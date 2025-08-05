@@ -32,9 +32,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -46,13 +46,13 @@ import java.util.function.Function;
 public abstract class TileMultiBlockBase extends TileEntityInventory implements IMainMultiBlock,
         IUpdatableTileEvent {
 
-    private MultiBlockStructure multiBlockStructure;
     public boolean full;
     public boolean activate;
     public List<Player> entityPlayerList;
-    public boolean visible = true;
+    private MultiBlockStructure multiBlockStructure;
     @OnlyIn(Dist.CLIENT)
     private Function render;
+    private boolean visible = true;
 
     public TileMultiBlockBase(MultiBlockStructure multiBlockStructure, IMultiTileBlock multiTileBlock, BlockPos pos, BlockState state) {
         super(multiTileBlock, pos, state);
@@ -76,6 +76,17 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             return null;
         };
         return function;
+    }
+
+    @Override
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (this.level.isClientSide)
+            return true;
+        this.getCooldownTracker().setTick(20);
+        visible = !visible;
+        new PacketUpdateFieldTile(this, "visible", visible);
+        return super.onSneakingActivated(player, hand, side, vec3);
+
     }
 
     @Override
@@ -110,9 +121,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                         tooltip.add(ChatFormatting.GREEN + "" + stack1.getCount() + "x" + ChatFormatting.GRAY + stack1.getDisplayName().getString());
                     }
                 }
-            }else{
+            } else {
                 try {
-                    this.multiBlockStructure = ((TileMultiBlockBase)this.getTeBlock().getTeClass().getConstructors()[0].newInstance(BlockPos.ZERO, this.getBlockState())).multiBlockStructure;
+                    this.multiBlockStructure = ((TileMultiBlockBase) this.getTeBlock().getTeClass().getConstructors()[0].newInstance(BlockPos.ZERO, this.getBlockState())).multiBlockStructure;
                 } catch (InstantiationException e) {
                     throw new RuntimeException(e);
                 } catch (IllegalAccessException e) {
@@ -270,7 +281,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     private void renderBlock(
             TileMultiBlockBase tile, RenderLevelStageEvent event
     ) {
-        if (facing == 0 || facing == 1 || !visible) {
+        if (facing == 0 || facing == 1 || !this.visible) {
             return;
         }
         for (Map.Entry<BlockPos, ItemStack> entry : this.multiBlockStructure.ItemStackMap.entrySet()) {
@@ -385,7 +396,6 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             }
             renderItem.render(item, ItemDisplayContext.FIXED, false,
                     poseStack, ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource(), i, OverlayTexture.NO_OVERLAY, itemModel);
-            ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
             poseStack.popPose();
         }
     }
@@ -423,7 +433,6 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
 
-
     @Override
     public boolean wasActivated() {
         return this.activate;
@@ -448,16 +457,16 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                 throw new RuntimeException(e);
             }
         }
-        if (name.equals("activate")) {
+        if (name.equals("visible")) {
             try {
-                this.activate = (boolean) DecoderHandler.decode(is);
+                this.visible = (boolean) DecoderHandler.decode(is);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        if (name.equals("visible")) {
+        if (name.equals("activate")) {
             try {
-                this.visible = (boolean) DecoderHandler.decode(is);
+                this.activate = (boolean) DecoderHandler.decode(is);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -552,20 +561,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             this.usingBeforeGUI();
         }
 
-
         return super.onActivated(player, hand, side, vec3);
     }
 
-    @Override
-    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-        if (this.level.isClientSide)
-            return true;
-        this.getCooldownTracker().setTick(20);
-        visible = !visible;
-        new PacketUpdateFieldTile(this,"visible",visible);
-        return super.onSneakingActivated(player, hand, side, vec3);
-
-    }
 
     @Override
     public void onLoaded() {

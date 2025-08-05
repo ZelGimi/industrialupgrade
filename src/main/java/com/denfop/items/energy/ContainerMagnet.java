@@ -3,9 +3,10 @@ package com.denfop.items.energy;
 import com.denfop.container.ContainerHandHeldInventory;
 import com.denfop.container.SlotVirtual;
 import com.denfop.container.VirtualSlotItem;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.network.packet.PacketItemStackUpdate;
 import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -31,9 +32,9 @@ public class ContainerMagnet extends ContainerHandHeldInventory<ItemStackMagnet>
         slots = slots / 9;
 
 
-        for (int i = 0; i < Toolbox1.list.length; i++) {
+        for (int i = 0; i < Toolbox1.list.size(); i++) {
             addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 10 + (i) * 18, 50,
-                    new VirtualSlotItem(Toolbox1.list, inventorySize)
+                    new VirtualSlotItem(Toolbox1, inventorySize)
             ));
         }
         addPlayerInventorySlots(player.getInventory(), 166);
@@ -118,7 +119,7 @@ public class ContainerMagnet extends ContainerHandHeldInventory<ItemStackMagnet>
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 
@@ -140,8 +141,7 @@ public class ContainerMagnet extends ContainerHandHeldInventory<ItemStackMagnet>
     public void broadcastChanges() {
         super.broadcastChanges();
         if (getPlayer() instanceof ServerPlayer) {
-            CompoundTag tagCompound = this.base.getNBT();
-            new PacketItemStackUpdate("type", tagCompound.getBoolean("type"), (ServerPlayer) getPlayer());
+            new PacketItemStackUpdate("type", this.base.itemStack1.getOrDefault(DataComponentsInit.BLACK_LIST, false), (ServerPlayer) getPlayer());
         }
     }
 

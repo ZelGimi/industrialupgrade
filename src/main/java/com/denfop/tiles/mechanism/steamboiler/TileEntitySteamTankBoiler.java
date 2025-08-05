@@ -21,8 +21,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
     private int amount;
 
     public TileEntitySteamTankBoiler(BlockPos pos, BlockState state) {
-        super(BlockSteamBoiler.steam_boiler_tank,pos,state);
+        super(BlockSteamBoiler.steam_boiler_tank, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTank("tank", 4000);
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
@@ -98,7 +98,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
         if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    this.getComp(Fluids.class).getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         }
         return super.onActivated(player, hand, side, vec3);

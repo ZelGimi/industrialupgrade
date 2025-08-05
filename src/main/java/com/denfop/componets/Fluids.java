@@ -12,15 +12,15 @@ import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -178,10 +178,10 @@ public class Fluids extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         for (final InternalFluidTank tank : this.managedTanks) {
             CompoundTag subTag = new CompoundTag();
-            subTag = tank.writeToNBT(subTag);
+            subTag = tank.writeToNBT(player.registryAccess(), subTag);
             try {
                 EncoderHandler.encode(buffer, subTag);
             } catch (IOException e) {
@@ -194,10 +194,10 @@ public class Fluids extends AbstractComponent {
 
     @Override
     public CustomPacketBuffer updateComponent() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(parent.registryAccess());
         for (final InternalFluidTank tank : this.managedTanks) {
             CompoundTag subTag = new CompoundTag();
-            subTag = tank.writeToNBT(subTag);
+            subTag = tank.writeToNBT(parent.registryAccess(), subTag);
             try {
                 EncoderHandler.encode(buffer, subTag);
             } catch (IOException e) {
@@ -209,7 +209,7 @@ public class Fluids extends AbstractComponent {
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         for (final InternalFluidTank tank : this.managedTanks) {
-            tank.readFromNBT((CompoundTag) DecoderHandler.decode(is));
+            tank.readFromNBT(is.registryAccess(), (CompoundTag) DecoderHandler.decode(is));
         }
 
     }
@@ -218,7 +218,7 @@ public class Fluids extends AbstractComponent {
 
         for (final InternalFluidTank tank : this.managedTanks) {
             if (nbt.contains(tank.identifier, 10)) {
-                tank.readFromNBT(nbt.getCompound(tank.identifier));
+                tank.readFromNBT(parent.provider, nbt.getCompound(tank.identifier));
             }
         }
 
@@ -229,7 +229,7 @@ public class Fluids extends AbstractComponent {
 
         for (final InternalFluidTank tank : this.managedTanks) {
             CompoundTag subTag = new CompoundTag();
-            subTag = tank.writeToNBT(subTag);
+            subTag = tank.writeToNBT(parent.provider, subTag);
             nbt.put(tank.identifier, subTag);
         }
 
@@ -237,13 +237,13 @@ public class Fluids extends AbstractComponent {
     }
 
     @Override
-    public Collection<? extends Capability<?>> getProvidedCapabilities(Direction side) {
-        return Collections.singleton(ForgeCapabilities.FLUID_HANDLER);
+    public Collection<? extends BlockCapability<?, ?>> getProvidedCapabilities(Direction side) {
+        return Collections.singleton(Capabilities.FluidHandler.BLOCK);
     }
 
     @Override
-    public <T> T getCapability(Capability<T> cap, Direction side) {
-        return cap == ForgeCapabilities.FLUID_HANDLER ? (T) new FluidHandler(side) : super.getCapability(
+    public <T> T getCapability(BlockCapability<T, Direction> cap, Direction side) {
+        return cap == Capabilities.FluidHandler.BLOCK ? (T) new FluidHandler(side) : super.getCapability(
                 cap,
                 side)
                 ;
@@ -269,7 +269,7 @@ public class Fluids extends AbstractComponent {
         }
     }
 
-    public static class InternalFluidTank extends FluidTank {
+    public class InternalFluidTank extends FluidTank {
 
         protected final String identifier;
         List<String> fluidList = new ArrayList<>();
@@ -292,25 +292,29 @@ public class Fluids extends AbstractComponent {
             this.inputSides = new ArrayList<>(inputSides);
             this.outputSides = new ArrayList<>(outputSides);
             this.typeItemSlot = typeItemSlot;
-            List<Fluid> fluidList1 = ForgeRegistries.FLUIDS.getValues().stream().filter(acceptedFluids).toList();
+            List<Fluid> fluidList1 = BuiltInRegistries.FLUID.stream().filter(acceptedFluids).toList();
             for (Fluid fluid1 : fluidList1) {
                 fluidList.add(Localization.translate(fluid1.getFluidType().getDescriptionId()));
             }
 
         }
 
-        public String getIdentifier() {
-            return identifier;
-        }
-
         public CustomPacketBuffer writePacket() {
-            CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
-            fluid.writeToPacket(packetBuffer);
+            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(parent.registryAccess());
+            try {
+                EncoderHandler.encode(packetBuffer, fluid);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return packetBuffer;
         }
 
         public void readPacket(CustomPacketBuffer packetBuffer) {
-            this.fluid = FluidStack.readFromPacket(packetBuffer);
+            try {
+                this.fluid = (FluidStack) DecoderHandler.decode(packetBuffer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public List<String> getFluidList() {
@@ -356,7 +360,7 @@ public class Fluids extends AbstractComponent {
 
         public void setAcceptedFluids(final Predicate<Fluid> acceptedFluids) {
             this.acceptedFluids = acceptedFluids;
-            List<Fluid> fluidList1 = ForgeRegistries.FLUIDS.getValues().stream().filter(acceptedFluids).toList();
+            List<Fluid> fluidList1 = BuiltInRegistries.FLUID.stream().filter(acceptedFluids).toList();
             fluidList.clear();
             for (Fluid fluid1 : fluidList1) {
                 fluidList.add(Localization.translate(fluid1.getFluidType().getDescriptionId()));
@@ -376,6 +380,9 @@ public class Fluids extends AbstractComponent {
             this.canAccept = b;
         }
 
+        public String getIdentifier() {
+            return identifier;
+        }
     }
 
     private class FluidHandler implements IFluidHandler {

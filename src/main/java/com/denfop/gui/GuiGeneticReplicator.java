@@ -42,7 +42,6 @@ public class GuiGeneticReplicator<T extends ContainerGeneticReplicator> extends 
     }
 
 
-
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
@@ -51,7 +50,7 @@ public class GuiGeneticReplicator<T extends ContainerGeneticReplicator> extends 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         if (this.container.base instanceof IUpgradableBlock) {
-           bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         bindTexture(getTexture());
@@ -70,7 +69,7 @@ public class GuiGeneticReplicator<T extends ContainerGeneticReplicator> extends 
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

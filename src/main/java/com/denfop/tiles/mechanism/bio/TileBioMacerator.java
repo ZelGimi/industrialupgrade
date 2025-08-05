@@ -19,7 +19,7 @@ public class TileBioMacerator extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.MACERATOR.usagePerTick,
                 EnumMultiMachine.MACERATOR.lenghtOperation,
-                4,BlockBaseMachine3.bio_macerator,pos,state
+                4, BlockBaseMachine3.bio_macerator, pos, state
         );
     }
 

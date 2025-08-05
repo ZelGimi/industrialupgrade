@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/duralumin"
+    },
+    "B": {
+      "tag": "c:plates/silver"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_188_element"
+  },
+  "show_notification": false
+}

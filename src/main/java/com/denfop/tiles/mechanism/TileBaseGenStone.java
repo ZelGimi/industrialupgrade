@@ -26,8 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -178,8 +178,8 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnStoneGeneratorParticles(level,pos,level.random);
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnStoneGeneratorParticles(level, pos, level.random);
         }
         MachineRecipe output = this.output;
         if (output != null && canAdd() && this.energy.getEnergy() >= this.energyConsume) {

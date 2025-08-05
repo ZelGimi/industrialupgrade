@@ -250,8 +250,6 @@ import com.denfop.integration.jei.quarry_mac.MQuarryCategory;
 import com.denfop.integration.jei.quarry_mac.MQuarryHandler;
 import com.denfop.integration.jei.radioactiveorehandler.RadioactiveOreHandlerCategory;
 import com.denfop.integration.jei.radioactiveorehandler.RadioactiveOreHandlerHandler;
-import com.denfop.integration.jei.reactorschemes.ReactorSchemesCategory;
-import com.denfop.integration.jei.reactorschemes.ReactorSchemesHandler;
 import com.denfop.integration.jei.recycler.RecyclerCategory;
 import com.denfop.integration.jei.recycler.RecyclerHandler;
 import com.denfop.integration.jei.refiner.RefinerCategory;
@@ -361,8 +359,6 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.*;
-import mezz.jei.api.runtime.IJeiRuntime;
-import mezz.jei.gui.overlay.bookmarks.BookmarkOverlay;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -372,7 +368,7 @@ import java.util.Map;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(Constants.MOD_ID, "jei");
+    private static final ResourceLocation UID = ResourceLocation.tryBuild(Constants.MOD_ID, "jei");
     public static List<JeiInform> informList = new ArrayList<>();
     public static JeiInform macerator = new JeiInform("macerator", MaceratorCategory.class, MaceratorHandler.class);
     public static JeiInform adv_alloy = new JeiInform("adv_alloy", AdvAlloySmelterCategory.class, AdvAlloySmelterHandler.class);
@@ -550,11 +546,14 @@ public class JEICompat implements IModPlugin {
     public static JeiInform world_collector_end = new JeiInform("world_collector_end", EndCategory.class, EndHandler.class);
     public static JeiInform world_collector_nether = new JeiInform("world_collector_nether", NetherCategory.class, NetherHandler.class);
     public static JeiInform scrapbox = new JeiInform("scrapbox", ScrapboxRecipeCategory.class, ScrapboxRecipeHandler.class);
+    public static IGuiHelper guiHelper;
 
-
-  //  public static JeiInform reactor_schemes = new JeiInform("reactor_schemes", ReactorSchemesCategory.class, ReactorSchemesHandler.class);
     public JEICompat() {
 
+    }
+
+    public static ItemStack getBlockStack(IMultiTileBlock block) {
+        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
     }
 
     @Override
@@ -562,20 +561,14 @@ public class JEICompat implements IModPlugin {
         return UID;
     }
 
-    public static ItemStack getBlockStack(IMultiTileBlock block) {
-        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
-
-    }
-
-
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
         registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.double_furnace), RecipeTypes.SMELTING);
 
-        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.triple_furnace),RecipeTypes.SMELTING);
-        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.quad_furnace),RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.triple_furnace), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.quad_furnace), RecipeTypes.SMELTING);
         registry.addRecipeCatalyst(getBlockStack(BlockSimpleMachine.furnace_iu), RecipeTypes.SMELTING);
-        registry.addRecipeCatalyst(getBlockStack(BlocksPhotonicMachine.photonic_furnace),RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlocksPhotonicMachine.photonic_furnace), RecipeTypes.SMELTING);
         registry.addRecipeCatalyst(getBlockStack(BlockBaseMachine3.bio_furnace), RecipeTypes.SMELTING);
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.basemachine2, 1, 37),
@@ -1287,7 +1280,8 @@ public class JEICompat implements IModPlugin {
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.imp_se_generator, 1, 0),
                 gen_se.recipeType
-        );  registry.addRecipeCatalyst(
+        );
+        registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.blockSE, 1, 0),
                 gen_se.recipeType
         );
@@ -1945,8 +1939,6 @@ public class JEICompat implements IModPlugin {
         );
 
     }
-
-    public static IGuiHelper guiHelper;
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {

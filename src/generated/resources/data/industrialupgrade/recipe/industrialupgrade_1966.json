@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/hafnium"
+    },
+    "B": {
+      "tag": "c:plates/thallium"
+    },
+    "C": {
+      "tag": "c:plates/zinc"
+    },
+    "D": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "BDB",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_593_element"
+  },
+  "show_notification": false
+}

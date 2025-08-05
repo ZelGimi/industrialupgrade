@@ -9,28 +9,31 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWirelessControllerGraphiteReactors;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.ReactorData;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWirelessControllerGraphiteReactors;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemReactorData;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.tiles.reactors.graphite.IGraphiteController;
 import com.denfop.tiles.reactors.graphite.graphite_controller.TileEntityGraphiteController;
 import com.denfop.utils.Keyboard;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
     public TileMultiBlockBase tileMultiBlockBase = null;
 
     public TileEntityWirelessGraphiteController(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.wireless_controller_graphite_reactors,pos,state);
+        super(BlockBaseMachine3.wireless_controller_graphite_reactors, pos, state);
         this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -57,8 +60,7 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
                 if (!(stack.getItem() instanceof ItemReactorData)) {
                     return false;
                 }
-                final CompoundTag nbt = ModUtils.nbt(stack);
-                return !nbt.getString("name").isEmpty();
+                return stack.has(DataComponentsInit.REACTOR_DATA);
             }
         };
     }
@@ -99,9 +101,13 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
-        CustomPacketBuffer packetBuffer =  super.writeContainerPacket();
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
         updateList();
-        packetBuffer.writeItem(this.invslot.get(0));
+        try {
+            EncoderHandler.encode(packetBuffer, this.invslot.get(0));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return packetBuffer;
     }
 
@@ -110,7 +116,11 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
         super.readContainerPacket(customPacketBuffer);
 
 
-        this.invslot.set(0,customPacketBuffer.readItem());
+        try {
+            this.invslot.set(0, (ItemStack) DecoderHandler.decode(customPacketBuffer));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -137,8 +147,8 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
         tileMultiBlockBase = null;
         if (this.invslot.get(0).isEmpty())
             return;
-        final CompoundTag nbt = ModUtils.nbt(this.invslot.get(0));
-        BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+        ReactorData reactorData = this.invslot.get(0).get(DataComponentsInit.REACTOR_DATA);
+        BlockPos pos = reactorData.pos();
         BlockEntity tileEntity = this.getWorld().getBlockEntity(pos);
         if (tileEntity instanceof TileMultiBlockBase && tileEntity instanceof IGraphiteReactor) {
             this.tileMultiBlockBase = (TileMultiBlockBase) tileEntity;

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_controller"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_419_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_426_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_424_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_428_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "BEB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:graphite_reactor/graphite_adv_controller"
+  },
+  "show_notification": false
+}

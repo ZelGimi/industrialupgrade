@@ -9,7 +9,6 @@ import com.denfop.api.gui.ScrollDirection;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.WindSystem;
-import com.denfop.container.ContainerBaseWaterGenerator;
 import com.denfop.container.ContainerHydroTurbineController;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
@@ -36,7 +35,7 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
         super(guiContainer, guiContainer.base.getStyle());
         this.imageHeight = 247;
         this.imageWidth = 207;
-        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guiwater_turbine.png");
+        this.background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiwater_turbine.png");
 
 
         this.inventory.setY(159);
@@ -59,15 +58,15 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
     }
 
     @Override
-    public boolean mouseScrolled(double d, double d2, double d3) {
+    public boolean mouseScrolled(double d, double d2, double d4, double d3) {
         ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
         int mouseX = (int) (d - this.guiLeft);
         int mouseY = (int) (d2 - this.guiTop);
         if (mouseX >= 35 && mouseX <= 171 && mouseY >= 118 && mouseY <= 124) {
-            new PacketUpdateServerTile(this.container.base, this.container.base.coefficient_power+d3);
+            new PacketUpdateServerTile(this.container.base, this.container.base.coefficient_power + d3);
             hoverChangePower = true;
         }
-        return super.mouseScrolled(d, d2, d3);
+        return super.mouseScrolled(d, d2, d4, d3);
 
     }
 
@@ -123,12 +122,12 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
         this.bindTexture();
         int xoffset = guiLeft;
         int yoffset = guiTop;
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
         bindTexture();
-        drawTexturedModalRect(poseStack, (int) (xoffset + 34 + ((this.container.base.coefficient_power-100)/50D)*130), yoffset + 116, 235, 0, 10, 12);
-        if (hoverChangePower){
-            drawTexturedModalRect(poseStack, (int) (xoffset + 34 + ((this.container.base.coefficient_power-100)/50D)*130), yoffset + 116, 246, 0, 10, 12);
+        drawTexturedModalRect(poseStack, (int) (xoffset + 34 + ((this.container.base.coefficient_power - 100) / 50D) * 130), yoffset + 116, 235, 0, 10, 12);
+        if (hoverChangePower) {
+            drawTexturedModalRect(poseStack, (int) (xoffset + 34 + ((this.container.base.coefficient_power - 100) / 50D) * 130), yoffset + 116, 246, 0, 10, 12);
 
         }
         hoverChangePower = false;
@@ -151,15 +150,16 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
         ItemStack rotor = container.base.slot.get(0);
         if (rotor.getDamageValue() >= rotor.getMaxDamage() * 0.25) {
             drawTexturedModalRect(poseStack, this.guiLeft + 46, (int) (this.guiTop + 137)
-                    , 245, (int) 34, 11, (int)11);
-        };
+                    , 245, (int) 34, 11, (int) 11);
+        }
+        ;
         if (this.container.base.getRotor() != null) {
             int windHeight = 74;
             double renderHeight = (double) windHeight * ModUtils.limit(
                     Math.min(24.4 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromWaterPower(
                                     this.container.base.getBlockPos(),
                                     this.container.base,
-                                    this.container.base.generation/((this.container.base.coefficient_power)/100D)
+                                    this.container.base.generation / ((this.container.base.coefficient_power) / 100D)
                             ) * this.container.base.getCoefficient()
                     ) / 24.4,
                     0.0D,
@@ -198,7 +198,7 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
                         Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromWaterPower(
                                         this.container.base.getBlockPos(),
                                         this.container.base,
-                                        this.container.base.generation/((this.container.base.coefficient_power)/100D)
+                                        this.container.base.generation / ((this.container.base.coefficient_power) / 100D)
                                 ) / this.container.base.getCoefficient()
                         )
                 ) + " m/s";
@@ -210,9 +210,9 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
             }
             PoseStack pose = poseStack.pose();
             pose.pushPose();
-            pose.translate(175 - getStringWidth(fields), 100,0);
-            pose.scale(0.85f,0.85f,1);
-            draw(poseStack, fields, 0,0, ModUtils.convertRGBcolorToInt(13, 229, 34));
+            pose.translate(175 - getStringWidth(fields), 100, 0);
+            pose.scale(0.85f, 0.85f, 1);
+            draw(poseStack, fields, 0, 0, ModUtils.convertRGBcolorToInt(13, 229, 34));
             pose.popPose();
         }
 
@@ -232,6 +232,7 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
                 i++;
             }
         }
+
         if (this.container.base.getRotor() != null) {
             if (container.base.wind_side == null)
                 return;
@@ -291,15 +292,15 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
                         .drawForeground(poseStack, mouseX, mouseY);
             }
             new AdvArea(this, 35, 117, 172, 125)
-                    .withTooltip(this.container.base.coefficient_power+"%")
+                    .withTooltip(this.container.base.coefficient_power + "%")
                     .drawForeground(poseStack, mouseX, mouseY);
 
             new AdvArea(this, 183, 12, 197, 91)
-                    .withTooltip( ModUtils.getString(Math.min(
+                    .withTooltip(ModUtils.getString(Math.min(
                             this.container.base.energy.getEnergy().getEnergy(),
                             this.container.base.energy.getEnergy().getCapacity()
-                    )) + "/" + ModUtils.getString( this.container.base.energy.getEnergy().getCapacity()) + " " +
-                            "EF"+"\n" + Localization.translate(
+                    )) + "/" + ModUtils.getString(this.container.base.energy.getEnergy().getCapacity()) + " " +
+                            "EF" + "\n" + Localization.translate(
                             "EUStorage.gui.info.output",
                             ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(this.container.base.energy.getEnergy().getSourceTier())
                             )
@@ -311,7 +312,8 @@ public class GuiHydroTurbineController<T extends ContainerHydroTurbineController
                 new Area(this, 46, 137, 11, 11)
                         .withTooltip(Localization.translate("iu.wind.repair"))
                         .drawForeground(poseStack, mouseX, mouseY);
-            };
+            }
+            ;
             float scale = 1;
             List<String> lines = wrapTextWithNewlines(fields, 255);
             int y = 0;

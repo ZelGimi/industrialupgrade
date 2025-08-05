@@ -18,7 +18,7 @@ public class TileEntitySteamHeaterBoiler extends TileEntityMultiBlockElement imp
     private final HeatComponent heat;
 
     public TileEntitySteamHeaterBoiler(BlockPos pos, BlockState state) {
-        super(BlockSteamBoiler.steam_boiler_heater,pos,state);
+        super(BlockSteamBoiler.steam_boiler_heater, pos, state);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
     }
 

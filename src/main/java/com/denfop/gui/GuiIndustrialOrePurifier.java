@@ -37,28 +37,27 @@ public class GuiIndustrialOrePurifier<T extends ContainerIndustrialOrePurifier> 
     }
 
 
-
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
-       bindTexture(getTexture());
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        bindTexture(getTexture());
 
 
         int xoffset = guiLeft;
         int yoffset = guiTop;
 
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

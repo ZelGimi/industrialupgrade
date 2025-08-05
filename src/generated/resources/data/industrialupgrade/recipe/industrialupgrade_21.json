@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gems/ruby"
+    }
+  },
+  "pattern": [
+    "A A",
+    "AAA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/ruby_chestplate"
+  },
+  "show_notification": false
+}

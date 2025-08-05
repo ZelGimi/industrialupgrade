@@ -12,14 +12,17 @@ public class TileEntityCreativeSteamStorage extends TileSteamStorage {
     public TileEntityCreativeSteamStorage(BlockPos pos, BlockState state) {
         super(BlockCreativeBlocks.creative_steam_storage, pos, state, 1024);
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.creativeBlock.getBlock(getTeBlock());
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
-        return  BlockCreativeBlocks.creative_steam_storage;
+        return BlockCreativeBlocks.creative_steam_storage;
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();

@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    "A A",
+    "A A",
+    "A A"
+  ],
+  "result": {
+    "count": 16,
+    "id": "industrialupgrade:basemachine3/quarry_pipe"
+  },
+  "show_notification": false
+}

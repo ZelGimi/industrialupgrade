@@ -4,6 +4,7 @@ import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.item.IEnergyItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.IProperties;
 import com.denfop.utils.ModUtils;
@@ -20,8 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,17 +33,18 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
     public final boolean wirelessCharge;
 
     public ItemBattery(double maxCharge, double transferLimit, int tier, boolean wirelessCharge) {
-        super(maxCharge, transferLimit, tier);
+        super(new Properties().component(DataComponentsInit.MODE, 0), maxCharge, transferLimit, tier);
         this.wirelessCharge = wirelessCharge;
         IUCore.proxy.addProperties(this);
     }
 
     public ItemBattery(double maxCharge, double transferLimit, int tier) {
-        super(maxCharge, transferLimit, tier);
+        super(new Properties().component(DataComponentsInit.MODE, 0), maxCharge, transferLimit, tier);
         this.wirelessCharge = false;
         IUCore.proxy.addProperties(this);
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -55,18 +57,19 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
 
+
     @Override
     public void appendHoverText(
-            ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag
+            ItemStack stack, @Nullable TooltipContext world, List<Component> tooltip, TooltipFlag flag
     ) {
         if (this.wirelessCharge) {
-            int mode = ModUtils.NBTGetInteger(stack, "mode");
+            int mode = stack.getOrDefault(DataComponentsInit.MODE, 0);
             if (mode > 4 || mode < 0) {
                 mode = 0;
             }
@@ -87,15 +90,13 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
     }
 
 
-
-
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, net.minecraft.world.entity.Entity entity, int slot, boolean isSelected) {
         if (!(entity instanceof Player player) || world.isClientSide || !wirelessCharge) {
             return;
         }
 
-        int mode = ModUtils.NBTGetInteger(itemStack, "mode");
+        int mode = itemStack.getOrDefault(DataComponentsInit.MODE, 0);
         if (mode < 1 || mode > 4) return;
 
         if (world.getGameTime() % ((mode == 4) ? 40 : 10) == 0) {
@@ -144,10 +145,9 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide && wirelessCharge) {
             ItemStack stack = player.getItemInHand(hand);
-            int mode = ModUtils.NBTGetInteger(stack, "mode");
+            int mode = stack.get(DataComponentsInit.MODE);
             mode = (mode + 1) % 5;
-
-            ModUtils.NBTSetInteger(stack, "mode", mode);
+            stack.set(DataComponentsInit.MODE, mode);
             player.displayClientMessage(
                     Component.literal(ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": " +
                             Localization.translate("message.battery.mode." + mode)), true);

@@ -20,13 +20,15 @@ public class ItemAlloysIngot<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
-        return new String[]{"forge:ingots/" + getElement().getName().replace("_alloy", "").replace("_", ""), "forge:ingots"};
+        return new String[]{"c:ingots/" + getElement().getName().replace("_alloy", "").replace("_", ""), "c:ingots"};
     }
 
     protected String getOrCreateDescriptionId() {

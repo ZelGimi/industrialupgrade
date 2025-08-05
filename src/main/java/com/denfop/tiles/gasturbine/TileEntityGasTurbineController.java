@@ -29,11 +29,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
     private List<BlockPos> posesBearings;
 
     public TileEntityGasTurbineController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.GasTurbineMultiBlock,BlockGasTurbine.gas_turbine_controller,pos,state);
+        super(InitMultiBlockSystem.GasTurbineMultiBlock, BlockGasTurbine.gas_turbine_controller, pos, state);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -80,15 +80,15 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                 coef = coef / 4;
                 if (canWork && energy.getEnergy().getFreeEnergy() >= generate * coef) {
                     tank.getTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
-                    if (this.getWorld().getGameTime() % 4 == 0){
+                    energy.getEnergy().addEnergy(generate * coef);
+                    if (this.getWorld().getGameTime() % 4 == 0) {
                         spawnExhaustParticles(level);
                     }
-                    energy.getEnergy().addEnergy(generate * coef);
                     if (this.getWorld().getGameTime() % 20 == 0) {
                         for (IRecuperator recuperator : recuperators) {
                             ((IExchangerItem) recuperator.getExchanger().get(0).getItem()).damageItem(recuperator
                                     .getExchanger()
-                                    .get(0), 1);
+                                    .get(0), -1);
                         }
                     }
                     energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generate * coef) + 1);
@@ -134,7 +134,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
         try {
             final FluidTank fluidTank = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank != null) {
-                this.tank.getTank().readFromNBT(fluidTank.writeToNBT(new CompoundTag()));
+                this.tank.getTank().readFromNBT(customPacketBuffer.registryAccess(), fluidTank.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -197,9 +197,10 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                         IAirBearings.class
                 );
     }
+
     public void spawnExhaustParticles(Level level) {
         if (!(level instanceof ServerLevel server)) return;
-        List<BlockPos> exhausts =posesBearings;
+        List<BlockPos> exhausts = posesBearings;
 
         for (BlockPos pos : exhausts) {
             double x = pos.getX() + 0.5;
@@ -209,9 +210,10 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
 
             Vec3 motion = Vec3.atLowerCornerOf(getFacing().getOpposite().getNormal());
 
-            server.sendParticles(ParticleTypes.CLOUD, x, y, z,0, motion.x, motion.y, motion.z,0.2);
+            server.sendParticles(ParticleTypes.CLOUD, x, y, z, 0, motion.x, motion.y, motion.z, 0.2);
         }
     }
+
 
     @Override
     public void setFull(final boolean full) {

@@ -96,11 +96,11 @@ public class GuiFluidCoolMachine<T extends ContainerFluidCoolMachine> extends Gu
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture(getTexture());
         int xOffset = guiLeft;
-        int yOffset =guiTop;
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        int yOffset = guiTop;
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xOffset + 3, yOffset + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
         TankGauge.createNormal(this, 112, 20, this.container.base.tank).drawBackground(poseStack, this.guiLeft, this.guiTop);
@@ -109,7 +109,7 @@ public class GuiFluidCoolMachine<T extends ContainerFluidCoolMachine> extends Gu
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

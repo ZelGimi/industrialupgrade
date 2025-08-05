@@ -2,13 +2,16 @@ package com.denfop.items.armour;
 
 import com.denfop.ElectricItem;
 import com.denfop.api.item.IEnergyItem;
-import com.denfop.items.armour.material.ArmorMaterials;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialArmor, IEnergyItem {
@@ -23,10 +26,17 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
             double transferLimit,
             int tier
     ) {
-        super(ArmorMaterials.ENERGY_ITEM, armorName, armorType);
+        super(Register.ENERGY_ITEM, armorName, armorType);
         this.maxCharge = maxCharge;
         this.tier = tier;
         this.transferLimit = transferLimit;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack p_41404_, Level p_41405_, Entity p_41406_, int p_41407_, boolean p_41408_) {
+        super.inventoryTick(p_41404_, p_41405_, p_41406_, p_41407_, p_41408_);
+        if (!p_41404_.has(DataComponentsInit.ENERGY))
+            p_41404_.set(DataComponentsInit.ENERGY, 0D);
     }
 
     public boolean isBarVisible(final ItemStack stack) {
@@ -92,11 +102,6 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
     @Override
     public int getMaxDamage(ItemStack stack) {
         return 0;
-    }
-
-    @Override
-    public boolean canBeDepleted() {
-        return false;
     }
 
 

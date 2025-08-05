@@ -1,9 +1,9 @@
 package com.denfop.tiles.reactors.water.inputfluid;
 
 import com.denfop.componets.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,13 +20,6 @@ public class FluidHandlerReactor implements IFluidHandler {
             fluidTankProperties[i] = this.list.get(i).getAllTanks().iterator().next();
         }
     }
-
-
-
-
-
-
-
 
 
     @Override

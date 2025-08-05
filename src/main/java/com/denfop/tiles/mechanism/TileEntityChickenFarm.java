@@ -30,13 +30,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityChickenFarm extends TileEntityInventory implements IUpgradableBlock {
 
@@ -51,13 +53,13 @@ public class TileEntityChickenFarm extends TileEntityInventory implements IUpgra
     private final ComponentUpgradeSlots componentUpgrade;
     private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<LevelChunk> chunks = new ArrayList<>();
 
     public TileEntityChickenFarm(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.chicken_farm,pos,state);
+        super(BlockBaseMachine3.chicken_farm, pos, state);
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -111,12 +113,10 @@ public class TileEntityChickenFarm extends TileEntityInventory implements IUpgra
     }
 
 
-
     @Override
     public void onLoaded() {
         super.onLoaded();
         visible.aabb = searchArea;
-
     }
 
     @Override

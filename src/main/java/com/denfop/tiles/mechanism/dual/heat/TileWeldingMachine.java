@@ -29,8 +29,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileWeldingMachine extends TileDoubleElectricMachine implements IHasRecipe {
 
@@ -40,7 +40,7 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
     private final AirPollutionComponent pollutionAir;
 
     public TileWeldingMachine(BlockPos pos, BlockState state) {
-        super(1, 140, 1, EnumDoubleElectricMachine.WELDING,BlockBaseMachine3.welding,pos,state);
+        super(1, 140, 1, EnumDoubleElectricMachine.WELDING, BlockBaseMachine3.welding, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
@@ -134,17 +134,17 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
                 2000
         );
 
-        addRecipe("forge:plates/Lead", IUItem.coolpipes.getItemStack(0, 4), 1000);
-        addRecipe("forge:plateDense/Iron", IUItem.coolpipes.getItemStack(1, 4), 2000);
-        addRecipe("forge:plateDense/Steel", IUItem.coolpipes.getItemStack(2, 4), 3000);
-        addRecipe("forge:doubleplate/AluminiumSilicon", IUItem.coolpipes.getItemStack(3, 4), 4000);
-        addRecipe("forge:doubleplate/Woods", IUItem.coolpipes.getItemStack(4, 4), 5000);
+        addRecipe("c:plates/Lead", IUItem.coolpipes.getItemStack(0, 4), 1000);
+        addRecipe("c:plateDense/Iron", IUItem.coolpipes.getItemStack(1, 4), 2000);
+        addRecipe("c:plateDense/Steel", IUItem.coolpipes.getItemStack(2, 4), 3000);
+        addRecipe("c:doubleplate/AluminiumSilicon", IUItem.coolpipes.getItemStack(3, 4), 4000);
+        addRecipe("c:doubleplate/Woods", IUItem.coolpipes.getItemStack(4, 4), 5000);
 
-        addRecipe("forge:plates/Aluminium", IUItem.pipes.getItemStack(0, 4), 1000);
-        addRecipe("forge:doubleplate/Aluminium", IUItem.pipes.getItemStack(1, 4), 2000);
-        addRecipe("forge:plates/Duralumin", IUItem.pipes.getItemStack(2, 4), 3000);
-        addRecipe("forge:doubleplate/Alcled", IUItem.pipes.getItemStack(3, 4), 4000);
-        addRecipe("forge:doubleplate/Permalloy", IUItem.pipes.getItemStack(4, 4), 5000);
+        addRecipe("c:plates/Aluminium", IUItem.pipes.getItemStack(0, 4), 1000);
+        addRecipe("c:doubleplate/Aluminium", IUItem.pipes.getItemStack(1, 4), 2000);
+        addRecipe("c:plates/Duralumin", IUItem.pipes.getItemStack(2, 4), 3000);
+        addRecipe("c:doubleplate/Alcled", IUItem.pipes.getItemStack(3, 4), 4000);
+        addRecipe("c:doubleplate/Permalloy", IUItem.pipes.getItemStack(4, 4), 5000);
 
         for (int i = 0; i < 5; i++) {
             addRecipe(
@@ -211,71 +211,71 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
                 IUItem.sunnariumpanel.getItemStack(12, 4),
                 IUItem.crafting_elements.getItemStack(350), 4000);
 
-        addRecipe("forge:rods/Titanium", "forge:plates/Iron",
+        addRecipe("c:rods/Titanium", "c:plates/Iron",
                 IUItem.crafting_elements.getItemStack(338), 2000);
 
-        addRecipe("forge:rods/Germanium", "forge:plates/Steel",
+        addRecipe("c:rods/Germanium", "c:plates/Steel",
                 IUItem.crafting_elements.getItemStack(411), 3000);
 
-        addRecipe("forge:rods/Iridium", "forge:plates/Iridium",
+        addRecipe("c:rods/Iridium", "c:plates/Iridium",
                 IUItem.crafting_elements.getItemStack(343), 4000);
 
         addRecipe(IUItem.sunnarium.getItemStack(4),
                 IUItem.sunnarium.getItemStack(3),
                 IUItem.crafting_elements.getItemStack(416), 1000);
 
-        addRecipe("forge:nuggets/Platinum", "forge:ingots/Platinum",
+        addRecipe("c:nuggets/Platinum", "c:ingots/Platinum",
                 IUItem.crafting_elements.getItemStack(314), 1000);
 
-        addRecipe("forge:nuggets/Mikhail", "forge:ingots/Mikhail",
+        addRecipe("c:nuggets/Mikhail", "c:ingots/Mikhail",
                 IUItem.crafting_elements.getItemStack(401), 1000);
 
-        addRecipe("forge:nuggets/Chromium", "forge:ingots/Chromium",
+        addRecipe("c:nuggets/Chromium", "c:ingots/Chromium",
                 IUItem.crafting_elements.getItemStack(345), 1000);
 
-        addRecipe("forge:nuggets/Electrum", "forge:ingots/Electrum",
+        addRecipe("c:nuggets/Electrum", "c:ingots/Electrum",
                 IUItem.crafting_elements.getItemStack(406), 2000);
 
-        addRecipe("forge:nuggets/Magnesium", "forge:ingots/Magnesium",
+        addRecipe("c:nuggets/Magnesium", "c:ingots/Magnesium",
                 IUItem.crafting_elements.getItemStack(381), 2000);
 
-        addRecipe("forge:nuggets/Zinc", "forge:ingots/Zinc",
+        addRecipe("c:nuggets/Zinc", "c:ingots/Zinc",
                 IUItem.crafting_elements.getItemStack(391), 2000);
 
-        addRecipe("forge:nuggets/Manganese", "forge:ingots/Manganese",
+        addRecipe("c:nuggets/Manganese", "c:ingots/Manganese",
                 IUItem.crafting_elements.getItemStack(329), 2000);
 
-        addRecipe("forge:nuggets/Cobalt", "forge:ingots/Cobalt",
+        addRecipe("c:nuggets/Cobalt", "c:ingots/Cobalt",
                 IUItem.crafting_elements.getItemStack(429), 3000);
 
-        addRecipe("forge:nuggets/Nickel", "forge:ingots/Nickel",
+        addRecipe("c:nuggets/Nickel", "c:ingots/Nickel",
                 IUItem.crafting_elements.getItemStack(358), 3000);
 
-        addRecipe("forge:nuggets/Silver", "forge:ingots/Silver",
+        addRecipe("c:nuggets/Silver", "c:ingots/Silver",
                 IUItem.crafting_elements.getItemStack(306), 3000);
 
-        addRecipe("forge:nuggets/Vanady", "forge:ingots/Vanady",
+        addRecipe("c:nuggets/Vanady", "c:ingots/Vanady",
                 IUItem.crafting_elements.getItemStack(301), 3000);
 
-        addRecipe("forge:nuggets/Vitalium", "forge:ingots/Vitalium",
+        addRecipe("c:nuggets/Vitalium", "c:ingots/Vitalium",
                 IUItem.crafting_elements.getItemStack(315), 4000);
 
-        addRecipe("forge:nuggets/Caravky", "forge:ingots/Caravky",
+        addRecipe("c:nuggets/Caravky", "c:ingots/Caravky",
                 IUItem.crafting_elements.getItemStack(349), 4000);
 
-        addRecipe("forge:plateDense/Steel", "forge:rods/Tungsten",
+        addRecipe("c:plateDense/Steel", "c:rods/Tungsten",
                 IUItem.crafting_elements.getItemStack(413), 2000);
 
-        addRecipe("forge:plateDense/Steel", IUItem.advancedAlloy,
+        addRecipe("c:plateDense/Steel", IUItem.advancedAlloy,
                 IUItem.crafting_elements.getItemStack(370), 2000);
 
-        addRecipe("forge:plateDense/Steel", "forge:gears/Tungsten",
+        addRecipe("c:plateDense/Steel", "c:gears/Tungsten",
                 IUItem.crafting_elements.getItemStack(412), 2000);
 
-        addRecipe("forge:plateDense/Steel", IUItem.crafting_elements.getItemStack(137),
+        addRecipe("c:plateDense/Steel", IUItem.crafting_elements.getItemStack(137),
                 IUItem.crafting_elements.getItemStack(438), 2000);
 
-        addRecipe("forge:plateDense/Steel", "forge:gems/Ruby",
+        addRecipe("c:plateDense/Steel", "c:gems/Ruby",
                 IUItem.crafting_elements.getItemStack(369), 2000);
 
     }

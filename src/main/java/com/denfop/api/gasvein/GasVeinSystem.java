@@ -4,7 +4,6 @@ import com.denfop.ModConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.*;
 
@@ -23,7 +22,6 @@ public class GasVeinSystem implements IGasVeinSystem {
         this.chunkPos = new LinkedList<>();
         this.chunkPosVeinMap = new HashMap<>();
         this.rand = new Random();
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public GasVein getEMPTY() {

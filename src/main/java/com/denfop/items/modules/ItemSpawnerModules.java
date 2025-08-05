@@ -12,10 +12,12 @@ public class ItemSpawnerModules<T extends Enum<T> & ISubEnum> extends ItemMain<T
     public ItemSpawnerModules(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     public enum Types implements ISubEnum {
         spawner_module(0),
         spawner_module1(1),

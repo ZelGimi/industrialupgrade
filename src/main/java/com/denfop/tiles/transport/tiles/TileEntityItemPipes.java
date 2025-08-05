@@ -27,14 +27,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.io.IOException;
 import java.util.*;
@@ -92,10 +92,11 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     @Override
     public void addInformation(ItemStack stack, List<String> info) {
-        final ItemType type =cableType;
+        final ItemType type = cableType;
         info.add("Maximum: " + type.getMax() + (type.isItem() ? " item/t" : " mb/t"));
 
     }
+
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
@@ -216,34 +217,37 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         if (tile != null && !(tile instanceof ITransportConductor)) {
             if (!tile.isRemoved()) {
                 for (Direction enumFacing : Direction.values()) {
-                    if (tile.getCapability(ForgeCapabilities.ITEM_HANDLER, enumFacing).orElse(null) != null && tile.getCapability(
-                            ForgeCapabilities.FLUID_HANDLER,
+                    if (tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, neighborPos, enumFacing) != null && tile.getLevel().getCapability(
+                            Capabilities.FluidHandler.BLOCK, neighborPos,
                             enumFacing
-                    ).orElse(null) != null) {
+                    ) != null) {
                         final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
                                 tile,
                                 neighborPos
                         );
 
-                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                        NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(
                                 getWorld(), transport
 
                         ));
                         break;
-                    } else if (tile.getCapability(ForgeCapabilities.ITEM_HANDLER, enumFacing).orElse(null) != null) {
+                    } else if (tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, neighborPos, enumFacing) != null) {
                         final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
                         );
 
-                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                        NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(
                                 getWorld(), transport
 
                         ));
                         break;
-                    } else if (tile.getCapability(ForgeCapabilities.FLUID_HANDLER, enumFacing).orElse(null) != null) {
+                    } else if (tile.getLevel().getCapability(
+                            Capabilities.FluidHandler.BLOCK, neighborPos,
+                            enumFacing
+                    ) != null) {
                         final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
                         );
 
-                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                        NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(
                                 getWorld(), transport
 
                         ));
@@ -281,9 +285,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         if (!(getWorld()).isClientSide && !addedToEnergyNet) {
 
             if (this.cableType.isItem()) {
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
             } else {
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
             }
             this.addedToEnergyNet = true;
             updateConnectivity();
@@ -294,34 +298,37 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
                 if (tile != null && !(tile instanceof ITransportConductor)) {
                     if (!tile.isRemoved()) {
                         for (Direction enumFacing : Direction.values()) {
-                            if (tile.getCapability(ForgeCapabilities.ITEM_HANDLER, enumFacing).orElse(null) != null && tile.getCapability(
-                                    ForgeCapabilities.FLUID_HANDLER,
+                            if (tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, neighborPos, enumFacing) != null && tile.getLevel().getCapability(
+                                    Capabilities.FluidHandler.BLOCK, neighborPos,
                                     enumFacing
-                            ).orElse(null) != null) {
+                            ) != null) {
                                 final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
                                         tile,
                                         neighborPos
                                 );
 
-                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(
                                         getWorld(), transport
 
                                 ));
                                 break;
-                            } else if (tile.getCapability(ForgeCapabilities.ITEM_HANDLER, enumFacing).orElse(null) != null) {
+                            } else if (tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, neighborPos, enumFacing) != null) {
                                 final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
                                 );
 
-                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(
                                         getWorld(), transport
 
                                 ));
                                 break;
-                            } else if (tile.getCapability(ForgeCapabilities.FLUID_HANDLER, enumFacing).orElse(null) != null) {
+                            } else if (tile.getLevel().getCapability(
+                                    Capabilities.FluidHandler.BLOCK, neighborPos,
+                                    enumFacing
+                            ) != null) {
                                 final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
                                 );
 
-                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(
                                         getWorld(), transport
 
                                 ));
@@ -339,9 +346,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         if (var2 < Direction.values().length) {
             super.updateTileServer(var1, var2);
             if (this.cableType.isItem()) {
-                MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
             } else {
-                MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
             }
             this.needUpdate = true;
         } else {
@@ -357,9 +364,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         if (this.needUpdate) {
 
             if (this.cableType.isItem()) {
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
             } else {
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
             }
 
             this.updateConnectivity();
@@ -374,9 +381,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     public void onUnloaded() {
         if (!this.getLevel().isClientSide && this.addedToEnergyNet) {
             if (this.cableType.isItem()) {
-                MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
             } else {
-                MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
+                NeoForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
             }
             this.addedToEnergyNet = false;
         }
@@ -479,7 +486,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         list = getInfoSlotFromFacing(facing);
         if (this.getWorld().getGameTime() % 20 == 0) {
             blackList =
-                    this.list.getFluidStackList().subList(0, 9).stream().filter(fluidStack -> !fluidStack.isEmpty()).collect(Collectors.toList());
+                    this.list.getFluidStackList().subList(0, 9).stream().filter(Objects::nonNull).collect(Collectors.toList());
         }
         return blackList;
 
@@ -494,7 +501,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
                             .getFluidStackList()
                             .subList(9, this.list.size())
                             .stream()
-                            .filter(fluidStack -> !fluidStack.isEmpty())
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList());
         }
         return whiteList;

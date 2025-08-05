@@ -7,16 +7,17 @@ public class ConductorInfo {
 
     private final double breakdownEnergy;
     private final BlockPos pos;
-    private  byte tick;
+    private byte tick;
     private double energy;
-    public ConductorInfo(BlockPos pos, IEnergyConductor energyConductor){
+
+    public ConductorInfo(BlockPos pos, IEnergyConductor energyConductor) {
         this.breakdownEnergy = energyConductor.getConductorBreakdownEnergy();
-        this.pos=pos;
+        this.pos = pos;
     }
 
 
     public void addEnergy(byte tick, double energy) {
-        if (tick != this.tick){
+        if (tick != this.tick) {
             this.tick = tick;
             this.energy = 0;
         }
@@ -26,10 +27,10 @@ public class ConductorInfo {
     public double getEnergy(int tick) {
         if (this.tick - 1 == tick
                 || this.tick == tick
-                || this.tick + 1 ==tick
+                || this.tick + 1 == tick
         ) {
             return energy;
-        }else {
+        } else {
             this.tick = (byte) tick;
             this.energy = 0;
         }

@@ -1,15 +1,14 @@
 package com.denfop.api.gui;
 
 import com.denfop.Localization;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.gui.GuiCore;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -107,6 +106,7 @@ public class TanksGauge extends GuiElement<TankGauge> {
             }
 
             Fluid fluid = fs.getFluid();
+
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
             TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
             int color = extensions.getTintColor();
@@ -117,8 +117,8 @@ public class TanksGauge extends GuiElement<TankGauge> {
             );
             bindBlockTexture();
             this.gui.drawSprite(poseStack,
-                 mouseX+   fluidX,
-                mouseY+    (double) (fluidY + fluidHeight) - renderHeight,
+                    mouseX + fluidX,
+                    mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                     fluidWidth,
                     renderHeight,
                     sprite,

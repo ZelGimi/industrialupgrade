@@ -24,7 +24,7 @@ public class GuiDigger<T extends ContainerDigger> extends GuiIU<ContainerDigger>
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
 
     }
 

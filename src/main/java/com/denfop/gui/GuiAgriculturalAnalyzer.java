@@ -5,22 +5,15 @@ import com.denfop.Localization;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.agriculture.genetics.Genome;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ImageScreen;
-import com.denfop.componets.ComponentRenderInventory;
-import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerAgriculturalAnalyzer;
-import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +23,7 @@ import java.util.stream.Collectors;
 @OnlyIn(Dist.CLIENT)
 public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> extends GuiIU<ContainerAgriculturalAnalyzer> {
 
-    private static ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guicropanalyzer.png");
+    private static ResourceLocation background = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guicropanalyzer.png");
     private final String name;
     private int prevText;
     private float scaled;
@@ -42,7 +35,7 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
         this.name = Localization.translate(itemStack1.getDescriptionId());
 
         this.componentList.clear();
-        this.imageWidth=203;
+        this.imageWidth = 203;
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -67,22 +60,21 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
-    protected void drawForegroundLayer(GuiGraphics poseStack,int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
-        poseStack.drawString(Minecraft.getInstance().font, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 4, 0,false);
-        if (!this.container.base.get(0).isEmpty() && this.container.base.genome == null){
-            ModUtils.nbt(this.container.base.get(0)).putBoolean("analyzed", true);
+        poseStack.drawString(Minecraft.getInstance().font, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 4, 0, false);
+        if (!this.container.base.get(0).isEmpty() && this.container.base.genome == null) {
             this.container.base.genome = new Genome(this.container.base.get(0));
             this.container.base.crop = CropNetwork.instance.getCropFromStack(this.container.base.get(0)).copy();
-            this.container.base.genome.loadCrop( this.container.base.crop);
+            this.container.base.genome.loadCrop(this.container.base.crop);
             textIndex = 0;
-        }else if (this.container.base.get(0).isEmpty() &&  this.container.base.genome != null){
+        } else if (this.container.base.get(0).isEmpty() && this.container.base.genome != null) {
             this.container.base.genome = null;
             this.container.base.crop = null;
             textIndex = 0;
@@ -106,9 +98,9 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
                 if (y + lineHeight > canvasY + canvasHeight) break;
 
                 pose.pushPose();
-                pose.translate(x,y,0);
+                pose.translate(x, y, 0);
                 pose.scale(scale, scale, scale);
-                poseStack.drawString(font, line,0,0, 0xFFFFFF, false);
+                poseStack.drawString(font, line, 0, 0, 0xFFFFFF, false);
                 pose.popPose();
 
                 y += lineHeight;
@@ -119,7 +111,7 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
     private String getInformationFromCrop() {
         ICrop crop = container.base.crop;
         List<String> namesBiomes = new ArrayList<>();
-        crop.getBiomes().forEach(biomeKey -> namesBiomes.add( Localization.translate("biome." + biomeKey.location().getNamespace() + "." + biomeKey.location().getPath())));
+        crop.getBiomes().forEach(biomeKey -> namesBiomes.add(Localization.translate("biome." + biomeKey.location().getNamespace() + "." + biomeKey.location().getPath())));
 
         return
                 Localization.translate("iu.crop_analyzer.name") + Localization.translate("crop." + crop.getName()) + "\n"

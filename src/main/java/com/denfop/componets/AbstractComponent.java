@@ -15,7 +15,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +65,10 @@ public abstract class AbstractComponent {
 
     public void ActionPurifier() {
 
+    }
+
+    public boolean onSneakingActivated(Player player, InteractionHand hand) {
+        return false;
     }
 
     public boolean canUpgradeBlock() {
@@ -162,17 +166,17 @@ public abstract class AbstractComponent {
     }
 
     public CustomPacketBuffer updateComponent() {
-        return new CustomPacketBuffer();
+        return new CustomPacketBuffer(this.parent.getLevel().registryAccess());
     }
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
     }
 
-    public Collection<? extends Capability<?>> getProvidedCapabilities(Direction side) {
+    public Collection<? extends BlockCapability<?, ?>> getProvidedCapabilities(Direction side) {
         return Collections.emptySet();
     }
 
-    public <T> T getCapability(Capability<T> cap, Direction side) {
+    public <T> T getCapability(BlockCapability<T, Direction> cap, Direction side) {
         return null;
     }
 
@@ -183,21 +187,5 @@ public abstract class AbstractComponent {
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-    }
-
-    public boolean canExtractLightLevel() {
-        return false;
-    }
-
-    public int getLightValue() {
-        return 0;
-    }
-
-    public int getLightOpacity() {
-        return 0;
-    }
-
-    public boolean onSneakingActivated(Player player, InteractionHand hand) {
-        return false;
     }
 }

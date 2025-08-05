@@ -2,9 +2,10 @@ package com.denfop.api.space.colonies.api.building;
 
 import com.denfop.api.space.colonies.building.StorageBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -32,9 +33,9 @@ public interface IStorage {
 
     boolean canRemoveItemStack(ItemStack fluidStack);
 
-    CompoundTag writeNBT(CompoundTag tag);
+    CompoundTag writeNBT(CompoundTag tag, HolderLookup.Provider p_332160_);
 
-    void readNBT(CompoundTag tag);
+    void readNBT(CompoundTag tag, HolderLookup.Provider p_332160_);
 
     boolean work();
 

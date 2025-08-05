@@ -10,12 +10,12 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class GuiVerticalSliderList extends AbstractWidget {
 
-    private static final ResourceLocation TEXTURES = new ResourceLocation(Constants.MOD_ID, "textures/gui/slider.png");
+    private static final ResourceLocation TEXTURES = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/slider.png");
     private final String name;
     private final int def;
     private final FormatHelper formatHelper;
@@ -41,10 +41,12 @@ public class GuiVerticalSliderList extends AbstractWidget {
         this.responder = p_i45541_1_;
         this.displayString1 = this.getDisplayString();
     }
+
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE, this.getDisplayString());
     }
+
     private String getDisplayString() {
         return this.formatHelper == null
                 ? I18n.get(this.name) + ": " + this.getSliderValue()
@@ -64,7 +66,6 @@ public class GuiVerticalSliderList extends AbstractWidget {
         if (this.sliderPosition < 0.0F) this.sliderPosition = 0.0F;
         if (this.sliderPosition > 1.0F) this.sliderPosition = 1.0F;
     }
-
 
 
     @Override
@@ -111,9 +112,6 @@ public class GuiVerticalSliderList extends AbstractWidget {
         if (this.sliderPosition > 1.0F) this.sliderPosition = 1.0F;
         this.responder.setEntryValue(this.id, (float) Math.round(this.getSliderValue()));
     }
-
-
-
 
 
     public void setMin(final int min) {

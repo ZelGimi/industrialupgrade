@@ -3,10 +3,11 @@ package com.denfop.api.space.colonies.api;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.colonies.DataItem;
 import com.denfop.api.space.colonies.Sends;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 import java.util.Map;
@@ -40,9 +41,9 @@ public interface IColonyNet {
 
     List<DataItem<ItemStack>> getItemsFromBody(IBody body);
 
-    CompoundTag writeNBT(CompoundTag tag, UUID player);
+    CompoundTag writeNBT(CompoundTag tag, UUID player, HolderLookup.Provider p_323640_);
 
-    void addColony(final CompoundTag tag);
+    void addColony(final CompoundTag tag, HolderLookup.Provider p_323640_);
 
     List<UUID> getList();
 

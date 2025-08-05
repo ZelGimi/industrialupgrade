@@ -16,8 +16,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class TileEntityGasTurbineTank extends TileEntityMultiBlockElement implem
     private final Fluids fluids;
 
     public TileEntityGasTurbineTank(BlockPos pos, BlockState state) {
-        super(BlockGasTurbine.gas_turbine_tank,pos,state);
+        super(BlockGasTurbine.gas_turbine_tank, pos, state);
         fluids = this.addComponent(new Fluids(this));
         this.tank = fluids.addTank("tank", 20000, InvSlot.TypeItemSlot.INPUT);
     }
@@ -57,14 +57,12 @@ public class TileEntityGasTurbineTank extends TileEntityMultiBlockElement implem
         if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null && this.getMain() != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
-
 
 
     @Override

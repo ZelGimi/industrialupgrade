@@ -31,6 +31,4 @@ public class TileEntitySteamTurbineGlass extends TileEntityMultiBlockElement imp
     }
 
 
-
-
 }

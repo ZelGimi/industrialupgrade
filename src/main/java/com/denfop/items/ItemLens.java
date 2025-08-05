@@ -11,10 +11,12 @@ public class ItemLens<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public ItemLens(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public enum Types implements ISubEnum {
         aerlinse(0),
         earthlinse(1),

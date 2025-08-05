@@ -2,21 +2,25 @@ package com.denfop.items.energy;
 
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.datagen.itemtag.ItemTagProvider;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 
-public class ItemAxe extends AxeItem implements IItemTab {
+import static net.minecraft.tags.ItemTags.AXES;
+
+public class ItemAxe extends AxeItem implements IItemTab, IItemTag {
     private final String name;
     private String nameItem;
 
     public ItemAxe(String name) {
-        super(IUTiers.RUBY, 5.0F, -3.0F,new Properties().stacksTo(1));
-        this.name=name;
+        super(IUTiers.RUBY, new Properties().stacksTo(1).attributes(DiggerItem.createAttributes(IUTiers.RUBY, IUTiers.RUBY.getAttackDamageBonus(), IUTiers.RUBY.getSpeed())));
+        this.name = name;
+        ItemTagProvider.list.add(this);
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -29,7 +33,7 @@ public class ItemAxe extends AxeItem implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+name;
+            this.nameItem = "item." + name;
         }
 
         return this.nameItem;
@@ -45,4 +49,15 @@ public class ItemAxe extends AxeItem implements IItemTab {
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
+    @Override
+    public Item getItem() {
+        return this;
+    }
+
+    @Override
+    public String[] getTags() {
+        return new String[]{AXES.location().toString()};
+    }
+
 }

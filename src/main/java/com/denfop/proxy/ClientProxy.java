@@ -1,12 +1,11 @@
 package com.denfop.proxy;
 
+import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.inv.IStackInventory;
 import com.denfop.api.inv.ITileInventory;
-import com.denfop.blocks.FluidName;
-import com.denfop.blocks.ItemBlockCore;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockCreativeBlocks;
 import com.denfop.container.ContainerBase;
@@ -21,12 +20,14 @@ import com.denfop.gui.GuiCore;
 import com.denfop.items.IProperties;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.mixin.access.RenderChunkRegionAccessor;
-import com.denfop.register.Register;
 import com.denfop.render.TileEntityRenderGasChamber;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.anvil.RenderItemAnvil;
 import com.denfop.render.autocollector.TileEntityRenderAutoLatexCollector;
-import com.denfop.render.base.*;
+import com.denfop.render.base.DynamicFluidContainerModel;
+import com.denfop.render.base.NuclearBombRenderer;
+import com.denfop.render.base.RenderCoreProcess;
+import com.denfop.render.base.SmallBeeRenderer;
 import com.denfop.render.compressor.TileEntityRenderCompressor;
 import com.denfop.render.dryer.TileEntityRenderDryer;
 import com.denfop.render.fluidheater.TileEntityRenderFluidHeater;
@@ -67,13 +68,9 @@ import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -86,28 +83,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.denfop.IUCore.LOGGER;
 import static com.denfop.register.Register.containerBase;
 import static com.denfop.register.Register.inventory_container;
+import static com.denfop.utils.KeyboardClient.*;
 
 public class ClientProxy extends CommonProxy {
 
@@ -115,29 +106,34 @@ public class ClientProxy extends CommonProxy {
     List<IProperties> propertiesList = new ArrayList<>();
 
     public ClientProxy() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::onRegisterAdditionalModels);
-        modEventBus.addListener(this::registerParticleFactories);
+        IEventBus modEventBus = IUCore.context;
         modEventBus.addListener(this::registerBlockColor);
+        modEventBus.addListener(this::registerParticleFactories);
         modEventBus.addListener(this::registerItemColor);
         modEventBus.addListener(this::registerRenderers);
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::registerKeys);
+        modEventBus.addListener(this::registerMenu);
+
         modEventBus.addListener(this::onRegisterGeometryLoaders);
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new EventAutoQuests());
+        NeoForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(new EventAutoQuests());
 
         new GlobalRenderManager();
     }
 
     @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
     public void onRegisterGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
 
-        event.register("fluid_container", DynamicFluidContainerModel.Loader.INSTANCE);
+        event.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fluid_container"), DynamicFluidContainerModel.Loader.INSTANCE);
     }
 
-    @SubscribeEvent
+    public void registerParticleFactories(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(EffectsRegister.STEAM_ASH.get(), SteamAshParticle.Factory::new);
+        event.registerSpriteSet(EffectsRegister.ANVIL.get(), BreakingItemParticle.AnvilProvider::new);
+
+    }
+
     @OnlyIn(Dist.CLIENT)
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(IUItem.entity_nuclear_bomb.get(), NuclearBombRenderer::new);
@@ -146,38 +142,38 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void onServerTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            ++ItemUpgradeMachinesKit.tick;
-            if (ItemUpgradeMachinesKit.tick % 40 == 0) {
-                for (int i = 0; i < ItemUpgradeMachinesKit.inform.length; i++) {
-                    final List<ItemStack> list1 = IUItem.map_upgrades.get(i);
-                    if (list1 != null)
-                        ItemUpgradeMachinesKit.inform[i] = ++ItemUpgradeMachinesKit.inform[i] % list1.size();
-                }
-            }
-            ++ListInformationUtils.tick;
-            if (ListInformationUtils.tick % 40 == 0) {
-                if (ListInformationUtils.mechanism_info.size() > 0)
-                    ListInformationUtils.index = (ListInformationUtils.index + 1) % ListInformationUtils.mechanism_info.size();
-                if (ListInformationUtils.mechanism_info1.size() > 0)
-                    ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1
-                            .values()
-                            .size();
-                if (ListInformationUtils.mechanism_info2.size() > 0)
-                    ListInformationUtils.index2 = (ListInformationUtils.index2 + 1) % ListInformationUtils.mechanism_info2.size();
+    public void onServerTick(ClientTickEvent.Pre event) {
 
+        ++ItemUpgradeMachinesKit.tick;
+        if (ItemUpgradeMachinesKit.tick % 40 == 0) {
+            for (int i = 0; i < ItemUpgradeMachinesKit.inform.length; i++) {
+                final List<ItemStack> list1 = IUItem.map_upgrades.get(i);
+                if (list1 != null)
+                    ItemUpgradeMachinesKit.inform[i] = ++ItemUpgradeMachinesKit.inform[i] % list1.size();
             }
         }
+        ++ListInformationUtils.tick;
+        if (ListInformationUtils.tick % 40 == 0) {
+            if (ListInformationUtils.mechanism_info.size() > 0)
+                ListInformationUtils.index = (ListInformationUtils.index + 1) % ListInformationUtils.mechanism_info.size();
+            if (ListInformationUtils.mechanism_info1.size() > 0)
+                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1
+                        .values()
+                        .size();
+            if (ListInformationUtils.mechanism_info2.size() > 0)
+                ListInformationUtils.index2 = (ListInformationUtils.index2 + 1) % ListInformationUtils.mechanism_info2.size();
+
+        }
+
 
     }
 
-    @SubscribeEvent
+
     public void registerBlockColor(RegisterColorHandlersEvent.Block event) {
         event.register((state, world, pos, tintIndex) -> {
             Level level = null;
             if (world instanceof RenderChunkRegion)
-             level    = ((RenderChunkRegionAccessor) world).getLevel();
+                level = ((RenderChunkRegionAccessor) world).getLevel();
             if (world instanceof Level)
                 level = (Level) world;
             if (level == null)
@@ -185,24 +181,42 @@ public class ClientProxy extends CommonProxy {
                         , 96, 8);
             Holder<Biome> biome = level.getBiome(pos);
             if (biome.is(Tags.Biomes.IS_SWAMP))
-                return   ModUtils.convertRGBcolorToInt(105
+                return ModUtils.convertRGBcolorToInt(105
                         , 122, 93);
             if (biome.is(BiomeTags.IS_JUNGLE))
-                return   ModUtils.convertRGBcolorToInt(12
+                return ModUtils.convertRGBcolorToInt(12
                         , 82, 32);
-          return   ModUtils.convertRGBcolorToInt(10
+            return ModUtils.convertRGBcolorToInt(10
                     , 96, 8);
         }, IUItem.leaves.getBlock().get());
-       
+
     }
 
-    @SubscribeEvent
+
     public void registerItemColor(RegisterColorHandlersEvent.Item event) {
         event.register((stack, tintIndex) -> ModUtils.convertRGBcolorToInt(10
                 , 96, 8), IUItem.leaves.getBlock().get());
         event.register(new DynamicFluidContainerModel.Colors(), IUItem.fluidCell.getItem());
 
 
+    }
+
+    public void registerMenu(RegisterMenuScreensEvent event) {
+        event.register(
+                containerBase.get(),
+                (MenuScreens.ScreenConstructor<ContainerBase<? extends IAdvInventory>, GuiCore<ContainerBase<? extends IAdvInventory>>>) (menu, inventory, p_96217_) -> {
+                    return ((ITileInventory) menu.base.getParent()).getGui(inventory.player, menu);
+                }
+        );
+        event.register(
+                inventory_container.get(),
+                (MenuScreens.ScreenConstructor<ContainerBase<? extends IAdvInventory>, GuiCore<ContainerBase<? extends IAdvInventory>>>) (menu, inventory, p_96217_) -> {
+                        if (menu == null)
+                            return null;
+                    IStackInventory stackInventory = ((IStackInventory) menu.base.getParent());
+                    return stackInventory.getGui(inventory.player, menu);
+                }
+        );
     }
 
     public Level getWorld(ResourceKey<Level> dim) {
@@ -212,25 +226,23 @@ public class ClientProxy extends CommonProxy {
 
     @OnlyIn(Dist.CLIENT)
     public void registerKeys(RegisterKeyMappingsEvent event) {
-        IUCore.keyboard.register(event);
+        event.register(changemode);
+        event.register(flymode);
+        event.register(blacklistviewmode);
+        event.register(verticalmode);
+        event.register(savemode);
+        event.register(blackmode);
+        event.register(streakmode);
+        event.register(armormode);
+        event.register(bootsmode);
+        event.register(leggingsmode);
+        event.register(altmode);
     }
 
     @Override
     public void preInit() {
         super.preInit();
-        MenuScreens.register(
-                containerBase.get(),
-                (MenuScreens.ScreenConstructor<ContainerBase<? extends IAdvInventory>, GuiCore<ContainerBase<? extends IAdvInventory>>>) (menu, inventory, p_96217_) -> {
-                    return ((ITileInventory) menu.base.getParent()).getGui(inventory.player, menu);
-                }
-        );
-        MenuScreens.register(
-                inventory_container.get(),
-                (MenuScreens.ScreenConstructor<ContainerBase<? extends IAdvInventory>, GuiCore<ContainerBase<? extends IAdvInventory>>>) (menu, inventory, p_96217_) -> {
-                    IStackInventory stackInventory = ((IStackInventory) menu.base.getParent());
-                    return stackInventory.getGui(inventory.player, menu);
-                }
-        );
+
         BlockEntityRenderers.register((BlockEntityType<? extends TileEntityAnvil>) IUItem.anvil.getBlock(0).getValue().getBlockType(), RenderItemAnvil::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileEntityPrimalFluidHeater>) IUItem.primalFluidHeater.getBlock(0).getValue().getBlockType(), TileEntityRenderFluidHeater::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileEntityPrimalGasChamber>) IUItem.gasChamber.getBlock(0).getValue().getBlockType(), TileEntityRenderGasChamber::new);
@@ -288,61 +300,11 @@ public class ClientProxy extends CommonProxy {
         BlockEntityRenderers.register((BlockEntityType<? extends TileEntityAutoLatexCollector>) IUItem.basemachine2.getBlock(BlockBaseMachine3.auto_latex_collector).getValue().getBlockType(), TileEntityRenderAutoLatexCollector::new);
 
 
-        MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());
+        NeoForge.EVENT_BUS.register(new EventSpectralSuitEffect());
         EnumMultiMachine.write();
         new TickHandler();
     }
 
-
-    @OnlyIn(Dist.CLIENT)
-    private void onRegisterAdditionalModels(ModelEvent.BakingCompleted event) {
-        try {
-            // Access the models field via reflection
-            Field modelsField = ModelEvent.BakingCompleted.class.getDeclaredField("models");
-            modelsField.setAccessible(true);
-
-            // Get the unmodifiable models map
-            Map<ResourceLocation, BakedModel> unmodifiableModels = (Map<ResourceLocation, BakedModel>) modelsField.get(event);
-
-            // Create a new modifiable map and copy the entries from the unmodifiable map
-            Map<ResourceLocation, BakedModel> newModels = new HashMap<>(unmodifiableModels);
-
-            // Modify the map as needed
-            for (RegistryObject<Item> registryObject : Register.ITEMS.getEntries()) {
-                Item item = registryObject.get();
-                if (item instanceof ItemBlockCore<?>) {
-                    ItemBlockCore<?> blockCore = (ItemBlockCore<?>) item;
-                    ModelResourceLocation model = new ModelResourceLocation(blockCore.getRegistryName(), "inventory");
-                    ModelResourceLocation modelBlock = BlockModelShaper.stateToModelLocation(blockCore.getBlock().defaultBlockState());
-
-                    // Ensure modelBlock is not null
-                    if (modelBlock == null) {
-                        LOGGER.error("ModelBlock for item {} is null!", blockCore.getRegistryName());
-                        continue;
-                    }
-                    BakedModel model1 = newModels.get(modelBlock);
-
-                    // Replace the model in the new map
-                    if (newModels.containsKey(model)) {
-                        newModels.put(model, newModels.get(modelBlock)); // Modify the model directly
-                    } else {
-                        LOGGER.warn("Model not found for item: {}", blockCore.getRegistryName());
-                    }
-                }
-            }
-
-            // Set the new map back into the event (if the event allows setting it)
-            modelsField.set(event, newModels);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to modify models map", e);
-        }
-    }
-    @SubscribeEvent
-    public void registerParticleFactories(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(EffectsRegister.STEAM_ASH.get(), SteamAshParticle.Factory::new);
-        event.registerSpriteSet(EffectsRegister.ANVIL.get(), BreakingItemParticle.AnvilProvider::new);
-
-    }
 
     public void messagePlayer(Player player, String message) {
         if (player != null) {
@@ -356,14 +318,11 @@ public class ClientProxy extends CommonProxy {
             IUCore.proxy.getPropertiesList().forEach(properties -> {
                         for (String property : properties.properties())
                             ItemProperties.register((Item) properties,
-                                    new ResourceLocation(property), (p_174676_, p_174677_, p_174678_, p_174679_) -> properties.getItemProperty(p_174676_, p_174677_, p_174678_, p_174679_, property));
+                                    ResourceLocation.parse(property), (p_174676_, p_174677_, p_174678_, p_174679_) -> properties.getItemProperty(p_174676_, p_174677_, p_174678_, p_174679_, property));
                     }
             );
 
         });
-        for (FluidName fluidName : FluidName.values)
-            if (!fluidName.getInstance().get().getFluidType().canDrownIn(null))
-                ItemBlockRenderTypes.setRenderLayer(fluidName.getInstance().get(), RenderType.translucent());
         new ElectricItemTooltipHandler();
     }
 

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/vitalium"
+    },
+    "B": {
+      "tag": "c:ingots/ferromanganese"
+    },
+    "C": {
+      "tag": "c:doubleplate/mikhail"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    }
+  },
+  "pattern": [
+    "A B",
+    "CDC",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy/magnet"
+  },
+  "show_notification": false
+}

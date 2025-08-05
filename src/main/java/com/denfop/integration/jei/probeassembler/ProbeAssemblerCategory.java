@@ -49,7 +49,7 @@ public class ProbeAssemblerCategory extends GuiIU implements IRecipeCategory<Pro
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityProbeAssembler) BlockBaseMachine3.probe_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 240,
                 170
         );
@@ -83,7 +83,6 @@ public class ProbeAssemblerCategory extends GuiIU implements IRecipeCategory<Pro
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -101,10 +100,10 @@ public class ProbeAssemblerCategory extends GuiIU implements IRecipeCategory<Pro
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
-        this.slots1.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
+        this.slots1.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,90, 33, xScale);
+        progress_bar.renderBar(stack, 90, 33, xScale);
     }
 
     @Override
@@ -120,19 +119,18 @@ public class ProbeAssemblerCategory extends GuiIU implements IRecipeCategory<Pro
         final List<ItemStack> inputs = recipe.getInput();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png");
     }
 
 

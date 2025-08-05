@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerTank extends TileEntityMainTank {
 
     public TileEntityPerTank(BlockPos pos, BlockState state) {
-        super(100000,BlockWaterReactors.water_per_tank,pos,state);
+        super(100000, BlockWaterReactors.water_per_tank, pos, state);
     }
 
     @Override

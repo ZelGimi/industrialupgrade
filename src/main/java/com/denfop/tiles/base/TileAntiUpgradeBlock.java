@@ -24,8 +24,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -155,24 +155,26 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
 
         if (i >= 1) {
             final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
-            if (list != null && list.size() > i - 1)
-                if (!list.get((int) (i - 1)).isEmpty()) {
-                    this.index = (int) (i - 1);
-                    return;
-                }
+
+            if (!list.get((int) (i - 1)).isEmpty()) {
+                this.index = (int) (i - 1);
+                return;
+            }
         }
         if (i == 0) {
             final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
             boolean need = false;
-            if (list.size() <= index)
-                return;
-            final ItemStack stack = list.get(this.index);
-            if (!stack.isEmpty()) {
-                if (this.outputSlot.canAdd(stack)) {
-                    need = true;
+            if (list.size() < this.index) {
+                this.need = false;
+            } else {
+                final ItemStack stack = list.get(this.index);
+                if (!stack.isEmpty()) {
+                    if (this.outputSlot.canAdd(stack)) {
+                        need = true;
+                    }
                 }
+                this.need = need;
             }
-            this.need = need;
         }
 
 

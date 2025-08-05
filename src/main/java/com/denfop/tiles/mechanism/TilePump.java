@@ -28,10 +28,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.EnumSet;
@@ -183,7 +183,7 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
         if (freespace >= 1000) {
             BlockState block = this.getWorld().getBlockState(pos);
             if (block.liquid()) {
-                FluidState fluidState = block.getBlock().getFluidState(block);
+                FluidState fluidState = block.getFluidState();
 
                 if (!fluidState.isSource()) {
                     return FluidStack.EMPTY;

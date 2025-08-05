@@ -6,7 +6,10 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 import java.util.*;
 
@@ -28,6 +31,7 @@ public class KeyboardIU implements IKeyboard {
     public boolean isJumpKeyDown(Player player) {
         return this.get(player, Key.JUMP);
     }
+
     public boolean isAltKeyDown(Player player) {
         return this.get(player, Key.ALT);
     }
@@ -80,7 +84,7 @@ public class KeyboardIU implements IKeyboard {
         return this.get(player, Key.SAVEMODE);
     }
 
-    public void sendKeyUpdate() {
+    public void sendKeyUpdate(Level level) {
     }
 
     public void processKeyUpdate(Player player, int keyState) {
@@ -101,6 +105,7 @@ public class KeyboardIU implements IKeyboard {
         return this.get(player, Key.STREAK);
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void register(RegisterKeyMappingsEvent event) {
     }
 

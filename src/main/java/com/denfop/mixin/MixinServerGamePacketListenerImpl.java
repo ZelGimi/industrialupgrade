@@ -31,14 +31,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class MixinServerGamePacketListenerImpl {
-
+    @Shadow
+    static final Logger LOGGER = LogUtils.getLogger();
     @Shadow
     public ServerPlayer player;
-
-    private ServerGamePacketListenerImpl getSelf() {
-        return (ServerGamePacketListenerImpl) (Object) this;
-    }
-
     @Shadow
     private Vec3 awaitingPositionFromClient;
 
@@ -49,6 +45,10 @@ public abstract class MixinServerGamePacketListenerImpl {
             Item item = pStack.getItem();
             return (item instanceof BlockItem || item instanceof BucketItem) && !pPlayer.getCooldowns().isOnCooldown(item);
         }
+    }
+
+    private ServerGamePacketListenerImpl getSelf() {
+        return (ServerGamePacketListenerImpl) (Object) this;
     }
 
     @Inject(method = "handleUseItemOn", at = @At("HEAD"))
@@ -63,7 +63,7 @@ public abstract class MixinServerGamePacketListenerImpl {
             Vec3 vec3 = blockhitresult.getLocation();
             BlockPos blockpos = blockhitresult.getBlockPos();
             Vec3 vec31 = Vec3.atCenterOf(blockpos);
-            if (this.player.canReach(blockpos, 1.5)) { // Vanilla uses eye-to-center distance < 6, which implies a padding of 1.5
+            if (this.player.canInteractWithBlock(blockpos, 1.5)) {
                 Vec3 vec32 = vec3.subtract(vec31);
                 double d0 = 1.0000001D;
                 BlockEntity blockEntity = this.player.level().getBlockEntity(blockpos);
@@ -91,6 +91,8 @@ public abstract class MixinServerGamePacketListenerImpl {
 
                             this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos));
                             this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos.relative(direction)));
+                        } else {
+                            LOGGER.warn("Rejecting UseItemOnPacket from {}: Location {} too far away from hit block {}.", this.player.getGameProfile().getName(), vec3, blockpos);
                         }
                 }
             }

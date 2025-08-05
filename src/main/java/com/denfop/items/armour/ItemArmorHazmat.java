@@ -3,10 +3,11 @@ package com.denfop.items.armour;
 import com.denfop.Constants;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.damagesource.IUDamageSource;
-import com.denfop.items.armour.material.ArmorMaterials;
+import com.denfop.register.Register;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,15 +16,18 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -31,30 +35,14 @@ import java.util.Iterator;
 public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, ISpecialArmor {
 
     public ItemArmorHazmat(String name, Type type) {
-        super(ArmorMaterials.HAZMAT, name, type);
+        super(Register.HAZMAT, name, type);
         if (type.getSlot() == EquipmentSlot.FEET) {
-            MinecraftForge.EVENT_BUS.register(this);
+            NeoForge.EVENT_BUS.register(this);
         }
         this.armorName = name;
 
     }
-    protected String getOrCreateDescriptionId() {
-        if (this.nameItem == null) {
-            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
-            String targetString = "industrialupgrade.";
-            String replacement = "";
-            if (replacement != null) {
-                int index = pathBuilder.indexOf(targetString);
-                while (index != -1) {
-                    pathBuilder.replace(index, index + targetString.length(), replacement);
-                    index = pathBuilder.indexOf(targetString, index + replacement.length());
-                }
-            }
-            this.nameItem ="iu."+ pathBuilder.toString().split("\\.")[2];
-        }
 
-        return this.nameItem;
-    }
     public static boolean hasCompleteHazmat(LivingEntity living) {
         Iterator<EquipmentSlot> var1 =
                 Arrays
@@ -89,10 +77,28 @@ public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, IS
         return source.is(DamageTypeTags.IS_FIRE) || source == IUDamageSource.radiation;
     }
 
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
+        }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        return this.nameItem;
+    }
+
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         int suffix1 = this.getEquipmentSlot() == EquipmentSlot.LEGS ? 2 : 1;
-        return Constants.MOD_ID + ":textures/armor/" + "hazmat" + '_' + suffix1 + ".png";
+        return ResourceLocation.parse(Constants.MOD_ID + ":textures/armor/" + "hazmat" + '_' + suffix1 + ".png");
     }
 
 
@@ -125,7 +131,8 @@ public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, IS
                 damageTotal = (int) ((damage + 1) / 2);
             }
             if (entity instanceof ServerPlayer)
-                stack.hurt(damageTotal, entity.getRandom(), (ServerPlayer) entity);
+                stack.hurtAndBreak(damageTotal, ((ServerPlayer) entity).serverLevel(), (ServerPlayer) entity, ignored -> {
+                });
         }
     }
 
@@ -144,7 +151,8 @@ public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, IS
 
                 int armorDamage = (fallDamage + 1) / 2;
                 if (armorDamage <= armor.getMaxDamage() - armor.getDamageValue() && armorDamage >= 0) {
-                    armor.hurt(armorDamage, event.getEntity().getRandom(), player);
+                    armor.hurtAndBreak(armorDamage, ((ServerPlayer) player).serverLevel(), (ServerPlayer) player, ignored -> {
+                    });
                     event.setCanceled(true);
                 }
             }
@@ -160,6 +168,12 @@ public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, IS
         return 1;
     }
 
+    @Override
+    public void inventoryTick(ItemStack p_41404_, Level p_41405_, Entity p_41406_, int p_41407_, boolean p_41408_) {
+        super.inventoryTick(p_41404_, p_41405_, p_41406_, p_41407_, p_41408_);
+        if (p_41407_ >= Inventory.INVENTORY_SIZE && p_41407_ < Inventory.INVENTORY_SIZE + 4 && p_41406_ instanceof Player player)
+            this.onArmorTick(p_41404_, p_41405_, (Player) p_41406_);
+    }
 
     public void onArmorTick(ItemStack stack, Level world, Player player) {
         if (!world.isClientSide && this.getEquipmentSlot() == EquipmentSlot.HEAD) {

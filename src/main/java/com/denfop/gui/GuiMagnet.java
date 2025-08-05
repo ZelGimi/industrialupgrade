@@ -11,8 +11,8 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMagnet;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet> {
@@ -112,13 +112,13 @@ public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet>
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
-        draw(poseStack, String.valueOf(this.container.base.x), 29 - getStringWidth( String.valueOf(this.container.base.x)) / 2, 87,
+        draw(poseStack, String.valueOf(this.container.base.x), 29 - getStringWidth(String.valueOf(this.container.base.x)) / 2, 87,
                 4210752
         );
-      draw(poseStack, String.valueOf(this.container.base.y), 79- getStringWidth( String.valueOf(this.container.base.y)) / 2, 87,
+        draw(poseStack, String.valueOf(this.container.base.y), 79 - getStringWidth(String.valueOf(this.container.base.y)) / 2, 87,
                 4210752
         );
-        draw(poseStack, String.valueOf(this.container.base.z), 129- getStringWidth( String.valueOf(this.container.base.z)) / 2, 87,
+        draw(poseStack, String.valueOf(this.container.base.z), 129 - getStringWidth(String.valueOf(this.container.base.z)) / 2, 87,
                 4210752
         );
     }
@@ -134,7 +134,7 @@ public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet>
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

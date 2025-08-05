@@ -17,10 +17,9 @@ public class GuiPlantFertilizer<T extends ContainerPlantFertilizer> extends GuiI
     }
 
 
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

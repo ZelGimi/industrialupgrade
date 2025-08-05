@@ -14,8 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityBasePump extends TileEntityMultiBlockElement implements IPump {
 
@@ -25,7 +25,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
     private int energy;
 
     public TileEntityBasePump(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
@@ -38,7 +38,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
-                final int itemDamage = ((ItemCraftingElements<?>)stack.getItem()).getElement().getId();
+                final int itemDamage = ((ItemCraftingElements<?>) stack.getItem()).getElement().getId();
                 switch (itemDamage) {
                     case 276:
                         return ((TileEntityBasePump) this.base).getBlockLevel() >= 0;
@@ -59,7 +59,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
                     ((TileEntityBasePump) this.base).setEnergy(0);
                     ((TileEntityBasePump) this.base).setPower(0);
                 } else {
-                    final int itemDamage = ((ItemCraftingElements<?>)content.getItem()).getElement().getId();
+                    final int itemDamage = ((ItemCraftingElements<?>) content.getItem()).getElement().getId();
                     switch (itemDamage) {
                         case 276:
                             ((TileEntityBasePump) this.base).setEnergy(5);
@@ -104,7 +104,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
                 this.setEnergy(0);
                 this.setPower(0);
             } else {
-                final int itemDamage =((ItemCraftingElements<?>)this.getSlot().get(0).getItem()).getElement().getId();
+                final int itemDamage = ((ItemCraftingElements<?>) this.getSlot().get(0).getItem()).getElement().getId();
                 switch (itemDamage) {
                     case 276:
                         this.setEnergy(5);

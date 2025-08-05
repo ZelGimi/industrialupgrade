@@ -4,13 +4,12 @@ import com.denfop.api.recipe.IRecipes;
 import com.denfop.api.recipe.RecipesCore;
 import com.denfop.recipe.CraftingManager;
 import com.denfop.recipe.IInputHandler;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 public class Recipes {
 
@@ -25,16 +24,18 @@ public class Recipes {
 
     }
 
-    public static void registerRecipe(Consumer<FinishedRecipe> consumer, RecipeBuilder recipe) {
+    public static void registerRecipe(RecipeOutput consumer, RecipeBuilder recipe) {
         recipe.save(consumer, "industrialupgrade:" + "industrialupgrade_" + recipeID++);
     }
 
-    public static void registerRecipe(Consumer<FinishedRecipe> consumer, RecipeBuilder recipe, String id) {
+    public static void registerRecipe(RecipeOutput consumer, RecipeBuilder recipe, String id) {
         try {
             recipe.save(consumer, id);
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(recipe);
-        };
+        }
+        ;
     }
 
     static void loadRecipes() {

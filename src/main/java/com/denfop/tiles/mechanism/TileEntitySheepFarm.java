@@ -34,13 +34,33 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.*;
 
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
+
 public class TileEntitySheepFarm extends TileEntityInventory implements IUpgradableBlock {
 
+    public static final Map<DyeColor, ItemLike> ITEM_BY_DYE = Util.make(Maps.newEnumMap(DyeColor.class), (p_29841_) -> {
+        p_29841_.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
+        p_29841_.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
+        p_29841_.put(DyeColor.MAGENTA, Blocks.MAGENTA_WOOL);
+        p_29841_.put(DyeColor.LIGHT_BLUE, Blocks.LIGHT_BLUE_WOOL);
+        p_29841_.put(DyeColor.YELLOW, Blocks.YELLOW_WOOL);
+        p_29841_.put(DyeColor.LIME, Blocks.LIME_WOOL);
+        p_29841_.put(DyeColor.PINK, Blocks.PINK_WOOL);
+        p_29841_.put(DyeColor.GRAY, Blocks.GRAY_WOOL);
+        p_29841_.put(DyeColor.LIGHT_GRAY, Blocks.LIGHT_GRAY_WOOL);
+        p_29841_.put(DyeColor.CYAN, Blocks.CYAN_WOOL);
+        p_29841_.put(DyeColor.PURPLE, Blocks.PURPLE_WOOL);
+        p_29841_.put(DyeColor.BLUE, Blocks.BLUE_WOOL);
+        p_29841_.put(DyeColor.BROWN, Blocks.BROWN_WOOL);
+        p_29841_.put(DyeColor.GREEN, Blocks.GREEN_WOOL);
+        p_29841_.put(DyeColor.RED, Blocks.RED_WOOL);
+        p_29841_.put(DyeColor.BLACK, Blocks.BLACK_WOOL);
+    });
     private static final int RADIUS = 4;
     private static final int MAX_SHEEP = 20;
     public final InvSlot slotSeeds;
@@ -52,13 +72,14 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     private final ComponentUpgradeSlots componentUpgrade;
     private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<LevelChunk> chunks = new ArrayList<>();
 
+
     public TileEntitySheepFarm(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.sheep_farm,pos,state);
+        super(BlockBaseMachine3.sheep_farm, pos, state);
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -74,8 +95,6 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
-
-
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
@@ -156,6 +175,7 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
             this.output.add(new ItemStack(Items.MUTTON, 1));
         }
     }
+
     private void breedSheep(List<Sheep> sheepList) {
         for (int i = 0; i < sheepList.size(); i++) {
             for (int j = i + 1; j < sheepList.size(); j++) {
@@ -188,24 +208,4 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
             }
         }
     }
-
-
-    public static final Map<DyeColor, ItemLike> ITEM_BY_DYE = Util.make(Maps.newEnumMap(DyeColor.class), (p_29841_) -> {
-        p_29841_.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
-        p_29841_.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
-        p_29841_.put(DyeColor.MAGENTA, Blocks.MAGENTA_WOOL);
-        p_29841_.put(DyeColor.LIGHT_BLUE, Blocks.LIGHT_BLUE_WOOL);
-        p_29841_.put(DyeColor.YELLOW, Blocks.YELLOW_WOOL);
-        p_29841_.put(DyeColor.LIME, Blocks.LIME_WOOL);
-        p_29841_.put(DyeColor.PINK, Blocks.PINK_WOOL);
-        p_29841_.put(DyeColor.GRAY, Blocks.GRAY_WOOL);
-        p_29841_.put(DyeColor.LIGHT_GRAY, Blocks.LIGHT_GRAY_WOOL);
-        p_29841_.put(DyeColor.CYAN, Blocks.CYAN_WOOL);
-        p_29841_.put(DyeColor.PURPLE, Blocks.PURPLE_WOOL);
-        p_29841_.put(DyeColor.BLUE, Blocks.BLUE_WOOL);
-        p_29841_.put(DyeColor.BROWN, Blocks.BROWN_WOOL);
-        p_29841_.put(DyeColor.GREEN, Blocks.GREEN_WOOL);
-        p_29841_.put(DyeColor.RED, Blocks.RED_WOOL);
-        p_29841_.put(DyeColor.BLACK, Blocks.BLACK_WOOL);
-    });
 }

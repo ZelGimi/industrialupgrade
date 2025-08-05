@@ -35,9 +35,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -65,7 +65,7 @@ public class TileEntitySteamSqueezer extends TileElectricMachine implements IHas
     private MachineRecipe output;
 
     public TileEntitySteamSqueezer(BlockPos pos, BlockState state) {
-        super(0, 1, 0,BlockBaseMachine3.steam_squeezer,pos,state);
+        super(0, 1, 0, BlockBaseMachine3.steam_squeezer, pos, state);
         this.progress = 0;
         this.inputSlotA = new InvSlotRecipes(this, "squeezer", this);
         this.defaultEnergyConsume = this.energyConsume = 2;
@@ -282,18 +282,18 @@ public class TileEntitySteamSqueezer extends TileElectricMachine implements IHas
                 UpgradableProperty.FluidInput, UpgradableProperty.ItemExtract
         );
     }
+
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
 }

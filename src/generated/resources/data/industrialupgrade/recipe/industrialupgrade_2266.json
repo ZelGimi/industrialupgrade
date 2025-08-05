@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_coolant"
+    },
+    "B": {
+      "tag": "c:plates/molybdenumsteel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_581_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_424_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_582_element"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_turbine/steam_turbine_adv_coolant"
+  },
+  "show_notification": false
+}

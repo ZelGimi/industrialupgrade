@@ -10,13 +10,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvSteamTurbineCoolant extends TileEntityBaseSteamTurbineCoolant {
 
     public TileEntityAdvSteamTurbineCoolant(BlockPos pos, BlockState state) {
-        super(1,BlockSteamTurbine.steam_turbine_adv_coolant,pos,state);
+        super(1, BlockSteamTurbine.steam_turbine_adv_coolant, pos, state);
     }
 
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamTurbine.steam_turbine_adv_coolant;
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.steam_turbine.getBlock(getTeBlock());

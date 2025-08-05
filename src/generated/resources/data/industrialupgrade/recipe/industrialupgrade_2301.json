@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/aluminumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/mithril"
+    },
+    "D": {
+      "tag": "c:casings/yttrium"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/speed_crop_1"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:spectral_box"
+    },
+    "B": {
+      "item": "industrialupgrade:alloydoubleplate/alcled"
+    },
+    "C": {
+      "item": "industrialupgrade:alloydoubleplate/inconel"
+    }
+  },
+  "pattern": [
+    "B B",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_625_element"
+  },
+  "show_notification": false
+}

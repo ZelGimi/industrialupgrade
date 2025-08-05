@@ -26,14 +26,14 @@ public class GuiQuantumTransformer<T extends ContainerQuantumMolecular> extends 
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(poseStack,mouseX, mouseY);
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         new AdvArea(this, 21, 29, 58, 41).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3") + " " + (this.container.base.queue ? "x64" : "x1")).drawForeground(poseStack,mouseX, mouseY);
+                "iu.molecular_info3") + " " + (this.container.base.queue ? "x64" : "x1")).drawForeground(poseStack, mouseX, mouseY);
         new AdvArea(this, 165, 22, 232, 47)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
                 .drawForeground(
-                        poseStack,  mouseX,
+                        poseStack, mouseX,
                         mouseY
                 );
 
@@ -41,13 +41,13 @@ public class GuiQuantumTransformer<T extends ContainerQuantumMolecular> extends 
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,(int) ((this.imageWidth / 2)), 5, name, ModUtils.convertRGBcolorToInt(255, 255, 255), false);
+        this.drawXCenteredString(poseStack, (int) ((this.imageWidth / 2)), 5, name, ModUtils.convertRGBcolorToInt(255, 255, 255), false);
     }
 
     protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
-        super.renderBg(poseStack,f, x, y);
+        super.renderBg(poseStack, f, x, y);
         this.bindTexture();
         String input = Localization.translate("gui.MolecularTransformer.input") + ": ";
         String output = Localization.translate("gui.MolecularTransformer.output") + ": ";
@@ -57,10 +57,10 @@ public class GuiQuantumTransformer<T extends ContainerQuantumMolecular> extends 
         this.bindTexture();
         double chargeLevel = (20.0D * this.container.base.getProgress());
         if (!this.container.base.queue) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 22, this.guiTop + 30, 26, 245, 16, 11);
+            drawTexturedModalRect(poseStack, this.guiLeft + 22, this.guiTop + 30, 26, 245, 16, 11);
 
         } else {
-            drawTexturedModalRect(poseStack,this.guiLeft + 42, this.guiTop + 30, 26, 245, 16, 11);
+            drawTexturedModalRect(poseStack, this.guiLeft + 42, this.guiTop + 30, 26, 245, 16, 11);
 
         }
         final MachineRecipe output3 = this.container.base.output;
@@ -68,31 +68,31 @@ public class GuiQuantumTransformer<T extends ContainerQuantumMolecular> extends 
                 output3.getRecipe().getOutput().items)) {
             if (!this.container.base.queue) {
                 bindTexture(getTexture());
-                drawTexturedModalRect(poseStack,this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
-              bindTexture(getTexture());
+                drawTexturedModalRect(poseStack, this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
+                bindTexture(getTexture());
 
-               draw(poseStack,input + this.container.base.inputSlot.get(0).getDisplayName().getString(),
+                draw(poseStack, input + this.container.base.inputSlot.get(0).getDisplayName().getString(),
                         this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
-                draw(poseStack,input + this.container.base.inputSlot.get(1).getDisplayName().getString(),
+                draw(poseStack, input + this.container.base.inputSlot.get(1).getDisplayName().getString(),
                         this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
 
-               draw(poseStack,output + output3.getRecipe().output.items.get(0).getDisplayName().getString(), this.guiLeft + 73,
+                draw(poseStack, output + output3.getRecipe().output.items.get(0).getDisplayName().getString(), this.guiLeft + 73,
                         this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
-                draw(poseStack,energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
+                draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
                                 "energy")) +
                                 " QE",
                         this.guiLeft + 73, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
                 if (this.container.base.getProgress() * 100 <= 100) {
-                   draw(poseStack,
+                    draw(poseStack,
                             progress + floor_double(this.container.base.getProgress() * 100) + "%",
                             this.guiLeft + 73, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                 }
-               draw(poseStack,
+                draw(poseStack,
                         "QE/t: " + ModUtils.getString(this.container.base.differenceenergy),
                         this.guiLeft + 73, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
@@ -118,37 +118,37 @@ public class GuiQuantumTransformer<T extends ContainerQuantumMolecular> extends 
                 size = Math.min(size, output2.getMaxStackSize());
                 if (this.container.base.outputSlot.get(0).isEmpty() || this.container.base.outputSlot.get(0).getCount() < 64) {
                     bindTexture(getTexture());
-                    drawTexturedModalRect(poseStack,this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
-                  bindTexture(getTexture());
-                    draw(poseStack,input + col * size + "x" + this.container.base.inputSlot.get(0).getDisplayName().getString(),
+                    drawTexturedModalRect(poseStack, this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
+                    bindTexture(getTexture());
+                    draw(poseStack, input + col * size + "x" + this.container.base.inputSlot.get(0).getDisplayName().getString(),
                             this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                   draw(poseStack,input + col1 * size + "x" + this.container.base.inputSlot
+                    draw(poseStack, input + col1 * size + "x" + this.container.base.inputSlot
                                     .get(1)
                                     .getDisplayName().getString(),
                             this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                    draw(poseStack,output + output2.getCount() * size + "x" + output3.getRecipe().output.items
+                    draw(poseStack, output + output2.getCount() * size + "x" + output3.getRecipe().output.items
                                     .get(0)
                                     .getDisplayName().getString()
                             , this.guiLeft + 73,
                             this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
-                   draw(poseStack,energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
+                    draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
                                     "energy") * size) + " QE",
                             this.guiLeft + 73, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                     if (this.container.base.getProgress() * 100 <= 100) {
-                       draw(poseStack,
+                        draw(poseStack,
                                 progress + floor_double(this.container.base.getProgress() * 100) + "%",
                                 this.guiLeft + 73, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                     }
 
 
-                   draw(poseStack,
+                    draw(poseStack,
                             "QE/t: " + ModUtils.getString(this.container.base.differenceenergy),
                             this.guiLeft + 73, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -165,38 +165,38 @@ public class GuiQuantumTransformer<T extends ContainerQuantumMolecular> extends 
 
         if (this.container.base.redstoneMode == 1) {
 
-            return new ResourceLocation(
+            return ResourceLocation.tryBuild(
                     Constants.TEXTURES,
                     "textures/gui/guiDoubleMolecularTransformerNew_chemical_green.png".toLowerCase()
             );
         } else if (this.container.base.redstoneMode == 2) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_gold.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_gold.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 3) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_red.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_red.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 4) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_silver.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_silver.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 5) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_violet.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_violet.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 6) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_blue.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_blue.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 7) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_green.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_green.png".toLowerCase());
         } else {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew.png".toLowerCase());
         }
     }
 
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
         int xMin = guiLeft;
-        int yMin =guiTop;
+        int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 22 && x <= 57 && y >= 30 && y <= 40) {

@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
 
-public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements  IGenomeItem {
+public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IGenomeItem {
     public ItemBeeGenome(T element) {
         super(new Item.Properties(), element);
     }
@@ -77,7 +77,8 @@ public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> imp
         genome_resistance_iii(46),
         genome_adaptive_i(47),
         genome_adaptive_ii(48),
-        genome_adaptive_iii(49),;
+        genome_adaptive_iii(49),
+        ;
 
         private final String name;
         private final int ID;
@@ -93,7 +94,7 @@ public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> imp
 
         @Override
         public String getName() {
-            return "bee_genome_"+name;
+            return "bee_genome_" + name;
         }
 
         @Override

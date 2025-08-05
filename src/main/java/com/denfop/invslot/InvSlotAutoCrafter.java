@@ -3,7 +3,7 @@ package com.denfop.invslot;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.tiles.mechanism.TileEntityAutoCrafter;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Collections;
 import java.util.List;

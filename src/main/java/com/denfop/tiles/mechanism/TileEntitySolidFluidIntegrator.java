@@ -34,9 +34,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class TileEntitySolidFluidIntegrator extends TileElectricMachine implemen
     protected short progress;
 
     public TileEntitySolidFluidIntegrator(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.solid_fluid_integrator,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.solid_fluid_integrator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -346,7 +346,7 @@ public class TileEntitySolidFluidIntegrator extends TileElectricMachine implemen
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemInput,
-                UpgradableProperty.FluidExtract,UpgradableProperty.ItemExtract
+                UpgradableProperty.FluidExtract, UpgradableProperty.ItemExtract
         );
     }
 

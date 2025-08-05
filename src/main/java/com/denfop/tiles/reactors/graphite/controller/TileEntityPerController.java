@@ -12,7 +12,7 @@ public class TileEntityPerController extends TileEntityMainController {
 
     public TileEntityPerController(BlockPos pos, BlockState state
     ) {
-        super(InitMultiBlockSystem.perGraphiteReactorMultiBlock, EnumGraphiteReactors.P,BlocksGraphiteReactors.graphite_per_controller,pos,state);
+        super(InitMultiBlockSystem.perGraphiteReactorMultiBlock, EnumGraphiteReactors.P, BlocksGraphiteReactors.graphite_per_controller, pos, state);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.denfop.recipe;
 
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -12,18 +13,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class InputItemStack implements IInputItemStack {
-    public static IInputItemStack create(CompoundTag tag) {
-        byte id = tag.getByte("id");
-        if (id == 0)
-            return new InputItemStack(tag);
-        if (id == 1)
-            return new InputOreDict(tag);
-        return new InputFluidStack(tag);
-    }
-
     public static InputItemStack EMPTY = new InputItemStack(ItemStack.EMPTY, 1, true);
     public final ItemStack input;
     public int amount;
+
+    public InputItemStack(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        boolean exist = compoundTag.getBoolean("exist");
+        if (exist) {
+            this.input = ItemStack.parseOptional(provider, compoundTag.getCompound("input"));
+            this.amount = compoundTag.getInt("amount");
+        } else {
+            this.input = ItemStack.EMPTY;
+            this.amount = 1;
+        }
+    }
 
     public InputItemStack(ItemStack input) {
         this(input, ModUtils.getSize(input));
@@ -41,6 +44,15 @@ public class InputItemStack implements IInputItemStack {
     InputItemStack(ItemStack input, int amount, boolean f) {
         this.input = input.copy();
         this.amount = amount;
+    }
+
+    public static IInputItemStack create(CompoundTag tag, HolderLookup.Provider provider) {
+        byte id = tag.getByte("id");
+        if (id == 0)
+            return new InputItemStack(tag, provider);
+        if (id == 1)
+            return new InputOreDict(tag, provider);
+        return new InputFluidStack(tag, provider);
     }
 
     @Override
@@ -62,17 +74,6 @@ public class InputItemStack implements IInputItemStack {
         return Collections.singletonList(ModUtils.setSize(this.input, this.getAmount()));
     }
 
-    public InputItemStack(CompoundTag compoundTag) {
-        boolean exist = compoundTag.getBoolean("exist");
-        if (exist) {
-            this.input = ItemStack.of(compoundTag.getCompound("input"));
-            this.amount = compoundTag.getInt("amount");
-        } else {
-            this.input = ItemStack.EMPTY;
-            this.amount = 1;
-        }
-    }
-
     @Override
     public boolean hasTag() {
         return false;
@@ -83,29 +84,26 @@ public class InputItemStack implements IInputItemStack {
         return null;
     }
 
-
-    @Override
-    public CompoundTag writeNBT() {
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putByte("id", (byte) 0);
-        compoundTag.putBoolean("exist", input != null && !input.isEmpty());
-        if (input != null && !input.isEmpty()) {
-            compoundTag.putInt("amount", amount);
-            compoundTag.put("input", input.save(new CompoundTag()));
-        }
-        return compoundTag;
-    }
-
     public String toString() {
         return "RInputItemStack<" + ModUtils.setSize(this.input, this.amount) + ">";
     }
 
     public boolean equals(Object obj) {
         InputItemStack other;
-        return obj != null && this.getClass() == obj.getClass() && ModUtils.checkItemEqualityStrict(
-                (other = (InputItemStack) obj).input,
-                this.input
+        return obj != null && this.getClass() == obj.getClass() && this.matches(
+                (other = (InputItemStack) obj).input
         ) && other.amount == this.amount;
     }
 
+    @Override
+    public CompoundTag writeNBT(HolderLookup.Provider provider) {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("id", (byte) 0);
+        compoundTag.putBoolean("exist", input != null && !input.isEmpty());
+        if (input != null && !input.isEmpty()) {
+            compoundTag.putInt("amount", amount);
+            compoundTag.put("input", input.save(provider, new CompoundTag()));
+        }
+        return compoundTag;
+    }
 }

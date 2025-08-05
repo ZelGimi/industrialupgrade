@@ -67,8 +67,8 @@ public class GuiGeneticPolymerizer<T extends ContainerGeneticPolymerizer> extend
         return ret;
     }
 
-protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
         this.handleUpgradeTooltip(par1, par2);
     }
@@ -86,18 +86,18 @@ protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         bindTexture(getTexture());
 
-       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

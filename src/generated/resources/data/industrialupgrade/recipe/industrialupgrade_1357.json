@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "tag": "c:plates/hafniumboride"
+    },
+    "D": {
+      "tag": "c:plates/tantalumtungstenhafnium"
+    }
+  },
+  "pattern": [
+    " C ",
+    "DAD",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:cyclotron/cyclotron_casing"
+  },
+  "show_notification": false
+}

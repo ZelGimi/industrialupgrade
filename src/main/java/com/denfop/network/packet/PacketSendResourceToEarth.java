@@ -12,13 +12,15 @@ import java.util.UUID;
 
 public class PacketSendResourceToEarth implements IPacket {
 
-    public PacketSendResourceToEarth() {
-    }
+    private CustomPacketBuffer buffer;
 
     ;
 
+    public PacketSendResourceToEarth() {
+    }
+
     public PacketSendResourceToEarth(Player player, IBody iBody) {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
         customPacketBuffer.writeByte(getId());
         try {
             EncoderHandler.encode(customPacketBuffer, player.getUUID());
@@ -29,7 +31,19 @@ public class PacketSendResourceToEarth implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        IUCore.network.getClient().sendPacket(customPacketBuffer);
+
+        this.buffer = customPacketBuffer;
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

@@ -33,8 +33,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEnrichment extends TileDoubleElectricMachine implements IHasRecipe {
 
@@ -93,6 +93,14 @@ public class TileEnrichment extends TileDoubleElectricMachine implements IHasRec
     }
 
     @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnRadiationParticles(level, pos, level.random);
+        }
+    }
+
+    @Override
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isClientSide) {
@@ -101,14 +109,6 @@ public class TileEnrichment extends TileDoubleElectricMachine implements IHasRec
             } else {
                 (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
-        }
-    }
-
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnRadiationParticles(level,pos,level.random);
         }
     }
 
@@ -133,12 +133,12 @@ public class TileEnrichment extends TileDoubleElectricMachine implements IHasRec
         );
         addenrichment(
                 new ItemStack(IUItem.preciousgem.getItemFromMeta(1), 4),
-                "forge:storage_blocks/Cobalt",
+                "c:storage_blocks/Cobalt",
                 new ItemStack(IUItem.crafting_elements.getItemFromMeta(269), 1), 200
         );
         addenrichment(
                 new ItemStack(Blocks.GLOWSTONE, 1),
-                "forge:ingots/Uranium",
+                "c:ingots/Uranium",
                 new ItemStack(IUItem.itemiu.getItemFromMeta(0), 1), 10
         );
         addenrichment(new ItemStack(IUItem.itemiu.getItemFromMeta(0), 1), IUItem.reinforcedGlass, new ItemStack(IUItem.itemiu.getItemFromMeta(1), 2), 10);

@@ -3,12 +3,28 @@ package com.denfop.api.upgrade;
 import com.denfop.Localization;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public class UpgradeItemInform {
 
+    public static final Codec<UpgradeItemInform> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.xmap(EnumInfoUpgradeModules::valueOf, EnumInfoUpgradeModules::name).fieldOf("upgrade").forGetter(obj -> obj.upgrade),
+            Codec.INT.fieldOf("number").forGetter(obj -> obj.number)
+    ).apply(instance, UpgradeItemInform::new));
+    public static final StreamCodec<FriendlyByteBuf, UpgradeItemInform> STREAM_CODEC = StreamCodec.of(
+            (buf, value) -> {
+                buf.writeEnum(value.upgrade);
+                buf.writeInt(value.number);
+            },
+            buf -> new UpgradeItemInform(buf.readEnum(EnumInfoUpgradeModules.class), buf.readInt())
+    );
     public final EnumInfoUpgradeModules upgrade;
-    public final int number;
+    public int number;
+
 
     public UpgradeItemInform(EnumInfoUpgradeModules modules, int number) {
         this.upgrade = modules;

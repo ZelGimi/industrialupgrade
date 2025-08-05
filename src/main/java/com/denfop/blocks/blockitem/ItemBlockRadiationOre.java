@@ -20,6 +20,6 @@ public class ItemBlockRadiationOre extends ItemBlockCore<BlocksRadiationOre.Type
 
     @Override
     public String[] getTags() {
-        return new String[]{"forge:ores/" + getElement().getName().split("_")[0], "forge:ores"};
+        return new String[]{"c:ores/" + getElement().getName().split("_")[0], "c:ores"};
     }
 }

@@ -4,16 +4,17 @@ import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.ReplicatorRecipe;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -24,21 +25,22 @@ public class ItemCrystalMemory extends Item implements IItemTab {
     public ItemCrystalMemory() {
         super(new Properties().stacksTo(1));
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
-    public ItemStack readItemStack(ItemStack stack) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        CompoundTag contentTag = nbt.getCompound("Pattern");
-        return ItemStack.of(contentTag);
+
+    public ItemStack readItemStack(HolderLookup.Provider access, ItemStack stack) {
+        return stack.getOrDefault(DataComponentsInit.PATTERN, ItemStack.EMPTY);
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack p_41421_, @Nullable TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
-        ItemStack recorded = this.readItemStack(p_41421_);
-        if (!ModUtils.isEmpty(recorded)) {
+
+        if (p_41421_.has(DataComponentsInit.PATTERN)) {
+            @Nullable ItemStack recorded = p_41421_.get(DataComponentsInit.PATTERN);
             p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + recorded.getDisplayName().getString()));
             p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.UU-Matter") + " " + ModUtils.getString(
                     ReplicatorRecipe.getInBuckets(
@@ -48,11 +50,8 @@ public class ItemCrystalMemory extends Item implements IItemTab {
         }
     }
 
-    public void writecontentsTag(ItemStack stack, ItemStack recorded) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        CompoundTag contentTag = new CompoundTag();
-        recorded.save(contentTag);
-        nbt.put("Pattern", contentTag);
+    public void writecontentsTag(RegistryAccess registryAccess, ItemStack stack, ItemStack recorded) {
+        stack.set(DataComponentsInit.PATTERN, recorded);
     }
 
     protected String getOrCreateDescriptionId() {

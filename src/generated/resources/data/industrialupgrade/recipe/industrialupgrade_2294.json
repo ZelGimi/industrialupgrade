@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/gallium"
+    },
+    "B": {
+      "item": "industrialupgrade:imp_bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/lead"
+    },
+    "D": {
+      "tag": "c:casings/aluminium"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/storage_food_3"
+  },
+  "show_notification": false
+}

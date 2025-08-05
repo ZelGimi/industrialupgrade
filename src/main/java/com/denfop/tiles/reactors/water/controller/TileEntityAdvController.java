@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvController extends TileEntityMainController {
 
     public TileEntityAdvController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.AdvWaterReactorMultiBlock, EnumFluidReactors.A,BlockWaterReactors.water_adv_controller,pos,state);
+        super(InitMultiBlockSystem.AdvWaterReactorMultiBlock, EnumFluidReactors.A, BlockWaterReactors.water_adv_controller, pos, state);
     }
 
     @Override

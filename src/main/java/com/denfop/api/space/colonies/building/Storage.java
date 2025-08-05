@@ -3,9 +3,10 @@ package com.denfop.api.space.colonies.building;
 import com.denfop.api.space.colonies.api.building.IStorage;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,10 +31,10 @@ public class Storage implements IStorage {
         this.storageBuilding = storageBuilding;
     }
 
-    public Storage(CompoundTag tag, final StorageBuilding storageBuilding) {
+    public Storage(CompoundTag tag, HolderLookup.Provider p_323640_, final StorageBuilding storageBuilding) {
         this.maxvaluefluid = 10000;
         this.storageBuilding = storageBuilding;
-        this.readNBT(tag);
+        this.readNBT(tag, p_323640_);
     }
 
     public Storage(CustomPacketBuffer packetBuffer, final StorageBuilding storageBuilding) {
@@ -88,9 +89,8 @@ public class Storage implements IStorage {
         List<FluidStack> fluidStacks = this.getFluidStacks();
         boolean added = false;
         fluidStacks.removeIf(Objects::isNull);
-        fluidStacks.removeIf(FluidStack::isEmpty);
         for (FluidStack stack : fluidStacks) {
-            if (stack.isFluidEqual(fluidStack)) {
+            if (FluidStack.isSameFluidSameComponents(stack, fluidStack)) {
                 if (stack.getAmount() + fluidStack.getAmount() <= this.maxvaluefluid) {
                     stack.grow(fluidStack.getAmount());
                     return true;
@@ -124,7 +124,7 @@ public class Storage implements IStorage {
         }
         List<FluidStack> fluidStacks = this.getFluidStacks();
         for (FluidStack stack : fluidStacks) {
-            if (stack.isFluidEqual(fluidStack)) {
+            if (FluidStack.isSameFluidSameComponents(stack, fluidStack)) {
                 if (stack.getAmount() - fluidStack.getAmount() >= 0) {
                     stack.shrink(fluidStack.getAmount());
                     return true;
@@ -188,20 +188,20 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public CompoundTag writeNBT(final CompoundTag tag) {
+    public CompoundTag writeNBT(final CompoundTag tag, HolderLookup.Provider p_332160_) {
         tag.putInt("max", this.max);
         tag.putInt("fluidmax", this.fluidmax);
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("col", this.getStacks().size());
         for (int i = 0; i < this.getStacks().size(); i++) {
-            nbt.put(String.valueOf(i), this.getStacks().get(i).save(new CompoundTag()));
+            nbt.put(String.valueOf(i), this.getStacks().get(i).save(p_332160_));
         }
         tag.put("stacks", nbt);
         CompoundTag nbt1 = new CompoundTag();
         nbt1.putInt("col_fluid", this.getFluidStacks().size());
         for (int i = 0; i < this.getFluidStacks().size(); i++) {
             if (this.fluidStackList.get(i) != null) {
-                nbt1.put(String.valueOf(i), this.getFluidStacks().get(i).writeToNBT(new CompoundTag()));
+                nbt1.put(String.valueOf(i), this.getFluidStacks().get(i).save(p_332160_));
             }
         }
         tag.put("fluids", nbt1);
@@ -217,7 +217,7 @@ public class Storage implements IStorage {
         int size = nbt.getInt("col");
         this.itemStackList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.itemStackList.add(ItemStack.of(nbt.getCompound(String.valueOf(i))));
+            this.itemStackList.add(ItemStack.parseOptional(tag.registryAccess(), nbt.getCompound(String.valueOf(i))));
         }
 
         CompoundTag nbt1;
@@ -226,26 +226,26 @@ public class Storage implements IStorage {
         size = nbt1.getInt("col_fluid");
         this.fluidStackList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt1.getCompound(String.valueOf(i))));
+            this.fluidStackList.add(FluidStack.parseOptional(tag.registryAccess(), nbt1.getCompound(String.valueOf(i))));
         }
 
     }
 
     @Override
-    public void readNBT(final CompoundTag tag) {
+    public void readNBT(final CompoundTag tag, HolderLookup.Provider p_332160_) {
         this.max = tag.getInt("max");
         this.fluidmax = tag.getInt("fluidmax");
         CompoundTag nbt = tag.getCompound("stacks");
         int size = nbt.getInt("col");
         this.itemStackList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.itemStackList.add(ItemStack.of(nbt.getCompound(String.valueOf(i))));
+            this.itemStackList.add(ItemStack.parseOptional(p_332160_, nbt.getCompound(String.valueOf(i))));
         }
         CompoundTag nbt1 = tag.getCompound("fluids");
         size = nbt1.getInt("col_fluid");
         this.fluidStackList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt1.getCompound(String.valueOf(i))));
+            this.fluidStackList.add(FluidStack.parseOptional(p_332160_, nbt1.getCompound(String.valueOf(i))));
         }
     }
 
@@ -261,14 +261,14 @@ public class Storage implements IStorage {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("col", this.getStacks().size());
         for (int i = 0; i < this.getStacks().size(); i++) {
-            nbt.put(String.valueOf(i), this.getStacks().get(i).save(new CompoundTag()));
+            nbt.put(String.valueOf(i), this.getStacks().get(i).save(customPacketBuffer.registryAccess()));
         }
         customPacketBuffer.writeNbt(nbt);
         CompoundTag nbt1 = new CompoundTag();
         nbt1.putInt("col_fluid", this.getStacks().size());
         for (int i = 0; i < this.getFluidStacks().size(); i++) {
             if (this.getFluidStacks().get(i) != null) {
-                nbt1.put(String.valueOf(i), this.getFluidStacks().get(i).writeToNBT(new CompoundTag()));
+                nbt1.put(String.valueOf(i), this.getFluidStacks().get(i).save(customPacketBuffer.registryAccess()));
             }
         }
         customPacketBuffer.writeNbt(nbt1);

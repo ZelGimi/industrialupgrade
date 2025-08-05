@@ -5,9 +5,9 @@ import com.denfop.blocks.FluidName;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.Collections;
 import java.util.List;
@@ -71,10 +71,6 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
         return new ComponentBioFuelEnergy(EnergyType.BIOFUEL, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
-    public void setFluidTank(final FluidTank fluidTank) {
-        this.fluidTank = fluidTank;
-    }
-
     @Override
     public double addEnergy(final double amount) {
         super.addEnergy(amount);
@@ -91,7 +87,6 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
         return true;
     }
 
-
     @Override
     public boolean useEnergy(final double amount) {
         super.useEnergy(amount);
@@ -106,5 +101,9 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
 
     public FluidTank getFluidTank() {
         return fluidTank;
+    }
+
+    public void setFluidTank(final FluidTank fluidTank) {
+        this.fluidTank = fluidTank;
     }
 }

@@ -18,7 +18,7 @@ public class TileBioCompressor extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.COMPRESSER.usagePerTick,
                 EnumMultiMachine.COMPRESSER.lenghtOperation,
-                4,BlockBaseMachine3.bio_compressor,pos,state
+                4, BlockBaseMachine3.bio_compressor, pos, state
         );
     }
 

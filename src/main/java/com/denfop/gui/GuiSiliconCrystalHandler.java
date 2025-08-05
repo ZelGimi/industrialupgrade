@@ -24,7 +24,7 @@ public class GuiSiliconCrystalHandler<T extends ContainerSiliconCrystalHandler> 
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack, par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         PoseStack pose = poseStack.pose();
         pose.pushPose();
         pose.scale(0.7f, 0.7f, 0.7f);
@@ -40,10 +40,9 @@ public class GuiSiliconCrystalHandler<T extends ContainerSiliconCrystalHandler> 
     }
 
 
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

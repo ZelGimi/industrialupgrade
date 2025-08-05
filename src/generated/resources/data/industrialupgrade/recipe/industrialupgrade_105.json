@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:additionmodule/charger"
+    },
+    "B": {
+      "item": "industrialupgrade:additionmodule/wireless"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:additionmodule/mov_charge_eu"
+  },
+  "show_notification": false
+}

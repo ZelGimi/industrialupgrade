@@ -17,7 +17,7 @@ public class TileImpReplicator extends TileBaseReplicator {
     private final AirPollutionComponent pollutionAir;
 
     public TileImpReplicator(BlockPos pos, BlockState state) {
-        super(0.85,BlockBaseMachine3.imp_replicator,pos,state);
+        super(0.85, BlockBaseMachine3.imp_replicator, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }

@@ -22,10 +22,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     public boolean work = true;
 
     public TileBaseHeatMachine(boolean hasFluid, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(hasFluid ? 0D : 10000D, 14, 1,block,pos,state);
+        super(hasFluid ? 0D : 10000D, 14, 1, block, pos, state);
         this.hasFluid = hasFluid;
         if (this.hasFluid) {
             this.fluids = this.addComponent(new Fluids(this));
@@ -134,7 +134,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         if (this.hasFluid) {
-            this.fluidTank.readFromNBT(nbttagcompound.getCompound("fluidTank"));
+            this.fluidTank.readFromNBT(this.provider, nbttagcompound.getCompound("fluidTank"));
         }
         this.maxtemperature = nbttagcompound.getShort("maxtemperature");
         this.auto = nbttagcompound.getBoolean("auto");
@@ -145,7 +145,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
         super.writeToNBT(nbttagcompound);
         if (this.hasFluid) {
             CompoundTag fluidTankTag = new CompoundTag();
-            this.fluidTank.writeToNBT(fluidTankTag);
+            this.fluidTank.writeToNBT(this.provider, fluidTankTag);
             nbttagcompound.put("fluidTank", fluidTankTag);
         }
         nbttagcompound.putShort("maxtemperature", this.maxtemperature);

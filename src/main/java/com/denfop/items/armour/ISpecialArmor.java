@@ -1,11 +1,11 @@
 package com.denfop.items.armour;
 
-import com.denfop.IUCore;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +18,23 @@ import java.util.Arrays;
 
 
 public interface ISpecialArmor {
+    static boolean hasCompleteArmor(LivingEntity living) {
+        EquipmentSlot[] var1 = EquipmentSlot.values();
+        int var2 = var1.length;
+
+        for (EquipmentSlot slot : var1) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+                ItemStack stack = living.getItemBySlot(slot);
+                if (stack.isEmpty() || !(stack.getItem() instanceof ISpecialArmor hazmat)) {
+                    return false;
+                }
+
+            }
+
+        }
+
+        return true;
+    }
 
     public static float getDamageAfterAbsorb(float damage, float totalArmor, float toughnessAttribute) {
         float f = 2.0F + toughnessAttribute / 4.0F;
@@ -128,8 +145,10 @@ public interface ISpecialArmor {
 
                 for (int i = 0; i < inventory.size(); i++) {
                     if (inventory.get(i).getItem() instanceof ArmorItem && inventory.get(i).getItem() instanceof ISpecialArmor) {
-                        inventory.get(i).hurt((int) armorDamage, IUCore.randomSource, entity instanceof ServerPlayer ? (ServerPlayer) entity : null);
 
+                        inventory.get(i).hurtAndBreak((int) armorDamage, (ServerLevel) entity.level(), entity, ignored -> {
+
+                        });
                         if (inventory.get(i).getCount() == 0) {
                             inventory.set(i, ItemStack.EMPTY);
                         }

@@ -20,10 +20,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement implements IFuelTank {
 
@@ -32,7 +32,7 @@ public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement impl
     private double speed;
 
     public TileEntitySmelteryFuelTank(BlockPos pos, BlockState state) {
-        super(BlockSmeltery.smeltery_fuel_tank,pos,state);
+        super(BlockSmeltery.smeltery_fuel_tank, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluids", 10000);
         this.fluidTank.setAcceptedFluids(Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.LAVA, FluidName.fluidpahoehoe_lava.getInstance().get()));
@@ -43,13 +43,12 @@ public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement impl
         if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     @Override

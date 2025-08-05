@@ -90,6 +90,7 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
     }
+
     public void renderSlot(GuiGraphics p_97800_, Slot p_97801_) {
         if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
             if (p_97801_ instanceof SlotInvSlot) {
@@ -99,8 +100,9 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
                 }
             }
         }
-        super.renderSlot(p_97800_,p_97801_);
+        super.renderSlot(p_97800_, p_97801_);
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 15 && mouseX <= 30 && mouseY >= 2 && mouseY <= 14) {
             List<String> text = new ArrayList<>();
@@ -122,8 +124,8 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack, par1, par2);
-       draw( poseStack,
+        super.drawForegroundLayer(poseStack, par1, par2);
+        draw(poseStack,
                 String.valueOf(this.container.base.getPressure()),
                 171,
                 103,
@@ -136,12 +138,12 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
             new Area(this, 201, 10, 15, 76)
                     .withTooltip(Localization.translate("iu.reactor_info.energy") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
                             "/" + ModUtils.getString(this.container.base.energy.getCapacity()))
-                    .drawForeground( poseStack, par1, par2);
+                    .drawForeground(poseStack, par1, par2);
         } else {
             new Area(this, 201, 10, 15, 76)
                     .withTooltip(Localization.translate("iu.reactor_info.upgrade1"))
                     .drawForeground(
-                            poseStack,  par1,
+                            poseStack, par1,
                             par2
                     );
         }
@@ -150,19 +152,19 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
                         "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" + Localization.translate(
                         "iu.reactor_info.stable_heat") + ": " + this.container.base.getStableMaxHeat() + "°C")
                 .drawForeground(
-                        poseStack,  par1,
+                        poseStack, par1,
                         par2
                 );
         new AdvArea(this, 200, 88, 217, 105)
                 .withTooltip(Localization.translate("iu.reactor_info.upgrade"))
                 .drawForeground(
-                        poseStack,  par1,
+                        poseStack, par1,
                         par2
                 );
         new AdvArea(this, 158, 100, 185, 124)
                 .withTooltip(Localization.translate("iu.reactor_info.pressure"))
                 .drawForeground(
-                        poseStack,    par1,
+                        poseStack, par1,
                         par2
                 );
         handleUpgradeTooltip(par1, par2);
@@ -189,8 +191,8 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
                                             if (this.container.base.heat_sensor) {
                                                 PoseStack pose = poseStack.pose();
                                                 pose.pushPose();
-                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(    String.valueOf((int) component.getHeat())) / 2,slotInvSlot.y + 5,0);
-                                                pose.scale(0.75f,0.75f,1f);
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf((int) component.getHeat())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
                                                 draw(poseStack,
                                                         String.valueOf((int) component.getHeat()),
                                                         0,
@@ -206,8 +208,8 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
                                                     .getType() != EnumTypeComponent.ROD) {
                                                 PoseStack pose = poseStack.pose();
                                                 pose.pushPose();
-                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(     String.valueOf(-1 * component.getDamage())) / 2,slotInvSlot.y + 5,0);
-                                                pose.scale(0.75f,0.75f,1f);
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf(-1 * component.getDamage())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
                                                 draw(poseStack,
                                                         String.valueOf(-1 * component.getDamage()),
                                                         0,
@@ -231,74 +233,73 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
     }
 
 
-
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack, partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
         if (this.container.base.work) {
-            drawTexturedModalRect( poseStack, this.guiLeft + 160,
+            drawTexturedModalRect(poseStack, this.guiLeft + 160,
                     this.guiTop + 12
                     , 228, 100, 27, 27
             );
         }
         if (this.visible) {
-            drawTexturedModalRect( poseStack, this.guiLeft + 160,
+            drawTexturedModalRect(poseStack, this.guiLeft + 160,
                     this.guiTop + 12
                     , 228, 72, 27, 27
             );
         }
         if (this.visible1) {
-            drawTexturedModalRect( poseStack, this.guiLeft + 153,
+            drawTexturedModalRect(poseStack, this.guiLeft + 153,
                     this.guiTop + 121
                     , 241, 185, 14, 14
             );
         }
         if (this.visible2) {
-            drawTexturedModalRect( poseStack, this.guiLeft + 176,
+            drawTexturedModalRect(poseStack, this.guiLeft + 176,
                     this.guiTop + 121
                     , 241, 200, 14, 14
             );
         }
         if (this.visible3) {
-            drawTexturedModalRect( poseStack, this.guiLeft + 163,
+            drawTexturedModalRect(poseStack, this.guiLeft + 163,
                     this.guiTop + 41
                     , 235, 215, 20, 20
             );
         }
         if (this.visible4) {
-            drawTexturedModalRect( poseStack, this.guiLeft + 163,
+            drawTexturedModalRect(poseStack, this.guiLeft + 163,
                     this.guiTop + 63
                     , 235, 236, 20, 20
             );
         }
         switch (this.container.base.getLevelReactor()) {
             case 0:
-                drawTexturedModalRect( poseStack, this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 7
                         , 241, 1, 14, 14
                 );
                 break;
             case 1:
-                drawTexturedModalRect( poseStack, this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 20
                         , 241, 14, 14, 14
                 );
                 break;
             case 2:
-                drawTexturedModalRect( poseStack, this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 33
                         , 241, 27, 14, 14
                 );
                 break;
             case 3:
-                drawTexturedModalRect( poseStack, this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 46
                         , 241, 40, 14, 14
                 );
                 break;
             case 4:
-                drawTexturedModalRect( poseStack, this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 59
                         , 241, 53, 14, 14
                 );
@@ -307,21 +308,21 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
         if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
             double bar = this.container.base.energy.getFillRatio();
             bar = Math.min(1, bar);
-            drawTexturedModalRect( poseStack, this.guiLeft + 204, (int) (this.guiTop + 84 - (bar * 70))
+            drawTexturedModalRect(poseStack, this.guiLeft + 204, (int) (this.guiTop + 84 - (bar * 70))
                     , 228, (int) (72 - (bar * 70)), 9, (int) (bar * 70));
 
         }
-       bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common.png"));
         double bar = this.container.base.heat / this.container.base.getMaxHeat();
         bar = Math.min(bar, 1);
-        drawTexturedModalRect( poseStack, this.guiLeft + 26, this.guiTop + 143
+        drawTexturedModalRect(poseStack, this.guiLeft + 26, this.guiTop + 143
                 , 4, 218, (int) (bar * 120), 18);
 
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
 
 
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect( poseStack, this.guiLeft + 15, this.guiTop + 2, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 15, this.guiTop + 2, 0, 0, 10, 10);
     }
 
     @Override
@@ -341,23 +342,23 @@ public class GuiWaterMainController<T extends ContainerWaterMainController> exte
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect( poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     protected ResourceLocation getTexture() {
         switch (this.container.base.getMaxLevelReactor()) {
             case 1:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guifluidreactor.png");
             case 2:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor1.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guifluidreactor1.png");
             case 3:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor2.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guifluidreactor2.png");
             case 4:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor3.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guifluidreactor3.png");
 
         }
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiwaterreactor5.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiwaterreactor5.png");
     }
 
 }

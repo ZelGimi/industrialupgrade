@@ -20,7 +20,6 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -28,9 +27,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,6 +84,7 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -102,9 +102,10 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
 
         return this.nameItem;
     }
+
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable TooltipContext world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         int windStrength = 10;
         int windStrength1 = 20;
         double KU = windStrength * this.getEfficiency(stack) * 25.0F;
@@ -151,15 +152,11 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
 
     @Override
     public void inventoryTick(@Nonnull ItemStack itemStack, @Nonnull Level world, @Nonnull Entity entity, int slot, boolean isSelected) {
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!RotorUpgradeSystem.instance.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(world, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventRotorItemLoad(world, this, itemStack));
         }
-        if (this.getMaxCustomDamage(itemStack) != nbt.getInt("maxDamage")) {
-            nbt.putInt("maxDamage", this.getMaxCustomDamage(itemStack));
-        }
+
     }
 
 

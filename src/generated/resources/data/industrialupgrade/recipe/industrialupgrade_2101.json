@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "c:plates/alcled"
+    },
+    "C": {
+      "tag": "c:plates/inconel"
+    },
+    "E": {
+      "item": "industrialupgrade:itemplates/bloodstone"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spaceupgrademodules/space_upgrademodule6"
+  },
+  "show_notification": false
+}

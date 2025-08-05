@@ -41,15 +41,15 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
     private final IDrawableStatic bg;
     private final ContainerLaserPolisher container1;
     private final GuiComponent progress_bar;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform jeiInform;
 
     public PrimalLaserCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -81,7 +81,6 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -99,9 +98,9 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, 0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack, 0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
     }
 
     @Override
@@ -110,12 +109,11 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX()-20, slots1.get(0).getJeiY()).addItemStack(new ItemStack(IUItem.laser.getItem()));
-
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX() - 20, slots1.get(0).getJeiY()).addItemStack(new ItemStack(IUItem.laser.getItem()));
 
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
@@ -124,9 +122,8 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

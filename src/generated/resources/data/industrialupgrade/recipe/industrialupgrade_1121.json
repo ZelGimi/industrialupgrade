@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:gears/iridium"
+    },
+    "C": {
+      "item": "minecraft:diamond_axe"
+    },
+    "D": {
+      "item": "minecraft:diamond_pickaxe"
+    },
+    "E": {
+      "item": "minecraft:diamond_shovel"
+    },
+    "F": {
+      "tag": "c:gears/magnesium"
+    }
+  },
+  "pattern": [
+    "CDE",
+    "BAB",
+    "FFF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_158_element"
+  },
+  "show_notification": false
+}

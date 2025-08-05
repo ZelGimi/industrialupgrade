@@ -36,10 +36,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,11 +174,11 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
         try {
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                getSteamFluid().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                getSteamFluid().readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                getWaterFluid().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                getWaterFluid().readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             this.energy.getEnergy().onNetworkUpdate(customPacketBuffer);
             this.phase = customPacketBuffer.readInt();
@@ -191,7 +191,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                 ICoolant coolant = listCoolant.get(i);
                 fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
                 if (fluidTank2 != null) {
-                    coolant.getCoolant().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                    coolant.getCoolant().readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
                 }
             }
         } catch (IOException e) {
@@ -298,7 +298,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
                     }
 
-                    model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+                    model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
                 }
                 poseStack.popPose();
             }
@@ -327,7 +327,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                         if (exchanger.getExchanger() == null) {
                             continue;
                         }
-                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), 1);
+                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), -1);
                         if (update) {
                             exchanger.getSlot().set(0, ItemStack.EMPTY);
                         }
@@ -597,7 +597,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
         if (isFull()) {
             for (IRod rod : iRodListMap) {
                 customPacketBuffer.writeBlockPos(rod.getBlockPos());
-                customPacketBuffer.writeBytes(((TileEntityMultiBlockElement)rod).writePacket());
+                customPacketBuffer.writeBytes(((TileEntityMultiBlockElement) rod).writePacket());
             }
         }
         return customPacketBuffer;
@@ -607,13 +607,13 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     public void readUpdatePacket(CustomPacketBuffer packetBuffer) {
         super.readUpdatePacket(packetBuffer);
         boolean isFull = packetBuffer.readBoolean();
-        if (isFull){
+        if (isFull) {
             iRodListMap.clear();
-            for (int i = 0;i < 9;i++){
+            for (int i = 0; i < 9; i++) {
                 TileEntityMultiBlockElement multiBlockElement = (TileEntityMultiBlockElement) this.getWorld().getBlockEntity(packetBuffer.readBlockPos());
                 packetBuffer.readShort();
                 multiBlockElement.readPacket(packetBuffer);
-                iRodListMap.add((IRod)multiBlockElement);
+                iRodListMap.add((IRod) multiBlockElement);
             }
             List<BlockPos> pos1 = this
                     .getMultiBlockStucture()

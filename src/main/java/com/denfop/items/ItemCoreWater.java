@@ -11,10 +11,12 @@ public class ItemCoreWater<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public ItemCoreWater(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public enum Types implements ISubEnum {
         core_wind(0),
         core_wind1(1),

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemplates/meteoric_iron"
+    },
+    "B": {
+      "tag": "c:plates/alumel"
+    },
+    "C": {
+      "tag": "c:plates/berylliumbronze"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "C C",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_764_element"
+  },
+  "show_notification": false
+}

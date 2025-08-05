@@ -10,9 +10,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import static com.denfop.api.gui.GuiElement.bindBlockTexture;
 import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
@@ -80,8 +80,8 @@ public class Component<T> {
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     guiComponent.getGui().drawSprite(poseStack,
-                          mouseX+  fluidX,
-                        mouseY+    fluidY,
+                            mouseX + fluidX,
+                            mouseY + fluidY,
                             fluidWidth,
                             fluidHeight,
                             sprite,
@@ -106,8 +106,8 @@ public class Component<T> {
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     guiComponent.getGui().drawSprite(poseStack,
-                            mouseX+     fluidX,
-                            mouseY+    fluidY,
+                            mouseX + fluidX,
+                            mouseY + fluidY,
                             fluidWidth,
                             fluidHeight,
                             sprite,
@@ -193,7 +193,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getWeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            poseStack, mouseX+guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
                             guiComponent.getType().getX1(),
                             guiComponent.getType().getY1(),
@@ -338,7 +338,7 @@ public class Component<T> {
         } else if (this.component instanceof FluidTank) {
             FluidTank component = (FluidTank) this.component;
             String text1;
-            text1 = component.getFluid().getDisplayName().getString();
+            text1 = component.getFluid().getHoverName().getString();
             if (component.getFluid().getFluid() == Fluids.EMPTY)
                 text1 = "";
             text = "Fluid " + text1 + ": " +

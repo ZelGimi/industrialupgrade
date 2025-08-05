@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/platinum"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/copper"
+    }
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/ampere"
+  },
+  "show_notification": false
+}

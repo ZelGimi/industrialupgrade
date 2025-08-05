@@ -25,8 +25,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class TileEntityAmpereGenerator extends TileElectricMachine implements IU
     public int levelBlock;
 
     public TileEntityAmpereGenerator(BlockPos pos, BlockState state) {
-        super(0, 0, 1,BlockBaseMachine3.ampere_generator,pos,state);
+        super(0, 0, 1, BlockBaseMachine3.ampere_generator, pos, state);
 
 
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 14));
@@ -78,7 +78,6 @@ public class TileEntityAmpereGenerator extends TileElectricMachine implements IU
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {

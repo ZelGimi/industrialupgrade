@@ -4,7 +4,7 @@ import com.denfop.Constants;
 import com.denfop.register.FluidHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public enum FluidName implements ISubEnum {
 
@@ -223,7 +223,7 @@ public enum FluidName implements ISubEnum {
     public static final FluidName[] values = values();
     private final boolean hasFlowTexture;
     private FluidName fluidname;
-    private RegistryObject<IUFluid> instance;
+    private DeferredHolder<Fluid, IUFluid> instance;
     private FluidHandler handler;
 
 
@@ -271,17 +271,17 @@ public enum FluidName implements ISubEnum {
     public ResourceLocation getTextureLocation(boolean flowing) {
         if (fluidname == null) {
             if (this.name().startsWith("fluidmolten")) {
-                return new ResourceLocation(Constants.MOD_ID, "block/fluid/molten_flow");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "block/fluid/molten_flow");
             } else {
                 String type = flowing && this.hasFlowTexture ? "flow" : "still";
-                return new ResourceLocation(Constants.MOD_ID, "block/fluid/" + this.name().substring(5).toLowerCase() + "_" + type);
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "block/fluid/" + this.name().substring(5).toLowerCase() + "_" + type);
             }
         } else {
             if (fluidname.name().startsWith("fluidmolten")) {
-                return new ResourceLocation(Constants.MOD_ID, "block/fluid/molten_flow");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "block/fluid/molten_flow");
             } else {
                 String type = flowing && this.hasFlowTexture ? "flow" : "still";
-                return new ResourceLocation(Constants.MOD_ID, "block/fluid/" + fluidname.name().substring(5).toLowerCase() + "_" + type);
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "block/fluid/" + fluidname.name().substring(5).toLowerCase() + "_" + type);
             }
         }
     }
@@ -291,7 +291,7 @@ public enum FluidName implements ISubEnum {
     }
 
 
-    public RegistryObject<IUFluid> getInstance() {
+    public DeferredHolder<Fluid, IUFluid> getInstance() {
         if (this.instance == null) {
             throw new IllegalStateException("the requested fluid instance for " + this.name() + " isn't set (yet)");
         } else {
@@ -299,7 +299,7 @@ public enum FluidName implements ISubEnum {
         }
     }
 
-    public void setInstance(RegistryObject<IUFluid> fluid) {
+    public void setInstance(DeferredHolder<Fluid, IUFluid> fluid) {
         if (fluid == null) {
             throw new NullPointerException("null fluid");
         } else if (this.instance != null) {

@@ -21,5 +21,4 @@ public class InvSlotRedstoneGenerator extends InvSlot {
     }
 
 
-
 }

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/polonium"
+    },
+    "B": {
+      "item": "industrialupgrade:bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/vanady"
+    },
+    "D": {
+      "tag": "c:casings/copper"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/slow_aging_1"
+  },
+  "show_notification": false
+}

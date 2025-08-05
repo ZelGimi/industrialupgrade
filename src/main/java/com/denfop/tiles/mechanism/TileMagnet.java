@@ -38,8 +38,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,7 +64,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         this.player = "";
         this.work = true;
         this.slot = new SlotInfo(this, 18, false);
-       visible = this.addComponent(new ComponentVisibleArea(this));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     @Override
@@ -74,12 +74,12 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             energyconsume = (int) DecoderHandler.decode(customPacketBuffer);
             int prevX = x;
             int prevY = y;
-            int prevZ= z;
+            int prevZ = z;
 
             x = (int) DecoderHandler.decode(customPacketBuffer);
             y = (int) DecoderHandler.decode(customPacketBuffer);
             z = (int) DecoderHandler.decode(customPacketBuffer);
-            if (prevX != x || prevY != y || prevZ != z){
+            if (prevX != x || prevY != y || prevZ != z) {
                 updateData();
                 visible.aabb = axisalignedbb;
             }
@@ -138,7 +138,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             this.player = player.getName().getString();
 
 
-          for (int x = this.pos.getX() - this.x; x <= this.pos.getX() + this.x; x++) {
+            for (int x = this.pos.getX() - this.x; x <= this.pos.getX() + this.x; x++) {
                 for (int y = this.pos.getY() - this.y; y <= this.pos.getY() + this.y; y++) {
                     for (int z = this.pos.getZ() - this.z; z <= this.pos.getZ() + this.z; z++) {
                         final BlockPos pos1 = new BlockPos(x, y, z);
@@ -215,20 +215,20 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
                 this.getBlockPos().getX() - this.x,
                 this.getBlockPos().getY() - this.y,
                 this.getBlockPos().getZ() - this.z,
-                this.getBlockPos().getX() + this.x+ 1,
-                this.getBlockPos().getY() + this.y+ 1,
+                this.getBlockPos().getX() + this.x + 1,
+                this.getBlockPos().getY() + this.y + 1,
                 this.getBlockPos().getZ() + this.z + 1
         );
         this.chunkPos = new ChunkPos(this.getPos());
         int j2 = (int) Math.floor((axisalignedbb.minX) / 16.0D);
-        int k2 = (int) Math.ceil((axisalignedbb.maxX ) / 16.0D);
+        int k2 = (int) Math.ceil((axisalignedbb.maxX) / 16.0D);
         int l2 = (int) Math.floor((axisalignedbb.minZ) / 16.0D);
         int i3 = (int) Math.ceil((axisalignedbb.maxZ) / 16.0D);
         list = Lists.newArrayList();
 
         for (int j3 = j2; j3 < k2; ++j3) {
             for (int k3 = l2; k3 < i3; ++k3) {
-                ChunkAccess chunk = getLevel().getChunk(j3,k3);
+                ChunkAccess chunk = getLevel().getChunk(j3, k3);
                 if (!list.contains(chunk)) {
                     list.add(chunk);
                 }
@@ -242,7 +242,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         List<ItemEntity> list = Lists.newArrayList();
         LevelEntityGetter<Entity> list1 = ((ServerLevel) level).getEntities();
 
-        this.list.forEach(chunk -> list1.get(axisalignedbb.move((chunk.getPos().x- chunkPos.x) * 16, 0, (chunk.getPos().z- chunkPos.z) * 16), (p_151522_) -> {
+        this.list.forEach(chunk -> list1.get(axisalignedbb.move((chunk.getPos().x - chunkPos.x) * 16, 0, (chunk.getPos().z - chunkPos.z) * 16), (p_151522_) -> {
             if (p_151522_ instanceof ItemEntity && axisalignedbb.contains(p_151522_.position())) {
                 list.add((ItemEntity) p_151522_);
             }
@@ -257,8 +257,8 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         if (!this.work) {
             return;
         }
-        if (this.getActive()){
-            ParticleUtils.spawnMagneticCatcherParticles(level,pos,level.random);
+        if (this.getActive()) {
+            ParticleUtils.spawnMagneticCatcherParticles(level, pos, level.random);
         }
         boolean ret = false;
         if (this.getWorld().getGameTime() % 4 == 0) {
@@ -324,7 +324,6 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             updateData();
         }
     }
-
 
 
     public double getEnergy() {

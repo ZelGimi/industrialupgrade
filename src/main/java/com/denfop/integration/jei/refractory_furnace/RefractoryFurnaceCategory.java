@@ -39,14 +39,15 @@ public class RefractoryFurnaceCategory extends GuiIU implements IRecipeCategory<
     private final IDrawableStatic bg;
     private final ContainerLaserPolisher container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public RefractoryFurnaceCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -99,12 +100,12 @@ public class RefractoryFurnaceCategory extends GuiIU implements IRecipeCategory<
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, 0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack, 0, 0, xScale);
-       bindTexture(getTexture());
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        bindTexture(getTexture());
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack, this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
@@ -114,18 +115,18 @@ public class RefractoryFurnaceCategory extends GuiIU implements IRecipeCategory<
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.INPUT,9, 8).setFluidRenderer(10000, true,12, 47).addFluidStack(recipe.getInput2().getFluid(),recipe.getInput2().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 9, 8).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput2().getFluid(), recipe.getInput2().getAmount());
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPlasticPlate.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIPlasticPlate.png".toLowerCase());
     }
 
 

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/nanocircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:transformer_iu/mv"
+    },
+    "C": {
+      "item": "industrialupgrade:circuit/quantumcircuit_part2"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/hybcore"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "powerutils:module_fe"
+  },
+  "show_notification": false
+}

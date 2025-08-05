@@ -32,7 +32,6 @@ public class GuiSteamBoiler<T extends ContainerSteamBoiler> extends GuiIU<Contai
     }
 
 
-
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -53,28 +52,25 @@ public class GuiSteamBoiler<T extends ContainerSteamBoiler> extends GuiIU<Contai
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
-       draw(poseStack,this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 4210752);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 4210752);
 
         handleUpgradeTooltip(par1, par2);
     }
 
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture(getTexture());
 
 
-
-
-
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect (poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
 
     }
 

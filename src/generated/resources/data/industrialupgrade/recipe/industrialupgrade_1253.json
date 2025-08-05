@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/electrum"
+    },
+    "C": {
+      "tag": "c:plates/invar"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    },
+    "E": {
+      "tag": "c:plates/ferromanganese"
+    }
+  },
+  "pattern": [
+    "A A",
+    "ACA",
+    "EDE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:primal_fluid_integrator/primal_fluid_integrator"
+  },
+  "show_notification": false
+}

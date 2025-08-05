@@ -27,20 +27,20 @@ public class GuiRocketAssembler<T extends ContainerRocketAssembler> extends GuiI
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
-       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
     @Override
-    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirocket_assembler.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirocket_assembler.png");
     }
 
 }

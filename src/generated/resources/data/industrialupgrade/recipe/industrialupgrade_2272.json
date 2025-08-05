@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_imp_pressure"
+    },
+    "B": {
+      "tag": "c:plates/woods"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_102_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_398_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_585_element"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "FEF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_turbine/steam_turbine_per_pressure"
+  },
+  "show_notification": false
+}

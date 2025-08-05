@@ -11,21 +11,21 @@ import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.container.ContainerBags;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -36,14 +36,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
@@ -64,29 +63,24 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
         IUCore.proxy.addProperties(this);
     }
 
+
     @Override
     public void appendHoverText(
             ItemStack stack,
-            @Nullable Level world,
+            @Nullable TooltipContext world,
             List<Component> tooltip,
             TooltipFlag flag
     ) {
-        tooltip.add(Component.literal(Localization.translate( "iu.bags.info")));
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+        tooltip.add(Component.literal(Localization.translate("iu.bags.info")));
+        if (!Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("press.lshift"));
         } else {
-            CompoundTag nbt = stack.getTag();
-            if (nbt == null || !nbt.contains("bag")) {
+            if (!stack.has(DataComponentsInit.DESCRIPTIONS_CONTAINER)) {
                 return;
             }
 
-            List<BagsDescription> list = new ArrayList<>();
-            CompoundTag nbt1 = nbt.getCompound("bag");
-            int size = nbt1.getInt("size");
+            List<BagsDescription> list = stack.getOrDefault(DataComponentsInit.DESCRIPTIONS_CONTAINER, Collections.emptyList());
 
-            for (int i = 0; i < size; i++) {
-                list.add(new BagsDescription(nbt1.getCompound(String.valueOf(i))));
-            }
 
             for (BagsDescription description : list) {
                 tooltip.add(Component.literal(description.getCount() + "x ")
@@ -113,7 +107,7 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -159,7 +153,6 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
     }
 
 
-
     @Override
     public boolean isEnchantable(ItemStack p_41456_) {
         return false;
@@ -171,9 +164,9 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
     }
 
     public void save(ItemStack stack, Player player) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("open", true);
-        nbt.putInt("slot_inventory", player.getInventory().selected);
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+        containerItem = containerItem.updateOpen(stack, true);
+        containerItem.updateSlot(stack, player.getInventory().selected);
     }
 
     @Override
@@ -184,8 +177,8 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
 
     @Override
     public void updateEvent(final int event, final ItemStack stack) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("white", !nbt.getBoolean("white"));
+        stack.set(DataComponentsInit.BLACK_LIST, !stack.getOrDefault(DataComponentsInit.BLACK_LIST, false));
+
     }
 
     public boolean canInsert(Player player, ItemStack stack, ItemStack stack1) {
@@ -217,26 +210,25 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
         if (!(entity instanceof Player)) {
             return;
         }
-        CompoundTag nbt = ModUtils.nbt(stack);
 
         if (!UpgradeSystem.system.hasInMap(stack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, stack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, stack));
         }
 
         Player player = (Player) entity;
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
 
-        if (nbt.getBoolean("open")) {
-            int slotId = nbt.getInt("slot_inventory");
+        if (containerItem.open()) {
+            int slotId = containerItem.slot_inventory();
             if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerBags) {
                 ItemStackBags toolbox = ((ContainerBags) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
-                    nbt.putBoolean("open", false);
+                    containerItem.updateOpen(stack, false);
                 }
             } else if (!(player.containerMenu instanceof ContainerBags)) {
-                nbt.putBoolean("open", false);
+                containerItem.updateOpen(stack, false);
             }
         }
 
@@ -268,12 +260,12 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
             if (!world.isClientSide && !player.isShiftKeyDown()) {
                 save(stack, player);
 
-                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
                 growingBuffer.writeByte(1);
 
                 growingBuffer.flip();
-                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+                player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
 
 
                 return InteractionResultHolder.success(player.getItemInHand(hand));
@@ -293,7 +285,7 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
-        return ModUtils.nbt(itemStack).getBoolean("open") ? 1 : 0;
+        return itemStack.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).open() ? 1 : 0;
     }
 
     @Override

@@ -6,8 +6,8 @@ import com.denfop.container.ContainerSolidMatter;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +81,7 @@ public class GuiSolidMatter<T extends ContainerSolidMatter> extends GuiCore<Cont
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSolidMatter.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiSolidMatter.png".toLowerCase());
     }
 
 }

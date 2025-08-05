@@ -21,7 +21,7 @@ public class TileElectricHeat extends TileBaseHeatMachine {
     private final AirPollutionComponent pollutionAir;
 
     public TileElectricHeat(BlockPos pos, BlockState state) {
-        super(false,BlockBaseMachine3.elec_heat,pos,state);
+        super(false, BlockBaseMachine3.elec_heat, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }

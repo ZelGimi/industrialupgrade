@@ -7,7 +7,6 @@ import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.damagesource.IUDamageSource;
 import com.denfop.datagen.DamageTypes;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -17,11 +16,9 @@ import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +27,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -59,7 +56,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         this.addedToEnergyNet = false;
         this.cableType = cableType;
         this.type = cableType.ordinal();
-        this.conductor = new ConductorInfo(pos,this);
+        this.conductor = new ConductorInfo(pos, this);
     }
 
     @Override
@@ -76,7 +73,6 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         info.add(Localization.translate("cable.tooltip.loss", lossFormat.format(loss)));
 
     }
-
 
 
     public ICableItem getCableItem() {
@@ -97,7 +93,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
     @Override
     public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+        NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
         this.needUpdate = true;
     }
 
@@ -107,7 +103,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         if (this.needUpdate) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this, this));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this, this));
             this.needUpdate = false;
             this.updateConnectivity();
         }
@@ -122,19 +118,20 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
                     .inflate(0.1D, 0.1D, 0.1D);
 
             List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
-            Registry<DamageType> registry = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
+
             for (LivingEntity entity : targets)
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
                     if (!IHazmatLike.hasCompleteHazmat(player)) {
 
-                        entity.hurt(new DamageSource(registry.getHolderOrThrow( DamageTypes.currentObject)), 0.25f);
+                        entity.hurt(new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageTypes.currentObject).orElse(entity.damageSources().damageTypes.getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.MAGIC))), 0.25f);
                     }
                 } else if (stats.getEnergyIn() > 0) {
-                    entity.hurt(new DamageSource(registry.getHolderOrThrow( DamageTypes.currentObject)), 0.25f);
+                    entity.hurt(new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageTypes.currentObject).orElse(entity.damageSources().damageTypes.getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.MAGIC))), 0.25f);
 
                 }
         }
+
     }
 
     public void onLoaded() {
@@ -142,7 +139,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         if (!this.getWorld().isClientSide && !addedToEnergyNet) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this, this));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this, this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
 
@@ -152,7 +149,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
 
     public void onUnloaded() {
         if (!this.getWorld().isClientSide && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
             this.updateConnectivity();
         }

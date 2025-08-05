@@ -33,7 +33,6 @@ import net.minecraft.world.item.Items;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteHandler> {
@@ -49,9 +48,9 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityGraphiteHandler) BlockBaseMachine3.graphite_handler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -75,7 +74,6 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -93,9 +91,9 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar(stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
         bindTexture(getTexture());
     }
 
@@ -107,10 +105,10 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GraphiteHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
-        final List<ItemStack> inputs = Arrays.asList(recipe.getInput(),recipe.getInput1());
+        final List<ItemStack> inputs = Arrays.asList(recipe.getInput(), recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
@@ -120,9 +118,8 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

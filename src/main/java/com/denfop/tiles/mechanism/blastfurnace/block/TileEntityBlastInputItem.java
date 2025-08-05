@@ -12,8 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,11 +39,11 @@ public class TileEntityBlastInputItem extends TileEntityMultiBlockElement implem
 
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
         if (this.getMain() != null) {
-            return ((TileMultiBlockBase) this.getMain()).getCapability(cap, facing);
+            return ((TileMultiBlockBase) this.getMain()).getCapability(cap, side);
         }
-        return super.getCapability(cap, facing);
+        return super.getCapability(cap, side);
     }
 
 

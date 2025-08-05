@@ -18,7 +18,7 @@ public class TileBioExtractor extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.EXTRACTOR.usagePerTick,
                 EnumMultiMachine.EXTRACTOR.lenghtOperation,
-                4,BlockBaseMachine3.bio_extractor,pos,state
+                4, BlockBaseMachine3.bio_extractor, pos, state
         );
     }
 

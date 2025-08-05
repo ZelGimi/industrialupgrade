@@ -9,16 +9,29 @@ import java.util.UUID;
 
 public class PacketSuccessUpdateColony implements IPacket {
 
-    public PacketSuccessUpdateColony() {
-    }
+    private CustomPacketBuffer buffer;
 
     ;
 
+    public PacketSuccessUpdateColony() {
+    }
+
     public PacketSuccessUpdateColony(Player entityPlayer) {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(entityPlayer.registryAccess());
         customPacketBuffer.writeByte(getId());
         customPacketBuffer.writeUUID(entityPlayer.getUUID());
-        IUCore.network.getServer().sendPacket(customPacketBuffer, (ServerPlayer) entityPlayer);
+        this.buffer = customPacketBuffer;
+        IUCore.network.getServer().sendPacket(this, customPacketBuffer, (ServerPlayer) entityPlayer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

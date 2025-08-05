@@ -32,9 +32,9 @@ public class FQuarryCategory extends GuiIU implements IRecipeCategory<FQuarryHan
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png"), 3, 3, 160,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquantumquerry.png"), 3, 3, 160,
                 80
         );
     }
@@ -45,7 +45,6 @@ public class FQuarryCategory extends GuiIU implements IRecipeCategory<FQuarryHan
     public String getTitles() {
         return Localization.translate(ItemStackHelper.fromData(IUItem.machines, 1, 8).getDescriptionId());
     }
-
 
 
     @Nonnull
@@ -62,15 +61,14 @@ public class FQuarryCategory extends GuiIU implements IRecipeCategory<FQuarryHan
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FQuarryHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,8, 21).addItemStack(new ItemStack(IUItem.analyzermodule.getItem()));
-        builder.addSlot(RecipeIngredientRole.OUTPUT,32, 12).addItemStack(recipe.getOutput());
-        builder.addSlot(RecipeIngredientRole.INPUT,8, 39).addItemStack( ItemStackHelper.fromData(IUItem.module9, 1));
+        builder.addSlot(RecipeIngredientRole.INPUT, 8, 21).addItemStack(new ItemStack(IUItem.analyzermodule.getItem()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 32, 12).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 8, 39).addItemStack(ItemStackHelper.fromData(IUItem.module9, 1));
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
     }
 
 

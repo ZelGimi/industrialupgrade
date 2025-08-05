@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerVending extends TileEntityBaseVending {
 
     public TileEntityPerVending(BlockPos pos, BlockState state) {
-        super(EnumTypeStyle.PERFECT,BlockBaseMachine3.per_vending,pos,state);
+        super(EnumTypeStyle.PERFECT, BlockBaseMachine3.per_vending, pos, state);
     }
 
 

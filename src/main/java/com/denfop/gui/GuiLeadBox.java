@@ -6,13 +6,13 @@ import com.denfop.container.ContainerLeadBox;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiLeadBox<T extends ContainerLeadBox> extends GuiIU<ContainerLeadBox> {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guileadbox.png");
+    private static final ResourceLocation background = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guileadbox.png");
     private final String name;
 
     public GuiLeadBox(ContainerLeadBox container, final ItemStack itemStack1) {

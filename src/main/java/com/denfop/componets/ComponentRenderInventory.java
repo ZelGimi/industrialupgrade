@@ -47,7 +47,7 @@ public class ComponentRenderInventory {
 
 
     public boolean contains(InvSlot invSlot) {
-        for (InvSlot slot : getSlotList()){
+        for (InvSlot slot : getSlotList()) {
             if (slot == invSlot)
                 return true;
         }

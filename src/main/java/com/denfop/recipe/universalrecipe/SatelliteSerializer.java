@@ -1,60 +1,69 @@
 package com.denfop.recipe.universalrecipe;
 
-import com.denfop.IUCore;
 import com.denfop.api.space.*;
-import com.denfop.recipe.InputOreDict;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.denfop.api.space.SpaceInit.regSatellite;
 
 public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
-    public static final SatelliteSerializer INSTANCE = new SatelliteSerializer();
 
-    @Override
-    public SatelliteRecipe fromJson(ResourceLocation id, JsonObject json) {
-        String name = json.get("name").getAsString();
+    public static final MapCodec<SatelliteRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(s -> s.name),
+            Codec.STRING.fieldOf("system").forGetter(s -> s.systemName),
+            Codec.STRING.fieldOf("texture").forGetter(s -> s.texturePath),
+            Codec.STRING.xmap(str -> EnumLevels.valueOf(str.toUpperCase()), EnumLevels::name).fieldOf("level").forGetter(s -> s.level),
+            Codec.STRING.fieldOf("planet").forGetter(s -> s.planetName),
+            Codec.INT.fieldOf("temperature").forGetter(s -> s.temperature),
+            Codec.BOOL.fieldOf("pressure").forGetter(s -> s.pressure),
+            Codec.DOUBLE.fieldOf("distance").forGetter(s -> s.distance),
+            Codec.STRING.xmap(str -> EnumType.valueOf(str.toUpperCase()), EnumType::name).fieldOf("type").forGetter(s -> s.type),
+            Codec.BOOL.fieldOf("oxygen").forGetter(s -> s.oxygen),
+            Codec.BOOL.fieldOf("colonies").forGetter(s -> s.colonies),
+            Codec.INT.fieldOf("angle").forGetter(s -> s.angle),
+            Codec.DOUBLE.fieldOf("time").forGetter(s -> s.time),
+            Codec.DOUBLE.fieldOf("size").forGetter(s -> s.size),
+            Codec.DOUBLE.fieldOf("rotation").forGetter(s -> s.rotation)
+    ).apply(instance, (name, systemStr, textureStr, level, planetStr, temperature, pressure, distance, type, oxygen, colonies, angle, time, size, rotation) -> {
+        ISystem system = SpaceNet.instance.getSystem().stream()
+                .filter(s -> s.getName().equals(systemStr.toLowerCase()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr));
 
-        ISystem system  = SpaceNet.instance.getSystem().stream().filter(systems -> systems.getName().equals(json.get("system").getAsString().toLowerCase())).toList().get(0);
-        ResourceLocation texture = new ResourceLocation(json.get("texture").getAsString()+ ".png");
-        EnumLevels level = EnumLevels.valueOf(json.get("level").getAsString().toUpperCase());
-        IPlanet planet = (IPlanet) SpaceNet.instance.getBodyFromName(json.get("planet").getAsString());
-        int temperature = json.get("temperature").getAsInt();
-        boolean pressure = json.get("pressure").getAsBoolean();
-        double distance = json.get("distance").getAsDouble();
-        EnumType type = EnumType.valueOf(json.get("type").getAsString().toUpperCase());
-        boolean oxygen = json.get("oxygen").getAsBoolean();
-        boolean colonies = json.get("colonies").getAsBoolean();
-        int angle = json.get("angle").getAsInt();
-        double time = json.get("time").getAsDouble();
-        double size = json.get("size").getAsDouble();
-        double rotation = json.get("rotation").getAsDouble();
-        regSatellite.add(() ->  new Satellite(name, system, texture, level, planet, temperature, pressure,
-                distance, type, oxygen, colonies, angle, time, size, rotation));
-        return new SatelliteRecipe(id, "", Collections.emptyList(), "");
+        IPlanet planet = (IPlanet) SpaceNet.instance.getBodyFromName(planetStr);
+        ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
+
+        regSatellite.add(() -> new Satellite(name, system, texture, level, planet, temperature, pressure, distance,
+                type, oxygen, colonies, angle, time, size, rotation));
+
+        return new SatelliteRecipe("", Collections.emptyList(), "");
+    }));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteRecipe> STREAM_CODEC = StreamCodec.of(SatelliteSerializer::toNetwork, SatelliteSerializer::fromNetwork);
+
+    private static SatelliteRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
+
+        return new SatelliteRecipe("", new ArrayList<>(), "");
+    }
+
+    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, SatelliteRecipe p_320586_) {
+
     }
 
     @Override
-    public SatelliteRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new SatelliteRecipe(id, "", new ArrayList<>(), "");
+    public MapCodec<SatelliteRecipe> codec() {
+        return MAP_CODEC;
     }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, SatelliteRecipe recipe) {
-
-
+    public StreamCodec<RegistryFriendlyByteBuf, SatelliteRecipe> streamCodec() {
+        return STREAM_CODEC;
     }
+
 }

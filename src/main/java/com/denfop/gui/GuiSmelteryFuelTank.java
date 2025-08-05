@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSmelteryFuelTank;
 import com.denfop.utils.Keyboard;
@@ -12,8 +11,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +61,7 @@ public class GuiSmelteryFuelTank<T extends ContainerSmelteryFuelTank> extends Gu
                         fluidX += 3;
                         fluidY += 3;
                         fluidWidth = 37;
-                        fluidHeight = 49;
+                        fluidHeight = 50;
                     }
 
                     Fluid fluid = fs.getFluid();
@@ -97,24 +96,24 @@ public class GuiSmelteryFuelTank<T extends ContainerSmelteryFuelTank> extends Gu
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void drawForegroundLayer(GuiGraphics poseStack,final int par1, final int par2) {
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guismeltery_fuel.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guismeltery_fuel.png");
     }
 
 }

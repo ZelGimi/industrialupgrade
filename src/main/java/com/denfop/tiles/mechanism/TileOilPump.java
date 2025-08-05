@@ -17,6 +17,7 @@ import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerOilPump;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiOilPump;
 import com.denfop.invslot.InvSlot;
@@ -43,11 +44,11 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -123,7 +124,8 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        tooltip.add(Localization.translate(  "iu.oil_quarry.info"));
+
+        tooltip.add(Localization.translate("iu.oil_quarry.info"));
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -131,10 +133,10 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.get(DataComponentsInit.DATA) != null && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getHoverName().getString());
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
@@ -230,7 +232,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
         ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
             CompoundTag nbt = ModUtils.nbt(drop);
             if (this.fluidTank.getFluidAmount() > 0) {
-                nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
+                nbt.put("fluid", this.fluidTank.getFluid().save(level.registryAccess(), new CompoundTag()));
             }
         }
         return drop;
@@ -249,8 +251,8 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             this.maxcount = this.vein.getMaxCol();
             this.type = this.vein.getType().ordinal();
         }
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
             if (fluidStack != null) {
                 this.fluidTank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
             }
@@ -264,7 +266,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
         if (name.equals("fluidTank")) {
             try {
                 FluidTank fluidTank = (FluidTank) DecoderHandler.decode(is);
-                this.fluidTank.readFromNBT(fluidTank.writeToNBT(new CompoundTag()));
+                this.fluidTank.readFromNBT(is.registryAccess(), fluidTank.writeToNBT(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

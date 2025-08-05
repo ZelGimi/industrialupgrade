@@ -22,7 +22,7 @@ public class GuiSawmill<T extends ContainerSawmill> extends GuiIU<ContainerSawmi
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

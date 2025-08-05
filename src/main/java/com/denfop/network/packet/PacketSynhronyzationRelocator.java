@@ -8,21 +8,33 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PacketSynhronyzationRelocator implements IPacket {
-    public PacketSynhronyzationRelocator(){
+    private CustomPacketBuffer buffer;
+
+    public PacketSynhronyzationRelocator() {
 
     }
 
     public PacketSynhronyzationRelocator(Player player, List<Point> list) {
-        if (player instanceof ServerPlayer serverPlayer){
-            CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        if (player instanceof ServerPlayer serverPlayer) {
+            CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
             customPacketBuffer.writeByte(this.getId());
             customPacketBuffer.writeInt(list.size());
-            list.forEach(point ->  point.writeToBuffer(customPacketBuffer));
-            IUCore.network.getServer().sendPacket(customPacketBuffer,serverPlayer);
+            list.forEach(point -> point.writeToBuffer(customPacketBuffer));
+            this.buffer = customPacketBuffer;
+            IUCore.network.getServer().sendPacket(this, customPacketBuffer, serverPlayer);
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -34,11 +46,11 @@ public class PacketSynhronyzationRelocator implements IPacket {
     public void readPacket(CustomPacketBuffer customPacketBuffer, Player entityPlayer) {
         List<Point> points = new ArrayList<>();
         int size = customPacketBuffer.readInt();
-        for (int i = 0; i < size;i++){
+        for (int i = 0; i < size; i++) {
             Point point = new Point(customPacketBuffer);
             points.add(point);
         }
-        RelocatorNetwork.instance.addPoints(entityPlayer,points);
+        RelocatorNetwork.instance.addPoints(entityPlayer, points);
     }
 
     @Override

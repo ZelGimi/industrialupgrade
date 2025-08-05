@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/beryllium"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    },
+    "C": {
+      "tag": "c:plates/bor"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_367_element"
+  },
+  "show_notification": false
+}

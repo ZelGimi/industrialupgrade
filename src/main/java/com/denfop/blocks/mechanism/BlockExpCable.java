@@ -1,6 +1,7 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.state.DefaultDrop;
@@ -14,24 +15,28 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+
+;
 
 public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
 
     experience(TileEntityExpCable.class, 0);
 
 
+    static String[] name = {"itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4",};
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     int idBlock;
     private TileEntityBlock dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
 
     ;
 
@@ -42,8 +47,6 @@ public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
 
     }
 
-    ;
-
     public int getIDBlock() {
         return idBlock;
     }
@@ -53,7 +56,7 @@ public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
     }
 
     public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
+        final ModContainer mc = IUCore.instance.modContainer;
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
@@ -77,10 +80,9 @@ public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
-
 
     @Override
     public MapColor getMaterial() {
@@ -92,7 +94,6 @@ public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
         return this.name();
     }
 
-
     @Override
     public String getMainPath() {
         return "wiring";
@@ -102,7 +103,6 @@ public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
     public int getId() {
         return this.itemMeta;
     }
-
 
     @Override
     public boolean hasItem() {
@@ -135,15 +135,17 @@ public enum BlockExpCable implements IMultiTileBlock, IMultiBlockItem {
     public HarvestTool getHarvestTool() {
         return HarvestTool.None;
     }
-    static   String[] name = {"itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4",};
+
     @Override
     public boolean hasUniqueName() {
         return true;
     }
+
     @Override
     public String getUniqueName() {
-        return "iu.expcable" ;
+        return "iu.expcable";
     }
+
     @Override
     @Nonnull
     public DefaultDrop getDefaultDrop() {

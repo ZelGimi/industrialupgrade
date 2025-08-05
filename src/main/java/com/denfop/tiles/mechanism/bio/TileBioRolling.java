@@ -18,7 +18,7 @@ public class TileBioRolling extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.Rolling.usagePerTick,
                 EnumMultiMachine.Rolling.lenghtOperation,
-                4,BlockBaseMachine3.bio_rolling,pos,state
+                4, BlockBaseMachine3.bio_rolling, pos, state
         );
     }
 

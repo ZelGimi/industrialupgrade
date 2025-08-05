@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "B": {
+      "tag": "c:plates/carbon"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_508_element"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BBB",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_517_element"
+  },
+  "show_notification": false
+}

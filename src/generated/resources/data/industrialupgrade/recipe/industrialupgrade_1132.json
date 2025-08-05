@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "D": {
+      "item": "industrialupgrade:radiationresources/rad_toriy"
+    },
+    "E": {
+      "tag": "c:plates/bronze"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "EDE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_627_element"
+  },
+  "show_notification": false
+}

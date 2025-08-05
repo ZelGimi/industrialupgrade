@@ -17,7 +17,7 @@ public class TilePerHandlerHeavyOre extends TileBaseHandlerHeavyOre {
     private final SoilPollutionComponent pollutionSoil;
 
     public TilePerHandlerHeavyOre(BlockPos pos, BlockState state) {
-        super(EnumTypeStyle.PERFECT,BlockBaseMachine3.quad_handlerho,pos,state);
+        super(EnumTypeStyle.PERFECT, BlockBaseMachine3.quad_handlerho, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.4));
     }

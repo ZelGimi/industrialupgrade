@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/universal"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdoubleplates/tin_doubleplate"
+    },
+    "C": {
+      "tag": "c:ingots/cobalt"
+    }
+  },
+  "pattern": [
+    " A ",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/universal1"
+  },
+  "show_notification": false
+}

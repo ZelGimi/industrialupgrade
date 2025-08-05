@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityTropicalHive extends TileEntityHive {
 
     public TileEntityTropicalHive(BlockPos pos, BlockState state) {
-        super(BeeInit.TROPICAL_BEE,BlockHive.tropical_hive, pos ,state);
+        super(BeeInit.TROPICAL_BEE, BlockHive.tropical_hive, pos, state);
     }
 
     @Override

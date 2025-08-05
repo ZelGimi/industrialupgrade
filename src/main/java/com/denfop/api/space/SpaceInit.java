@@ -6,7 +6,7 @@ import com.denfop.api.space.rovers.enums.EnumTypeRovers;
 import com.denfop.blocks.FluidName;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -56,11 +56,6 @@ public class SpaceInit {
     public static Planet makemake;
     public static Planet haumea;
     public static Asteroid asteroids;
-    public static Star sextantis;
-    public static Star cancri;
-    public static Star kapteynSun;
-    public static Star kepler186Sun;
-
     public static List<Runnable> regSystem = new LinkedList<>();
     public static List<Runnable> regStar = new LinkedList<>();
     public static List<Runnable> regPlanet = new LinkedList<>();
@@ -68,6 +63,11 @@ public class SpaceInit {
     public static List<Runnable> regAsteroid = new LinkedList<>();
     public static List<Runnable> regBaseResource = new LinkedList<>();
     public static List<Runnable> regColonyBaseResource = new LinkedList<>();
+    private static Star sextantis;
+    private static Star cancri;
+    private static Star kapteynSun;
+    private static Star kepler186Sun;
+
     public static void jsonInit() {
         regSystem.forEach(Runnable::run);
         regStar.forEach(Runnable::run);
@@ -77,6 +77,7 @@ public class SpaceInit {
         regBaseResource.forEach(Runnable::run);
         regColonyBaseResource.forEach(Runnable::run);
     }
+
     public static void init() {
         solarSystem = new System("solarsystem");
         sextantis24 = new System("sextantis");
@@ -1383,7 +1384,7 @@ public class SpaceInit {
     public static ResourceLocation getTexture(String name) {
 
 
-        return new ResourceLocation(
+        return ResourceLocation.tryBuild(
                 Constants.TEXTURES,
                 "textures/planet/" + name + ".png"
         );

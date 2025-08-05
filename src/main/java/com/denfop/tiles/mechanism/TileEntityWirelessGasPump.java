@@ -14,6 +14,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWirelessGasPump;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.VeinInfo;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWirelessGasPump;
 import com.denfop.invslot.InvSlot;
@@ -24,7 +26,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Keyboard;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -34,10 +35,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -53,7 +54,7 @@ public class TileEntityWirelessGasPump extends TileEntityInventory implements IM
     public int levelBlock;
 
     public TileEntityWirelessGasPump(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.wireless_gas_pump,pos,state);
+        super(BlockBaseMachine3.wireless_gas_pump, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = fluids.addTank("tank", 256000, Fluids.fluidPredicate(FluidName.fluidgas.getInstance().get()
         ));
@@ -71,9 +72,8 @@ public class TileEntityWirelessGasPump extends TileEntityInventory implements IM
                 if (!(stack.getItem() instanceof ItemVeinSensor)) {
                     return false;
                 }
-                final CompoundTag nbt = ModUtils.nbt(stack);
-                if (!nbt.getString("type").isEmpty()) {
-                    return nbt.getString("type").equals("gas");
+                if (!stack.has(DataComponentsInit.VEIN_INFO)) {
+                    return stack.get(DataComponentsInit.VEIN_INFO).type().equals("gas");
                 }
                 return false;
             }
@@ -120,7 +120,7 @@ public class TileEntityWirelessGasPump extends TileEntityInventory implements IM
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
-                return super.onActivated(player, hand, side,vec3);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
@@ -130,7 +130,6 @@ public class TileEntityWirelessGasPump extends TileEntityInventory implements IM
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     @Override
@@ -174,8 +173,8 @@ public class TileEntityWirelessGasPump extends TileEntityInventory implements IM
             tooltip.add(Localization.translate("iu.machines_work_energy") + 10 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
 
             tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getFluid().getFluidType().getDescription().getString());
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
@@ -226,9 +225,9 @@ public class TileEntityWirelessGasPump extends TileEntityInventory implements IM
             if (stack.isEmpty()) {
                 continue;
             }
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            int x = nbt.getInt("x");
-            int z = nbt.getInt("z");
+            VeinInfo veinInfo = stack.get(DataComponentsInit.VEIN_INFO);
+            int x = veinInfo.x();
+            int z = veinInfo.z();
             ChunkPos chunkPos = new ChunkPos(x >> 4, z >> 4);
             final Vein vein = VeinSystem.system.getVein(chunkPos);
             if (vein.isFind() && vein.getType() == Type.GAS) {

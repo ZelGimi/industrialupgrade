@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:gas_reactor/imp_gas_compressor"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_393_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_reactor/per_gas_compressor"
+  },
+  "show_notification": false
+}

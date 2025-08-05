@@ -32,8 +32,9 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.ClientHooks;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -199,7 +200,6 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     }
 
 
-
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
@@ -223,9 +223,9 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                         this.getWorld(),
                         null, 0
                 );
-                this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                this.transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                         this.bakedModel,
-                       GROUND,
+                        GROUND,
                         false
                 );
             }
@@ -351,7 +351,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                             this.getWorld(),
                             null, 0
                     );
-                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                    this.transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                             this.bakedModel,
                             GROUND,
                             false

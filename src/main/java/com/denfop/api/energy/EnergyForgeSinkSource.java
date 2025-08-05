@@ -2,16 +2,19 @@ package com.denfop.api.energy;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class EnergyForgeSinkSource extends EnergyForge implements IDual {
+    List<Integer> energyTicks = new LinkedList<>();
     private double perenergy;
     private double pastEnergy;
     private double tick;
+    private double perenergy1;
+    private double pastEnergy1;
 
     public EnergyForgeSinkSource(BlockEntity blockEntity) {
         super(blockEntity);
@@ -68,8 +71,8 @@ public class EnergyForgeSinkSource extends EnergyForge implements IDual {
     public double getDemandedEnergy(Direction direction) {
         IEnergyStorage energyStorage = storages.get(direction);
         if (energyStorage == null)
-            return  0;
-        return energyStorage.receiveEnergy(Integer.MAX_VALUE,true) / 4D;
+            return 0;
+        return energyStorage.receiveEnergy(Integer.MAX_VALUE, true) / 4D;
     }
 
     @Override
@@ -94,16 +97,10 @@ public class EnergyForgeSinkSource extends EnergyForge implements IDual {
 
     }
 
-    List<Integer> energyTicks = new LinkedList<>();
-
     @Override
     public List<Integer> getEnergyTickList() {
         return energyTicks;
     }
-
-    private double perenergy1;
-    private double pastEnergy1;
-
 
     @Override
     public double getPerEnergy1() {
@@ -137,7 +134,6 @@ public class EnergyForgeSinkSource extends EnergyForge implements IDual {
             return 0;
         return energy.extractEnergy(Integer.MAX_VALUE, true) / 4D;
     }
-
 
     @Override
     public double canExtractEnergy() {

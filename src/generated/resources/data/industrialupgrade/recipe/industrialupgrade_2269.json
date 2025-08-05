@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
+    },
+    "B": {
+      "tag": "c:plates/neodymium"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_63_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_387_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_581_element"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "FEF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_turbine/steam_turbine_pressure"
+  },
+  "show_notification": false
+}

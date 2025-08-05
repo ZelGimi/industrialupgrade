@@ -1,46 +1,45 @@
 package com.denfop.recipe.universalrecipe;
 
-import com.denfop.IUCore;
-import com.denfop.api.space.*;
 import com.denfop.api.space.System;
-import com.denfop.recipe.InputOreDict;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.denfop.api.space.SpaceInit.*;
+import static com.denfop.api.space.SpaceInit.regSystem;
 
 public class SystemSerializer implements RecipeSerializer<SystemRecipe> {
-    public static final SystemSerializer INSTANCE = new SystemSerializer();
 
-    @Override
-    public SystemRecipe fromJson(ResourceLocation id, JsonObject json) {
-        String name = json.get("name").getAsString();
-        int distanceFromStar = json.get("name").getAsInt();
-        regSystem.add(() ->  new System(name,distanceFromStar));
-        return new SystemRecipe(id, "", Collections.emptyList(), "");
+    public static final MapCodec<SystemRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(SystemRecipe::getName),
+            Codec.INT.fieldOf("distance").forGetter(SystemRecipe::getDistanceFromStar)
+    ).apply(instance, (name, distanceFromStar) -> {
+        regSystem.add(() -> new System(name, distanceFromStar));
+        return new SystemRecipe("", Collections.emptyList(), "");
+    }));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SystemRecipe> STREAM_CODEC = StreamCodec.of(SystemSerializer::toNetwork, SystemSerializer::fromNetwork);
+
+    private static SystemRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
+
+        return new SystemRecipe("", new ArrayList<>(), "");
+    }
+
+    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, SystemRecipe p_320586_) {
+
     }
 
     @Override
-    public SystemRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new SystemRecipe(id, "", new ArrayList<>(), "");
+    public MapCodec<SystemRecipe> codec() {
+        return MAP_CODEC;
     }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, SystemRecipe recipe) {
-
-
+    public StreamCodec<RegistryFriendlyByteBuf, SystemRecipe> streamCodec() {
+        return STREAM_CODEC;
     }
+
 }

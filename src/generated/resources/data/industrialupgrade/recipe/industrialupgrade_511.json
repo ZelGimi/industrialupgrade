@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/photon_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_558_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_479_element"
+    },
+    "D": {
+      "tag": "c:plates/superalloyrene"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/photon_part3"
+  },
+  "show_notification": false
+}

@@ -15,8 +15,8 @@ import java.util.List;
 
 public class MetalFormerRecipe {
 
-    public static final String[] recipe = {"forge:ingots/", "forge:plates/", "forge:ingots/", "forge:plates/", "forge:storage_blocks/"};
-    public static final String[] recipe1 = {"forge:plates/", "forge:casings/", "forge:rods/", "forge:rods/", "forge:plates/"};
+    public static final String[] recipe = {"c:ingots/", "c:plates/", "c:ingots/", "c:plates/", "c:storage_blocks/"};
+    public static final String[] recipe1 = {"c:plates/", "c:casings/", "c:rods/", "c:rods/", "c:plates/"};
 
     public static final String[] recipe2 = {"Osmium", "Tantalum", "Cadmium"};
     public static final List<String> list_baseore1 = itemNames7();
@@ -103,9 +103,9 @@ public class MetalFormerRecipe {
     }
 
     public static void init() {
-        addmolot("forge:ingots/Lithium", "forge:plates/Lithium", 1);
-        addmolot("forge:gems/Bor", "forge:plates/Bor", 1);
-        addmolot("forge:gems/Beryllium", "forge:plates/Beryllium", 1);
+        addmolot("c:ingots/Lithium", "c:plates/Lithium", 1);
+        addmolot("c:gems/Bor", "c:plates/Bor", 1);
+        addmolot("c:gems/Beryllium", "c:plates/Beryllium", 1);
         addmolot(new ItemStack(IUItem.synthetic_rubber.getItem()), 1, new ItemStack(IUItem.synthetic_plate.getItem(), 1));
         addmolot(new ItemStack(IUItem.graphene.getItem()), 1, new ItemStack(IUItem.graphene_plate.getItem(), 1));
         addCutting(new ItemStack(IUItem.graphene_plate.getItem()), new ItemStack(IUItem.graphene_wire.getItem(), 4), 4);
@@ -113,10 +113,10 @@ public class MetalFormerRecipe {
         addmolot(new ItemStack(IUItem.crafting_elements.getStack(504), 1), 1, new ItemStack(IUItem.crafting_elements.getStack(501), 1));
         addCutting(new ItemStack(IUItem.crafting_elements.getStack(495), 2), new ItemStack(IUItem.crafting_elements.getStack(494), 1), 1);
         for (String s : recipe2) {
-            addcutting("forge:ingots/" + s, "forge:rods/" + s, 2);
+            addcutting("c:ingots/" + s, "c:rods/" + s, 2);
         }
         for (String s : list_baseore1) {
-            addcutting("forge:ingots/" + s, "forge:rods/" + s, 2);
+            addcutting("c:ingots/" + s, "c:rods/" + s, 2);
         }
         addmolot(new ItemStack(IUItem.wolframite.getItem()), 1, new ItemStack(IUItem.crafting_elements.getStack(655), 1));
         addmolot(new ItemStack(IUItem.crafting_elements.getStack(655), 1), 1, new ItemStack(IUItem.crafting_elements.getStack(505), 2));
@@ -254,43 +254,43 @@ public class MetalFormerRecipe {
             }
         }
         addmolot(
-                "forge:storage_blocks/Iron",
-                "forge:plates/Iron",
+                "c:storage_blocks/Iron",
+                "c:plates/Iron",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Bronze",
-                "forge:plates/Bronze",
+                "c:storage_blocks/Bronze",
+                "c:plates/Bronze",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Tin",
-                "forge:plates/Tin",
+                "c:storage_blocks/Tin",
+                "c:plates/Tin",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Copper",
-                "forge:plates/Copper",
+                "c:storage_blocks/Copper",
+                "c:plates/Copper",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Gold",
-                "forge:plates/Gold",
+                "c:storage_blocks/Gold",
+                "c:plates/Gold",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Lapis",
-                "forge:plates/Lapis",
+                "c:storage_blocks/Lapis",
+                "c:plates/Lapis",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Lead",
-                "forge:plates/Lead",
+                "c:storage_blocks/Lead",
+                "c:plates/Lead",
                 9
         );
         addmolot(
-                "forge:storage_blocks/Steel",
-                "forge:plates/Steel",
+                "c:storage_blocks/Steel",
+                "c:plates/Steel",
                 9
         );
         for (int j = 0; j < recipe.length; j++) {
@@ -320,37 +320,37 @@ public class MetalFormerRecipe {
         }
 
 
-        addCutting("forge:plates/Muntsa", 4, new ItemStack(IUItem.expcable.getItem()));
+        addCutting("c:plates/Muntsa", 4, new ItemStack(IUItem.expcable.getItem()));
 
-        addmolot("forge:ingots/Steel", IUItem.plateadviron);
-        addmolot("forge:ingots/Copper", IUItem.platecopper);
-        addmolot("forge:ingots/Lead", IUItem.platelead);
-        addmolot("forge:ingots/Gold", IUItem.plategold);
-        addmolot("forge:ingots/Tin", IUItem.platetin);
-        addmolot("forge:ingots/Iron", IUItem.plateiron);
-        addmolot("forge:ingots/Bronze", IUItem.platebronze);
-        addmolot("forge:plates/Bronze", IUItem.casingbronze, 2);
-        addmolot("forge:plates/Iron", IUItem.casingiron, 2);
-        addmolot("forge:plates/Steel", IUItem.casingadviron, 2);
-        addmolot("forge:plates/Copper", IUItem.casingcopper, 2);
-        addmolot("forge:plates/Lead", IUItem.casinglead, 2);
-        addmolot("forge:plates/Gold", IUItem.casinggold, 2);
-        addmolot("forge:plates/Tin", IUItem.casingtin, 2);
+        addmolot("c:ingots/Steel", IUItem.plateadviron);
+        addmolot("c:ingots/Copper", IUItem.platecopper);
+        addmolot("c:ingots/Lead", IUItem.platelead);
+        addmolot("c:ingots/Gold", IUItem.plategold);
+        addmolot("c:ingots/Tin", IUItem.platetin);
+        addmolot("c:ingots/Iron", IUItem.plateiron);
+        addmolot("c:ingots/Bronze", IUItem.platebronze);
+        addmolot("c:plates/Bronze", IUItem.casingbronze, 2);
+        addmolot("c:plates/Iron", IUItem.casingiron, 2);
+        addmolot("c:plates/Steel", IUItem.casingadviron, 2);
+        addmolot("c:plates/Copper", IUItem.casingcopper, 2);
+        addmolot("c:plates/Lead", IUItem.casinglead, 2);
+        addmolot("c:plates/Gold", IUItem.casinggold, 2);
+        addmolot("c:plates/Tin", IUItem.casingtin, 2);
 
-        addExtruding("forge:ingots/Tin", IUItem.tinCableItem, 3);
-        addExtruding("forge:ingots/Iron", IUItem.ironCableItem, 4);
-        addExtruding("forge:ingots/Gold", IUItem.goldCableItem, 4);
-        addExtruding("forge:ingots/Copper", IUItem.copperCableItem, 3);
+        addExtruding("c:ingots/Tin", IUItem.tinCableItem, 3);
+        addExtruding("c:ingots/Iron", IUItem.ironCableItem, 4);
+        addExtruding("c:ingots/Gold", IUItem.goldCableItem, 4);
+        addExtruding("c:ingots/Copper", IUItem.copperCableItem, 3);
 
 
-        addCutting("forge:plates/Tin", IUItem.tinCableItem, 3);
-        addCutting("forge:plates/Iron", IUItem.ironCableItem, 4);
-        addCutting("forge:plates/Gold", IUItem.goldCableItem, 4);
-        addCutting("forge:plates/Copper", IUItem.copperCableItem, 3);
+        addCutting("c:plates/Tin", IUItem.tinCableItem, 3);
+        addCutting("c:plates/Iron", IUItem.ironCableItem, 4);
+        addCutting("c:plates/Gold", IUItem.goldCableItem, 4);
+        addCutting("c:plates/Copper", IUItem.copperCableItem, 3);
         for (int i = 0; i < 19; i++) {
             addCutting(
                     new ItemStack(IUItem.stik.getStack(i), 2),
-                    "forge:ingots/" + itemNames()
+                    "c:ingots/" + itemNames()
                             .get(i)
             );
         }

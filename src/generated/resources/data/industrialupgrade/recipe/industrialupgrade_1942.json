@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:wool"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/glass6"
+    },
+    "C": {
+      "item": "industrialupgrade:synthetic_plate"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/universal6"
+  },
+  "show_notification": false
+}

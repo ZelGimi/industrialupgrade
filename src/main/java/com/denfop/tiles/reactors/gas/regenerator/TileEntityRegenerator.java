@@ -13,7 +13,7 @@ public class TileEntityRegenerator extends TileEntityMultiBlockElement implement
     private int helium;
 
     public TileEntityRegenerator(int level, int max, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.level = level;
         this.max = max;
     }

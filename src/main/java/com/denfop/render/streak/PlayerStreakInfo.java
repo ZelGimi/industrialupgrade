@@ -1,6 +1,7 @@
 package com.denfop.render.streak;
 
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 
 public class PlayerStreakInfo {
@@ -32,8 +33,8 @@ public class PlayerStreakInfo {
         return nbt;
     }
 
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
+    public CustomPacketBuffer writePacket(RegistryAccess registryAccess) {
+        CustomPacketBuffer packetBuffer = new CustomPacketBuffer(registryAccess);
         packetBuffer.writeShort(rgb.getRed());
         packetBuffer.writeShort(rgb.getBlue());
         packetBuffer.writeShort(rgb.getGreen());

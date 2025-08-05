@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/carbon"
+    },
+    "B": {
+      "item": "industrialupgrade:pumps/pump"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_344_element"
+    }
+  },
+  "pattern": [
+    "A A",
+    "CBC",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:pumps/adv_pump"
+  },
+  "show_notification": false
+}

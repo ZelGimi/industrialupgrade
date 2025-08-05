@@ -9,8 +9,8 @@ import com.denfop.container.ContainerElectrolyzer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiElectrolyzer<T extends ContainerElectrolyzer> extends GuiIU<ContainerElectrolyzer> {
@@ -18,7 +18,7 @@ public class GuiElectrolyzer<T extends ContainerElectrolyzer> extends GuiIU<Cont
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png".toLowerCase());
+        background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png".toLowerCase());
     }
 
     public ContainerElectrolyzer container;
@@ -80,7 +80,7 @@ public class GuiElectrolyzer<T extends ContainerElectrolyzer> extends GuiIU<Cont
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
@@ -94,7 +94,7 @@ public class GuiElectrolyzer<T extends ContainerElectrolyzer> extends GuiIU<Cont
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.container.base != null) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 

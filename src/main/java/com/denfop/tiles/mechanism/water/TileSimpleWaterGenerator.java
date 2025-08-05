@@ -13,7 +13,7 @@ public class TileSimpleWaterGenerator extends TileBaseWaterGenerator {
 
 
     public TileSimpleWaterGenerator(BlockPos pos, BlockState state) {
-        super(EnumLevelGenerators.ONE,BlockBaseMachine3.simple_water_generator,pos,state);
+        super(EnumLevelGenerators.ONE, BlockBaseMachine3.simple_water_generator, pos, state);
     }
 
     @Override

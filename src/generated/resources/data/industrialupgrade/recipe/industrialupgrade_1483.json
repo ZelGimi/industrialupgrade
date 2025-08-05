@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_234_element"
+  },
+  "show_notification": false
+}

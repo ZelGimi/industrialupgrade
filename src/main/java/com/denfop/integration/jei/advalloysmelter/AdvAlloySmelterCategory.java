@@ -41,20 +41,21 @@ public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<Ad
     private final ContainerTripleElectricMachine container1;
     private final GuiComponent progress_bar;
     private final GuiComponent slots1;
+    private final JeiInform<AdvAlloySmelterCategory, AdvAlloySmelterHandler> jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform<AdvAlloySmelterCategory,AdvAlloySmelterHandler>  jeiInform;
+
     public AdvAlloySmelterCategory(
-            IGuiHelper guiHelper, JeiInform<AdvAlloySmelterCategory,AdvAlloySmelterHandler> jeiInform
+            IGuiHelper guiHelper, JeiInform<AdvAlloySmelterCategory, AdvAlloySmelterHandler> jeiInform
     ) {
         super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
@@ -84,7 +85,6 @@ public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<Ad
     }
 
 
-
     @SuppressWarnings("removal")
     @Override
     public IDrawable getBackground() {
@@ -102,7 +102,7 @@ public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<Ad
         final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1(), recipes.getInput2());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() + 15).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() + 15).addItemStack(inputs.get(i));
 
 
         }
@@ -111,6 +111,7 @@ public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<Ad
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
     }
+
     @Override
     public void draw(AdvAlloySmelterHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics poseStack, double mouseX, double mouseY) {
         progress++;
@@ -123,8 +124,8 @@ public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<Ad
             progress = 0;
         }
         this.slots.drawBackground(poseStack, -20, 15);
-        this.slots1.drawBackground(poseStack,0, 0);
-        progress_bar.renderBar(poseStack,0, 0, xScale);
+        this.slots1.drawBackground(poseStack, 0, 0);
+        progress_bar.renderBar(poseStack, 0, 0, xScale);
         bindTexture(getTexture());
         int temp = recipe.temperature;
 
@@ -133,10 +134,8 @@ public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<Ad
     }
 
 
-
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

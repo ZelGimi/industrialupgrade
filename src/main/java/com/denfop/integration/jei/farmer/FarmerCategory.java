@@ -52,9 +52,9 @@ public class FarmerCategory extends GuiIU implements IRecipeCategory<FarmerHandl
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileFermer) BlockMoreMachine3.farmer.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
@@ -134,9 +134,8 @@ public class FarmerCategory extends GuiIU implements IRecipeCategory<FarmerHandl
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine3.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine3.png");
     }
 
 

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_254_element"
+    },
+    "B": {
+      "item": "simplyquarries:simplyquarries/imp_simply_quarry"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_120_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    }
+  },
+  "pattern": [
+    "D D",
+    "ABE",
+    "DCD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplyquarries:simplyquarries/per_simply_quarry"
+  },
+  "show_notification": false
+}

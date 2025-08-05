@@ -18,9 +18,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 public class TileEntityMainTank extends TileEntityMultiBlockElement implements ITank {
 
@@ -28,7 +28,7 @@ public class TileEntityMainTank extends TileEntityMultiBlockElement implements I
     public final Fluids.InternalFluidTank tank;
 
     public TileEntityMainTank(int col, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         tank = this.fluids.addTank("fluidTank", col);
         tank.setCanAccept(false);
@@ -62,13 +62,12 @@ public class TileEntityMainTank extends TileEntityMultiBlockElement implements I
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand)) && this.getMain() != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public Fluids getFluids() {

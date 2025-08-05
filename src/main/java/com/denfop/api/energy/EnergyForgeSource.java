@@ -2,7 +2,7 @@ package com.denfop.api.energy;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.Map;
 
@@ -45,6 +45,7 @@ public class EnergyForgeSource extends EnergyForge implements IEnergySource {
     public double canExtractEnergy(Direction direction) {
 
         return storages.get(direction).extractEnergy(Integer.MAX_VALUE, true) / 4D;
+
     }
 
     @Override

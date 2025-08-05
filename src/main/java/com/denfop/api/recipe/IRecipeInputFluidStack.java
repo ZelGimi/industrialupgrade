@@ -1,6 +1,6 @@
 package com.denfop.api.recipe;
 
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 

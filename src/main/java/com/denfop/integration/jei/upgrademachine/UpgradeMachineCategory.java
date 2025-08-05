@@ -38,14 +38,15 @@ public class UpgradeMachineCategory extends GuiIU implements IRecipeCategory<Upg
     private final IDrawableStatic bg;
     private final ContainerUpgradeMachineFactory container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public UpgradeMachineCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -115,7 +116,7 @@ public class UpgradeMachineCategory extends GuiIU implements IRecipeCategory<Upg
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

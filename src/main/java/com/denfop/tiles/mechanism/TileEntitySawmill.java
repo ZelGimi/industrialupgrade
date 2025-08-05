@@ -28,8 +28,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -50,7 +50,7 @@ public class TileEntitySawmill extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileEntitySawmill(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.sawmill,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.sawmill, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
@@ -154,36 +154,35 @@ public class TileEntitySawmill extends TileElectricMachine implements
     @Override
     public void init() {
 
-            addRecipe(new ItemStack(Blocks.OAK_LOG), new ItemStack(Blocks.OAK_PLANKS, 6));
-            addRecipe(new ItemStack(Blocks.SPRUCE_LOG), new ItemStack(Blocks.SPRUCE_PLANKS, 6));
-            addRecipe(new ItemStack(Blocks.BIRCH_LOG), new ItemStack(Blocks.BIRCH_PLANKS, 6));
-            addRecipe(new ItemStack(Blocks.JUNGLE_LOG), new ItemStack(Blocks.JUNGLE_PLANKS, 6));
-            addRecipe(new ItemStack(Blocks.ACACIA_LOG), new ItemStack(Blocks.ACACIA_PLANKS, 6));
-            addRecipe(new ItemStack(Blocks.DARK_OAK_LOG), new ItemStack(Blocks.DARK_OAK_PLANKS, 6));
+        addRecipe(new ItemStack(Blocks.OAK_LOG), new ItemStack(Blocks.OAK_PLANKS, 6));
+        addRecipe(new ItemStack(Blocks.SPRUCE_LOG), new ItemStack(Blocks.SPRUCE_PLANKS, 6));
+        addRecipe(new ItemStack(Blocks.BIRCH_LOG), new ItemStack(Blocks.BIRCH_PLANKS, 6));
+        addRecipe(new ItemStack(Blocks.JUNGLE_LOG), new ItemStack(Blocks.JUNGLE_PLANKS, 6));
+        addRecipe(new ItemStack(Blocks.ACACIA_LOG), new ItemStack(Blocks.ACACIA_PLANKS, 6));
+        addRecipe(new ItemStack(Blocks.DARK_OAK_LOG), new ItemStack(Blocks.DARK_OAK_PLANKS, 6));
 
-            addRecipe(new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Blocks.OAK_STAIRS));
-            addRecipe(new ItemStack(Blocks.SPRUCE_PLANKS), new ItemStack(Blocks.SPRUCE_STAIRS));
-            addRecipe(new ItemStack(Blocks.BIRCH_PLANKS), new ItemStack(Blocks.BIRCH_STAIRS));
-            addRecipe(new ItemStack(Blocks.JUNGLE_PLANKS), new ItemStack(Blocks.JUNGLE_STAIRS));
-            addRecipe(new ItemStack(Blocks.ACACIA_PLANKS), new ItemStack(Blocks.ACACIA_STAIRS));
-            addRecipe(new ItemStack(Blocks.DARK_OAK_PLANKS), new ItemStack(Blocks.DARK_OAK_STAIRS));
+        addRecipe(new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Blocks.OAK_STAIRS));
+        addRecipe(new ItemStack(Blocks.SPRUCE_PLANKS), new ItemStack(Blocks.SPRUCE_STAIRS));
+        addRecipe(new ItemStack(Blocks.BIRCH_PLANKS), new ItemStack(Blocks.BIRCH_STAIRS));
+        addRecipe(new ItemStack(Blocks.JUNGLE_PLANKS), new ItemStack(Blocks.JUNGLE_STAIRS));
+        addRecipe(new ItemStack(Blocks.ACACIA_PLANKS), new ItemStack(Blocks.ACACIA_STAIRS));
+        addRecipe(new ItemStack(Blocks.DARK_OAK_PLANKS), new ItemStack(Blocks.DARK_OAK_STAIRS));
 
-            addRecipe(new ItemStack(Blocks.OAK_STAIRS), new ItemStack(Blocks.OAK_SLAB, 3));
-            addRecipe(new ItemStack(Blocks.SPRUCE_STAIRS), new ItemStack(Blocks.SPRUCE_SLAB, 3));
-            addRecipe(new ItemStack(Blocks.BIRCH_STAIRS), new ItemStack(Blocks.BIRCH_SLAB, 3));
-            addRecipe(new ItemStack(Blocks.JUNGLE_STAIRS), new ItemStack(Blocks.JUNGLE_SLAB, 3));
-            addRecipe(new ItemStack(Blocks.ACACIA_STAIRS), new ItemStack(Blocks.ACACIA_SLAB, 3));
-            addRecipe(new ItemStack(Blocks.DARK_OAK_STAIRS), new ItemStack(Blocks.DARK_OAK_SLAB, 3));
+        addRecipe(new ItemStack(Blocks.OAK_STAIRS), new ItemStack(Blocks.OAK_SLAB, 3));
+        addRecipe(new ItemStack(Blocks.SPRUCE_STAIRS), new ItemStack(Blocks.SPRUCE_SLAB, 3));
+        addRecipe(new ItemStack(Blocks.BIRCH_STAIRS), new ItemStack(Blocks.BIRCH_SLAB, 3));
+        addRecipe(new ItemStack(Blocks.JUNGLE_STAIRS), new ItemStack(Blocks.JUNGLE_SLAB, 3));
+        addRecipe(new ItemStack(Blocks.ACACIA_STAIRS), new ItemStack(Blocks.ACACIA_SLAB, 3));
+        addRecipe(new ItemStack(Blocks.DARK_OAK_STAIRS), new ItemStack(Blocks.DARK_OAK_SLAB, 3));
 
-            addRecipe(new ItemStack(Blocks.OAK_SLAB, 3), new ItemStack(Items.STICK));
-            addRecipe(new ItemStack(Blocks.SPRUCE_SLAB, 3), new ItemStack(Items.STICK));
-            addRecipe(new ItemStack(Blocks.BIRCH_SLAB, 3), new ItemStack(Items.STICK));
-            addRecipe(new ItemStack(Blocks.JUNGLE_SLAB, 3), new ItemStack(Items.STICK));
-            addRecipe(new ItemStack(Blocks.ACACIA_SLAB, 3), new ItemStack(Items.STICK));
-            addRecipe(new ItemStack(Blocks.DARK_OAK_SLAB, 3), new ItemStack(Items.STICK));
+        addRecipe(new ItemStack(Blocks.OAK_SLAB, 3), new ItemStack(Items.STICK));
+        addRecipe(new ItemStack(Blocks.SPRUCE_SLAB, 3), new ItemStack(Items.STICK));
+        addRecipe(new ItemStack(Blocks.BIRCH_SLAB, 3), new ItemStack(Items.STICK));
+        addRecipe(new ItemStack(Blocks.JUNGLE_SLAB, 3), new ItemStack(Items.STICK));
+        addRecipe(new ItemStack(Blocks.ACACIA_SLAB, 3), new ItemStack(Items.STICK));
+        addRecipe(new ItemStack(Blocks.DARK_OAK_SLAB, 3), new ItemStack(Items.STICK));
 
-            addRecipe(new ItemStack(Items.STICK), new ItemStack(Blocks.OAK_BUTTON));
-
+        addRecipe(new ItemStack(Items.STICK), new ItemStack(Blocks.OAK_BUTTON));
 
 
     }

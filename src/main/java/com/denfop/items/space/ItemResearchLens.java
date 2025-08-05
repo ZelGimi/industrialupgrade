@@ -14,13 +14,14 @@ public class ItemResearchLens<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
         super(new Item.Properties(), element);
     }
 
-    @Override
-    public CreativeModeTab getItemCategory() {
-        return IUCore.ItemTab;
-    }
     public static EnumTypeUpgrade getType(int meta) {
         return EnumTypeUpgrade.getFromID(meta);
 
+    }
+
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
 
     public enum Types implements ISubEnum {

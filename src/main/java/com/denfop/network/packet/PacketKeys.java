@@ -1,20 +1,34 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.player.Player;
 
 public class PacketKeys implements IPacket {
+
+    private CustomPacketBuffer buffer;
 
     public PacketKeys() {
 
     }
 
-    public PacketKeys(int keyState) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(5);
+    public PacketKeys(int keyState, RegistryAccess registryAccess) {
+        CustomPacketBuffer buffer = new CustomPacketBuffer(5, registryAccess);
         buffer.writeByte(this.getId());
         buffer.writeInt(keyState);
         buffer.flip();
-        IUCore.network.getClient().sendPacket(buffer);
+        this.buffer = buffer;
+        IUCore.network.getClient().sendPacket(this, buffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

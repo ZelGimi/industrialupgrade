@@ -16,8 +16,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +27,7 @@ import java.util.Set;
 @OnlyIn(Dist.CLIENT)
 public class GuiConverterSolidMatter<T extends ContainerConverterSolidMatter> extends GuiIU<ContainerConverterSolidMatter> {
 
-    private static final ResourceLocation background = new ResourceLocation(
+    private static final ResourceLocation background = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/gui/guiconvertersolidmatter1.png"
     );
@@ -157,7 +157,7 @@ public class GuiConverterSolidMatter<T extends ContainerConverterSolidMatter> ex
 
         }
         drawBackground(poseStack);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }

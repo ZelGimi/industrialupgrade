@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "B": {
+      "item": "minecraft:glass"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "BBB",
+    "BAB"
+  ],
+  "result": {
+    "count": 7,
+    "id": "industrialupgrade:glass/reinforced"
+  },
+  "show_notification": false
+}

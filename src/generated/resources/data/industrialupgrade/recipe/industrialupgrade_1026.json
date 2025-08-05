@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_365_element"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/wireless_controller_reactors"
+    }
+  },
+  "pattern": [
+    "A A",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/wireless_controller_graphite_reactors"
+  },
+  "show_notification": false
+}

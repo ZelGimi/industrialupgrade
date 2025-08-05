@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntitySimpleTank extends TileEntityMainTank implements ITank {
 
     public TileEntitySimpleTank(BlockPos pos, BlockState state) {
-        super(10000,BlockWaterReactors.water_tank,pos,state);
+        super(10000, BlockWaterReactors.water_tank, pos, state);
     }
 
     @Override

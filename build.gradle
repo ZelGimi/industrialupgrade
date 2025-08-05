@@ -1,242 +1,145 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'java-library'
+    id 'eclipse'
     id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '1.0.13'
 }
 
-version = "${mc_version}"+ '-' + "${mod_version}"
-group = 'com/denfop'
-archivesBaseName = "IndustrialUpgrade"
+version = "${minecraft_version}"+ '-' + "${mod_version}"
+group = mod_group_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+repositories {
+    mavenLocal()
+}
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: 'parchment', version: "${mappings_version}-${mc_version}"
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+base {
+    archivesName =  "IndustrialUpgrade"
+}
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neoforge_version
+
+    mods {
+        industrialupgrade {
+            sourceSet sourceSets.main
+        }
+    }
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
     runs {
         client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.enabledGameTestNamespaces', 'industrialupgrade'
-			arg "-mixin.config=industrialupgrade.mixins.json"
-
-            mods {
-                industrialupgrade {
-                    source sourceSets.main
-                }
-            }
+            client()
         }
 
         server {
-            workingDirectory project.file('server')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.enabledGameTestNamespaces', 'industrialupgrade'
-			arg "-mixin.config=industrialupgrade.mixins.json"
-           
-            mods {
-                industrialupgrade {
-                    source sourceSets.main
-                }
-            }
+            server()
+        }
+
+        gametestWorld {
+            client()
+            programArguments.addAll("--username", "Dev", "--quickPlaySingleplayer", "GametestWorld")
         }
 
         data {
-            workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-			arg "-mixin.config=industrialupgrade.mixins.json"
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'industrialupgrade', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            mods {
-                industrialupgrade {
-                    source sourceSets.main
-                }
-            }
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
+
+        gametest {
+            type = "gameTestServer"
+            gameDirectory = project.file("build/gametest")
+        }
+
     }
+
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 repositories {
-    maven { url "https://minecraft.curseforge.com/api/maven/" }
-    maven { url "https://maven.blamejared.com" }
-    maven { url "https://jitpack.io" }
-    maven { url "https://www.cursemaven.com" }
-    maven { url "https://squiddev.cc/maven/" }
-    maven { url "https://maven.tterrag.com/" }
-    maven { url "https://modmaven.dev/" }
-    maven { url "https://maven.firstdarkdev.xyz/snapshots/" }
-    maven { url "https://maven.architectury.dev" }
-    maven { url "https://maven.saps.dev/minecraft" }
     maven {
-        url "https://maven.latvian.dev/releases"
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
         content {
-            includeGroup "dev.latvian.mods"
-            includeGroup "dev.latvian.apps"
+            includeGroup "dev.emi"
         }
     }
-
     maven {
-        url 'https://jitpack.io'
+        name 'cursemaven'
+        url "https://www.cursemaven.com"
         content {
-            includeGroup "com.github.rtyley"
+            includeGroup "curse.maven"
         }
     }
+    maven {
+        name = "Modmaven"
+        url = uri("https://modmaven.dev/")
+    }
+    mavenCentral()
 }
 
 dependencies {
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-
-    runtimeOnly fg.deobf("curse.maven:spark-361579:4738952")
-/*    implementation fg.deobf("com.lowdragmc.ldlib:ldlib-forge-${mc_version}:${ldlib_version}") {
-        transitive = false
-    }
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}") {
-        transitive = false
-    }*/
-
-    implementation fg.deobf("curse.maven:immersive-engineering-231951:5224387")
-    implementation fg.deobf("curse.maven:crafttweaker-239197:6256146")
-
-    compileOnly fg.deobf("curse.maven:kubejs-238086:5853326")
-//    implementation fg.deobf("curse.maven:terralith-513688:5512076")
-    implementation fg.deobf("curse.maven:the-lost-cities-269024:6174986")
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-
-    //runtimeOnly fg.deobf("curse.maven:ctm-267602:4393695")
-
-    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
-        transitive = false
-    }
-    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
-        transitive = false
-    }
-    compileOnly fileTree('lib')
+//    implementation "curse.maven:glodium-957920:5614731"
+//    implementation "org.appliedenergistics:appliedenergistics2:19.2.2-beta"
+ //   implementation "org.appliedenergistics:guideme:2.5.1"
+    compileOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
+    compileOnly "curse.maven:modern-industrialization-405388:5585300"
+    compileOnly "curse.maven:grandpower-980156:5432440"
+    compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
+    compileOnly "curse.maven:jade-324717:5427817"
+    compileOnly "curse.maven:wireless-chargers-510656:5551798"
+    compileOnly "curse.maven:flux-networks-248020:6089446"
+    implementation "curse.maven:jei-238222:6577302"
+    // runtime test
+  //  runtimeOnly "curse.maven:jade-324717:5427817"
+    runtimeOnly "curse.maven:crafttweaker-239197:6434161"
+ //   runtimeOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
+   compileOnly fileTree('lib')
     runtimeOnly fileTree('lib')
-    compileOnly fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
-    compileOnly fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
-    //implementation fg.deobf("curse.maven:ftb-library-forge-404465:5282375")
-    //implementation fg.deobf("curse.maven:ftb-teams-forge-404468:5267190")
-    //implementation fg.deobf("curse.maven:ftb-chunks-forge-314906:5267364")
-
-    //runtimeOnly fg.deobf("curse.maven:nbtedit-reborn-678133:4420565")
-    //runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${ct_version}")
-
-    compileOnly fg.deobf("curse.maven:emi-580555:5872526")
-
-
-    implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}")
-    compileOnly fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:generators")
-    //compileOnly fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:api")
-
-    compileOnly("cc.tweaked:cc-tweaked-${mc_version}-core-api:${cc_version}")
-    compileOnly(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge-api:${cc_version}"))
-    implementation fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge:${cc_version}")
-
-    compileOnly fg.deobf("curse.maven:sedna-511276:${sedna_version}")
-    compileOnly fg.deobf("curse.maven:markdownmanual-502485:${md_version}")
-    compileOnly fg.deobf("curse.maven:oc2r-1037738:${oc2_version}")
-    implementation fg.deobf("curse.maven:the-one-probe-245211:6106996")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-    runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
-    compileOnly fg.deobf("curse.maven:jade-324717:6271651")
- //   runtimeOnly fg.deobf("curse.maven:almost-unified-633823:6552475")
-  //  compileOnly fg.deobf("curse.maven:almost-unified-633823:6552475")
-
-// Mockito dependencies
-    testImplementation 'org.mockito:mockito-core:5.3.1'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "industrialupgrade",
-                "Specification-Vendor"    : "Denfop",
-                "Specification-Version" : "${project.version}",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "Denfop",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version         : neoforge_version, neo_version_range: neoforge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
     }
 }
 
-mixin {
-    add sourceSets.main, "industrialupgrade.refmap.json"
-    config "industrialupgrade.mixins.json"
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
 }
-
-jar.enabled = false
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-configurations {
-    shaded {
-        transitive = false
-    }
-}
-
-test {
-    useJUnitPlatform()
-}
-
-shadowJar {
-    finalizedBy 'reobfShadowJar'
-
-    from sourceSets.main.output.classesDirs
-    from sourceSets.main.output.resourcesDir
-
-    manifest {
-        attributes([
-                "Specification-Title"   : "industrialupgrade",
-                "Specification-Vendor"  : "Denfop",
-                "Specification-Version" : "${project.version}",
-                "Implementation-Title"  : "${project.name}",
-                "Implementation-Version": "${project.version}",
-                "Implementation-Vendor" : "Denfop",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"          : "industrialupgrade.mixins.json"
-        ])
-    }
-
-    configurations = [project.configurations.shaded]
-    archiveClassifier = null
-}
 
 
 
-reobf {
-    shadowJar {}
-}
 
-afterEvaluate {
-    tasks.reobfJar.enabled = false
-}
-
-tasks.assemble.dependsOn reobfShadowJar
-jar.finalizedBy('reobfJar')
 task devJar(type: Jar) {
     archiveClassifier.set('dev')
     from sourceSets.main.output

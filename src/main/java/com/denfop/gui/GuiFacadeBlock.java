@@ -32,7 +32,7 @@ public class GuiFacadeBlock<T extends ContainerFacadeBlock> extends GuiIU<Contai
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(poseStack,mouseX, mouseY);
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
     }
 
@@ -53,11 +53,11 @@ public class GuiFacadeBlock<T extends ContainerFacadeBlock> extends GuiIU<Contai
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         int h = guiLeft;
         int k = guiTop;
-       bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect( poseStack,h + 3, k + 3, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, h + 3, k + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
 
     }
@@ -65,7 +65,7 @@ public class GuiFacadeBlock<T extends ContainerFacadeBlock> extends GuiIU<Contai
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

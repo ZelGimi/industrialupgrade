@@ -18,7 +18,7 @@ public class TileEntityEnergyBarrier extends TileEntityInventory {
     private final Energy energy;
 
     public TileEntityEnergyBarrier(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.energy_barrier,pos,state);
+        super(BlockBaseMachine3.energy_barrier, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1000, 14));
     }
 
@@ -45,7 +45,6 @@ public class TileEntityEnergyBarrier extends TileEntityInventory {
                 this.energy.useEnergy(10);
             }
         }
-
 
 
     }

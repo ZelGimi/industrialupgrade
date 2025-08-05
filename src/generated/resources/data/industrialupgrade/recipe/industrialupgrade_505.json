@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemsunnariumpanel/adspp"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniumglass/photoniyglass11"
+    },
+    "C": {
+      "item": "industrialupgrade:stick/vanady"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:photoniumglass/photoniyglass12"
+  },
+  "show_notification": false
+}

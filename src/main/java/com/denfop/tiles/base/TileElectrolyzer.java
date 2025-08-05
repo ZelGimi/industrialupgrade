@@ -35,11 +35,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.Arrays;
@@ -92,10 +92,16 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
+
+    public static int applyModifier(int base, int extra, double multiplier) {
+        double ret = Math.round((base + extra) * multiplier);
+        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
+    }
+
     @Override
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
-        CompoundTag compoundTag =  super.writeToNBT(nbttagcompound);
-        compoundTag.putInt("levelMech",levelMech);
+        CompoundTag compoundTag = super.writeToNBT(nbttagcompound);
+        compoundTag.putInt("levelMech", levelMech);
         return compoundTag;
     }
 
@@ -103,11 +109,6 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         levelMech = nbttagcompound.getInt("levelMech");
-    }
-
-    public static int applyModifier(int base, int extra, double multiplier) {
-        double ret = Math.round((base + extra) * multiplier);
-        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
     @Override
@@ -191,6 +192,9 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnElectrolyzerParticles(level, pos, level.random);
+        }
         MutableObject<ItemStack> output1 = new MutableObject<>();
         boolean check = false;
         if (this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity() && this.fluidSlot1.transferToTank(
@@ -289,10 +293,10 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                     ItemStack cathode = this.cathodeslot.get(0);
                     ItemStack anode = this.anodeslot.get(0);
                     if (cathode.getDamageValue() < cathode.getMaxDamage()) {
-                        DamageHandler.damage(cathode,1,null);
+                        DamageHandler.damage(cathode, 1, null);
                     }
                     if (anode.getDamageValue() < anode.getMaxDamage()) {
-                        DamageHandler.damage(anode,1,null);
+                        DamageHandler.damage(anode, 1, null);
                     }
                     if (cathode.getDamageValue() == cathode.getMaxDamage()) {
                         this.cathodeslot.consume(1);
@@ -309,9 +313,7 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                 setActive(false);
             }
         }
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnElectrolyzerParticles(level,pos,level.random);
-        }
+
         if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }

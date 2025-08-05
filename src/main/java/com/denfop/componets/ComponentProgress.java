@@ -77,7 +77,7 @@ public class ComponentProgress extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(final ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeShort(progress.length);
         for (final short value : progress) {
             buffer.writeShort(value);
@@ -88,7 +88,7 @@ public class ComponentProgress extends AbstractComponent {
     }
 
     public CustomPacketBuffer updateComponent() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, parent.registryAccess());
         buffer.writeShort(progress.length);
         for (final short value : progress) {
             buffer.writeShort(value);

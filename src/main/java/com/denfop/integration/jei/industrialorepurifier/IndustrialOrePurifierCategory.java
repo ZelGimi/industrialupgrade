@@ -39,16 +39,17 @@ public class IndustrialOrePurifierCategory extends GuiIU implements IRecipeCateg
     private final IDrawableStatic bg;
     private final ContainerLaserPolisher container1;
     private final GuiComponent progress_bar;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform jeiInform;
+
     public IndustrialOrePurifierCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -70,7 +71,6 @@ public class IndustrialOrePurifierCategory extends GuiIU implements IRecipeCateg
     public String getTitles() {
         return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.industrial_ore_purifier).getDescriptionId());
     }
-
 
 
     @Nonnull
@@ -97,10 +97,10 @@ public class IndustrialOrePurifierCategory extends GuiIU implements IRecipeCateg
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, 0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack, 0, 0, xScale);
-       bindTexture(getTexture());
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        bindTexture(getTexture());
     }
 
     @Override
@@ -127,9 +127,8 @@ public class IndustrialOrePurifierCategory extends GuiIU implements IRecipeCateg
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

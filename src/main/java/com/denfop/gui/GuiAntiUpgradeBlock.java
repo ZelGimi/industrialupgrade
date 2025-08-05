@@ -73,12 +73,12 @@ public class GuiAntiUpgradeBlock<T extends ContainerAntiUpgrade> extends GuiIU<C
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiantiupgrade.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiantiupgrade.png");
     }
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(poseStack,mouseX, mouseY);
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
         String tooltip2 =
                 ModUtils.getString(Math.min(
@@ -88,7 +88,7 @@ public class GuiAntiUpgradeBlock<T extends ContainerAntiUpgrade> extends GuiIU<C
                         "EF";
         new AdvArea(this, 26, 56, 37, 71)
                 .withTooltip(tooltip2)
-                .drawForeground(poseStack,mouseX, mouseY);
+                .drawForeground(poseStack, mouseX, mouseY);
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
@@ -99,14 +99,14 @@ public class GuiAntiUpgradeBlock<T extends ContainerAntiUpgrade> extends GuiIU<C
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
 
         int xoffset = (this.width - this.imageWidth) / 2;
         int yoffset = (this.height - this.imageHeight) / 2;
         bindTexture(getTexture());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         final int progress = Math.min(31 * this.container.base.progress / 100, 31);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
@@ -151,7 +151,7 @@ public class GuiAntiUpgradeBlock<T extends ContainerAntiUpgrade> extends GuiIU<C
                     i++;
                     continue;
                 }
-                new ItemStackImage(this,71, 9 + i * 18, () -> stack).drawBackground(poseStack,guiLeft,guiTop);
+                new ItemStackImage(this, 71, 9 + i * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
                 i++;
 
             }

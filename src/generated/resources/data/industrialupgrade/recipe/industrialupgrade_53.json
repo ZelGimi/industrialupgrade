@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemdust/energium_dust"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_282_element"
+    },
+    "C": {
+      "item": "industrialupgrade:compresscarbon"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BAB",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:nanobox"
+  },
+  "show_notification": false
+}

@@ -3,11 +3,14 @@ package com.denfop.container;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +28,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     public SlotInfo(TileEntityInventory multiCable, int size, boolean fluid) {
         super(multiCable, null, size);
         this.fluid = fluid;
-        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
+        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
         this.listBlack = new ArrayList<>();
         this.listWhite = new ArrayList<>();
     }
@@ -39,16 +42,20 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     }
 
     @Override
-    public void readFromNbt(final CompoundTag nbt) {
-        super.readFromNbt(nbt);
+    public void readFromNbt(HolderLookup.Provider provider, final CompoundTag nbt) {
+        super.readFromNbt(provider, nbt);
         fluid = nbt.getBoolean("fluid");
         if (this.fluid) {
-            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
+            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
 
             for (int i = 0; i < size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    if (FluidHandlerFix.hasFluidHandler(this.get(i))) {
-                        fluidStackList.set(i, new FluidStack(FluidHandlerFix.getFluidHandler(this.get(i)).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), 1));
+                    Item item = this.get(i).getItem();
+                    Block block = Block.byItem(item);
+                    if (block != Blocks.AIR) {
+                        if (block instanceof LiquidBlock) {
+                            fluidStackList.set(i, new FluidStack(((LiquidBlock) block).fluid.getSource(), 1));
+                        }
                     }
                 }
             }
@@ -56,8 +63,8 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     }
 
     @Override
-    public CompoundTag writeToNbt(CompoundTag nbt) {
-        nbt = super.writeToNbt(nbt);
+    public CompoundTag writeToNbt(HolderLookup.Provider provider, CompoundTag nbt) {
+        nbt = super.writeToNbt(provider, nbt);
         nbt.putBoolean("fluid", isFluid());
         return nbt;
     }

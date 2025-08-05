@@ -4,16 +4,14 @@ import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GUIEFReader;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -22,9 +20,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ItemEFReader extends Item implements IItemStackInventory, IUpdatableItemStackEvent, IItemTab {
     private String nameItem;
@@ -32,10 +29,12 @@ public class ItemEFReader extends Item implements IItemStackInventory, IUpdatabl
     public ItemEFReader() {
         super(new Properties().stacksTo(1).setNoRepair());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -85,17 +84,13 @@ public class ItemEFReader extends Item implements IItemStackInventory, IUpdatabl
                     world,
                     pos
             ) != EnergyNetGlobal.EMPTY) {
-                final CompoundTag nbt = ModUtils.nbt(player.getItemInHand(context.getHand()));
-                nbt.putInt("x", pos.getX());
-                nbt.putInt("y", pos.getY());
-                nbt.putInt("z", pos.getZ());
-
-                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+                player.getItemInHand(context.getHand()).set(DataComponentsInit.TELEPORT, pos);
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
                 growingBuffer.writeByte(1);
 
                 growingBuffer.flip();
-                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+                player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
 
 
                 return InteractionResult.SUCCESS;

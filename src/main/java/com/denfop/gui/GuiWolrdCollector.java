@@ -36,12 +36,12 @@ public class GuiWolrdCollector<T extends ContainerWorldCollector> extends GuiCor
 
 
     protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
-        super.renderBg(poseStack,f, x, y);
+        super.renderBg(poseStack, f, x, y);
         bindTexture(getTexture());
         int chargeLevel = (int) (51.0F * this.container.base.matter_energy / this.container.base.max_matter_energy);
         int progress = (int) (34.0F * this.container.base.guiProgress);
-        int xoffset =guiLeft;
-        int yoffset =guiTop;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
         if (chargeLevel > 0) {
             drawTexturedModalRect(poseStack, xoffset + 31, yoffset + 17 + 51 - chargeLevel, 179, 2 + 51 - chargeLevel,
                     5, chargeLevel
@@ -50,7 +50,7 @@ public class GuiWolrdCollector<T extends ContainerWorldCollector> extends GuiCor
         if (progress > 0) {
             drawTexturedModalRect(poseStack, xoffset + 66, yoffset + 34, 177, 60, progress, 18);
         }
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
@@ -58,17 +58,17 @@ public class GuiWolrdCollector<T extends ContainerWorldCollector> extends GuiCor
     public ResourceLocation getTexture() {
         switch (this.container.base.enumTypeCollector) {
             case AQUA:
-                return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiwaterassembler.png");
+                return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiwaterassembler.png");
             case NETHER:
-                return new ResourceLocation(Constants.TEXTURES, "textures/gui/guinetherassembler.png");
+                return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guinetherassembler.png");
             case EARTH:
-                return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiearthassembler.png");
+                return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiearthassembler.png");
             case END:
-                return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiendassembler.png");
+                return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiendassembler.png");
             case AER:
-                return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiaerassembler.png");
+                return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiaerassembler.png");
             default:
-                return new ResourceLocation(Constants.TEXTURES, "textures/gui/guicrystallize.png");
+                return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guicrystallize.png");
 
         }
 

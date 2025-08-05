@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/mikhail"
+    },
+    "B": {
+      "tag": "c:plates/iridium"
+    },
+    "C": {
+      "tag": "c:plates/invar"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_710_element"
+  },
+  "show_notification": false
+}

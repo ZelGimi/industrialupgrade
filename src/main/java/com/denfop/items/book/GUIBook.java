@@ -6,19 +6,16 @@ import com.denfop.api.gui.Area;
 import com.denfop.api.gui.ItemImage;
 import com.denfop.api.gui.ScrollDirection;
 import com.denfop.api.guidebook.*;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiIU;
-import com.denfop.network.packet.PacketItemStackEvent;
-import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,27 +27,32 @@ import static com.mojang.blaze3d.systems.RenderSystem.disableScissor;
 @OnlyIn(Dist.CLIENT)
 public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
 
-    public static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guidebook.png");
-    public static final ResourceLocation sprites = new ResourceLocation(Constants.TEXTURES, "textures/gui/sprites.png");
-    public static final ResourceLocation sprites_lines = new ResourceLocation(
+    public static final ResourceLocation background = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guidebook.png");
+    public static final ResourceLocation sprites = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/sprites.png");
+    public static final ResourceLocation sprites_lines = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/gui/slider_guide.png"
     );
-    public static final ResourceLocation background1 = new ResourceLocation(
+    public static final ResourceLocation background1 = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/gui/guidebook1.png"
     );
     private final Player player;
 
-    public int tab = 0;
+    int tab = 0;
     List<Quest> questList = new ArrayList<>();
     LinkedList<GuideQuest> guideQuests = new LinkedList<>();
+    boolean reset = false;
     private Map<String, List<String>> map;
     private boolean hoverDiscord = false;
     private boolean hoverGithub = false;
     private boolean hoverPU = false;
     private boolean hoverQG = false;
     private boolean hoverSQ = false;
+    private int offsetX = 0, offsetY = 0;
+    private boolean isDragging = false;
+    private boolean isDragging1 = false;
+    private int lastMouseX, lastMouseY;
 
     public GUIBook(Player player, final ItemStack itemStack1, final ContainerBook containerBook) {
         super(containerBook);
@@ -59,30 +61,13 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         this.imageHeight = 195;
         this.elements.clear();
         this.componentList.clear();
-        CompoundTag nbt = ModUtils.nbt(container.base.itemStack1);
-        if (nbt.contains("book_info")) {
-            int[] decode = decode(nbt.getInt("book_info"));
+        questList = GuideBookCore.instance.getQuests(0);
+        if (container.base.itemStack1.has(DataComponentsInit.MODE)) {
+            int[] decode = decode(container.base.itemStack1.get(DataComponentsInit.MODE));
             this.tab = decode[0];
             this.offsetX = decode[1];
             this.offsetY = decode[2];
         }
-        questList = GuideBookCore.instance.getQuests(0);
-    }
-
-    @Override
-    public void changeParams() {
-        super.changeParams();
-        imageHeight = 4000;
-        imageWidth = 9000;
-    }
-
-    public void renderBackground(GuiGraphics pGuiGraphics) {
-        if (this.minecraft.level != null) {
-            pGuiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
-        } else {
-            this.renderDirtBackground(pGuiGraphics);
-        }
-
     }
 
     public static int encode(int tab, int offsetX, int offsetY) {
@@ -112,12 +97,20 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
     }
 
     @Override
+    public void changeParams() {
+        super.changeParams();
+        imageHeight = 4000;
+        imageWidth = 9000;
+    }
+
+    @Override
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.imageWidth = 255;
         this.imageHeight = 195;
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+
         this.map = GuideBookCore.uuidGuideMap.get(player.getUUID());
         if (reset) {
             questList = GuideBookCore.instance.getQuests(tab);
@@ -127,13 +120,9 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             lastMouseY = 0;
             reset = false;
             guideQuests.clear();
-            new PacketItemStackEvent(encode(tab, offsetX, offsetY), minecraft.player);
-            ModUtils.nbt(container.base.itemStack1).putInt("book_info", encode(tab, offsetX, offsetY));
+            container.base.itemStack1.set(DataComponentsInit.MODE, encode(tab, offsetX, offsetY));
         }
     }
-
-
-    boolean reset = false;
 
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
@@ -144,8 +133,6 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         int x = i - xMin;
         int y = j - yMin;
         int y1 = 5;
-        if (map == null)
-            return;
         for (GuideQuest guideQuest : new ArrayList<>(guideQuests)) {
             if (guideQuest.is(x, y)) {
                 if (guideQuest.isRemove(x, y)) {
@@ -208,36 +195,36 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 throw new RuntimeException(e);
             }
         }
+        if (map != null) {
+            GuideTab guideTab = guideTabs.get(tab);
+            List<String> quests = map.get(guideTab.unLocalized);
+            for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
 
-        GuideTab guideTab = guideTabs.get(tab);
-        List<String> quests = map.get(guideTab.unLocalized);
-        for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
+                int centerX = 116 + offsetX;
+                int centerY = 73 + offsetY;
+                int xOffset = centerX + quest.x + (quest.shape == Shape.EPIC ? 2 : 3);
+                int yOffset = centerY + quest.y + (quest.shape == Shape.EPIC ? 2 : 3);
+                int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                int texH = texW;
+                boolean hasPrev = quest.hasPrev;
 
-            int centerX = 116 + offsetX;
-            int centerY = 73 + offsetY;
-            int xOffset = centerX + quest.x + (quest.shape == Shape.EPIC ? 2 : 3);
-            int yOffset = centerY + quest.y + (quest.shape == Shape.EPIC ? 2 : 3);
-            int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
-            int texH = texW;
-            boolean hasPrev = quest.hasPrev;
+                boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : false;
 
-            boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : false;
-
-            if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
-                if (this.guideQuests.contains(new GuideQuest(quest))) {
-                    this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
-                } else if (guideQuests.size() <= 1) {
-                    this.guideQuests.add(new GuideQuest(quest, container.base.player, isUnlocked));
+                if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
+                    if (this.guideQuests.contains(new GuideQuest(quest))) {
+                        this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
+                    } else if (guideQuests.size() <= 1) {
+                        this.guideQuests.add(new GuideQuest(quest, container.base.player, isUnlocked));
+                    }
                 }
+
+
             }
-
-
         }
     }
 
     public void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-
         for (GuideQuest guideQuest : guideQuests) {
             if (guideQuest.is(par1, par2)) {
                 guideQuest.drawForegroundLayer(this, poseStack, par1, par2);
@@ -349,7 +336,6 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         } else {
             firstHorizontal = false;
         }
-
         if (firstHorizontal) {
             if (prevX < x) {
                 if (y > prevY) {
@@ -396,12 +382,12 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                         );
 
                     }
-                }else {
+                } else {
                     if (y - 1 > 0) {
                         drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY, lines);
                     } else {
 
-                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY ,
+                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY,
                                 lines
                         );
 
@@ -490,19 +476,12 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         );
     }
 
-    private int offsetX = 0, offsetY = 0;
-
-    private boolean isDragging = false;
-    private boolean isDragging1 = false;
-    private int lastMouseX, lastMouseY;
-
     @Override
-    public boolean mouseScrolled(double d, double d2, double d3) {
-        super.mouseScrolled(d, d2, d3);
+    public boolean mouseScrolled(double d, double d2, double d4, double d3) {
+
+        ScrollDirection direction = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
         int mouseX = (int) (d - this.guiLeft);
         int mouseY = (int) (d2 - this.guiTop);
-        ScrollDirection direction = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
-
         if (direction != ScrollDirection.stopped) {
             for (GuideQuest guideQuest : guideQuests) {
                 if (guideQuest.is(mouseX, mouseY)) {
@@ -516,8 +495,9 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 }
             }
         }
-        return super.mouseScrolled(d, d2, d3);
+        return super.mouseScrolled(d, d2, d4, d3);
     }
+
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
@@ -554,8 +534,8 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                     int dy = (int) dragY;
                     offsetX += dx;
                     offsetY += dy;
-                    new PacketItemStackEvent(encode(tab, offsetX, offsetY), minecraft.player);
-                    ModUtils.nbt(container.base.itemStack1).putInt("book_info", encode(tab, offsetX, offsetY));
+                    container.base.itemStack1.set(DataComponentsInit.MODE, encode(tab, offsetX, offsetY));
+
                 }
                 return true;
             } else {
@@ -692,7 +672,6 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         }
 
 
-        PoseStack posestack = RenderSystem.getModelViewStack();
         if (map != null) {
             GuideTab guideTab = guideTabs.get(tab);
             String tabKey = guideTab.getUnLocalized();
@@ -701,7 +680,7 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 poseStack.pose().pushPose();
                 poseStack.pose().translate(0, 0, 300);
 
-                posestack.translate(0, 0, 300);
+                poseStack.pose().translate(0, 0, 300);
                 guideQuest.drawBackgroundLayer(this, poseStack, guiLeft, guiTop,
                         !quests.contains(guideQuest.getQuest().unLocalizedName)
                 );

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/cadmium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_380_element"
+    },
+    "C": {
+      "tag": "c:plates/spinel"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_396_element"
+  },
+  "show_notification": false
+}

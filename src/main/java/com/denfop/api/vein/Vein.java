@@ -1,6 +1,7 @@
 package com.denfop.api.vein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 
@@ -96,8 +97,8 @@ public class Vein implements IVein {
         this.oldMineral = data2 == 0;
     }
 
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(32);
+    public CustomPacketBuffer writePacket(RegistryAccess registryAccess) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(32, registryAccess);
 
         int m = 0;
         m += this.meta;

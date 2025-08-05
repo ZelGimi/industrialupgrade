@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -62,6 +64,7 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape Deposits = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
+    public static Map<Integer, List<String>> mapInf = new HashMap<>();
 
     public BlockDeposits(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of().mapColor(MapColor.STONE).destroyTime(3f).noOcclusion().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
@@ -69,7 +72,9 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         BlockTagsProvider.list.add(this);
     }
 
-    public static Map<Integer, List<String>> mapInf = new HashMap<>();
+    public static boolean isFree(BlockState p_53242_) {
+        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || p_53242_.liquid() || p_53242_.canBeReplaced();
+    }
 
     @Override
     public List<String> getInformationFromMeta() {
@@ -113,10 +118,6 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         }
     }
 
-    public static boolean isFree(BlockState p_53242_) {
-        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || p_53242_.liquid() || p_53242_.canBeReplaced();
-    }
-
     @Override
     int getMetaFromState(BlockState state) {
         return getElement().getId();
@@ -132,17 +133,19 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
         return blockstate;
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
         ItemStack tool = p_60538_.getParameter(TOOL);
         BlockPos pos = new BlockPos((int) p_60538_.getParameter(ORIGIN).x, (int) p_60538_.getParameter(ORIGIN).y, (int) p_60538_.getParameter(ORIGIN).z);
+
         List<ItemStack> drops = NonNullList.create();
-        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool),tool);
+        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), tool), tool);
         return drops;
     }
 
-    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune,ItemStack tool) {
-        List<ItemStack>   drops = new ArrayList<>();
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune, ItemStack tool) {
+        List<ItemStack> drops = new ArrayList<>();
         if (tool.getItem() instanceof ItemHammer) {
             final IBaseRecipe recipe = Recipes.recipes.getRecipe("handlerho");
             final List<BaseMachineRecipe> recipe_list = Recipes.recipes.getRecipeList("handlerho");
@@ -177,15 +180,16 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
                 }
             }
         } else {
-            drops.add(new ItemStack(IUItem.heavyore.getItem( this.getMetaFromState(state)), 1));
+            drops.add(new ItemStack(IUItem.heavyore.getItem(this.getMetaFromState(state)), 1));
         }
         return drops;
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+    public ItemStack getCloneItemStack(LevelReader p_304395_, BlockPos p_49824_, BlockState p_49825_) {
         return IUItem.heavyore.getStack(this.getElement().getId());
     }
+
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
@@ -194,11 +198,10 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 
         return IUItem.heavyore.getStack(this.getElement().getId());
     }
-
 
 
     public FluidState getFluidState(BlockState state) {
@@ -223,7 +226,7 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
     @Override
     public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-        int levelEnchant = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
+        int levelEnchant = EnchantmentHelper.getItemEnchantmentLevel(player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), player.getMainHandItem());
         return levelEnchant == 0;
 
     }

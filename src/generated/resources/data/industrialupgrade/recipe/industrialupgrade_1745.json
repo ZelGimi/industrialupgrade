@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
+    "B": {
+      "tag": "c:plates/copper"
+    }
+  },
+  "pattern": [
+    " B ",
+    "AAA",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_581_element"
+  },
+  "show_notification": false
+}

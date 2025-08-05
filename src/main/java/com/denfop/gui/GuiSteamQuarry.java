@@ -29,15 +29,15 @@ public class GuiSteamQuarry<T extends ContainerSteamQuarry> extends GuiIU<Contai
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer( poseStack, f, x, y);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect( poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
 
     }
@@ -62,7 +62,7 @@ public class GuiSteamQuarry<T extends ContainerSteamQuarry> extends GuiIU<Contai
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
     }
 
 }

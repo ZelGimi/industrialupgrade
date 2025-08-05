@@ -25,8 +25,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -55,11 +55,11 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
     protected double guiProgress;
 
     public TileBaseAdditionGenStone(int energyPerTick, int length, int outputSlots, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        this(energyPerTick, length, outputSlots, 1,block,pos,state);
+        this(energyPerTick, length, outputSlots, 1, block, pos, state);
     }
 
     public TileBaseAdditionGenStone(int energyPerTick, int length, int outputSlots, int aDefaultTier, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super((double) energyPerTick * length, 1, outputSlots,block,pos,state);
+        super((double) energyPerTick * length, 1, outputSlots, block, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
@@ -298,8 +298,6 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
     public ContainerAdditionGenStone getGuiContainer(Player entityPlayer) {
         return new ContainerAdditionGenStone(entityPlayer, this);
     }
-
-
 
 
     public enum Mode {

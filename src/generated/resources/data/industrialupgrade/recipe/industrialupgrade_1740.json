@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_casing"
+    },
+    "C": {
+      "item": "minecraft:redstone_block"
+    },
+    "D": {
+      "item": "minecraft:repeater"
+    }
+  },
+  "pattern": [
+    " C ",
+    "DBD",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:smeltery/smeltery_controller"
+  },
+  "show_notification": false
+}

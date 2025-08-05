@@ -4,9 +4,9 @@ import com.denfop.api.Recipes;
 import com.denfop.componets.Fluids;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -276,7 +276,7 @@ public class FluidHandlerRecipe {
             for (int i = 0; i < outputTank.size(); i++) {
                 FluidTank fluidTank = outputTank.get(i);
                 final FluidStack fluid = output.output_fluid.get(i);
-                if (!fluidTank.getFluid().isEmpty() && !fluid.isFluidEqual(fluidTank.getFluid())) {
+                if (!fluidTank.getFluid().isEmpty() && !FluidStack.isSameFluid(fluid, fluidTank.getFluid())) {
                     return false;
                 }
                 if (fluidTank.getFluidAmount() + fluid.getAmount() > fluidTank.getCapacity()) {
@@ -346,9 +346,9 @@ public class FluidHandlerRecipe {
     public void fillFluid(FluidStack fluidStack) {
 
         for (FluidTank tank : outputTank) {
-            if (tank.getFluid().isEmpty() || (tank
-                    .getFluid()
-                    .isFluidEqual(fluidStack) && tank.getFluid().getAmount() + fluidStack.getAmount() <= tank.getCapacity())) {
+            if (tank.getFluid().isEmpty() || (FluidStack
+                    .isSameFluid(tank
+                            .getFluid(), fluidStack) && tank.getFluid().getAmount() + fluidStack.getAmount() <= tank.getCapacity())) {
                 tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                 break;
             }
@@ -359,9 +359,9 @@ public class FluidHandlerRecipe {
     public void fillFluid1() {
         if (this.output != null) {
             for (FluidTank tank : outputTank) {
-                if (tank.getFluid().isEmpty() || (tank
-                        .getFluid()
-                        .isFluidEqual(output.output_fluid.get(0)) && tank.getFluid().getAmount() + output.output_fluid.get(0).getAmount() <= tank.getCapacity())) {
+                if (tank.getFluid().isEmpty() || (FluidStack
+                        .isSameFluid(tank
+                                .getFluid(), output.output_fluid.get(0)) && tank.getFluid().getAmount() + output.output_fluid.get(0).getAmount() <= tank.getCapacity())) {
                     tank.fill(output.output_fluid.get(0), IFluidHandler.FluidAction.EXECUTE);
                     break;
                 }

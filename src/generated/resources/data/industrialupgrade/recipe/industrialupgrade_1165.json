@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/invar"
+    },
+    "B": {
+      "tag": "c:plates/aluminiumsilicon"
+    }
+  },
+  "pattern": [
+    "AB ",
+    "BAB",
+    "BBA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:recipe_schedule"
+  },
+  "show_notification": false
+}

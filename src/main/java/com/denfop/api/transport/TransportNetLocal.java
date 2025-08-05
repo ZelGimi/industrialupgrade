@@ -10,9 +10,9 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.*;
 
@@ -266,7 +266,7 @@ public class TransportNetLocal {
             List<FluidStack> WhiteItemStacks = transportConductor.getWhiteListFluids(facing);
             if (!WhiteItemStacks.isEmpty()) {
                 for (FluidStack stack1 : WhiteItemStacks) {
-                    if (stack1.isFluidEqual(stack)) {
+                    if (FluidStack.isSameFluid(stack1, stack)) {
                         return true;
                     }
 
@@ -276,7 +276,7 @@ public class TransportNetLocal {
             return true;
         } else {
             for (FluidStack stack1 : BlackItemStacks) {
-                if (stack1.isFluidEqual(stack)) {
+                if (FluidStack.isSameFluid(stack1, stack)) {
                     return false;
                 }
 
@@ -617,10 +617,10 @@ public class TransportNetLocal {
             }
             IFluidHandler handler = TransportPath.getFluidHandler();
             for (FluidStack fluidStack : list) {
-                if (!canInsertOrExtract(TransportPath.first, fluidStack, TransportPath.firstSide)) {
+                if (!canInsertOrExtract(TransportPath.first, fluidStack, TransportPath.firstSide.getOpposite())) {
                     continue;
                 }
-                if (!canInsertOrExtract(TransportPath.end, fluidStack, TransportPath.targetDirection)) {
+                if (!canInsertOrExtract(TransportPath.end, fluidStack, TransportPath.targetDirection.getOpposite())) {
                     continue;
                 }
                 if (fluidStack.getAmount() <= 0) {

@@ -35,9 +35,9 @@ public class GenPetrolCategory extends GuiIU implements IRecipeCategory<GenPetro
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -82,15 +82,14 @@ public class GenPetrolCategory extends GuiIU implements IRecipeCategory<GenPetro
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenPetrolHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,95,21).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
 
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

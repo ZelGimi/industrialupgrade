@@ -12,10 +12,9 @@ public class GuiGasTurbineRecuperator<T extends ContainerGasTurbineRecuperator> 
     }
 
 
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigas_turbine_recuperator.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigas_turbine_recuperator.png");
     }
 
 }

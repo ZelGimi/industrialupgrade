@@ -28,8 +28,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.*;
@@ -181,7 +181,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     private boolean isPatternRecorded(ItemStack stack) {
         if (!this.diskSlot.isEmpty() && this.diskSlot.get(0).getItem() instanceof ItemCrystalMemory) {
             ItemStack crystalMemory = this.diskSlot.get(0);
-            if (ModUtils.checkItemEquality(((ItemCrystalMemory) crystalMemory.getItem()).readItemStack(crystalMemory), stack)) {
+            if (ModUtils.checkItemEquality(((ItemCrystalMemory) crystalMemory.getItem()).readItemStack(level.registryAccess(), crystalMemory), stack)) {
                 return true;
             }
         }
@@ -227,9 +227,9 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getInt("progress");
         CompoundTag contentTag = nbttagcompound.getCompound("currentStack");
-        this.currentStack = ItemStack.of(contentTag);
+        this.currentStack = ItemStack.parseOptional(provider, contentTag);
         contentTag = nbttagcompound.getCompound("pattern");
-        this.pattern = ItemStack.of(contentTag);
+        this.pattern = ItemStack.parseOptional(provider, contentTag);
         int stateIdx = nbttagcompound.getInt("state");
         this.state = stateIdx < TileScanner.State.values().length
                 ? TileScanner.State.values()[stateIdx]
@@ -242,13 +242,13 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         CompoundTag contentTag;
         if (!ModUtils.isEmpty(this.currentStack)) {
             contentTag = new CompoundTag();
-            this.currentStack.save(contentTag);
+            this.currentStack.save(this.provider, contentTag);
             nbt.put("currentStack", contentTag);
         }
 
         if (!ModUtils.isEmpty(this.pattern)) {
             contentTag = new CompoundTag();
-            this.pattern.save(contentTag);
+            this.pattern.save(this.provider, contentTag);
             nbt.put("pattern", contentTag);
         }
 
@@ -278,7 +278,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         if (!this.diskSlot.isEmpty() && stack != null) {
             if (this.diskSlot.get(0).getItem() instanceof ItemCrystalMemory) {
                 ItemStack crystalMemory = this.diskSlot.get(0);
-                ((ItemCrystalMemory) crystalMemory.getItem()).writecontentsTag(crystalMemory, stack);
+                ((ItemCrystalMemory) crystalMemory.getItem()).writecontentsTag(this.registryAccess(), crystalMemory, stack);
                 return true;
             } else {
                 return false;

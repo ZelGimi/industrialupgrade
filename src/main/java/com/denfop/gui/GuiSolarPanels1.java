@@ -100,13 +100,13 @@ public class GuiSolarPanels1<Y extends ContainerSolarPanels1> extends GuiIU<Cont
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, this.guiLeft + 17, this.guiTop + 41, 0, 0, 10, 10);
 
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolarpanel1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisolarpanel1.png");
     }
 
 }

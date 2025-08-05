@@ -25,6 +25,6 @@ public class ItemBlockResource extends ItemBlockCore<BlockResource.Type> impleme
         if (getElement().getId() < 1 || getElement().getId() > 6)
             return new String[]{};
         String name = getElement().getName();
-        return new String[]{"forge:storage_blocks/" + name.replace("_block", ""), "forge:storage_blocks"};
+        return new String[]{"c:storage_blocks/" + name.replace("_block", ""), "c:storage_blocks"};
     }
 }

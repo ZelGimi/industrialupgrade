@@ -18,13 +18,15 @@ public class ItemPreciousGem<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
-        return new String[]{"forge:gems/" + getElement().getName().substring(0, getElement().getName().indexOf("_")), "forge:gems"};
+        return new String[]{"c:gems/" + getElement().getName().substring(0, getElement().getName().indexOf("_")), "c:gems"};
     }
 
     public enum Types implements ISubEnum {

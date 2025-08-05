@@ -4,6 +4,7 @@ import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
@@ -31,17 +32,31 @@ public class ItemFoodIU extends Item implements IItemTab {
         super(new Item.Properties()
                 .food(new FoodProperties.Builder()
                         .nutrition(amount)
-                        .saturationMod(saturation).alwaysEat()
+                        .saturationModifier(saturation).alwaysEdible()
                         .build())
         );
 
         this.name = name;
         this.path = "";
     }
+
+    public ItemFoodIU(String name, String path, int amount, float saturation) {
+        super(new Item.Properties()
+                .food(new FoodProperties.Builder()
+                        .nutrition(amount)
+                        .saturationModifier(saturation)
+                        .build())
+        );
+
+        this.name = name;
+        this.path = path;
+    }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.CropsTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -54,21 +69,10 @@ public class ItemFoodIU extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[1]+".name";
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[1] + ".name";
         }
 
         return this.nameItem;
-    }
-    public ItemFoodIU(String name, String path, int amount, float saturation) {
-        super(new Item.Properties()
-                .food(new FoodProperties.Builder()
-                        .nutrition(amount)
-                        .saturationMod(saturation)
-                        .build())
-        );
-
-        this.name = name;
-        this.path = path;
     }
 
     @Override
@@ -80,8 +84,8 @@ public class ItemFoodIU extends Item implements IItemTab {
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity player) {
         if (!world.isClientSide && stack.getItem() == IUItem.terra_wart.getItem()) {
             for (MobEffectInstance effect : new ArrayList<>(player.getActiveEffects())) {
-                MobEffect potion = effect.getEffect();
-                if (!potion.isBeneficial()) {
+                Holder<MobEffect> potion = effect.getEffect();
+                if (!potion.value().isBeneficial()) {
                     player.removeEffect(potion);
                 }
             }

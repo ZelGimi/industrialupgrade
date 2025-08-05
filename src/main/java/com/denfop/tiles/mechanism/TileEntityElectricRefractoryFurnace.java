@@ -27,9 +27,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -44,7 +44,7 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
     private final AirPollutionComponent pollutionAir;
 
     public TileEntityElectricRefractoryFurnace(BlockPos pos, BlockState state) {
-        super(1, 200, 1,BlockBaseMachine3.electric_refractory_furnace,pos,state);
+        super(1, 200, 1, BlockBaseMachine3.electric_refractory_furnace, pos, state);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
         this.inputSlotA = new InvSlotRecipes(this, "elec_refractory_furnace", this, this.fluidTank);
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
@@ -92,79 +92,79 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         for (String s : list_string) {
-            if (Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().isEmpty()) {
+            if (Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().isEmpty()) {
                 continue;
             }
             final CompoundTag nbt = new CompoundTag();
             nbt.putInt("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 2),
-                    input.getInput("forge:crushed/" + s)
-            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:crushed/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 2),
-                    input.getInput("forge:dusts/" + s)
-            ), new RecipeOutput(nbt,Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:dusts/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
 
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 5),
-                    input.getInput("forge:crushed/" + s)
-            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:crushed/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 5),
-                    input.getInput("forge:dusts/" + s)
-            ), new RecipeOutput(nbt,Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:dusts/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
 
         }
 
         for (String s : list_baseore1) {
-            if (Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().isEmpty()) {
+            if (Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().isEmpty()) {
                 continue;
             }
             final CompoundTag nbt = new CompoundTag();
             nbt.putInt("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 2),
-                    input.getInput("forge:crushed/" + s)
-            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:crushed/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 2),
-                    input.getInput("forge:dusts/" + s)
-            ), new RecipeOutput(nbt,Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:dusts/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
 
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 5),
-                    input.getInput("forge:crushed/" + s)
-            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:crushed/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 5),
-                    input.getInput("forge:dusts/" + s)
-            ), new RecipeOutput(nbt,Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:dusts/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
 
         }
         for (String s : standardList) {
-            if (Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().isEmpty()) {
+            if (Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().isEmpty()) {
                 continue;
             }
             final CompoundTag nbt = new CompoundTag();
             nbt.putInt("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 2),
-                    input.getInput("forge:crushed/" + s)
-            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:crushed/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 2),
-                    input.getInput("forge:dusts/" + s)
-            ), new RecipeOutput(nbt,Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:dusts/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
 
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 5),
-                    input.getInput("forge:crushed/" + s)
-            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:crushed/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
                     new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 5),
-                    input.getInput("forge:dusts/" + s)
-            ), new RecipeOutput(nbt,Recipes.inputFactory.getInput("forge:raw_ingots/" + s).getInputs().get(0))));
+                    input.getInput("c:dusts/" + s)
+            ), new RecipeOutput(nbt, Recipes.inputFactory.getInput("c:raw_ingots/" + s).getInputs().get(0))));
 
         }
 

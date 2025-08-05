@@ -38,9 +38,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
     protected short progress;
 
     public TileEntityFluidIntegrator(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.fluid_integrator,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.fluid_integrator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -98,7 +98,8 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
 
     }
-    public static void addRecipe(IInputItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
+
+    public static void addRecipe(ItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "fluid_integrator",
@@ -112,7 +113,8 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
                 outputfluidStack)));
 
     }
-    public static void addRecipe(ItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
+
+    public static void addRecipe(IInputItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "fluid_integrator",
@@ -174,7 +176,7 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidcarbonmonoxide.getInstance().get()
                         , 20)
         );
-        addRecipe(Recipes.inputFactory.getInput("forge:dusts/coal"), new ItemStack(IUItem.crafting_elements.getStack(498)),
+        addRecipe(Recipes.inputFactory.getInput("c:dusts/coal"), new ItemStack(IUItem.crafting_elements.getStack(498)),
                 new FluidStack(FluidName.fluidhyd.getInstance().get(), 200),
                 new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 100)

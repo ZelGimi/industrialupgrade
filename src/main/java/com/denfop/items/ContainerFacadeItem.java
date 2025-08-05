@@ -1,6 +1,7 @@
 package com.denfop.items;
 
 import com.denfop.container.ContainerHandHeldInventory;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.Objects;
 
@@ -19,7 +22,12 @@ public class ContainerFacadeItem extends ContainerHandHeldInventory<FacadeItemIn
     public ContainerFacadeItem(Player player, FacadeItemInventory facadeItemInventory) {
         super(facadeItemInventory, player);
 
-        this.addSlotToContainer(new Slot(facadeItemInventory, 0, 80, 55));
+        this.addSlotToContainer(new Slot(facadeItemInventory, 0, 80, 55) {
+            @Override
+            public boolean mayPlace(ItemStack p_40231_) {
+                return Block.byItem(p_40231_.getItem()) != Blocks.AIR;
+            }
+        });
 
         this.current = player.getInventory().selected;
         addPlayerInventorySlots(player.getInventory(), 233);
@@ -105,7 +113,7 @@ public class ContainerFacadeItem extends ContainerHandHeldInventory<FacadeItemIn
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+                held.get(DataComponentsInit.CONTAINER).updateUUID(held, 0);
             }
         }
 

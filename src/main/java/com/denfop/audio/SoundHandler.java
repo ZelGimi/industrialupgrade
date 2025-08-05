@@ -12,8 +12,8 @@ import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +25,15 @@ public class SoundHandler {
     public static void stopSound(BlockPos pos) {
         SoundEngine soundEngine = ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine();
         if (((SoundEngineAccess) soundEngine).getLoaded()) {
-            sounds:
             for (Map.Entry<SoundInstance, ChannelAccess.ChannelHandle> map : ((SoundEngineAccess) soundEngine).getInstanceToChannel().entrySet()) {
                 BlockPos pos1 = new BlockPos((int) map.getKey().getX(), (int) map.getKey().getY(),
                         (int) map.getKey().getZ()
                 );
-                if (pos1.getX() < 0){
-                    pos1 = pos1.offset(-1,0,0);
+                if (pos1.getX() < 0) {
+                    pos1 = pos1.offset(-1, 0, 0);
                 }
-                if (pos1.getZ() < 0){
-                    pos1 = pos1.offset(0,0,-1);
+                if (pos1.getZ() < 0) {
+                    pos1 = pos1.offset(0, 0, -1);
                 }
                 if (pos1.equals(pos)) {
                     map.getValue().execute(Channel::stop);
@@ -109,7 +108,6 @@ public class SoundHandler {
         if (can) {
             Minecraft.getInstance().getSoundManager().play(new PlayerSound(player, sound1.getSoundEvent()));
 
-
         }
     }
 
@@ -140,6 +138,5 @@ public class SoundHandler {
 
         }
     }
-
 
 }

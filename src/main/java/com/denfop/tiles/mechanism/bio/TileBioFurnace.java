@@ -19,7 +19,7 @@ public class TileBioFurnace extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.ELECTRIC_FURNACE.usagePerTick,
                 EnumMultiMachine.ELECTRIC_FURNACE.lenghtOperation,
-                4,BlockBaseMachine3.bio_furnace,pos,state
+                4, BlockBaseMachine3.bio_furnace, pos, state
         );
     }
 

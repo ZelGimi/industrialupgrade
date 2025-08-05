@@ -14,7 +14,7 @@ public class TileEntityGasTurbineSocket extends TileEntityMultiBlockElement impl
     private final Energy energy;
 
     public TileEntityGasTurbineSocket(BlockPos pos, BlockState state) {
-        super(BlockGasTurbine.gas_turbine_socket,pos,state);
+        super(BlockGasTurbine.gas_turbine_socket, pos, state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 2000000, 14));
     }
 

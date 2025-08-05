@@ -2,7 +2,7 @@ package com.denfop.api.cool.event;
 
 import com.denfop.api.cool.ICoolTile;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class CoolTileEvent extends LevelEvent {
 

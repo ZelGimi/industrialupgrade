@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "B": {
+      "tag": "c:plates/molybdenumsteel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_678_element"
+    },
+    "D": {
+      "tag": "c:gears/gadolinium"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "CAD",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:colonial_building/medium_protection"
+  },
+  "show_notification": false
+}

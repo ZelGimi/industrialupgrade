@@ -14,7 +14,7 @@ public class ImageSpaceInterface2 extends GuiElement<ImageSpaceInterface2> {
 
     public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
 
-        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/gui_space_main_red.png"));
+        GuiCore.bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/gui_space_main_red.png"));
         RenderSystem.setShaderColor(1, 1, 1, 1);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x, mouseY + this.y, 0, 0, width - 5, height - 5);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x + width - 6, mouseY + this.y, 251, 0, 5, height - 5);

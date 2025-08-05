@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/mythril"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/bloodstone"
+    },
+    "D": {
+      "tag": "c:plates/aluminiumlithium"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_676_element"
+  },
+  "show_notification": false
+}

@@ -55,7 +55,7 @@ public enum CableType implements StringRepresentable, ICableItem {
         this.loss = loss;
         this.capacity = capacity;
         this.insulation = 0;
-        this.texture = new ResourceLocation(
+        this.texture = ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "blocks/wiring/" + this.getMainPath() + "/" + this
                         .getNameCable()
@@ -69,7 +69,7 @@ public enum CableType implements StringRepresentable, ICableItem {
         this.capacity = capacity;
         this.insulation = insulation;
 
-        this.texture = new ResourceLocation(
+        this.texture = ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "blocks/wiring/" + this.getMainPath() + "/" + this
                         .getNameCable()

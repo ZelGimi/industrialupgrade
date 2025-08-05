@@ -6,15 +6,13 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-@OnlyIn(Dist.CLIENT)
+
 public class KeyboardClient extends KeyboardIU {
 
     public static final KeyMapping changemode = new KeyMapping("Change mode key", InputConstants.KEY_G, "IndustrialUpgrade");
@@ -34,7 +32,7 @@ public class KeyboardClient extends KeyboardIU {
     private int lastKeyState = 0;
 
     public KeyboardClient() {
-        MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     public void register(RegisterKeyMappingsEvent ClientRegistry) {
@@ -52,7 +50,7 @@ public class KeyboardClient extends KeyboardIU {
     }
 
 
-    public void sendKeyUpdate() {
+    public void sendKeyUpdate(Level level) {
         Set<Key> keys = EnumSet.noneOf(Key.class);
         Screen currentScreen = Minecraft.getInstance().screen;
         if (currentScreen == null) {
@@ -99,7 +97,7 @@ public class KeyboardClient extends KeyboardIU {
 
         int currentKeyState = Key.toInt(keys);
         if (currentKeyState != this.lastKeyState) {
-            new PacketKeys(currentKeyState);
+            new PacketKeys(currentKeyState, level.registryAccess());
             super.processKeyUpdate(IUCore.proxy.getPlayerInstance(), currentKeyState);
             this.lastKeyState = currentKeyState;
         }

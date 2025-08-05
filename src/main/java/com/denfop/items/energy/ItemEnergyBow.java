@@ -10,6 +10,7 @@ import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.PacketSoundPlayer;
@@ -21,7 +22,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,18 +32,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.ArrowLooseEvent;
-import net.minecraftforge.event.entity.player.ArrowNockEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.ArrowLooseEvent;
+import net.neoforged.neoforge.event.entity.player.ArrowNockEvent;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -62,7 +60,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     private String nameItem;
 
     public ItemEnergyBow(String name, double nanoBowBoost, int tier, int transferenergy, int maxenergy, float type) {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1).component(DataComponentsInit.ENERGY, 0D).component(DataComponentsInit.MODE, 0));
         this.name = name;
         this.nanoBowBoost = nanoBowBoost;
         this.tier = tier;
@@ -88,28 +86,24 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
             int itemSlot,
             boolean isSelected
     ) {
-        CompoundTag nbt = ModUtils.nbt(stack);
 
         if (!UpgradeSystem.system.hasInMap(stack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, stack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, stack));
         }
     }
-
 
     public void onUseTick(Level pLevel, LivingEntity livingEntity, ItemStack stack, int i) {
         if (!(livingEntity instanceof Player player)) {
             return;
         }
 
-        CompoundTag nbt = ModUtils.nbt(stack);
-        int mode = nbt.getInt("bowMode");
+        int mode = stack.getOrDefault(DataComponentsInit.MODE, 0);
 
         if (mode == 1) {
             int bowEnergy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWENERGY, stack) ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWENERGY, stack).number : 0;
 
-            int j = getUseDuration(stack) - i;
+            int j = getUseDuration(stack, livingEntity) - i;
             if (j >= 10 && ElectricItem.manager.canUse(stack, CHARGE[1] - CHARGE[1] * 0.1 * bowEnergy)) {
                 releaseUsing(stack, livingEntity.level(), livingEntity, i);
                 player.stopUsingItem();
@@ -118,27 +112,25 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     }
 
     public String[] properties() {
-        return new String[]{"pulling", "pull","mode"};
+        return new String[]{"pulling", "pull", "mode"};
     }
 
     @Nonnull
     @Override
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        CompoundTag nbt = stack.getOrCreateTag();
-
-        int mode = nbt.getInt("bowMode");
+        int mode = stack.getOrDefault(DataComponentsInit.MODE, 0);
         int bowenergy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWENERGY, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWENERGY, stack).number : 0;
 
         if (IUCore.keyboard.isChangeKeyDown(player)) {
-            if (!world.isClientSide) {
-                mode++;
-                if (mode >= CHARGE.length) {
-                    mode = 0;
-                }
-                nbt.putInt("bowMode", mode);
+
+            mode++;
+            if (mode >= CHARGE.length) {
+                mode = 0;
             }
+            stack.set(DataComponentsInit.MODE, mode);
+
             if (!world.isClientSide) {
                 IUCore.proxy.messagePlayer(player, Localization.translate("info.nanobow." + MODE[mode]));
             }
@@ -150,12 +142,16 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
         }
 
         ArrowNockEvent event = new ArrowNockEvent(player, stack, hand, world, false);
-        MinecraftForge.EVENT_BUS.post(event);
+        NeoForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return event.getAction();
         }
 
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+    }
+
+    public UseAnim getUseAnimation(ItemStack p_40678_) {
+        return UseAnim.BOW;
     }
 
     public void releaseUsing(
@@ -170,11 +166,10 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
         }
 
         Player player = (Player) entityLiving;
-        CompoundTag nbt = stack.getOrCreateTag();
-        int mode = nbt.getInt("bowMode");
+        int mode = stack.getOrDefault(DataComponentsInit.MODE, 0);
         int charge = getMaxItemUseDuration(stack) - timeLeft;
         ArrowLooseEvent event = new ArrowLooseEvent(player, stack, world, charge, false);
-        MinecraftForge.EVENT_BUS.post(event);
+        NeoForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
         }
@@ -203,7 +198,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
             int bowdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWDAMAGE, stack) ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWDAMAGE, stack).number : 0;
             arrow.setBaseDamage(arrow.getBaseDamage() + type * 2.5D + 0.5D + type * 2.5D * 0.25 * bowdamage);
-            int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+            int j = EnchantmentHelper.getItemEnchantmentLevel(world.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.POWER), stack);
             if (j > 0) {
                 arrow.setBaseDamage(arrow.getBaseDamage() + j * 0.5D + 0.5D);
             }
@@ -221,20 +216,20 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
                 arrow.setBaseDamage(arrow.getBaseDamage() + nanoBowBoost * 0.5D + 0.5D);
             }
 
-            int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+            int k = EnchantmentHelper.getItemEnchantmentLevel(world.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.PUNCH), stack);
             if (mode == 0 && arrow.isCritArrow()) {
                 k++;
             } else if (mode == 3 && arrow.isCritArrow()) {
                 k += 5;
             }
             if (k > 0) {
-                arrow.setKnockback(k);
+                arrow.setKsnockback(k);
             }
-            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_ASPECT, stack) > 0) {
-                arrow.setSecondsOnFire(100);
+            if (EnchantmentHelper.getItemEnchantmentLevel(world.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FLAME), stack) > 0) {
+                arrow.igniteForSeconds(100);
             }
             if (mode == 4 && arrow.isCritArrow()) {
-                arrow.setSecondsOnFire(2000);
+                arrow.igniteForSeconds(2000);
             }
             arrow.pickup = Arrow.Pickup.CREATIVE_ONLY;
 
@@ -275,8 +270,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     }
 
     public int getMaxItemUseDuration(@Nonnull ItemStack stack) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        switch (nbt.getInt("bowMode")) {
+        switch (stack.getOrDefault(DataComponentsInit.MODE, 0)) {
             case 3:
             case 5:
                 return 144000;
@@ -295,26 +289,25 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     public float getItemProperty(ItemStack stack, ClientLevel world, LivingEntity entityIn, int p174679, String property) {
         if (property.equals("pulling"))
             return entityIn != null && entityIn.isUsingItem() && entityIn.getUseItem() == stack ? 1.0F : 0.0F;
-        if (property.equals("mode")){
+        if (property.equals("mode")) {
 
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            if (nbt.getString("mode").isEmpty())
+
+            if (stack.getOrDefault(DataComponentsInit.SKIN, "").isEmpty())
                 return -1;
             String[] mode = {"Zelen", "Demon", "Dark", "Cold", "Ender", "Ukraine", "Fire", "Snow", "Taiga", "Desert", "Emerald"};
             for (int i = 0; i < mode.length; i++)
-                if (nbt.getString("mode").equals(mode[i]))
+                if (stack.getOrDefault(DataComponentsInit.SKIN, "").equals(mode[i]))
                     return i;
         }
         if (entityIn == null) {
             return 0.0F;
         } else {
-            return !(entityIn.getUseItem().getItem() instanceof BowItem) ? 0.0F : (float) (stack.getUseDuration() - entityIn.getUseItemRemainingTicks()) / 20.0F;
+            return !(entityIn.getUseItem().getItem() instanceof BowItem) ? 0.0F : (float) (stack.getUseDuration(entityIn) - entityIn.getUseItemRemainingTicks()) / 20.0F;
         }
     }
 
     public EntityAdvArrow createArrow(Level worldIn, ItemStack stack, LivingEntity shooter) {
-        EntityAdvArrow entitytippedarrow = new EntityAdvArrow(worldIn, shooter);
-        entitytippedarrow.setEffectsFromItem(stack);
+        EntityAdvArrow entitytippedarrow = new EntityAdvArrow(worldIn, shooter, new ItemStack(Items.ARROW), stack);
         entitytippedarrow.setStack(stack);
         return entitytippedarrow;
     }
@@ -331,17 +324,18 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
 
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(
             @Nonnull final ItemStack stack,
-            final Level world,
+            final TooltipContext world,
             @Nonnull final List<Component> tooltip,
             @Nonnull final TooltipFlag flag
     ) {
@@ -410,7 +404,6 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     }
 
 
-
     @Override
     public boolean isEnchantable(ItemStack p_41456_) {
         return false;
@@ -425,6 +418,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {

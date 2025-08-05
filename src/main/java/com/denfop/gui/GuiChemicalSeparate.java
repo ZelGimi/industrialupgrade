@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -41,8 +41,8 @@ public class GuiChemicalSeparate<T extends ContainerDefaultMultiElement> extends
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,
-                            mouseX+   fluidX,
-                            mouseY+   fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
+                            mouseX + fluidX,
+                            mouseY + fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
                             fluidHeight * (fs.getAmount() / 10000D),
                             sprite,
@@ -52,7 +52,7 @@ public class GuiChemicalSeparate<T extends ContainerDefaultMultiElement> extends
                             false
                     );
                 }
-              bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
@@ -80,21 +80,21 @@ public class GuiChemicalSeparate<T extends ContainerDefaultMultiElement> extends
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         bindTexture();
-      RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         drawTexturedModalRect(poseStack, this.guiLeft + this.imageWidth / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 76, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(poseStack,guiLeft,guiTop);
+            element.drawBackground(poseStack, guiLeft, guiTop);
         }
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
     }
 
 }

@@ -19,7 +19,7 @@ public class GuiSteamElectrolyzer<T extends ContainerSteamElectrolyzer> extends 
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png".toLowerCase());
+        background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png".toLowerCase());
     }
 
     public ContainerSteamElectrolyzer container;
@@ -80,7 +80,7 @@ public class GuiSteamElectrolyzer<T extends ContainerSteamElectrolyzer> extends 
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
 
 
         handleUpgradeTooltip(par1, par2);
@@ -88,20 +88,20 @@ public class GuiSteamElectrolyzer<T extends ContainerSteamElectrolyzer> extends 
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
 
 
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
-      bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

@@ -27,9 +27,9 @@ public interface ISolarTile {
 
     void setLoad(double load);
 
-     List<List<TileEntityMiniPanels.EnumState>> getStables();
+    List<List<TileEntityMiniPanels.EnumState>> getStables();
 
-      void setStables(int index, List<TileEntityMiniPanels.EnumState> enumStateList);
+    void setStables(int index, List<TileEntityMiniPanels.EnumState> enumStateList);
 
     List<ItemStack> getCoresItems();
 

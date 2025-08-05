@@ -7,20 +7,6 @@ import net.minecraft.client.renderer.RenderStateShard;
 public abstract class RenderType extends net.minecraft.client.renderer.RenderType {
     public static final net.minecraft.client.renderer.RenderType LEASH = create("leash_circle", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP, 256, false, false, net.minecraft.client.renderer.RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_SHADER).setTextureState(NO_TEXTURE).setCullState(NO_CULL).setDepthTestState(NO_DEPTH_TEST).createCompositeState(false));
     public static final net.minecraft.client.renderer.RenderType LEASH1 = create("leash_circle", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP, 256, false, false, net.minecraft.client.renderer.RenderType.CompositeState.builder().setShaderState(POSITION_COLOR_SHADER).setTextureState(NO_TEXTURE).setCullState(NO_CULL).createCompositeState(false));
-    public static final net.minecraft.client.renderer.RenderType renderType = RenderType.create(
-            "my_transparent_box",
-            DefaultVertexFormat.POSITION_COLOR,
-            VertexFormat.Mode.QUADS,
-            256,
-            false,
-            true,
-            RenderType.CompositeState.builder()
-                    .setShaderState(RenderType.ShaderStateShard.POSITION_COLOR_SHADER)
-                    .setTransparencyState(RenderType.TransparencyStateShard.TRANSLUCENT_TRANSPARENCY)
-                    .setOutputState(net.minecraft.client.renderer.RenderType.TRANSLUCENT_TARGET)
-                    .setWriteMaskState(RenderType.COLOR_DEPTH_WRITE)
-                    .createCompositeState(false)
-    );
     public static final net.minecraft.client.renderer.RenderType LEASH_TRANSPARENT = create(
             "leash_circle_transparent",
             DefaultVertexFormat.POSITION_COLOR,
@@ -43,7 +29,7 @@ public abstract class RenderType extends net.minecraft.client.renderer.RenderTyp
                     .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                     .createCompositeState(false)
     );
-    public static final net.minecraft.client.renderer.RenderType  QUAD_TRANSPARENT_OVER_WATER = RenderType.create(
+    public static final net.minecraft.client.renderer.RenderType QUAD_TRANSPARENT_OVER_WATER = RenderType.create(
             "quad_transparent_over_water",
             DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS,
@@ -60,7 +46,6 @@ public abstract class RenderType extends net.minecraft.client.renderer.RenderTyp
                     .setCullState(RenderStateShard.NO_CULL)
                     .createCompositeState(true)
     );
-
 
     public RenderType(String p_173178_, VertexFormat p_173179_, VertexFormat.Mode p_173180_, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);

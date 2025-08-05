@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/obsidian"
+    },
+    "B": {
+      "tag": "c:plates/steel"
+    },
+    "C": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ACA",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:obsidian_hammer"
+  },
+  "show_notification": false
+}

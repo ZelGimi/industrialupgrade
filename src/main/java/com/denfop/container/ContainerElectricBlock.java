@@ -20,7 +20,7 @@ public class ContainerElectricBlock extends ContainerFullInv<TileElectricBlock> 
         this.inventory = entityPlayer.getInventory();
         final List<EquipmentSlot> list = Arrays
                 .stream(EquipmentSlot.values())
-                .filter(type -> type.getType() == EquipmentSlot.Type.ARMOR)
+                .filter(type -> type.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
                 .collect(
                         Collectors.toList());
         Collections.reverse(list);

@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_478_element"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "B B",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/hazmat_leggings"
+  },
+  "show_notification": false
+}

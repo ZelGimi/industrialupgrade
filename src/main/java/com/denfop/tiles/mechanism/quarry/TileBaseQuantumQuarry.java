@@ -46,8 +46,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.*;
@@ -387,7 +387,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
                     if (this.original) {
                         Item item = stack.getStack().getItem();
                         if ((!stack.isGem() && !stack.isShard()
-                                && item != Items.REDSTONE && item != Items.LAPIS_LAZULI && item != Items.COAL && item != Items.GLOWSTONE_DUST ) && chance2 >= 1) {
+                                && item != Items.REDSTONE && item != Items.LAPIS_LAZULI && item != Items.COAL && item != Items.GLOWSTONE_DUST) && chance2 >= 1) {
 
                             this.outputSlot.add(stack.getStack());
 

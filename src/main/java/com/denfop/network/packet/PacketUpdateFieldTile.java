@@ -9,38 +9,52 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.io.IOException;
 
 public class PacketUpdateFieldTile implements IPacket {
+
+    private CustomPacketBuffer buffer;
 
     public PacketUpdateFieldTile() {
 
     }
 
     public PacketUpdateFieldTile(TileEntityBlock te, String field, Object o) {
-        final CustomPacketBuffer packet = new CustomPacketBuffer();
+        final CustomPacketBuffer packet = new CustomPacketBuffer(te.getWorld().registryAccess());
         packet.writeString(field);
         try {
             EncoderHandler.encode(packet, o);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        this.buffer = packet;
         IUCore.network.getServer().addTileFieldToUpdate(te, packet);
     }
 
     public PacketUpdateFieldTile(CustomPacketBuffer customPacketBuffer, ServerPlayer entityPlayer) {
-        IUCore.network.getServer().sendPacket(PacketDistributor.PLAYER.with(() -> entityPlayer), customPacketBuffer);
+
+        this.buffer = customPacketBuffer;
+        IUCore.network.getServer().sendPacket(this, customPacketBuffer, entityPlayer);
     }
 
     public static void apply(BlockPos pos, Level world, byte[] is) {
         BlockEntity te = world.getBlockEntity(pos);
-        final CustomPacketBuffer buf = new CustomPacketBuffer();
+        final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
         buf.writeBytes(is);
         if (te != null) {
             ((TileEntityBlock) te).updateField(buf.readString().trim(), buf);
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

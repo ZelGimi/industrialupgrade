@@ -46,11 +46,11 @@ public class ElectronicsCategory extends GuiIU implements IRecipeCategory<Electr
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityElectronicsAssembler) BlockBaseMachine3.electronic_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
@@ -94,10 +94,10 @@ public class ElectronicsCategory extends GuiIU implements IRecipeCategory<Electr
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,20, -15, xScale);
-      bindTexture(getTexture());
+        progress_bar.renderBar(stack, 20, -15, xScale);
+        bindTexture(getTexture());
     }
 
     @Override
@@ -106,19 +106,19 @@ public class ElectronicsCategory extends GuiIU implements IRecipeCategory<Electr
         final List<ItemStack> inputs = recipes.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

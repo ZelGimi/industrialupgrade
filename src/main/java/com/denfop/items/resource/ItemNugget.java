@@ -18,10 +18,12 @@ public class ItemNugget<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -37,7 +39,7 @@ public class ItemNugget<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
                 break;
 
         }
-        return new String[]{"forge:nuggets/" + name, "forge:nuggets"};
+        return new String[]{"c:nuggets/" + name, "c:nuggets"};
     }
 
     public enum Types implements ISubEnum {

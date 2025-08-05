@@ -31,16 +31,16 @@ public class TileEntityRenderGasChamber implements BlockEntityRenderer<TileEntit
 
             Component text = (tile.fluidTank1.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank1.getCapacity()) :
-                    Component.literal(tile.fluidTank1.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(tile.fluidTank1.getFluid().getHoverName().getString() + ": " +
                             tile.fluidTank1.getFluidAmount() + "/" + tile.fluidTank1.getCapacity());
 
             Component text1 = (tile.fluidTank2.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank2.getCapacity()) :
-                    Component.literal(tile.fluidTank2.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(tile.fluidTank2.getFluid().getHoverName().getString() + ": " +
                             tile.fluidTank2.getFluidAmount() + "/" + tile.fluidTank2.getCapacity());
             Component text2 = (tile.fluidTank3.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank3.getCapacity()) :
-                    Component.literal(tile.fluidTank3.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(tile.fluidTank3.getFluid().getHoverName().getString() + ": " +
                             tile.fluidTank3.getFluidAmount() + "/" + tile.fluidTank3.getCapacity());
 
             Component text3 = Component.literal(String.format("%d", (int) (tile.getProgress() * 100)) + "%");
@@ -116,18 +116,24 @@ public class TileEntityRenderGasChamber implements BlockEntityRenderer<TileEntit
     }
 
     private void renderFloatingText(Component text, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        boolean flag = true;
+        int i = 0;
         poseStack.pushPose();
-        poseStack.mulPose(contex.getEntityRenderer().cameraOrientation());
-        poseStack.scale(-0.025F, -0.025F, 0.025F);
+        poseStack.translate(0, 0, 0);
+        poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+        poseStack.scale(0.025F, -0.025F, 0.025F);
         Matrix4f matrix4f = poseStack.last().pose();
-        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-        int j = (int) (f1 * 255.0F) << 24;
-        Font font = contex.getFont();
-        float f2 = (float) (-font.width(text) / 2);
-        font.drawInBatch(text, f2, (float) 0, 553648127, false, matrix4f, buffer, Font.DisplayMode.NORMAL, j, packedLight);
-        if (true) {
-            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer,  Font.DisplayMode.NORMAL, 0, packedLight);
+        float f = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+        int j = (int) (f * 255.0F) << 24;
+        Font font = Minecraft.getInstance().font;
+        float f1 = (float) (-font.width(text) / 2);
+        font.drawInBatch(
+                text, f1, (float) i, 553648127, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, j, packedLight
+        );
+        if (flag) {
+            font.drawInBatch(text, f1, (float) i, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
         }
+
         poseStack.popPose();
     }
 }

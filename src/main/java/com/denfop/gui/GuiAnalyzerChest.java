@@ -18,7 +18,7 @@ public class GuiAnalyzerChest<T extends ContainerAnalyzerChest> extends GuiIU<Co
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

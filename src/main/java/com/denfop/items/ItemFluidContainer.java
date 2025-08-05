@@ -1,30 +1,27 @@
 package com.denfop.items;
 
 import com.denfop.Localization;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemFluidContainer extends Item {
+public class ItemFluidContainer extends Item implements ItemFluidCapabilities {
     public final int capacity;
     protected String nameItem;
 
@@ -61,14 +58,16 @@ public class ItemFluidContainer extends Item {
         return this.nameItem + ".name";
     }
 
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
-        IFluidHandlerItem fs = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) this.initCapabilities(stack, stack.getTag()));
-        if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY) {
-            list.add(Component.literal("< " + Localization.translate(fs.getFluidInTank(0).getFluid().getFluidType().getDescriptionId()) + ", " + fs.getFluidInTank(0).getAmount() + " mB >"));
-        } else {
-            list.add(Component.literal(Localization.translate("iu.item.FluidContainer.Empty")));
-        }
+        IFluidHandlerItem fs = stack.getCapability(Capabilities.FluidHandler.ITEM, null);
+        if (fs != null)
+            if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY) {
+                list.add(Component.literal("< " + Localization.translate(fs.getFluidInTank(0).getFluid().getFluidType().getDescriptionId()) + ", " + fs.getFluidInTank(0).getAmount() + " mB >"));
+            } else {
+                list.add(Component.literal(Localization.translate("iu.item.FluidContainer.Empty")));
+            }
     }
 
     @Override
@@ -77,15 +76,15 @@ public class ItemFluidContainer extends Item {
             return super.getCraftingRemainingItem(stack);
         } else {
             ItemStack ret = ModUtils.setSize(stack, 1);
-            IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) this.initCapabilities(stack, stack.getTag()));
+            IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM, null);
             handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
             return handler.getContainer();
         }
 
     }
 
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new CapabilityFluidHandlerItem(stack, ItemFluidContainer.this.capacity) {
+    public IFluidHandlerItem initCapabilities(ItemStack stack) {
+        return new CapabilityFluidHandlerItem(() -> DataComponentsInit.FLUID.get(), stack, ItemFluidContainer.this.capacity) {
             public boolean canFillFluidType(FluidStack fluid) {
                 return fluid != null && ItemFluidContainer.this.canfill(fluid.getFluid());
             }
@@ -102,8 +101,8 @@ public class ItemFluidContainer extends Item {
 
     public List<ItemStack> getAllStacks() {
         List<ItemStack> ret = new LinkedList<>();
-        ret.add(new ItemStack(this));
-        for (final Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {
+        ret.add(new ItemStack(this).copy());
+        for (final Fluid fluid : BuiltInRegistries.FLUID) {
             ItemStack add = this.getItemStack(fluid);
             if (add != ItemStack.EMPTY && !add.isEmpty() && !FluidHandlerFix.getFluidHandler(add).getFluidInTank(0).isEmpty()) {
                 ret.add(add);
@@ -133,11 +132,14 @@ public class ItemFluidContainer extends Item {
     }
 
     public ItemStack getItemStack(Fluid fluid) {
-        ItemStack ret = new ItemStack(this);
+        ItemStack ret = new ItemStack(this).copy();
         if (fluid == null || fluid == Fluids.EMPTY || !fluid.isSource(fluid.defaultFluidState())) {
             return ret;
         } else {
             IFluidHandlerItem handler = FluidHandlerFix.getFluidHandler(ret);
+            if (handler == null) {
+                handler = initCapabilities(ret);
+            }
             if (handler.fill(new FluidStack(fluid, Integer.MAX_VALUE), IFluidHandler.FluidAction.EXECUTE) > 0) {
                 return handler.getContainer();
             } else {

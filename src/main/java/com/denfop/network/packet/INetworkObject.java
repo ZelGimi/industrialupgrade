@@ -2,6 +2,6 @@ package com.denfop.network.packet;
 
 public interface INetworkObject {
 
-    CustomPacketBuffer writePacket();
+    CustomPacketBuffer writePacket(CustomPacketBuffer o);
 
 }

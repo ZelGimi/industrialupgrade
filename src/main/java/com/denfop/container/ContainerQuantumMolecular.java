@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.Slot;
 public class ContainerQuantumMolecular extends ContainerBase<TileQuantumMolecular> {
 
     public ContainerQuantumMolecular(Player entityPlayer, TileQuantumMolecular tileEntity1) {
-        super(tileEntity1,null);
+        super(tileEntity1, null);
         this.player = entityPlayer;
         this.inventory = player.getInventory();
 

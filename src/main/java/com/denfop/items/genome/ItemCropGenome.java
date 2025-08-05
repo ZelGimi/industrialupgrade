@@ -25,6 +25,7 @@ public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     public CreativeModeTab getItemCategory() {
         return IUCore.GenomeTab;
     }
+
     public enum Types implements ISubEnum {
         soil_i(0),
         soil_ii(1),
@@ -74,7 +75,8 @@ public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         genome_resistance_iii(45),
         genome_adaptive_i(46),
         genome_adaptive_ii(47),
-        genome_adaptive_iii(48),;
+        genome_adaptive_iii(48),
+        ;
 
         private final String name;
         private final int ID;
@@ -90,7 +92,7 @@ public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
 
         @Override
         public String getName() {
-            return "crop_genome"+name;
+            return "crop_genome" + name;
         }
 
         @Override

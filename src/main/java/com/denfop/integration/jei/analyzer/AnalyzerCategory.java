@@ -27,13 +27,14 @@ public class AnalyzerCategory extends GuiIU implements IRecipeCategory<AnalyzerH
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public AnalyzerCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 200,
                 250
         );
@@ -50,7 +51,6 @@ public class AnalyzerCategory extends GuiIU implements IRecipeCategory<AnalyzerH
     public String getTitles() {
         return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine2.analyzer).getDescriptionId());
     }
-
 
 
     @SuppressWarnings("removal")
@@ -74,15 +74,14 @@ public class AnalyzerCategory extends GuiIU implements IRecipeCategory<AnalyzerH
     @Override
     public void draw(AnalyzerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
-        this.drawSplitString(stack,Minecraft.getInstance().font, Localization.translate("iu.analyzer.jei"),5, 5,
+        this.drawSplitString(stack, Minecraft.getInstance().font, Localization.translate("iu.analyzer.jei"), 5, 5,
                 220, 4210752
         );
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

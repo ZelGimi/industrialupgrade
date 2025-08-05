@@ -3,9 +3,9 @@ package com.denfop.blocks;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
-public class IUFluid extends ForgeFlowingFluid {
+public class IUFluid extends BaseFlowingFluid {
 
 
     private final boolean isSource;

@@ -32,9 +32,9 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -48,7 +48,6 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -57,7 +56,7 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
 
     @Override
     public void draw(GasSensorHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      drawSplitString( stack, Localization.translate(recipe.output), 5, 3,
+        drawSplitString(stack, Localization.translate(recipe.output), 5, 3,
                 140 - 5, 4210752
         );
 
@@ -65,7 +64,7 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GasSensorHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,50, 70).setFluidRenderer(1,true,16, 16).addFluidStack(recipe.input,1);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 70).setFluidRenderer(1, true, 16, 16).addFluidStack(recipe.input, 1);
 
     }
 
@@ -75,7 +74,7 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

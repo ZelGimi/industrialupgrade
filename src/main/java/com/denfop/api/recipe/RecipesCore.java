@@ -4,9 +4,9 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,10 +34,6 @@ public class RecipesCore implements IRecipes {
         init();
         this.fluid_recipe = new RecipesFluidCore();
         fluid_recipe.init();
-    }
-
-    public List<String> getMap_recipe_managers() {
-        return map_recipe_managers.keySet().stream().toList();
     }
 
     public List<Fluid> getInputFluidsFromRecipe(String name) {
@@ -187,21 +183,19 @@ public class RecipesCore implements IRecipes {
     public void addFluidRemoveRecipe(String name, FluidStack stack) {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, false));
     }
+
     public void addFluidRemoveRecipe(String name, FluidStack stack, boolean removeAll) {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, removeAll));
     }
 
     public void removeAllRecipesFromList() {
         this.recipeRemoves.forEach(recipeRemove -> {
-            if (recipeRemove.isRemoveAll())
-            this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
-            else
-                this.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+            this.removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.isRemoveAll(), new RecipeOutput(null, recipeRemove.getStack()));
 
         });
 
         this.recipeFluidRemoves.forEach(recipeRemove -> {
-            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(),recipeRemove.isRemoveAll(), recipeRemove.getStack());
+            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.isRemoveAll(), recipeRemove.getStack());
 
         });
     }
@@ -234,9 +228,6 @@ public class RecipesCore implements IRecipes {
         this.map_recipe_managers.put(name, new RecipeManager(name, size, consume));
     }
 
-    public List<String> getRecipes() {
-        return map_recipes.keySet().stream().toList();
-    }
 
     @Override
     public RecipesFluidCore getRecipeFluid() {
@@ -296,14 +287,14 @@ public class RecipesCore implements IRecipes {
 
     }
 
-    public void removeAllRecipe(String name, RecipeOutput output) {
+    public void removeAllRecipe(String name, boolean removeAll, RecipeOutput output) {
         List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
         List<BaseMachineRecipe> deleteRecipes = new ArrayList<>();
+        boolean find = false;
         for (BaseMachineRecipe recipe : recipes) {
-            boolean find = false;
             for (ItemStack stack : output.items) {
                 for (ItemStack output_stack : recipe.output.items) {
-                    if (ModUtils.checkItemEquality(output_stack, stack)) {
+                    if (ModUtils.checkItemEquality(output_stack, stack) && (removeAll || !find)) {
                         deleteRecipes.add(recipe);
                         find = true;
                         break;
@@ -379,7 +370,7 @@ public class RecipesCore implements IRecipes {
             if (tank.getFluid().isEmpty()) {
                 return null;
             }
-            if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid())) {
+            if (!FluidStack.isSameFluid(tank.getFluid(), baseMachineRecipe.input.getFluid())) {
                 return null;
             }
             if (tank.getFluidAmount() < 1000) {
@@ -535,7 +526,7 @@ public class RecipesCore implements IRecipes {
             if (tank.getFluid().isEmpty()) {
                 return null;
             }
-            if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid())) {
+            if (!FluidStack.isSameFluid(tank.getFluid(), baseMachineRecipe.input.getFluid())) {
                 return null;
             }
             if (tank.getFluidAmount() < 1000) {

@@ -4,15 +4,13 @@ import com.denfop.render.RenderFluidBlock;
 import com.denfop.tiles.mechanism.TileEntityAutoLatexCollector;
 import com.denfop.tiles.mechanism.TileEntityDryer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
-import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
 public class TileEntityRenderAutoLatexCollector implements BlockEntityRenderer<TileEntityAutoLatexCollector> {
     private final BlockEntityRendererProvider.Context contex;

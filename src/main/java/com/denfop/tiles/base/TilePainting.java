@@ -14,6 +14,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.*;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPainting;
 import com.denfop.recipe.IInputHandler;
@@ -23,15 +24,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class TilePainting extends TileDoubleElectricMachine implements IHasRecipe {
@@ -71,20 +71,18 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
                 ItemStack stack1 = this.invSlotRecipes.get(1).getItem() instanceof IEnergyItem
                         ? this.invSlotRecipes.get(1)
                         : this.invSlotRecipes.get(0);
-                CompoundTag tNBT = ModUtils.nbt(stack1);
                 int damage = stack1.getDamageValue();
-                final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
+                ItemEnchantments enchantmentMap = EnchantmentHelper.getEnchantmentsForCrafting(stack1);
                 double newCharge = ElectricItem.manager.getCharge(stack1);
+                ItemStack stack = stack1.copy();
                 this.invSlotRecipes.consume();
                 this.outputSlot.add(processResult);
-                ItemStack stack = this.outputSlot.get(0);
-                stack.setTag(tNBT);
-                CompoundTag nbt = ModUtils.nbt(stack);
+                this.outputSlot.set(0, stack);
                 String mode = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("mode");
-                nbt.putString("mode", mode);
+                stack.set(DataComponentsInit.SKIN, mode);
                 ElectricItem.manager.use(stack, newCharge, null);
                 ElectricItem.manager.charge(stack, newCharge, Integer.MAX_VALUE, true, false);
-                EnchantmentHelper.setEnchantments(enchantmentMap, stack);
+                EnchantmentHelper.setEnchantments(stack, enchantmentMap);
                 stack.setDamageValue(damage);
 
             }
@@ -151,17 +149,7 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
                 ),
                 new RecipeOutput(nbt4, container)
         ));
-        CompoundTag nbt5 = ModUtils.nbt();
-        name = "";
-        nbt5.putString("mode", name);
 
-        Recipes.recipes.addRecipe("painter", new BaseMachineRecipe(
-                new Input(
-                        input.getInput(container),
-                        input.getInput(new ItemStack(IUItem.paints.getStack(0), 4))
-                ),
-                new RecipeOutput(nbt5, container)
-        ));
 
         CompoundTag nbt6 = ModUtils.nbt();
         name = "Ukraine";
@@ -233,6 +221,17 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
                 ),
                 new RecipeOutput(nbt11, container)
         ));
+        CompoundTag nbt5 = ModUtils.nbt();
+        name = "";
+        nbt5.putString("mode", name);
+
+        Recipes.recipes.addRecipe("painter", new BaseMachineRecipe(
+                new Input(
+                        input.getInput(container),
+                        input.getInput(new ItemStack(IUItem.paints.getStack(0), 4))
+                ),
+                new RecipeOutput(nbt5, container)
+        ));
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -257,9 +256,9 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
         addpainting(new ItemStack(IUItem.drill.getItem(), 1));
         addpainting(new ItemStack(IUItem.vajra.getItem(), 1));
         addpainting(new ItemStack(IUItem.ult_vajra.getItem(), 1));
-           addpainting(new ItemStack(IUItem.nano_bow.getItem(), 1));
-              addpainting(new ItemStack(IUItem.quantum_bow.getItem(), 1));
-             addpainting(new ItemStack(IUItem.spectral_bow.getItem(), 1));
+        addpainting(new ItemStack(IUItem.nano_bow.getItem(), 1));
+        addpainting(new ItemStack(IUItem.quantum_bow.getItem(), 1));
+        addpainting(new ItemStack(IUItem.spectral_bow.getItem(), 1));
         addpainting(new ItemStack(IUItem.quantumpickaxe.getItem(), 1));
         addpainting(new ItemStack(IUItem.spectralpickaxe.getItem(), 1));
         addpainting(new ItemStack(IUItem.nanoshovel.getItem(), 1));

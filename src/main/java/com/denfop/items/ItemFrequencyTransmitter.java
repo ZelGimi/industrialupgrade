@@ -2,11 +2,11 @@ package com.denfop.items;
 
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.tiles.base.TileEntityTeleporter;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,8 +19,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -30,35 +30,34 @@ public class ItemFrequencyTransmitter extends Item implements IItemTab {
     public ItemFrequencyTransmitter() {
         super(new Properties());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!level.isClientSide) {
-            CompoundTag nbtData = stack.getOrCreateTag();
-            boolean hadJustSet = nbtData.getBoolean("targetJustSet");
+        if (!level.isClientSide && player.isShiftKeyDown()) {
 
-            if (nbtData.getBoolean("targetSet") && !hadJustSet) {
-                nbtData.putBoolean("targetSet", false);
+            boolean hadJustSet = stack.has(DataComponentsInit.TELEPORT);
+
+            if (hadJustSet) {
+                stack.remove(DataComponentsInit.TELEPORT);
                 player.displayClientMessage(Component.translatable("Frequency Transmitter unlinked"), true);
             }
 
-            if (hadJustSet) {
-                nbtData.putBoolean("targetJustSet", false);
-            }
+
         }
 
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 
     @Override
-    public InteractionResult useOn(
-            UseOnContext context
-    ) {
+    public InteractionResult onItemUseFirst(ItemStack stack,
+                                            UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
@@ -69,25 +68,18 @@ public class ItemFrequencyTransmitter extends Item implements IItemTab {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
 
-         if (!(blockEntity instanceof TileEntityTeleporter teleporter)) {
-             return InteractionResult.PASS;
-          }
+        if (!(blockEntity instanceof TileEntityTeleporter teleporter)) {
+            return InteractionResult.PASS;
+        }
 
-        ItemStack stack = context.getItemInHand();
-        CompoundTag nbtData = stack.getOrCreateTag();
 
-        boolean targetSet = nbtData.getBoolean("targetSet");
-        boolean justSetTarget = true;
+        boolean targetSet = stack.has(DataComponentsInit.TELEPORT);
+        BlockPos target = stack.getOrDefault(DataComponentsInit.TELEPORT, BlockPos.ZERO);
 
-        BlockPos target = new BlockPos(
-                nbtData.getInt("targetX"),
-                nbtData.getInt("targetY"),
-                nbtData.getInt("targetZ")
-        );
 
-      if (!targetSet) {
-            targetSet = true;
+        if (!targetSet) {
             target = teleporter.getPos();
+            stack.set(DataComponentsInit.TELEPORT, target);
             player.displayClientMessage(Component.translatable("Frequency Transmitter linked to Teleporter."), true);
         } else if (teleporter.getPos().equals(target)) {
             player.displayClientMessage(Component.translatable("Can't link Teleporter to itself."), true);
@@ -99,32 +91,25 @@ public class ItemFrequencyTransmitter extends Item implements IItemTab {
                 teleporter.setTarget(target);
                 targetTeleporter.setTarget(pos);
                 player.displayClientMessage(Component.translatable("Teleportation link established."), true);
-            } else {
-                justSetTarget = false;
-                targetSet = false;
             }
         }
 
-        nbtData.putBoolean("targetSet", targetSet);
-        nbtData.putBoolean("targetJustSet", justSetTarget);
-        nbtData.putInt("targetX", target.getX());
-        nbtData.putInt("targetY", target.getY());
-        nbtData.putInt("targetZ", target.getZ());
+        stack.set(DataComponentsInit.TELEPORT, target);
 
         return InteractionResult.SUCCESS;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        CompoundTag nbtData = stack.getOrCreateTag();
+    public void appendHoverText(ItemStack stack, TooltipContext level, List<Component> tooltip, TooltipFlag flag) {
 
-        if (nbtData.getBoolean("targetSet")) {
+        if (stack.has(DataComponentsInit.TELEPORT)) {
+            BlockPos pos = stack.get(DataComponentsInit.TELEPORT);
             tooltip.add(Component.translatable(
                     "frequency_transmitter.tooltip.target",
-                    nbtData.getInt("targetX"),
-                    nbtData.getInt("targetY"),
-                    nbtData.getInt("targetZ")
+                    pos.getX(),
+                    pos.getY(),
+                    pos.getZ()
             ));
         } else {
             tooltip.add(Component.translatable("frequency_transmitter.tooltip.blank"));

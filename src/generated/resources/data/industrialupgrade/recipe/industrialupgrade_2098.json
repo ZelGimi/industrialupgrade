@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "c:plates/woods"
+    },
+    "C": {
+      "tag": "c:plates/berylliumbronze"
+    },
+    "E": {
+      "tag": "c:plates/nitenol"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spaceupgrademodules/space_upgrademodule"
+  },
+  "show_notification": false
+}

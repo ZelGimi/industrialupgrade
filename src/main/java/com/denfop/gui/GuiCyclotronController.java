@@ -14,8 +14,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -64,7 +64,7 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture();
         if (container.base.progress > 0) {
             final double progress = Math.min(1, container.base.progress / 1000D);
@@ -74,7 +74,7 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
         }
         (new FluidItem(this, 11, 28, container.base.cryogen.getCryogenTank().getFluid()) {
             @Override
-            public void drawBackground(GuiGraphics poseStack,final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 bindCommonTexture();
                 FluidStack fs = container.base.cryogen.getCryogenTank().getFluid();
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
@@ -88,8 +88,8 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,
-                            mouseX+   fluidX,
-                            mouseY+  fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
+                            mouseX + fluidX,
+                            mouseY + fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
                             fluidHeight * fs.getAmount() / 10000D,
                             sprite,
@@ -99,11 +99,11 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
                             false
                     );
                 }
-               bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
-            public void drawForeground(GuiGraphics poseStack,final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 if (mouseX >= this.x - 4 && mouseX <= this.x + 15 && mouseY >= this.y - 4 && mouseY <= this.y + 51) {
                     List<String> lines = this.getToolTip();
                     if (this.getTooltipProvider() != null) {
@@ -124,7 +124,7 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
         );
         (new FluidItem(this, 33, 28, container.base.coolant.getCoolantTank().getFluid()) {
             @Override
-            public void drawBackground(GuiGraphics poseStack,final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 bindCommonTexture();
                 FluidStack fs = container.base.coolant.getCoolantTank().getFluid();
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
@@ -138,8 +138,8 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,
-                         mouseX+   fluidX,
-                            mouseY+  fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
+                            mouseX + fluidX,
+                            mouseY + fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
                             fluidHeight * fs.getAmount() / 10000D,
                             sprite,
@@ -149,7 +149,7 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
                             false
                     );
                 }
-               bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
@@ -177,20 +177,20 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
                 52,
                 31,
                 () -> this.container.base.bombardmentChamber.getInputSlot().get(0)
-        ).drawBackground(poseStack,this.guiLeft, this.guiTop);
+        ).drawBackground(poseStack, this.guiLeft, this.guiTop);
         new ItemStackImage(this, 103, 31, () -> this.container.base.electrostaticDeflector.getOutputSlot().get(0)).drawBackground(
-                poseStack,    this.guiLeft,
+                poseStack, this.guiLeft,
                 this.guiTop
         );
         this.bindTexture();
-        drawTexturedModalRect(poseStack,this.guiLeft + 130, guiTop + 26, 216,
+        drawTexturedModalRect(poseStack, this.guiLeft + 130, guiTop + 26, 216,
                 5, (int) (35 * this.container.base.positrons.getPositrons().getFillRatio()), 8
         );
-        drawTexturedModalRect(poseStack,this.guiLeft + 130, guiTop + 44, 216,
+        drawTexturedModalRect(poseStack, this.guiLeft + 130, guiTop + 44, 216,
                 23, (int) (35 * this.container.base.quantum.getQuantum().getFillRatio()), 8
         );
         if (hover) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 51, guiTop + 59, 237,
+            drawTexturedModalRect(poseStack, this.guiLeft + 51, guiTop + 59, 237,
                     36, 18, 18
             );
         }
@@ -203,30 +203,30 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
             );
         }
 
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, 10, 10);
 
 
     }
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         this.hover = par1 >= 51 && par1 <= 68 && par2 >= 59 && par2 <= 76;
         new AdvArea(this, 72, 31, 94, 47)
                 .withTooltip((int) (Math.min(1, container.base.progress / 1000D) * 100) + "%")
                 .drawForeground(
-                        poseStack,  par1,
+                        poseStack, par1,
                         par2
                 );
 
         new AdvArea(this, 51, 59, 68, 76).withTooltip(((TileEntityCyclotronController) this.container.base).work ?
                 Localization.translate(
                         "turn_off") :
-                Localization.translate("turn_on")).drawForeground(poseStack,par1, par2);
+                Localization.translate("turn_on")).drawForeground(poseStack, par1, par2);
         (new FluidItem(this, 11, 28, container.base.cryogen.getCryogenTank().getFluid()) {
 
             @Override
@@ -267,10 +267,10 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
         }).drawForeground(poseStack, par1, par2);
         new GuiComponent(this, 126, 22, EnumTypeComponent.POSITRONS,
                 new Component<>(this.container.base.positrons.getPositrons())
-        ).drawForeground(poseStack,par1, par2);
+        ).drawForeground(poseStack, par1, par2);
         new GuiComponent(this, 126, 40, EnumTypeComponent.QUANTUM_ENERGY_WEIGHT,
                 new Component<>(this.container.base.quantum.getQuantum())
-        ).drawForeground(poseStack,par1, par2);
+        ).drawForeground(poseStack, par1, par2);
         new ItemStackImage(this, 52,
                 31, () -> this.container.base.bombardmentChamber.getInputSlot().get(0)
         ).drawForeground(
@@ -286,7 +286,7 @@ public class GuiCyclotronController<T extends ContainerCyclotronController> exte
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicyclotroncontroller.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guicyclotroncontroller.png");
     }
 
 }

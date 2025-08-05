@@ -18,10 +18,12 @@ public class ItemPurifiedCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -35,7 +37,7 @@ public class ItemPurifiedCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<
 
 
         }
-        return new String[]{"forge:purifiedcrushed/" + name, "forge:purifiedcrushed"};
+        return new String[]{"c:purifiedcrushed/" + name, "c:purifiedcrushed"};
     }
 
     public enum Types implements ISubEnum {

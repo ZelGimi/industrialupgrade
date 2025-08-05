@@ -11,36 +11,38 @@ import com.denfop.network.packet.PacketColorPicker;
 import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.render.streak.RGB;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 
 import javax.annotation.Nonnull;
 
 import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX_COLOR;
-import static com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerStreak> implements GuiPageButtonList.GuiResponder, GuiSlider.FormatHelper {
 
-    private final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/Color.png".toLowerCase());
+    private final ResourceLocation background = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/Color.png".toLowerCase());
+    boolean isRgb = false;
     private PlayerStreakInfo colorPicker;
     private Checkbox rgb;
-
 
     public GuiColorPicker(ContainerStreak container, final ItemStack itemStack1) {
         super(container);
         this.componentList.clear();
-        this.title = Component.literal("");
+    }
+
+    @Override
+    public Component getTitle() {
+        return Component.literal("");
     }
 
     @Override
@@ -50,7 +52,7 @@ public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerS
         if (this.colorPicker == null) {
             this.colorPicker = new PlayerStreakInfo(new RGB((short) 0, (short) 0, (short) 0), false);
             IUCore.mapStreakInfo.put(this.container.player.getName().getString(), colorPicker);
-            new PacketColorPicker(colorPicker, this.container.player.getName().getString());
+            new PacketColorPicker(colorPicker, this.container.player.getName().getString(), this.container.player.registryAccess());
 
         }
         this.renderables.add(new GuiSlider(this, 0, (this.width - this.imageWidth) / 2 + 10, (this.height - this.imageHeight) / 2 + 80,
@@ -66,12 +68,8 @@ public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerS
                 Localization.translate("iu.blue"),
                 0, 255, colorPicker.getRgb().getBlue(), this
         ));
-        rgb = new Checkbox(
-                (this.width - this.imageWidth) / 2 + 10,
-                (this.height - this.imageHeight) / 2 + 155, 20, 20,
-                Component.translatable("iu.rgb"),
-                colorPicker.isRainbow()
-        );
+        rgb = Checkbox.builder(Component.translatable("iu.rgb"), Minecraft.getInstance().font).pos((int) (this.width - this.imageWidth) / 2 + 10,
+                (int) (this.height - this.imageHeight) / 2 + 155).maxWidth(20).selected(colorPicker.isRainbow()).build();
         this.isRgb = colorPicker.isRainbow();
         this.renderables.add(rgb);
     }
@@ -100,14 +98,15 @@ public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerS
                 break;
 
         }
-        new PacketColorPicker(colorPicker, this.container.player.getName().getString());
+        new PacketColorPicker(colorPicker, this.container.player.getName().getString(), this.container.player.registryAccess());
     }
-    boolean isRgb = false;
+
     @Override
     public void setEntryValue(final int id, @Nonnull final String value) {
 
     }
-    public void drawTexturedModalRect1(PoseStack poseStack,int x, int y, int textureX, int textureY, int width, int height) {
+
+    public void drawTexturedModalRect1(PoseStack poseStack, int x, int y, int textureX, int textureY, int width, int height) {
         double[] name = new double[3];
         for (int i = 0; i < 3; i++) {
 
@@ -118,31 +117,19 @@ public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerS
             }
         }
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuilder();
+        bindTexture();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        poseStack.pushPose();
-        Matrix4f matrix = poseStack.last().pose();
-        bufferbuilder.begin(QUADS, POSITION_TEX_COLOR);
-
-         bufferbuilder.vertex(matrix,x, y + height, 0).uv(
-                (float) (textureX) * 0.00390625F,
-                (float) (textureY + height) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        bufferbuilder.vertex(matrix,x + width, y + height,0).uv(
-                (float) (textureX + width) * 0.00390625F,
-                (float) (textureY + height) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        bufferbuilder.vertex(matrix,x + width, y,0).uv(
-                (float) (textureX + width) * 0.00390625F,
-                (float) (textureY) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        bufferbuilder.vertex(matrix,x, y, 0).uv(
-                (float) (textureX) * 0.00390625F,
-                (float) (textureY) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        tessellator.end();
-        poseStack.popPose();
-
+        Matrix4f matrix4f = poseStack.last().pose();
+        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, POSITION_TEX_COLOR);
+        bufferbuilder.addVertex(matrix4f, x, y + height, 0).setUv((float) (textureX) * 0.00390625F,
+                (float) (textureY + height) * 0.00390625F).setColor((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1);
+        bufferbuilder.addVertex(matrix4f, (float) x + width, y + height, 0).setUv((float) (textureX + width) * 0.00390625F,
+                (float) (textureY + height) * 0.00390625F).setColor((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1);
+        bufferbuilder.addVertex(matrix4f, (float) x + width, y, 0).setUv((float) (textureX + width) * 0.00390625F,
+                (float) (textureY) * 0.00390625F).setColor((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1);
+        bufferbuilder.addVertex(matrix4f, (float) x, y, 0).setUv((float) (textureX) * 0.00390625F,
+                (float) (textureY) * 0.00390625F).setColor((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1);
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
     }
 
     @Override
@@ -154,18 +141,19 @@ public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerS
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int xOffset =guiLeft;
+        int xOffset = guiLeft;
         int yOffset = guiTop;
         bindTexture(this.background);
 
         this.drawTexturedModalRect1(poseStack.pose(), xOffset, yOffset, 15, 1, 180, 60);
-        if (isRgb != rgb.selected()){
+        if (isRgb != rgb.selected()) {
             isRgb = rgb.selected();
             colorPicker.setRainbow(isRgb);
-            new PacketColorPicker(colorPicker, this.container.player.getName().getString());
+            new PacketColorPicker(colorPicker, this.container.player.getName().getString(), this.container.player.registryAccess());
         }
 
     }
+
     @Override
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);

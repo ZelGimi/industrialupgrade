@@ -22,7 +22,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -44,7 +44,7 @@ public class TileCanner extends TileElectricLiquidTankInventory
     private int fluid_amount;
 
     public TileCanner(BlockPos pos, BlockState state) {
-        super(300, 1, 10,BlockBaseMachine3.canner_iu,pos,state);
+        super(300, 1, 10, BlockBaseMachine3.canner_iu, pos, state);
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
         this.inputSlotA = new InvSlotRecipes(this, "cannerenrich", this, this.fluidTank);
         Recipes.recipes.addInitRecipes(this);
@@ -69,7 +69,6 @@ public class TileCanner extends TileElectricLiquidTankInventory
         double ret = Math.round((base + extra) * multiplier);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
-
 
 
     public IMultiTileBlock getTeBlock() {
@@ -131,13 +130,10 @@ public class TileCanner extends TileElectricLiquidTankInventory
     }
 
 
-
     public MachineRecipe getOutput() {
         this.output = this.inputSlotA.process();
         return this.output;
     }
-
-
 
 
     public double getEnergy() {

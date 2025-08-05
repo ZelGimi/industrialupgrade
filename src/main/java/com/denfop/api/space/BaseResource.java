@@ -1,11 +1,10 @@
 package com.denfop.api.space;
 
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.Objects;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class BaseResource implements IBaseResource {
 
@@ -39,17 +38,17 @@ public class BaseResource implements IBaseResource {
         SpaceNet.instance.addResource(this);
     }
 
-    public BaseResource(CompoundTag tagCompound) {
+    public BaseResource(CompoundTag tagCompound, HolderLookup.Provider p_323640_) {
         percentplanet = tagCompound.getByte("percentplanet");
         min = tagCompound.getByte("min");
         max = tagCompound.getByte("max");
         if (tagCompound.getBoolean("hasItem")) {
-            stack = ItemStack.of(tagCompound.getCompound("stack"));
+            stack = ItemStack.parseOptional(p_323640_, tagCompound.getCompound("stack"));
         } else {
             stack = null;
         }
         if (tagCompound.getBoolean("hasFluid")) {
-            fluidStack = FluidStack.loadFluidStackFromNBT(tagCompound.getCompound("fluidStack"));
+            fluidStack = FluidStack.parseOptional(p_323640_, tagCompound.getCompound("fluidStack"));
         } else {
             fluidStack = null;
         }
@@ -93,18 +92,18 @@ public class BaseResource implements IBaseResource {
     }
 
     @Override
-    public CompoundTag writeNBTTag(final CompoundTag tagCompound) {
+    public CompoundTag writeNBTTag(final CompoundTag tagCompound, HolderLookup.Provider p_323640_) {
         tagCompound.putByte("percentplanet", (byte) percentplanet);
         tagCompound.putByte("min", (byte) min);
         tagCompound.putByte("max", (byte) max);
         tagCompound.putByte("rovers", (byte) typeRovers.ordinal());
         tagCompound.putBoolean("hasItem", stack != null);
         if (stack != null) {
-            tagCompound.put("stack", stack.save(new CompoundTag()));
+            tagCompound.put("stack", stack.save(p_323640_));
         }
         tagCompound.putBoolean("hasFluid", fluidStack != null);
         if (fluidStack != null) {
-            tagCompound.put("fluidStack", fluidStack.writeToNBT(new CompoundTag()));
+            tagCompound.put("fluidStack", fluidStack.save(p_323640_));
         }
         return tagCompound;
     }
@@ -114,16 +113,4 @@ public class BaseResource implements IBaseResource {
         return typeRovers;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BaseResource that = (BaseResource) o;
-        return max == that.max && min == that.min && percentplanet == that.percentplanet && Objects.equals(fluidStack, that.fluidStack) && typeRovers == that.typeRovers && Objects.equals(stack, that.stack) && Objects.equals(body, that.body);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fluidStack, typeRovers, stack, max, min, body, percentplanet);
-    }
 }

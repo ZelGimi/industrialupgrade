@@ -5,7 +5,7 @@ import com.denfop.mixin.access.DeferredRegisterAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -15,13 +15,11 @@ import java.util.function.Supplier;
 import static com.denfop.register.Register.ITEMS;
 
 public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
-    List<RegistryObject<E>> registryObjectList;
-    public static List<RegistryObject<Item>> objects = new LinkedList<>();
-    public DataItem(Class<T> typeClass, Class<E> itemClass){
-        this(typeClass,itemClass,Constants.MOD_ID);
-    }
-    public DataItem(Class<T> typeClass, Class<E> itemClass, String constants) {
-        Map<T, RegistryObject<E>> map = new HashMap<>();
+    public static List<DeferredHolder<Item, Item>> objects = new ArrayList<>();
+    List<DeferredHolder<Item, E>> registryObjectList;
+
+    public DataItem(Class<T> typeClass, Class<E> itemClass) {
+        Map<T, DeferredHolder<Item, E>> map = new HashMap<>();
         T[] collections = typeClass.getEnumConstants();
         int indexMax = 0;
         for (T type : collections) {
@@ -38,13 +36,13 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
                     }
                 };
 
-                final ResourceLocation key = new ResourceLocation(constants, type.getMainPath() + "/" + type.getSerializedName() + type.getOtherPart());
+                final ResourceLocation key = ResourceLocation.tryBuild(IUCore.MODID, type.getMainPath() + "/" + type.getSerializedName() + type.getOtherPart());
                 if (indexMax < type.getId())
                     indexMax = type.getId();
                 if (!type.register())
                     continue;
-                RegistryObject<E> ret = RegistryObject.create(key, ITEMS.getRegistryKey(),constants);
-                objects.add((RegistryObject<Item>) ret);
+                DeferredHolder<Item, E> ret = DeferredHolder.create(ITEMS.getRegistryKey(), key);
+                objects.add((DeferredHolder<Item, Item>) ret);
                 var entries = ((DeferredRegisterAccessor) ITEMS).getEntries();
                 if (entries.putIfAbsent(ret, supplier) != null) {
                     throw new IllegalArgumentException("Duplicate registration " + type);
@@ -55,7 +53,7 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
             }
         }
         registryObjectList = new ArrayList<>(Collections.nCopies(indexMax + 1, null));
-        for (Map.Entry<T, RegistryObject<E>> entry : map.entrySet()) {
+        for (Map.Entry<T, DeferredHolder<Item, E>> entry : map.entrySet()) {
             registryObjectList.set(entry.getKey().getId(), entry.getValue());
         }
     }
@@ -67,24 +65,27 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
     public E getStack(int meta) {
         return registryObjectList.get(meta % registryObjectList.size()).get();
     }
+
     public ItemStack getItemStack(int meta) {
         return new ItemStack(registryObjectList.get(meta % registryObjectList.size()).get());
     }
+
     public ItemStack getItemStack(int meta, int col) {
-        return new ItemStack(registryObjectList.get(meta % registryObjectList.size()).get(),col);
+        return new ItemStack(registryObjectList.get(meta % registryObjectList.size()).get(), col);
     }
+
     public E getItemFromMeta(int meta) {
         return registryObjectList.get(meta % registryObjectList.size()).get();
     }
 
-    public RegistryObject<E> getRegistryObject(int meta) {
+    public DeferredHolder<Item, E> getRegistryObject(int meta) {
 
         return registryObjectList.get(meta % registryObjectList.size());
     }
 
     public int getMeta(E item) {
         int i = 0;
-        for (RegistryObject<E> registryObject : registryObjectList) {
+        for (DeferredHolder<Item, E> registryObject : registryObjectList) {
             if (registryObject.get() == item) {
                 return i;
             }
@@ -96,14 +97,15 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
     public int getMeta(ItemStack itemStack) {
         int i = 0;
         E item = (E) itemStack.getItem();
-        for (RegistryObject<E> registryObject : registryObjectList) {
-            if (registryObject.get().equals(item)) {
+        for (DeferredHolder<Item, E> registryObject : registryObjectList) {
+            if (registryObject.get() == item) {
                 return i;
             }
             i++;
         }
         return 0;
     }
+
     public E getItem(T meta) {
         return registryObjectList.get(meta.getId()).get();
     }

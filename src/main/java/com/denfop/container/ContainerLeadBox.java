@@ -1,5 +1,7 @@
 package com.denfop.container;
 
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.bags.ItemStackLeadBox;
 import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.utils.ModUtils;
@@ -120,7 +122,8 @@ public class ContainerLeadBox extends ContainerHandHeldInventory<ItemStackLeadBo
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 

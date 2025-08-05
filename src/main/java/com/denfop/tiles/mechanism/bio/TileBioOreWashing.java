@@ -18,7 +18,7 @@ public class TileBioOreWashing extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.OreWashing.usagePerTick,
                 EnumMultiMachine.OreWashing.lenghtOperation,
-                4,BlockBaseMachine3.bio_orewashing,pos,state
+                4, BlockBaseMachine3.bio_orewashing, pos, state
         );
     }
 

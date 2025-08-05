@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:gas_reactor/gas_coolant"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_418_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_426_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_424_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_reactor/adv_gas_coolant"
+  },
+  "show_notification": false
+}

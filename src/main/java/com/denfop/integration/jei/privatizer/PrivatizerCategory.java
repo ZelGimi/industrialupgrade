@@ -43,7 +43,7 @@ public class PrivatizerCategory extends GuiIU implements IRecipeCategory<Privati
         super(((TilePrivatizer) BlockBaseMachine3.privatizer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 169,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 169,
                 75
         );
         this.componentList.clear();
@@ -62,7 +62,7 @@ public class PrivatizerCategory extends GuiIU implements IRecipeCategory<Privati
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 2).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 2).getDescriptionId());
     }
 
 
@@ -74,21 +74,21 @@ public class PrivatizerCategory extends GuiIU implements IRecipeCategory<Privati
 
     @Override
     public void draw(PrivatizerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PrivatizerHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.getSlots();
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(new ItemStack(IUItem.module7.getStack(0), 1));
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(new ItemStack(IUItem.module7.getStack(0), 1));
 
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(1).getJeiX(), slots1.get(1).getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(1).getJeiX(), slots1.get(1).getJeiY()).addItemStack(recipe.getOutput());
 
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiprivatizer_jei.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiprivatizer_jei.png");
     }
 
 

@@ -31,13 +31,15 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityPlantGardener extends TileEntityInventory implements IUpgradableBlock {
 
@@ -49,14 +51,14 @@ public class TileEntityPlantGardener extends TileEntityInventory implements IUpg
     private final ComponentUpgradeSlots componentUpgrade;
     private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
     List<ChunkPos> chunks;
 
     public TileEntityPlantGardener(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.plant_gardener,pos,state);
+        super(BlockBaseMachine3.plant_gardener, pos, state);
         this.output = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

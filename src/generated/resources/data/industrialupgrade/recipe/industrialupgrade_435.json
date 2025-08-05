@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/iron"
+    },
+    "B": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "item": "minecraft:flint"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "ADA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/circuit_part1"
+  },
+  "show_notification": false
+}

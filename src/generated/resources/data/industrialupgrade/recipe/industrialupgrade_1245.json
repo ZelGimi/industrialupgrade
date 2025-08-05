@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/thallium"
+    },
+    "B": {
+      "tag": "c:plates/strontium"
+    },
+    "C": {
+      "tag": "c:plates/niobium"
+    }
+  },
+  "pattern": [
+    "CCB",
+    "CAA",
+    "CCB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_588_element"
+  },
+  "show_notification": false
+}

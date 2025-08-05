@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tantalumtungstenhafnium"
+    },
+    "B": {
+      "tag": "c:nuggets/iridium"
+    },
+    "C": {
+      "tag": "c:plates/mikhail"
+    }
+  },
+  "pattern": [
+    "C C",
+    "ACA",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_694_element"
+  },
+  "show_notification": false
+}

@@ -33,12 +33,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +61,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.MACERATOR);
 
     public TileEntityMacerator(BlockPos pos, BlockState state) {
-        super(BlockMacerator.macerator,pos,state);
+        super(BlockMacerator.macerator, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "macerator", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
@@ -69,7 +69,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
                     List<TagKey<Item>> tags = itemStack.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList();
                     for (TagKey<Item> i : tags) {
                         String name = i.location().getPath();
-                        if (name.startsWith("ores") || name.startsWith("raw_materials")|| name.startsWith("storage_blocks/raw_")) {
+                        if (name.startsWith("ores") || name.startsWith("raw_materials")|| (name.startsWith("storage_blocks/raw_"))) {
                             return false;
                         }
                     }
@@ -91,21 +91,21 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK)
+            return null;
+        return super.getCapability(cap, side);
     }
-
 
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.primal_repair1"));
+
         tooltip.add(Localization.translate("iu.primal_repair.info"));
         tooltip.add(Localization.translate("iu.primal_macerator.infi"));
-
         tooltip.add(Localization.translate( "iu.primal_macerator.info2"));
+
     }
 
     @Override
@@ -184,14 +184,14 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                inputSlotA.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -208,8 +208,8 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            inputSlotA.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
+            outputSlot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -234,7 +234,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     @Override
     public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         ItemStack stack = player.getItemInHand(hand);
-        if (durability >= 0 && durability < 96 && stack.getItem()  instanceof ItemCraftingElements<?> && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 41) {
+        if (durability >= 0 && durability < 96 && stack.getItem() instanceof ItemCraftingElements<?> && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 41) {
             durability = 96;
             stack.shrink(1);
             new PacketUpdateFieldTile(this, "durability", this.durability);
@@ -321,8 +321,6 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
 
         return this.level.isClientSide;
     }
-
-
 
 
     @Override

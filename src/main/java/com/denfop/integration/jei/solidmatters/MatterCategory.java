@@ -28,13 +28,14 @@ public class MatterCategory extends GuiIU implements IRecipeCategory<MatterHandl
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public MatterCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntitySolidFluidIntegrator) BlockBaseMachine3.solid_fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolidmatter" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisolidmatter" +
                         ".png"), 3, 3, 148,
                 80
         );
@@ -61,7 +62,7 @@ public class MatterCategory extends GuiIU implements IRecipeCategory<MatterHandl
 
     @Override
     public void draw(MatterHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-       drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("cost.name") + " " + ModUtils.getString((double) recipe.getEnergy()) + "EF",
                 10,
                 67,
@@ -72,12 +73,12 @@ public class MatterCategory extends GuiIU implements IRecipeCategory<MatterHandl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MatterHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,77,23).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 23).addItemStack(recipe.getInput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisynthesis.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisynthesis.png");
     }
 
 

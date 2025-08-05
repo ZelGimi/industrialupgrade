@@ -18,8 +18,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
@@ -31,7 +31,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     private int index;
 
     public TileEntityGraphiteController(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override

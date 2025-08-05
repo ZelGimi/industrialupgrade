@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/osmiridium"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "C": {
+      "tag": "c:plates/iridium"
+    }
+  },
+  "pattern": [
+    " AC",
+    "ABA",
+    "CA "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_701_element"
+  },
+  "show_notification": false
+}

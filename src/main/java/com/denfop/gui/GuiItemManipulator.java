@@ -40,20 +40,20 @@ public class GuiItemManipulator<T extends ContainerItemManipulator> extends GuiI
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString( poseStack,this.imageWidth / 2, 4, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2, 4, name, 4210752, false);
     }
 
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture();
         int xoffset = guiLeft;
         int yoffset = guiTop;
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,this.imageWidth / 2, 4, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2, 4, name, 4210752, false);
 
     }
 
@@ -75,10 +75,8 @@ public class GuiItemManipulator<T extends ContainerItemManipulator> extends GuiI
     }
 
 
-
-
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

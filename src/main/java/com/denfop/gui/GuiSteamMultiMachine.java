@@ -86,13 +86,13 @@ public class GuiSteamMultiMachine<T extends ContainerSteamMultiMachine> extends 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
 
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-       bindTexture(getTexture());
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
         int j = guiLeft;
         int k = guiTop;
         drawTexturedModalRect(poseStack, j, k, 0, 0, 176, this.imageHeight);
         int xoffset = guiLeft;
-        int yoffset =guiTop;
+        int yoffset = guiTop;
         this.drawBackground(poseStack);
         int i = 0;
         for (Slot slot : this.container.slots) {
@@ -128,13 +128,13 @@ public class GuiSteamMultiMachine<T extends ContainerSteamMultiMachine> extends 
 
         }
 
-       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
     }
 
 }

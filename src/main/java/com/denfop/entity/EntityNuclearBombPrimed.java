@@ -8,11 +8,10 @@ import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +20,6 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
 
@@ -46,8 +44,8 @@ public class EntityNuclearBombPrimed extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(FUSE, 80);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(FUSE, 80);
     }
 
     public int getFuse() {
@@ -90,7 +88,7 @@ public class EntityNuclearBombPrimed extends Entity {
         if (!this.level().isClientSide) {
             if (this.level().dimension() == Level.OVERWORLD) {
                 int radiationValue = 5000;
-                new PacketUpdateRadiationValue(this.level().getChunk(explosionPos).getPos(), radiationValue);
+                new PacketUpdateRadiationValue(this.level().getChunk(explosionPos).getPos(), radiationValue, (ServerLevel) this.level());
                 spreadRadiation(explosionPos, radiationValue);
                 affectNearbyPlayers(explosionPos, 30.0D);
             }
@@ -103,7 +101,8 @@ public class EntityNuclearBombPrimed extends Entity {
             for (int z = -radius; z <= radius; z++) {
                 BlockPos chunkCenter = explosionPos.offset(x * 16, 0, z * 16);
                 int radiationLevel = (int) (initialRadiation / (1 + Math.sqrt(x * x + z * z)));
-                new PacketUpdateRadiationValue(this.level().getChunk(chunkCenter).getPos(), radiationLevel);
+                if (!this.level().isClientSide)
+                    new PacketUpdateRadiationValue(this.level().getChunk(chunkCenter).getPos(), radiationLevel, (ServerLevel) this.level());
             }
         }
     }
@@ -115,7 +114,7 @@ public class EntityNuclearBombPrimed extends Entity {
         );
         for (Player player : players) {
             if (!hasRadiationSuit(player)) {
-                player.addEffect(new MobEffectInstance(IUPotion.radiation, 200, 0));
+                player.addEffect(new MobEffectInstance(IUPotion.rad, 200, 0));
             }
         }
     }
@@ -135,10 +134,6 @@ public class EntityNuclearBombPrimed extends Entity {
         tag.putShort("Fuse", (short) this.getFuse());
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
 
     public LivingEntity getOwner() {
         return this.owner;

@@ -4,6 +4,7 @@ import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
@@ -12,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -21,6 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
@@ -33,11 +34,10 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -51,10 +51,12 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     public boolean canfill(Fluid fluid) {
         return true;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.fluidCellTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -64,7 +66,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Item.TooltipContext level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
         if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
             list.add(Component.literal(Localization.translate("press.lshift")));
@@ -72,17 +74,16 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
         if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
             list.add(Component.literal(Localization.translate("iu.fluid_cell.info")));
         }
-
     }
 
-    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
-        return new CapabilityFluidHandlerItem(stack, 1000) {
+    public IFluidHandlerItem initCapabilities(ItemStack stack) {
+        return new CapabilityFluidHandlerItem(() -> DataComponentsInit.FLUID.get(), stack, 1000) {
             public boolean canFillFluidType(FluidStack fluid) {
-                return fluid != null && ItemFluidCell.this.canfill(fluid.getFluid());
+                return !fluid.isEmpty() && ItemFluidCell.this.canfill(fluid.getFluid());
             }
 
             public boolean canDrainFluidType(FluidStack fluid) {
-                return fluid != null && ItemFluidCell.this.canfill(fluid.getFluid()) && fluid.getAmount() >= 1000;
+                return !fluid.isEmpty() && ItemFluidCell.this.canfill(fluid.getFluid()) && fluid.getAmount() >= 1000;
             }
 
             @Override
@@ -121,9 +122,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 
         ItemStack itemstack = player.getItemInHand(hand);
-        IFluidHandlerItem fs = itemstack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse(null);
-        if (fs == null)
-            fs = (IFluidHandlerItem) initCapabilities(itemstack,itemstack.getOrCreateTag());
+        IFluidHandlerItem fs = itemstack.getCapability(Capabilities.FluidHandler.ITEM, null);
         BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, fs.getFluidInTank(0).getFluid() == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         if (blockhitresult.getType() == HitResult.Type.MISS) {
             return InteractionResultHolder.pass(itemstack);
@@ -153,7 +152,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
                 } else {
                     BlockState block = world.getBlockState(blockpos);
                     if (block.liquid()) {
-                        FluidState fluidState = block.getBlock().getFluidState(block);
+                        FluidState fluidState = block.getFluidState();
 
                         if (!fluidState.isSource()) {
                             return InteractionResultHolder.fail(itemstack);
@@ -228,7 +227,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
                         );
                     }
                 } else {
-                    if (!worldIn.isClientSide && ( flag1) && !iblockstate.liquid()) {
+                    if (!worldIn.isClientSide && (flag1) && !iblockstate.liquid()) {
                         worldIn.destroyBlock(posIn, true);
                     }
 

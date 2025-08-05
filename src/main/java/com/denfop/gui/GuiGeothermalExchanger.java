@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class GuiGeothermalExchanger<T extends ContainerGeothermalExchanger> exte
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,
-                          mouseX+  fluidX,
-                        mouseY+    fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
+                            mouseX + fluidX,
+                            mouseY + fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
                             fluidHeight * (fs.getAmount() / 10000D),
                             sprite,
@@ -49,7 +49,7 @@ public class GuiGeothermalExchanger<T extends ContainerGeothermalExchanger> exte
                             false
                     );
                 }
-               bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
@@ -80,13 +80,13 @@ public class GuiGeothermalExchanger<T extends ContainerGeothermalExchanger> exte
                 98, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(poseStack,guiLeft, guiTop);
+            element.drawBackground(poseStack, guiLeft, guiTop);
         }
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigeothermalpump.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigeothermalpump.png");
     }
 
 }

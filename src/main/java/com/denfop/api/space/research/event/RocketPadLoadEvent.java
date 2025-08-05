@@ -2,7 +2,7 @@ package com.denfop.api.space.research.event;
 
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class RocketPadLoadEvent extends LevelEvent {
 

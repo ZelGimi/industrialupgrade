@@ -10,8 +10,8 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
@@ -56,7 +56,7 @@ public class GuiAdvAlloySmelter<T extends ContainerTripleElectricMachine> extend
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpCooling extends TileEntityCoolant {
 
     public TileEntityImpCooling(BlockPos pos, BlockState state) {
-        super(2,BlocksGraphiteReactors.graphite_imp_cooling,pos,state);
+        super(2, BlocksGraphiteReactors.graphite_imp_cooling, pos, state);
     }
 
     @Override

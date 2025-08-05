@@ -18,10 +18,12 @@ public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -46,7 +48,7 @@ public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
                 break;
 
         }
-        return new String[]{"forge:casings/" + name, "forge:casings"};
+        return new String[]{"c:casings/" + name, "c:casings"};
     }
 
     public enum Types implements ISubEnum {
@@ -99,7 +101,8 @@ public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
         draconid(46),
         meteoric_iron(47),
         mythril(48),
-        orichalcum(49),;
+        orichalcum(49),
+        ;
 
         private final String name;
         private final int ID;

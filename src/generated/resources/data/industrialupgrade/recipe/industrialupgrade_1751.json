@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_599_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/hafnium"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/bismuth"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_583_element"
+  },
+  "show_notification": false
+}

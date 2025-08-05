@@ -84,14 +84,12 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
                 addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
                         i, upgradeX + 5, upgradeY + 1 + i * 18
                 ));
-            }
-            else if (tileEntity1 instanceof TileWeldingMachine) {
-                  addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                           i, upgradeX + 5, upgradeY + i * 18
-                 ));
-                }
-            else if (tileEntity1 instanceof TileUpgradeBlock
-                || tileEntity1 instanceof TileEntityUpgradeRover
+            } else if (tileEntity1 instanceof TileWeldingMachine) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX + 5, upgradeY + i * 18
+                ));
+            } else if (tileEntity1 instanceof TileUpgradeBlock
+                    || tileEntity1 instanceof TileEntityUpgradeRover
             ) {
                 addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
                         i, upgradeX + 5, upgradeY + 1 + i * 18

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_666_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_667_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "CAE",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/collector_product_bee"
+  },
+  "show_notification": false
+}

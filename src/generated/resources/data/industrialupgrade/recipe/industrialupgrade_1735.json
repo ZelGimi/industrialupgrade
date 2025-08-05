@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:water_reactors/water_imp_controller"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_405_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_403_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    "BEB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:water_reactors/water_per_controller"
+  },
+  "show_notification": false
+}

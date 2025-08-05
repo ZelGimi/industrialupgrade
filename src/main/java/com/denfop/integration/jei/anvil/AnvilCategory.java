@@ -29,12 +29,13 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public AnvilCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -69,9 +70,9 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AnvilHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,5,25).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,30,25).addItemStack(new ItemStack(IUItem.ForgeHammer.getItem()));
-        builder.addSlot(RecipeIngredientRole.OUTPUT,60,25).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.ForgeHammer.getItem()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipes.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
 
@@ -83,22 +84,21 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
         this.drawSplitString(stack, Minecraft.getInstance().font, Localization.translate("iu.anvil.jei"), 5, 3,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack, Minecraft.getInstance().font,"+", 26, 31,
+        this.drawSplitString(stack, Minecraft.getInstance().font, "+", 26, 31,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack, Minecraft.getInstance().font,"->", 47, 31,
+        this.drawSplitString(stack, Minecraft.getInstance().font, "->", 47, 31,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack, Minecraft.getInstance().font,Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
+        this.drawSplitString(stack, Minecraft.getInstance().font, Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
                         "iu.anvil.jei2"), 5, 50,
                 140 - 5, 4210752
         );
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

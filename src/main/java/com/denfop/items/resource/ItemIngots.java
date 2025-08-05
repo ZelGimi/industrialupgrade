@@ -21,10 +21,12 @@ public class ItemIngots<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -48,7 +50,7 @@ public class ItemIngots<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
                 name = "mithril";
                 break;
         }
-        return new String[]{"forge:ingots/" + name.replace("_ingot", ""), "forge:ingots"};
+        return new String[]{"c:ingots/" + name.replace("_ingot", ""), "c:ingots"};
     }
 
     protected String getOrCreateDescriptionId() {

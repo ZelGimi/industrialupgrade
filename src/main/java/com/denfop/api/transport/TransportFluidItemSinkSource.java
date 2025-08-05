@@ -5,10 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.*;
 
@@ -41,14 +41,14 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         boolean isItem = false;
         boolean isFluid = false;
         for (Direction facing : Direction.values()) {
-            IItemHandler item_storage = parent.getCapability(
-                    ForgeCapabilities.ITEM_HANDLER,
+            IItemHandler item_storage = parent.getLevel().getCapability(
+                    Capabilities.ItemHandler.BLOCK, pos,
                     facing
-            ).orElse(null);
-            IFluidHandler fluid_storage = parent.getCapability(
-                    ForgeCapabilities.FLUID_HANDLER,
+            );
+            IFluidHandler fluid_storage = parent.getLevel().getCapability(
+                    Capabilities.FluidHandler.BLOCK, pos,
                     facing
-            ).orElse(null);
+            );
             if (!isFluid && fluid_storage != null) {
                 isFluid = true;
             }

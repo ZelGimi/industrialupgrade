@@ -9,6 +9,8 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBarrel;
 import com.denfop.componets.Fluids;
+import com.denfop.datacomponent.BeerInfo;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.ParticleUtils;
@@ -22,8 +24,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -80,7 +82,7 @@ public class TileEntityBarrel extends TileEntityInventory {
         if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player
                 .getItemInHand(hand)) != null && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
             ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
             this.prev = this.tank.getFluidAmount();
             waterVariety = EnumWaterVariety.getVarietyFromLevelWater(this.tank.getFluidAmount() / 1000);
@@ -98,15 +100,8 @@ public class TileEntityBarrel extends TileEntityInventory {
         if (!this.getWorld().isClientSide && hops + this.wheat == 10 && beerVariety == null) {
             beerVariety = EnumBeerVariety.getBeerVarietyFromRatio(this.wheat, hops);
         }
-        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.booze_mug.getItem() && !ModUtils
-                .nbt(stack)
-                .contains("beer") && waterVariety != null && beerVariety != null) {
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            nbt.putBoolean("beer", true);
-            nbt.putByte("amount", (byte) 5);
-            nbt.putByte("waterVariety", (byte) waterVariety.ordinal());
-            nbt.putByte("timeVariety", (byte) timeVariety.ordinal());
-            nbt.putByte("beerVariety", (byte) beerVariety.ordinal());
+        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.booze_mug.getItem() && !stack.has(DataComponentsInit.BEER) && waterVariety != null && beerVariety != null) {
+            stack.set(DataComponentsInit.BEER, new BeerInfo(waterVariety, timeVariety, beerVariety, 5));
             hops = 0;
             wheat = 0;
             time = 0;
@@ -130,8 +125,8 @@ public class TileEntityBarrel extends TileEntityInventory {
         }
         if (this.hops + this.wheat == 10 && this.waterVariety != null) {
             this.time++;
-            if (this.level.getGameTime() % 5 == 0){
-                ParticleUtils.spawnFermenterParticles(level,pos,level.random);
+            if (this.level.getGameTime() % 5 == 0) {
+                ParticleUtils.spawnFermenterParticles(level, pos, level.random);
             }
             if (this.time % 1200 == 0) {
                 this.timeVariety = EnumTimeVariety.getVarietyFromTime(this.time / (3600 * 20D));

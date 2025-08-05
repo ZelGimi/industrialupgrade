@@ -36,9 +36,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class TileEntityItemDividerFluids extends TileElectricMachine implements
     protected short progress;
 
     public TileEntityItemDividerFluids(BlockPos pos, BlockState state) {
-        super(200, 1, 0,BlockBaseMachine3.item_divider_to_fluid,pos,state);
+        super(200, 1, 0, BlockBaseMachine3.item_divider_to_fluid, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;

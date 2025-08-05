@@ -11,9 +11,10 @@ import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufInputStream;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
@@ -23,10 +24,9 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -253,7 +253,7 @@ public class DecoderHandler {
             case Double:
                 return is.readDouble();
             case Enchantment:
-                return BuiltInRegistries.ENCHANTMENT.get((ResourceLocation) decode(is, EncodedType.ResourceLocation));
+                return is.registryAccess().registryOrThrow(Registries.ENCHANTMENT).get((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case Enum:
                 return is.readVarInt();
             case Float:
@@ -261,10 +261,20 @@ public class DecoderHandler {
             case Fluid:
                 return BuiltInRegistries.FLUID.get((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case FluidStack:
-                FluidStack ret2 = new FluidStack((Fluid) decode(is, EncodedType.Fluid), is.readInt());
-                if (!ret2.isEmpty())
-                    ret2.setTag((CompoundTag) decode(is));
-                return ret2;
+
+                ResourceLocation resourceLocation1 = (ResourceLocation) decode(is, EncodedType.ResourceLocation);
+                DataComponentPatch componentPatch = null;
+                int amount = is.readInt();
+                if (is.readBoolean())
+                    componentPatch = (DataComponentPatch) decode(is);
+                if (componentPatch != null) {
+                    FluidStack ret2 = new FluidStack(is.registryAccess().registryOrThrow(Registries.FLUID).getHolder(resourceLocation1).get(), amount, componentPatch);
+                    return ret2;
+                } else {
+                    FluidStack ret2 = new FluidStack(is.registryAccess().registryOrThrow(Registries.FLUID).getHolder(resourceLocation1).get(), amount);
+                    return ret2;
+
+                }
             case FluidTank:
                 FluidStack fluidStack = (FluidStack) decode(is);
                 FluidTank fluidTank = new FluidTank(is.readInt());
@@ -290,15 +300,23 @@ public class DecoderHandler {
                 if (size == 0) {
                     return ModUtils.emptyStack;
                 }
-                Item item = decode(is, Item.class);
-                CompoundTag nbt = (CompoundTag) decode(is);
-                ItemStack ret1 = new ItemStack(item, size);
-                ret1.setTag(nbt);
-                return ret1;
+                ResourceLocation resourceLocation = (ResourceLocation) decode(is, EncodedType.ResourceLocation);
+                DataComponentPatch componentPatch1 = null;
+                if (is.readBoolean())
+                    componentPatch1 = (DataComponentPatch) decode(is);
+                Holder.Reference<Item> holder = is.registryAccess().registryOrThrow(Registries.ITEM).getHolder(resourceLocation).get();
+                if (componentPatch1 == null) {
+                    return new ItemStack(holder, size);
+                } else {
+                    ItemStack ret1 = new ItemStack(holder, size, componentPatch1);
+                    return ret1;
+                }
+            case DataComponentPatch:
+                return DataComponentPatch.STREAM_CODEC.decode(is);
             case Long:
                 return is.readLong();
             case NBTTagCompound:
-                return NbtIo.read(new ByteBufInputStream(is), NbtAccounter.UNLIMITED);
+                return NbtIo.read(new ByteBufInputStream(is), NbtAccounter.unlimitedHeap());
             case Null:
                 return null;
             case Object:
@@ -306,7 +324,7 @@ public class DecoderHandler {
             case Potion:
                 return BuiltInRegistries.POTION.get((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case ResourceLocation:
-                return new ResourceLocation(is.readString(), is.readString());
+                return ResourceLocation.tryBuild(is.readString(), is.readString());
             case Short:
                 return is.readShort();
             case String:

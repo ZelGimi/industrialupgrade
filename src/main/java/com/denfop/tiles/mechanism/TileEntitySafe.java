@@ -15,11 +15,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,18 +31,16 @@ public class TileEntitySafe extends TileEntityInventory {
     public int timer = 10;
 
     public TileEntitySafe(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.safe, pos,state);
+        super(BlockBaseMachine3.safe, pos, state);
         this.getComponentPrivate().setActivate(true);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 63);
     }
 
-
-
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK)
+            return null;
+        return super.getCapability(cap, side);
     }
 
 

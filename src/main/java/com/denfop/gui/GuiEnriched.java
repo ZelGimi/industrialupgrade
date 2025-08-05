@@ -9,8 +9,8 @@ import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.tiles.mechanism.dual.TileEnrichment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiEnriched<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
@@ -52,7 +52,7 @@ public class GuiEnriched<T extends ContainerDoubleElectricMachine> extends GuiIU
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUEnrichment.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUEnrichment.png".toLowerCase());
     }
 
 }

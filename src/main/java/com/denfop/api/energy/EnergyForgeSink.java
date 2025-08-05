@@ -1,21 +1,19 @@
 package com.denfop.api.energy;
 
-import com.denfop.componets.Energy;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EnergyForgeSink   extends EnergyForge implements IEnergySink{
+public class EnergyForgeSink extends EnergyForge implements IEnergySink {
+    List<Integer> energyTicks = new LinkedList<>();
     private double perenergy;
     private double pastEnergy;
     private double tick;
 
-    public EnergyForgeSink(BlockEntity blockEntity){
+    public EnergyForgeSink(BlockEntity blockEntity) {
         super(blockEntity);
     }
 
@@ -69,28 +67,32 @@ public class EnergyForgeSink   extends EnergyForge implements IEnergySink{
     public double getDemandedEnergy(Direction direction) {
         IEnergyStorage energyStorage = storages.get(direction);
         if (energyStorage == null)
-            return  0;
-        return energyStorage.receiveEnergy(Integer.MAX_VALUE,true) / 4D;
+            return 0;
+        return energyStorage.receiveEnergy(Integer.MAX_VALUE, true) / 4D;
     }
+
     @Override
     public int getSinkTier(Direction direction) {
         IEnergyStorage energyStorage = storages.get(direction);
-        return EnergyNetGlobal.instance.getTierFromPower(energyStorage.receiveEnergy(Integer.MAX_VALUE,true) / 4D);
+        return EnergyNetGlobal.instance.getTierFromPower(energyStorage.receiveEnergy(Integer.MAX_VALUE, true) / 4D);
     }
+
     @Override
     public int getSinkTier() {
         return 1;
     }
+
     @Override
-    public void receiveEnergy(Direction direction,double var2) {
+    public void receiveEnergy(Direction direction, double var2) {
         IEnergyStorage energyStorage = storages.get(direction);
-        energyStorage.receiveEnergy((int) (var2 * 4),false);
+        energyStorage.receiveEnergy((int) (var2 * 4), false);
     }
+
     @Override
     public void receiveEnergy(double var2) {
 
     }
-    List<Integer> energyTicks = new LinkedList<>();
+
     @Override
     public List<Integer> getEnergyTickList() {
         return energyTicks;

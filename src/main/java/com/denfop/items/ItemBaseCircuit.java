@@ -2,15 +2,14 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.utils.ModUtils;
+import com.denfop.datacomponent.DataComponentsInit;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Locale;
 
@@ -20,6 +19,7 @@ public class ItemBaseCircuit<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
         if (properties().length > 0)
             IUCore.proxy.addProperties(this);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
@@ -35,8 +35,7 @@ public class ItemBaseCircuit<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack stack, ClientLevel world, LivingEntity entity, int p174679, String property) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        int level = nbt.getInt("level");
+        int level = stack.getOrDefault(DataComponentsInit.LEVEL_MICROCHIP, 0);
         if (level == 0)
             return 0;
         level = switch (this.getElement().getId()) {

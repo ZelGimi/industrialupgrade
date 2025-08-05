@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:storage_blocks/iron"
+    },
+    "B": {
+      "tag": "c:storage_blocks/titanium"
+    }
+  },
+  "pattern": [
+    "AAA",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:block_anvil/block_anvil"
+  },
+  "show_notification": false
+}

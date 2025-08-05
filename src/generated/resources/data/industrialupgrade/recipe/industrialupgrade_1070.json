@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/lead"
+    },
+    "B": {
+      "tag": "c:plates/platinum"
+    },
+    "C": {
+      "tag": "c:plates/tantalum"
+    }
+  },
+  "pattern": [
+    "AB ",
+    "BC ",
+    "   "
+  ],
+  "result": {
+    "count": 2,
+    "id": "industrialupgrade:crafting_elements/crafting_366_element"
+  },
+  "show_notification": false
+}

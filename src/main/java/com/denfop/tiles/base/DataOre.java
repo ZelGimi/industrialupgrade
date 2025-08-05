@@ -8,6 +8,8 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
@@ -50,7 +52,7 @@ public class DataOre {
         this.iBlockState = state;
     }
 
-    public DataOre(CompoundTag tagCompound) {
+    public DataOre(HolderLookup.Provider provider, CompoundTag tagCompound) {
         name = tagCompound.getString("name");
         number = tagCompound.getInt("number");
         y = tagCompound.getInt("y");
@@ -61,7 +63,7 @@ public class DataOre {
             this.listPos.add(new BlockPos(posTag.getInt("x"), posTag.getInt("y"), posTag.getInt("z")));
         }
         CompoundTag stackTag = tagCompound.getCompound("stackTag");
-        stack = ItemStack.of(stackTag);
+        stack = ItemStack.parseOptional(provider, stackTag);
         this.iBlockState = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         this.veinsList = new ArrayList<>();
         int size1 = tagCompound.getInt("size1");
@@ -206,7 +208,7 @@ public class DataOre {
         return recipe_stack;
     }
 
-    public CompoundTag getTagCompound() {
+    public CompoundTag getTagCompound(HolderLookup.Provider provider) {
         CompoundTag tagCompound = new CompoundTag();
         tagCompound.putString("name", name);
         tagCompound.putInt("number", number);
@@ -221,7 +223,7 @@ public class DataOre {
             tagCompound.put("blockpos_" + i, posTag);
         }
         CompoundTag stackTag = new CompoundTag();
-        stack.save(stackTag);
+        stack.save(provider, stackTag);
         tagCompound.put("stackTag", stackTag);
         tagCompound.putInt("size1", this.veinsList.size());
         for (int i = 0; i < veinsList.size(); i++) {
@@ -234,8 +236,8 @@ public class DataOre {
         return tagCompound;
     }
 
-    public CustomPacketBuffer getCustomPacket() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+    public CustomPacketBuffer getCustomPacket(RegistryAccess registryAccess) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(registryAccess);
         customPacketBuffer.writeString(name);
         customPacketBuffer.writeInt(number);
         customPacketBuffer.writeInt(y);

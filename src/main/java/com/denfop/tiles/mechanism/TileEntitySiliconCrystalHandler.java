@@ -32,11 +32,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -54,7 +53,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
     private int levelBlock;
 
     public TileEntitySiliconCrystalHandler(BlockPos pos, BlockState state) {
-        super(1000, 1, 1,BlockBaseMachine3.silicon_crystal_handler,pos,state);
+        super(1000, 1, 1, BlockBaseMachine3.silicon_crystal_handler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this);
 
@@ -239,7 +238,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
-                return super.onActivated(player, hand, side,vec3);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
@@ -249,7 +248,6 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {

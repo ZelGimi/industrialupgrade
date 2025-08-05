@@ -23,7 +23,7 @@ public class TileSteamMacerator extends TileSteamMultiMachine {
         super(
                 EnumMultiMachine.MACERATOR.usagePerTick,
                 EnumMultiMachine.MACERATOR.lenghtOperation,
-                4,BlockBaseMachine3.steam_macerator,pos,state
+                4, BlockBaseMachine3.steam_macerator, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.125));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));

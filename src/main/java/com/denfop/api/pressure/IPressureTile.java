@@ -14,6 +14,7 @@ public interface IPressureTile {
     BlockPos getPos();
 
     BlockEntity getTile();
+
     long getIdNetwork();
 
     void setId(long id);

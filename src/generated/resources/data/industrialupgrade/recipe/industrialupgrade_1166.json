@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:bricks"
+    },
+    "B": {
+      "tag": "c:casings/hafniumcarbide"
+    },
+    "C": {
+      "tag": "c:casings/aluminiumsilicon"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:cokeoven/coke_oven_part"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "c:plates/permalloy"
+    },
+    "C": {
+      "tag": "c:plates/draconid"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:quad_molecular"
+  },
+  "show_notification": false
+}

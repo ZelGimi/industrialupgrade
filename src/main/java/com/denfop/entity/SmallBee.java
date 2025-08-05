@@ -6,9 +6,11 @@ import com.denfop.tiles.bee.TileEntityApiary;
 import com.denfop.tiles.crop.TileEntityCrop;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -24,24 +26,26 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class SmallBee extends Bee {
+    public IBee bee;
+    List<TileEntityCrop> crops;
+    boolean can = true;
     private BlockPos hivePos;
     private boolean hasCustomNectar = false;
-    List<TileEntityCrop> crops;
-
 
     public SmallBee(EntityType<? extends Bee> type, Level level) {
         super(type, level);
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.FLYING_SPEED, (double) 0.6F).add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.ATTACK_DAMAGE, 2.0D).add(Attributes.FOLLOW_RANGE, 48.0D);
+    }
+
     public void setCrops(List<TileEntityCrop> crops) {
         this.crops = crops;
     }
+
     public void setBee(IBee bee) {
         this.bee = bee;
-    }
-    public IBee bee;
-    public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.FLYING_SPEED, (double) 0.6F).add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.ATTACK_DAMAGE, 2.0D).add(Attributes.FOLLOW_RANGE, 48.0D);
     }
 
     @Override
@@ -50,11 +54,6 @@ public class SmallBee extends Bee {
 
         this.goalSelector.addGoal(5, new CollectCustomNectarGoal(this));
         this.goalSelector.addGoal(6, new ReturnToHiveGoal(this));
-    }
-
-    public void setCustomHive(BlockPos pos) {
-        this.hivePos = pos;
-
     }
 
     public boolean hasCustomNectar() {
@@ -69,6 +68,10 @@ public class SmallBee extends Bee {
         return hivePos;
     }
 
+    public void setCustomHive(BlockPos pos) {
+        this.hivePos = pos;
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -77,28 +80,27 @@ public class SmallBee extends Bee {
             tag.put("HivePos", NbtUtils.writeBlockPos(hivePos));
         }
     }
-    boolean can = true;
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (can){
-            if (bee == null){
-                this.hivePos = new BlockPos((int) this.position().x,(int)this.position().y,(int)this.position().z);
-                if (this.level().getBlockEntity(hivePos) instanceof TileEntityApiary apiary){
-                    this.bee = apiary.getQueen();
-                }
-            }
-            can = false;
-        }
-    }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.hasCustomNectar = tag.getBoolean("HasCustomNectar");
         if (tag.contains("HivePos")) {
-            this.hivePos = NbtUtils.readBlockPos(tag.getCompound("HivePos"));
+            this.hivePos = NbtUtils.readBlockPos(tag, "HivePos").get();
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (can) {
+            if (bee == null) {
+                this.hivePos = new BlockPos((int) this.position().x, (int) this.position().y, (int) this.position().z);
+                if (this.level().getBlockEntity(hivePos) instanceof TileEntityApiary apiary) {
+                    this.bee = apiary.getQueen();
+                }
+            }
+            can = false;
         }
     }
 
@@ -133,10 +135,10 @@ public class SmallBee extends Bee {
 
 
         if (manhattan < 4 || airPos == null) {
-            this.navigation.setMaxVisitedNodesMultiplier(1F);
+            this.navigation.setMaxVisitedNodesMultiplier(1.5F);
             this.navigation.moveTo(targetCenter.x, targetCenter.y, targetCenter.z, 1.0D);
         } else {
-            this.navigation.setMaxVisitedNodesMultiplier(1F);
+            this.navigation.setMaxVisitedNodesMultiplier(1.5F);
             this.navigation.moveTo(airPos.x, airPos.y, airPos.z, 1.0D);
         }
     }
@@ -171,7 +173,7 @@ class ReturnToHiveGoal extends Goal {
             bee.discard();
             return;
         }
-        if (bee.getCustomHive() != null && bee.position().distanceTo(Vec3.atCenterOf(bee.getCustomHive())) < 1.5D) {
+        if (bee.getCustomHive() != null && bee.position().distanceTo(Vec3.atCenterOf(bee.getCustomHive())) < 1.75D) {
             bee.setHasCustomNectar(false);
             bee.discard();
         } else {
@@ -199,7 +201,7 @@ class CollectCustomNectarGoal extends Goal {
     public boolean canUse() {
         if (bee.crops == null) return true;
         if (bee.hasCustomNectar()) return false;
-        if (bee.crops.isEmpty()){
+        if (bee.crops.isEmpty()) {
             bee.discard();
             return false;
         }
@@ -213,6 +215,21 @@ class CollectCustomNectarGoal extends Goal {
             bee.pathfindRandomlyTowards(cropTarget);
     }
 
+    public void spawnBonemealParticles(Level level, BlockPos pos) {
+        if (level instanceof ServerLevel serverLevel) {
+            RandomSource random = level.getRandom();
+
+
+            for (int i = 0; i < 15; ++i) {
+                double x = pos.getX() + random.nextDouble();
+                double y = pos.getY();
+                double z = pos.getZ() + random.nextDouble();
+                ((ServerLevel) level).sendParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 0, 0.0, 0.0, 0.0, 1);
+            }
+
+        }
+    }
+
     @Override
     public void tick() {
         if (bee.crops == null) {
@@ -223,14 +240,14 @@ class CollectCustomNectarGoal extends Goal {
             bee.discard();
             return;
         }
-        if (cropTarget != null &&bee.position().distanceTo(Vec3.atCenterOf(cropTarget)) < 1.5D) {
+        if (cropTarget != null && bee.position().distanceTo(Vec3.atCenterOf(cropTarget)) < 1.5D) {
             if (!bee.level().isClientSide()) {
                 ((ServerLevel) bee.level()).sendParticles(
                         new DustParticleOptions(new Vector3f(1.0f, 0.8f, 0.2f), 1.0f),
                         cropTarget.getX(), cropTarget.getY() + 0.3, cropTarget.getZ(),
                         10, 0.1, 0.1, 0.1, 0.01
                 );
-                bee.level().levelEvent(1505, this.cropTarget, 0);
+                spawnBonemealParticles(bee.level(), this.cropTarget);
                 ((BeeAccessor) this.bee).invokeSetFlag(8, true);
             }
             bee.setHasCustomNectar(true);

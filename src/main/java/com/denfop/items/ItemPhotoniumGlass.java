@@ -11,10 +11,12 @@ public class ItemPhotoniumGlass<T extends Enum<T> & ISubEnum> extends ItemMain<T
     public ItemPhotoniumGlass(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public enum Types implements ISubEnum {
         photoniyglass1(0),
         photoniyglass2(1),

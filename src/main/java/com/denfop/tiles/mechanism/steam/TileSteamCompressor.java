@@ -22,7 +22,7 @@ public class TileSteamCompressor extends TileSteamMultiMachine {
         super(
                 EnumMultiMachine.COMPRESSER.usagePerTick,
                 EnumMultiMachine.COMPRESSER.lenghtOperation,
-                4,BlockBaseMachine3.steam_compressor,pos,state
+                4, BlockBaseMachine3.steam_compressor, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.125));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));

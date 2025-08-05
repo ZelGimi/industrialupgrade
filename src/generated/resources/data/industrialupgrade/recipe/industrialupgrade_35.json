@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring_storage/mfsu_iu"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "DAD",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring_storage/adv_mfsu"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/ferromanganese"
+    },
+    "B": {
+      "tag": "c:plates/germanium"
+    },
+    "C": {
+      "item": "industrialupgrade:capacitor/imp_capacitor"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:capacitor/per_capacitor"
+  },
+  "show_notification": false
+}

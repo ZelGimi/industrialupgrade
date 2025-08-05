@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -156,7 +156,7 @@ public class HeatComponent extends AbstractComponent {
 
                 this.validHeatReceivers.clear();
                 this.energyHeatConductorMap.clear();
-                MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.parent.getLevel()));
+                NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.parent.getLevel()));
             }
 
             this.loaded = true;
@@ -232,7 +232,7 @@ public class HeatComponent extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this.delegate, this.parent.getLevel()));
+            NeoForge.EVENT_BUS.post(new HeatTileUnloadEvent(this.delegate, this.parent.getLevel()));
             this.delegate = null;
         }
 
@@ -240,7 +240,7 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeBoolean(this.need);
@@ -377,7 +377,7 @@ public class HeatComponent extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this.delegate, this.world));
+            NeoForge.EVENT_BUS.post(new HeatTileUnloadEvent(this.delegate, this.world));
         }
 
         this.sinkDirections = sinkDirections;
@@ -394,7 +394,7 @@ public class HeatComponent extends AbstractComponent {
             assert !this.parent.getLevel().isClientSide;
             this.validHeatReceivers.clear();
             this.energyHeatConductorMap.clear();
-            MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.world));
+            NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.world));
         }
 
 

@@ -13,7 +13,7 @@ public class TileEntityBaseCoolant extends TileEntityMultiBlockElement implement
     private int helium;
 
     public TileEntityBaseCoolant(int levelBlock, int max, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelBlock = levelBlock;
         this.max = max;
     }

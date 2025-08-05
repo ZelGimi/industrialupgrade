@@ -20,7 +20,7 @@ public class ItemBlockOre2 extends ItemBlockCore<BlockOres2.Type> implements IIt
 
     @Override
     public String[] getTags() {
-        return new String[]{"forge:ores/" + getElement().getName(), "forge:ores"};
+        return new String[]{"c:ores/" + getElement().getName(), "c:ores"};
     }
 
 }

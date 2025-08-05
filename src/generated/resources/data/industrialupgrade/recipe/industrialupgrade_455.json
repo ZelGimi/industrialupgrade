@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:rotor/myphical"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "D": {
+      "item": "industrialupgrade:excitednucleus/sincore"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "CBC",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:corewind/core_wind10"
+  },
+  "show_notification": false
+}

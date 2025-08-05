@@ -69,7 +69,7 @@ public class GuiBioMultiMachine<T extends ContainerBioMultiMachine> extends GuiI
     }
 
     @Override
-protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         this.drawForeground(poseStack, mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
@@ -99,8 +99,8 @@ protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, fina
         int j = guiLeft;
         int k = guiTop;
         drawTexturedModalRect(poseStack, j, k, 0, 0, 176, this.imageHeight);
-        int xoffset =guiLeft;
-        int yoffset =guiTop;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
         this.drawBackground(poseStack);
         int i = 0;
         for (Slot slot : this.container.slots) {
@@ -135,14 +135,14 @@ protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, fina
             guiElement.drawBackground(poseStack, x - this.guiLeft, y - this.guiTop);
 
         }
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guibio_machine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guibio_machine.png");
     }
 
 }

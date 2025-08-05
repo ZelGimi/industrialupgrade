@@ -31,11 +31,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,8 +49,8 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     public Fluids fluids;
     public boolean work = true;
 
-    public TileEntitySteamBoiler(BlockPos pos,BlockState state) {
-        super(0, 0, 1,BlockBaseMachine3.steamboiler,pos,state);
+    public TileEntitySteamBoiler(BlockPos pos, BlockState state) {
+        super(0, 0, 1, BlockBaseMachine3.steamboiler, pos, state);
 
 
         this.fluids = this.addComponent(new Fluids(this));
@@ -75,7 +75,7 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
@@ -114,11 +114,11 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank1.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                this.fluidTank1.readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -186,10 +186,10 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.work) {
-            if (this.getWorld().getGameTime() % 2 == 0) {
-                if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
-                    this.steam.addEnergy(2);
-                    this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
+            if (this.getWorld().getGameTime() % 1 == 0) {
+                if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 1 && this.steam.getEnergy() + 1 <= this.steam.getCapacity()) {
+                    this.steam.addEnergy(1);
+                    this.fluidTank.drain(1, IFluidHandler.FluidAction.EXECUTE);
                     this.setActive(true);
                 } else {
                     setActive(false);

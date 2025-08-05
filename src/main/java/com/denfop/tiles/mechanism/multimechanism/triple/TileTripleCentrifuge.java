@@ -25,11 +25,13 @@ public class TileTripleCentrifuge extends TileMultiMachine {
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.cold.storage=0;
+        this.cold.storage = 0;
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockMoreMachine3.triplecentrifuge;
     }

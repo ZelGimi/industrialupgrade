@@ -22,7 +22,7 @@ public class TileSteamExtractor extends TileSteamMultiMachine {
         super(
                 EnumMultiMachine.EXTRACTOR.usagePerTick,
                 EnumMultiMachine.EXTRACTOR.lenghtOperation,
-                4,BlockBaseMachine3.steam_extractor,pos,state
+                4, BlockBaseMachine3.steam_extractor, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.125));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));

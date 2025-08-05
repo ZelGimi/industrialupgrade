@@ -27,11 +27,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.*;
@@ -57,7 +57,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     private Integer prevIndex;
 
     public TileEntitySmelteryController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.SmelterMultiBlock,BlockSmeltery.smeltery_controller,pos,state);
+        super(InitMultiBlockSystem.SmelterMultiBlock, BlockSmeltery.smeltery_controller, pos, state);
         this.fluidManager = new FluidHandlerRecipe[3];
         for (int i = 0; i < 3; i++) {
             this.fluidManager[i] = new FluidHandlerRecipe("smeltery");
@@ -83,7 +83,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                 casting.getFluid_handler().setOutput(null);
                 casting.getFluid_handler().setName("empty");
 
-                int damage =   ((ItemCraftingElements<?>) casting.getInputSlotB().get(0).getItem()).getElement().getId();
+                int damage = ((ItemCraftingElements<?>) casting.getInputSlotB().get(0).getItem()).getElement().getId();
                 if (damage == 496) {
                     casting.getFluid_handler().setName("ingot_casting");
                     if (this.getMain() != null) {
@@ -173,7 +173,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         FluidStack fluid1 = tank1.getFluid();
                         FluidStack fluid2 = tank2.getFluid();
 
-                        boolean hasFluid1 = !fluid1.isEmpty()    && fluid1.getAmount() > 0;
+                        boolean hasFluid1 = !fluid1.isEmpty() && fluid1.getAmount() > 0;
                         boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
                         if (hasFluid1 && !hasFluid2) {
                             return -1;
@@ -334,7 +334,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                 throw new RuntimeException(e);
             }
             if (fluidTank2 != null) {
-                tank.getTank().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                tank.getTank().readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         }
 
@@ -380,7 +380,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                             FluidTank tank2 = listTank.get(j).getTank();
                             FluidStack fluid2 = tank2.getFluid();
 
-                            if (!fluid2.isEmpty() && fluid1.isFluidEqual(fluid2)) {
+                            if (!fluid2.isEmpty() && FluidStack.isSameFluid(fluid1, fluid2)) {
                                 int amountNeeded = tank1.getCapacity() - fluid1.getAmount();
                                 if (amountNeeded > 0) {
                                     int transferAmount = Math.min(amountNeeded, fluid2.getAmount());
@@ -428,7 +428,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
 
                 if ((casting.getFluid_handler().output() == null && this.getFirstTank() != null && this
                         .getFirstTank()
-                        .getFluidAmount() >= 1) && ( this.prevIndex == this.list.get(0))) {
+                        .getFluidAmount() >= 1) && (Objects.equals(this.prevIndex, this.list.get(0)))) {
                     casting.getFluid_handler().getOutput(this.getFirstTank());
                 } else {
                     if (casting.getFluid_handler().output() != null && !casting.getFluid_handler().checkFluids()) {
@@ -616,7 +616,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
         if (!casting.getInputSlotB().isEmpty()) {
             casting.getFluid_handler().setName("empty");
             casting.getFluid_handler().setOutput(null);
-            int damage =  ((ItemCraftingElements<?>) casting.getInputSlotB().get(0).getItem()).getElement().getId();
+            int damage = ((ItemCraftingElements<?>) casting.getInputSlotB().get(0).getItem()).getElement().getId();
             if (damage == 496) {
                 casting.getFluid_handler().setName("ingot_casting");
                 if (this.getMain() != null) {

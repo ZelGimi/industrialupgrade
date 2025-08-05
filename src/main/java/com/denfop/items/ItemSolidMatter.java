@@ -19,10 +19,7 @@ public class ItemSolidMatter<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public ItemSolidMatter(T element) {
         super(new Item.Properties(), element);
     }
-    @Override
-    public CreativeModeTab getItemCategory() {
-        return IUCore.ItemTab;
-    }
+
     public static EnumSolidMatter getsolidmatter(int meta) {
         return switch (meta) {
             case 0 -> EnumSolidMatter.AER;
@@ -35,6 +32,11 @@ public class ItemSolidMatter<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
             default -> EnumSolidMatter.MATTER;
         };
 
+    }
+
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
 
     @Override

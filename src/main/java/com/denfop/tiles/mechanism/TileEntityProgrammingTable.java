@@ -31,8 +31,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -49,7 +49,7 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
     public int levelBlock;
 
     public TileEntityProgrammingTable(BlockPos pos, BlockState state) {
-        super(100, 1, 1,BlockBaseMachine3.programming_table,pos,state);
+        super(100, 1, 1, BlockBaseMachine3.programming_table, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "programming", this);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 2, 0)) {
@@ -101,7 +101,7 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
-                return super.onActivated(player, hand, side,vec3);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
@@ -112,7 +112,6 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {

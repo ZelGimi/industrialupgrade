@@ -6,7 +6,7 @@ import com.google.common.base.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 
 public abstract class TileElectricLiquidTankInventory extends TileElectricMachine {

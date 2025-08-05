@@ -8,19 +8,19 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -36,8 +36,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -49,7 +48,7 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     private final int radius;
 
     public ItemMagnet(double maxCharge, double transferLimit, int tier, int radius) {
-        super(maxCharge, transferLimit, tier);
+        super(new Properties().component(DataComponentsInit.MODE, 0).component(DataComponentsInit.BLACK_LIST, false), maxCharge, transferLimit, tier);
 
         this.radius = radius;
 
@@ -60,6 +59,7 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -72,15 +72,16 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.energy."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu.energy." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     @Override
     public void updateEvent(final int event, final ItemStack stack) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("white", !nbt.getBoolean("white"));
+        stack.set(DataComponentsInit.BLACK_LIST, !stack.getOrDefault(DataComponentsInit.BLACK_LIST, false));
+
     }
 
     @Override
@@ -91,14 +92,12 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
         if (p_77663_2_.isClientSide) {
             return;
         }
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
         }
         Player player = (Player) p_77663_3_;
-        int mode = ModUtils.NBTGetInteger(itemStack, "mode");
+        int mode = itemStack.getOrDefault(DataComponentsInit.MODE, 0);
         if (mode != 0) {
             int radius1 = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SIZE, itemStack) ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SIZE, itemStack).number : 0);
@@ -150,22 +149,23 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
             }
         }
         ItemStack stack = itemStack;
-        if (nbt.getBoolean("open")) {
-            int slotId = nbt.getInt("slot_inventory");
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+
+        if (containerItem.open()) {
+            int slotId = containerItem.slot_inventory();
             if (slotId != slotIndex && !p_77663_2_.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMagnet) {
                 ItemStackMagnet toolbox = ((ContainerMagnet) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
-                    nbt.putBoolean("open", false);
+                    containerItem.updateOpen(stack, false);
                 }
             }
         }
     }
 
     private boolean canInsert(ItemStack itemstack, ItemStack itemStack1, ItemStackMagnet inventory) {
-        final CompoundTag nbt = ModUtils.nbt(itemstack);
-        boolean white = nbt.getBoolean("white");
+        boolean white = itemstack.getOrDefault(DataComponentsInit.BLACK_LIST, false);
         boolean can = false;
         if (white) {
             for (ItemStack stack1 : inventory.list) {
@@ -190,20 +190,20 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     @Override
     public InteractionResultHolder<ItemStack> use(Level p_41432_, Player player, InteractionHand hand) {
 
-        if (IUCore.keyboard.isChangeKeyDown(player) && !p_41432_.isClientSide) {
+        if (IUCore.keyboard.isChangeKeyDown(player)) {
 
-            int mode = ModUtils.NBTGetInteger(player.getItemInHand(hand), "mode");
+            int mode = player.getItemInHand(hand).getOrDefault(DataComponentsInit.MODE, 0);
             mode++;
             if (mode > 2 || mode < 0) {
                 mode = 0;
             }
-
-            ModUtils.NBTSetInteger(player.getItemInHand(hand), "mode", mode);
-            IUCore.proxy.messagePlayer(
-                    player,
-                    ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                            + Localization.translate("message.magnet.mode." + mode)
-            );
+            player.getItemInHand(hand).set(DataComponentsInit.MODE, mode);
+            if (!p_41432_.isClientSide)
+                IUCore.proxy.messagePlayer(
+                        player,
+                        ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
+                                + Localization.translate("message.magnet.mode." + mode)
+                );
 
 
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
@@ -211,12 +211,12 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
             if (!p_41432_.isClientSide) {
                 save(player.getItemInHand(hand), player);
 
-                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer(p_41432_.registryAccess());
 
                 growingBuffer.writeByte(1);
 
                 growingBuffer.flip();
-                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+                player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
 
 
                 return InteractionResultHolder.success(player.getItemInHand(hand));
@@ -226,9 +226,9 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     }
 
     public void save(ItemStack stack, Player player) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("open", true);
-        nbt.putInt("slot_inventory", player.getInventory().selected);
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+        containerItem = containerItem.updateOpen(stack, true);
+        containerItem.updateSlot(stack, player.getInventory().selected);
     }
 
     public IAdvInventory getInventory(Player player, ItemStack stack) {
@@ -247,9 +247,10 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
         return true;
     }
 
+
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
-        int mode = ModUtils.NBTGetInteger(p_41421_, "mode");
+    public void appendHoverText(ItemStack p_41421_, @Nullable TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        int mode = p_41421_.getOrDefault(DataComponentsInit.MODE, 0);
         if (mode > 2 || mode < 0) {
             mode = 0;
         }

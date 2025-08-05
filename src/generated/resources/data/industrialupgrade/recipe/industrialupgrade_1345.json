@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:geothermalpump/geothermal_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/heat_exchange"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:geothermalpump/geothermal_exchanger"
+  },
+  "show_notification": false
+}

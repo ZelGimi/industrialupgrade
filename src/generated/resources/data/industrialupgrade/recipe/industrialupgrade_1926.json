@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gems/quartz"
+    },
+    "B": {
+      "tag": "c:plates/gold"
+    },
+    "C": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "pattern": [
+    " A ",
+    " C ",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:solderingiron"
+  },
+  "show_notification": false
+}

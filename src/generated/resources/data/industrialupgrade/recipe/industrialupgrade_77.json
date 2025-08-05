@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_11_element"
+    },
+    "B": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "   ",
+    " B ",
+    "A  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy/purifier"
+  },
+  "show_notification": false
+}

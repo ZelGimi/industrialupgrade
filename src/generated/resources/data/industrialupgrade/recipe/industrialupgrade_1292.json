@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/steamboiler"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/steel_tank"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/steam_converter"
+  },
+  "show_notification": false
+}

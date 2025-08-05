@@ -2,6 +2,7 @@ package com.denfop.recipe;
 
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -22,10 +23,10 @@ import static com.denfop.datagen.itemtag.ItemTagProvider.mapItems;
 
 public class InputOreDict implements IInputItemStack {
 
-    public int amount;
     public final Integer meta;
     private final TagKey<Item> tag;
     private final List<ItemStack> ores;
+    public int amount;
 
     public InputOreDict(String input) {
         this(input.toLowerCase(), 1);
@@ -36,46 +37,31 @@ public class InputOreDict implements IInputItemStack {
     }
 
     public InputOreDict(String input, int amount, Integer meta) {
-        ResourceLocation input1 = new ResourceLocation(input.toLowerCase());
+        ResourceLocation input1 = ResourceLocation.parse(input.toLowerCase());
         this.amount = amount;
         this.meta = meta;
         this.tag = ItemTags.create(input1);
         ores = new ArrayList<>();
         Iterable<Holder<Item>> holder = BuiltInRegistries.ITEM.getTagOrEmpty(this.tag);
         holder.forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-        if (ores.isEmpty()){
-            if (mapItems.containsKey(tag.location())){
+        if (ores.isEmpty()) {
+            if (mapItems.containsKey(tag.location())) {
                 mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
             }
         }
         for (ItemStack stack : ores) {
             stack.setCount(this.getAmount());
         }
-
     }
-    public InputOreDict(CompoundTag tagCompound) {
-        this.amount = tagCompound.getInt("Amount");
 
-        this.meta = tagCompound.contains("Meta") ? tagCompound.getInt("Meta") : 0;
-
-
-        this.tag = TagKey.create(Registries.ITEM, new ResourceLocation(tagCompound.getString("ItemTag")));
-
-
-        this.ores = new ArrayList<>();
-        ListTag list = tagCompound.getList("Ores", Tag.TAG_COMPOUND);
-        for (int i = 0; i < list.size(); i++) {
-            ores.add(ItemStack.of(list.getCompound(i)));
-        }
-    }
     public InputOreDict(TagKey<Item> tag, int amount) {
         this.amount = amount;
         this.meta = 0;
         this.tag = tag;
         ores = new ArrayList<>();
         BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-        if (ores.isEmpty()){
-            if (mapItems.containsKey(tag.location())){
+        if (ores.isEmpty()) {
+            if (mapItems.containsKey(tag.location())) {
                 mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
             }
         }
@@ -84,11 +70,19 @@ public class InputOreDict implements IInputItemStack {
         }
     }
 
-    @Override
-    public void growAmount(final int col) {
-        amount += col;
-        for (ItemStack stack : getOres()) {
-            stack.setCount(this.getAmount());
+    public InputOreDict(CompoundTag tagCompound, HolderLookup.Provider provider) {
+        this.amount = tagCompound.getInt("Amount");
+
+        this.meta = tagCompound.contains("Meta") ? tagCompound.getInt("Meta") : 0;
+
+
+        this.tag = TagKey.create(Registries.ITEM, ResourceLocation.parse(tagCompound.getString("ItemTag")));
+
+
+        this.ores = new ArrayList<>();
+        ListTag list = tagCompound.getList("Ores", Tag.TAG_COMPOUND);
+        for (int i = 0; i < list.size(); i++) {
+            ores.add(ItemStack.parseOptional(provider, list.getCompound(i)));
         }
     }
 
@@ -98,15 +92,14 @@ public class InputOreDict implements IInputItemStack {
         this.tag = tag;
         ores = new ArrayList<>();
         BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-        if (ores.isEmpty()){
-            if (mapItems.containsKey(tag.location())){
+        if (ores.isEmpty()) {
+            if (mapItems.containsKey(tag.location())) {
                 mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
             }
         }
         for (ItemStack stack : ores) {
             stack.setCount(this.getAmount());
         }
-
     }
 
     public InputOreDict(FriendlyByteBuf buffer) {
@@ -118,6 +111,37 @@ public class InputOreDict implements IInputItemStack {
         stack = stack.copy();
         stack.setCount(col);
         return stack;
+    }
+
+    @Override
+    public void growAmount(final int col) {
+        amount += col;
+        for (ItemStack stack : getOres()) {
+            stack.setCount(this.getAmount());
+        }
+    }
+
+    @Override
+    public CompoundTag writeNBT(HolderLookup.Provider provider) {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putByte("id", (byte) 1);
+        tagCompound.putInt("Amount", amount);
+
+        if (meta != null) {
+            tagCompound.putInt("Meta", meta);
+        }
+
+        if (tag != null) {
+            tagCompound.putString("ItemTag", tag.location().toString());
+        }
+
+        ListTag list = new ListTag();
+        for (ItemStack stack : ores) {
+            list.add(stack.save(provider, new CompoundTag()));
+        }
+        tagCompound.put("Ores", list);
+
+        return tagCompound;
     }
 
     public boolean matches(ItemStack subject) {
@@ -160,29 +184,6 @@ public class InputOreDict implements IInputItemStack {
     @Override
     public TagKey<Item> getTag() {
         return this.tag;
-    }
-
-    @Override
-    public CompoundTag writeNBT() {
-        CompoundTag tagCompound = new CompoundTag();
-        tagCompound.putByte("id", (byte) 1);
-        tagCompound.putInt("Amount", amount);
-
-        if (meta != null) {
-            tagCompound.putInt("Meta", meta);
-        }
-
-        if (tag != null) {
-            tagCompound.putString("ItemTag", tag.location().toString());
-        }
-
-        ListTag list = new ListTag();
-        for (ItemStack stack : ores) {
-            list.add(stack.save(new CompoundTag()));
-        }
-        tagCompound.put("Ores", list);
-
-        return tagCompound;
     }
 
 

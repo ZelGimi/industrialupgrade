@@ -12,8 +12,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,7 +52,7 @@ public class GuiSmelteryController<T extends ContainerSmelteryController> extend
             public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
-                    this.gui.drawTexturedModalRect( poseStack,this.gui.guiLeft + x, guiTop + y, 177,
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + x, guiTop + y, 177,
                             25, 161 - 139, 55 - 33
                     );
                 }
@@ -73,7 +73,7 @@ public class GuiSmelteryController<T extends ContainerSmelteryController> extend
             public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
-                    this.gui.drawTexturedModalRect( poseStack,this.gui.guiLeft + x, guiTop + y, 177,
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + x, guiTop + y, 177,
                             1, 161 - 139, 55 - 33
                     );
                 }
@@ -201,7 +201,7 @@ public class GuiSmelteryController<T extends ContainerSmelteryController> extend
             element.drawBackground(poseStack, guiLeft, guiTop);
         }
         this.bindTexture();
-      RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
 
         for (int i = 0; i < fluidTanks1.size(); i++) {
             this.bindTexture();
@@ -213,18 +213,18 @@ public class GuiSmelteryController<T extends ContainerSmelteryController> extend
         bindTexture();
         for (int i = 0; i < container.base.list.size(); i++) {
             int index = container.base.list.get(i);
-            drawTexturedModalRect(poseStack,this.guiLeft + 21 + (index % 6) * 18, guiTop + 17 + (index / 6) * 18, 200,
+            drawTexturedModalRect(poseStack, this.guiLeft + 21 + (index % 6) * 18, guiTop + 17 + (index / 6) * 18, 200,
                     1, 18, 18
             );
         }
-       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guismeltery.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guismeltery.png");
     }
 
 }

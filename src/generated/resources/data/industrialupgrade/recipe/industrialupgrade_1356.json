@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:doubleplate/muntsa"
+    },
+    "C": {
+      "tag": "c:doubleplate/alcled"
+    },
+    "D": {
+      "tag": "c:plates/zinc"
+    },
+    "E": {
+      "tag": "c:plates/caravky"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    "ECE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_59_element"
+  },
+  "show_notification": false
+}

@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,10 +19,12 @@ public class ItemMesh extends ItemDamage implements IItemTab {
         super(new Properties().stacksTo(1), maxDamage);
         this.level = level;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public int getLevel() {
         return level;
     }
@@ -31,7 +32,7 @@ public class ItemMesh extends ItemDamage implements IItemTab {
     @Override
     public void appendHoverText(
             @Nonnull final ItemStack stack,
-            @Nullable final Level world,
+            @Nullable final TooltipContext world,
             @Nonnull final List<Component> tooltip,
             @Nonnull final TooltipFlag flag
     ) {

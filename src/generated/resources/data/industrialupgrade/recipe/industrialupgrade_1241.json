@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_491_element"
+    },
+    "B": {
+      "tag": "c:plates/redbrass"
+    },
+    "C": {
+      "tag": "c:plates/duralumin"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_486_element"
+  },
+  "show_notification": false
+}

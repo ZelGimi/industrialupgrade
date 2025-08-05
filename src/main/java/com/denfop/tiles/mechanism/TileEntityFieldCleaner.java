@@ -32,15 +32,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgradableBlock {
 
@@ -51,16 +53,17 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
     public final InvSlotUpgrade upgradeSlot;
     private final Fluids fluids;
     private final ComponentUpgradeSlots componentUpgrade;
+
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
     List<ChunkPos> chunks;
     private ComponentVisibleArea visible;
 
     public TileEntityFieldCleaner(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.field_cleaner,pos,state);
+        super(BlockBaseMachine3.field_cleaner, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTankInsert("tank", 10000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance().get()));
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
@@ -82,7 +85,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
@@ -161,12 +164,14 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
             return false;
         }
     }
+
     private void updateCrop() {
         list.clear();
         for (ChunkPos chunk : chunks) {
             this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk));
         }
     }
+
 
     @Override
     public void updateEntityServer() {

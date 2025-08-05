@@ -45,11 +45,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
     private int levelBlock;
 
     public TileImpOilRefiner(BlockPos pos, BlockState state) {
-        super(24000, 14, 2,BlockBaseMachine3.imp_refiner,pos,state);
+        super(24000, 14, 2, BlockBaseMachine3.imp_refiner, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.INPUT);
         this.needUpdate = false;
@@ -95,6 +95,7 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
+
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         if (this.levelBlock != 0) {
@@ -109,7 +110,7 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
-                return super.onActivated(player, hand, side,vec3);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
@@ -128,7 +129,7 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -138,7 +139,7 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank2.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -148,7 +149,7 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank3.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank3.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -274,7 +275,6 @@ public class TileImpOilRefiner extends TileElectricMachine implements IManufactu
     public void removeLevel(final int level) {
         this.levelBlock -= level;
     }
-
 
 
     @Override

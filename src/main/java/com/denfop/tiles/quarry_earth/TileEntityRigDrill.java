@@ -49,10 +49,10 @@ public class TileEntityRigDrill extends TileEntityMultiBlockElement implements I
                 final DataPos dataPos1 = dataPos.remove(0);
                 if (controller.getEnergy().getEnergy() > 50) {
                     BlockState state = level.getBlockState(dataPos1.getPos());
-                    List<ItemStack> stacks = state.getBlock().getDrops(state, (ServerLevel) level,dataPos1.getPos()
+                    List<ItemStack> stacks = state.getBlock().getDrops(state, (ServerLevel) level, dataPos1.getPos()
                             , null
                     );
-                    level.setBlock(dataPos1.getPos(), Blocks.AIR.defaultBlockState(),3);
+                    level.setBlock(dataPos1.getPos(), Blocks.AIR.defaultBlockState(), 3);
                     for (ItemStack stack : stacks) {
                         chest:
                         for (IEarthChest chest : controller.earthChestList) {

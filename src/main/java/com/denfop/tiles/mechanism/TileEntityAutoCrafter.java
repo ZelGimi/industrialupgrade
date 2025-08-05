@@ -35,14 +35,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgradableBlock {
@@ -62,7 +66,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
     private boolean canRecipe = false;
 
     public TileEntityAutoCrafter(BlockPos pos, BlockState state) {
-        super(1000, 4, 1,BlockBaseMachine3.autocrafter,pos,state);
+        super(1000, 4, 1, BlockBaseMachine3.autocrafter, pos, state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 18) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -148,7 +152,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
         } else {
             canRecipe = false;
 
-             final List<ItemStack> list = this.slot.stream()
+            final List<ItemStack> list = this.slot.stream()
                     .filter(itemStack -> !itemStack.isEmpty())
                     .toList();
 
@@ -180,7 +184,6 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
             canRecipe = true;
         }
     }
-
 
     @Override
     public void onLoaded() {
@@ -249,7 +252,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
 
     private void operateOnce(List<ItemStack> processResult) {
         final List<IInputItemStack> input = recipe.input.getInputs();
-         final List<ItemStack> list = this.slot.stream()
+        final List<ItemStack> list = this.slot.stream()
                 .filter(itemStack -> !itemStack.isEmpty())
                 .collect(Collectors.toList());
 
@@ -282,7 +285,6 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
         this.outputSlot.add(processResult);
     }
 
-
     public InvSlotAutoCrafter getAutoCrafter() {
         return autoCrafter;
     }
@@ -302,19 +304,20 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
 
     public void updateCraft() {
         if (!(level instanceof ServerLevel))
-            return;;
+            return;
+        ;
         RecipeManager recipeManager = ((ServerLevel) level).getRecipeManager();
-        Collection<CraftingRecipe> recipes = recipeManager.getAllRecipesFor(RecipeType.CRAFTING);
+        List<RecipeHolder<CraftingRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeType.CRAFTING);
 
         if (this.autoCrafter.isEmpty()) {
             recipe = null;
             return;
         }
         recipe = null;
-        for (CraftingRecipe recipe1 : recipes) {
-
-            if (recipe1.matches(this.crafingTable, level)) {
-                final ItemStack output = recipe1.assemble(this.crafingTable,this.getLevel().registryAccess());
+        for (RecipeHolder<CraftingRecipe> recipe2 : recipes) {
+            CraftingRecipe recipe1 = recipe2.value();
+            if (recipe1.matches(this.crafingTable.asCraftInput(), level)) {
+                final ItemStack output = recipe1.assemble(this.crafingTable.asCraftInput(), this.getLevel().registryAccess());
                 List<IInputItemStack> list = new ArrayList<>();
                 for (ItemStack stack : this.autoCrafter) {
                     if (!stack.isEmpty()) {

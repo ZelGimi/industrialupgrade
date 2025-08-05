@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:machineblock"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:additionmodule/purifier"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_36_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "CAD",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/radiation_purifier"
+  },
+  "show_notification": false
+}

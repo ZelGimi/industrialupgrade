@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/titanium"
+    },
+    "C": {
+      "tag": "c:ingots/chromium"
+    }
+  },
+  "pattern": [
+    "A A",
+    " A ",
+    "C C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:connect_item"
+  },
+  "show_notification": false
+}

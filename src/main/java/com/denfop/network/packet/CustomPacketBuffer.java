@@ -1,31 +1,42 @@
 package com.denfop.network.packet;
 
+import com.denfop.IUCore;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class CustomPacketBuffer extends FriendlyByteBuf {
+public class CustomPacketBuffer extends RegistryFriendlyByteBuf {
 
     private static final Charset utf8 = StandardCharsets.UTF_8;
 
-    public CustomPacketBuffer(final ByteBuf wrapped) {
-        super(wrapped);
+    public CustomPacketBuffer(final ByteBuf wrapped, RegistryAccess p_319803_) {
+        super(wrapped, p_319803_);
     }
 
-    public CustomPacketBuffer(final int size) {
-        super(Unpooled.buffer().capacity(size));
+    public CustomPacketBuffer(final RegistryFriendlyByteBuf wrapped) {
+        super(wrapped, wrapped.registryAccess());
     }
 
-    public CustomPacketBuffer(byte[] data) {
-        this();
+    public CustomPacketBuffer(final FriendlyByteBuf wrapped) {
+        super(wrapped, IUCore.registry == null ? IUCore.registryAccess : IUCore.registry);
+    }
+
+    public CustomPacketBuffer(final int size, RegistryAccess p_319803_) {
+        super(Unpooled.buffer().capacity(size), p_319803_);
+    }
+
+    public CustomPacketBuffer(byte[] data, RegistryAccess p_319803_) {
+        this(p_319803_);
         this.writeBytes(data);
     }
 
-    public CustomPacketBuffer() {
-        super(Unpooled.buffer());
+    public CustomPacketBuffer(RegistryAccess p_319803_) {
+        super(Unpooled.buffer(), p_319803_);
     }
 
 
@@ -35,6 +46,7 @@ public class CustomPacketBuffer extends FriendlyByteBuf {
         this.writeBytes(bytes);
         return this;
     }
+
 
     public String readString() {
         int len = this.readVarInt();

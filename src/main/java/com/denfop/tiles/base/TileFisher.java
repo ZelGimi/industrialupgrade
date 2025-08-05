@@ -27,6 +27,7 @@ import com.denfop.utils.ModUtils;
 import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -46,8 +47,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -165,17 +166,18 @@ public class TileFisher extends TileElectricMachine
         }
         checkwater = checkwater();
         this.player = new FakePlayerSpawner(getWorld());
+        player.setPos(Vec3.atLowerCornerOf(this.getPos().below()));
         this.energyFishHook = new FishingHook(player, getWorld(), 0, 0);
         this.lootcontext$builder = new LootParams.Builder((ServerLevel) this.getWorld());
-        this.table = this.getWorld().getServer().getLootData().getLootTable(BuiltInLootTables.FISHING);
+        this.table = this.getWorld().getServer().reloadableRegistries().getLootTable(BuiltInLootTables.FISHING);
         this.listPool = this.table.getPool("main");
     }
 
     public void updateEntityServer() {
 
         super.updateEntityServer();
-        if (this.getActive()  && this.getLevel().getGameTime() % 5 == 0){
-            ParticleUtils.spawnFishingMachineParticles(this.getLevel(),pos,this.getLevel().random);
+        if (this.getActive() && this.getLevel().getGameTime() % 5 == 0) {
+            ParticleUtils.spawnFishingMachineParticles(this.getLevel(), pos, this.getLevel().random);
         }
 
         if (this.getWorld().getGameTime() % 100 == 0) {
@@ -219,16 +221,16 @@ public class TileFisher extends TileElectricMachine
             }
             if (!this.inputslot.isEmpty()) {
                 ItemStack stack = this.inputslot.get(0);
-                int j = EnchantmentHelper.getFishingSpeedBonus(stack);
-                int k = EnchantmentHelper.getFishingLuckBonus(stack);
+                int j = (int) (EnchantmentHelper.getFishingTimeReduction((ServerLevel) getWorld(), stack, player) * 20.0F);
+                int k = EnchantmentHelper.getFishingLuckBonus((ServerLevel) getWorld(), stack, player);
                 BlockPos pos1 = pos.below();
                 lootcontext$builder
                         .withLuck((float) k)
                         .withParameter(LootContextParams.THIS_ENTITY, energyFishHook)
-                        .withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.ORIGIN, new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()));
+                        .withParameter(LootContextParams.ATTACKING_ENTITY, this.player).withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.ORIGIN, new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()));
 
                 List<ItemStack> list = new ArrayList<>();
-                this.table.getRandomItems(lootcontext$builder.create(LootContextParamSets.FISHING),list::add);
+                this.table.getRandomItems(lootcontext$builder.create(LootContextParamSets.FISHING), list::add);
                 for (ItemStack var1 : list) {
                     if (this.outputSlot.add(var1)) {
                         this.energy.useEnergy(this.energyconsume);
@@ -236,7 +238,7 @@ public class TileFisher extends TileElectricMachine
                     progress = 0;
                 }
                 int damage = stack.getMaxDamage() - stack.getDamageValue();
-                int m = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, stack);
+                int m = EnchantmentHelper.getItemEnchantmentLevel(this.getWorld().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.UNBREAKING), stack);
                 RandomSource rand;
                 if (!((stack.getItem() instanceof IEnergyItem))) {
                     if (this.inputslot.get(0).getDamageValue() > -1) {

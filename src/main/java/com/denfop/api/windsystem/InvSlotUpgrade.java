@@ -54,15 +54,19 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
     public void update() {
         for (int i = 0; i < size(); i++) {
-            set(i, ItemStack.EMPTY);
+            put(i, ItemStack.EMPTY, false);
         }
     }
 
     public void update(ItemStack stack) {
         Map<Integer, ItemStack> map = RotorUpgradeSystem.instance.getList(stack);
         for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
-            set(entry.getKey(), entry.getValue());
+            put(entry.getKey(), entry.getValue(), false);
         }
+    }
+
+    public void put(int index, ItemStack content, boolean updates) {
+        super.set(index, content);
     }
 
     @Override

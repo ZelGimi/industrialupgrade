@@ -1,0 +1,13 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_chromium"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "industrialupgrade:raw_metals/raw_chromium"
+  }
+}

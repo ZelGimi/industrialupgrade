@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/polonium"
+    },
+    "B": {
+      "tag": "c:casings/aluminumbronze"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "AAA",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "id": "industrialupgrade:wiring/steam"
+  },
+  "show_notification": false
+}

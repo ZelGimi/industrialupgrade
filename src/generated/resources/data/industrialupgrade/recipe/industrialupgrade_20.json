@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gems/topaz"
+    }
+  },
+  "pattern": [
+    "   ",
+    "A A",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/topaz_boots"
+  },
+  "show_notification": false
+}

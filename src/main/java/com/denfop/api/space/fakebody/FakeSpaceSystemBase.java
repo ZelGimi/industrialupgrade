@@ -10,8 +10,8 @@ import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
     List<IFakeBody> deletingBody = new LinkedList<>();
 
     public FakeSpaceSystemBase() {
-        MinecraftForge.EVENT_BUS.register(new EventHandlerPlanet());
+        NeoForge.EVENT_BUS.register(new EventHandlerPlanet());
         this.fakePlanetList = new LinkedList<>();
         this.fakeSatelliteList = new LinkedList<>();
         this.rand = new Random();

@@ -5,16 +5,18 @@ import com.denfop.api.space.colonies.api.building.*;
 import com.denfop.api.space.colonies.enums.EnumHouses;
 import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface IColony {
 
-    CustomPacketBuffer writePacket();
+    CustomPacketBuffer writePacket(RegistryAccess registryAccess);
 
     boolean isAuto();
 
@@ -122,7 +124,7 @@ public interface IColony {
     void addMaxEnergy(int energy);
 
 
-    CompoundTag writeNBT(CompoundTag tag);
+    CompoundTag writeNBT(CompoundTag tag, HolderLookup.Provider p_323640_);
 
     List<IColonyBuilding> getBuildingList();
 

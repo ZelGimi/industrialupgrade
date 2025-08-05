@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class ItemCreativeBattery extends ItemBattery {
     public ItemCreativeBattery(boolean wireless) {
-        super(Math.pow(10,24), Double.MAX_VALUE, 1,wireless);
+        super(Math.pow(10, 24), Double.MAX_VALUE, 1, wireless);
     }
 
     @Override

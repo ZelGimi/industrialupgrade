@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_263_element"
+    }
+  },
+  "pattern": [
+    " G ",
+    " B ",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/gas_pump"
+  },
+  "show_notification": false
+}

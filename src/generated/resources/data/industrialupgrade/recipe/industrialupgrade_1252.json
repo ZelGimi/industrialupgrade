@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "tag": "minecraft:planks"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    },
+    "E": {
+      "item": "industrialupgrade:tools/treetap"
+    }
+  },
+  "pattern": [
+    "CEC",
+    "CBC",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:block_squeezer/squeezer"
+  },
+  "show_notification": false
+}

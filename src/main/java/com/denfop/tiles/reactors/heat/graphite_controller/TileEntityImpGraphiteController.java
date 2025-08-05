@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpGraphiteController extends TileEntityGraphiteController {
 
     public TileEntityImpGraphiteController(BlockPos pos, BlockState state) {
-        super(2,BlockHeatReactor.heat_imp_graphite_controller,pos,state);
+        super(2, BlockHeatReactor.heat_imp_graphite_controller, pos, state);
     }
 
     @Override

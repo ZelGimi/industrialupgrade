@@ -33,8 +33,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
     public int type_block;
 
     public TileEntityAlkalineEarthQuarry(BlockPos pos, BlockState state) {
-        super(100, 14, 1,BlockBaseMachine3.alkalineearthquarry,pos,state);
+        super(100, 14, 1, BlockBaseMachine3.alkalineearthquarry, pos, state);
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
         inputSlotA = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {

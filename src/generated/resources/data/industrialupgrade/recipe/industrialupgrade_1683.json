@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:nuclearresource/uranium_238"
+    },
+    "B": {
+      "item": "industrialupgrade:nuclearresource/small_uranium_235"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:nuclearresource/uranium"
+  },
+  "show_notification": false
+}

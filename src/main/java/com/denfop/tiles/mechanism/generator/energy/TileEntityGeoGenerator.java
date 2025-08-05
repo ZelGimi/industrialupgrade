@@ -21,11 +21,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
                 1,
                 InvSlotFluid.TypeFluidSlot.INPUT,
                 this.fluidTank
-        ){
+        ) {
             @Override
             protected boolean acceptsLiquid(Fluid fluid) {
                 return fluid == Fluids.LAVA;

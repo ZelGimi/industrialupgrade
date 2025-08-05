@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/nimonic"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "C": {
+      "item": "industrialupgrade:alloygear/woods"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "CBC",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_470_element"
+  },
+  "show_notification": false
+}

@@ -37,19 +37,20 @@ public class BiomassCategory extends GuiIU implements IRecipeCategory<BiomassHan
     private final IDrawableStatic bg;
     private final ContainerItemDivider container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public BiomassCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityItemDivider) BlockBaseMachine3.item_divider.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
@@ -85,14 +86,15 @@ public class BiomassCategory extends GuiIU implements IRecipeCategory<BiomassHan
         if (xScale >= 1) {
             progress = 0;
         }
-       bindTexture(getTexture());
-        this.slots.drawBackground( stack,0, -10);
-        progress_bar.renderBar( stack,0, 0, xScale);
+        bindTexture(getTexture());
+        this.slots.drawBackground(stack, 0, -10);
+        progress_bar.renderBar(stack, 0, 0, xScale);
 
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack,this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -112,16 +114,16 @@ public class BiomassCategory extends GuiIU implements IRecipeCategory<BiomassHan
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,  slots1.get(i).getJeiX(), slots1.get(i).getJeiY() - 10).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY() - 10).addItemStack(inputs.get(i));
 
         }
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  104, 8).setFluidRenderer(1000,true,12, 47).addFluidStack(recipes.getOutput().getFluid(),recipes.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(1000, true, 12, 47).addFluidStack(recipes.getOutput().getFluid(), recipes.getOutput().getAmount());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

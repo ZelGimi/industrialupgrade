@@ -3,7 +3,7 @@ package com.denfop.integration.jei.distiller;
 
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;

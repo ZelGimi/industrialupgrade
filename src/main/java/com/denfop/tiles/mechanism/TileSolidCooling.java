@@ -29,8 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
     public boolean work;
 
     public TileSolidCooling(BlockPos pos, BlockState state) {
-        super(0, 0, 1,BlockBaseMachine3.solid_cooling,pos,state);
+        super(0, 0, 1, BlockBaseMachine3.solid_cooling, pos, state);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, 14));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
@@ -75,9 +75,8 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
         timerItem.put(new ItemStack(Blocks.SNOW, 1), 10);
         timerItem.put(new ItemStack(Blocks.ICE, 1), 30);
         timerItem.put(new ItemStack(Blocks.PACKED_ICE, 1), 90);
-        timerItem.put(new ItemStack(Blocks.BLUE_ICE, 1), 90*9);
+        timerItem.put(new ItemStack(Blocks.BLUE_ICE, 1), 90 * 9);
     }
-
 
 
     @Override

@@ -1,0 +1,45 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:module_storage"
+    },
+    "B": {
+      "tag": "c:plates/carbon"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 5,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/nanocircuit"
+    },
+    "D": {
+      "tag": "c:gears/electrum"
+    },
+    "E": {
+      "tag": "c:doubleplate/aluminumbronze"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "DED"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:module_separate"
+  },
+  "show_notification": false
+}

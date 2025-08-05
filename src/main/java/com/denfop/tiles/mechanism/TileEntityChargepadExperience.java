@@ -18,8 +18,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class TileEntityChargepadExperience extends TileEntityInventory {
     private Player player;
 
     public TileEntityChargepadExperience(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.exp_chargepad,pos,state);
+        super(BlockBaseMachine3.exp_chargepad, pos, state);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
         this.energy.setDirections(ModUtils.allFacings, ModUtils.allFacings);
     }

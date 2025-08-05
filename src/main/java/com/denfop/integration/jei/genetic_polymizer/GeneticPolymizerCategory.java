@@ -44,9 +44,9 @@ public class GeneticPolymizerCategory extends GuiIU implements IRecipeCategory<G
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityGeneticPolymerizer) BlockBaseMachine3.genetic_polymerizer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 150,
                 77
         );
@@ -95,12 +95,12 @@ public class GeneticPolymizerCategory extends GuiIU implements IRecipeCategory<G
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar(stack,25, 0, xScale);
+        progress_bar.renderBar(stack, 25, 0, xScale);
         bindTexture(getTexture());
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground(stack,this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
 
     }
@@ -111,18 +111,18 @@ public class GeneticPolymizerCategory extends GuiIU implements IRecipeCategory<G
         final List<ItemStack> inputs = recipes.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack( inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack( recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
 
-        builder.addSlot(RecipeIngredientRole.INPUT,  4, 8).setFluidRenderer(12000,true,12,47).addFluidStack(recipes.getInput2().getFluid(),recipes.getInput2().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 4, 8).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getInput2().getFluid(), recipes.getInput2().getAmount());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPlastic.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIPlastic.png".toLowerCase());
     }
 
 

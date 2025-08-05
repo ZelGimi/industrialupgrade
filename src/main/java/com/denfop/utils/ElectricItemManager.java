@@ -3,7 +3,7 @@ package com.denfop.utils;
 import com.denfop.ElectricItem;
 import com.denfop.api.item.IElectricItemManager;
 import com.denfop.api.item.IEnergyItem;
-import net.minecraft.nbt.CompoundTag;
+import com.denfop.datacomponent.DataComponentsInit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class ElectricItemManager implements IElectricItemManager {
         if (!(item instanceof IEnergyItem)) {
             throw new IllegalArgumentException("no electric item");
         } else {
-            ItemStack ret = new ItemStack(item);
+            ItemStack ret = new ItemStack(item).copy();
             ElectricItem.manager.charge(ret, charge, 2147483647, true, false);
             return ret;
         }
@@ -41,17 +41,11 @@ public class ElectricItemManager implements IElectricItemManager {
             if (!ignoreTransferLimit && amount > item.getTransferEnergy(stack)) {
                 amount = item.getTransferEnergy(stack);
             }
-
-            CompoundTag tNBT = ModUtils.nbt(stack);
-            double newCharge = tNBT.getDouble("charge");
+            double newCharge = stack.getOrDefault(DataComponentsInit.ENERGY, 0).doubleValue();
             amount = Math.min(amount, item.getMaxEnergy(stack) - newCharge);
             if (!simulate) {
                 newCharge += amount;
-                if (newCharge > 0.0D) {
-                    tNBT.putDouble("charge", newCharge);
-                } else {
-                    tNBT.putDouble("charge", 0);
-                }
+                stack.set(DataComponentsInit.ENERGY, Math.max(newCharge, 0.0D));
             }
 
             return amount;
@@ -79,16 +73,12 @@ public class ElectricItemManager implements IElectricItemManager {
                     amount = item.getTransferEnergy(stack);
                 }
 
-                CompoundTag tNBT = ModUtils.nbt(stack);
-                double newCharge = tNBT.getDouble("charge");
+
+                double newCharge = getCharge(stack);
                 amount = Math.min(amount, newCharge);
                 if (!simulate) {
                     newCharge -= amount;
-                    if (newCharge > 0.0D) {
-                        tNBT.putDouble("charge", newCharge);
-                    } else {
-                        tNBT.putDouble("charge", 0);
-                    }
+                    stack.set(DataComponentsInit.ENERGY, Math.max(newCharge, 0.0D));
                 }
                 return amount;
             }
@@ -98,7 +88,9 @@ public class ElectricItemManager implements IElectricItemManager {
     }
 
     public double getCharge(ItemStack stack) {
-        return ModUtils.nbt(stack).getDouble("charge");
+        if (!stack.has(DataComponentsInit.ENERGY))
+            stack.set(DataComponentsInit.ENERGY, 0d);
+        return stack.get(DataComponentsInit.ENERGY).doubleValue();
     }
 
     public double getMaxCharge(ItemStack stack) {

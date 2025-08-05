@@ -34,8 +34,8 @@ public class SolidFluidIntegratorCategory extends GuiIU implements IRecipeCatego
     private final ContainerSolidFluidIntegrator container1;
     private final GuiComponent slots1;
     private final GuiComponent progress_bar;
-    private int progress;
     JeiInform jeiInform;
+    private int progress;
 
     public SolidFluidIntegratorCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
@@ -43,7 +43,7 @@ public class SolidFluidIntegratorCategory extends GuiIU implements IRecipeCatego
         super(((TileEntitySolidFluidIntegrator) BlockBaseMachine3.solid_fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
         );
@@ -98,16 +98,16 @@ public class SolidFluidIntegratorCategory extends GuiIU implements IRecipeCatego
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SolidFluidIntegratorHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 14, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getInputFluid().getFluid(),recipe.getInputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 50+71, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutputFluid().getFluid(),recipe.getOutputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 39,21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getInput().getFluid(),recipe.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 14, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInputFluid().getFluid(), recipe.getInputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 39, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput().getFluid(), recipe.getInput().getAmount());
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 115 - 25, 44 - 0).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

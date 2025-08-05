@@ -32,9 +32,9 @@ public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHan
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -60,7 +60,7 @@ public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHan
 
     @Override
     public void draw(GasPumpHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-       drawSplitString(stack,
+        drawSplitString(stack,
                 Localization.translate("iu.gaspump.info"),
                 10,
                 5,
@@ -71,14 +71,13 @@ public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHan
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GasPumpHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

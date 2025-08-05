@@ -5,7 +5,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +28,12 @@ public class FluidAdapterHandler {
         this.container = baseMachineRecipe;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<FluidAdapterHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
         }
         return recipes;
     }
-
 
     public static FluidAdapterHandler getRecipe(ItemStack is) {
         if (is == null || is.isEmpty()) {
@@ -61,7 +56,7 @@ public class FluidAdapterHandler {
 
 
             addRecipe(input, input1,
-                    inputFluid, outputFluid,baseMachineRecipe
+                    inputFluid, outputFluid, baseMachineRecipe
             );
         }
 
@@ -74,7 +69,7 @@ public class FluidAdapterHandler {
             FluidStack inputFluid,
             FluidStack outputFluid,
             BaseMachineRecipe baseMachineRecipe) {
-        FluidAdapterHandler recipe = new FluidAdapterHandler(input, output, inputFluid, outputFluid,baseMachineRecipe);
+        FluidAdapterHandler recipe = new FluidAdapterHandler(input, output, inputFluid, outputFluid, baseMachineRecipe);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -82,6 +77,9 @@ public class FluidAdapterHandler {
         return recipe;
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() {
         return input;

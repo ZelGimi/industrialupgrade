@@ -1,10 +1,9 @@
 package com.denfop.integration.jei.generator;
 
 
-
 import com.denfop.componets.Fluids;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;

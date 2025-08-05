@@ -69,7 +69,7 @@ public class GuiQuantumQuarry<T extends ContainerQuantumQuarry> extends GuiIU<Co
 
     protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
         super.renderBg(poseStack, f, x, y);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, guiLeft() + 3, guiTop() + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
 
@@ -83,7 +83,7 @@ public class GuiQuantumQuarry<T extends ContainerQuantumQuarry> extends GuiIU<Co
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

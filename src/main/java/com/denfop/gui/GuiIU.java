@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiIU<T extends ContainerBase<? extends IAdvInventory>> extends GuiCore<T> {
+public abstract class GuiIU<T extends ContainerBase<? extends IAdvInventory>> extends GuiCore<T> {
 
     private final EnumTypeStyle style;
     public boolean isBlack = false;
@@ -163,7 +163,7 @@ public class GuiIU<T extends ContainerBase<? extends IAdvInventory>> extends Gui
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name =this.container.base.getDisplayName().getString();
+        String name = this.container.base.getDisplayName().getString();
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
@@ -182,8 +182,8 @@ public class GuiIU<T extends ContainerBase<? extends IAdvInventory>> extends Gui
         int textY = (int) ((this.guiTop + 6) / scale);
 
 
-        poseStack.drawString(Minecraft.getInstance().font,name, textX, textY, 4210752,false);
-        pose.scale(1/scale,1/scale,1);
+        poseStack.drawString(Minecraft.getInstance().font, name, textX, textY, 4210752, false);
+        pose.scale(1 / scale, 1 / scale, 1);
 
         pose.popPose();
     }

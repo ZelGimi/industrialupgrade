@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:basemachine3/elec_heat"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "c:plates/inconel"
+    },
+    "D": {
+      "tag": "c:plates/mithril"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "DBD",
+    "C C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:autoheater"
+  },
+  "show_notification": false
+}

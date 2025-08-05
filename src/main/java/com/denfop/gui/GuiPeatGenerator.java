@@ -36,9 +36,8 @@ public class GuiPeatGenerator<T extends ContainerPeatGenerator> extends GuiIU<Co
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
-
 
 
 }

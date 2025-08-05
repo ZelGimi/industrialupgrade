@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_41_element"
+    },
+    "B": {
+      "tag": "c:plates/ferromanganese"
+    },
+    "C": {
+      "tag": "c:plates/invar"
+    }
+  },
+  "pattern": [
+    "C C",
+    "BAB",
+    "BCB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:macerator/macerator"
+  },
+  "show_notification": false
+}

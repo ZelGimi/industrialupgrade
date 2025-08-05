@@ -1,0 +1,48 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 7,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/quantumcircuit"
+    },
+    "D": {
+      "item": "industrialupgrade:energy_tools/nanodrill"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_516_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_509_element"
+    },
+    "T": {
+      "tag": "c:doubleplate/muntsa"
+    }
+  },
+  "pattern": [
+    "THT",
+    "CDC",
+    "BFB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy_tools/quantumdrill"
+  },
+  "show_notification": false
+}

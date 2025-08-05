@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/berylliumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_563_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_565_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_598_element"
+    },
+    "E": {
+      "tag": "c:plates/tantalumtungstenhafnium"
+    }
+  },
+  "pattern": [
+    "ECB",
+    "CDA",
+    "ECB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_592_element"
+  },
+  "show_notification": false
+}

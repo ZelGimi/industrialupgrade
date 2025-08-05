@@ -1,5 +1,5 @@
 {
-    "parent": "forge:item/default",
+    "parent": "neoforge:item/default",
     "loader": "industrialupgrade:fluid_container",
     "textures": {
         "base": "industrialupgrade:item/reinforced_empty_cell",

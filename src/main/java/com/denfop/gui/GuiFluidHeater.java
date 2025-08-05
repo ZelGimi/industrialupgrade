@@ -47,14 +47,14 @@ public class GuiFluidHeater<T extends ContainerHeatFluids> extends GuiIU<Contain
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         if (this.container.base instanceof IUpgradableBlock) {
-           bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         bindTexture(getTexture());
 
@@ -63,16 +63,16 @@ public class GuiFluidHeater<T extends ContainerHeatFluids> extends GuiIU<Contain
         int yoffset = guiTop;
 
         if (progress > 0) {
-            drawTexturedModalRect(poseStack,xoffset + 88, yoffset + 40, 177, 41, progress, 19);
+            drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

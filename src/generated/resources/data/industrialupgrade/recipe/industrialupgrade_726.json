@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "B": {
+      "tag": "c:ingots/gold"
+    },
+    "C": {
+      "tag": "c:ingots/iron"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_650_element"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DBD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_21_element"
+  },
+  "show_notification": false
+}

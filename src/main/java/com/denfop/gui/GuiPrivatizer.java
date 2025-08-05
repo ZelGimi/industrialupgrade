@@ -18,13 +18,8 @@ public class GuiPrivatizer<T extends ContainerPrivatizer> extends GuiIU<Containe
     }
 
 
-
-
-
-
-
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

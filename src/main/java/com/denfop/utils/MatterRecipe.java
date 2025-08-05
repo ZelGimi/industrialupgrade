@@ -37,31 +37,11 @@ public class MatterRecipe {
     }
 
     public static boolean areItemStackTagsEqual(ItemStack stackA, ItemStack stackB) {
-        if (stackA.isEmpty() && stackB.isEmpty()) {
-            return true;
-        } else if (!stackA.isEmpty() && !stackB.isEmpty()) {
-            if (stackA.getTag() == null && stackB.getTag() != null) {
-                return false;
-            } else {
-                return (stackA.getTag() == null || stackA.getTag().equals(stackB.getTag()));
-            }
-        } else {
-            return false;
-        }
+        return true;
     }
 
     public boolean isEqualNbt(@Nullable ItemStack left, @Nullable ItemStack right) {
 
-
-        if (!areItemStackTagsEqual(left, right)) {
-            if (left.hasTag() && !right.hasTag() && left.getTag().isEmpty()) {
-                return true;
-            } else if (!left.hasTag() && right.hasTag() && right.getTag().isEmpty()) {
-                return true;
-            } else {
-                return !left.hasTag() && !right.hasTag();
-            }
-        }
 
         return true;
     }

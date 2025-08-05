@@ -1,5 +1,7 @@
 package com.denfop.container;
 
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemStackVeinSensor;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
@@ -21,7 +23,6 @@ public class ContainerVeinSensor extends ContainerHandHeldInventory<ItemStackVei
         this.inventory = player.getInventory();
         this.player = player;
         this.current = player.getInventory().selected;
-     //   addPlayerInventorySlots(player.getInventory(), 243);
 
     }
 
@@ -103,7 +104,8 @@ public class ContainerVeinSensor extends ContainerHandHeldInventory<ItemStackVei
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 

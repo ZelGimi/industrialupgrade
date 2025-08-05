@@ -32,9 +32,9 @@ public class GasWellCategory extends GuiIU implements IRecipeCategory<GasWellHan
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -61,7 +61,7 @@ public class GasWellCategory extends GuiIU implements IRecipeCategory<GasWellHan
 
     @Override
     public void draw(GasWellHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      drawSplitString(stack, Localization.translate(recipe.output), 5, 3,
+        drawSplitString(stack, Localization.translate(recipe.output), 5, 3,
                 140 - 5, 4210752
         );
 
@@ -69,13 +69,12 @@ public class GasWellCategory extends GuiIU implements IRecipeCategory<GasWellHan
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GasWellHandler recipe, IFocusGroup focuses) {
-        builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addFluidStack(recipe.input,1);
+        builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addFluidStack(recipe.input, 1);
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

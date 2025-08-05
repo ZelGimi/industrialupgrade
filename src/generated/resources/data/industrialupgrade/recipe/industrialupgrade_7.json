@@ -1,0 +1,37 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    },
+    {
+      "tag": "c:ingots/tantalum"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:baseblockingot1/tantalum"
+  }
+}

@@ -3,6 +3,7 @@ package com.denfop.items;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.tiles.bee.FrameAttributeLevel;
 import com.denfop.tiles.bee.IFrameItem;
 import com.denfop.utils.ModUtils;
@@ -30,17 +31,19 @@ public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
     public FrameAttributeLevel getAttribute(final int meta) {
         return FrameAttributeLevel.values()[this.getElement().getId()];
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public int getCustomDamage(final ItemStack stack) {
-        if (!stack.hasTag()) {
+        if (!stack.has(DataComponentsInit.DATA)) {
             return 0;
         } else {
-            assert stack.getTag() != null;
-            return stack.getTag().getInt("damage");
+            assert stack.get(DataComponentsInit.DATA) != null;
+            return stack.get(DataComponentsInit.DATA).getInt("damage");
         }
     }
 

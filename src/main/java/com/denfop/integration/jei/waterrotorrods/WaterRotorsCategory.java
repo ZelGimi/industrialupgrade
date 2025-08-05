@@ -27,12 +27,13 @@ public class WaterRotorsCategory extends GuiIU implements IRecipeCategory<WaterR
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public WaterRotorsCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsr_jei" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsr_jei" +
                         ".png"), 5, 5, 140,
                 80
         );
@@ -48,7 +49,7 @@ public class WaterRotorsCategory extends GuiIU implements IRecipeCategory<WaterR
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 44).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 44).getDescriptionId());
     }
 
 
@@ -62,21 +63,21 @@ public class WaterRotorsCategory extends GuiIU implements IRecipeCategory<WaterR
     @Override
     public void draw(WaterRotorsHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
-     }
+    }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, WaterRotorsHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,52,15).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.INPUT,30,37).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.INPUT,52,37).addItemStack(recipe.getInputs()[4]);
-        builder.addSlot(RecipeIngredientRole.INPUT,74,37).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.INPUT,52,59).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,113,37).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 52, 15).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 30, 37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 52, 37).addItemStack(recipe.getInputs()[4]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 74, 37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 52, 59).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 113, 37).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsr_jei.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsr_jei.png");
     }
 
 

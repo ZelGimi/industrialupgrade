@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:dyes/yellow"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_271_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "DAD",
+    "D D"
+  ],
+  "result": {
+    "count": 3,
+    "id": "industrialupgrade:crafting_elements/crafting_478_element"
+  },
+  "show_notification": false
+}

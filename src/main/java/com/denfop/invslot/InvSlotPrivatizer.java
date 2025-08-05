@@ -3,12 +3,11 @@ package com.denfop.invslot;
 
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TilePrivatizer;
-import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
@@ -46,9 +45,8 @@ public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
             this.tile.listItems.clear();
             for (int i = 0; i < this.size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    CompoundTag nbt1 = ModUtils.nbt(this.get(i));
-                    String name = nbt1.getString("name");
-                    if (!this.tile.listItems.contains(name)) {
+                    String name = this.get(i).getOrDefault(DataComponentsInit.NAME, "");
+                    if (!name.isEmpty() && !this.tile.listItems.contains(name)) {
                         this.tile.listItems.add(name);
                     }
                 }

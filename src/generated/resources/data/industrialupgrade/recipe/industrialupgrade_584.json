@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    },
+    "B": {
+      "tag": "c:plates/alumel"
+    }
+  },
+  "pattern": [
+    "B B",
+    "BAB",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:chemistry/cathode"
+  },
+  "show_notification": false
+}

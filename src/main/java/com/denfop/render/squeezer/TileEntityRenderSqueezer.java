@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
@@ -43,7 +43,7 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
 
             itemRenderer.renderStatic(itemStack, GROUND,
-                    packedLight, combinedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
+                    packedLight, combinedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
             poseStack.popPose();
         }
         FluidTank tank = tile.fluidTank1;
@@ -65,7 +65,7 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
             if (tile.facing == 3) {
                 poseStack.translate(0.6 + 0.08, 0.18, 0.07 + 0.12);
             }
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.82f,0);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.82f);
             poseStack.popPose();
         }
     }

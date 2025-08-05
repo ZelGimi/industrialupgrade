@@ -27,12 +27,13 @@ public class ApiaryCategory extends GuiIU implements IRecipeCategory<ApiaryHandl
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public ApiaryCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -51,6 +52,7 @@ public class ApiaryCategory extends GuiIU implements IRecipeCategory<ApiaryHandl
     public RecipeType<ApiaryHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -65,15 +67,14 @@ public class ApiaryCategory extends GuiIU implements IRecipeCategory<ApiaryHandl
 
     @Override
     public void draw(ApiaryHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        this.drawSplitString(stack,recipe.output, 5, 3,
+        this.drawSplitString(stack, recipe.output, 5, 3,
                 140 - 5, 4210752
         );
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

@@ -53,12 +53,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.joml.Vector3f;
 
@@ -144,10 +144,12 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         world.addParticle(ParticleTypes.FLAME, particlePos.x, particlePos.y, particlePos.z, 0, 0.05, 0);
                     }
 
+                    // Частицы дыма
                     for (int j = 0; j < 1 + rand.nextInt(2); j++) {
                         world.addParticle(ParticleTypes.SMOKE, particlePos.x, particlePos.y + 0.3, particlePos.z, 0, 0.02, 0);
                     }
 
+                    // Частицы красного камня
                     if (rand.nextInt(3) == 0) {
                         world.addParticle(new DustParticleOptions(new Vector3f(1, 0, 0), 1),
                                 pos.getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.4 - 0.2,
@@ -156,6 +158,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                                 1.0f, 0.3f, 0.1f);
                     }
 
+                    // Частицы лавы
                     if (rand.nextInt(5) == 0) {
                         world.addParticle(ParticleTypes.LAVA,
                                 pos.getX() + 0.5 + dx + offsetX * -4 + rand.nextDouble() * 0.4 - 0.2,
@@ -606,7 +609,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                 return ModUtils.interactWithFluidHandler(player, hand,
                         this.blastInputFluid
                                 .getFluid()
-                                .getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                                .getCapability(Capabilities.FluidHandler.BLOCK, side)
                 );
             } else {
                 return super.onActivated(player, hand, side, vec3);

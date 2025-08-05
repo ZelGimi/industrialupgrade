@@ -35,6 +35,7 @@ import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -43,10 +44,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,11 +122,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         );
         this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation() * 100));
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.reactor_safety_doom.info"));
     }
+
     public LogicReactor getReactor() {
         if (this.reactor == null) {
             this.reactor = new LogicFluidReactor(this);
@@ -437,7 +440,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
                 if (fluidTank1 != null) {
-                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -447,7 +450,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
                 if (fluidTank1 != null) {
-                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -457,7 +460,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
                 if (fluidTank1 != null) {
-                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -467,7 +470,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
                 if (fluidTank1 != null) {
-                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -858,7 +861,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 this.getPos().getZ() + length, 25, false, Explosion.BlockInteraction.KEEP
         );
 
-        level.setBlock(pos, Blocks.AIR.defaultBlockState(),11);
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
         for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
             if (level.random.nextInt(2) == 0) {
                 continue;
@@ -880,16 +883,18 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 default:
                     throw new IllegalStateException("Unexpected value: " + facing);
             }
-            level.setBlock(pos1,Blocks.AIR.defaultBlockState(),11);
+            level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 11);
 
         }
 
         if (this.level.dimension() == Level.OVERWORLD) {
             for (ChunkPos pos1 : chunkPosList) {
-                if (!pos1.equals(chunkPos)) {
-                    new PacketUpdateRadiationValue(pos1, (int) (rad * 10));
-                } else {
-                    new PacketUpdateRadiationValue(pos1, (int) (rad * 50));
+                if (!this.level.isClientSide) {
+                    if (!pos1.equals(chunkPos)) {
+                        new PacketUpdateRadiationValue(pos1, (int) (rad * 10), (ServerLevel) this.level);
+                    } else {
+                        new PacketUpdateRadiationValue(pos1, (int) (rad * 50), (ServerLevel) this.level);
+                    }
                 }
             }
         }

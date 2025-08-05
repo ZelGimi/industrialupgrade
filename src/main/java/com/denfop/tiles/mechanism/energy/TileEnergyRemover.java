@@ -30,9 +30,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.*;
 
@@ -116,7 +116,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
+            NeoForge.EVENT_BUS.post(new EventLoadController(this, level));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
 
         }
@@ -141,7 +141,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
+            NeoForge.EVENT_BUS.post(new EventUnloadController(this, level));
         }
         super.onUnloaded();
     }
@@ -200,7 +200,8 @@ public class TileEnergyRemover extends TileEntityInventory implements
         if (this.work) {
             for (IEnergyConductor conductor : this.conductorList) {
                 TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
-                        conductor,level);
+                        conductor, level);
+
                 final List<ItemStack> drops = tile.getBlock().getDrops(
                         level,
                         tile.getPos(),
@@ -208,7 +209,6 @@ public class TileEnergyRemover extends TileEntityInventory implements
                 );
                 if (this.slot.add(drops.get(0))) {
                     tile.onUnloaded();
-
                     this.getWorld().removeBlock(tile.getPos(), false);
                 }
 

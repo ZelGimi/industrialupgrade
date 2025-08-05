@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/germanium"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/iron"
+    },
+    "D": {
+      "tag": "c:casings/bronze"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/chance_healing_2"
+  },
+  "show_notification": false
+}

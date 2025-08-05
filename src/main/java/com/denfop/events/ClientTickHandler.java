@@ -29,13 +29,13 @@ public class ClientTickHandler {
             String radiationText = String.format("%.2f Sv", radiationLevel);
             pose.drawString(Minecraft.getInstance().font, radiationText, 40, 90, 0xFFFFFF);
 
-            GuiCore.bindTexture(0, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_dosimeter.png"));
+            GuiCore.bindTexture(0, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_dosimeter.png"));
             guiGraphics.scale(0.4f, 0.4f, 0.4f);
-            pose.blit( GuiCore.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
+            pose.blit(GuiCore.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
 
 
             ResourceLocation radiationTexture = getRadiationTexture(player);
-           GuiCore.bindTexture(0, radiationTexture);
+            GuiCore.bindTexture(radiationTexture);
             pose.blit(GuiCore.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
             guiGraphics.popPose();
         }
@@ -54,12 +54,12 @@ public class ClientTickHandler {
 
         if (!dimension) {
             int frame = (worldTime % 2 == 0) ? 0 : 1;
-            return new ResourceLocation(Constants.MOD_ID, "textures/gui/radiation/" + frame + ".png");
+            return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/radiation/" + frame + ".png");
         } else {
             Radiation radiation = RadiationSystem.rad_system.getMap().get(player.chunkPosition());
             if (radiation == null) {
                 int frame = (worldTime % 4 == 0) ? 0 : 1;
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/radiation/" + frame + ".png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/radiation/" + frame + ".png");
             } else {
                 return getRadiationLevelTexture(radiation, worldTime);
             }
@@ -69,15 +69,15 @@ public class ClientTickHandler {
     private static ResourceLocation getRadiationLevelTexture(Radiation radiation, long worldTime) {
         if (radiation == null) {
             if (Minecraft.getInstance().player.level().getGameTime() % 20 == 0) {
-                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 1, 1);
+                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 10, 1);
             }
             if (worldTime % 4 == 0) {
-                return new ResourceLocation(
+                return ResourceLocation.tryBuild(
                         Constants.MOD_ID,
                         "textures/gui/radiation/0.png"
                 );
             } else {
-                return new ResourceLocation(
+                return ResourceLocation.tryBuild(
                         Constants.MOD_ID,
                         "textures/gui/radiation/1.png"
                 );
@@ -85,28 +85,28 @@ public class ClientTickHandler {
 
         } else {
             if (Minecraft.getInstance().player.level().getGameTime() % 20 == 0) {
-                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 1, 1);
+                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 10, 1);
             }
             if (radiation.getLevel() == EnumLevelRadiation.LOW) {
                 int col = (int) ((radiation.getRadiation() / 800) * 2);
 
                 if (worldTime % 2 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + col + ".png"
                     );
                 } else if (worldTime % 9 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (int) Math.max(0, col - 1) + ".png"
                     );
                 } else if (worldTime % 5 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (col + 1) + ".png"
                     );
                 } else {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (col) + ".png"
                     );
@@ -115,25 +115,25 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.DEFAULT) {
                 int col = (int) ((radiation.getRadiation() / 800) * 4);
                 if (Minecraft.getInstance().player.level().getGameTime() % 20 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.default_radiation.getSoundEvent(), 1, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.default_radiation.getSoundEvent(), 10, 1);
                 }
                 if (worldTime % 2 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (3 + col) + ".png"
                     );
                 } else if (worldTime % 9 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (2 + col) + ".png"
                     );
                 } else if (worldTime % 5 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (4 + col) + ".png"
                     );
                 } else {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (3 + col) + ".png"
                     );
@@ -142,25 +142,25 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.MEDIUM) {
                 int col = (int) ((radiation.getRadiation() / 800) * 3);
                 if (Minecraft.getInstance().player.level().getGameTime() % 20 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.medium_radiation.getSoundEvent(), 1, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.medium_radiation.getSoundEvent(), 10, 1);
                 }
                 if (worldTime % 2 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (7 + col) + ".png"
                     );
                 } else if (worldTime % 9 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (6 + col) + ".png"
                     );
                 } else if (worldTime % 5 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (8 + col) + ".png"
                     );
                 } else {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (7 + col) + ".png"
                     );
@@ -169,25 +169,25 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.HIGH) {
                 int col = (int) ((radiation.getRadiation() / 800) * 2);
                 if (Minecraft.getInstance().player.level().getGameTime() % 30 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.high_radiation.getSoundEvent(), 1, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.high_radiation.getSoundEvent(), 10, 1);
                 }
                 if (worldTime % 2 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (11 + col) + ".png"
                     );
                 } else if (worldTime % 9 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (10 + col) + ".png"
                     );
                 } else if (worldTime % 5 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (12 + col) + ".png"
                     );
                 } else {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + (11 + col) + ".png"
                     );
@@ -196,25 +196,25 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.VERY_HIGH) {
                 int col = (int) ((radiation.getRadiation() / 800) * 2);
                 if (Minecraft.getInstance().player.level().getGameTime() % 30 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.very_high_radiation.getSoundEvent(), 1, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.very_high_radiation.getSoundEvent(), 10, 1);
                 }
                 if (worldTime % 2 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + Math.min(14 + col, 16) + ".png"
                     );
                 } else if (worldTime % 9 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + Math.min(13 + col, 16) + ".png"
                     );
                 } else if (worldTime % 5 == 0) {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + Math.min(15 + col, 16) + ".png"
                     );
                 } else {
-                    return new ResourceLocation(
+                    return ResourceLocation.tryBuild(
                             Constants.MOD_ID,
                             "textures/gui/radiation/" + Math.min(14 + col, 16) + ".png"
                     );
@@ -222,7 +222,7 @@ public class ClientTickHandler {
 
             }
         }
-        return new ResourceLocation(
+        return ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "textures/gui/radiation/0.png"
         );

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/vanady"
+    },
+    "B": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "C": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "D": {
+      "tag": "c:ingots/caravky"
+    },
+    "E": {
+      "tag": "c:plates/zinc"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "EDE",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:module_schedule"
+  },
+  "show_notification": false
+}

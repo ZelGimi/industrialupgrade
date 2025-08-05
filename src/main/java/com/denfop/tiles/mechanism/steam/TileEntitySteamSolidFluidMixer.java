@@ -36,10 +36,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -71,7 +71,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
     protected short progress;
 
     public TileEntitySteamSolidFluidMixer(BlockPos pos, BlockState state) {
-        super(0, 1, 1,BlockBaseMachine3.steam_solid_fluid_mixer,pos,state);
+        super(0, 1, 1, BlockBaseMachine3.steam_solid_fluid_mixer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -129,7 +129,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);

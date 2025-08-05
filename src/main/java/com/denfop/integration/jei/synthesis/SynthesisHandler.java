@@ -20,11 +20,7 @@ public class SynthesisHandler {
         this.input1 = input1;
         this.output = output;
         this.percent = percent;
-        this.container  = container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<SynthesisHandler> getRecipes() {
@@ -35,7 +31,7 @@ public class SynthesisHandler {
     }
 
     public static SynthesisHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, int percent, BaseMachineRecipe container) {
-        SynthesisHandler recipe = new SynthesisHandler(input, input1, output, percent,container);
+        SynthesisHandler recipe = new SynthesisHandler(input, input1, output, percent, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -61,7 +57,7 @@ public class SynthesisHandler {
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0),
-                    container.getOutput().metadata.getInt("percent"),container
+                    container.getOutput().metadata.getInt("percent"), container
             );
 
 
@@ -69,6 +65,9 @@ public class SynthesisHandler {
 
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

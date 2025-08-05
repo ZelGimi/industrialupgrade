@@ -13,21 +13,18 @@ import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
-import com.denfop.blocks.FluidName;
 import com.denfop.items.ItemFluidContainer;
 import com.denfop.utils.FluidHandlerFix;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +38,7 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
     private final double maxEnergy;
     private final double transferEnergy;
     private final int tier;
+    private final EnumRoversLevelFluid fluids;
     private final double progress;
     public List<EnumTypeUpgrade> upgrades = Arrays.asList(EnumTypeUpgrade.values());
 
@@ -51,6 +49,7 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
         super(new Properties().setNoRepair().stacksTo(1), capacity);
         this.name = name;
         this.maxEnergy = maxEnergy;
+        this.fluids = fluids;
         this.transferEnergy = transferEnergy;
         this.tier = tier;
         this.progress = progress;
@@ -59,28 +58,31 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
         BaseSpaceUpgradeSystem.list.add(() -> SpaceUpgradeSystem.system.addRecipe(this, EnumTypeUpgrade.values()));
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.SpaceTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> subItems) {
         if (this.allowedIn(tab)) {
-            subItems.add(new ItemStack(this));
+            subItems.add(new ItemStack(this, 1));
 
             ItemStack stack1 = new ItemStack(this);
             ElectricItem.manager.charge(stack1, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
             subItems.add(stack1);
 
-            for (Map.Entry<Fluid, Integer> entry: BaseSpaceSystem.fluidToLevel.entrySet()) {
+            for (Map.Entry<Fluid, Integer> entry : BaseSpaceSystem.fluidToLevel.entrySet()) {
                 if (entry.getValue() > this.enumRoversLevel.ordinal() + 1)
                     continue;
                 ItemStack stack = new ItemStack(this);
                 ElectricItem.manager.charge(stack, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
-                subItems.add(this.getItemStack(stack,entry.getKey()));
+                subItems.add(this.getItemStack(stack, entry.getKey()));
             }
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -98,6 +100,7 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
 
         return this.nameItem;
     }
+
     @Override
     public boolean canProvideEnergy(final ItemStack var1) {
         return false;
@@ -107,7 +110,6 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
     public double getMaxEnergy(final ItemStack var1) {
         return maxEnergy;
     }
-
 
 
     @Override
@@ -143,11 +145,9 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!SpaceUpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
     }
 

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_29_element"
+    }
+  },
+  "pattern": [
+    " E ",
+    " B ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/energy_barrier"
+  },
+  "show_notification": false
+}

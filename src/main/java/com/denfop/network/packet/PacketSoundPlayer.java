@@ -7,22 +7,36 @@ import net.minecraft.world.entity.player.Player;
 
 public class PacketSoundPlayer implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketSoundPlayer(String name, Player player) {
-        final CustomPacketBuffer buffer = new CustomPacketBuffer();
+        final CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeString(name);
-        IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer, (ServerPlayer) player);
     }
 
     public PacketSoundPlayer(EnumSound name, Player player) {
-        final CustomPacketBuffer buffer = new CustomPacketBuffer();
+        final CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeString(name.getNameSounds());
-        IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer, (ServerPlayer) player);
     }
 
     public PacketSoundPlayer() {
 
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

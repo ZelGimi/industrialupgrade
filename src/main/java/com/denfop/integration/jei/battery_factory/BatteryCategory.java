@@ -38,18 +38,19 @@ public class BatteryCategory extends GuiIU implements IRecipeCategory<BatteryHan
     private final IDrawableStatic bg;
     private final ContainerBattery container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public BatteryCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityBatteryFactory) BlockBaseMachine3.battery_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
@@ -80,9 +81,9 @@ public class BatteryCategory extends GuiIU implements IRecipeCategory<BatteryHan
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar(stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
         bindTexture(getTexture());
     }
 
@@ -90,6 +91,7 @@ public class BatteryCategory extends GuiIU implements IRecipeCategory<BatteryHan
     public RecipeType<BatteryHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -104,17 +106,16 @@ public class BatteryCategory extends GuiIU implements IRecipeCategory<BatteryHan
         final List<ItemStack> inputs = recipes.getInputs1();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

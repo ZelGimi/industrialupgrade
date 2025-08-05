@@ -10,6 +10,7 @@ import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTank;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTank;
 import com.denfop.invslot.InvSlot;
@@ -24,20 +25,18 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -117,16 +116,13 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
         if (!this.getWorld().isClientSide && player
                 .getItemInHand(hand)
                 .getCapability(
-                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        Capabilities.FluidHandler.ITEM,
                         null
-                ).orElse((IFluidHandlerItem) player
-                        .getItemInHand(hand).getItem().initCapabilities(player
-                                .getItemInHand(hand), player
-                                .getItemInHand(hand).getTag())) != null) {
+                ) != null) {
 
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
 
@@ -137,22 +133,22 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(this.level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getVisualOrderText());
+            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getHoverName().getVisualOrderText());
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
-        tooltip.add(Localization.translate("iu.storage_fluid") + this.fluidTank.getCapacity()/1000 + " B");
+        tooltip.add(Localization.translate("iu.storage_fluid") + this.fluidTank.getCapacity() / 1000 + " B");
         super.addInformation(stack, tooltip);
     }
 
     @Override
     public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(placer.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
             if (fluidStack != null) {
                 this.fluidTank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
             }
@@ -167,7 +163,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
 
         if (this.fluidTank.getFluidAmount() > 0) {
             CompoundTag nbt = ModUtils.nbt(itemStackList.get(0));
-            nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
+            nbt.put("fluid", this.fluidTank.getFluid().save(player.registryAccess(), new CompoundTag()));
         }
 
         return itemStackList;
@@ -181,7 +177,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
         ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
             if (this.fluidTank.getFluidAmount() > 0) {
                 CompoundTag nbt = ModUtils.nbt(drop);
-                nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
+                nbt.put("fluid", this.fluidTank.getFluid().save(this.level.registryAccess(), new CompoundTag()));
             }
         }
         return drop;

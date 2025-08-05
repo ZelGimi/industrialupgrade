@@ -11,12 +11,12 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class GuiVerticalSlider extends AbstractWidget {
 
-    private static final ResourceLocation TEXTURES = new ResourceLocation(Constants.MOD_ID, "textures/gui/slider.png");
+    private static final ResourceLocation TEXTURES = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/slider.png");
     private final String name;
     private final int def;
     private final FormatHelper formatHelper;
@@ -95,7 +95,7 @@ public class GuiVerticalSlider extends AbstractWidget {
         }
 
 
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 
         stack.blit(TEXTURES, this.getX() - 2,
@@ -111,10 +111,8 @@ public class GuiVerticalSlider extends AbstractWidget {
         } else if (this.isHovered) {
             j = 16777120;
         }
-        stack.drawCenteredString(Minecraft.getInstance().font, this.getDisplayString(),  this.getX() + (this.width - 8) / 2 + 4 + Minecraft.getInstance().font.width(this.displayString1) - 5,    this.getY() + this.height / 2 - 7, j);
+        stack.drawCenteredString(Minecraft.getInstance().font, this.getDisplayString(), this.getX() + (this.width - 8) / 2 + 4 + Minecraft.getInstance().font.width(this.displayString1) - 5, this.getY() + this.height / 2 - 7, j);
     }
-
-
 
 
     @Override
@@ -153,8 +151,6 @@ public class GuiVerticalSlider extends AbstractWidget {
         if (this.sliderPosition > 1.0F) this.sliderPosition = 1.0F;
         this.responder.setEntryValue(this.id, (float) Math.round(this.getSliderValue()));
     }
-
-
 
 
     public void setMin(final int min) {

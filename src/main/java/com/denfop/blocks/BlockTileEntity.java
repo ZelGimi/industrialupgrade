@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -38,10 +40,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -50,8 +50,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.PlantType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
@@ -61,7 +59,7 @@ import java.util.*;
 
 import static com.denfop.api.tile.IMultiTileBlock.CABLE;
 
-public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block implements EntityBlock, IWrenchable, IPlantable, IBlockTag {
+public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block implements EntityBlock, IWrenchable, IBlockTag {
 
     public static final Map<BlockPos, TileEntityBlock> teBlockDrop = new HashMap<>();
     public static final Property<Direction> ALL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.allFacings);
@@ -85,6 +83,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     }));
     private static final BlockEntityTicker<TileEntityBlock> TICKER = (level, blockPos, blockState, tileEntityBlock) -> {
         tileEntityBlock.tick();
+
     };
     public static TypeProperty currentTypeProperty;
     private static IMultiTileBlock preValue;
@@ -133,14 +132,33 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         }).noOcclusion().sound(value.getMaterial() == MapColor.WOOL ? SoundType.WOOL : SoundType.STONE);
         if (value.getMaterial() == MapColor.PLANT)
             prop = prop.noCollission();
-        if (value.getMaterial() == CABLE)
+        if (value.getMaterial() == MapColor.WOOL)
             prop = prop.explosionResistance(300);
         if (value.getHarvestTool() != HarvestTool.None)
             prop = prop.requiresCorrectToolForDrops();
-        BlockTileEntity<T> ret = new BlockTileEntity<>(prop,value, identifier, infoAboutTile);
+        BlockTileEntity<T> ret = new BlockTileEntity<>(prop, value, identifier, infoAboutTile);
         currentTypeProperty = null;
         return ret;
     }
+
+    private static TileEntityBlock getTe(Level world, BlockPos pos) {
+        BlockEntity te = world.getBlockEntity(pos);
+        return te instanceof TileEntityBlock ? (TileEntityBlock) te : null;
+    }
+
+    private static TileEntityBlock getTe(BlockGetter getter, BlockPos pos) {
+        BlockEntity blockEntity = getter.getBlockEntity(pos);
+        if (blockEntity instanceof TileEntityBlock te) {
+            return te;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
+    }
+
     public float getShadeBrightness(BlockState p_48731_, BlockGetter p_48732_, BlockPos p_48733_) {
         return 1.0F;
     }
@@ -154,39 +172,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
             return super.skipRendering(p_53972_, p_53973_, p_53974_);
         IMultiTileBlock type = p_53973_.getValue(this.typeProperty).teBlock;
         return this.value == type || super.skipRendering(p_53972_, p_53973_, p_53974_);
-    }
-    private static TileEntityBlock getTe(Level world, BlockPos pos) {
-        BlockEntity te = world.getBlockEntity(pos);
-        return te instanceof TileEntityBlock ? (TileEntityBlock) te : null;
     }    public TypeProperty typeProperty = this.getTypeProperty();
-
-    @Override
-    public boolean canBeReplaced(BlockState pState, Fluid pFluid) {
-        return false;
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
-        return false;
-    }
-
-    @Override
-    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
-        return false;
-    }
-
-    @Override
-    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        return true;
-    }
-
-    private static TileEntityBlock getTe(BlockGetter getter, BlockPos pos) {
-        BlockEntity blockEntity = getter.getBlockEntity(pos);
-        if (blockEntity instanceof TileEntityBlock te) {
-            return te;
-        }
-        return null;
-    }
 
     public void setItem(ItemBlockTileEntity<T> item) {
         this.item = item;
@@ -196,7 +182,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         return value;
     }
 
-    public void entityInside(BlockState state, Level level, BlockPos pos,  Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
 
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -206,7 +192,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
 
     }
 
-    public void setPlacedBy(Level level,BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
         TileEntityBlock tileEntityBlock = getTe(level, blockPos);
         if (tileEntityBlock != null) {
             tileEntityBlock.onPlaced(itemStack, livingEntity, tileEntityBlock.getFacing());
@@ -231,29 +217,24 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         return 0;
     }
 
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world,  BlockPos pos, CollisionContext collisionContext) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext collisionContext) {
         TileEntityBlock te = getTe(world, pos);
         return te == null ? super.getShape(state, world, pos, collisionContext) : Shapes.create(te.getVisualBoundingBox());
 
     }
 
     @Override
-    public boolean hasDynamicShape() {
-        return true;
-    }
-
-    @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof TileEntityBlock) {
-            return Shapes.create(((TileEntityBlock) te).getOutlineBoundingBox());
+            return Shapes.create(((TileEntityBlock) te).getOutlineBoundingBox().move(pos));
         }
         return super.getInteractionShape(state, world, pos);
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if(!this.hasCollision)
+        if (!this.hasCollision)
             return Shapes.empty();
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof TileEntityBlock) {
@@ -293,7 +274,6 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
             PROPERTY_BY_DIRECTION.values().forEach(p_49915_::add);
 
 
-
     }
 
     @Override
@@ -308,13 +288,11 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         return te != null && te.canSetFacingWrench(newDirection, player);
     }
 
-
     @Override
     public boolean wrenchCanRemove(Level world, BlockPos pos, Player player) {
         TileEntityBlock te = getTe(world, pos);
         return te != null && te.wrenchCanRemove(player);
     }
-
 
     @Override
     public List<ItemStack> getWrenchDrops(Level var1, BlockPos var2, BlockState var3, BlockEntity te, Player player, int fortune) {
@@ -325,7 +303,6 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         return list;
     }
 
-
     @Override
     public void wrenchBreak(Level world, BlockPos pos) {
         TileEntityBlock tileEntityBlock = (TileEntityBlock) world.getBlockEntity(pos);
@@ -333,7 +310,6 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
             tileEntityBlock.wrenchBreak();
         }
     }
-
 
     @Nullable
     @Override
@@ -352,17 +328,16 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     }
 
     @Override
-    public void playerWillDestroy(Level p_176208_1_, BlockPos p_176208_2_, BlockState p_176208_3_, Player p_176208_4_) {
+    public BlockState playerWillDestroy(Level p_176208_1_, BlockPos p_176208_2_, BlockState p_176208_3_, Player p_176208_4_) {
         this.spawnDestroyParticles(p_176208_1_, p_176208_4_, p_176208_2_, p_176208_3_);
-        p_176208_1_.playSound(p_176208_4_,p_176208_2_,this.soundType.getBreakSound(), SoundSource.BLOCKS, this.soundType.getVolume() * 0.5F, this.soundType.getPitch() * 0.75F);
-
+        p_176208_1_.playSound(p_176208_4_, p_176208_2_, this.soundType.getBreakSound(), SoundSource.BLOCKS, this.soundType.getVolume() * 0.5F, this.soundType.getPitch() * 0.75F);
+        return p_176208_3_;
     }
 
     @Override
     public boolean hasAnalogOutputSignal(BlockState p_60457_) {
         return true;
     }
-
 
     @Override
     public int getSignal(BlockState p_60483_, BlockGetter p_60484_, BlockPos p_60485_, Direction p_60486_) {
@@ -378,6 +353,8 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         super.playerDestroy(p_49827_, p_49828_, p_49829_, p_49830_, p_49831_, p_49832_);
     }
     public  static LinkedList<TileEntityBlock> drops = new LinkedList<>();
+
+
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         TileEntityBlock te = getTe(world, pos);
         if (te != null) {
@@ -419,11 +396,6 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         }
     }
 
-    @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
-    }
-
     private Direction getPlacementFacing(LivingEntity livingEntity, Direction direction) {
         Set<Direction> set = this.value.getSupportedFacings();
         if (set.isEmpty()) {
@@ -463,19 +435,30 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         return blockState;
     }
 
-    public @NotNull InteractionResult use(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, Player player, @NotNull InteractionHand interactionHand, @NotNull BlockHitResult blockHitResult) {
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack p_316304_, BlockState p_316362_, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player.isSecondaryUseActive()) {
             TileEntityBlock te = getTe(level, blockPos);
-            return te == null ? InteractionResult.PASS : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
+            return te == null ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
         } else {
             TileEntityBlock te = getTe(level, blockPos);
-            return te == null ? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
+            return te == null ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    protected InteractionResult useWithoutItem(BlockState p_60503_, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        if (player.isSecondaryUseActive()) {
+            TileEntityBlock te = getTe(level, blockPos);
+            return te == null ? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult1(te.onSneakingActivated(player, InteractionHand.MAIN_HAND, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
+        } else {
+            TileEntityBlock te = getTe(level, blockPos);
+            return te == null ? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult1(te.onActivated(player, InteractionHand.MAIN_HAND, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
+        }
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         TileEntityBlock te = getTe(level, pos);
 
         return te == null ? ModUtils.emptyStack : te.getPickBlock(player, target);
@@ -486,7 +469,9 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         BlockEntity blockEntity = null;
         try {
             blockEntity = p_60538_.getParameter(LootContextParams.BLOCK_ENTITY);
-        }catch (Exception e){};
+        } catch (Exception e) {
+        }
+        ;
         if (blockEntity == null) {
             Vec3 vec3 = p_60538_.getParameter(LootContextParams.ORIGIN);
             return this.getDrops(p_60538_.getLevel(), new BlockPos((int) vec3.x, (int) vec3.y, (int) vec3.z), p_60537_, p_60538_.getParameter(LootContextParams.THIS_ENTITY));
@@ -494,12 +479,12 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         Entity entity = null;
         try {
             entity = p_60538_.getParameter(LootContextParams.THIS_ENTITY);
-        }catch (Exception e){};
-        return this.getDrops(p_60538_.getLevel(), blockEntity.getBlockPos(), p_60537_,entity);
+        } catch (Exception e) {
+        }
+        ;
+        return this.getDrops(p_60538_.getLevel(), blockEntity.getBlockPos(), p_60537_, entity);
 
     }
-
-
 
     @Override
     public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
@@ -518,25 +503,25 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
                         case Axe:
                             ItemStack stack = player.getMainHandItem();
                             if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(new ResourceLocation("forge", "tools/axes")));
+                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/axes")));
                             }
                             break;
                         case Pickaxe:
                             stack = player.getMainHandItem();
                             if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(new ResourceLocation("forge", "tools/pickaxes")));
+                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/pickaxes")));
                             }
                             break;
                         case Shovel:
                             stack = player.getMainHandItem();
                             if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(new ResourceLocation("forge", "tools/shovels")));
+                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/shovels")));
                             }
                             break;
                         case Wrench:
                             stack = player.getMainHandItem();
                             if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(new ResourceLocation("forge", "tools/wrench")));
+                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench")));
                             }
                             break;
                         default:
@@ -560,7 +545,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
                 if (player instanceof Player) {
                     ItemStack stack = ((Player) player).getMainHandItem();
                     if (!stack.isEmpty()) {
-                        wasWrench = stack.is(ItemTags.create(new ResourceLocation("forge", "tools/wrench")));
+                        wasWrench = stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench")));
                     }
                 }
                 final int chance = te.getLevel().random.nextInt(100);
@@ -574,7 +559,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         if (player instanceof Player) {
             ItemStack stack = ((Player) player).getMainHandItem();
             if (!stack.isEmpty()) {
-                wasWrench = stack.is(ItemTags.create(new ResourceLocation("forge", "tools/wrench")));
+                wasWrench = stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench")));
             }
         }
         final int chance = te.getLevel().random.nextInt(100);
@@ -587,12 +572,9 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         TileEntityBlock te = getTe(level, blockPos);
         if (te != null && blockState2.getBlock() != blockState.getBlock()) {
             te.onBlockBreak(false);
-            te.onUnloaded();
-            level.removeBlock(te.getPos(), false);
         }
 
         super.onRemove(blockState, level, blockPos, blockState2, b);
-
     }
 
     @Override
@@ -603,26 +585,17 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
             te.onClicked(player);
     }
 
-
-
     @Override
     public boolean isCollisionShapeFullBlock(BlockState p_181242_, BlockGetter p_181243_, BlockPos p_181244_) {
         return super.isCollisionShapeFullBlock(p_181242_, p_181243_, p_181244_);
     }
 
-    public InteractionResult getResult(boolean result) {
+    public ItemInteractionResult getResult(boolean result) {
+        return result ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    public InteractionResult getResult1(boolean result) {
         return result ? InteractionResult.SUCCESS : InteractionResult.PASS;
-    }
-
-    @Override
-    public BlockState getPlant(BlockGetter level, BlockPos pos) {
-        return level.getBlockState(pos);
-    }
-
-    @Override
-    public PlantType getPlantType(BlockGetter level, BlockPos pos) {
-        TileEntityBlock te = (TileEntityBlock) level.getBlockEntity(pos);
-        return te == null ? TileEntityBlock.noCrop : te.getPlantType();
     }
 
     @Override
@@ -634,6 +607,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public Pair<String, Integer> getHarvestLevel() {
         return new Pair<>(value.getHarvestTool().toolClass, 1);
     }
+
 
 
 

@@ -39,15 +39,16 @@ public class BrewingCategory extends GuiIU implements IRecipeCategory<BrewingHan
     private final IDrawableStatic bg;
     private final ContainerEnchanterBooks container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public BrewingCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -76,6 +77,7 @@ public class BrewingCategory extends GuiIU implements IRecipeCategory<BrewingHan
     public RecipeType<BrewingHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -89,12 +91,12 @@ public class BrewingCategory extends GuiIU implements IRecipeCategory<BrewingHan
         final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack( inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
     }
 
     @Override
@@ -108,18 +110,15 @@ public class BrewingCategory extends GuiIU implements IRecipeCategory<BrewingHan
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar(stack,-12, 0, xScale);
-       bindTexture(getTexture());
+        progress_bar.renderBar(stack, -12, 0, xScale);
+        bindTexture(getTexture());
     }
 
 
-
-
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guialloysmelter.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guialloysmelter.png");
     }
 
 

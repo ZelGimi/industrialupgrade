@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "B": {
+      "tag": "c:dusts/diamond"
+    },
+    "C": {
+      "item": "minecraft:quartz"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "count": 9,
+    "id": "industrialupgrade:itemdust/energium_dust"
+  },
+  "show_notification": false
+}

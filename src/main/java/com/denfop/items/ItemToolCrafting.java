@@ -3,7 +3,6 @@ package com.denfop.items;
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -11,7 +10,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,13 +27,18 @@ public class ItemToolCrafting extends Item implements IItemTab {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
-        ItemStack ret = itemStack.copy();
-        return ret.hurt(1, IUCore.randomSource, null) ? ModUtils.emptyStack : ret;
+        int l = itemStack.getDamageValue() + 1;
+        itemStack.setDamageValue(l);
+        if (itemStack.getDamageValue() == itemStack.getMaxDamage())
+            return ItemStack.EMPTY;
+        return itemStack;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -55,7 +58,7 @@ public class ItemToolCrafting extends Item implements IItemTab {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack p_41421_, @Nullable TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         p_41423_.add(Component.literal(Localization.translate("item.itemTool.tooltip.UsesLeft", getRemainingUses(p_41421_))));
     }
 

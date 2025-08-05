@@ -8,7 +8,7 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.IUpgradeWithBlackList;
-import com.denfop.api.upgrade.UpgradeModificator;
+import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.api.upgrade.event.EventItemLoad;
@@ -21,6 +21,8 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.UpgradeItem;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiUpgradeBlock;
 import com.denfop.items.EnumInfoUpgradeModules;
@@ -28,25 +30,18 @@ import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.denfop.events.IUEventHandler.getUpgradeItem;
 
@@ -87,9 +82,8 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         return;
                     }
 
-                    module = module.copy();
 
-                    CompoundTag nbt1 = ModUtils.nbt(stack1);
+                    DataComponentMap components = stack1.getComponents();
                     if (module.getItem() instanceof ItemUpgradeModule) {
                         if (UpgradeSystem.system.getRemaining(stack1) == 0) {
                             this.updateTick.setRecipeOutput(null);
@@ -101,54 +95,49 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                             this.updateTick.setRecipeOutput(null);
                             return;
                         }
-                        double newCharge = ElectricItem.manager.getCharge(stack1);
-                        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
+                        ItemStack stack = stack1.copy();
                         this.invSlotRecipes.consume();
                         this.outputSlot.add(processResult);
-                        ItemStack stack = this.outputSlot.get(0);
-                        stack.setTag(nbt1);
-                        CompoundTag nbt = ModUtils.nbt(stack);
-                        final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
-                        ListTag modesTagList = nbt.getList("modes", 10);
-                        CompoundTag upgrade = new CompoundTag();
-                        upgrade.putInt("index", type.ordinal());
-                        modesTagList.add(upgrade);
-                        nbt.put("modes", modesTagList);
-                        ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
-                        ElectricItem.manager.use(stack, 1, null);
-                        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-                        MinecraftForge.EVENT_BUS.post(new EventItemLoad(level, (IUpgradeItem) stack.getItem(), stack));
-                    } else if (module.getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) module.getItem()) == 12) {
-                        CompoundTag nbt2 = ModUtils.nbt(module);
-                        double newCharge = ElectricItem.manager.getCharge(stack1);
-                        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
-                        this.invSlotRecipes.consume();
-                        this.outputSlot.add(processResult);
-                        ItemStack stack = this.outputSlot.get(0);
-                        stack.setTag(nbt1);
-                        CompoundTag nbt = ModUtils.nbt(stack);
-                        ListTag tagList = nbt.getList("blacklist", 8);
-                        int size = nbt2.getInt("size");
-                        for (int j = 0; j < size; j++) {
-                            String l = "number_" + j;
-                            String temp = nbt2.getString(l);
-                            StringTag nbtTagString = StringTag.valueOf(temp);
-                            tagList.add(nbtTagString);
+                        this.outputSlot.set(0, stack);
+                        UpgradeItem upgradeItem = stack.get(DataComponentsInit.UPGRADE_ITEM);
+                        boolean find = false;
+                        List<UpgradeItemInform> upgradeItemInformList = upgradeItem.upgradeItemInforms();
+                        for (UpgradeItemInform upgradeItemInform : upgradeItemInformList) {
+                            if (upgradeItemInform.upgrade == type) {
+                                upgradeItemInform.number++;
+                                find = true;
+                                break;
+                            }
                         }
-                        nbt.put("blacklist", tagList);
+                        if (!find) {
+                            upgradeItemInformList.add(new UpgradeItemInform(type, 1));
+                        }
+                        upgradeItem = upgradeItem.updateUpgrades(stack, upgradeItemInformList);
+                        upgradeItem = upgradeItem.updateAmount(stack, upgradeItem.amount() + 1);
                         ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                         ElectricItem.manager.use(stack, 1, null);
-                        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-
-                        MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(
+                        NeoForge.EVENT_BUS.post(new EventItemLoad(level, (IUpgradeItem) stack.getItem(), stack));
+                    } else if (module.getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) module.getItem()) == 12) {
+                        List<String> stringList = module.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+                        ItemStack stack = stack1.copy();
+                        this.invSlotRecipes.consume();
+                        this.outputSlot.add(processResult);
+                        this.outputSlot.set(0, stack);
+                        UpgradeItem upgradeItem = stack.get(DataComponentsInit.UPGRADE_ITEM);
+                        List<String> list = new ArrayList<>(stringList);
+                        upgradeItem = upgradeItem.updateBlackList(stack, list);
+                        ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
+                        ElectricItem.manager.use(stack, 1, null);
+                        NeoForge.EVENT_BUS.post(new EventItemBlackListLoad(
                                 level,
                                 (IUpgradeWithBlackList) stack.getItem(),
                                 stack,
-                                nbt2
+                                new CompoundTag()
                         ));
 
                     }
                 } else {
+
                     ItemStack stack1 = getUpgradeItem(this.invSlotRecipes.get(0))
                             ? this.invSlotRecipes.get(0)
                             : this.invSlotRecipes.get(1);
@@ -156,24 +145,22 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                             ? this.invSlotRecipes.get(1).copy()
                             : this.invSlotRecipes.get(0).copy();
                     boolean need = UpgradeSystem.system.needModificate(stack1, module);
-                    if (need) {
-                        CompoundTag nbt1 = ModUtils.nbt(stack1);
-                        double newCharge = ElectricItem.manager.getCharge(stack1);
-                        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
 
+                    if (need) {
+
+                        ItemStack stack = stack1.copy();
                         this.invSlotRecipes.consume();
                         this.outputSlot.add(processResult);
-                        ItemStack stack = this.outputSlot.get(0);
-                        stack.setTag(nbt1);
+                        this.outputSlot.set(0, stack);
+
                         UpgradeSystem.system.addModificate(
                                 stack,
                                 this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("type")
                         );
                         ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                         ElectricItem.manager.use(stack, 1, null);
-                        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
 
-                        MinecraftForge.EVENT_BUS.post(new EventItemLoad(level, (IUpgradeItem) stack.getItem(), stack));
+                        NeoForge.EVENT_BUS.post(new EventItemLoad(level, (IUpgradeItem) stack.getItem(), stack));
 
                     }
                 }

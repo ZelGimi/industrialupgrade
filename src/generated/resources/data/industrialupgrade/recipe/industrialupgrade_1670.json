@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:dusts/stone"
+    },
+    "B": {
+      "item": "minecraft:clay_ball"
+    },
+    "C": {
+      "item": "minecraft:sand"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "ABA",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_289_element"
+  },
+  "show_notification": false
+}

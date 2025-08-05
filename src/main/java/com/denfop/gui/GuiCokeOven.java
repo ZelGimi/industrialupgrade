@@ -6,7 +6,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerCokeOven;
@@ -18,10 +17,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,7 +124,7 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 47;
+                        fluidHeight = 48;
                     }
 
                     Fluid fluid = fs.getFluid();
@@ -194,7 +193,7 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                     return;
                 }
                 FluidStack fs = container.base.tank1.getFluid();
-                if (!fs.isEmpty()&& fs.getAmount() > 0) {
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
                     int fluidWidth = this.width;
@@ -203,7 +202,7 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 47;
+                        fluidHeight = 48;
                     }
 
                     Fluid fluid = fs.getFluid();
@@ -260,7 +259,7 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         highlightedMinus = false;
         highlightedPlus = false;
@@ -290,13 +289,13 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 20, 6, net.minecraft.network.chat.Component.nullToEmpty(name), 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 20, 6, net.minecraft.network.chat.Component.nullToEmpty(name), 4210752, false);
     }
 
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         bindTexture(getTexture());
 
         int progress = (int) (38.0F * this.container.base.getProgress() / 3600D);
@@ -306,35 +305,35 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture(getTexture());
         if (highlightedMinus) {
-            drawTexturedModalRect( poseStack,xoffset + 34, yoffset + 23, 192, 3, 14, 14);
+            drawTexturedModalRect(poseStack, xoffset + 34, yoffset + 23, 192, 3, 14, 14);
 
         }
         if (highlightedPlus) {
-            drawTexturedModalRect( poseStack,xoffset + 108, yoffset + 23, 177, 3, 14, 14);
+            drawTexturedModalRect(poseStack, xoffset + 108, yoffset + 23, 177, 3, 14, 14);
 
         }
         if (progress > 0) {
             drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 46, 177, 19, progress, 11);
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect( poseStack,xoffset + 3, yoffset + 3, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
-     bindTexture(getTexture());
+        bindTexture(getTexture());
 
         int bar = (int) ((Math.min(this.container.base.bar * 1D, 5D) / 5D) * 50D);
         if (bar > 0) {
-            drawTexturedModalRect( poseStack,this.guiLeft + 53, this.guiTop + 28, 181, 53, bar, 5);
+            drawTexturedModalRect(poseStack, this.guiLeft + 53, this.guiTop + 28, 181, 53, bar, 5);
         }
         if (container.base.heat != null) {
             progress = (int) (50.0F * container.base.heat.getFillRatio());
-            drawTexturedModalRect( poseStack,this.guiLeft + 66, this.guiTop + 79, 180, 34, progress, 8);
+            drawTexturedModalRect(poseStack, this.guiLeft + 66, this.guiTop + 79, 180, 34, progress, 8);
 
         }
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guicokeoven.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guicokeoven.png");
     }
 
 }

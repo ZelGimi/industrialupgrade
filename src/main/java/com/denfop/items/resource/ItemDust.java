@@ -20,10 +20,12 @@ public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -39,7 +41,7 @@ public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
                 break;
 
         }
-        return new String[]{"forge:dusts/" + name, "forge:dusts"};
+        return new String[]{"c:dusts/" + name, "c:dusts"};
     }
 
     protected String getOrCreateDescriptionId() {
@@ -57,7 +59,7 @@ public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
             this.nameItem = pathBuilder.toString();
         }
 
-        return this.nameItem.replace("_dust","");
+        return this.nameItem.replace("_dust", "");
     }
 
     public enum ItemDustTypes implements ISubEnum {

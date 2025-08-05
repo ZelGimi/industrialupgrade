@@ -47,9 +47,9 @@ public class InoculatorCategory extends GuiIU implements IRecipeCategory<Inocula
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -90,10 +90,10 @@ public class InoculatorCategory extends GuiIU implements IRecipeCategory<Inocula
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,-12, 0, xScale);
-     bindTexture(getTexture());
+        progress_bar.renderBar(stack, -12, 0, xScale);
+        bindTexture(getTexture());
     }
 
 
@@ -109,7 +109,7 @@ public class InoculatorCategory extends GuiIU implements IRecipeCategory<Inocula
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.output);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.output);
 
     }
 
@@ -119,7 +119,7 @@ public class InoculatorCategory extends GuiIU implements IRecipeCategory<Inocula
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guialloysmelter.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guialloysmelter.png");
     }
 
 

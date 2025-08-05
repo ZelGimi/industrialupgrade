@@ -42,18 +42,19 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacHan
     private final IDrawableStatic bg;
     private final ContainerMultiMachine container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public CombMacCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
@@ -87,7 +88,7 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacHan
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.machines_base1, 1, 6).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.machines_base1, 1, 6).getDescriptionId());
     }
 
     @SuppressWarnings("removal")
@@ -126,7 +127,7 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacHan
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack( recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
     }
 
     @Override
@@ -135,7 +136,7 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacHan
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

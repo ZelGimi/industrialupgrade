@@ -3,7 +3,6 @@ package com.denfop.api.energy;
 import com.denfop.api.sytem.InfoTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,9 @@ public interface IEnergyTile {
     void setHashCodeSource(int hashCode);
 
 
-   default boolean isRemovedTile(){
-       return false;
-   };
+    default boolean isRemovedTile() {
+        return false;
+    }
+
+    ;
 }

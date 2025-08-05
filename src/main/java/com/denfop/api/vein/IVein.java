@@ -1,6 +1,7 @@
 package com.denfop.api.vein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 
@@ -30,7 +31,7 @@ public interface IVein {
 
     CompoundTag writeTag();
 
-    CustomPacketBuffer writePacket();
+    CustomPacketBuffer writePacket(RegistryAccess registryAccess);
 
     boolean equals(Object o);
 

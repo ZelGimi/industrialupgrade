@@ -19,7 +19,7 @@ public class GuiCyclotronPositrons<T extends ContainerPositrons> extends GuiIU<C
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicyclotron2.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guicyclotron2.png");
     }
 
 }

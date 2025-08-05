@@ -1,4 +1,3 @@
 {
-  "parent" : "minecraft:item/generated"
- 
+	"parent": "minecraft:item/generated"
 }

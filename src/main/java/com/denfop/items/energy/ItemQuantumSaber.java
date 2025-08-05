@@ -10,6 +10,7 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
 import com.denfop.audio.SoundHandler;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.PacketSoundPlayer;
@@ -17,15 +18,13 @@ import com.denfop.network.packet.PacketStopSoundPlayer;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -35,23 +34,26 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
+import static net.minecraft.world.item.SwordItem.createToolProperties;
 
 public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgradeItem, IProperties, IItemTab {
     public static int ticker = 0;
@@ -68,7 +70,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
             int maxCharge,
             int transferLimit, int tier, int activedamage1, int damage
     ) {
-        super(Tiers.DIAMOND,  new Properties().setNoRepair().setNoRepair().stacksTo(1));
+        super(Tiers.DIAMOND, new Properties().setNoRepair().setNoRepair().stacksTo(1).component(DataComponentsInit.MODE, 0).component(DataComponentsInit.ENERGY, 0D).component(DataComponentsInit.ACTIVE, false).component(DataComponents.TOOL, createToolProperties()));
         this.soundTicker = 0;
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
@@ -79,6 +81,16 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
         runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list));
 
     }
+
+    private static boolean isActive(ItemStack stack) {
+
+        return stack.getOrDefault(DataComponentsInit.ACTIVE, false);
+    }
+
+    private static void setActive(ItemStack stack, boolean active) {
+        stack.set(DataComponentsInit.ACTIVE, active);
+    }
+
     public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         return !pPlayer.isCreative();
     }
@@ -90,17 +102,10 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
             return pState.is(BlockTags.SWORD_EFFICIENT) ? 1.5F : 1.0F;
         }
     }
+
     public boolean isCorrectToolForDrops(BlockState pBlock) {
         return pBlock.is(Blocks.COBWEB);
     }
-
-    /**
-     * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
-     */
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? getAttributeModifiers(EquipmentSlot.MAINHAND,new ItemStack(this)) : super.getDefaultAttributeModifiers(pEquipmentSlot);
-    }
-
 
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
@@ -119,20 +124,6 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
 
         return this.nameItem;
     }
-    private static boolean isActive(ItemStack stack) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        return isActive(nbt);
-    }
-
-    private static boolean isActive(CompoundTag nbt) {
-        return nbt.getBoolean("active");
-    }
-
-    private static void setActive(CompoundTag nbt, boolean active) {
-        nbt.putBoolean("active", active);
-    }
-
-
 
     public String[] properties() {
         return new String[]{"active"};
@@ -141,13 +132,37 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack stack, ClientLevel world, LivingEntity entityIn, int p174679, String property) {
-        return ModUtils.nbt(stack).getBoolean("active") ? 1.0F : 0.0F;
+        return stack.getOrDefault(DataComponentsInit.ACTIVE, false) ? 1.0F : 0.0F;
 
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
-        return net.minecraftforge.common.ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(itemAbility);
+    }
+
+    @Override
+    public boolean isCorrectToolForDrops(ItemStack p_336002_, BlockState pBlock) {
+        return pBlock.is(Blocks.COBWEB);
+    }
+
+    @Override
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        int saberdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0;
+        int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
+
+        if (ElectricItem.manager.canUse(stack, 400.0D)) {
+            if (isActive(stack)) {
+                dmg = (int) (activedamage + activedamage * 0.15 * saberdamage);
+            }
+        }
+
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+        builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, 2, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, dmg, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+
+        return builder.build();
     }
 
     public String getRandomSwingSound() {
@@ -163,13 +178,14 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
+    public boolean mineBlock(ItemStack itemstack, Level p_41417_, BlockState p_41418_, BlockPos p_41419_, LivingEntity p_41420_) {
         if (isActive(itemstack)) {
-            drainSaber(itemstack, 80.0D, player);
+            drainSaber(itemstack, 80.0D, p_41420_);
         }
 
         return false;
     }
+
 
     public void drainSaber(ItemStack itemStack, double amount, LivingEntity entity) {
         int saberenergy = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABERENERGY, itemStack) ?
@@ -177,8 +193,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
 
 
         if (!ElectricItem.manager.use(itemStack, amount - amount * 0.15 * saberenergy, entity)) {
-            CompoundTag nbtData = ModUtils.nbt(itemStack);
-            nbtData.putBoolean("active", false);
+            setActive(itemStack, false);
         }
     }
 
@@ -199,34 +214,34 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (world.isClientSide) {
-            return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-        } else {
-            CompoundTag nbt = stack.getOrCreateTag();
+        if (!world.isClientSide) {
             if (!IUCore.keyboard.isChangeKeyDown(player)) {
-                if (isActive(nbt)) {
-                    setActive(nbt, false);
+                if (isActive(stack)) {
+                    setActive(stack, false);
                     new PacketStopSoundPlayer(EnumSound.NanosabreIdle, player);
+                    player.containerMenu.broadcastChanges();
                     return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
                 } else if (ElectricItem.manager.canUse(stack, 16.0D)) {
-                    setActive(nbt, true);
+                    setActive(stack, true);
                     new PacketSoundPlayer(this.getStartSound(), player);
                     return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
                 } else {
                     return super.use(world, player, hand);
                 }
             } else {
-                int mode = nbt.getInt("attackMode");
-                nbt.putInt("attackMode", mode == 0 ? 1 : 0);
+                int mode = stack.getOrDefault(DataComponentsInit.MODE, 0);
+                stack.set(DataComponentsInit.MODE, mode == 0 ? 1 : 0);
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
         }
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
+
 
     @Override
     public void appendHoverText(
             ItemStack stack,
-            Level worldIn,
+            TooltipContext worldIn,
             List<Component> tooltip,
             TooltipFlag flagIn
     ) {
@@ -241,45 +256,19 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (slot != EquipmentSlot.MAINHAND) {
-            return super.getAttributeModifiers(slot, stack);
-        } else {
-            int saberdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
-                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0;
-            int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
-
-            if (ElectricItem.manager.canUse(stack, 400.0D)) {
-                CompoundTag nbtData = ModUtils.nbt(stack);
-                if (nbtData.getBoolean("active")) {
-                    dmg = (int) (activedamage + activedamage * 0.15 * saberdamage);
-                }
-            }
-
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-            builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", 2, AttributeModifier.Operation.ADDITION));
-            builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", dmg, AttributeModifier.Operation.ADDITION));
-
-            return builder.build();
-        }
-    }
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean p_41408_) {
         super.inventoryTick(itemStack, world, entity, slot, p_41408_);
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
         if (world.isClientSide && isActive(itemStack) && world.getGameTime() % 20 == 0) {
             SoundHandler.playSound(IUCore.proxy.getPlayerInstance(), getIdleSound());
         }
-        CompoundTag nbtData = ModUtils.nbt(itemStack);
 
-        if (!nbtData.getBoolean("active")) {
+        if (!isActive(itemStack)) {
             return;
         }
         if (ticker % 16 == 0 && entity instanceof ServerPlayer) {
@@ -300,8 +289,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity source) {
-        CompoundTag nbtData = ModUtils.nbt(stack);
-        if (!nbtData.getBoolean("active")) {
+        if (!isActive(stack)) {
             return true;
         }
         if (!target.level().isClientSide) {
@@ -330,11 +318,11 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
             int saberdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0;
             int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
-            int attackMode = nbtData.getInt("attackMode");
+            int attackMode = stack.getOrDefault(DataComponentsInit.MODE, 0);
+
 
             if (ElectricItem.manager.canUse(stack, 400.0D)) {
-                CompoundTag nbtData1 = ModUtils.nbt(stack);
-                if (nbtData1.getBoolean("active")) {
+                if (isActive(stack)) {
                     dmg = (int) (activedamage + activedamage * 0.15 * saberdamage);
                 }
                 if (attackMode != 0) {
@@ -411,6 +399,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {

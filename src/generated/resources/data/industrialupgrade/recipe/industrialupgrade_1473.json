@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "E": {
+      "item": "minecraft:water_bucket"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_243_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "BAD",
+    "ECF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/water_rotor_assembler"
+  },
+  "show_notification": false
+}

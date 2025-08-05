@@ -13,7 +13,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,12 +24,14 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem, II
         super(new Item.Properties().stacksTo(1), maxDamage);
         this.level = level;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack p_41421_, @Nullable TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
                 p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
@@ -38,6 +39,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem, II
         p_41423_.add(Component.literal(Localization.translate("reactor.component_level1")));
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -50,7 +52,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem, II
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -88,12 +90,12 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem, II
 
     @Override
     public double getHeatRemovePercent(final IAdvReactor reactor) {
-        return 1-0.05*level;
+        return 1 - 0.05 * level;
     }
 
     @Override
     public void damageItem(final ItemStack stack, final int damage) {
-        applyCustomDamage(stack, 1, null);
+        applyCustomDamage(stack, -1, null);
     }
 
     @Override
@@ -105,7 +107,6 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem, II
     public boolean caneExtractHeat() {
         return true;
     }
-
 
     @Override
     public double getEnergyProduction(final IAdvReactor reactor) {

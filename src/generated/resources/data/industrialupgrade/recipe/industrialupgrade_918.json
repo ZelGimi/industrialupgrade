@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/cadmium"
+    },
+    "B": {
+      "item": "industrialupgrade:fan/imp_fan"
+    },
+    "C": {
+      "tag": "c:plates/titanium"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:fan/per_fan"
+  },
+  "show_notification": false
+}

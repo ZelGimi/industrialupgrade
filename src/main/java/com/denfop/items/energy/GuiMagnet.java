@@ -6,29 +6,30 @@ import com.denfop.Localization;
 import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiIU;
 import com.denfop.network.packet.PacketItemStackEvent;
-import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet> {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png".toLowerCase());
+    private static final ResourceLocation background = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GUIBags.png".toLowerCase());
     private final String name;
     int index = 0;
+    private Boolean white;
 
     public GuiMagnet(ContainerMagnet container, final ItemStack itemStack1) {
         super(container);
+        this.white = container.base.containerStack.getOrDefault(DataComponentsInit.BLACK_LIST, false);
 
         this.name = Localization.translate(itemStack1.getDescriptionId() + ".name");
         this.slots = new GuiComponent(this, 0, 0, getComponent(),
@@ -45,10 +46,10 @@ public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet>
                             SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F)
                     );
 
+                    white = !white;
                     new PacketItemStackEvent(0, container.base.player);
+                    container.base.containerStack.set(DataComponentsInit.BLACK_LIST, white);
 
-                    CompoundTag nbt = ModUtils.nbt(container.base.itemStack1);
-                    nbt.putBoolean("white", !nbt.getBoolean("white"));
                 }
                 return true;
             }
@@ -83,8 +84,8 @@ public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet>
                 this.drawTexturedModalRect(poseStack, this.guiLeft + 7 + col1 * 18, this.getGuiTop() + 23 + col * 18, 176, 0, 18, 18);
             }
         }
-        CompoundTag tagCompound = ModUtils.nbt(this.container.base.itemStack1);
-        boolean white = tagCompound.getBoolean("white");
+
+
         if (white) {
             RenderSystem.enableBlend();
             this.drawItemStack(poseStack, 11, 11, new ItemStack(IUItem.module9.getStack(13), 1));

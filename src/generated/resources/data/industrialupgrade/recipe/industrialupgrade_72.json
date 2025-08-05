@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:energy_tools/vajra"
+    },
+    "B": {
+      "item": "industrialupgrade:energy_tools/ultddrill"
+    },
+    "C": {
+      "tag": "c:plates/nimonic"
+    },
+    "D": {
+      "tag": "c:plates/superalloyrene"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "DBD",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy_tools/ult_vajra"
+  },
+  "show_notification": false
+}

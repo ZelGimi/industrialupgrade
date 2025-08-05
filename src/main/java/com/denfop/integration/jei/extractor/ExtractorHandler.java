@@ -20,10 +20,6 @@ public class ExtractorHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<ExtractorHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -32,7 +28,7 @@ public class ExtractorHandler {
     }
 
     public static ExtractorHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
-        ExtractorHandler recipe = new ExtractorHandler(input, output,container);
+        ExtractorHandler recipe = new ExtractorHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -58,7 +54,7 @@ public class ExtractorHandler {
             try {
                 addRecipe(
                         container.input.getInputs().get(0).getInputs().get(0),
-                        container.getOutput().items.get(0),container
+                        container.getOutput().items.get(0), container
                 );
 
             } catch (Exception ignored) {
@@ -67,6 +63,9 @@ public class ExtractorHandler {
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

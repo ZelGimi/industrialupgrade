@@ -1,0 +1,37 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    },
+    {
+      "tag": "c:ingots/uranium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:blockresource/uranium_block"
+  }
+}

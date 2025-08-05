@@ -12,13 +12,15 @@ import java.util.UUID;
 
 public class PacketCreateColony implements IPacket {
 
-    public PacketCreateColony() {
-    }
+    private CustomPacketBuffer buffer;
 
     ;
 
+    public PacketCreateColony() {
+    }
+
     public PacketCreateColony(Player player, IBody iBody) {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
         customPacketBuffer.writeByte(getId());
         try {
             EncoderHandler.encode(customPacketBuffer, player.getUUID());
@@ -29,7 +31,18 @@ public class PacketCreateColony implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        IUCore.network.getClient().sendPacket(customPacketBuffer);
+        this.buffer = customPacketBuffer;
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

@@ -4,8 +4,7 @@ package com.denfop.integration.jei.crops;
 import com.denfop.IUItem;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICrop;
-import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
+import com.denfop.datacomponent.DataComponentsInit;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -40,22 +39,7 @@ public class CropCrossoverHandler {
         recipes.add(recipe);
         return recipe;
     }
-    public ItemStack getOutputs() {
-        ItemStack stack = new ItemStack(IUItem.crops.getStack(0));
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putInt("crop_id", output.getId());
-        return stack;
-    }
-    public List<ItemStack> getInputs() {
-        List<ItemStack> itemStackList = new ArrayList<>();
-        inputs.forEach(crop -> {
-            ItemStack stack = new ItemStack(IUItem.crops.getStack(0));
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            nbt.putInt("crop_id", crop.getId());
-            itemStackList.add(stack);
-        });
-        return itemStackList;
-    }
+
     public static CropCrossoverHandler getRecipe(ItemStack is) {
         if (is == null || is.isEmpty()) {
             return null;
@@ -72,6 +56,22 @@ public class CropCrossoverHandler {
         });
 
 
+    }
+
+    public ItemStack getOutputs() {
+        ItemStack stack = new ItemStack(IUItem.crops.getStack(0));
+        stack.set(DataComponentsInit.CROP, output.getId());
+        return stack;
+    }
+
+    public List<ItemStack> getInputs() {
+        List<ItemStack> itemStackList = new ArrayList<>();
+        inputs.forEach(crop -> {
+            ItemStack stack = new ItemStack(IUItem.crops.getStack(0));
+            stack.set(DataComponentsInit.CROP, crop.getId());
+            itemStackList.add(stack);
+        });
+        return itemStackList;
     }
 
 

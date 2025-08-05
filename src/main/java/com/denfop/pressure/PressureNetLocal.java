@@ -56,11 +56,11 @@ public class PressureNetLocal implements IPressureNet {
     public void remove(final IPressureSource par1) {
         final PressureTick<IPressureSource, PressurePath> energyTick = this.senderPath.removeSource(par1);
         if (energyTick != null)
-        if (energyTick.getList() != null) {
-            for (PressurePath PressurePath : energyTick.getList()) {
-                PressurePath.target.getEnergyTickList().remove(energyTick.getSource());
+            if (energyTick.getList() != null) {
+                for (PressurePath PressurePath : energyTick.getList()) {
+                    PressurePath.target.getEnergyTickList().remove(energyTick.getSource());
+                }
             }
-        }
     }
 
 
@@ -200,17 +200,10 @@ public class PressureNetLocal implements IPressureNet {
     }
 
 
-
-
-
-
-
     public void onUnload() {
         this.senderPath.clear();
         this.chunkCoordinatesTileMap.clear();
     }
-
-
 
 
     public void removeTile(IPressureTile tile1) {
@@ -266,7 +259,7 @@ public class PressureNetLocal implements IPressureNet {
                 }
             }
         }
-         energyPaths = new ArrayList<>(energyPaths);
+        energyPaths = new ArrayList<>(energyPaths);
         for (PressurePath energyPath : energyPaths) {
             energyPath.target.getEnergyTickList().add(tick.getSource());
 
@@ -280,8 +273,7 @@ public class PressureNetLocal implements IPressureNet {
         tile1 = emitter.getPos();
 
 
-
-        return  emitter.getValidReceivers();
+        return emitter.getValidReceivers();
 
     }
 
@@ -358,7 +350,6 @@ public class PressureNetLocal implements IPressureNet {
         }
         this.sourceToUpdateList = new ArrayList<>(sourceToUpdateList);
     }
-
 
 
     @Override

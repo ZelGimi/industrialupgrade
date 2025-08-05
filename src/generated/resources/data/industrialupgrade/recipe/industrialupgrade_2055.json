@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/polonium"
+    },
+    "B": {
+      "tag": "c:plates/tantalum"
+    },
+    "C": {
+      "tag": "c:nuggets/gallium"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "BBB",
+    "C C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_738_element"
+  },
+  "show_notification": false
+}

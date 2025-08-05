@@ -3,17 +3,18 @@ package com.denfop.invslot;
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.WirelessConnection;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileAnalyzer;
 import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
-import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -184,13 +185,10 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < this.size(); i++) {
 
-            if (!this.get(i).isEmpty()&& this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 12) {
-                final CompoundTag nbt = ModUtils.nbt(this.get(i));
-                int size = nbt.getInt("size");
-                for (int j = 0; j < size; j++) {
-                    String l = "number_" + j;
-                    String temp = ModUtils.NBTGetString(get(i), l);
-                    list.add(temp);
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 12) {
+                List<String> listString = this.get(i).getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+                for (String s : listString) {
+                    list.add(s);
                 }
             }
 
@@ -201,14 +199,10 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
     public List<String> getwhitelist() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty()&& this.get(i).getItem() instanceof ItemQuarryModule  && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 13) {
-                final CompoundTag nbt = ModUtils.nbt(this.get(i));
-                int size = nbt.getInt("size");
-                for (int j = 0; j < size; j++) {
-                    String l = "number_" + j;
-                    String temp = ModUtils.NBTGetString(get(i), l);
-                    list.add(temp);
-
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 13) {
+                List<String> listString = this.get(i).getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+                for (String s : listString) {
+                    list.add(s);
                 }
                 break;
             }
@@ -258,11 +252,12 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
                 int x;
                 int y;
                 int z;
-                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
+                WirelessConnection wirelessConnection = this.get(i).getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
 
-                x = nbttagcompound.getInt("Xcoord");
-                y = nbttagcompound.getInt("Ycoord");
-                z = nbttagcompound.getInt("Zcoord");
+
+                x = wirelessConnection.x();
+                y = wirelessConnection.y();
+                z = wirelessConnection.z();
 
                 if (x != 0 && y != 0 && z != 0) {
                     list.add(x);

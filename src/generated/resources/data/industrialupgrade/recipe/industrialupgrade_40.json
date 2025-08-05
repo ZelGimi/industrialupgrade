@@ -1,0 +1,45 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring_storage/had_mfsu"
+    },
+    "B": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 10,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/spectralcircuit"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/adrcore"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems2"
+    }
+  },
+  "pattern": [
+    "EBE",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring_storage/gra_mfsu"
+  },
+  "show_notification": false
+}

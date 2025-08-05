@@ -9,18 +9,31 @@ import java.util.UUID;
 
 public class PacketUpdateCompleteQuest implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateCompleteQuest() {
 
     }
 
     public PacketUpdateCompleteQuest(Player player, String tab, String quest) {
         GuideBookCore.instance.remove(player.getUUID(), tab, quest);
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
         customPacketBuffer.writeByte(getId());
         customPacketBuffer.writeUUID(player.getUUID());
         customPacketBuffer.writeString(tab);
         customPacketBuffer.writeString(quest);
-        IUCore.network.getClient().sendPacket(customPacketBuffer);
+        this.buffer = customPacketBuffer;
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -34,7 +47,8 @@ public class PacketUpdateCompleteQuest implements IPacket {
         String tab = customPacketBuffer.readString();
         String quest = customPacketBuffer.readString();
         if (entityPlayer.getUUID().equals(uuid)) {
-            ExperienceUtils.addPlayerXP(entityPlayer,20);
+
+            ExperienceUtils.addPlayerXP(entityPlayer, 20);
             GuideBookCore.instance.remove(uuid, tab, quest);
         }
     }

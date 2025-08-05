@@ -13,6 +13,8 @@ import com.denfop.blocks.mechanism.BlockQuarryVein;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerQuarryVein;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.VeinInfo;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiQuarryVein;
 import com.denfop.items.ItemVeinSensor;
@@ -42,8 +44,8 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -118,7 +120,7 @@ public class TileQuarryVein extends TileElectricMachine implements
                     player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
                     updateTileEntityField();
                     return true;
-                }else if (this.levelMech < 4 && this.levelMech ==
+                } else if (this.levelMech < 4 && this.levelMech ==
                         (itemUpgradeMachinesKit.getElement().getId() + 1)) {
                     this.levelMech++;
                     player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
@@ -128,21 +130,18 @@ public class TileQuarryVein extends TileElectricMachine implements
                 }
             } else if (player.getItemInHand(hand).getItem() instanceof ItemVeinSensor) {
                 if (this.vein != VeinSystem.system.getEMPTY() && this.vein.get() && this.vein.getType() != Type.EMPTY) {
-                    final CompoundTag nbt = ModUtils.nbt(player.getItemInHand(hand));
+
+                    String type;
                     if (this.vein.getType() == Type.VEIN) {
-                        String s = getType(this.vein.getMeta(), this.vein.isOldMineral());
-                        nbt.putString("type", s);
+                        type = getType(this.vein.getMeta(), this.vein.isOldMineral());
                     } else {
                         if (this.vein.getType() == Type.OIL) {
-                            String s = "oil";
-                            nbt.putString("type", s);
+                            type = "oil";
                         } else {
-                            String s = "gas";
-                            nbt.putString("type", s);
+                            type = "gas";
                         }
                     }
-                    nbt.putInt("x", this.pos.getX());
-                    nbt.putInt("z", this.pos.getZ());
+                    player.getItemInHand(hand).set(DataComponentsInit.VEIN_INFO, new VeinInfo(type, this.pos.getX(), this.pos.getZ()));
                     return true;
                 }
             }

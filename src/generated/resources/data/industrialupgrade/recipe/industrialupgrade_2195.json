@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:motors_with_improved_bearings_"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_657_element"
+    }
+  },
+  "pattern": [
+    " C ",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/hologram_space"
+  },
+  "show_notification": false
+}

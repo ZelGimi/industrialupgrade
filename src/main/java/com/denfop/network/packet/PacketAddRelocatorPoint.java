@@ -6,16 +6,29 @@ import com.denfop.items.relocator.RelocatorNetwork;
 import net.minecraft.world.entity.player.Player;
 
 public class PacketAddRelocatorPoint implements IPacket {
+    private CustomPacketBuffer buffer;
+
     public PacketAddRelocatorPoint() {
 
     }
 
     public PacketAddRelocatorPoint(Player player, Point point) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(60);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(60, player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeString(player.getName().getString());
         point.writeToBuffer(buffer);
-        IUCore.network.getClient().sendPacket(buffer);
+        this.buffer = buffer;
+        IUCore.network.getClient().sendPacket(this);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

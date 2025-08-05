@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "B": {
+      "item": "industrialupgrade:rotor/rotor_carbon"
+    },
+    "C": {
+      "tag": "c:doubleplate/iridium"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:corewind/core_wind5"
+  },
+  "show_notification": false
+}

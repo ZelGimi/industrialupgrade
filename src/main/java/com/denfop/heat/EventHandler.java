@@ -4,16 +4,16 @@ package com.denfop.heat;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 public class EventHandler {
 
     public EventHandler() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
 
@@ -41,13 +41,13 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.LevelTickEvent event) {
-        if (event.level.isClientSide) {
+    public void tick(final LevelTickEvent.Post event) {
+        if (event.getLevel().isClientSide) {
             return;
         }
-        if (event.phase == TickEvent.Phase.END) {
-            HeatNetGlobal.onTickEnd(event.level);
-        }
+
+        HeatNetGlobal.onTickEnd(event.getLevel());
+
     }
 
     @SubscribeEvent

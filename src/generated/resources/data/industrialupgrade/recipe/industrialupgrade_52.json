@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "B": {
+      "tag": "c:doubleplate/iridium"
+    },
+    "C": {
+      "item": "industrialupgrade:photoniy_ingot"
+    },
+    "D": {
+      "tag": "c:casings/iridium"
+    },
+    "F": {
+      "item": "industrialupgrade:quantumitems2"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "CFC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:quantumitems3"
+  },
+  "show_notification": false
+}

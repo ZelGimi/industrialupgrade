@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_436_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_342_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_322_element"
+    },
+    "F": {
+      "tag": "c:plates/lithium"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "FAF",
+    "DBE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:graphite_reactor/graphite_controller"
+  },
+  "show_notification": false
+}

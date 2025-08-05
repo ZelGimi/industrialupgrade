@@ -19,7 +19,7 @@ public class GuiWaterSecurity<T extends ContainerWaterSecurity> extends GuiIU<Co
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack, par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         ISecurity security = (ISecurity) getContainer().base;
         String name = ((TileEntityMultiBlockElement) security).active.equals("") ? "none" :
                 ((TileEntityMultiBlockElement) security).active;
@@ -40,29 +40,29 @@ public class GuiWaterSecurity<T extends ContainerWaterSecurity> extends GuiIU<Co
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         ISecurity security = (ISecurity) getContainer().base;
-        bindTexture(new ResourceLocation(
+        bindTexture(ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "textures/gui/common.png"
         ));
         if (!((TileEntityMultiBlockElement) security).active.equals("")) {
             switch (((TileEntityMultiBlockElement) security).active) {
                 case "none":
-                    this.drawTexturedModalRect(poseStack,this.guiLeft + 40, this.guiTop + 36, 36, 1, 10, 27);
+                    this.drawTexturedModalRect(poseStack, this.guiLeft + 40, this.guiTop + 36, 36, 1, 10, 27);
                     break;
                 case "stable":
-                    this.drawTexturedModalRect(poseStack,this.guiLeft + 40, this.guiTop + 36, 4, 1, 10, 27);
+                    this.drawTexturedModalRect(poseStack, this.guiLeft + 40, this.guiTop + 36, 4, 1, 10, 27);
                     break;
                 case "unstable":
-                    this.drawTexturedModalRect(poseStack,this.guiLeft + 40, this.guiTop + 36, 21, 1, 10, 27);
+                    this.drawTexturedModalRect(poseStack, this.guiLeft + 40, this.guiTop + 36, 21, 1, 10, 27);
                     break;
                 case "error":
-                    this.drawTexturedModalRect(poseStack,this.guiLeft + 40, this.guiTop + 36, 51, 1, 10, 27);
+                    this.drawTexturedModalRect(poseStack, this.guiLeft + 40, this.guiTop + 36, 51, 1, 10, 27);
                     break;
             }
         } else {
-            this.drawTexturedModalRect(poseStack,this.guiLeft + 40, this.guiTop + 36, 36, 1, 10, 27);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 40, this.guiTop + 36, 36, 1, 10, 27);
 
         }
     }
@@ -70,12 +70,12 @@ public class GuiWaterSecurity<T extends ContainerWaterSecurity> extends GuiIU<Co
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guifluidreactor4.png");
     }
 
 }

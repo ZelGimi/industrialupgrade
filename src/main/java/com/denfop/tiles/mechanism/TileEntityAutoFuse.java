@@ -24,8 +24,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class TileEntityAutoFuse extends TileEntityInventory {
     private boolean boom = false;
 
     public TileEntityAutoFuse(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.autofuse,pos,state);
+        super(BlockBaseMachine3.autofuse, pos, state);
         this.slotBomb = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

@@ -25,10 +25,12 @@ public class ItemCoolingUpgrade<T extends Enum<T> & ISubEnum> extends ItemMain<T
             case 2 -> EnumCoolUpgrade.HELIUM;
         };
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     public enum Types implements ISubEnum {
         azote(0),
         hydrogen(1),

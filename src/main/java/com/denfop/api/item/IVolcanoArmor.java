@@ -8,7 +8,7 @@ public interface IVolcanoArmor {
 
     static boolean hasCompleteHazmat(LivingEntity living) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                 ItemStack stack = living.getItemBySlot(slot);
                 if (stack.isEmpty() || !(stack.getItem() instanceof IVolcanoArmor)) {
                     return false;

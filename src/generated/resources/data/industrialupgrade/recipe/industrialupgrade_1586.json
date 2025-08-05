@@ -1,0 +1,16 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_206_element"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:transformer_iu/lv"
+  }
+}

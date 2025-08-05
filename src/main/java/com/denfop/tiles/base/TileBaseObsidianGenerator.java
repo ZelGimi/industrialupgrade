@@ -23,7 +23,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -153,6 +153,9 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnObsidianGeneratorParticles(level, pos, level.random);
+        }
         MutableObject<ItemStack> output1 = new MutableObject<>();
         boolean check = false;
         if (this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity() && this.fluidSlot1.transferToTank(
@@ -184,9 +187,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
                 this.fluid_handler.setOutput(null);
             }
         }
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnObsidianGeneratorParticles(level,pos,level.random);
-        }
+
 
         if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.energy.canUseEnergy(energyConsume) && this.outputSlot.canAdd(
                 this.fluid_handler.output().getOutput().items.get(0))) {

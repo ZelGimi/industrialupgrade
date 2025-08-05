@@ -3,7 +3,7 @@ package com.denfop.api.energy.event;
 
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class TileLoadEvent extends LevelEvent {
 

@@ -5,8 +5,8 @@ import com.denfop.IUCore;
 import com.denfop.mixin.access.DeferredRegisterAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
@@ -18,9 +18,9 @@ public class Sounds {
         }
     }
 
-    private static RegistryObject<SoundEvent> registerSound(String soundName, DeferredRegister<SoundEvent> registry) {
-        ResourceLocation soundID = new ResourceLocation(IUCore.MODID, soundName);
-        RegistryObject<SoundEvent> ret = RegistryObject.create(soundID, registry.getRegistryKey(), IUCore.MODID);
+    private static DeferredHolder<SoundEvent, SoundEvent> registerSound(String soundName, DeferredRegister<SoundEvent> registry) {
+        ResourceLocation soundID = ResourceLocation.tryBuild(IUCore.MODID, soundName);
+        DeferredHolder<SoundEvent, SoundEvent> ret = DeferredHolder.create(registry.getRegistryKey(), soundID);
         var entries = ((DeferredRegisterAccessor) registry).getEntries();
         Supplier<SoundEvent> supplier = () -> SoundEvent.createVariableRangeEvent(soundID);
         if (entries.putIfAbsent(ret, supplier) != null) {

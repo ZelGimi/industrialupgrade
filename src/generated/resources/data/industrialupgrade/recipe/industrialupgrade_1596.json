@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemcore/adrcore"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
+    "C": {
+      "tag": "c:doubleplate/alcled"
+    },
+    "D": {
+      "tag": "c:doubleplate/germanium"
+    },
+    "E": {
+      "tag": "c:plates/vitalium"
+    }
+  },
+  "pattern": [
+    "CEC",
+    "ABA",
+    "DED"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_253_element"
+  },
+  "show_notification": false
+}

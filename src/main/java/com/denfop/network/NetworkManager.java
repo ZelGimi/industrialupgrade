@@ -5,8 +5,9 @@ import com.denfop.network.packet.*;
 import com.denfop.tiles.base.TileEntityBlock;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,33 +15,71 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.server.ServerLifecycleHooks;
-import org.apache.commons.lang3.tuple.Pair;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class NetworkManager {
 
-    private static SimpleChannel channel;
-    private static ResourceLocation handler;
+
     public static Map<Byte, IPacket> packetMap = new HashMap<>();
+    public static Map<Byte, CustomPacketPayload.Type<IPacket>> packetTypeMap = new HashMap<>();
+    public static boolean reg = false;
+    public static StreamCodec<RegistryFriendlyByteBuf, IPacket> STREAM_CODEC = new StreamCodec<>() {
+        public IPacket decode(RegistryFriendlyByteBuf p_320167_) {
+            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(p_320167_);
+            IPacket packet;
+            try {
+                packet = packetMap.get(packetBuffer.readByte()).getClass().getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                     InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+            byte[] bytes = new byte[p_320167_.writerIndex() - p_320167_.readerIndex()];
+            p_320167_.readBytes(bytes);
+            packetBuffer = new CustomPacketBuffer(bytes, p_320167_.registryAccess());
+            packet.setPacketBuffer(packetBuffer);
+            return packet;
+        }
+
+        public void encode(RegistryFriendlyByteBuf p_320240_, IPacket p_341316_) {
+            CustomPacketBuffer customPacketBuffer = p_341316_.getPacketBuffer();
+            customPacketBuffer.flip();
+            p_320240_.writeBytes(customPacketBuffer);
+            customPacketBuffer.flip();
+            p_341316_.setPacketBuffer(customPacketBuffer);
+        }
+    };
 
     public NetworkManager() {
-        handler = new ResourceLocation("industrialupgrade", "network");
+        IUCore.context.addListener(this::register);
 
-        if (channel == null) {
-            channel = NetworkRegistry.newSimpleChannel(handler, () -> "1.0.0", (e) -> true, (e) -> true);
+    }
+
+    public static <T extends Collection<ServerPlayer>> T getPlayersInRange(Level world, BlockPos pos, T result) {
+        if (!(world instanceof ServerLevel)) {
+            return result;
+        } else {
+            List<ServerPlayer> list = ((ServerLevel) world).getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
+            result.addAll(list);
+            return result;
         }
+    }
+
+    @SubscribeEvent
+    public void register(final RegisterPayloadHandlersEvent event) {
+
+        PayloadRegistrar handler = event.registrar("industrialupgrade");
         this.registerPacket(new PacketKeys());
         this.registerPacket(new PacketAbstractComponent());
-        this.registerPacket(new PacketColorPickerAllLoggIn(null));
+        this.registerPacket(new PacketColorPickerAllLoggIn());
         this.registerPacket(new PacketRadiation());
         this.registerPacket(new PacketUpdateServerTile());
         this.registerPacket(new PacketUpdateTile());
@@ -78,43 +117,80 @@ public class NetworkManager {
         this.registerPacket(new PacketUpdateInformationAboutQuestsPlayer());
         this.registerPacket(new PacketSynhronyzationRelocator());
         this.registerPacket(new PacketUpdateRelocator());
-        this.registerPacket(new PacketFixerRecipe());
         this.registerPacket(new PacketDrainFluidPipette());
 
-        channel.registerMessage(0, CustomPacketBuffer.class,
-                (customPacketBuffer, buf) -> {
-                    buf.writeBytes(customPacketBuffer);
-                }, CustomPacketBuffer::new
-                , this::onPacketData);
-    }
+        if (!reg) {
+            reg = true;
+            for (IPacket packet : packetMap.values()) {
 
-    public static SimpleChannel getChannel() {
-        return channel;
-    }
 
-    public static <T extends Collection<ServerPlayer>> T getPlayersInRange(Level world, BlockPos pos, T result) {
-        if (!(world instanceof ServerLevel)) {
-            return result;
-        } else {
-            List<ServerPlayer> list = ((ServerLevel) world).getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
-            result.addAll(list);
-            return result;
+                if (packet.getPacketType() == EnumTypePacket.CLIENT) {
+                    CustomPacketPayload.Type<IPacket> TYPE = new CustomPacketPayload.Type(ResourceLocation.fromNamespaceAndPath(IUCore.MODID, "packet_" + packet.getId()));
+                    packetTypeMap.put(packet.getId(), TYPE);
+                    handler.playToServer(TYPE, STREAM_CODEC, (payload, context) -> {
+                        IUCore.network.getServer().onPacketData(payload.getPacketBuffer(), context);
+                    });
+
+                } else {
+                    CustomPacketPayload.Type<IPacket> TYPE = new CustomPacketPayload.Type(ResourceLocation.fromNamespaceAndPath(IUCore.MODID, "packet_" + packet.getId()));
+                    packetTypeMap.put(packet.getId(), TYPE);
+                    handler.playToClient(TYPE, STREAM_CODEC, (payload, context) -> {
+                        IUCore.network.getServer().onPacketData(payload.getPacketBuffer(), context);
+                    });
+                }
+
+            }
         }
     }
 
-    public Packet<?> makePacket(NetworkDirection direction, CustomPacketBuffer buffer) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeByte(0);
+    public IPacket makePacket(IPacket packet, CustomPacketBuffer buffer) {
+        CustomPacketBuffer buf = new CustomPacketBuffer(Unpooled.buffer(), packet.getPacketBuffer().registryAccess());
+        buf.writeByte(packet.getId());
         buf.writeBoolean(this.isClient());
         buf.writeBytes(buffer);
-        return direction.buildPacket(Pair.of(buf, 0), handler).getThis();
+        try {
+            packet = packet.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        packet.setPacketBuffer(buf);
+        return packet;
     }
 
-    public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
+    public IPacket makePacket(IPacket packet) {
+        CustomPacketBuffer buf = new CustomPacketBuffer(Unpooled.buffer(), packet.getPacketBuffer().registryAccess());
+        buf.writeByte(packet.getId());
+        buf.writeBoolean(this.isClient());
+        buf.writeBytes(packet.getPacketBuffer());
+        try {
+            packet = packet.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        packet.setPacketBuffer(buf);
+        return packet;
+    }
+
+    public void sendPacket(IPacket packet, CustomPacketBuffer buffer) {
         if (!this.isClient()) {
-            packetDistributor.send(makePacket(packetDistributor.getDirection(), buffer));
-        } else{
-            IUCore.network.getClient().sendPacket(packetDistributor,buffer);
+            PacketDistributor.sendToAllPlayers(makePacket(packet, buffer));
+        } else {
+            IUCore.network.getClient().sendPacket(packet, null, buffer);
+        }
+    }
+
+    public void sendPacket(IPacket packet, Player player, CustomPacketBuffer buffer) {
+        if (!this.isClient()) {
+            PacketDistributor.sendToPlayer((ServerPlayer) player, makePacket(packet, buffer));
+        } else {
+            IUCore.network.getClient().sendPacket(packet, player, buffer);
         }
 
     }
@@ -132,55 +208,61 @@ public class NetworkManager {
         return false;
     }
 
-    public void onPacketData(CustomPacketBuffer is, Supplier<NetworkEvent.Context> ctx) {
-        boolean isClient = is.readBoolean();
-        if (!isClient) {
-            is.retain();
-            byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
-            is.readBytes(bytes);
-            ctx.get().enqueueWork(() -> {
-                CustomPacketBuffer is1 = new CustomPacketBuffer(bytes);
-                if (is1.writerIndex() > is1.readerIndex()) {
-                    byte type = is1.readByte();
-                    IUCore.network.getClient().onPacketData(is1,type);
-
-                }
-            });
-        } else {
-            is.retain();
-            byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
-            is.readBytes(bytes);
-            ctx.get().enqueueWork(() -> {
-                CustomPacketBuffer is1 = new CustomPacketBuffer(bytes);
-                if (is1.writerIndex() > is1.readerIndex()) {
-                    try {
+    public void onPacketData(CustomPacketBuffer is, IPayloadContext ctx) {
+        try {
+            boolean isClient = is.readBoolean();
+            if (!isClient) {
+                byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
+                is.readBytes(bytes);
+                ctx.enqueueWork(() -> {
+                    CustomPacketBuffer is1 = new CustomPacketBuffer(bytes, is.registryAccess());
+                    if (is1.writerIndex() > is1.readerIndex()) {
                         byte type = is1.readByte();
-                        IPacket packet = packetMap.get(type);
-                        if (packet != null && packet.getPacketType() == EnumTypePacket.CLIENT) {
-                            packet.readPacket(is1, ctx.get().getSender());
-                        }
-                    } catch (Exception e) {
-                        System.err.println("Ошибка обработки пакета: " + e.getMessage());
-                        e.printStackTrace();
+                        IUCore.network.getClient().onPacketData(is1, type);
+
                     }
-                }
-            });
+                });
+            } else {
+                byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
+                is.readBytes(bytes);
+                ctx.enqueueWork(() -> {
+                    CustomPacketBuffer is1 = new CustomPacketBuffer(bytes, is.registryAccess());
+                    if (is1.writerIndex() > is1.readerIndex()) {
+                        try {
+                            byte type = is1.readByte();
+                            IPacket packet = packetMap.get(type);
+                            if (packet != null && packet.getPacketType() == EnumTypePacket.CLIENT) {
+                                packet.readPacket(is1, ctx.player());
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Ошибка обработки пакета: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка обработки пакета: " + e.getMessage());
+            e.printStackTrace();
         }
-        ctx.get().setPacketHandled(true);
     }
 
     public void onPacketData(CustomPacketBuffer is, byte type) {
     }
 
-    public final void sendPacket(CustomPacketBuffer buffer, ServerPlayer player) {
-        this.sendPacket(PacketDistributor.PLAYER.with(() -> player), buffer);
+    public final void sendPacket(IPacket buffer, ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, makePacket(buffer));
     }
 
-    public void sendPacket(CustomPacketBuffer buffer) {
+    public final void sendPacket(IPacket buffer, CustomPacketBuffer is, ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, makePacket(buffer, is));
+    }
+
+    public void sendPacket(IPacket buffer) {
         if (!this.isClient()) {
             PlayerList players = ServerLifecycleHooks.getCurrentServer().getPlayerList();
             for (ServerPlayer player : players.getPlayers())
-                this.sendPacket(PacketDistributor.PLAYER.with(() -> player), buffer);
+                PacketDistributor.sendToPlayer(player, makePacket(buffer));
         } else {
             IUCore.network.getClient().sendPacket(buffer);
         }

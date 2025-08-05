@@ -18,8 +18,8 @@ import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -102,6 +102,7 @@ public class TileEntitySimpleSecurity extends TileEntityMultiBlockElement implem
     public ContainerWaterSecurity getGuiContainer(final Player var1) {
         return new ContainerWaterSecurity(this, var1);
     }
+
     public EnumTypeSecurity getSecurity() {
         return security;
     }

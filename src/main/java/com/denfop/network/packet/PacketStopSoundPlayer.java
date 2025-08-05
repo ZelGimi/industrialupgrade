@@ -8,16 +8,28 @@ import net.minecraft.world.entity.player.Player;
 
 public class PacketStopSoundPlayer implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketStopSoundPlayer(EnumSound name, Player player) {
-        final CustomPacketBuffer buffer = new CustomPacketBuffer();
+        final CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeInt(name.ordinal());
-        IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer, (ServerPlayer) player);
     }
-
 
     public PacketStopSoundPlayer() {
 
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

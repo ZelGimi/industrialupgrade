@@ -42,9 +42,9 @@ public class GeneticStabilizerCategory extends GuiIU implements IRecipeCategory<
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
         );
@@ -99,17 +99,16 @@ public class GeneticStabilizerCategory extends GuiIU implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GeneticStabilizerHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 5, 44 ).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 5, 44).addItemStack(recipes.getInput());
 
-        builder.addSlot(RecipeIngredientRole.INPUT,  14, 21).setFluidRenderer(12000,true,12,47).addFluidStack( recipes.getInputFluid().getFluid(), recipes.getInputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,   50 + 71, 21).setFluidRenderer(12000,true,12,47).addFluidStack( recipes.getOutputFluid().getFluid(), recipes.getOutputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 14, 21).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getInputFluid().getFluid(), recipes.getInputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getOutputFluid().getFluid(), recipes.getOutputFluid().getAmount());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

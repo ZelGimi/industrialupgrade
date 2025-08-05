@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/aluminiumsilicon"
+    },
+    "B": {
+      "tag": "c:plates/nitenol"
+    }
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "A  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:tools/radioprotector"
+  },
+  "show_notification": false
+}

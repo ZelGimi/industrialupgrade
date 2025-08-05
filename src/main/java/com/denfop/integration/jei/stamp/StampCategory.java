@@ -41,14 +41,15 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampHandler
     private final IDrawableStatic bg;
     private final ContainerStamp container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public StampCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -95,9 +96,9 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampHandler
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
     }
 
     @Override
@@ -106,13 +107,13 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampHandler
         final List<ItemStack> inputs = recipe.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
 
         i++;
         IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, 10, 60);
@@ -121,16 +122,16 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampHandler
             case "stamp_coolant":
 
 
-                slot.addItemStack( ItemStackHelper.fromData(IUItem.crafting_elements, 1, 369));
+                slot.addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 369));
                 break;
             case "stamp_plate":
-                slot.addItemStack( ItemStackHelper.fromData(IUItem.crafting_elements, 1, 370));
+                slot.addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 370));
                 break;
             case "stamp_exchanger":
-                slot.addItemStack( ItemStackHelper.fromData(IUItem.crafting_elements, 1, 412));
+                slot.addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 412));
                 break;
             case "stamp_vent":
-                slot.addItemStack( ItemStackHelper.fromData(IUItem.crafting_elements, 1, 413));
+                slot.addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 413));
                 break;
             case "stamp_capacitor":
                 slot.addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 438));
@@ -142,7 +143,7 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampHandler
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

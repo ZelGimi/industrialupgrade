@@ -32,8 +32,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -57,7 +57,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
     protected short progress;
 
     public TileEntityTripleSolidMixer(BlockPos pos, BlockState state) {
-        super(200, 1, 3,BlockBaseMachine3.triple_solid_mixer,pos,state);
+        super(200, 1, 3, BlockBaseMachine3.triple_solid_mixer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -87,6 +87,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
 
 
     }
+
     public static void addRecipe(
             ItemStack container, ItemStack container1, IInputItemStack container2, ItemStack output,
             ItemStack output1
@@ -95,7 +96,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
         Recipes.recipes.addRecipe(
                 "triple_solid_mixer",
                 new BaseMachineRecipe(
-                        new Input(input.getInput(container), input.getInput(container1), container2),
+                        new Input(input.getInput(container), input.getInput(container1), input.getInput(container2)),
                         new RecipeOutput(null, output, output1)
                 )
         );
@@ -136,7 +137,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.iudust.getStack(66), 2), new ItemStack(IUItem.iudust.getStack(60), 6), Recipes.inputFactory.getInput("forge:dusts/coal", 10),
+        addRecipe(new ItemStack(IUItem.iudust.getStack(66), 2), new ItemStack(IUItem.iudust.getStack(60), 6), Recipes.inputFactory.getInput("c:dusts/coal", 10),
                 new ItemStack(IUItem.iudust.getStack(71), 6),
                 new ItemStack(IUItem.white_phosphorus.getItem())
         );

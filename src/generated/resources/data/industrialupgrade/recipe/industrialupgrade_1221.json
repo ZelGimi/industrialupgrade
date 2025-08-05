@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/alcled"
+    },
+    "B": {
+      "tag": "c:plates/aluminiumlithium"
+    }
+  },
+  "pattern": [
+    "BA ",
+    "BBA",
+    " BA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_531_element"
+  },
+  "show_notification": false
+}

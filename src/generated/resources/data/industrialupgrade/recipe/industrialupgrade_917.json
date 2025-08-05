@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/platinum"
+    },
+    "B": {
+      "item": "industrialupgrade:fan/adv_fan"
+    },
+    "C": {
+      "tag": "c:plates/titanium"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:fan/imp_fan"
+  },
+  "show_notification": false
+}

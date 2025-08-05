@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:basemachine3/solardestiller"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_199_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_138_element"
+    }
+  },
+  "pattern": [
+    "DBD",
+    " A ",
+    "D D"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/adv_solar_destiller"
+  },
+  "show_notification": false
+}

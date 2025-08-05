@@ -3,14 +3,12 @@ package com.denfop.items;
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.datacomponent.ContainerItem;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -22,9 +20,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,10 +35,12 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
         super(new Properties().stacksTo(1));
         this.slots = 1;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -65,9 +64,9 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
     }
 
     public void save(ItemStack stack, Player player) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("open", true);
-        nbt.putInt("slot_inventory", player.getInventory().selected);
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+        containerItem = containerItem.updateOpen(stack, true);
+        containerItem.updateSlot(stack, player.getInventory().selected);
     }
 
     @Override
@@ -84,16 +83,16 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
             return;
         }
         Player player = (Player) entity;
-        CompoundTag nbt = stack.getOrCreateTag();
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
 
-        if (nbt.getBoolean("open")) {
-            int slotId = nbt.getInt("slot_inventory");
+        if (containerItem.open()) {
+            int slotId = containerItem.slot_inventory();
             if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerFacadeItem) {
                 FacadeItemInventory toolbox = ((ContainerFacadeItem) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
-                    nbt.putBoolean("open", false);
+                    containerItem.updateOpen(stack, false);
                 }
             }
         }
@@ -105,7 +104,7 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(
             ItemStack stack,
-            @Nullable Level world,
+            @Nullable TooltipContext world,
             List<Component> tooltip,
             TooltipFlag flag
     ) {
@@ -133,12 +132,12 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
         if (!player.level().isClientSide && world.getBlockEntity(blockhitresult.getBlockPos()) == null) {
             save(stack, player);
 
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
             growingBuffer.writeByte(1);
 
             growingBuffer.flip();
-            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+            player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
         }
 
         return InteractionResultHolder.success(player.getItemInHand(hand));

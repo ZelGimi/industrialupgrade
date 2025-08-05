@@ -5,7 +5,7 @@ import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.colonies.DataItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

@@ -20,8 +20,8 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -183,7 +183,7 @@ public class ContainerBase<T extends IAdvInventory> extends AbstractContainerMen
 
                 slot = (Slot) slots.get(i);
                 itemstack = slot.getItem();
-                if (!itemstack.isEmpty() && slot.mayPlace(stack) && ItemStack.isSameItemSameTags(stack, itemstack)) {
+                if (!itemstack.isEmpty() && slot.mayPlace(stack) && ItemStack.isSameItem(stack, itemstack)) {
                     int j = itemstack.getCount() + stack.getCount();
                     int maxSize = Math.min(slot.getMaxStackSize(itemstack), stack.getMaxStackSize());
                     if (j <= maxSize) {

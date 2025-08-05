@@ -37,7 +37,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -81,7 +81,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     public TileEntityUniversalCable(UniversalType cableType, IMultiTileBlock block, BlockPos pos, BlockState state) {
         super(cableType, block, pos, state);
         this.cableType = cableType;
-        this.conductor = new ConductorInfo(pos,this);
+        this.conductor = new ConductorInfo(pos, this);
     }
 
     @Override
@@ -94,16 +94,19 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         loss = type.loss;
 
         info.add(Localization.translate("iu.universal_cable.info"));
+
         info.add(ModUtils.getString(capacity) + " " + Localization.translate("iu.generic.text.EUt"));
         info.add(Localization.translate("cable.tooltip.loss", lossFormat.format(loss)));
         info.add(Localization.translate("iu.transport.cold") + "-" + ModUtils.getString(64) + " °C");
         info.add(Localization.translate("iu.transport.heat") + ModUtils.getString(16000) + " °C");
 
     }
+
     @Override
     public ConductorInfo getInfo() {
         return conductor;
     }
+
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         ItemStack stack = player.getItemInHand(hand);
@@ -236,25 +239,25 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     @Override
     public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+        NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
 
         if (heat) {
-            MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
         }
         if (cold) {
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
         }
         if (quantum) {
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
         }
         if (experience) {
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
         }
         if (solarium) {
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
         }
         if (radiation) {
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.RADIATION, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.RADIATION, this));
         }
         this.needUpdate = true;
     }
@@ -318,25 +321,25 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
             this.validColdReceivers.clear();
             this.validHeatReceivers.clear();
             this.energyHeatConductorMap.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
 
             if (heat) {
-                MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
             }
             if (cold) {
-                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
             }
             if (quantum) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
             }
             if (experience) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
             }
             if (solarium) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
             }
             if (radiation) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.RADIATION, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.RADIATION, this));
             }
             this.needUpdate = false;
             this.updateConnectivity();
@@ -345,19 +348,19 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
             switch (enumTypeOperation) {
                 case HEAT:
                     this.heat = true;
-                    MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+                    NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
                     break;
                 case COLD:
                     this.cold = true;
-                    MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+                    NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
                     break;
                 case QUANTUM:
                     this.quantum = true;
-                    MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
+                    NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
                     break;
                 case EXPERIENCE:
                     this.experience = true;
-                    MinecraftForge.EVENT_BUS.post(new EnergyEvent(
+                    NeoForge.EVENT_BUS.post(new EnergyEvent(
                             this.getWorld(),
                             EnumTypeEvent.LOAD,
                             EnergyType.EXPERIENCE,
@@ -366,7 +369,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                     break;
                 case SOLARIUM:
                     this.solarium = true;
-                    MinecraftForge.EVENT_BUS.post(new EnergyEvent(
+                    NeoForge.EVENT_BUS.post(new EnergyEvent(
                             this.getWorld(),
                             EnumTypeEvent.LOAD,
                             EnergyType.SOLARIUM,
@@ -406,24 +409,24 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
             validTypeReceivers.clear();
             this.energyCoolConductorMap.clear();
             validColdReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             if (heat) {
-                MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
             }
             if (cold) {
-                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
             }
             if (quantum) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
             }
             if (experience) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
             }
             if (solarium) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
             }
             if (radiation) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.RADIATION, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.RADIATION, this));
             }
             this.addedToEnergyNet = true;
             this.updateConnectivity();
@@ -435,18 +438,18 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
     public void onUnloaded() {
         if (!this.getWorld().isClientSide && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             if (heat) {
-                MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
             }
             if (cold) {
-                MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
             }
             if (quantum) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
             }
             if (experience) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(
+                NeoForge.EVENT_BUS.post(new EnergyEvent(
                         this.getWorld(),
                         EnumTypeEvent.UNLOAD,
                         EnergyType.EXPERIENCE,
@@ -454,10 +457,10 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                 ));
             }
             if (solarium) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
             }
             if (radiation) {
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.RADIATION, this));
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.RADIATION, this));
             }
 
             this.addedToEnergyNet = false;

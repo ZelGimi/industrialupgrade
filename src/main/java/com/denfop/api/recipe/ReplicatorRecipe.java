@@ -20,10 +20,10 @@ public class ReplicatorRecipe {
         add(Items.IRON_INGOT, 1.066);
         add(Items.COAL, 0.9144);
         add(IUItem.bronzeIngot, 0.9611);
-        add("forge:ingots/Tin", 1.082);
-        add("forge:ingots/Steel", 1.066);
-        add("forge:ingots/Copper", 0.9174);
-        add("forge:ingots/Silver", 79.25);
+        add("c:ingots/Tin", 1.082);
+        add("c:ingots/Steel", 1.066);
+        add("c:ingots/Copper", 0.9174);
+        add("c:ingots/Silver", 79.25);
         add(IUItem.rubber, 100.7);
         add(Items.REDSTONE, 1.221);
         add(Items.GLOWSTONE_DUST, 39.94);
@@ -34,9 +34,9 @@ public class ReplicatorRecipe {
         add(Blocks.SAND, 0.15);
         add(Items.CLAY_BALL, 23.08);
         add(Items.GOLD_INGOT, 8.456);
-        add("forge:ingots/Lead", 5.576);
+        add("c:ingots/Lead", 5.576);
         add(Blocks.STONE, 0.150);
-        add(Blocks.GRASS, 26.35);
+        add(Blocks.GRASS_BLOCK, 26.35);
         add(Blocks.DIRT, 0.148);
         add(Blocks.GRAVEL, 0.527);
         add(Blocks.GLASS, 0.29);
@@ -186,16 +186,16 @@ public class ReplicatorRecipe {
         add(Items.STRING, 146.8);
         add(Items.BONE, 80.57);
         for (String s : list_string) {
-            add("forge:ingots/" + s, 25);
+            add("c:ingots/" + s, 25);
         }
         for (String s : list_baseore1) {
-            add("forge:ingots/" + s, 25);
+            add("c:ingots/" + s, 25);
         }
         for (String s : list_string) {
-            add("forge:storage_blocks/" + s, 25 * 9 * 0.9);
+            add("c:storage_blocks/" + s, 25 * 9 * 0.9);
         }
         for (String s : list_baseore1) {
-            add("forge:storage_blocks/" + s, 25 * 9 * 0.9);
+            add("c:storage_blocks/" + s, 25 * 9 * 0.9);
         }
         add(ItemStackHelper.fromData(IUItem.iudust, 1, 66), 8);
         add(ItemStackHelper.fromData(IUItem.iudust, 1, 69), 8);

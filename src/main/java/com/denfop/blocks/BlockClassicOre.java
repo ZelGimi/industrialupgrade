@@ -10,6 +10,7 @@ import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,6 +49,7 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         BlockTagsProvider.list.add(this);
         if (element.getId() == 3)
             this.registerDefaultState(this.stateDefinition.any().setValue(BOOL_PROPERTY, false));
+
     }
 
     @Override
@@ -65,7 +66,7 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
 
 
         ChunkPos chunkPos = new ChunkPos(pos);
-        PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1);
+        PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1, world);
         AABB axisAlignedBB = new AABB(
                 pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2,
                 pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3
@@ -76,7 +77,7 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         for (Player player : players) {
             boolean canAffect = !IHazmatLike.hasCompleteHazmat(player);
             if (canAffect) {
-                player.addEffect(new MobEffectInstance(IUPotion.radiation, 400, 0));
+                player.addEffect(new MobEffectInstance(IUPotion.rad, 400, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 0));
             }
         }
@@ -105,11 +106,9 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
     }
 
     @Override
-    public List<ItemStack> getDrops(      @Nonnull final Level world,
-                                          @Nonnull final BlockPos pos,
-                                          @Nonnull final BlockState state,
-                                          final int fortune) {
+    public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
         final int meta = getElement().getId();
+        int fortune = EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), p_60538_.getParameter(TOOL));
         if (meta == 0) {
             return Collections.singletonList((new ItemStack(IUItem.rawMetals.getStack(16), 1 + getDrop(fortune))));
         } else if (meta == 1) {
@@ -117,9 +116,9 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         } else if (meta == 2) {
             return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(19), 1 + getDrop(fortune)));
         } else if (meta == 3) {
-            return Collections.singletonList(new ItemStack(getStateForPlacement(null,null).getBlock())) ;
+            return super.getDrops(p_60537_, p_60538_);
         }
-        return super.getDrops(world, pos,state,fortune);
+        return super.getDrops(p_60537_, p_60538_);
     }
 
     private int getDrop(int fortune) {

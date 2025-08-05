@@ -33,10 +33,10 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -62,31 +62,30 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
 
     @Override
     public void draw(GasTurbineHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-       drawSplitString(stack,
+        drawSplitString(stack,
                 Localization.translate("iu.windgenerator1"),
                 5,
                 30,
                 150 - 10,
                 4210752
         );
-      drawSplitString(stack,
+        drawSplitString(stack,
                 ModUtils.getString(recipe.getEnergy()),
                 5,
                 30 + 10,
-              150 - 10,
+                150 - 10,
                 4210752
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GasTurbineHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
     }
 
 

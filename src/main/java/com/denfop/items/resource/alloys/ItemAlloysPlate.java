@@ -18,13 +18,15 @@ public class ItemAlloysPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
-        return new String[]{"forge:plates/" + getElement().getName().replace("_alloy", "").replace("_", ""), "forge:plates"};
+        return new String[]{"c:plates/" + getElement().getName().replace("_alloy", "").replace("_", ""), "c:plates"};
     }
 
     public enum Types implements ISubEnum {

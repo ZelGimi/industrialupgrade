@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine"
+    },
+    "B": {
+      "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine1"
+    },
+    "C": {
+      "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine2"
+    },
+    "D": {
+      "tag": "c:plates/manganese"
+    }
+  },
+  "pattern": [
+    " A ",
+    "BDC",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine3"
+  },
+  "show_notification": false
+}

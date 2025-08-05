@@ -18,10 +18,12 @@ public class ItemGear<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -37,7 +39,7 @@ public class ItemGear<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
                 break;
 
         }
-        return new String[]{"forge:gears/" + name, "forge:gears"};
+        return new String[]{"c:gears/" + name, "c:gears"};
     }
 
     public enum Types implements ISubEnum {

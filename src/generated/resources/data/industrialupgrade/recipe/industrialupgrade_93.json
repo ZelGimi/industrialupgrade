@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/mikhail"
+    },
+    "B": {
+      "tag": "c:casings/chromium"
+    },
+    "C": {
+      "tag": "c:doubleplate/alcled"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/per_matter"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:solid/earth_solidmatter"
+  },
+  "show_notification": false
+}

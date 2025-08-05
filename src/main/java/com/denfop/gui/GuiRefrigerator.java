@@ -20,22 +20,21 @@ public class GuiRefrigerator<T extends ContainerRefrigerator> extends GuiIU<Cont
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
-        TankGauge.createNormal(this, 12, 20, container.base.tank).drawForeground( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        TankGauge.createNormal(this, 12, 20, container.base.tank).drawForeground(poseStack, par1, par2);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
-        TankGauge.createNormal(this, 12, 20, container.base.tank).drawBackground( poseStack,guiLeft, guiTop);
+        TankGauge.createNormal(this, 12, 20, container.base.tank).drawBackground(poseStack, guiLeft, guiTop);
     }
-
 
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

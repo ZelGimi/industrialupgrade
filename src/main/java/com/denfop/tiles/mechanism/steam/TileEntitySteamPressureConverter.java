@@ -31,11 +31,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,7 +50,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
     public short maxpressure;
 
     public TileEntitySteamPressureConverter(BlockPos pos, BlockState state) {
-        super(0, 0, 1,BlockBaseMachine3.steampressureconverter,pos,state);
+        super(0, 0, 1, BlockBaseMachine3.steampressureconverter, pos, state);
 
 
         this.fluids = this.addComponent(new Fluids(this));
@@ -73,7 +73,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
@@ -104,6 +104,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
             }
         }
     }
+
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
@@ -111,7 +112,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             this.maxpressure = (short) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {

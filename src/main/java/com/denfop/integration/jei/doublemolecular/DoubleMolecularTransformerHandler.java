@@ -14,12 +14,12 @@ import java.util.List;
 public class DoubleMolecularTransformerHandler {
 
     private static final List<DoubleMolecularTransformerHandler> recipes = new ArrayList<>();
-    private final double energy;
-    private final ItemStack input, input1, output;
     public final String inputText;
     public final String inputText1;
     public final String outputText;
     public final String totalEU;
+    private final double energy;
+    private final ItemStack input, input1, output;
 
     public DoubleMolecularTransformerHandler(ItemStack input, ItemStack input1, ItemStack output, double energy) {
         this.input = input;
@@ -29,10 +29,10 @@ public class DoubleMolecularTransformerHandler {
         String inputText = null;
         String inputText1 = null;
         if (!this.input.isEmpty() && !this.input1.isEmpty()) {
-            inputText =input.getDisplayName().getString();
+            inputText = input.getDisplayName().getString();
             inputText1 = input1.getDisplayName().getString();
-        } 
-        
+        }
+
         this.inputText = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText;
         this.inputText1 = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText1;
 

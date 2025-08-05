@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:transformer_iu/mv"
+    },
+    "B": {
+      "item": "industrialupgrade:medium_current_converter_to_low"
+    },
+    "C": {
+      "item": "industrialupgrade:upgrade_casing"
+    },
+    "D": {
+      "item": "industrialupgrade:wiring/gold1"
+    }
+  },
+  "pattern": [
+    " A ",
+    "DBD",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:upgrades/transformer"
+  },
+  "show_notification": false
+}

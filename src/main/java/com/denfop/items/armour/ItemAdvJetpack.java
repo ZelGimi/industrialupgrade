@@ -11,6 +11,7 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
 import com.denfop.audio.SoundHandler;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.utils.KeyboardClient;
@@ -24,21 +25,24 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -67,6 +71,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.JETPACK.list));
 
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -76,6 +81,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
             p_41392_.add(new ItemStack(this, 1));
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -88,11 +94,12 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem =pathBuilder.toString().split("\\.")[2]+".name";
+            this.nameItem = pathBuilder.toString().split("\\.")[2] + ".name";
         }
 
         return this.nameItem;
     }
+
     @Override
     public String[] properties() {
         return new String[]{"", "Demon", "Dark", "Cold", "Ender"};
@@ -108,23 +115,23 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity p_41406_, int p_41407_, boolean p_41408_) {
         super.inventoryTick(stack, worldIn, p_41406_, p_41407_, p_41408_);
-        CompoundTag nbt = ModUtils.nbt(stack);
 
         if (!UpgradeSystem.system.hasInMap(stack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(worldIn, this, stack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(worldIn, this, stack));
         }
+        if (p_41407_ >= Inventory.INVENTORY_SIZE && p_41407_ < Inventory.INVENTORY_SIZE + 4 && p_41406_ instanceof Player player)
+            this.onArmorTick(stack, worldIn, (Player) p_41406_);
     }
 
+
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, List<Component> tooltip, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext p_41422_, List<Component> tooltip, TooltipFlag p_41424_) {
         super.appendHoverText(stack, p_41422_, tooltip, p_41424_);
-        CompoundTag nbtData = ModUtils.nbt(stack);
         if (UpgradeSystem.system.hasModules(
                 EnumInfoUpgradeModules.FLY,
                 stack
         )) {
-            tooltip.add(Component.literal(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack"))));
+            tooltip.add(Component.literal(Localization.translate("iu.fly") + " " + ModUtils.Boolean(stack.getOrDefault(DataComponentsInit.JETPACK, false))));
             tooltip.add(Component.literal(Localization.translate("iu.fly_need")));
 
             if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
@@ -155,16 +162,16 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
         return 20000;
     }
 
-
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         int suffix = (this.getEquipmentSlot() == EquipmentSlot.LEGS) ? 2 : 1;
         CompoundTag nbtData = ModUtils.nbt(stack);
         if (!nbtData.getString("mode").isEmpty()) {
-            return Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + nbtData.getString("mode") + "_" + suffix + ".png";
+            return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + nbtData.getString("mode") + "_" + suffix + ".png");
         }
 
 
-        return Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + suffix + ".png";
+        return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + suffix + ".png");
     }
 
 
@@ -288,8 +295,6 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
     }
 
 
-
-
     public void onArmorTick(@Nonnull ItemStack itemStack, @Nonnull Level world, Player player) {
 
         if (player.getInventory().armor.get(2).is(itemStack.getItem())) {
@@ -310,14 +315,13 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
                 }
             }
             boolean jetpack;
-            if (nbtData.getBoolean("jetpack")) {
+            if (itemStack.getOrDefault(DataComponentsInit.JETPACK, false)) {
                 player.fallDistance = 0;
 
-                if (nbtData.getBoolean("jump") && !nbtData.getBoolean("canFly") && !player.getAbilities().mayfly && IUCore.keyboard.isJumpKeyDown(
-                        player) && !nbtData.getBoolean(
-                        "isFlyActive") && toggleTimer == 0) {
+                if (nbtData.getBoolean("jump") && !itemStack.getOrDefault(DataComponentsInit.FLY, false) && !player.getAbilities().mayfly && IUCore.keyboard.isJumpKeyDown(
+                        player) && toggleTimer == 0) {
                     toggleTimer = 10;
-                    nbtData.putBoolean("canFly", true);
+                    itemStack.set(DataComponentsInit.JETPACK, true);
                 }
                 nbtData.putBoolean("jump", !player.onGround());
 
@@ -325,11 +329,11 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
                     if (ElectricItem.manager.canUse(itemStack, 25)) {
                         ElectricItem.manager.use(itemStack, 25, null);
                     } else {
-                        nbtData.putBoolean("jetpack", false);
+                        itemStack.set(DataComponentsInit.JETPACK, false);
                     }
                 }
             }
-            jetpack = nbtData.getBoolean("jetpack");
+            jetpack = itemStack.getOrDefault(DataComponentsInit.JETPACK, false);
             if ((IUCore.keyboard.isJumpKeyDown(player) || hoverMode) && !jetpack) {
                 jetpackUsed = this.useJetpack(player, hoverMode);
             }
@@ -340,8 +344,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
                 toggleTimer = 10;
                 jetpack = !jetpack;
                 if (!player.level().isClientSide()) {
-
-                    nbtData.putBoolean("jetpack", jetpack);
+                    itemStack.set(DataComponentsInit.JETPACK, jetpack);
                     if (jetpack) {
                         IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info"));
                     } else {

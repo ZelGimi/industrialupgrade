@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_56_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_175_element"
+    },
+    "D": {
+      "item": "industrialupgrade:imp_se_gen/imp_se_gen"
+    }
+  },
+  "pattern": [
+    " A ",
+    " D ",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/combiner_se_generators"
+  },
+  "show_notification": false
+}

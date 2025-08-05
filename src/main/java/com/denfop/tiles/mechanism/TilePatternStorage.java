@@ -24,14 +24,15 @@ import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
     public double patternEu;
 
     public TilePatternStorage(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.pattern_storage_iu,pos,state);
+        super(BlockBaseMachine3.pattern_storage_iu, pos, state);
         this.diskSlot = new InvSlot(
                 this,
                 InvSlot.TypeItemSlot.INPUT_OUTPUT,
@@ -74,7 +75,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
 
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.readContents(nbttagcompound);
+        this.readContents(provider, nbttagcompound);
     }
 
     public CompoundTag writeToNBT(CompoundTag nbt) {
@@ -117,7 +118,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
         super.onPlaced(stack, placer, facing);
         if (!this.getWorld().isClientSide) {
             CompoundTag nbt = ModUtils.nbt(stack);
-            this.readContents(nbt);
+            this.readContents(placer.registryAccess(), nbt);
         }
 
     }
@@ -135,12 +136,12 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
         return drop;
     }
 
-    public void readContents(CompoundTag nbt) {
+    public void readContents(HolderLookup.Provider access, CompoundTag nbt) {
         ListTag patternList = nbt.getList("patterns", 10);
 
         for (int i = 0; i < patternList.size(); ++i) {
             CompoundTag contentTag = patternList.getCompound(i);
-            ItemStack Item =  ItemStack.of(contentTag);
+            ItemStack Item = ItemStack.parseOptional(access, contentTag);
             this.addPattern(new RecipeInfo(Item, Recipes.recipes
                     .getRecipeOutput("replicator", false, Item)
                     .getOutput().metadata.getDouble(
@@ -155,7 +156,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
 
         for (final RecipeInfo stack : this.patterns) {
             CompoundTag contentTag = new CompoundTag();
-            stack.getStack().save(contentTag);
+            stack.getStack().save(provider, contentTag);
             list.add(contentTag);
         }
 
@@ -203,7 +204,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
                     crystalMemory = this.diskSlot.get(0);
                     if (crystalMemory.getItem() instanceof ItemCrystalMemory) {
                         ((ItemCrystalMemory) crystalMemory.getItem()).writecontentsTag(
-                                crystalMemory,
+                                this.registryAccess(), crystalMemory,
                                 this.patterns.get(this.index).getStack()
                         );
                     }
@@ -213,8 +214,8 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
                 if (!this.diskSlot.isEmpty()) {
                     crystalMemory = this.diskSlot.get(0);
                     if (crystalMemory.getItem() instanceof ItemCrystalMemory) {
-                        ItemStack record = ((ItemCrystalMemory) crystalMemory.getItem()).readItemStack(crystalMemory);
-                        if (record != null) {
+                        ItemStack record = ((ItemCrystalMemory) crystalMemory.getItem()).readItemStack(level.registryAccess(), crystalMemory);
+                        if (!record.isEmpty()) {
                             this.addPattern(new RecipeInfo(record, Recipes.recipes
                                     .getRecipeOutput("replicator", false, record)
                                     .getOutput().metadata.getDouble(

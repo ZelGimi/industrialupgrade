@@ -46,8 +46,8 @@ public class InvSlotInput extends InvSlot {
         final IInputHandler input = Recipes.inputFactory;
         if (!this.get(index).isEmpty()) {
             final Block block = Block.byItem(content.getItem());
-            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.tile.getWorld())).withLuck(tile.chance).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(new BlockPos(0,0,0))).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
-            final List<ItemStack> list = new ArrayList<>(block.getDrops(block.defaultBlockState(), lootcontext$builder));
+            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.tile.getWorld())).withLuck(tile.chance).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(new BlockPos(0, 0, 0))).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
+            final List<ItemStack> list = new ArrayList<>(block.defaultBlockState().getDrops(lootcontext$builder));
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
                 final List<ItemStack> list2 = new ArrayList<>();
@@ -130,8 +130,8 @@ public class InvSlotInput extends InvSlot {
                 continue;
             }
             final Block block = Block.byItem(content.getItem());
-            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.tile.getWorld())).withLuck(tile.chance).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(new BlockPos(0,0,0))).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
-            final List<ItemStack> list =  new ArrayList<>(block.getDrops(block.defaultBlockState(), lootcontext$builder));
+            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.tile.getWorld())).withLuck(tile.chance).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(new BlockPos(0, 0, 0))).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
+            final List<ItemStack> list = new ArrayList<>(block.defaultBlockState().getDrops(lootcontext$builder));
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
                 final List<ItemStack> list2 = new ArrayList<>();

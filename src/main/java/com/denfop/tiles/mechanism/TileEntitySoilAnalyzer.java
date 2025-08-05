@@ -23,8 +23,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     public Radiation radiation;
 
     public TileEntitySoilAnalyzer(BlockPos pos, BlockState state) {
-        super(5000, 14, 0,BlockBaseMachine3.soil_analyzer,pos,state);
+        super(5000, 14, 0, BlockBaseMachine3.soil_analyzer, pos, state);
         this.progress = this.addComponent(new ComponentProgress(this, 1, (short) 400));
         this.analyzed = false;
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
@@ -140,7 +140,6 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
-
 
 
     public List<AABB> getAabbs(boolean forCollision) {

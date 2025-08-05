@@ -25,7 +25,7 @@ public class GuiCombinerSolidMatter<T extends ContainerCombinerSolidMatter> exte
     protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
         super.renderBg(poseStack, f, x, y);
         if (this.container.base != null) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         bindTexture();
@@ -40,7 +40,7 @@ public class GuiCombinerSolidMatter<T extends ContainerCombinerSolidMatter> exte
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

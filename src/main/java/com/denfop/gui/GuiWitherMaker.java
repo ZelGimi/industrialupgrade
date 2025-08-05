@@ -8,8 +8,8 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerBaseWitherMaker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiWitherMaker<T extends ContainerBaseWitherMaker> extends GuiIU<ContainerBaseWitherMaker> {
@@ -54,7 +54,7 @@ public class GuiWitherMaker<T extends ContainerBaseWitherMaker> extends GuiIU<Co
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiWitherMaker.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GuiWitherMaker.png".toLowerCase());
     }
 
 }

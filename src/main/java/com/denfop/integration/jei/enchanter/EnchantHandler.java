@@ -78,9 +78,11 @@ public class EnchantHandler {
     public ItemStack getOutput() {
         return output.copy();
     }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1);
     }
+
     public boolean matchesInput(ItemStack is) {
         return true;
     }

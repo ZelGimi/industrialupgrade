@@ -18,7 +18,7 @@ public class TileBioCentrifuge extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.Centrifuge.usagePerTick,
                 EnumMultiMachine.Centrifuge.lenghtOperation,
-                4,BlockBaseMachine3.bio_centrifuge,pos,state
+                4, BlockBaseMachine3.bio_centrifuge, pos, state
         );
     }
 

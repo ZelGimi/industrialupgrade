@@ -61,7 +61,7 @@ public class TileEntitySintezatorRenderer implements BlockEntityRenderer<TileSin
         var buffer = bufferSource.getBuffer(RenderType.solid());
         var pose = poseStack.last();
         for (BakedQuad quad : quads) {
-            buffer.putBulkData(pose, quad, 1.0f, 1.0f, 1.0f, combinedLight, OverlayTexture.NO_OVERLAY);
+            buffer.putBulkData(pose, quad, 1.0f, 1.0f, 1.0f, 1.0f, combinedLight, OverlayTexture.NO_OVERLAY);
         }
     }
 }

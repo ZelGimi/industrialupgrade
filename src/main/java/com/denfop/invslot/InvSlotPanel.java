@@ -4,13 +4,13 @@ package com.denfop.invslot;
 import com.denfop.ElectricItem;
 import com.denfop.IUItem;
 import com.denfop.api.item.IEnergyItem;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.WirelessConnection;
 import com.denfop.items.modules.*;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class InvSlotPanel extends InvSlot {
@@ -185,16 +185,16 @@ public class InvSlotPanel extends InvSlot {
         tile.wirelessComponent.removeAll();
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem()) == 10) {
-
+                WirelessConnection wirelessConnection = this.get(i).getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
+                if (wirelessConnection == WirelessConnection.EMPTY)
+                    continue;
                 int x;
                 int y;
                 int z;
-                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
-
-                x = nbttagcompound.getInt("Xcoord");
-                y = nbttagcompound.getInt("Ycoord");
-                z = nbttagcompound.getInt("Zcoord");
-                if (!nbttagcompound.getBoolean("change")) {
+                x = wirelessConnection.x();
+                y = wirelessConnection.y();
+                z = wirelessConnection.z();
+                if (!wirelessConnection.change()) {
                     tile.wirelessComponent.setUpdate(true);
                     BlockPos pos = new BlockPos(x, y, z);
                     tile.wirelessComponent.addConnect(pos);

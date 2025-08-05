@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.steamturbine;
 
 import com.denfop.api.multiblock.IMultiElement;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public interface ITank extends IMultiElement {
 

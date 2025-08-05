@@ -19,14 +19,14 @@ public class GuiSmelteryCasting<T extends ContainerSmelteryCasting> extends GuiI
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         new AdvArea(this, 69, 34, 100, 52)
                 .withTooltip(ModUtils.getString(this.getContainer().base.progress.getBar() * 100) + "%")
-                .drawForeground(poseStack,par1, par2);
+                .drawForeground(poseStack, par1, par2);
         if (container.base.getMain() != null) {
             TileEntitySmelteryController controller = (TileEntitySmelteryController) container.base.getMain();
             if (controller.getFirstTank() != null) {
-                new FluidItem(this, 49, 34, controller.getFirstTank().getFluid()).drawForeground(poseStack,par1, par2);
+                new FluidItem(this, 49, 34, controller.getFirstTank().getFluid()).drawForeground(poseStack, par1, par2);
             }
         }
     }
@@ -38,8 +38,8 @@ public class GuiSmelteryCasting<T extends ContainerSmelteryCasting> extends GuiI
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
         RenderSystem.setShaderColor(1, 1, 1, 1);
         drawTexturedModalRect(poseStack,
@@ -63,7 +63,7 @@ public class GuiSmelteryCasting<T extends ContainerSmelteryCasting> extends GuiI
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guismeltery_casting.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guismeltery_casting.png");
     }
 
 }

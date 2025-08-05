@@ -28,14 +28,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.PlantType;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntitySaplingGardener extends TileEntityInventory implements IUpgradableBlock {
 
@@ -47,19 +47,17 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     private ComponentVisibleArea visible;
 
     public TileEntitySaplingGardener(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.sapling_gardener,pos,state);
+        super(BlockBaseMachine3.sapling_gardener, pos, state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((BlockItem) stack.getItem()).getBlock()).getPlantType(
-                        level,
-                        getBlockPos()) == PlantType.PLAINS;
+                return stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof net.minecraft.world.level.block.SaplingBlock;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
@@ -74,6 +72,13 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemInput
         );
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+
+        visible.aabb = searchArea;
     }
 
     @Override
@@ -96,13 +101,6 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
         return new GuiSaplingGardener((ContainerSaplingGardener) menu);
-    }
-
-    @Override
-    public void onLoaded() {
-        super.onLoaded();
-
-        visible.aabb = searchArea;
     }
 
     @Override

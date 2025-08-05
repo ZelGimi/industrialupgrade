@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/universal4"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdoubleplates/steel_doubleplate"
+    },
+    "C": {
+      "tag": "c:doubleplate/vitalium"
+    }
+  },
+  "pattern": [
+    " A ",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/universal5"
+  },
+  "show_notification": false
+}

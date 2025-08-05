@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:compressed_redstone"
+    },
+    "B": {
+      "item": "industrialupgrade:electronic_stabilizers"
+    },
+    "C": {
+      "item": "industrialupgrade:graphene_wire"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_588_element"
+    }
+  },
+  "pattern": [
+    " A ",
+    "BDB",
+    "CEC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:motors_with_improved_bearings_"
+  },
+  "show_notification": false
+}

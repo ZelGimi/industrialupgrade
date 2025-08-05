@@ -78,15 +78,6 @@ public class Channel {
         return Objects.hash(channel, tesseract);
     }
 
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
-        packetBuffer.writeInt(channel);
-        packetBuffer.writeInt(mode.ordinal());
-        packetBuffer.writeInt(typeChannel.ordinal());
-        packetBuffer.writeBoolean(active);
-        packetBuffer.writeBoolean(isPrivate);
-        return packetBuffer;
-    }
 
     public CompoundTag writeNBT() {
         CompoundTag tagCompound = new CompoundTag();

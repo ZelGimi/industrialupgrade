@@ -3,6 +3,8 @@ package com.denfop.container;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.NodeStats;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EFReaderInventory;
 import com.denfop.network.packet.PacketItemStackUpdate;
 import com.denfop.utils.ModUtils;
@@ -24,9 +26,7 @@ public class ContainerEFReader extends ContainerHandHeldInventory<EFReaderInvent
         super(efReaderInventory, null);
         this.player = player;
         this.inventory = player.getInventory();
-        BlockPos pos = new BlockPos(ModUtils.nbt(itemStack1).getInt("x"), ModUtils.nbt(itemStack1).getInt("y"),
-                ModUtils.nbt(itemStack1).getInt("z")
-        );
+        BlockPos pos = itemStack1.getOrDefault(DataComponentsInit.TELEPORT, BlockPos.ZERO);
         this.current = player.getInventory().selected;
         this.tile = EnergyNetGlobal.instance.getTile(efReaderInventory.player.level(), pos);
     }
@@ -91,7 +91,7 @@ public class ContainerEFReader extends ContainerHandHeldInventory<EFReaderInvent
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 
@@ -113,7 +113,7 @@ public class ContainerEFReader extends ContainerHandHeldInventory<EFReaderInvent
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        NodeStats nodeStats = EnergyNetGlobal.instance.getNodeStats(this.tile,this.player.level());
+        NodeStats nodeStats = EnergyNetGlobal.instance.getNodeStats(this.tile, this.player.level());
 
         if (player instanceof ServerPlayer) {
             new PacketItemStackUpdate("energySink", nodeStats.getEnergyIn(), (ServerPlayer) player);

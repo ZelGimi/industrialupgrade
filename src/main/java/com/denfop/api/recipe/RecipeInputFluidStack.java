@@ -1,6 +1,6 @@
 package com.denfop.api.recipe;
 
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +22,7 @@ public class RecipeInputFluidStack implements IRecipeInputFluidStack {
     @Override
     public boolean matched(final FluidStack stack) {
         for (FluidStack input : getItemStack()) {
-            if (input.isFluidEqual(input)) {
+            if (FluidStack.isSameFluid(stack, input)) {
                 return true;
             }
         }
@@ -40,7 +40,7 @@ public class RecipeInputFluidStack implements IRecipeInputFluidStack {
         RecipeInputFluidStack that = (RecipeInputFluidStack) o;
         for (FluidStack input : getItemStack()) {
             for (FluidStack input1 : that.getItemStack()) {
-                if (input.isFluidEqual(input1)) {
+                if (FluidStack.isSameFluid(input, input1)) {
                     return true;
                 }
 

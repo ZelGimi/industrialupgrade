@@ -22,10 +22,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,42 +40,20 @@ public class TileEntityWirelessMatterCollector extends TileEntityInventory {
     Map<ChunkPos, List<IMatter>> chunkPosListMap = new HashMap<>();
 
     public TileEntityWirelessMatterCollector(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.matter_collector,pos,state);
+        super(BlockBaseMachine3.matter_collector, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("tank", 16384000, Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance().get()));
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
         visible = this.addComponent(new ComponentVisibleArea(this));
+
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.matter_collector.info"));
-    }
-    @Override
-    public BlockTileEntity getBlock() {
-        return IUItem.basemachine2.getBlock(getTeBlock());
-    }
-
-    @Override
-    public IMultiTileBlock getTeBlock() {
-        return BlockBaseMachine3.matter_collector;
-    }
-
-    @Override
-    public ContainerWirelessMatterCollector getGuiContainer(final Player var1) {
-        return new ContainerWirelessMatterCollector(this, var1);
-    }
-
-    public Fluids.InternalFluidTank getFluidTank() {
-        return fluidTank;
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
-        return new GuiWirelessMatterCollector((ContainerWirelessMatterCollector) menu);
     }
 
     @Override
@@ -99,7 +77,32 @@ public class TileEntityWirelessMatterCollector extends TileEntityInventory {
             }
         }
 
-        visible.aabb = new AABB(minX,level.getMinBuildHeight(),minZ,maxX,level.getMaxBuildHeight(),maxZ);
+        visible.aabb = new AABB(minX, level.getMinBuildHeight(), minZ, maxX, level.getMaxBuildHeight(), maxZ);
+    }
+
+    @Override
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2.getBlock(getTeBlock());
+    }
+
+    @Override
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.matter_collector;
+    }
+
+    @Override
+    public ContainerWirelessMatterCollector getGuiContainer(final Player var1) {
+        return new ContainerWirelessMatterCollector(this, var1);
+    }
+
+    public Fluids.InternalFluidTank getFluidTank() {
+        return fluidTank;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWirelessMatterCollector((ContainerWirelessMatterCollector) menu);
     }
 
     @Override

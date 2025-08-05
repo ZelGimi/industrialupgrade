@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpCompressor extends TileEntityBaseCompressor {
 
     public TileEntityImpCompressor(BlockPos pos, BlockState state) {
-        super(2,BlockGasReactor.imp_gas_compressor,pos,state);
+        super(2, BlockGasReactor.imp_gas_compressor, pos, state);
     }
 
     @Override

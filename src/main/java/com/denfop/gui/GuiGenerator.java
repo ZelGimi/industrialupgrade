@@ -8,8 +8,8 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiGenerator<T extends ContainerGenerator> extends GuiIU<ContainerGenerator> {
@@ -39,7 +39,7 @@ public class GuiGenerator<T extends ContainerGenerator> extends GuiIU<ContainerG
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -1,6 +1,7 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.IElectricBlock;
 import com.denfop.api.IStorage;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -16,15 +17,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+;
 
 public enum BlockEnergyStorage implements IMultiTileBlock, IElectricBlock {
     adv_mfsu(TileElectricAdvMFSU.class, 0),
@@ -50,7 +52,7 @@ public enum BlockEnergyStorage implements IMultiTileBlock, IElectricBlock {
     int idBlock;
     private TileEntityBlock dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
 
     BlockEnergyStorage(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, Rarity.UNCOMMON);
@@ -78,7 +80,7 @@ public enum BlockEnergyStorage implements IMultiTileBlock, IElectricBlock {
     }
 
     public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
+        final ModContainer mc = IUCore.instance.modContainer;
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
@@ -97,7 +99,7 @@ public enum BlockEnergyStorage implements IMultiTileBlock, IElectricBlock {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 

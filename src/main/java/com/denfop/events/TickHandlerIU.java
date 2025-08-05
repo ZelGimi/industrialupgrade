@@ -6,17 +6,16 @@ import com.denfop.items.armour.ISpecialArmor;
 import com.denfop.network.WorldData;
 import com.denfop.world.IWorldTickCallback;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 public class TickHandlerIU {
 
@@ -37,53 +36,63 @@ public class TickHandlerIU {
     }
 
     @SubscribeEvent
-    public void hurt(LivingHurtEvent event) {
+    public void hurt(LivingDamageEvent.Pre event) {
         if (event.getEntity() instanceof LivingEntity) {
             NonNullList<ItemStack> armorList = NonNullList.withSize(4, ItemStack.EMPTY);
             armorList.set(0, (event.getEntity().getItemBySlot(EquipmentSlot.FEET)));
             armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
             armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
             armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
-            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getAmount());
-            event.setAmount(damageAmount);
+            if (ISpecialArmor.hasCompleteArmor(event.getEntity())) {
+                float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getOriginalDamage());
+                event.setNewDamage(damageAmount);
+            }
         }
     }
 
+    @SubscribeEvent
+    public void onWorldTick1(LevelTickEvent.Pre event) {
+        Level world = event.getLevel();
+        WorldData worldData = WorldData.get(world, false);
+        if (worldData != null)
+            processUpdates(world, worldData);
+
+
+    }
 
     @SubscribeEvent
-    public void onWorldTick(TickEvent.LevelTickEvent event) {
-        Level world = event.level;
+    public void onWorldTick(LevelTickEvent.Post event) {
+        Level world = event.getLevel();
         WorldData worldData = WorldData.get(world, false);
         if (worldData != null) {
-            if (event.phase == TickEvent.Phase.START) {
-                processUpdates(world, worldData);
 
+            if (world.isClientSide) {
+                IUCore.network.getClient().onTickEnd(worldData);
             } else {
-                if (world.isClientSide) {
-                    IUCore.network.getClient().onTickEnd(worldData);
-                } else {
-                    IUCore.network.getServer().onTickEnd(worldData);
-                }
+                IUCore.network.getServer().onTickEnd(worldData);
             }
+
 
         }
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            IUCore.keyboard.sendKeyUpdate();
+    public void onClientTick(LevelTickEvent.Pre event) {
+        if (!event.getLevel().isClientSide)
+            return;
 
-            if (Minecraft.getInstance().level != null) {
-                if (IUDamageSource.current == null)
-                    IUDamageSource.initDamage(Minecraft.getInstance().level.registryAccess());
+        IUCore.keyboard.sendKeyUpdate(event.getLevel());
 
-                ClientLevel world = Minecraft.getInstance().level;
-                processUpdates(world, WorldData.get(world));
+        if (Minecraft.getInstance().level != null) {
+            if (IUDamageSource.current == null)
+                IUDamageSource.initDamage(event.getLevel().registryAccess());
 
-            }
+            Level world = event.getLevel();
+            processUpdates(world, WorldData.get(world));
+
         }
+
 
     }
 

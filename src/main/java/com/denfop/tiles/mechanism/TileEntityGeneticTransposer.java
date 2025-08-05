@@ -25,9 +25,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -54,7 +54,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                 300,
                 1,
                 12,
-                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()),BlockBaseMachine3.genetic_transposer,pos,state
+                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()), BlockBaseMachine3.genetic_transposer, pos, state
         );
         this.outputSlot1 = new InvSlotOutput(this, 1);
         this.fluidSlot = new InvSlotFluidByList(
@@ -137,7 +137,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(0)))
-                ));
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -145,9 +145,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(6)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(6)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -155,9 +155,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(37)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(37)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -165,9 +165,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(36)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(36)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -175,9 +175,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(41)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(41)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -185,9 +185,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(24)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(24)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -195,9 +195,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(38)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(38)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -205,9 +205,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(33)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(33)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -217,7 +217,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(7)))
-                ));
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -225,9 +225,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(3)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(3)))
+        ));
 
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
@@ -239,7 +239,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(10)))
-                ));
+        ));
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
@@ -248,9 +248,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(47)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(47)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -258,9 +258,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(44)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(44)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -268,9 +268,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(12)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(12)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -278,9 +278,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(21)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(21)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -290,7 +290,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(30)))
-                ));
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -298,9 +298,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(18)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(18)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -308,9 +308,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(27)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(27)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
@@ -318,9 +318,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(15)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(15)))
+        ));
         //
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
@@ -331,7 +331,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(0)))
-                ));
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -339,9 +339,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(36)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(36)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -349,9 +349,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(35)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(35)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -359,9 +359,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(40)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(40)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -369,9 +369,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(28)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(28)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -379,9 +379,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(37)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(37)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -389,9 +389,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(13)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(13)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -401,7 +401,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(7)))
-                ));
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -409,9 +409,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(3)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(3)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -421,7 +421,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(7)))
-                ));
+        ));
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
@@ -432,7 +432,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(10)))
-                ));
+        ));
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
@@ -441,9 +441,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(46)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(46)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -451,9 +451,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(43)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(43)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -461,9 +461,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(22)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(22)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -471,9 +471,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(31)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(31)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -483,7 +483,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(25)))
-                ));
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -491,9 +491,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(19)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(19)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -501,9 +501,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(34)))
-                        ));
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(34)))
+        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
@@ -511,9 +511,9 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
                         input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
                         input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
-                        ),
-                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(12))))
-                        );
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(12))))
+        );
     }
 
 

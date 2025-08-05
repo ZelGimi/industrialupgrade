@@ -13,13 +13,13 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBaseGenerationChipMachine;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenerationMicrochip;
 import com.denfop.invslot.InvSlot;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileBaseGenerationMicrochip;
-import com.denfop.utils.ModUtils;
 import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -31,8 +31,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -75,13 +75,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnMicrochipAssemblerParticles(level,pos,level.random);
-        }
-    }
+
     private static void add(
             ItemStack second, ItemStack three,
             ItemStack four, ItemStack five,
@@ -96,7 +90,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         CompoundTag nbt = new CompoundTag();
         nbt.putShort("temperature", (short) 4000);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        first1 = input.getInput("forge:ingots/aluminium");
+        first1 = input.getInput("c:ingots/aluminium");
 
         second1 = input.getInput(second);
         three1 = input.getInput(three);
@@ -157,7 +151,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
 
     private static IInputItemStack getInputFromTagOrStack(ItemStack stack, IInputHandler input) {
         Optional<TagKey<Item>> tag = stack.getTags()
-                .filter(loc -> loc.location().getNamespace().equals("forge") && loc.location().getPath().contains("/"))
+                .filter(loc -> loc.location().getNamespace().equals("c") && loc.location().getPath().contains("/"))
                 .findFirst();
 
         if (tag.isPresent() && stack.getItem() instanceof Item) {
@@ -166,7 +160,6 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
             return input.getInput(stack);
         }
     }
-
 
     public static void add(
             ItemStack first,
@@ -193,7 +186,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
             second1 = getInputFromTagOrStack(second, input);
             three1 = getInputFromTagOrStack(three, input);
             four1 = getInputFromTagOrStack(four, input);
-            five1 = input.getInput(ItemTags.create(new ResourceLocation(five)));
+            five1 = input.getInput(ItemTags.create(ResourceLocation.tryParse(five)));
 
             Recipes.recipes.addRecipe(
                     "microchip",
@@ -215,7 +208,6 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
             ));
         }
     }
-
 
     public static void add(
             ItemStack first,
@@ -240,7 +232,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
             first1 = getInputFromTagOrStack(first, input);
             second1 = getInputFromTagOrStack(second, input);
             three1 = getInputFromTagOrStack(three, input);
-            four1 =input.getInput(ItemTags.create(new ResourceLocation(four)));
+            four1 = input.getInput(ItemTags.create(ResourceLocation.tryParse(four)));
             five1 = getInputFromTagOrStack(five, input);
         } else {
             first1 = input.getInput(first);
@@ -261,9 +253,16 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
 
     public static ItemStack getLevelCircuit(ItemStack stack, int level) {
         stack = stack.copy();
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putInt("level", level);
+        stack.set(DataComponentsInit.LEVEL_MICROCHIP, level);
         return stack;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnMicrochipAssemblerParticles(level, pos, level.random);
+        }
     }
 
     @Override
@@ -321,7 +320,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.GOLD_INGOT),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(7)),
-                "forge:ingots/copper",
+                "c:ingots/copper",
                 new ItemStack(IUItem.basecircuit.getItemFromMeta(1)),
                 (short) 4000, true
         );
@@ -356,7 +355,7 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                 new ItemStack(Items.FLINT),
                 new ItemStack(Items.LAPIS_LAZULI),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(9)),
-                "forge:ingots/steel", new ItemStack(Items.GOLD_INGOT),
+                "c:ingots/steel", new ItemStack(Items.GOLD_INGOT),
 
                 new ItemStack(IUItem.basecircuit.getItemFromMeta(12)),
                 true

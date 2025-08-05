@@ -30,12 +30,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
     private int levelBlock;
 
     public TileSteamElectrolyzer(BlockPos pos, BlockState state) {
-        super(0, 1, 0,BlockBaseMachine3.steam_electrolyzer,pos,state);
+        super(0, 1, 0, BlockBaseMachine3.steam_electrolyzer, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.ampere = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.AMPERE, this, 4000));
@@ -82,7 +82,6 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
     }
 
 
-
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.steam_electrolyzer;
     }
@@ -96,12 +95,13 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
         return new ContainerSteamElectrolyzer(entityPlayer, this);
 
     }
+
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
@@ -177,12 +177,12 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
                         outputFluidStack1.getFluid(),
                         outputFluidStack1.getAmount() * size
                 );
-                this.fluidTank3.fill(fluidStack,  IFluidHandler.FluidAction.EXECUTE);
+                this.fluidTank3.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                 drain1 = true;
             }
             if (drain || drain1) {
                 int drains = size * inputFluidStack.getAmount();
-                this.getFluidTank(0).drain(drains,  IFluidHandler.FluidAction.EXECUTE);
+                this.getFluidTank(0).drain(drains, IFluidHandler.FluidAction.EXECUTE);
                 if (!this.getActive()) {
                     this.setActive(true);
                     initiate(0);

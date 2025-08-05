@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_327_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "tag": "c:doubleplate/titanium"
+    }
+  },
+  "pattern": [
+    "   ",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:heat_reactors/heat_socket"
+  },
+  "show_notification": false
+}

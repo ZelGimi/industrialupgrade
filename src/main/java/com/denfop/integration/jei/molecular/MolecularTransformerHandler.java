@@ -14,11 +14,11 @@ import java.util.List;
 public class MolecularTransformerHandler {
 
     private static final List<MolecularTransformerHandler> recipes = new ArrayList<>();
-    private final double energy;
-    private final ItemStack input, output;
     public final String inputText;
     public final String outputText;
     public final String totalEU;
+    private final double energy;
+    private final ItemStack input, output;
 
     public MolecularTransformerHandler(ItemStack input, ItemStack output, double energy) {
         this.input = input;
@@ -26,7 +26,7 @@ public class MolecularTransformerHandler {
         this.energy = energy;
         String inputText = null;
         if (!this.input.isEmpty()) {
-            inputText =input.getDisplayName().getString();
+            inputText = input.getDisplayName().getString();
         }
 
         this.inputText = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText;

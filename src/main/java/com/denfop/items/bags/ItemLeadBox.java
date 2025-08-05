@@ -6,6 +6,8 @@ import com.denfop.IUPotion;
 import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerLeadBox;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.items.reactors.ItemBaseRod;
@@ -16,9 +18,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -28,9 +28,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +43,7 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
         super(new Properties().stacksTo(1));
         this.slots = 27;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -68,19 +68,20 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public IAdvInventory getInventory(Player player, ItemStack stack) {
         return new ItemStackLeadBox(player, stack, this.slots);
     }
 
     public void save(ItemStack stack, Player player) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("open", true);
-        nbt.putInt("slot_inventory", player.getInventory().selected);
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+        containerItem = containerItem.updateOpen(stack, true);
+        containerItem.updateSlot(stack, player.getInventory().selected);
     }
 
     @Override
@@ -97,23 +98,24 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
             return;
         }
         Player player = (Player) entity;
-        CompoundTag nbt = stack.getOrCreateTag();
 
-        if (nbt.getBoolean("open")) {
-            int slotId = nbt.getInt("slot_inventory");
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+
+        if (containerItem.open()) {
+            int slotId = containerItem.slot_inventory();
             if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
                 ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
-                    nbt.putBoolean("open", false);
+                    containerItem.updateOpen(stack, false);
                 }
             }
         }
 
         if (world.getGameTime() % 40 == 0) {
             if (!(player.containerMenu instanceof ContainerLeadBox)) {
-                boolean rod = nbt.getBoolean("rod");
+                boolean rod = stack.getOrDefault(DataComponentsInit.ACTIVE, false);
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack currentStack = player.getInventory().getItem(i);
                     if (currentStack.getItem() instanceof IRadioactiveItemType) {
@@ -123,7 +125,7 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
                         ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
                         if (box.canAdd(currentStack)) {
                             box.add(currentStack);
-                            player.removeEffect(IUPotion.radiation);
+                            player.removeEffect(IUPotion.rad);
                             player.getInventory().setItem(i, ItemStack.EMPTY);
                             player.containerMenu.broadcastChanges();
                             box.setChanged();
@@ -134,17 +136,18 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
         }
     }
 
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(
             ItemStack stack,
-            @Nullable Level world,
+            @Nullable TooltipContext world,
             List<Component> tooltip,
             TooltipFlag flag
     ) {
         tooltip.add(Component.translatable("iu.radiationbox"));
-        CompoundTag nbt = stack.getOrCreateTag();
-        boolean rod = nbt.getBoolean("rod");
+
+        boolean rod = stack.getOrDefault(DataComponentsInit.ACTIVE, false);
         tooltip.add(Component.translatable("message.text.mode_no_instrument").append(": ")
                 .append(rod ? Component.translatable("message.leadbox.enable") : Component.translatable("message.leadbox.disable")));
 
@@ -172,31 +175,23 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
     @Nonnull
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
-       /* if (world.isClientSide) {
-            try {
-                Optional<MenuScreens.ScreenConstructor<ContainerBase<?>, ?>> factory = MenuScreens.getScreenFactory(Register.inventory_container.get(), Minecraft.getInstance(), 0, Component.translatable("iu"));
-                factory.get().create(getInventory(player,stack).getGuiContainer(player),player.getInventory(), Component.translatable(""));
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }*/
+
         if (!world.isClientSide && !player.isShiftKeyDown()) {
             save(stack, player);
 
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(world.registryAccess());
 
             growingBuffer.writeByte(1);
 
             growingBuffer.flip();
-            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+            player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
 
 
             return InteractionResultHolder.success(player.getItemInHand(hand));
 
         } else if (!world.isClientSide && player.isShiftKeyDown()) {
-            CompoundTag nbt = ModUtils.nbt(stack);
-            boolean rod = !nbt.getBoolean("rod");
-            nbt.putBoolean("rod", rod);
+            boolean rod = !stack.getOrDefault(DataComponentsInit.ACTIVE, false);
+            stack.set(DataComponentsInit.ACTIVE, rod);
 
             if (rod) {
                 IUCore.proxy.messagePlayer(
@@ -218,8 +213,7 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
 
     public boolean canInsert(Player player, ItemStack stack, ItemStack stack1) {
         ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
-        CompoundTag nbt = ModUtils.nbt(stack);
-        boolean rod = nbt.getBoolean("rod");
+        boolean rod = stack.getOrDefault(DataComponentsInit.ACTIVE, false);
         if (stack1.getItem() instanceof IRadioactiveItemType) {
             if (!rod) {
                 return !(stack1.getItem() instanceof ItemBaseRod);

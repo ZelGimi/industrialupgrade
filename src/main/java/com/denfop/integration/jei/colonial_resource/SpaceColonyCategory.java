@@ -25,12 +25,13 @@ public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceC
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public SpaceColonyCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 170
         );
@@ -45,7 +46,6 @@ public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceC
     }
 
 
-
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -56,14 +56,14 @@ public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceC
 
     @Override
     public void draw(SpaceColonyHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-       drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("iu.space_recipe.jei") + Localization.translate("iu.body." + recipe.body.getName().toLowerCase()),
                 5,
                 3,
-               140 - 5,
+                140 - 5,
                 4210752
         );
-        drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("iu.space_recipe.jei2"), 5, 20,
                 140 - 5, 4210752
         );
@@ -76,9 +76,9 @@ public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceC
             int x = 5 + (i % 6) * 20;
             int y = 65 + (i / 6) * 19;
             if (i < recipes.getInput().size()) {
-                builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).addItemStack(recipes.getInput().get(i));
+                builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addItemStack(recipes.getInput().get(i));
             } else {
-                builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).setFluidRenderer(1,true,16,16).addFluidStack(recipes.getOutput().get(i- recipes.getInput().size()).getFluid(),recipes.getOutput().get(i- recipes.getInput().size()).getAmount());
+                builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).setFluidRenderer(1, true, 16, 16).addFluidStack(recipes.getOutput().get(i - recipes.getInput().size()).getFluid(), recipes.getOutput().get(i - recipes.getInput().size()).getAmount());
             }
 
         }
@@ -90,7 +90,7 @@ public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceC
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

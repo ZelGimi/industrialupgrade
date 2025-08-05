@@ -33,7 +33,7 @@ public class QuantumMolecularCategory extends GuiIU implements IRecipeCategory<Q
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew" +
                         ".png"), 10, 49, 216,
                 73
         );
@@ -64,30 +64,30 @@ public class QuantumMolecularCategory extends GuiIU implements IRecipeCategory<Q
         if (xScale > 18) {
             progress = 0;
         }
-       bindTexture(getTexture());
-        drawTexturedModalRect( stack, 31 - 11, 75 - 49, 43, 237, 14, (int) xScale);
+        bindTexture(getTexture());
+        drawTexturedModalRect(stack, 31 - 11, 75 - 49, 43, 237, 14, (int) xScale);
         int y = 5;
         int x = 65;
-        drawSplitString(stack,recipe.inputText, x, y, 246 - x, 16777215);
-        y += 18+ 1;
-        drawSplitString(stack,recipe.inputText1, x, y, 246 - x, 16777215);
+        drawSplitString(stack, recipe.inputText, x, y, 246 - x, 16777215);
         y += 18 + 1;
-        drawSplitString(stack,recipe.outputText, x, y, 246 - x, 16777215);
+        drawSplitString(stack, recipe.inputText1, x, y, 246 - x, 16777215);
         y += 18 + 1;
-        drawString(stack,recipe.totalEU, x, y, 16777215);
+        drawSplitString(stack, recipe.outputText, x, y, 246 - x, 16777215);
+        y += 18 + 1;
+        drawString(stack, recipe.totalEU, x, y, 16777215);
     }
 
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, QuantumMolecularHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,8,7).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,28,7).addItemStack(recipes.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,18, 47).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 8, 7).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 28, 7).addItemStack(recipes.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 18, 47).addItemStack(recipes.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew.png");
     }
 
 

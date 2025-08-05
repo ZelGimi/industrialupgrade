@@ -7,17 +7,29 @@ import net.minecraft.world.item.ItemStack;
 
 public class PacketItemStackEvent implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketItemStackEvent() {
 
     }
 
     public PacketItemStackEvent(int event, Player player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeString(player.getName().getString());
         buffer.writeInt(event);
+        this.buffer = buffer;
+        IUCore.network.getClient().sendPacket(this, buffer);
+    }
 
-        IUCore.network.getClient().sendPacket(buffer);
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

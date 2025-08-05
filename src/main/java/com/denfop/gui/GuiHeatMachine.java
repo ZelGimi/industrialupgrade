@@ -73,7 +73,6 @@ public class GuiHeatMachine<T extends ContainerHeatMachine> extends GuiIU<Contai
     }
 
 
-
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
@@ -91,28 +90,25 @@ public class GuiHeatMachine<T extends ContainerHeatMachine> extends GuiIU<Contai
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
 
 
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer( poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect( poseStack,this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
-          bindTexture(getTexture());
-
-
-
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
 
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
 
     }
 

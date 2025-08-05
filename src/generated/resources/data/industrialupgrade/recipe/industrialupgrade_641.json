@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:itemspace/umbriel_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/umbriel_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/umbriel_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/umbriel_pebble"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:itemspace/umbriel_boulder"
+  }
+}

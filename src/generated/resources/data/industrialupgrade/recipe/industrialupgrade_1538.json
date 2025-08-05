@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:entitymodules/module_mob"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_59_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_54_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "BAB",
+    "DCE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/spawner"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/nichrome"
+    },
+    "B": {
+      "item": "industrialupgrade:quarrymodules/ef2"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spawnermodules/spawner_module3"
+  },
+  "show_notification": false
+}

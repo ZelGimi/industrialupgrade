@@ -74,24 +74,24 @@ public class InvSlotSubstitute extends InvSlot {
                         continue;
                     }
                     ItemBlockTileEntity<BlockCable> cable1 = IUItem.cable.getItem(stack);
-                        boolean need = false;
-                        for (CableItem cableItem : cableItemList) {
-                            if (cableItem.equals(new CableItem(((CableType)((TileEntityCable)cable1.getElement().getDummyTe()).cableItem).capacity,
-                                    stack.getCount(), stack
-                            ))) {
-                                cableItem.addCount(stack.getCount());
-                                need = true;
-                                break;
-                            }
+                    boolean need = false;
+                    for (CableItem cableItem : cableItemList) {
+                        if (cableItem.equals(new CableItem(((CableType) ((TileEntityCable) cable1.getElement().getDummyTe()).cableItem).capacity,
+                                stack.getCount(), stack
+                        ))) {
+                            cableItem.addCount(stack.getCount());
+                            need = true;
+                            break;
                         }
-                        if (!need) {
-                            cableItemList.add(new CableItem(((CableType)((TileEntityCable)cable1.getElement().getDummyTe()).cableItem).capacity,
-                                    stack.getCount(), stack
-                            ));
-                        }
-
-
                     }
+                    if (!need) {
+                        cableItemList.add(new CableItem(((CableType) ((TileEntityCable) cable1.getElement().getDummyTe()).cableItem).capacity,
+                                stack.getCount(), stack
+                        ));
+                    }
+
+
+                }
 
                 this.tile.setCableItemList(cableItemList);
                 cableItemList.forEach(cableItem -> this.tile.setMaxValue(

@@ -37,10 +37,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -70,7 +70,7 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
     private MachineRecipe output;
 
     public TileEntitySteamBioGenerator(BlockPos pos, BlockState state) {
-        super(0, 1, 0,BlockBaseMachine3.steam_bio_generator,pos,state);
+        super(0, 1, 0, BlockBaseMachine3.steam_bio_generator, pos, state);
         this.progress = 0;
         this.inputSlotA = new InvSlotRecipes(this, "biomass", this);
         this.defaultEnergyConsume = this.energyConsume = 1;
@@ -324,17 +324,12 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
-
-
-
-
 
 
 }

@@ -18,7 +18,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.*;
 
@@ -88,7 +88,7 @@ public class EnergyNetLocal {
             final BlockPos pos = entity.getBlockPos();
             final ITransportTile transportTile = TransportNetGlobal.instance.getSubTile(world, pos);
             if (transportTile != null) {
-                MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                NeoForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
                         world,
                         transportTile
                 ));
@@ -96,7 +96,7 @@ public class EnergyNetLocal {
             if (!(entity instanceof TileEntityBlock)) {
                 IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(world, pos);
                 if (energyTile != null) {
-                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
+                    NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
                             world,
                             energyTile
                     ));

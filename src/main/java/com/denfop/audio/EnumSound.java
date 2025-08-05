@@ -2,7 +2,7 @@ package com.denfop.audio;
 
 
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public enum EnumSound {
     air_collector(TypePath.Machines, "air_collector"),
@@ -93,7 +93,7 @@ public enum EnumSound {
     ;
     private final TypePath typePath;
     private final String nameSounds;
-    private RegistryObject<SoundEvent> soundEvent;
+    private DeferredHolder<SoundEvent, SoundEvent> soundEvent;
 
     EnumSound(TypePath typePath, String nameSounds) {
         this.typePath = typePath;
@@ -113,7 +113,7 @@ public enum EnumSound {
         return soundEvent.get();
     }
 
-    public void setSoundEvent(final RegistryObject<SoundEvent> soundEvent) {
+    public void setSoundEvent(final DeferredHolder<SoundEvent, SoundEvent> soundEvent) {
         this.soundEvent = soundEvent;
     }
 

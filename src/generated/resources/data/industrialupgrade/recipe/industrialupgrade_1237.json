@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:dirt"
+    },
+    "B": {
+      "item": "industrialupgrade:apatite_cube"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:apatite/humus"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:reactors/per_heat_exchange"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/per_vent"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/proton"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:reactors/proton_energy_coupler"
+  },
+  "show_notification": false
+}

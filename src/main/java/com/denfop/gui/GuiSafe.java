@@ -16,7 +16,7 @@ public class GuiSafe<T extends ContainerSafe> extends GuiIU<ContainerSafe> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guibags.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guibags.png");
     }
 
 }

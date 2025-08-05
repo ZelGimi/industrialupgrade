@@ -26,18 +26,16 @@ public class GuiWirelessMatterCollector<T extends ContainerWirelessMatterCollect
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         String percent = this.container.base.getIntegerPercentage() + "%";
         int nmPos2 = (this.imageWidth - this.getStringWidth(percent)) / 2;
-        draw(poseStack,percent, nmPos2 - 35, 46, 4210752);
+        draw(poseStack, percent, nmPos2 - 35, 46, 4210752);
     }
 
     @Override
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
-
-
 
 
 }

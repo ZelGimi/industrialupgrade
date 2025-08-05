@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_33_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_72_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_128_element"
+    }
+  },
+  "pattern": [
+    "B F",
+    "DAE",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:moremachine3/assamplerscrap"
+  },
+  "show_notification": false
+}

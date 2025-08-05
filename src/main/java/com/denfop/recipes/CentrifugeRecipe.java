@@ -183,10 +183,10 @@ public class CentrifugeRecipe {
                 growCount(IUItem.ironDust, 7)
         );
 
-        addcentrifuge1("forge:Purifiedcrushed/Uranium", new ItemStack(IUItem.nuclear_res.getStack(5), 1),
+        addcentrifuge1("c:Purifiedcrushed/Uranium", new ItemStack(IUItem.nuclear_res.getStack(5), 1),
                 new ItemStack(IUItem.Uran238, 6)
         );
-        addcentrifuge1("forge:crushed/Uranium", new ItemStack(IUItem.nuclear_res.getItemFromMeta(5), 1),
+        addcentrifuge1("c:crushed/Uranium", new ItemStack(IUItem.nuclear_res.getItemFromMeta(5), 1),
                 new ItemStack(IUItem.Uran238, 4), IUItem.stoneDust
         );
         addcentrifuge(growCount(IUItem.UranFuel, 10), growCount(IUItem.Uran238, 56),
@@ -340,7 +340,7 @@ public class CentrifugeRecipe {
 
         }
         final IInputHandler input = Recipes.inputFactory;
-        stack[0] = input.getInput("forge:dusts/" + meta).getInputs().get(0).copy();
+        stack[0] = input.getInput("c:dusts/" + meta).getInputs().get(0).copy();
         stack[1] = IUItem.stoneDust;
         if (output != null) {
             stack[2] = output;
@@ -352,7 +352,7 @@ public class CentrifugeRecipe {
                 "centrifuge",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:crushed/" + meta)
+                                input.getInput("c:crushed/" + meta)
                         ),
                         new RecipeOutput(nbt, stack)
                 )
@@ -368,7 +368,7 @@ public class CentrifugeRecipe {
 
         }
         final IInputHandler input = Recipes.inputFactory;
-        stack[0] = input.getInput("forge:dusts/" + meta).getInputs().get(0).copy();
+        stack[0] = input.getInput("c:dusts/" + meta).getInputs().get(0).copy();
 
         if (output != null) {
             stack[1] = output;
@@ -379,7 +379,7 @@ public class CentrifugeRecipe {
                 "centrifuge",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:purifiedcrushed/" + meta)
+                                input.getInput("c:purifiedcrushed/" + meta)
                         ),
                         new RecipeOutput(nbt, stack)
                 )

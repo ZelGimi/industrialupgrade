@@ -13,23 +13,37 @@ import java.util.List;
 
 public class PacketStopSound implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketStopSound() {
 
     }
 
     public PacketStopSound(Level world, BlockPos pos) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
-        buffer.writeByte(this.getId());
-        buffer.writeBlockPos(pos);
         List<ServerPlayer> playersInRange = NetworkManager.getPlayersInRange(
                 world,
                 pos,
                 new ArrayList<>()
         );
         for (ServerPlayer player : playersInRange) {
-            IUCore.network.getServer().sendPacket(buffer, player);
+            CustomPacketBuffer buffer = new CustomPacketBuffer(world.registryAccess());
+            buffer.writeByte(this.getId());
+            buffer.writeBlockPos(pos);
+
+            this.buffer = buffer;
+            IUCore.network.getServer().sendPacket(this, buffer, player);
         }
 
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

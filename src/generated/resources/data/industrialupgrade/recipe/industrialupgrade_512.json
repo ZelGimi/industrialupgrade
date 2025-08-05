@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/nanocircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:stick/titanium"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/nanocircuit_part2"
+  },
+  "show_notification": false
+}

@@ -17,10 +17,9 @@ public class GuiCowFarm<T extends ContainerCowFarm> extends GuiIU<ContainerCowFa
     }
 
 
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

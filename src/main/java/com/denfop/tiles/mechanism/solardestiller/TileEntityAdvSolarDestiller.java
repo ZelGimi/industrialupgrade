@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvSolarDestiller extends TileEntityBaseSolarDestiller {
 
     public TileEntityAdvSolarDestiller(BlockPos pos, BlockState state) {
-        super(EnumTypeStyle.ADVANCED,BlockBaseMachine3.adv_solar_destiller,pos,state);
+        super(EnumTypeStyle.ADVANCED, BlockBaseMachine3.adv_solar_destiller, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

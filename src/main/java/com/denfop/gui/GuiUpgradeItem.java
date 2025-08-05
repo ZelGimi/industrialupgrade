@@ -12,15 +12,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiUpgradeItem<T extends ContainerHeldUpgradeItem> extends GuiIU<ContainerHeldUpgradeItem> {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guiblacklist.png");
+    private static final ResourceLocation background = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiblacklist.png");
     final List<ItemStack> list;
     private final String name;
 
@@ -48,8 +48,8 @@ public class GuiUpgradeItem<T extends ContainerHeldUpgradeItem> extends GuiIU<Co
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-      draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 11, 0);
-       draw(poseStack,
+        draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 11, 0);
+        draw(poseStack,
                 Localization.translate("iu.blacklist_description"),
                 (this.imageWidth - this.getStringWidth(Localization.translate("iu.blacklist_description"))) / 2,
                 21,

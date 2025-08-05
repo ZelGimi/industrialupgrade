@@ -18,10 +18,12 @@ public class ItemVerySmallDust<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -37,7 +39,7 @@ public class ItemVerySmallDust<T extends Enum<T> & ISubEnum> extends ItemMain<T>
                 break;
 
         }
-        return new String[]{"forge:verysmalldust/" + name, "forge:verysmalldust"};
+        return new String[]{"c:verysmalldust/" + name, "c:verysmalldust"};
     }
 
     public enum Types implements ISubEnum {

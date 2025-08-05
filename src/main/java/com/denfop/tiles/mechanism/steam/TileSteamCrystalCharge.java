@@ -33,8 +33,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,7 +60,7 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
     protected short progress;
 
     public TileSteamCrystalCharge(BlockPos pos, BlockState state) {
-        super(0, 1, 1,BlockBaseMachine3.steam_crystal_charge,pos,state);
+        super(0, 1, 1, BlockBaseMachine3.steam_crystal_charge, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;

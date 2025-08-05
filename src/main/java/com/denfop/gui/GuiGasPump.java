@@ -53,9 +53,8 @@ public class GuiGasPump<T extends ContainerGasPump> extends GuiIU<ContainerGasPu
     }
 
 
-
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

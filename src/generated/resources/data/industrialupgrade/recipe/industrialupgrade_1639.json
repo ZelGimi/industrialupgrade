@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_279_element"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    " BB",
+    "BBB",
+    "AB "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy_tools/chainsaw"
+  },
+  "show_notification": false
+}

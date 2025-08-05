@@ -23,10 +23,8 @@ public class GuiAdvSteamQuarry<T extends ContainerAdvSteamQuarry> extends GuiIU<
     }
 
 
-
-
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteam_machine.png");
     }
 
 }

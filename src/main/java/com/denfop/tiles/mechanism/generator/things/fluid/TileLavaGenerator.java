@@ -27,11 +27,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -110,17 +110,16 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getActive()  && this.getLevel().getGameTime() % 5 == 0){
-            ParticleUtils.spawnLavaGeneratorParticles(this.getLevel(),pos,this.getLevel().random);
+        if (this.getActive() && this.getLevel().getGameTime() % 5 == 0) {
+            ParticleUtils.spawnLavaGeneratorParticles(this.getLevel(), pos, this.getLevel().random);
         }
-
         boolean needsInvUpdate = false;
         if (!(this.energy.getEnergy() <= 0.0D) && this.fluidTank.getFluidAmount() < this.fluidTank.getCapacity()) {
 
 
             if (this.energy.getEnergy() >= this.energycost) {
-                this.setActive(true);
                 needsInvUpdate = this.attemptGeneration();
+                this.setActive(true);
                 if (this.getLevel().getGameTime() % 40 == 0) {
                     initiate(0);
                 }

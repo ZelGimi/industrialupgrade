@@ -11,31 +11,45 @@ import net.minecraft.world.phys.Vec3;
 
 public class PacketExplosion implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketExplosion() {
     }
 
     public PacketExplosion(Explosion explosion, int power, boolean flaming, boolean damage) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
-        buffer.writeByte(this.getId());
+        for (Player player : ((ExplosionAccessor) explosion).getLevel().players()) {
+            CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
+            buffer.writeByte(this.getId());
 
-        Vec3 vec = explosion.getPosition();
-        BlockPos pos = new BlockPos((int) vec.x, (int) vec.y, (int) vec.z);
-        buffer.writeBlockPos(pos);
-        buffer.writeInt(power);
-        buffer.writeBoolean(flaming);
-        buffer.writeBoolean(damage);
+            Vec3 vec = explosion.center();
+            BlockPos pos = new BlockPos((int) vec.x, (int) vec.y, (int) vec.z);
+            buffer.writeBlockPos(pos);
+            buffer.writeInt(power);
+            buffer.writeBoolean(flaming);
+            buffer.writeBoolean(damage);
 
-        for (Player player : ((ExplosionAccessor)explosion).getLevel().players()) {
+
             if (!(player instanceof ServerPlayer)) continue;
 
 
-            double dx = explosion.getPosition().x - player.getX();
-            double dy = explosion.getPosition().y - player.getY();
-            double dz = explosion.getPosition().z - player.getZ();
+            double dx = explosion.center().x - player.getX();
+            double dy = explosion.center().y - player.getY();
+            double dz = explosion.center().z - player.getZ();
             double distanceSq = dx * dx + dy * dy + dz * dz;
             if (distanceSq > 1024) continue;
-            IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
+            this.buffer = buffer;
+            IUCore.network.getServer().sendPacket(this, buffer, (ServerPlayer) player);
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

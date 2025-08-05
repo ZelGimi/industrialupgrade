@@ -39,7 +39,7 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
 
     public TileEntityRollingMachine(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.rolling_machine,pos,state);
+        super(BlockBaseMachine3.rolling_machine, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "cutting", this) {
         };
         this.progress = 0;
@@ -63,8 +63,6 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     }
 
 
-
-
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -81,14 +79,14 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                inputSlotA.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -105,8 +103,8 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            inputSlotA.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
+            outputSlot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -226,7 +224,6 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public void onUpdate() {
 
     }
-
 
 
     @Override

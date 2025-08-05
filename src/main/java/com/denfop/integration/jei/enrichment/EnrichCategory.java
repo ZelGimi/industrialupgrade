@@ -34,9 +34,9 @@ public class EnrichCategory extends GuiIU implements IRecipeCategory<EnrichHandl
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guenrichment" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guenrichment" +
                         ".png"), 3, 3, 140,
                 75
         );
@@ -74,26 +74,26 @@ public class EnrichCategory extends GuiIU implements IRecipeCategory<EnrichHandl
         }
 
         bindTexture(getTexture());
-        drawTexturedModalRect( stack, 64 + 2, +33, 177, 32, (int) xScale + 1, 15);
+        drawTexturedModalRect(stack, 64 + 2, +33, 177, 32, (int) xScale + 1, 15);
 
-        drawSplitString( stack,
-              recipe.getRadAmount() + "☢", 53, 60,
+        drawSplitString(stack,
+                recipe.getRadAmount() + "☢", 53, 60,
                 140 - 5, 4210752
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EnrichHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,13,33).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,35,33).addItemStack(recipes.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,99,33).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 13, 33).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 35, 33).addItemStack(recipes.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 99, 33).addItemStack(recipes.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guenrichment.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guenrichment.png");
     }
 
 

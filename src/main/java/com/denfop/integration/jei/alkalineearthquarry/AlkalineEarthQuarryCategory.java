@@ -39,18 +39,19 @@ public class AlkalineEarthQuarryCategory extends GuiIU implements IRecipeCategor
     private final IDrawableStatic bg;
     private final ContainerLaserPolisher container1;
     private final GuiComponent progress_bar;
+    JeiInform<AlkalineEarthQuarryCategory, AlkalineEarthQuarryHandler> jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform<AlkalineEarthQuarryCategory, AlkalineEarthQuarryHandler> jeiInform;
+
     public AlkalineEarthQuarryCategory(
             final IGuiHelper guiHelper, JeiInform<AlkalineEarthQuarryCategory, AlkalineEarthQuarryHandler> jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
@@ -76,7 +77,6 @@ public class AlkalineEarthQuarryCategory extends GuiIU implements IRecipeCategor
     }
 
 
-
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -96,13 +96,13 @@ public class AlkalineEarthQuarryCategory extends GuiIU implements IRecipeCategor
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
         builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX() + 15, slots1.get(0).getJeiY() + 15).addItemStack(recipes.getMesh());
     }
 
@@ -117,25 +117,22 @@ public class AlkalineEarthQuarryCategory extends GuiIU implements IRecipeCategor
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar(stack,0, 0, xScale);
-       bindTexture(getTexture());
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        bindTexture(getTexture());
 
-       this.drawSplitString(stack, Localization.translate("earth_quarry.jei1"), 5, 3,
+        this.drawSplitString(stack, Localization.translate("earth_quarry.jei1"), 5, 3,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack,recipe.chance + "%", 80, 24,
+        this.drawSplitString(stack, recipe.chance + "%", 80, 24,
                 140 - 5, 4210752
         );
     }
 
 
-
-
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -17,7 +17,7 @@ public interface IHazmatLike {
         int var2 = var1.length;
 
         for (EquipmentSlot slot : var1) {
-            if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                 ItemStack stack = living.getItemBySlot(slot);
                 if (stack.isEmpty() || !(stack.getItem() instanceof IHazmatLike hazmat)) {
                     return false;

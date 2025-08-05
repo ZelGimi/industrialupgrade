@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvRegenerator extends TileEntityRegenerator {
 
     public TileEntityAdvRegenerator(BlockPos pos, BlockState state) {
-        super(1, 7500,BlockGasReactor.adv_gas_regenerator,pos,state);
+        super(1, 7500, BlockGasReactor.adv_gas_regenerator, pos, state);
     }
 
     @Override

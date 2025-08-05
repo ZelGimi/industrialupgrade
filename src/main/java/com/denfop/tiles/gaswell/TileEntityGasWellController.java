@@ -25,10 +25,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +41,7 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
     public GasVein vein;
 
     public TileEntityGasWellController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.GasWellMultiBlock,BlockGasWell.gas_well_controller,pos,state);
+        super(InitMultiBlockSystem.GasWellMultiBlock, BlockGasWell.gas_well_controller, pos, state);
 
     }
 
@@ -130,7 +130,7 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
         customPacketBuffer.writeBytes(socket.getEnergy().updateComponent());
         customPacketBuffer.writeBytes(tank.getTank().writePacket());
         customPacketBuffer.writeBoolean(vein != null);
-        customPacketBuffer.writeBytes(vein.writePacket());
+        customPacketBuffer.writeBytes(vein.writePacket(customPacketBuffer.registryAccess()));
         customPacketBuffer.writeBoolean(work);
         return customPacketBuffer;
     }

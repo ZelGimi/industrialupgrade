@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 public class EventLoadController extends EnergyTileEvent {
 
     public EventLoadController(final IEnergyController tile, Level level) {
-        super(tile,level);
+        super(tile, level);
     }
 
 }

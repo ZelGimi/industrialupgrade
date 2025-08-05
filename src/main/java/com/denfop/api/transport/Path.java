@@ -2,8 +2,8 @@ package com.denfop.api.transport;
 
 
 import net.minecraft.core.Direction;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class Path {
 

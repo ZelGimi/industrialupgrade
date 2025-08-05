@@ -52,9 +52,9 @@ public class ExtractorCategory extends GuiIU implements IRecipeCategory<Extracto
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileExtractor) BlockSimpleMachine.extractor_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
@@ -112,10 +112,10 @@ public class ExtractorCategory extends GuiIU implements IRecipeCategory<Extracto
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,0, 0, xScale);
-      bindTexture(getTexture());
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        bindTexture(getTexture());
     }
 
     @Override
@@ -135,9 +135,8 @@ public class ExtractorCategory extends GuiIU implements IRecipeCategory<Extracto
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIMachine.png".toLowerCase());
     }
 
 

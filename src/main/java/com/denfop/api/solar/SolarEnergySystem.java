@@ -18,7 +18,7 @@ public class SolarEnergySystem {
         int level = 0;
         for (ItemStack stack : stackList) {
             if (!stack.isEmpty()) {
-                level += (((ItemMain<?>)stack.getItem()).getElement().getId() + 1);
+                level += (((ItemMain<?>) stack.getItem()).getElement().getId() + 1);
             }
         }
         solarTile.setCoreLevel(level);
@@ -35,7 +35,7 @@ public class SolarEnergySystem {
                     if (item == null || item.isEmpty()) {
                         continue;
                     }
-                    int meta = ((ItemMain<?>)item.getItem()).getElement().getId();
+                    int meta = ((ItemMain<?>) item.getItem()).getElement().getId();
                     if (meta + 1 > max) {
                         max = meta + 1;
                     }
@@ -61,7 +61,7 @@ public class SolarEnergySystem {
                     if (item == null || item.isEmpty()) {
                         continue;
                     }
-                    int meta = ((ItemMain<?>)item.getItem()).getElement().getId();
+                    int meta = ((ItemMain<?>) item.getItem()).getElement().getId();
                     if (meta + 1 > max) {
                         max = meta + 1;
                     }
@@ -93,7 +93,7 @@ public class SolarEnergySystem {
                         index++;
                         continue;
                     }
-                    int meta = ((ItemMain<?>)item.getItem()).getElement().getId();
+                    int meta = ((ItemMain<?>) item.getItem()).getElement().getId();
                     if (meta + 1 > max) {
                         max = meta + 1;
                     }
@@ -122,7 +122,7 @@ public class SolarEnergySystem {
                         if (stack == null || stack.isEmpty()) {
                             enumStateList.add(TileEntityMiniPanels.EnumState.EMPTY);
                         } else {
-                            int meta1 = ((ItemMain<?>)stack.getItem()).getElement().getId();
+                            int meta1 = ((ItemMain<?>) stack.getItem()).getElement().getId();
                             int differenceMeta = Math.abs(meta - meta1);
                             if (differenceMeta == 0) {
                                 enumStateList.add(TileEntityMiniPanels.EnumState.STABLE);

@@ -31,7 +31,7 @@ public class TileEntityCableRenderer implements BlockEntityRenderer<TileEntityMu
         poseStack.translate(0.0D, 0.0D, 0.0D);
 
         if (te.stackFacade != null && !te.stackFacade.isEmpty()) {
-            if (data.getItemStack().isEmpty() || !ItemStack.isSameItemSameTags(data.getItemStack(), te.stackFacade)) {
+            if (data.getItemStack().isEmpty() || !ItemStack.isSameItem(data.getItemStack(), te.stackFacade)) {
                 data.setItemStack(te.stackFacade);
                 data.setBakedModel(Minecraft.getInstance().getItemRenderer().getModel(te.stackFacade, te.getLevel(), null, 0));
             }

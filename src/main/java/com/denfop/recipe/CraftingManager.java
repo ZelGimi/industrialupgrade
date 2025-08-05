@@ -7,12 +7,11 @@ import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,18 +22,18 @@ public class CraftingManager {
     public CraftingManager() {
     }
 
-    public BaseRecipe addRecipe(DataSimpleItem<?,?> output, Object... input) {
+    public BaseRecipe addRecipe(DataSimpleItem<?, ?> output, Object... input) {
         return addRecipe(output.getItemStack(), input);
     }
+
     public BaseRecipe addRecipe(Item output, Object... input) {
         return addRecipe(new ItemStack(output), input);
     }
+
     public BaseRecipe addRecipe(String output, Object... input) {
         return addRecipe(Recipes.inputFactory.getInput(output).getInputs().get(0), input);
     }
-    public BaseRecipe addRecipe(String output,int amount, Object... input) {
-        return addRecipe(ModUtils.setSize(Recipes.inputFactory.getInput(output).getInputs().get(0),amount), input);
-    }
+
     public BaseRecipe addRecipe(ItemStack output, Object... input) {
         List<Object> objects = Arrays.asList(input);
         List<String> list = new ArrayList<>();
@@ -67,13 +66,12 @@ public class CraftingManager {
         }
         return new BaseShapelessRecipe(output, recipeInputList);
     }
-    public BaseRecipe addShapelessRecipe(String output,int amount, Object... input) {
-        return addRecipe(ModUtils.setSize(Recipes.inputFactory.getInput(output).getInputs().get(0),amount), input);
-    }
+
     public BaseShapelessRecipe addShapelessRecipe(Item output, Object... input) {
         return addShapelessRecipe(new ItemStack(output), input);
     }
-    public BaseShapelessRecipe addShapelessRecipe(DataSimpleItem<?,?> output, Object... input) {
+
+    public BaseShapelessRecipe addShapelessRecipe(DataSimpleItem<?, ?> output, Object... input) {
         return addShapelessRecipe(output.getItemStack(), input);
     }
 
@@ -90,13 +88,13 @@ public class CraftingManager {
             return Recipes.inputFactory.getInput(new ItemStack(((DataSimpleItem) o).getItem()));
         } else if (o instanceof DataSimpleBlock) {
             return Recipes.inputFactory.getInput(new ItemStack((((DataSimpleBlock) o).getItem())));
-        }else if (o instanceof DataBlock) {
+        } else if (o instanceof DataBlock) {
             return Recipes.inputFactory.getInput(new ItemStack((((DataBlock) o).getItem())));
         } else if (o instanceof DataItem) {
-            return Recipes.inputFactory.getInput(ItemStackHelper.fromData((DataItem<?,?>) o));
-        }else if (o instanceof DataBlockEntity<?>) {
+            return Recipes.inputFactory.getInput(ItemStackHelper.fromData((DataItem<?, ?>) o));
+        } else if (o instanceof DataBlockEntity<?>) {
             return Recipes.inputFactory.getInput(ItemStackHelper.fromData((DataBlockEntity<?>) o));
-        }else if (o instanceof ItemStack) {
+        } else if (o instanceof ItemStack) {
             return Recipes.inputFactory.getInput((ItemStack) o);
         } else if (o instanceof Block) {
             return Recipes.inputFactory.getInput(new ItemStack((Block) o));

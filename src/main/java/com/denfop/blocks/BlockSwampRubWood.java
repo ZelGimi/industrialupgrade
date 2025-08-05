@@ -100,7 +100,7 @@ public class BlockSwampRubWood<T extends Enum<T> & ISubEnum> extends BlockCore<T
                     Item item = this.getMultiData().getItem(RubberWoodState.plain_y.getId());
                     spawnAsEntity(p_60538_.getLevel(), new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), new ItemStack(item, 1));
                     if (!p_60537_.getValue(stateProperty).isPlain() && p_60538_.getLevel().random.nextInt(6) == 0) {
-                        spawnAsEntity(p_60538_.getLevel(),  new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), IUItem.latex.copy());
+                        spawnAsEntity(p_60538_.getLevel(), new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), IUItem.latex.copy());
                     }
                 }
             }

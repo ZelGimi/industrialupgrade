@@ -25,18 +25,6 @@ public class DepositsHandler {
         return recipes;
     }
 
-    public List<ItemStack> getInputs() {
-
-        List<ItemStack> stack = new ArrayList<>();
-        if (veinType.getHeavyOre() != null) {
-            stack.add(new ItemStack(veinType.getHeavyOre().getBlock(), 1));
-        }
-        for (ChanceOre ore : veinType.getOres()) {
-            stack.add(new ItemStack(ore.getBlock().getBlock(), 1));
-        }
-        return stack;
-    }
-
     public static DepositsHandler addRecipe(
             VeinType veinType
     ) {
@@ -54,6 +42,18 @@ public class DepositsHandler {
 
 
         }
+    }
+
+    public List<ItemStack> getInputs() {
+
+        List<ItemStack> stack = new ArrayList<>();
+        if (veinType.getHeavyOre() != null) {
+            stack.add(new ItemStack(veinType.getHeavyOre().getBlock(), 1));
+        }
+        for (ChanceOre ore : veinType.getOres()) {
+            stack.add(new ItemStack(ore.getBlock().getBlock(), 1));
+        }
+        return stack;
     }
 
     public VeinType getVeinType() {

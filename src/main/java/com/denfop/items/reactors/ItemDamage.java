@@ -1,10 +1,9 @@
 package com.denfop.items.reactors;
 
 import com.denfop.api.item.IDamageItem;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -19,7 +18,7 @@ public class ItemDamage extends Item implements IDamageItem {
     protected String nameItem;
 
     public ItemDamage(Item.Properties properties, int maxDamage) {
-        super(properties);
+        super(maxDamage == 0 ? properties.stacksTo(1) : properties.stacksTo(1).durability(maxDamage));
         this.maxDamageItem = maxDamage;
     }
 
@@ -41,14 +40,16 @@ public class ItemDamage extends Item implements IDamageItem {
         return this.nameItem;
     }
 
-    public  int getMaxDamage(ItemStack stack){
+    public int getMaxDamage(ItemStack stack) {
         return getMaxCustomDamage(stack);
     }
 
 
     @Override
     public int getDamage(ItemStack stack) {
-        return !stack.hasTag() ? 0 : stack.getTag().getInt("damage");
+        if (!stack.has(DataComponents.DAMAGE))
+            stack.set(DataComponents.DAMAGE, 0);
+        return stack.get(DataComponents.DAMAGE);
     }
 
     public boolean isBarVisible(@Nonnull ItemStack stack) {
@@ -76,11 +77,11 @@ public class ItemDamage extends Item implements IDamageItem {
 
 
     public int getCustomDamage(ItemStack stack) {
-        if (!stack.hasTag()) {
+        if (!stack.has(DataComponents.DAMAGE)) {
             return 0;
         } else {
-            assert stack.getTag() != null;
-            return stack.getTag().getInt("damage");
+            assert stack.get(DataComponents.DAMAGE) != null;
+            return stack.get(DataComponents.DAMAGE);
         }
     }
 
@@ -94,11 +95,10 @@ public class ItemDamage extends Item implements IDamageItem {
     }
 
     public void setCustomDamage(ItemStack stack, int damage) {
-        CompoundTag nbt = ModUtils.nbt(stack);
         if (damage > maxDamageItem) {
             damage = maxDamageItem;
         }
-        nbt.putInt("damage", damage);
+        stack.set(DataComponents.DAMAGE, damage);
     }
 
     public boolean applyCustomDamage(ItemStack stack, int damage, LivingEntity src) {
@@ -106,7 +106,7 @@ public class ItemDamage extends Item implements IDamageItem {
         if (damage1 <= 0)
             damage1 = 0;
         this.setCustomDamage(stack, damage1);
-        return getBarWidth(stack) == 0;
+        return true;
     }
 
 

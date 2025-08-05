@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_imp_fueltank"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_392_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_396_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_50_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_398_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "EAE",
+    "BCB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:heat_reactors/heat_per_fueltank"
+  },
+  "show_notification": false
+}

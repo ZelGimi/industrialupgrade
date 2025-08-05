@@ -23,8 +23,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,22 +45,10 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
     Map<Item, Integer> mapValues = new HashMap<>();
 
     public TileEntityBaseVending(EnumTypeStyle style, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.style = style;
-        this.invSlotBuyPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1){
-            @Override
-            public void onChanged() {
-                super.onChanged();
-
-            }
-        };
-        this.invSlotSellPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1){
-            @Override
-            public void onChanged() {
-                super.onChanged();
-
-            }
-        };
+        this.invSlotBuyPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1);
+        this.invSlotSellPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1);
 
         this.invSlotBuy = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1) {
             @Override
@@ -89,7 +77,6 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
         timer += 5;
         return super.onActivated(player, hand, side, vec3);
     }
-
 
 
     public void updateItems() {
@@ -171,7 +158,7 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
             if (privateStack.isEmpty()) {
                 continue;
             }
-            if (!stack.is(privateStack.getItem())){
+            if (!stack.is(privateStack.getItem())) {
                 return;
             }
             ItemStack privateSell = this.invSlotSellPrivate.get(i);
@@ -217,12 +204,12 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
                         break;
                     }
                     if (stack1.is(privateSell.getItem())) {
-                        int shrink = Math.min(countCan , stack1.getCount() / privateSell.getCount());
-                        stack1.shrink(shrink*privateSell.getCount());
+                        int shrink = Math.min(countCan, stack1.getCount() / privateSell.getCount());
+                        stack1.shrink(shrink * privateSell.getCount());
                         countCan -= shrink;
                     }
                 }
-                stack.shrink(countCan1* privateStack.getCount());
+                stack.shrink(countCan1 * privateStack.getCount());
                 this.output.add(ModUtils.setSize(privateStack, countCan1 * privateStack.getCount()));
                 this.invSlotSell.add(ModUtils.setSize(privateSell, countCan1 * privateSell.getCount()));
                 this.updateItems();

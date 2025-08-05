@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UpdateTileEntityPacket {
+
     public static void send(WorldData worldData) throws IOException {
         if (!worldData.listUpdateTile.isEmpty()) {
             for (TileEntityBlock te : new ArrayList<>(worldData.listUpdateTile)) {
@@ -20,7 +21,7 @@ public class UpdateTileEntityPacket {
                         new ArrayList<>()
                 );
                 for (ServerPlayer player : playersInRange) {
-                    CustomPacketBuffer commonBuffer = new CustomPacketBuffer();
+                    CustomPacketBuffer commonBuffer = new CustomPacketBuffer(player.registryAccess());
                     commonBuffer.writeByte(0);
                     EncoderHandler.encode(commonBuffer, te.getBlockPos(), false);
                     commonBuffer.writeBytes(te.writePacket());
@@ -38,7 +39,7 @@ public class UpdateTileEntityPacket {
                         new ArrayList<>()
                 );
                 for (ServerPlayer player : playersInRange) {
-                    CustomPacketBuffer commonBuffer = new CustomPacketBuffer();
+                    CustomPacketBuffer commonBuffer = new CustomPacketBuffer(player.registryAccess());
                     commonBuffer.writeByte(25);
                     EncoderHandler.encode(commonBuffer, te.getBlockPos(), false);
                     commonBuffer.writeBytes(te.writeUpdatePacket());
@@ -49,7 +50,7 @@ public class UpdateTileEntityPacket {
         for (Map.Entry<TileEntityBlock, Map<Player, CustomPacketBuffer>> entry : worldData.mapUpdateContainer.entrySet()) {
             for (Map.Entry<Player, CustomPacketBuffer> entry1 : entry.getValue().entrySet()) {
 
-                final CustomPacketBuffer playerBuffer = new CustomPacketBuffer();
+                final CustomPacketBuffer playerBuffer = new CustomPacketBuffer(entry1.getKey().registryAccess());
                 playerBuffer.writeByte(8);
                 EncoderHandler.encode(playerBuffer, entry.getKey().getBlockPos(), false);
                 playerBuffer.writeBytes(entry1.getValue());
@@ -70,7 +71,7 @@ public class UpdateTileEntityPacket {
                 byte[] bytes = new byte[buffer.writerIndex() - buffer.readerIndex()];
                 buffer.readBytes(bytes);
                 for (ServerPlayer player : playersInRange) {
-                    final CustomPacketBuffer playerBuffer = new CustomPacketBuffer();
+                    final CustomPacketBuffer playerBuffer = new CustomPacketBuffer(player.registryAccess());
                     playerBuffer.writeByte(12);
                     EncoderHandler.encode(playerBuffer, te.getBlockPos(), false);
                     playerBuffer.writeBytes(bytes);

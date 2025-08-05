@@ -8,6 +8,7 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.api.space.colonies.enums.EnumTypeFactory;
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 public class Factory extends Building implements IFactory {
@@ -52,8 +53,8 @@ public class Factory extends Building implements IFactory {
     }
 
     @Override
-    public CompoundTag writeTag(final CompoundTag tag) {
-        super.writeTag(tag);
+    public CompoundTag writeTag(final CompoundTag tag, HolderLookup.Provider p_323640_) {
+        super.writeTag(tag, p_323640_);
         tag.putByte("id", (byte) this.getType().ordinal());
         tag.putByte("people", people);
         return tag;

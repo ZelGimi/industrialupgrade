@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:plates/tin"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CBC",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_49_element"
+  },
+  "show_notification": false
+}

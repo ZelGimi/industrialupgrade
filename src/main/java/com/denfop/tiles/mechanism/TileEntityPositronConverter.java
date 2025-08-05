@@ -26,8 +26,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
 
 
     public TileEntityPositronConverter(BlockPos pos, BlockState state) {
-        super(500, 8, 1,BlockBaseMachine3.positronconverter,pos,state);
+        super(500, 8, 1, BlockBaseMachine3.positronconverter, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override

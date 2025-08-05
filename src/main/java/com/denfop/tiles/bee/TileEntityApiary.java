@@ -26,6 +26,7 @@ import com.denfop.blocks.mechanism.BlockApiary;
 import com.denfop.container.ContainerApiary;
 import com.denfop.container.ContainerBase;
 import com.denfop.damagesource.IUDamageSource;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.entity.SmallBee;
 import com.denfop.gui.GuiApiary;
 import com.denfop.gui.GuiCore;
@@ -59,8 +60,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.*;
@@ -408,7 +409,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         this.deathTask = customPacketBuffer.readByte();
         this.illTask = customPacketBuffer.readByte();
         this.queen = BeeNetwork.instance.getBee(customPacketBuffer.readInt()).copy();
-
         int size = customPacketBuffer.readInt();
         for (int i = 0; i < size; i++) {
             double chance = customPacketBuffer.readDouble();
@@ -491,7 +491,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             if (this.queen != null) {
                 this.genome = new Genome(this.stack);
                 this.chunk = this.getWorld().getChunkAt(pos);
-                this.biome = this.getWorld().getBiome(pos).get();
+                this.biome = this.getWorld().getBiome(pos).value();
                 reset();
                 set();
                 this.coef = this.queen.canWorkInBiome(biome, level) || genome.hasGenome(EnumGenetic.COEF_BIOME) ? 1 : 0.5;
@@ -558,55 +558,12 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             if (queen != null) {
                 List<Product> products = queen.getProduct();
                 queen = BeeNetwork.instance.getBee(queen.getId()).copy();
-                if (this.biome != null)
-                    this.coef = this.queen.canWorkInBiome(biome, level) ? 1 : 0.5;
+                this.coef = this.queen.canWorkInBiome(biome, level) ? 1 : 0.5;
                 this.coef = genome.hasGenome(EnumGenetic.COEF_BIOME) ? 1 : coef;
-
                 products.forEach(product -> queen.addPercentProduct(product.getCrop(), product.getChance()));
             }
         }
 
-    }
-
-    @Override
-    public void readPacket(CustomPacketBuffer packetBuffer) {
-        super.readPacket(packetBuffer);
-        boolean hasQueen = packetBuffer.readBoolean();
-        if (hasQueen){
-            queen = BeeNetwork.instance.getBee(packetBuffer.readInt());
-        }
-    }
-
-    @Override
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
-        customPacketBuffer.writeBoolean(queen != null);
-        if (queen != null)
-            customPacketBuffer.writeInt(queen.getId());
-        return customPacketBuffer;
-    }
-
-    @Override
-    public CustomPacketBuffer writeUpdatePacket() {
-        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
-        customPacketBuffer.writeBoolean(queen != null);
-        if (queen != null)
-            customPacketBuffer.writeInt(queen.getId());
-        return customPacketBuffer;
-    }
-
-    @Override
-    public boolean needUpdate() {
-        return true;
-    }
-
-    @Override
-    public void readUpdatePacket(CustomPacketBuffer packetBuffer) {
-        super.readUpdatePacket(packetBuffer);
-      boolean hasQueen = packetBuffer.readBoolean();
-      if (hasQueen){
-          queen = BeeNetwork.instance.getBee(packetBuffer.readInt());
-      }
     }
 
     @Override
@@ -632,21 +589,20 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 .getItemInHand(InteractionHand.MAIN_HAND)
                 .getItem() instanceof ItemJarBees && queen == null && !this.getWorld().isClientSide) {
             ItemStack stack = player.getItemInHand(hand);
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            if (nbt.contains("swarm")) {
+            if (stack.has(DataComponentsInit.SWARM)) {
                 this.stack = stack.copy();
                 this.stack.setCount(1);
-                int id = nbt.getInt("bee_id");
+                int id = stack.getOrDefault(DataComponentsInit.BEE, 0);
                 this.id = WorldBaseGen.random.nextLong();
                 this.queen = BeeNetwork.instance.getBee(id).copy();
                 this.genome = new Genome(this.stack);
-                this.biome = this.getWorld().getBiome(pos).get();
+                this.biome = this.getWorld().getBiome(pos).value();
                 this.coef = this.queen.canWorkInBiome(biome, level) ? 1 : 0.5;
                 reset();
                 set();
                 this.coef = genome.hasGenome(EnumGenetic.COEF_BIOME) ? 1 : coef;
-                int totalBeeCount = nbt.getInt("swarm");
-                if (!nbt.contains("info")) {
+                int totalBeeCount = stack.get(DataComponentsInit.SWARM);
+                if (!stack.has(DataComponentsInit.BEE_LIST)) {
                     int attackBeeCount = (int) (totalBeeCount * (percentAttackBee / 100.0));
                     int doctorBeeCount = (int) (totalBeeCount * (percentDoctorBee / 100.0));
                     int workersBeeCount = (int) (totalBeeCount * (percentWorkersBee / 100.0));
@@ -680,10 +636,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         apairyBeeList.add(bee);
                     }
                 } else {
-                    final ListTag tagList = nbt.getList("info", 10);
-                    for (int i = 0; i < tagList.size(); i++) {
-                        CompoundTag beeInfo = tagList.getCompound(i);
-                        Bee bee = new Bee(beeInfo);
+                    List<Bee> list = stack.get(DataComponentsInit.BEE_LIST);
+                    for (Bee bee : list) {
+
                         if (bee.isIll()) {
                             this.illBeeList.add(bee);
                         }
@@ -749,16 +704,10 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 .getItemInHand(InteractionHand.MAIN_HAND)
                 .getItem() instanceof ItemNet && !this.getWorld().isClientSide) {
             ItemStack stack = new ItemStack(IUItem.jarBees.getStack(0), 1);
-
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            this.genome.writeNBT(nbt);
-            nbt.putInt("bee_id", queen.getId());
-            nbt.putInt("swarm", this.apairyBeeList.size());
-            ListTag tagList = new ListTag();
-            for (Bee bee : this.apairyBeeList) {
-                tagList.add(bee.writeToNBT());
-            }
-            nbt.put("info", tagList);
+            stack.set(DataComponentsInit.BEE, queen.getId());
+            this.genome.writeNBT(stack);
+            stack.set(DataComponentsInit.SWARM, this.apairyBeeList.size());
+            stack.set(DataComponentsInit.BEE_LIST, new ArrayList<>(this.apairyBeeList));
             player.addItem(stack);
             this.apairyBeeList.clear();
             this.queen = null;
@@ -874,7 +823,8 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             nbt.putByte("bee_id", (byte) queen.getId());
             nbt.put("bees", tagList);
             nbt.putLong("id_queen", id);
-            nbt.put("stack", stack.serializeNBT());
+            if (stack != null)
+                nbt.put("stack", stack.save(this.provider));
             ListTag listTag = new ListTag();
             for (Product product : queen.getProduct()) {
                 CompoundTag compoundTag = new CompoundTag();
@@ -908,9 +858,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         if (nbt.contains("bees")) {
             int beeId = nbt.getByte("bee_id");
             id = nbt.getLong("id_queen");
-            queen = BeeNetwork.instance.getBee(beeId).copy();
-            this.stack = ItemStack.of(nbt.getCompound("stack"));
 
+
+            queen = BeeNetwork.instance.getBee(beeId).copy();
             ListTag listTag = nbt.getList("product", 10);
             for (int i = 0; i < listTag.size(); i++) {
                 CompoundTag compoundTag = listTag.getCompound(i);
@@ -923,6 +873,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 }
             }
 
+            this.stack = ItemStack.parseOptional(provider, nbt.getCompound("stack"));
             ListTag tagList = nbt.getList("bees", 10);
             apairyBeeList.clear();
             for (int i = 0; i < tagList.size(); i++) {
@@ -1010,10 +961,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         this.tickDrainJelly = tickDrainJelly;
     }
 
-    public double[] getMassiveNeeds() {
-        return massiveNeeds;
-    }
-
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -1033,8 +980,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 generation++;
                 canAdaptationBee();
             }
-            ParticleUtils.spawnApiaryParticles(level, pos, level.random);
-
             this.rain = level.isRaining();
             this.thundering = level.isThundering();
             feedBees(apairyBeeList);
@@ -1047,6 +992,8 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             if (royalJelly < 0) {
                 royalJelly = 0;
             }
+            ParticleUtils.spawnApiaryParticles(level, pos, level.random);
+
             massiveNeeds[0] = this.food / (maxFood * 1D);
             massiveNeeds[1] = this.apairyBeeList.size() * 1D / (queen.getMaxSwarm() * swarmGenome);
             enemy = getNearbyEntitiesWithWeight();
@@ -1246,7 +1193,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 tickDrainFood = 0;
                 foodCellSlot.get(0).shrink(1);
                 this.invSlotFood.add(ModUtils.getCellFromFluid(FluidName.fluidhoney.getInstance().get()));
-                this.food -= 500;
+                this.food -= 500D;
             }
         }
         if (!this.jellyCellSlot.isEmpty() && tickDrainJelly == 20) {
@@ -1256,6 +1203,49 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 this.invSlotJelly.add(ModUtils.getCellFromFluid(FluidName.fluidroyaljelly.getInstance().get()));
                 this.royalJelly -= 50D;
             }
+        }
+    }
+
+    @Override
+    public void readPacket(CustomPacketBuffer packetBuffer) {
+        super.readPacket(packetBuffer);
+        boolean hasQueen = packetBuffer.readBoolean();
+        try {
+            if (hasQueen) {
+                queen = BeeNetwork.instance.getBee(packetBuffer.readInt());
+            }
+        }catch (Exception e){};
+    }
+
+    @Override
+    public CustomPacketBuffer writePacket() {
+        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
+        customPacketBuffer.writeBoolean(queen != null);
+        if (queen != null)
+            customPacketBuffer.writeInt(queen.getId());
+        return customPacketBuffer;
+    }
+
+    @Override
+    public CustomPacketBuffer writeUpdatePacket() {
+        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
+        customPacketBuffer.writeBoolean(queen != null);
+        if (queen != null)
+            customPacketBuffer.writeInt(queen.getId());
+        return customPacketBuffer;
+    }
+
+    @Override
+    public boolean needUpdate() {
+        return true;
+    }
+
+    @Override
+    public void readUpdatePacket(CustomPacketBuffer packetBuffer) {
+        super.readUpdatePacket(packetBuffer);
+        boolean hasQueen = packetBuffer.readBoolean();
+        if (hasQueen) {
+            queen = BeeNetwork.instance.getBee(packetBuffer.readInt());
         }
     }
 
@@ -1724,7 +1714,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         }
     }
 
-
     public boolean contains(BlockPos vec) {
         if (vec.getX() > this.axisAlignedBB.minX && vec.getX() < axisAlignedBB.maxX) {
             if (vec.getY() > this.axisAlignedBB.minY && vec.getY() < axisAlignedBB.maxY) {
@@ -1763,7 +1752,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         if (WorldBaseGen.random.nextDouble() < 0.5) {
                             passedCrops.add(crop);
                             crop.setBeeId(this.id);
-
                             int stage = crop.getCrop().getStage();
                             if (crop.getCrop().getTick() < crop.getCrop().getMaxTick()) {
                                 crop.getCrop().addTick((int) ((int) ((crop
@@ -1812,9 +1800,11 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 }
             }
         }
+
         for (int i = 0; i < level.random.nextInt(Math.max(1, passedCrops.size() / 4)) + 1; i++) {
             SmallBee smallBee = IUItem.entity_bee.get().create(level);
             smallBee.setCrops(passedCrops);
+
             smallBee.setBee(queen);
             smallBee.setCustomHive(pos);
             smallBee.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
@@ -1840,6 +1830,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         } else {
             harvest++;
         }
+
     }
 
     private void attackPlayers(Map<Player, Double> enemy) {

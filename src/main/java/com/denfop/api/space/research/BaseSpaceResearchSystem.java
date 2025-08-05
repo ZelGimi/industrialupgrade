@@ -8,10 +8,8 @@ import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.utils.FluidHandlerFix;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -222,7 +220,7 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
         if (rovers == null) {
             return false;
         }
-        if (FluidUtil.getFluidHandler(rovers.getItemStack()).orElse((IFluidHandlerItem) rovers.getItemStack().getItem().initCapabilities(rovers.getItemStack(), rovers.getItemStack().getTag())).drain(10, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+        if (FluidHandlerFix.getFluidHandler(rovers.getItemStack()).drain(10, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
             return false;
         }
         Data data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(table.getPlayer()).computeIfAbsent(

@@ -16,6 +16,7 @@ public class TileEntityDualMultiCrop extends TileEntityMultiCrop {
     public TileEntityDualMultiCrop(BlockPos pos, BlockState state) {
         super(2, BlockBaseMachine3.dual_multi_crop, pos, state);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.dual_multi_crop;

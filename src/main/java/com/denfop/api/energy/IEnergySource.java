@@ -13,17 +13,23 @@ public interface IEnergySource extends IEnergyEmitter {
     void addPerEnergy(double setEnergy);
 
     boolean isSource();
-    default double canExtractEnergy(Direction direction){
-       return canExtractEnergy();
+
+    default double canExtractEnergy(Direction direction) {
+        return canExtractEnergy();
     }
+
     double canExtractEnergy();
-    default void extractEnergy(Direction direction, double var1){
+
+    default void extractEnergy(Direction direction, double var1) {
         extractEnergy(var1);
     }
+
     void extractEnergy(double var1);
-    default  int getSourceTier(Direction direction){
+
+    default int getSourceTier(Direction direction) {
         return getSourceTier();
     }
+
     int getSourceTier();
 
 }

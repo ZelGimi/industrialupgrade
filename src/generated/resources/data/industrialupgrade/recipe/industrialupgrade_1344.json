@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/heat_exchange"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:chemical_plant/chemical_plant_exchanger"
+  },
+  "show_notification": false
+}

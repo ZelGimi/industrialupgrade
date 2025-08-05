@@ -15,6 +15,8 @@ import java.io.IOException;
 
 public class PacketUpdateTile implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateTile() {
 
     }
@@ -27,7 +29,8 @@ public class PacketUpdateTile implements IPacket {
 
     public PacketUpdateTile(CustomPacketBuffer data, ServerPlayer player) {
 
-        IUCore.network.getServer().sendPacket(data, player);
+        this.buffer = data;
+        IUCore.network.getServer().sendPacket(this, data, player);
     }
 
     private static void apply(BlockPos pos, Class<? extends TileEntityBlock> teClass, Level world, byte[] is) {
@@ -35,7 +38,7 @@ public class PacketUpdateTile implements IPacket {
             BlockEntity te = world.getBlockEntity(pos);
             if (teClass != null && (te == null || te.getClass() != teClass || te.isRemoved() || te.getLevel() != world)) {
 
-                System.out.println(2);
+
             } else {
                 if (te == null) {
                     return;
@@ -48,11 +51,21 @@ public class PacketUpdateTile implements IPacket {
 
 
             }
-            final CustomPacketBuffer buf = new CustomPacketBuffer();
+            final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
             buf.writeBytes(is);
             ((TileEntityBlock) te).readPacket(buf);
 
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

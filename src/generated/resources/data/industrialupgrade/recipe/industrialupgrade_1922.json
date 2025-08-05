@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_casing"
+    },
+    "C": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "pattern": [
+    " C ",
+    " B ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:smeltery/smeltery_furnace"
+  },
+  "show_notification": false
+}

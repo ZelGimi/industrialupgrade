@@ -17,6 +17,7 @@ public class RegisterOreDictionary {
     public static final List<String> standardList = Arrays.asList("Copper", "Tin", "Lead", "Iron", "Gold", "Osmium", "Tantalum",
             "Cadmium"
     );
+
     public static List<String> itemNames7() {
         return Arrays.asList(
                 "Arsenic",

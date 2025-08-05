@@ -24,8 +24,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,20 +36,22 @@ public class TileEntityFacadeBlock extends TileEntityInventory implements IUpdat
     public final InvSlot stackSlot;
 
     public TileEntityFacadeBlock(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.facademechanism,pos,state);
+        super(BlockBaseMachine3.facademechanism, pos, state);
         this.stackSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return  Block.byItem(stack.getItem()) != Blocks.AIR;
+                return Block.byItem(stack.getItem()) != Blocks.AIR;
             }
         };
         this.stackSlot.setStackSizeLimit(1);
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.facade_mechanism.info"));
     }
+
     @Override
     public ContainerFacadeBlock getGuiContainer(final Player var1) {
         return new ContainerFacadeBlock(var1, this);

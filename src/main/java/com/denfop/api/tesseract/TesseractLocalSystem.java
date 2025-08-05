@@ -6,8 +6,8 @@ import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -172,7 +172,7 @@ public class TesseractLocalSystem {
                                     two.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                                     one.drain(stack.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                                 } else {
-                                    if (two.getFluid().isFluidEqual(stack)) {
+                                    if (FluidStack.isSameFluid(two.getFluid(), stack)) {
                                         final int canFill = two.getCapacity() - two.getFluidAmount();
                                         final int canDrain = stack.getAmount();
                                         final int sent = Math.min(canFill, canDrain);
@@ -196,7 +196,7 @@ public class TesseractLocalSystem {
                                 one.drain(stack.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                             } else {
 
-                                if (two.getFluid().isFluidEqual(stack)) {
+                                if (FluidStack.isSameFluid(two.getFluid(), stack)) {
                                     final int canFill = two.getCapacity() - two.getFluidAmount();
                                     final int canDrain = stack.getAmount();
                                     final int sent = Math.min(canFill, canDrain);

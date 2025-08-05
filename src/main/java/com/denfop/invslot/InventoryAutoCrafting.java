@@ -10,7 +10,7 @@ public class InventoryAutoCrafting extends TransientCraftingContainer {
     private final TileEntityAutoCrafter tile;
 
     public InventoryAutoCrafting(TileEntityAutoCrafter tile) {
-        super((AbstractContainerMenu)null, 3, 3);
+        super((AbstractContainerMenu) null, 3, 3);
         this.tile = tile;
     }
 

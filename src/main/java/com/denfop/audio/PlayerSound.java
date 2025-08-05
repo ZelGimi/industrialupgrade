@@ -1,7 +1,5 @@
 package com.denfop.audio;
 
-import java.lang.ref.WeakReference;
-
 import com.denfop.mixin.access.SoundEngineAccessor;
 import com.denfop.mixin.access.SoundManagerAccess;
 import net.minecraft.client.Minecraft;
@@ -18,15 +16,14 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerSound extends AbstractTickableSoundInstance {
 
 
-    private  Player player;
     private final int subtitleFrequency;
-
+    private Player player;
     private int consecutiveTicks;
 
 
     public PlayerSound(@NotNull Player player, @NotNull SoundEvent sound) {
         super(sound, SoundSource.PLAYERS, player.level().getRandom());
-        this.player =player;
+        this.player = player;
         this.subtitleFrequency = 60;
         this.delay = 0;
         this.looping = true;
@@ -44,8 +41,6 @@ public class PlayerSound extends AbstractTickableSoundInstance {
     }
 
 
-
-
     @Override
     public void tick() {
         Player player = getPlayer();
@@ -61,10 +56,10 @@ public class PlayerSound extends AbstractTickableSoundInstance {
 
         if (consecutiveTicks % subtitleFrequency == 0) {
             SoundManager soundHandler = Minecraft.getInstance().getSoundManager();
-            for (SoundEventListener soundEventListener :  ((SoundEngineAccessor)((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine()).getListeners()) {
+            for (SoundEventListener soundEventListener : ((SoundEngineAccessor) ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine()).getListeners()) {
                 WeighedSoundEvents soundEventAccessor = resolve(soundHandler);
                 if (soundEventAccessor != null) {
-                    soundEventListener.onPlaySound(this, soundEventAccessor);
+                    soundEventListener.onPlaySound(this, soundEventAccessor, volume);
                 }
             }
             consecutiveTicks = 1;
@@ -72,7 +67,6 @@ public class PlayerSound extends AbstractTickableSoundInstance {
             consecutiveTicks++;
         }
     }
-
 
 
     @Override

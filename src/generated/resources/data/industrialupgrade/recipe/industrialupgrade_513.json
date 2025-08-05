@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/quantumcircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:stick/silver"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/quantumcircuit_part2"
+  },
+  "show_notification": false
+}

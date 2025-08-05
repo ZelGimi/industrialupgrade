@@ -9,13 +9,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
 public class PacketAbstractComponent implements IPacket {
 
+
+    private CustomPacketBuffer buffer;
 
     public PacketAbstractComponent() {
     }
@@ -26,7 +28,7 @@ public class PacketAbstractComponent implements IPacket {
             ServerPlayer player,
             CustomPacketBuffer data
     ) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(64);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(64, player.registryAccess());
         try {
             buffer.writeByte(this.getId());
             EncoderHandler.encode(buffer, te.getBlockPos(), false);
@@ -35,8 +37,18 @@ public class PacketAbstractComponent implements IPacket {
         } catch (IOException var7) {
             throw new RuntimeException(var7);
         }
-        buffer.flip();
-        IUCore.network.getServer().sendPacket(buffer, player);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, player);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -65,7 +77,7 @@ public class PacketAbstractComponent implements IPacket {
             if (component != null) {
                 try {
 
-                    component.onNetworkUpdate(new CustomPacketBuffer(data));
+                    component.onNetworkUpdate(new CustomPacketBuffer(data, is.registryAccess()));
                 } catch (IOException var6) {
                     throw new RuntimeException(var6);
                 }
@@ -73,9 +85,11 @@ public class PacketAbstractComponent implements IPacket {
         }
     }
 
+
     @Override
     public EnumTypePacket getPacketType() {
         return EnumTypePacket.SERVER;
     }
+
 
 }

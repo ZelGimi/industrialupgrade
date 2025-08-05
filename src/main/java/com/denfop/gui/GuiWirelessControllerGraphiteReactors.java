@@ -95,18 +95,18 @@ public class GuiWirelessControllerGraphiteReactors<T extends ContainerWirelessCo
                 ItemStack stack = this.container.base.itemStacks.get(i);
                 if (!stack.isEmpty()) {
                     new ItemStackImage(this, 8 + i * 18, 25, () -> stack).drawBackground(
-                            poseStack,   this.guiLeft,
+                            poseStack, this.guiLeft,
                             this.guiTop
                     );
                 }
             }
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

@@ -12,8 +12,8 @@ import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -95,7 +95,7 @@ public class GuiFisher<T extends ContainerFisher> extends GuiIU<ContainerFisher>
         bindTexture(getTexture());
         this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
         this.drawBackground(poseStack);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, this.guiLeft() + 3, this.guiTop() + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
         int chargeLevel = (int) (48.0F * this.container.base.energy.getEnergy()
@@ -119,7 +119,7 @@ public class GuiFisher<T extends ContainerFisher> extends GuiIU<ContainerFisher>
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

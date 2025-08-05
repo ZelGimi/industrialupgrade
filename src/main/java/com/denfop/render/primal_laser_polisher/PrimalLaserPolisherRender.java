@@ -30,7 +30,7 @@ public class PrimalLaserPolisherRender implements BlockEntityRenderer<TileEntity
             poseStack.translate(0.5, 0.88, 0.4);
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             itemRenderer.renderStatic(itemStack, GROUND,
-                    packedLight, combinedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
+                    packedLight, combinedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
             poseStack.popPose();
         }
     }

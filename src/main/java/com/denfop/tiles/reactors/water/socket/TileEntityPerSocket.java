@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerSocket extends TileEntityMainSocket implements ISocket {
 
     public TileEntityPerSocket(BlockPos pos, BlockState state) {
-        super(80000,BlockWaterReactors.water_per_socket,pos,state);
+        super(80000, BlockWaterReactors.water_per_socket, pos, state);
     }
 
     @Override

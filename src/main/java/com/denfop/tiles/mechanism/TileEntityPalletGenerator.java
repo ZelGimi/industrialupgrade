@@ -18,8 +18,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +34,9 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
 
 
     public TileEntityPalletGenerator(BlockPos pos, BlockState state) {
-        super(0, 14, 0,BlockBaseMachine3.pallet_generator,pos,state);
+        super(0, 14, 0, BlockBaseMachine3.pallet_generator, pos, state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 5000000, tier));
-        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000000D));
+        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 50000D));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 6) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

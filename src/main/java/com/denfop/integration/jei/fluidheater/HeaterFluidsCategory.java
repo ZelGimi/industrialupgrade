@@ -40,11 +40,11 @@ public class HeaterFluidsCategory extends GuiIU implements IRecipeCategory<Heate
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.container1 = (ContainerImpOilRefiner) this.getContainer();
@@ -87,7 +87,7 @@ public class HeaterFluidsCategory extends GuiIU implements IRecipeCategory<Heate
         if (xScale >= 1) {
             progress = 0;
         }
-     bindTexture(getTexture());
+        bindTexture(getTexture());
 
         progress_bar.renderBar(stack, 0, 0, xScale);
 
@@ -104,15 +104,14 @@ public class HeaterFluidsCategory extends GuiIU implements IRecipeCategory<Heate
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HeaterFluidsHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(8000,true,12,47).addFluidStack(recipe.getInput().getFluid(),recipe.getInput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(8000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(8000, true, 12, 47).addFluidStack(recipe.getInput().getFluid(), recipe.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(8000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

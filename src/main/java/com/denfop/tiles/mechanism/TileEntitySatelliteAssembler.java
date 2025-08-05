@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -48,7 +48,7 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileEntitySatelliteAssembler(BlockPos pos, BlockState state) {
-        super(800, 1, 1,BlockBaseMachine3.satellite_assembler,pos,state);
+        super(800, 1, 1, BlockBaseMachine3.satellite_assembler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -181,7 +181,6 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     }
 
 
-
     public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
@@ -190,20 +189,20 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     public void init() {
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(726)), new ItemStack(IUItem.crafting_elements.getStack(729)),
                 new ItemStack(IUItem.crafting_elements.getStack(746)), new ItemStack(IUItem.crafting_elements.getStack(740)),
-                        new ItemStack(IUItem.satellite.getItem())
-                );
+                new ItemStack(IUItem.satellite.getItem())
+        );
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(707)), new ItemStack(IUItem.crafting_elements.getStack(735)),
                 new ItemStack(IUItem.crafting_elements.getStack(730)), new ItemStack(IUItem.crafting_elements.getStack(767)),
-                        new ItemStack(IUItem.adv_satellite.getItem())
-                );
+                new ItemStack(IUItem.adv_satellite.getItem())
+        );
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(727)), new ItemStack(IUItem.crafting_elements.getStack(728)),
                 new ItemStack(IUItem.crafting_elements.getStack(737)), new ItemStack(IUItem.crafting_elements.getStack(736)),
-                        new ItemStack(IUItem.imp_satellite.getItem())
-                );
+                new ItemStack(IUItem.imp_satellite.getItem())
+        );
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(711)), new ItemStack(IUItem.crafting_elements.getStack(760)),
                 new ItemStack(IUItem.crafting_elements.getStack(759)), new ItemStack(IUItem.crafting_elements.getStack(741)),
-                        new ItemStack(IUItem.per_satellite.getItem())
-                );
+                new ItemStack(IUItem.per_satellite.getItem())
+        );
     }
 
 }

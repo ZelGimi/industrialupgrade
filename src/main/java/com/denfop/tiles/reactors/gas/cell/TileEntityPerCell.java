@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerCell extends TileEntityMainTank implements ICell {
 
     public TileEntityPerCell(BlockPos pos, BlockState state) {
-        super(240000,BlockGasReactor.per_gas_cell,pos,state);
+        super(240000, BlockGasReactor.per_gas_cell, pos, state);
     }
 
     @Override

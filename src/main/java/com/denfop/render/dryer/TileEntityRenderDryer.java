@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
@@ -31,13 +31,13 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
             poseStack.pushPose();
             poseStack.translate(0.17, 0, 0.17);
             poseStack.translate(0.0, 1.2, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f,0);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f);
             poseStack.popPose();
 
             poseStack.pushPose();
             poseStack.translate(0.1 + 0.6, 0, 0.1 + 0.6);
             poseStack.translate(0.0, 0.7, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.4f, 0.3f,1);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.4f, 0.3f, 1);
             poseStack.popPose();
         }
         ItemStack itemstack = te.outputSlot.get(0);
@@ -46,8 +46,8 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
             poseStack.translate(0.5, 0.65, 0.4);
 
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
-            contex.getItemRenderer().renderStatic(itemstack,GROUND,
-                    packedLight, combinedOverlay, poseStack, bufferSource,te.getLevel(), 0);
+            contex.getItemRenderer().renderStatic(itemstack, GROUND,
+                    packedLight, combinedOverlay, poseStack, bufferSource, te.getLevel(), 0);
             poseStack.popPose();
         }
     }

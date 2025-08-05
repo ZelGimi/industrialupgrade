@@ -2,7 +2,7 @@ package com.denfop.integration.jei.geothermal;
 
 
 import com.denfop.blocks.FluidName;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;

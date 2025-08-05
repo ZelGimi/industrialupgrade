@@ -22,8 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.*;
 
@@ -38,14 +38,14 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
     public int indexChunk = 0;
     public Map<ChunkPos, List<DataPos>> map = new HashMap<>();
     public List<ChunkPos> chunkPosList = new LinkedList<>();
-
-    private List<DataPos> dataPos = new LinkedList<>();
     public int max = 0;
     public int block_Col;
+    List<DataPos> notAddedPos = new ArrayList<>();
+    private List<DataPos> dataPos = new LinkedList<>();
     private IRigDrill quarry;
 
     public TileEntityEarthQuarryController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.EarthQuarryMultiBlock,BlockEarthQuarry.earth_controller,pos,state);
+        super(InitMultiBlockSystem.EarthQuarryMultiBlock, BlockEarthQuarry.earth_controller, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 100000, 14));
     }
 
@@ -181,7 +181,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
             indexChunk = 0;
         }
     }
-    List<DataPos> notAddedPos = new ArrayList<>();
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -198,18 +198,18 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                         this.energy.useEnergy(50);
                         if (dataPos1.state.getBlock() == Blocks.DIRT) {
                             if (random.nextInt(100) >= 90) {
-                                level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1),3);
+                                level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1), 3);
                                 this.dataPos.add(dataPos1);
                             }
                         } else if (dataPos1.state.getBlock() == Blocks.GRAVEL) {
                             if (random.nextInt(100) >= 94) {
-                                level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2),3);
+                                level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2), 3);
                                 this.dataPos.add(dataPos1);
                             }
                         } else if (dataPos1.state.getBlock() == Blocks.SAND) {
 
                             if (random.nextInt(100) >= 80) {
-                                level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0),3);
+                                level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0), 3);
                                 this.dataPos.add(dataPos1);
                             }
 
@@ -225,7 +225,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
 
                     }
                 } else {
-                    if (!notAddedPos.isEmpty()){
+                    if (!notAddedPos.isEmpty()) {
                         Iterator<DataPos> iter = notAddedPos.iterator();
                         while (iter.hasNext()) {
                             DataPos dataPos1 = iter.next();
@@ -235,18 +235,18 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                             this.energy.useEnergy(50);
                             if (dataPos1.state.getBlock() == Blocks.DIRT) {
                                 if (random.nextInt(100) >= 90) {
-                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1),3);
+                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1), 3);
                                     this.dataPos.add(dataPos1);
                                 }
                             } else if (dataPos1.state.getBlock() == Blocks.GRAVEL) {
                                 if (random.nextInt(100) >= 94) {
-                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2),3);
+                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2), 3);
                                     this.dataPos.add(dataPos1);
                                 }
                             } else if (dataPos1.state.getBlock() == Blocks.SAND) {
 
                                 if (random.nextInt(100) >= 80) {
-                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0),3);
+                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0), 3);
                                     this.dataPos.add(dataPos1);
                                 }
 
@@ -256,7 +256,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                         this.block_Col = this.dataPos.size();
                         this.work = false;
                         this.indexChunk = this.max;
-                    }else {
+                    } else {
                         this.work = false;
                         this.indexChunk = this.max;
                     }

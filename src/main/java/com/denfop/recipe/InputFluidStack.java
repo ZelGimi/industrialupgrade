@@ -3,18 +3,18 @@ package com.denfop.recipe;
 
 import com.denfop.componets.Fluids;
 import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.*;
 
@@ -32,17 +32,7 @@ public class InputFluidStack implements IInputItemStack {
     public InputFluidStack(Fluid fluid) {
         this(fluid, 1000);
     }
-    public InputFluidStack(CompoundTag compoundTag){
-        boolean exist = compoundTag.getBoolean("exist");
-        if (exist){
-            ResourceLocation fluidId = new ResourceLocation(compoundTag.getString("Fluid"));
-            this.fluid = ForgeRegistries.FLUIDS.getValue(fluidId);
-            this.amount = compoundTag.getInt("Amount");
-        }else{
-            this.fluid = Fluids.EMPTY;
-            this.amount = 1;
-        }
-    }
+
     public InputFluidStack(FluidStack fluid) {
         this(fluid.getFluid(), fluid.getAmount());
     }
@@ -52,8 +42,16 @@ public class InputFluidStack implements IInputItemStack {
         this.amount = amount;
     }
 
-    public InputFluidStack(FriendlyByteBuf buffer) {
-        this(buffer.readFluidStack());
+    public InputFluidStack(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        boolean exist = compoundTag.getBoolean("exist");
+        if (exist) {
+            ResourceLocation fluidId = ResourceLocation.parse(compoundTag.getString("Fluid"));
+            this.fluid = BuiltInRegistries.FLUID.get(fluidId);
+            this.amount = compoundTag.getInt("Amount");
+        } else {
+            this.fluid = Fluids.EMPTY;
+            this.amount = 1;
+        }
     }
 
     public static List<ItemStack> getFluidContainer(Fluid fluid) {
@@ -61,7 +59,7 @@ public class InputFluidStack implements IInputItemStack {
         ArrayList<ItemStack> ret;
         Iterator<Item> var3;
         ret = new ArrayList<>();
-        var3 = ForgeRegistries.ITEMS.iterator();
+        var3 = BuiltInRegistries.ITEM.iterator();
 
         while (var3.hasNext()) {
             Item item = var3.next();
@@ -98,6 +96,10 @@ public class InputFluidStack implements IInputItemStack {
         }
     }
 
+    public FluidStack getFluid() {
+        return new FluidStack(fluid, amount);
+    }
+
     public boolean matches(ItemStack subject) {
         Optional<FluidStack> fs1 = FluidUtil.getFluidContained(subject);
         FluidStack fs = fs1.orElse(null);
@@ -112,10 +114,6 @@ public class InputFluidStack implements IInputItemStack {
         return getFluidContainer(this.fluid);
     }
 
-    public FluidStack getFluid() {
-        return new FluidStack(fluid,amount);
-    }
-
     @Override
     public boolean hasTag() {
         return false;
@@ -123,21 +121,6 @@ public class InputFluidStack implements IInputItemStack {
 
     @Override
     public TagKey<Item> getTag() {
-        return null;
-    }
-
-    @Override
-    public CompoundTag writeNBT() {
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putByte("id", (byte) 2);
-        compoundTag.putBoolean("exist",fluid != null && !fluid.equals(Fluids.EMPTY) && amount != 0);
-        if (fluid != null && !fluid.equals(Fluids.EMPTY)) {
-            ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
-            if (fluidId != null) {
-                compoundTag.putString("Fluid", fluidId.toString());
-                compoundTag.putInt("Amount", amount);
-            }
-        }
         return null;
     }
 
@@ -152,6 +135,21 @@ public class InputFluidStack implements IInputItemStack {
         return obj != null && this.getClass() == obj.getClass() && (other = (InputFluidStack) obj).fluid == this.fluid && other.amount == this.amount;
     }
 
+    @Override
+    public CompoundTag writeNBT(HolderLookup.Provider provider) {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("id", (byte) 2);
+        compoundTag.putBoolean("exist", fluid != null && !fluid.equals(Fluids.EMPTY) && amount != 0);
+        if (fluid != null && !fluid.equals(Fluids.EMPTY)) {
+            ResourceLocation fluidId = BuiltInRegistries.FLUID.getKey(fluid);
+            if (fluidId != null) {
+                compoundTag.putString("Fluid", fluidId.toString());
+                compoundTag.putInt("Amount", amount);
+            }
+        }
+        return null;
+    }
+
     private static class FluidHandlerInfo {
 
         final List<ItemStack> items;
@@ -161,5 +159,4 @@ public class InputFluidStack implements IInputItemStack {
         }
 
     }
-
 }

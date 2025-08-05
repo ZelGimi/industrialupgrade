@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/meteoric"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "C": {
+      "tag": "c:gems/ruby"
+    }
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:tome_research"
+  },
+  "show_notification": false
+}

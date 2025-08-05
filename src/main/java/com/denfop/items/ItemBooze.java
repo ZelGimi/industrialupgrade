@@ -6,13 +6,14 @@ import com.denfop.Localization;
 import com.denfop.api.brewage.EnumBeerVariety;
 import com.denfop.api.brewage.EnumTimeVariety;
 import com.denfop.api.brewage.EnumWaterVariety;
-import com.denfop.utils.ModUtils;
+import com.denfop.datacomponent.BeerInfo;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.Timer;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,8 +25,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,33 +41,31 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
         super(new Properties().stacksTo(1).setNoRepair());
         IUCore.proxy.addProperties(this);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab tab, @Nonnull NonNullList<ItemStack> items) {
         if (allowedIn(tab)) {
-            items.add(new ItemStack(this));
+            items.add(new ItemStack(this).copy());
 
             for (EnumWaterVariety waterVariety : EnumWaterVariety.values()) {
                 for (EnumTimeVariety timeVariety : EnumTimeVariety.values()) {
                     for (EnumBeerVariety beerVariety : EnumBeerVariety.values()) {
                         ItemStack stack = new ItemStack(this);
-                        CompoundTag nbt = stack.getOrCreateTag();
 
-                        nbt.putBoolean("beer", true);
-                        nbt.putByte("waterVariety", (byte) waterVariety.ordinal());
-                        nbt.putByte("timeVariety", (byte) timeVariety.ordinal());
-                        nbt.putByte("beerVariety", (byte) beerVariety.ordinal());
-                        nbt.putByte("amount", (byte) 5);
-
+                        BeerInfo beerInfo = new BeerInfo(waterVariety, timeVariety, beerVariety, 5);
+                        stack.set(DataComponentsInit.BEER, beerInfo);
                         items.add(stack);
                     }
                 }
             }
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -93,15 +92,15 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity living) {
-        CompoundTag nbtTagCompound = stack.getOrCreateTag();
 
-        if (!nbtTagCompound.contains("beer")) {
+        if (!stack.has(DataComponentsInit.BEER)) {
             return new ItemStack(this);
         } else {
             int level;
-            EnumWaterVariety waterVariety = EnumWaterVariety.values()[nbtTagCompound.getByte("waterVariety")];
-            EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
-            EnumBeerVariety beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("beerVariety")];
+            BeerInfo beerInfo = stack.get(DataComponentsInit.BEER);
+            EnumWaterVariety waterVariety = beerInfo.waterVariety();
+            EnumTimeVariety timeVariety = beerInfo.timeVariety();
+            EnumBeerVariety beerVariety = beerInfo.beerVariety();
 
             if (timeVariety == EnumTimeVariety.BLACK_STUFF || waterVariety == EnumWaterVariety.BLACK_STUFF || beerVariety == EnumBeerVariety.BLACKSTUFF) {
                 return this.drinkBlackStuff(living);
@@ -124,7 +123,7 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
                 level = slow.getAmplifier();
             }
 
-            nbtTagCompound.putByte("amount", (byte) (nbtTagCompound.getByte("amount") - 1));
+            beerInfo = beerInfo.updateAmount(stack);
             this.amplifyEffect(living, MobEffects.DIG_SLOWDOWN, max, intensity, duration);
 
             if (level > -1) {
@@ -147,11 +146,11 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
                 }
             }
 
-            return nbtTagCompound.getByte("amount") > 0 ? stack : new ItemStack(this);
+            return beerInfo != null ? stack : new ItemStack(this);
         }
     }
 
-    public void amplifyEffect(LivingEntity living, MobEffect effect, int max, float intensity, int duration) {
+    public void amplifyEffect(LivingEntity living, Holder<MobEffect> effect, int max, float intensity, int duration) {
         MobEffectInstance eff = living.getEffect(effect);
 
         if (eff == null) {
@@ -201,20 +200,19 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
     }
 
 
-
     @Override
     public void appendHoverText(
             ItemStack stack,
-            @Nullable Level worldIn,
+            @Nullable TooltipContext worldIn,
             List<Component> tooltip,
             TooltipFlag flagIn
     ) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag nbtTagCompound = stack.getTag();
-        if (nbtTagCompound != null && nbtTagCompound.contains("beer")) {
-            EnumWaterVariety waterVariety = EnumWaterVariety.values()[nbtTagCompound.getByte("waterVariety")];
-            EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
-            EnumBeerVariety beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("beerVariety")];
+        if (stack.has(DataComponentsInit.BEER)) {
+            BeerInfo beerInfo = stack.get(DataComponentsInit.BEER);
+            EnumWaterVariety waterVariety = beerInfo.waterVariety();
+            EnumTimeVariety timeVariety = beerInfo.timeVariety();
+            EnumBeerVariety beerVariety = beerInfo.beerVariety();
 
             tooltip.add(Component.literal(Localization.translate("iu.beer.recipe.info")));
             tooltip.add(Component.literal(Localization.translate("iu.beer.recipe")));
@@ -226,20 +224,21 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
         }
     }
 
+
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack p_41454_, LivingEntity p_344979_) {
         return 32;
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        CompoundTag nbtTagCompound = stack.getTag();
-        if (nbtTagCompound == null || !nbtTagCompound.contains("beer")) {
+        if (!stack.has(DataComponentsInit.BEER)) {
             return Component.literal(Localization.translate(this.getDescriptionId(stack).replace("item.", "iu.") + ".name"));
         } else {
-            EnumWaterVariety waterVariety = EnumWaterVariety.values()[nbtTagCompound.getByte("waterVariety")];
-            EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
-            EnumBeerVariety beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("beerVariety")];
+            BeerInfo beerInfo = stack.get(DataComponentsInit.BEER);
+            EnumWaterVariety waterVariety = beerInfo.waterVariety();
+            EnumTimeVariety timeVariety = beerInfo.timeVariety();
+            EnumBeerVariety beerVariety = beerInfo.beerVariety();
 
             return Component.literal(waterVariety.name() + " " + beerVariety.name() + " " + timeVariety.name());
         }
@@ -247,7 +246,7 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        return ModUtils.nbt(stack).contains("beer") ? UseAnim.DRINK : UseAnim.NONE;
+        return stack.has(DataComponentsInit.BEER) ? UseAnim.DRINK : UseAnim.NONE;
     }
 
 
@@ -260,12 +259,11 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
-        final CompoundTag nbt = ModUtils.nbt(itemStack);
-        boolean hasKey = nbt.contains("beer");
+        boolean hasKey = itemStack.has(DataComponentsInit.BEER);
         if (!hasKey) {
             return 0;
         } else {
-            EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbt.getByte("timeVariety")];
+            EnumTimeVariety timeVariety = itemStack.get(DataComponentsInit.BEER).timeVariety();
             return timeVariety.ordinal() + 1;
         }
     }

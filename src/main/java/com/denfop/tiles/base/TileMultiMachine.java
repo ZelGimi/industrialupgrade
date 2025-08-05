@@ -14,7 +14,6 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
-import com.denfop.audio.SoundHandler;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.*;
 import com.denfop.componets.client.ComponentClientEffectRender;
@@ -44,7 +43,6 @@ import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -58,10 +56,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -165,9 +163,11 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             }
         };
     }
-    public int getFertilizer(){
-        return  0;
+
+    public int getFertilizer() {
+        return 0;
     }
+
     public FluidTank getTank() {
         return tank;
     }
@@ -518,7 +518,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             } else if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(entityPlayer.getItemInHand(hand)) != null && this.fluid != null) {
 
                 return ModUtils.interactWithFluidHandler(entityPlayer, hand,
-                        this.fluid.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                        this.fluid.getCapability(Capabilities.FluidHandler.BLOCK, side)
                 );
             }
 
@@ -610,23 +610,24 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            switch (this.getMachine().type){
-                case FARMER ->  ParticleUtils.spawnFarmParticles(level,pos,level.random);
-                case CUTTING -> ParticleUtils.spawnCutterParticles(level,pos,level.random);
-                case ROLLING ->  ParticleUtils.spawnRollingMillParticles(level,pos,level.random);
-                case RECYCLER ->  ParticleUtils.spawnRecyclerParticles(level,pos,level.random);
-                case EXTRACTOR -> ParticleUtils.spawnExtractorParticles(level,pos,level.random);
-                case Centrifuge -> ParticleUtils.spawnCentrifugeParticles(level,pos,level.random);
-                case Gearing -> ParticleUtils.spawnGearParticles(level,pos,level.random);
-                case EXTRUDING ->  ParticleUtils.spawnExtruderParticles(level,pos,level.random);
-                case MACERATOR -> ParticleUtils.spawnMaceratorParticles(level,pos,level.random);
-                case COMPRESSOR ->  ParticleUtils.spawnCompressorParticles(level,pos,level.random);
-                case OreWashing -> ParticleUtils.spawnOreWashingParticles(level,pos,level.random);
-                case COMBRECYCLER -> ParticleUtils.spawnRecyclerParticles(level,pos,level.random);
-                case COMBMACERATOR ->  ParticleUtils.spawnMaceratorParticles(level,pos,level.random);
-                case ASSAMPLERSCRAP -> ParticleUtils.spawnScrapCollectorParticles(level,pos,level.random);
-                case ELECTRICFURNACE ->  ParticleUtils.showFlames((ServerLevel) this.getWorld(), this.getBlockPos(), this.getFacing());
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            switch (this.getMachine().type) {
+                case FARMER -> ParticleUtils.spawnFarmParticles(level, pos, level.random);
+                case CUTTING -> ParticleUtils.spawnCutterParticles(level, pos, level.random);
+                case ROLLING -> ParticleUtils.spawnRollingMillParticles(level, pos, level.random);
+                case RECYCLER -> ParticleUtils.spawnRecyclerParticles(level, pos, level.random);
+                case EXTRACTOR -> ParticleUtils.spawnExtractorParticles(level, pos, level.random);
+                case Centrifuge -> ParticleUtils.spawnCentrifugeParticles(level, pos, level.random);
+                case Gearing -> ParticleUtils.spawnGearParticles(level, pos, level.random);
+                case EXTRUDING -> ParticleUtils.spawnExtruderParticles(level, pos, level.random);
+                case MACERATOR -> ParticleUtils.spawnMaceratorParticles(level, pos, level.random);
+                case COMPRESSOR -> ParticleUtils.spawnCompressorParticles(level, pos, level.random);
+                case OreWashing -> ParticleUtils.spawnOreWashingParticles(level, pos, level.random);
+                case COMBRECYCLER -> ParticleUtils.spawnRecyclerParticles(level, pos, level.random);
+                case COMBMACERATOR -> ParticleUtils.spawnMaceratorParticles(level, pos, level.random);
+                case ASSAMPLERSCRAP -> ParticleUtils.spawnScrapCollectorParticles(level, pos, level.random);
+                case ELECTRICFURNACE ->
+                        ParticleUtils.showFlames((ServerLevel) this.getWorld(), this.getBlockPos(), this.getFacing());
             }
 
         }

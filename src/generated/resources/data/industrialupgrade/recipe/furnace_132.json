@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace3/moon_meteoric_iron_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:itemingots/meteoric_iron"
+  }
+}

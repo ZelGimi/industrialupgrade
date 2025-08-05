@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "B": {
+      "item": "industrialupgrade:rotorupgrade_schemes"
+    },
+    "C": {
+      "tag": "c:casings/nichrome"
+    }
+  },
+  "pattern": [
+    "A A",
+    "CBC",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:rotors_upgrade/rotorupgrade"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/aluminumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/steam_storage"
+  },
+  "show_notification": false
+}

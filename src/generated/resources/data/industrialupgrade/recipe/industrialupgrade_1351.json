@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_373_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_372_element"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:chemical_plant/chemical_plant_generator"
+  },
+  "show_notification": false
+}

@@ -22,7 +22,7 @@ public class ItemBlockRubberSapling extends BlockItem implements IItemTab {
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.sapling";
+            this.nameItem = "iu.sapling";
         }
 
         return this.nameItem;

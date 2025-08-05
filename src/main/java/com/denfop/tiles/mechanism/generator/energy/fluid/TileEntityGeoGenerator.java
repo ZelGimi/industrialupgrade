@@ -16,7 +16,7 @@ public class TileEntityGeoGenerator extends com.denfop.tiles.mechanism.generator
     private final AirPollutionComponent pollutionAir;
 
     public TileEntityGeoGenerator(BlockPos pos, BlockState state) {
-        super(10, 1, 1,BlockBaseMachine3.geogenerator_iu,pos,state);
+        super(10, 1, 1, BlockBaseMachine3.geogenerator_iu, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.35));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.85));
     }

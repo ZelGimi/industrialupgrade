@@ -17,6 +17,7 @@ public class ItemSpace<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public CreativeModeTab getItemCategory() {
         return IUCore.SpaceTab;
     }
+
     public enum Types implements ISubEnum {
         ariel_boulder(),
         asteroids_boulder(),

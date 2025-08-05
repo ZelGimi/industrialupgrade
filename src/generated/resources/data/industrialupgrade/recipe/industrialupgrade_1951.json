@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/carbon"
+    },
+    "B": {
+      "item": "industrialupgrade:water_rotor/water_rotor_steel"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:corewater/core_wind4"
+  },
+  "show_notification": false
+}

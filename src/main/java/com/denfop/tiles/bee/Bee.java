@@ -2,12 +2,57 @@ package com.denfop.tiles.bee;
 
 import com.denfop.api.bee.IBee;
 import com.denfop.world.WorldBaseGen;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Objects;
 
 public class Bee {
 
+    public static final Codec<Bee> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.LONG.fieldOf("id").forGetter(Bee::getId),
+            Codec.INT.fieldOf("maxLife").forGetter(Bee::getMaxLife),
+            Codec.INT.fieldOf("birthTick").forGetter(Bee::getBirthTick),
+            Codec.DOUBLE.fieldOf("jelly").forGetter(Bee::getJelly),
+            Codec.DOUBLE.fieldOf("food").forGetter(Bee::getFood),
+            Codec.BOOL.fieldOf("ill").forGetter(Bee::isIll),
+            Codec.INT.fieldOf("tick").forGetter(Bee::getTick),
+            Codec.STRING.xmap(EnumTypeBee::valueOf, Enum::name).fieldOf("typeBee").forGetter(Bee::getTypeBee),
+            Codec.STRING.xmap(EnumTypeLife::valueOf, Enum::name).fieldOf("type").forGetter(Bee::getType),
+            Codec.BOOL.fieldOf("isDead").forGetter(Bee::isDead),
+            Codec.BOOL.fieldOf("wasBirth").forGetter(Bee::isWasBirth)
+    ).apply(instance, Bee::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, Bee> STREAM_CODEC = StreamCodec.of(
+            (buf, value) -> {
+                buf.writeLong(value.getId());
+                buf.writeInt(value.getMaxLife());
+                buf.writeInt(value.getBirthTick());
+                buf.writeDouble(value.getJelly());
+                buf.writeDouble(value.getFood());
+                buf.writeBoolean(value.isIll());
+                buf.writeInt(value.getTick());
+                buf.writeUtf(value.getTypeBee().name());
+                buf.writeUtf(value.getType().name());
+                buf.writeBoolean(value.isDead());
+                buf.writeBoolean(value.isWasBirth());
+            },
+            buf -> new Bee(
+                    buf.readLong(),
+                    buf.readInt(),
+                    buf.readInt(),
+                    buf.readDouble(),
+                    buf.readDouble(),
+                    buf.readBoolean(),
+                    buf.readInt(),
+                    EnumTypeBee.valueOf(buf.readUtf()),
+                    EnumTypeLife.valueOf(buf.readUtf()),
+                    buf.readBoolean(),
+                    buf.readBoolean()
+            )
+    );
     final long id;
     private final int maxLife;
     private final int birthTick;
@@ -33,6 +78,20 @@ public class Bee {
         this.food = food;
     }
 
+    public Bee(long id, int maxLife, int birthTick, double jelly, double food, boolean isIll, int tick, EnumTypeBee enumTypeBee, EnumTypeLife enumTypeLife, boolean isDead, boolean isWasBirth) {
+        this.maxLife = maxLife;
+        this.typeBee = enumTypeBee;
+        this.type = enumTypeLife;
+        this.id = id;
+        this.birthTick = birthTick;
+        this.tick = tick;
+        this.wasBirth = isWasBirth;
+        this.jelly = jelly;
+        this.ill = isIll;
+        this.isDead = isDead;
+        this.food = food;
+    }
+
     public Bee(CompoundTag tagCompound) {
         this.maxLife = tagCompound.getShort("maxLife");
         this.ill = tagCompound.getBoolean("ill");
@@ -43,6 +102,14 @@ public class Bee {
         this.tick = tagCompound.getShort("tick");
         this.jelly = tagCompound.getShort("jelly") / 100D;
         this.food = tagCompound.getShort("food") / 100D;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public int getBirthTick() {
+        return birthTick;
     }
 
     @Override
@@ -74,6 +141,10 @@ public class Bee {
         tagCompound.putShort("food", (short) (this.food * 100));
 
         return tagCompound;
+    }
+
+    public boolean isWasBirth() {
+        return wasBirth;
     }
 
     public boolean isChild() {

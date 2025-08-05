@@ -166,7 +166,7 @@ public class ComponentTimer extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(this.timers.size() * 3 + 1);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(this.timers.size() * 3 + 1, player.registryAccess());
         this.timers.forEach(timer -> timer.writeBuffer(buffer));
         buffer.writeInt(this.indexWork);
         buffer.flip();

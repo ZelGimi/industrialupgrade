@@ -51,8 +51,8 @@ public class DamageHandler {
         } else if (item instanceof IDamageItem) {
             return ((IDamageItem) item).applyCustomDamage(stack, damage, src);
         } else
-            stack.hurtAndBreak(damage,src,(p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-            return false;
+            stack.hurtAndBreak(damage, src, EquipmentSlot.MAINHAND);
+        return false;
     }
 
 }

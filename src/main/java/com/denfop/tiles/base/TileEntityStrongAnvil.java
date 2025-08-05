@@ -32,9 +32,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,12 +91,11 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK)
+            return null;
+        return super.getCapability(cap, side);
     }
-
 
 
     public List<AABB> getAabbs(boolean forCollision) {
@@ -125,13 +123,11 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     }
 
 
-
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
         List<ItemStack> drop = super.getSelfDrops(fortune, wrench);
         return drop;
     }
-
 
 
     @Override
@@ -152,14 +148,14 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                inputSlotA.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -176,8 +172,8 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            inputSlotA.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
+            outputSlot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -293,12 +289,10 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     }
 
 
-
     @Override
     public void onUpdate() {
 
     }
-
 
 
     @Override
@@ -330,24 +324,24 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
             }
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             addanvil(
-                    "forge:raw_materials/" + s,
-                    "forge:crushed/" + s
+                    "c:raw_materials/" + s,
+                    "c:crushed/" + s
             );
         }
         String s = "iron";
         addanvil(
-                "forge:raw_materials/" + s,
-                "forge:crushed/" + s
+                "c:raw_materials/" + s,
+                "c:crushed/" + s
         );
         s = "gold";
         addanvil(
-                "forge:raw_materials/" + s,
-                "forge:crushed/" + s
+                "c:raw_materials/" + s,
+                "c:crushed/" + s
         );
         s = "copper";
         addanvil(
-                "forge:raw_materials/" + s,
-                "forge:crushed/" + s
+                "c:raw_materials/" + s,
+                "c:crushed/" + s
         );
     }
 

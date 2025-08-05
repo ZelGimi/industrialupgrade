@@ -10,6 +10,7 @@ import com.denfop.tiles.mechanism.TileMagnet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,22 +30,9 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
     public String player;
 
     public TileEntityAntiMagnet(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.antimagnet,pos,state);
+        super(BlockBaseMachine3.antimagnet, pos, state);
         this.player = "";
         visible = this.addComponent(new ComponentVisibleArea(this));
-    }
-    @Override
-    public void onLoaded() {
-        super.onLoaded();
-        AABB axisalignedbb = new AABB(
-                this.getBlockPos().getX() - 10,
-                this.getBlockPos().getY() -10,
-                this.getBlockPos().getZ() -10,
-                this.getBlockPos().getX() +10 + 1,
-                this.getBlockPos().getY() + 10 + 1,
-                this.getBlockPos().getZ() +10 + 1
-        );
-        visible.aabb = axisalignedbb;
     }
 
     @Override
@@ -57,10 +45,23 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
     }
 
 
-
     public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.antimagnet.info"));
 
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        AABB axisalignedbb = new AABB(
+                this.getBlockPos().getX() - 10,
+                this.getBlockPos().getY() -10,
+                this.getBlockPos().getZ() -10,
+                this.getBlockPos().getX() +10 + 1,
+                this.getBlockPos().getY() + 10 + 1,
+                this.getBlockPos().getZ() +10 + 1
+        );
+        visible.aabb = axisalignedbb;
     }
 
     @Override

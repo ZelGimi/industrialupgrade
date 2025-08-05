@@ -14,7 +14,7 @@ public class TileEntityWindTurbineSocket extends TileEntityMultiBlockElement imp
     private final Energy energy;
 
     public TileEntityWindTurbineSocket(BlockPos pos, BlockState state) {
-        super( BlockWindTurbine.wind_turbine_socket, pos, state);
+        super(BlockWindTurbine.wind_turbine_socket, pos, state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 2000000, 14));
     }
 

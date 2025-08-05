@@ -16,9 +16,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -64,10 +63,12 @@ public class ItemColonialBuilding<T extends Enum<T> & ISubEnum> extends ItemMain
                 return EnumTypeBuilding.FABRIC;
         }
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.SpaceTab;
     }
+
     @Override
     public IColonyBuilding getBuilding(final IColony colony, final ItemStack stack, boolean simulate) {
         EnumTypeBuilding building = getBuilding(stack);
@@ -184,7 +185,7 @@ public class ItemColonialBuilding<T extends Enum<T> & ISubEnum> extends ItemMain
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(
             ItemStack stack,
-            @Nullable Level worldIn,
+            @Nullable TooltipContext worldIn,
             List<Component> tooltip,
             TooltipFlag flagIn
     ) {

@@ -36,9 +36,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     protected double guiProgress;
 
     public TileEntityFluidHeater(BlockPos pos, BlockState state) {
-        super(100, 1, 2,BlockBaseMachine3.fluid_heater,pos,state);
+        super(100, 1, 2, BlockBaseMachine3.fluid_heater, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 200;
@@ -301,6 +301,7 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     public ContainerHeatFluids getGuiContainer(Player entityPlayer) {
         return new ContainerHeatFluids(entityPlayer, this);
     }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {

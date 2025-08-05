@@ -12,7 +12,7 @@ public class TileSimpleWindGenerator extends TileWindGenerator {
 
 
     public TileSimpleWindGenerator(BlockPos pos, BlockState state) {
-        super(EnumLevelGenerators.ONE,BlockBaseMachine3.simple_wind_generator,pos,state);
+        super(EnumLevelGenerators.ONE, BlockBaseMachine3.simple_wind_generator, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

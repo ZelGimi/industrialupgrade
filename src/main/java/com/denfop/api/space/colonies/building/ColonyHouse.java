@@ -10,6 +10,7 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 public class ColonyHouse extends Building implements IBuildingHouse {
@@ -138,8 +139,8 @@ public class ColonyHouse extends Building implements IBuildingHouse {
     }
 
     @Override
-    public CompoundTag writeTag(final CompoundTag tag) {
-        super.writeTag(tag);
+    public CompoundTag writeTag(final CompoundTag tag, HolderLookup.Provider p_323640_) {
+        super.writeTag(tag, p_323640_);
         tag.putByte("id", (byte) this.houses.ordinal());
         tag.putByte("people", (byte) (this.peoples));
         tag.putByte("workers", (byte) (this.workers));

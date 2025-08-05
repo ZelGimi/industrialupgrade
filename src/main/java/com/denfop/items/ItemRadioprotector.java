@@ -18,12 +18,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 public class ItemRadioprotector extends ItemFluidContainer implements IProperties, IItemTab {
 
@@ -32,6 +32,7 @@ public class ItemRadioprotector extends ItemFluidContainer implements IPropertie
         IUCore.proxy.addProperties(this);
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
@@ -89,6 +90,6 @@ public class ItemRadioprotector extends ItemFluidContainer implements IPropertie
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
-        return initCapabilities(itemStack, itemStack.getTag()).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null).getFluidInTank(0).isEmpty() ? 0 : 1;
+        return itemStack.getCapability(Capabilities.FluidHandler.ITEM).getFluidInTank(0).isEmpty() ? 0 : 1;
     }
 }

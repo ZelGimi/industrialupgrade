@@ -3,7 +3,7 @@ package com.denfop.api.windsystem.upgrade.event;
 import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class EventRotorItemLoad extends LevelEvent {
 

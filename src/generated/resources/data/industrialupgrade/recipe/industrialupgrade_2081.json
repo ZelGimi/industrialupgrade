@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_112_element"
+    },
+    "B": {
+      "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/mythril"
+    }
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_turbine/gas_turbine_blower"
+  },
+  "show_notification": false
+}

@@ -11,8 +11,8 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerPlasticPlateCreator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
@@ -57,7 +57,7 @@ public class GuiPlasticPlateCreator<T extends ContainerPlasticPlateCreator> exte
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         bindTexture(getTexture());
 
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
@@ -66,7 +66,7 @@ public class GuiPlasticPlateCreator<T extends ContainerPlasticPlateCreator> exte
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

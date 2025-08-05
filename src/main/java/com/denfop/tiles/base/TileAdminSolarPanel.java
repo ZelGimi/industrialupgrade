@@ -14,7 +14,7 @@ public class TileAdminSolarPanel extends TileSolarPanel {
 
     public TileAdminSolarPanel(BlockPos pos, BlockState state) {
         super(14, EnumSolarPanels.QUARK_SOLAR_PANEL.genday * 4, EnumSolarPanels.QUARK_SOLAR_PANEL.producing * 4,
-                EnumSolarPanels.QUARK_SOLAR_PANEL.maxstorage * 16, null,BlockAdminPanel.admpanel,pos,state
+                EnumSolarPanels.QUARK_SOLAR_PANEL.maxstorage * 16, null, BlockAdminPanel.admpanel, pos, state
         );
     }
 

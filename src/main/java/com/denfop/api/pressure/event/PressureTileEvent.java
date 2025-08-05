@@ -2,7 +2,7 @@ package com.denfop.api.pressure.event;
 
 import com.denfop.api.pressure.IPressureTile;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class PressureTileEvent extends LevelEvent {
 

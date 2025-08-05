@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTank;
@@ -14,8 +13,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,9 +85,9 @@ public class GuiSteamTank<T extends ContainerSteamTank> extends GuiIU<ContainerS
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(poseStack,mouseX+
-                            fluidX,
-                             mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                    this.gui.drawSprite(poseStack, mouseX +
+                                    fluidX,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -97,7 +96,7 @@ public class GuiSteamTank<T extends ContainerSteamTank> extends GuiIU<ContainerS
                             false,
                             true
                     );
-                   RenderSystem.setShaderColor(1, 1, 1, 1);
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
                     this.gui.bindTexture();
                     this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + 99, this.gui.guiTop + 23, 177, 1, 12, 46);
                 }
@@ -108,10 +107,8 @@ public class GuiSteamTank<T extends ContainerSteamTank> extends GuiIU<ContainerS
     }
 
 
-
-
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guisteamtank.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guisteamtank.png");
     }
 
 }

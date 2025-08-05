@@ -31,7 +31,7 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
 
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             itemRenderer.renderStatic(itemStack, GROUND,
-                    combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                    combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
             if (tile.facing == 5 || tile.facing == 4) {
                 poseStack.translate(0, -1, -0.05);
 
@@ -41,7 +41,7 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
             for (int i = 0; i < itemStack.getCount() - 1; i++) {
                 poseStack.translate(0, 0, -0.0075);
                 itemRenderer.renderStatic(itemStack, GROUND,
-                        combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                        combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
             }
             poseStack.popPose();
         }
@@ -62,8 +62,8 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
 
             for (int i = 0; i < outputStack.getCount(); i++) {
                 poseStack.translate(0, 0, -0.0075);
-                itemRenderer.renderStatic(outputStack,GROUND,
-                        combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                itemRenderer.renderStatic(outputStack, GROUND,
+                        combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
 
             }
 

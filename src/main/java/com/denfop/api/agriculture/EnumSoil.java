@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.denfop.blocks.BlockClassicOre.BOOL_PROPERTY;
-
 public enum EnumSoil {
     FARMLAND(Blocks.FARMLAND),
     MYCELIUM(Blocks.MYCELIUM),
@@ -48,7 +46,7 @@ public enum EnumSoil {
     COPPER(Blocks.COPPER_ORE, Blocks.COPPER_ORE.defaultBlockState(), false),
     TIN(IUItem.classic_ore.getBlock(1), IUItem.classic_ore.getStateFromMeta(1), false),
     LEAD(IUItem.classic_ore.getBlock(2), IUItem.classic_ore.getStateFromMeta(2), false),
-    URANIUM(IUItem.classic_ore.getBlock(3), IUItem.classic_ore.getStateFromMeta(3).setValue(BOOL_PROPERTY, false), false),
+    URANIUM(IUItem.classic_ore.getBlock(3), IUItem.classic_ore.getStateFromMeta(3), false),
     ARSENIC(IUItem.ore3.getBlock(0), IUItem.ore3.getStateFromMeta(0), false),
     BARIUM(IUItem.ore3.getBlock(1), IUItem.ore3.getStateFromMeta(1), false),
     BISMUTH(IUItem.ore3.getBlock(2), IUItem.ore3.getStateFromMeta(2), false),
@@ -69,6 +67,7 @@ public enum EnumSoil {
     CADMIUM(IUItem.ore2.getBlock(5), IUItem.ore2.getStateFromMeta(5), false),
     ;
 
+    static List<IInputItemStack> lst;
     private final Block block;
     private final BlockState state;
     private final boolean ignore;
@@ -85,12 +84,6 @@ public enum EnumSoil {
         this.ignore = ignore;
     }
 
-    public Block getBlock() {
-        return this.block;
-    }
-
-    static List<IInputItemStack> lst;
-
     public static List<IInputItemStack> getBlocks() {
         if (lst == null) {
             lst = new LinkedList<>();
@@ -102,20 +95,27 @@ public enum EnumSoil {
         }
         return lst;
     }
-    public static boolean contain(ItemStack stack){
-        for (IInputItemStack iInputItemStack : getBlocks()){
+
+    public static boolean contain(ItemStack stack) {
+        for (IInputItemStack iInputItemStack : getBlocks()) {
             if (iInputItemStack.matches(stack))
                 return true;
         }
         return false;
     }
-    public static EnumSoil get(ItemStack stack){
-        for (int i = 0; i < EnumSoil.values().length;i++){
-            if ( getBlocks().get(i).matches(stack))
+
+    public static EnumSoil get(ItemStack stack) {
+        for (int i = 0; i < EnumSoil.values().length; i++) {
+            if (getBlocks().get(i).matches(stack))
                 return EnumSoil.values()[i];
         }
         return null;
     }
+
+    public Block getBlock() {
+        return this.block;
+    }
+
     public ItemStack getStack() {
         return new ItemStack(block);
     }

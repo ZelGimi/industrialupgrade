@@ -31,7 +31,7 @@ public abstract class MixinInventory {
             if (!this.items.get(i).isEmpty())
                 if (p_36031_.getItem() instanceof IItemStackInventory && p_36031_.is(this.items.get(i).getItem()))
                     return i;
-                else if (ItemStack.isSameItemSameTags(p_36031_, this.items.get(i))) {
+                else if (ItemStack.isSameItem(p_36031_, this.items.get(i))) {
                     return i;
                 }
         }

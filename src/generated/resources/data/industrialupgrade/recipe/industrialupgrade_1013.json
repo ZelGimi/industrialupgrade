@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/solid_cooling"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_72_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    }
+  },
+  "pattern": [
+    "AEA",
+    "CBG",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/refrigerator_fluids"
+  },
+  "show_notification": false
+}

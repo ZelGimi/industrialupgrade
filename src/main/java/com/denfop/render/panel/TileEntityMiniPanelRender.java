@@ -20,14 +20,15 @@ public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntity
 
     private static final Map<Integer, ModelMiniPanelGlass> panelModels = new HashMap<>();
     private static final Map<Integer, BottomModel> bottomModels = new HashMap<>();
-    private static final ResourceLocation bottomTextures = new ResourceLocation(
+    private static final ResourceLocation bottomTextures = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/block/admsp_bottom.png"
     );
     private static final ModelMiniPanelGlass bonusPanel = new ModelMiniPanelGlass(10);
     private static final BottomModel bonusBottom = new BottomModel(10);
 
-    public TileEntityMiniPanelRender(BlockEntityRendererProvider.Context context) {}
+    public TileEntityMiniPanelRender(BlockEntityRendererProvider.Context context) {
+    }
 
     @Override
     public void render(
@@ -53,20 +54,20 @@ public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntity
                 ResourceLocation glassTexture = ((ISolarItem) stack.getItem()).getResourceLocation(0);
 
                 VertexConsumer glassConsumer = bufferSource.getBuffer(RenderType.entitySolid(glassTexture));
-                model.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay,1,1,1,1);
+                model.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay, 0xFFFFFFFF);
 
                 VertexConsumer bottomConsumer = bufferSource.getBuffer(RenderType.entitySolid(bottomTextures));
-                model1.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay,1,1,1,1);
+                model1.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay, 0xFFFFFFFF);
             }
         } else {
             ItemStack stack = te.invSlotGlass.get(0);
             ResourceLocation glassTexture = ((ISolarItem) stack.getItem()).getResourceLocation(stack.getDamageValue());
 
             VertexConsumer glassConsumer = bufferSource.getBuffer(RenderType.entitySolid(glassTexture));
-            bonusPanel.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay,1,1,1,1);
+            bonusPanel.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay, 0xFFFFFFFF);
 
             VertexConsumer bottomConsumer = bufferSource.getBuffer(RenderType.entitySolid(bottomTextures));
-            bonusBottom.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay,1,1,1,1);
+            bonusBottom.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay, 0xFFFFFFFF);
         }
 
         poseStack.popPose();

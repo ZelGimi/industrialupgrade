@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tantalum"
+    },
+    "B": {
+      "tag": "c:casings/thallium"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "AAA",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "id": "industrialupgrade:wiring/biofuel"
+  },
+  "show_notification": false
+}

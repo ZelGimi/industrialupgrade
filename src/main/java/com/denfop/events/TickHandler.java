@@ -11,6 +11,7 @@ import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.energy.instruments.EnumOperations;
 import com.denfop.items.energy.instruments.ItemEnergyInstruments;
@@ -29,7 +30,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -44,14 +44,14 @@ import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -85,28 +85,20 @@ public class TickHandler {
             UpgradableProperty.ItemInput, UpgradableProperty.ItemExtract);
 
     public TickHandler() {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-    @SubscribeEvent
-    public void initData(TickEvent.LevelTickEvent event){
-        if (event.level.isClientSide && event.phase == TickEvent.Phase.END){
-            IUCore.instance.registerData(event.level);
-        }
+        NeoForge.EVENT_BUS.register(this);
     }
 
     protected static BlockHitResult getPlayerPOVHitResult(Level p_41436_, Player p_41437_, ClipContext.Fluid p_41438_) {
-        float f = p_41437_.getXRot();
-        float f1 = p_41437_.getYRot();
         Vec3 vec3 = p_41437_.getEyePosition();
-        float f2 = Mth.cos(-f1 * ((float) Math.PI / 180F) - (float) Math.PI);
-        float f3 = Mth.sin(-f1 * ((float) Math.PI / 180F) - (float) Math.PI);
-        float f4 = -Mth.cos(-f * ((float) Math.PI / 180F));
-        float f5 = Mth.sin(-f * ((float) Math.PI / 180F));
-        float f6 = f3 * f4;
-        float f7 = f2 * f4;
-        double d0 = p_41437_.getBlockReach();
-        Vec3 vec31 = vec3.add((double) f6 * d0, (double) f5 * d0, (double) f7 * d0);
+        Vec3 vec31 = vec3.add(p_41437_.calculateViewVector(p_41437_.getXRot(), p_41437_.getYRot()).scale(p_41437_.blockInteractionRange()));
         return p_41436_.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, p_41438_, p_41437_));
+    }
+
+    @SubscribeEvent
+    public void initData(LevelTickEvent.Post event) {
+        if (event.getLevel().isClientSide) {
+            IUCore.instance.registerData(event.getLevel());
+        }
     }
 
     public int getOreColor(BlockState state) {
@@ -121,13 +113,11 @@ public class TickHandler {
             return ModUtils.convertRGBcolorToInt(30, 50, 173);
         } else if (block == Blocks.REDSTONE_ORE) {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
+        }else if (block == Blocks.COPPER_ORE) {
+            return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.COAL_ORE) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        }
-        else if (block == Blocks.COPPER_ORE) {
-            return ModUtils.convertRGBcolorToInt(255, 144, 0);
-        }
-        else if (block == Blocks.EMERALD_ORE) {
+        } else if (block == Blocks.EMERALD_ORE) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
         } else if (block == Blocks.NETHER_QUARTZ_ORE) {
             return ModUtils.convertRGBcolorToInt(223, 223, 223);
@@ -415,7 +405,7 @@ public class TickHandler {
     }
 
     public Direction getDirection(ItemStack stack) {
-        int rawDir = ModUtils.nbt(stack).getByte("dir");
+        int rawDir = stack.getOrDefault(DataComponentsInit.DIRECTION, (byte) 0);
         return rawDir >= 1 && rawDir <= 6 ? Direction.values()[rawDir - 1] : null;
     }
 
@@ -463,6 +453,7 @@ public class TickHandler {
             x = pos.getX();
             y = pos.getY();
             z = pos.getZ();
+            RenderSystem.enableDepthTest();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
@@ -498,35 +489,36 @@ public class TickHandler {
                         int f3 = currentPos.getX() + 1;
                         int f4 = currentPos.getY() + 1;
                         int f5 = currentPos.getZ() + 1;
-                        p_109623_.vertex(matrix4f, f, f1, f2).color(p_109630_, p_109635_, p_109636_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f2).color(p_109630_, p_109635_, p_109636_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f2).color(p_109634_, p_109631_, p_109636_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f2).color(p_109634_, p_109631_, p_109636_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f2).color(p_109634_, p_109635_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f5).color(p_109634_, p_109635_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+                        p_109623_.addVertex(matrix4f, f, f1, f2).setColor(p_109630_, p_109635_, p_109636_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(p_109630_, p_109635_, p_109636_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f2).setColor(p_109634_, p_109631_, p_109636_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f2).setColor(p_109634_, p_109631_, p_109636_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f2).setColor(p_109634_, p_109635_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f5).setColor(p_109634_, p_109635_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), -1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), -1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, -1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, -1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, -1.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, -1.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
 
                     }
                 }
             }
 
+            RenderSystem.disableDepthTest();
 
             poseStack.popPose();
         } else {
@@ -548,6 +540,7 @@ public class TickHandler {
                 x = pos.getX();
                 y = pos.getY();
                 z = pos.getZ();
+                RenderSystem.enableDepthTest();
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
@@ -583,35 +576,36 @@ public class TickHandler {
                             int f3 = currentPos.getX() + 1;
                             int f4 = currentPos.getY() + 1;
                             int f5 = currentPos.getZ() + 1;
-                            p_109623_.vertex(matrix4f, f, f1, f2).color(p_109630_, p_109635_, p_109636_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f1, f2).color(p_109630_, p_109635_, p_109636_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f1, f2).color(p_109634_, p_109631_, p_109636_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f4, f2).color(p_109634_, p_109631_, p_109636_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f1, f2).color(p_109634_, p_109635_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f1, f5).color(p_109634_, p_109635_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f1, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f1, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f1, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                            p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+                            p_109623_.addVertex(matrix4f, f, f1, f2).setColor(p_109630_, p_109635_, p_109636_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(p_109630_, p_109635_, p_109636_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f1, f2).setColor(p_109634_, p_109631_, p_109636_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f4, f2).setColor(p_109634_, p_109631_, p_109636_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f1, f2).setColor(p_109634_, p_109635_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                            p_109623_.addVertex(matrix4f, f, f1, f5).setColor(p_109634_, p_109635_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                            p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), -1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), -1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                            p_109623_.addVertex(matrix4f, f, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                            p_109623_.addVertex(matrix4f, f, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, -1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, -1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, -1.0F);
+                            p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, -1.0F);
+                            p_109623_.addVertex(matrix4f, f, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                            p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                            p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(p_109630_, p_109631_, p_109632_, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
 
                         }
                     }
                 }
 
+                RenderSystem.disableDepthTest();
 
                 poseStack.popPose();
             }
@@ -756,30 +750,30 @@ public class TickHandler {
                         int f3 = currentPos.getX() + 1;
                         int f4 = currentPos.getY() + 1;
                         int f5 = currentPos.getZ() + 1;
-                        p_109623_.vertex(matrix4f, f, f1, f2).color(0, p_109635_, 0, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f2).color(0, p_109635_, 0, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f2).color(0, p_109635_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f5).color(0, p_109635_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f1, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f, f4, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f1, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f2).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-                        p_109623_.vertex(matrix4f, f3, f4, f5).color(0, p_109631_, 0, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+                        p_109623_.addVertex(matrix4f, f, f1, f2).setColor(0, p_109635_, 0, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(0, p_109635_, 0, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f2).setColor(0, p_109635_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f5).setColor(0, p_109635_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), -1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), -1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, -1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, -1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f, f1, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, -1.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, -1.0F);
+                        p_109623_.addVertex(matrix4f, f, f4, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 1.0F, 0.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f1, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 1.0F, 0.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f2).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
+                        p_109623_.addVertex(matrix4f, f3, f4, f5).setColor(0, p_109631_, 0, p_109633_).setNormal(poseStack.last(), 0.0F, 0.0F, 1.0F);
 
                     }
                 }
@@ -894,13 +888,13 @@ public class TickHandler {
                 double z4 = this.z4[i][j];
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
-                bufferSource.vertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).color(r, g, b, 1f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x2 * radius), (float) (y + y2 * radius), (float) (z + z2 * radius)).color(r, g, b, 1f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).color(r, g, b, 1f).endVertex();
+                bufferSource.addVertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).setColor(r, g, b, 1f);
+                bufferSource.addVertex(matrix, (float) (x + x2 * radius), (float) (y + y2 * radius), (float) (z + z2 * radius)).setColor(r, g, b, 1f);
+                bufferSource.addVertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).setColor(r, g, b, 1f);
 
-                bufferSource.vertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).color(r, g, b, 1f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x4 * radius), (float) (y + y4 * radius), (float) (z + z4 * radius)).color(r, g, b, 1f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).color(r, g, b, 1f).endVertex();
+                bufferSource.addVertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).setColor(r, g, b, 1f);
+                bufferSource.addVertex(matrix, (float) (x + x4 * radius), (float) (y + y4 * radius), (float) (z + z4 * radius)).setColor(r, g, b, 1f);
+                bufferSource.addVertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).setColor(r, g, b, 1f);
             }
 
         }
@@ -956,7 +950,7 @@ public class TickHandler {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void renderTick(RenderGuiOverlayEvent.Post event) {
+    public void renderTick(RenderGuiEvent.Post event) {
         ClientTickHandler.onTickRender1(event.getGuiGraphics());
 
 
@@ -964,7 +958,7 @@ public class TickHandler {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onPlayerUpdate(LivingEvent.LivingTickEvent event) {
+    public void onPlayerUpdate(PlayerTickEvent.Pre event) {
         if (event.getEntity() instanceof LocalPlayer) {
             LocalPlayer player = (LocalPlayer) event.getEntity();
             Level world = player.level();

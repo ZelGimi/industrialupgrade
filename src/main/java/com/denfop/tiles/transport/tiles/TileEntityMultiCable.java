@@ -7,6 +7,8 @@ import com.denfop.api.transport.ITransportConductor;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCable;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCable;
 import com.denfop.gui.GuiCore;
 import com.denfop.network.DecoderHandler;
@@ -17,11 +19,9 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.transport.DataCable;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.transport.types.ICableItem;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -35,11 +35,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +51,7 @@ import static com.denfop.blocks.BlockTileEntity.*;
 
 public class TileEntityMultiCable extends TileEntityInventory implements IUpdatableTileEvent {
 
+    public static final NumberFormat lossFormat = new DecimalFormat("0.00#");
     public static List<BlockEntityType<? extends TileEntityMultiCable>> list = new ArrayList<>();
     public ICableItem cableItem;
     public byte connectivity;
@@ -60,7 +60,6 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     public DataCable dataCable;
     private ResourceLocation texture;
     private List<Direction> blackList = new ArrayList<>();
-    public static final NumberFormat lossFormat = new DecimalFormat("0.00#");
 
     public TileEntityMultiCable(ICableItem name, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
         super(tileBlock, pos, state);
@@ -83,7 +82,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
 
     public ResourceLocation getTexture() {
         if (this.texture == null) {
-            this.texture = new ResourceLocation(
+            this.texture = ResourceLocation.tryBuild(
                     Constants.MOD_ID,
                     "blocks/wiring/" + getCableItem().getMainPath() + "/" + getCableItem()
                             .getNameCable()
@@ -110,18 +109,19 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         }
         if (this.stackFacade != null && !this.stackFacade.isEmpty()) {
             final CompoundTag nbt2 = new CompoundTag();
-            this.stackFacade.save(nbt2);
+            this.stackFacade.save(provider, nbt2);
             nbt.put("stackFacade", nbt2);
         }
         return nbt;
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK)
+            return null;
+        return super.getCapability(cap, side);
     }
+
 
     @Override
     public void readFromNBT(final CompoundTag nbtTagCompound) {
@@ -135,7 +135,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         }
         if (nbtTagCompound.contains("stackFacade")) {
             final CompoundTag stackFacade = nbtTagCompound.getCompound("stackFacade");
-            this.stackFacade = ItemStack.of(stackFacade);
+            this.stackFacade = ItemStack.parseOptional(provider, stackFacade);
         }
     }
 
@@ -322,14 +322,9 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         final ItemStack stack = player.getItemInHand(hand);
-        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.facadeItem.getItem()) {
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            ListTag contentList = nbt.getList("Items", 10);
-
-            for (int i = 0; i < 1; ++i) {
-                CompoundTag slotNbt = contentList.getCompound(i);
-                this.stackFacade = ItemStack.of(slotNbt);
-            }
+        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.facadeItem.getItem() && stack.has(DataComponentsInit.CONTAINER) && !stack.get(DataComponentsInit.CONTAINER).listItem().isEmpty()) {
+            ContainerItem containerItem = stack.get(DataComponentsInit.CONTAINER);
+            this.stackFacade = containerItem.listItem().get(0).copy();
             final Block block = this.stackFacade.getItem() instanceof BlockItem ? ((BlockItem) this.stackFacade.getItem()).getBlock() : Blocks.AIR;
             if (block != Blocks.AIR) {
                 this.stackFacade = this.stackFacade.copy();

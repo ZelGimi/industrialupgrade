@@ -16,7 +16,7 @@ public class TileEntityGenerator extends TileEntityAdvGenerator {
     private final AirPollutionComponent pollutionAir;
 
     public TileEntityGenerator(BlockPos pos, BlockState state) {
-        super(1, 4000, 1,BlockBaseMachine3.generator_iu,pos,state);
+        super(1, 4000, 1, BlockBaseMachine3.generator_iu, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.35));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
     }

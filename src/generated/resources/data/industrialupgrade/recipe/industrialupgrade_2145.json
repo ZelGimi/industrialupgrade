@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/gold"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "id": "industrialupgrade:wiring/itemcable11"
+  },
+  "show_notification": false
+}

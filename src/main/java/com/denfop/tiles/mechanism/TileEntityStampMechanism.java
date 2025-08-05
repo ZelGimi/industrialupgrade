@@ -29,8 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -51,7 +51,7 @@ public class TileEntityStampMechanism extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileEntityStampMechanism(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.stamp_mechanism,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.stamp_mechanism, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -83,7 +83,7 @@ public class TileEntityStampMechanism extends TileElectricMachine implements
                     ((TileEntityStampMechanism) this.base).getOutput();
                     return content;
                 }
-                int damage =((ItemCraftingElements<?>) content.getItem()).getElement().getId();
+                int damage = ((ItemCraftingElements<?>) content.getItem()).getElement().getId();
                 if (damage == 369) {
                     ((TileEntityStampMechanism) this.base).inputSlotA.setRecipe("stamp_coolant");
                 }
@@ -149,77 +149,77 @@ public class TileEntityStampMechanism extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe("stamp_plate", new ItemStack(IUItem.reactor_plate.getItem()), "forge:plates/Iron", "forge:ingots/Lead", "forge:ingots/Tin", "forge:gems/Quartz");
-        addRecipe("stamp_plate", new ItemStack(IUItem.adv_reactor_plate.getItem()), "forge:plates/Bronze", new ItemStack(IUItem.reactor_plate.getItem()),
-                "forge:storage_blocks/Redstone",
-                "forge:ingots/Spinel"
+        addRecipe("stamp_plate", new ItemStack(IUItem.reactor_plate.getItem()), "c:plates/Iron", "c:ingots/Lead", "c:ingots/Tin", "c:gems/Quartz");
+        addRecipe("stamp_plate", new ItemStack(IUItem.adv_reactor_plate.getItem()), "c:plates/Bronze", new ItemStack(IUItem.reactor_plate.getItem()),
+                "c:storage_blocks/Redstone",
+                "c:ingots/Spinel"
         );
         addRecipe("stamp_plate", new ItemStack(IUItem.imp_reactor_plate.getItem()), ModUtils.setSize(IUItem.advancedAlloy, 4),
-                "forge:ingots/Aluminium",
-                "forge:ingots/Vanadoalumite", new ItemStack(IUItem.adv_reactor_plate.getItem())
+                "c:ingots/Aluminium",
+                "c:ingots/Vanadoalumite", new ItemStack(IUItem.adv_reactor_plate.getItem())
         );
-        addRecipe("stamp_plate", new ItemStack(IUItem.per_reactor_plate.getItem()), "forge:plateDense/Steel",
+        addRecipe("stamp_plate", new ItemStack(IUItem.per_reactor_plate.getItem()), "c:plateDense/Steel",
                 new ItemStack(IUItem.compresscarbon.getItem(), 2),
                 new ItemStack(IUItem.plast.getItem()), new ItemStack(IUItem.imp_reactor_plate.getItem())
         );
 
-        addRecipe("stamp_vent", new ItemStack(IUItem.vent.getItem()), "forge:gears/Chromium", "forge:storage_blocks/Copper", new ItemStack(Items.REDSTONE, 4),
-                "forge:ingots/Iron"
+        addRecipe("stamp_vent", new ItemStack(IUItem.vent.getItem()), "c:gears/Chromium", "c:storage_blocks/Copper", new ItemStack(Items.REDSTONE, 4),
+                "c:ingots/Iron"
         );
-        addRecipe("stamp_vent", new ItemStack(IUItem.adv_Vent.getItem()), new ItemStack(IUItem.vent.getItem()), "forge:plates/Gold", "forge:ingots/Electrum",
-                "forge:ingots/Bronze"
+        addRecipe("stamp_vent", new ItemStack(IUItem.adv_Vent.getItem()), new ItemStack(IUItem.vent.getItem()), "c:plates/Gold", "c:ingots/Electrum",
+                "c:ingots/Bronze"
         );
-        addRecipe("stamp_vent", new ItemStack(IUItem.imp_Vent.getItem()), new ItemStack(IUItem.adv_Vent.getItem()), "forge:gems/Diamond", "forge:plates/Platinum",
-                "forge:rods/Iridium"
+        addRecipe("stamp_vent", new ItemStack(IUItem.imp_Vent.getItem()), new ItemStack(IUItem.adv_Vent.getItem()), "c:gems/Diamond", "c:plates/Platinum",
+                "c:rods/Iridium"
         );
         addRecipe(
                 "stamp_vent",
                 new ItemStack(IUItem.per_Vent.getItem()),
                 new ItemStack(IUItem.imp_Vent.getItem()),
                 new ItemStack(IUItem.iudust.getStack(24), 8),
-                "forge:storage_blocks/Redbrass",
-                "forge:plates/Germanium"
+                "c:storage_blocks/Redbrass",
+                "c:plates/Germanium"
         );
 
 
         addRecipe("stamp_vent", new ItemStack(IUItem.componentVent.getItem()), new ItemStack(IUItem.vent.getItem()),
                 new ItemStack(IUItem.plastic_plate.getItem(), 4),
-                "forge:plates/Iron",
-                "forge:ingots/Tungsten"
+                "c:plates/Iron",
+                "c:ingots/Tungsten"
         );
-        addRecipe("stamp_vent", new ItemStack(IUItem.adv_componentVent.getItem()), new ItemStack(IUItem.componentVent.getItem()), "forge:plates/Aluminium",
-                "forge:ingots/Iron",
+        addRecipe("stamp_vent", new ItemStack(IUItem.adv_componentVent.getItem()), new ItemStack(IUItem.componentVent.getItem()), "c:plates/Aluminium",
+                "c:ingots/Iron",
                 new ItemStack(IUItem.iudust.getStack(29), 8)
         );
         addRecipe(
                 "stamp_vent",
                 new ItemStack(IUItem.imp_componentVent.getItem()),
                 new ItemStack(IUItem.adv_componentVent.getItem()),
-                "forge:plates/Aluminumbronze",
-                "forge:ingots/Duralumin",
-                "forge:storage_blocks/Redstone"
+                "c:plates/Aluminumbronze",
+                "c:ingots/Duralumin",
+                "c:storage_blocks/Redstone"
         );
         addRecipe("stamp_vent", new ItemStack(IUItem.per_componentVent.getItem()), new ItemStack(IUItem.imp_componentVent.getItem()),
-                "forge:storage_blocks/Diamond",
+                "c:storage_blocks/Diamond",
                 new ItemStack(IUItem.crafting_elements.getStack(319), 4),
-                "forge:plates/Iridium"
+                "c:plates/Iridium"
         );
 
 
         addRecipe("stamp_exchanger", new ItemStack(IUItem.heat_exchange.getItem()), new ItemStack(IUItem.crafting_elements.getStack(122), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(280), 4),
                 new ItemStack(IUItem.crafting_elements.getStack(277), 1),
-                "forge:ingots/Zinc"
+                "c:ingots/Zinc"
         );
         addRecipe("stamp_exchanger", new ItemStack(IUItem.adv_heat_exchange.getItem()), new ItemStack(IUItem.heat_exchange.getItem()),
                 new ItemStack(IUItem.plastic_plate.getItem(), 4),
-                "forge:storage_blocks/Redstone",
-                "forge:ingots/Redbrass"
+                "c:storage_blocks/Redstone",
+                "c:ingots/Redbrass"
         );
         addRecipe("stamp_exchanger", new ItemStack(IUItem.imp_heat_exchange.getItem()), new ItemStack(IUItem.adv_heat_exchange.getItem()),
                 new ItemStack(IUItem.crafting_elements.getStack(320), 4),
-                "forge:ingots/Titanium",
-                "forge:plates/Germanium"
+                "c:ingots/Titanium",
+                "c:plates/Germanium"
         );
         addRecipe("stamp_exchanger", new ItemStack(IUItem.per_heat_exchange.getItem()), new ItemStack(IUItem.imp_heat_exchange.getItem()),
                 IUItem.compresscarbon.getItem(),
@@ -229,38 +229,38 @@ public class TileEntityStampMechanism extends TileElectricMachine implements
 
 
         addRecipe("stamp_capacitor", new ItemStack(IUItem.capacitor.getItem()), new ItemStack(IUItem.reactor_plate.getItem()),
-                "forge:storage_blocks/Bronze",
-                "forge:storage_blocks/Redstone",
+                "c:storage_blocks/Bronze",
+                "c:storage_blocks/Redstone",
                 IUItem.carbonFiber
         );
         addRecipe("stamp_capacitor", new ItemStack(IUItem.adv_capacitor.getItem()), new ItemStack(IUItem.capacitor.getItem()),
                 new ItemStack(IUItem.plastic_plate.getItem(), 4),
-                "forge:storage_blocks/Iron",
-                "forge:storage_blocks/Coal"
+                "c:storage_blocks/Iron",
+                "c:storage_blocks/Coal"
         );
         addRecipe("stamp_capacitor", new ItemStack(IUItem.imp_capacitor.getItem()), new ItemStack(IUItem.adv_capacitor.getItem()),
                 new ItemStack(IUItem.crafting_elements.getStack(320), 4),
-                "forge:plates/Invar",
+                "c:plates/Invar",
                 new ItemStack(IUItem.crafting_elements.getStack(282), 4)
         );
         addRecipe("stamp_capacitor", new ItemStack(IUItem.per_capacitor.getItem()), new ItemStack(IUItem.imp_capacitor.getItem()),
-                "forge:storage_blocks/Diamond",
+                "c:storage_blocks/Diamond",
                 new ItemStack(IUItem.crafting_elements.getStack(285), 1),
-                "forge:plates/Vitalium"
+                "c:plates/Vitalium"
         );
 
         addRecipe("stamp_coolant", new ItemStack(IUItem.coolant.getItem()), ModUtils.getCellFromFluid(FluidName.fluidhyd.getInstance().get()),
-                "forge:storage_blocks/Iron",
-                "forge:ingots/Lithium",
-                "forge:ingots/Tin"
+                "c:storage_blocks/Iron",
+                "c:ingots/Lithium",
+                "c:ingots/Tin"
         );
         addRecipe("stamp_coolant", new ItemStack(IUItem.adv_coolant.getItem()), new ItemStack(IUItem.coolant.getItem()),
-                ModUtils.getCellFromFluid(FluidName.fluidazot.getInstance().get()), "forge:storage_blocks/Steel",
-                "forge:plates/Obsidian"
+                ModUtils.getCellFromFluid(FluidName.fluidazot.getInstance().get()), "c:storage_blocks/Steel",
+                "c:plates/Obsidian"
         );
         addRecipe("stamp_coolant", new ItemStack(IUItem.imp_coolant.getItem()), new ItemStack(IUItem.adv_coolant.getItem()),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()), "forge:plates/Tungsten",
-                "forge:doubleplate/Duralumin"
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()), "c:plates/Tungsten",
+                "c:doubleplate/Duralumin"
         );
     }
 

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_596_element"
+    },
+    "D": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "E": {
+      "tag": "c:plates/superalloyhaynes"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:hydro_turbine/hydro_turbine_socket"
+  },
+  "show_notification": false
+}

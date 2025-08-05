@@ -9,8 +9,8 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerRedstoneGenerator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiRedstoneGenerator<T extends ContainerRedstoneGenerator> extends GuiIU<ContainerRedstoneGenerator> {
@@ -18,7 +18,7 @@ public class GuiRedstoneGenerator<T extends ContainerRedstoneGenerator> extends 
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiRedstoneGenerator.png".toLowerCase());
+        background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiRedstoneGenerator.png".toLowerCase());
     }
 
     public ContainerRedstoneGenerator container;
@@ -50,7 +50,7 @@ public class GuiRedstoneGenerator<T extends ContainerRedstoneGenerator> extends 
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

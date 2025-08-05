@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvCapacitor extends TileEntityCapacitor {
 
     public TileEntityAdvCapacitor(BlockPos pos, BlockState state) {
-        super(1,BlocksGraphiteReactors.graphite_adv_capacitor,pos,state);
+        super(1, BlocksGraphiteReactors.graphite_adv_capacitor, pos, state);
     }
 
     @Override

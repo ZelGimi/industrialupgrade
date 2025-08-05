@@ -17,7 +17,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.Random;
 
@@ -26,10 +26,20 @@ public class HiveGenerator extends Feature<NoneFeatureConfiguration> {
         super(p_65786_);
     }
 
+    public static boolean isTreeBlock(BlockState blockState) {
+        Block block = blockState.getBlock();
+        return blockState.is(BlockTags.LEAVES) || blockState.is(BlockTags.LOGS);
+    }
+
+    public static boolean canReplace(BlockState blockState) {
+        Block block = blockState.getBlock();
+        return blockState.canBeReplaced(Fluids.EMPTY) && !blockState.liquid();
+    }
+
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         WorldGenLevel world = context.level();
-        if ( WorldBaseGen.random.nextBoolean() && WorldBaseGen.random.nextInt(10) <= 5) {
+        if (WorldBaseGen.random.nextBoolean() && WorldBaseGen.random.nextInt(10) <= 5) {
             ChunkPos chunkPos = new ChunkPos(context.origin());
             int chunkX = chunkPos.x;
             int chunkZ = chunkPos.z;
@@ -38,16 +48,18 @@ public class HiveGenerator extends Feature<NoneFeatureConfiguration> {
         }
         return false;
     }
+
     private void placeHive(WorldGenLevel world, BlockPos pos, int meta) {
         for (Direction facing : Direction.values()) {
             final BlockPos placePos = pos.offset(facing.getNormal());
             if (world.getBlockState(placePos).isAir()) {
-                BlockState state =   IUItem.hive.getItem(meta).getBlock().defaultBlockState();
-                world.setBlock(pos,state,11);
+                BlockState state = IUItem.hive.getItem(meta).getBlock().defaultBlockState();
+                world.setBlock(pos, state, 11);
                 break;
             }
         }
     }
+
     private void generateHives(WorldGenLevel world, Random rand, int x, int z) {
         int hivesPerChunk = 1;
         for (int i = 0; i < hivesPerChunk; i++) {
@@ -71,18 +83,8 @@ public class HiveGenerator extends Feature<NoneFeatureConfiguration> {
         }
     }
 
-    public static boolean isTreeBlock(BlockState blockState) {
-        Block block = blockState.getBlock();
-        return blockState.is(BlockTags.LEAVES) || blockState.is(BlockTags.LOGS);
-    }
-
-    public static boolean canReplace(BlockState blockState) {
-        Block block = blockState.getBlock();
-        return blockState.canBeReplaced(Fluids.EMPTY) && !blockState.liquid();
-    }
-
     public BlockPos getPosForHive(WorldGenLevel world, int x, int z) {
-        BlockPos topPos = new BlockPos(x, world.getHeight(Heightmap.Types.WORLD_SURFACE ,x, z)-1,z);
+        BlockPos topPos = new BlockPos(x, world.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1, z);
 
         if (topPos.getY() <= 0) {
             return null;

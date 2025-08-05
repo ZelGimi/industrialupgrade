@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:basemachine3/wireless_controller_reactors"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_470_element"
+    }
+  },
+  "pattern": [
+    " C ",
+    " B ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/simulation_reactors"
+  },
+  "show_notification": false
+}

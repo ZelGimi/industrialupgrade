@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "B": {
+      "tag": "c:plates/woods"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_678_element"
+    },
+    "D": {
+      "tag": "c:gears/spinel"
+    },
+    "E": {
+      "tag": "c:plates/permalloy"
+    }
+  },
+  "pattern": [
+    "BEB",
+    "CAD",
+    "BEB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:colonial_building/high_factory"
+  },
+  "show_notification": false
+}

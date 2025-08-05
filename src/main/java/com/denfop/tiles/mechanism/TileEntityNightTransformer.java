@@ -22,8 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public int levelBlock;
 
     public TileEntityNightTransformer(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.night_transformer,pos,state);
+        super(BlockBaseMachine3.night_transformer, pos, state);
         this.ne = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.NIGHT, this, 10000));
         this.se = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.SOLARIUM, this, 20000));
         this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
@@ -78,7 +78,6 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     }
 
 
-
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         if (this.levelBlock != 0) {
@@ -117,7 +116,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.qe.getEnergy() >= 5 && this.se.getEnergy() >= 2 && this.ne.getEnergy() + 1 <= this.ne.getCapacity()) {
-            int max = (int) Math.min((levelBlock + 1)*5, qe.getEnergy() / ((levelBlock + 1) * 5));
+            int max = (int) Math.min((levelBlock + 1) * 5, qe.getEnergy() / ((levelBlock + 1) * 5));
             max = (int) Math.min(max, se.getEnergy() / ((levelBlock + 1) * 2));
             max = (int) Math.min(max, (this.ne.getCapacity() - ne.getEnergy()) / ((levelBlock + 1)));
             this.qe.useEnergy(max * 5);

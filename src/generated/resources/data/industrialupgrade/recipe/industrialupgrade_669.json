@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:tank_iu/adv_tank"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniy"
+    },
+    "C": {
+      "item": "industrialupgrade:nanobox"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "CAC",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:tank_iu/imp_tank"
+  },
+  "show_notification": false
+}

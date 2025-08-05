@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:gas_reactor/gas_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_367_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_387_element"
+    }
+  },
+  "pattern": [
+    "DBD",
+    " A ",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_reactor/gas_cell"
+  },
+  "show_notification": false
+}

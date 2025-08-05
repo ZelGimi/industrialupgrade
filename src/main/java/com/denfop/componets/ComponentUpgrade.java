@@ -93,7 +93,7 @@ public class ComponentUpgrade extends AbstractComponent {
     }
 
     public CustomPacketBuffer updateComponent() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(parent.registryAccess());
         buffer.writeInt(this.listActiveUpgrade.size());
         for (TypeUpgrade upgrade : this.listActiveUpgrade) {
             buffer.writeInt(upgrade.ordinal());

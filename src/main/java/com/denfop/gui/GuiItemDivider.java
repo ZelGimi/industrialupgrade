@@ -48,28 +48,28 @@ public class GuiItemDivider<T extends ContainerItemDivider> extends GuiIU<Contai
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer( poseStack, f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         if (this.container.base instanceof IUpgradableBlock) {
-           bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect ( poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         bindTexture(getTexture());
 
         int progress = (int) (32 * this.container.base.getProgress());
-        int xoffset =guiLeft;
-        int yoffset =guiTop;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
 
         if (progress > 0) {
-            drawTexturedModalRect( poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
+            drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString( poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "B": {
+      "item": "industrialupgrade:compresscarbonultra"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_275_element"
+    },
+    "D": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "F": {
+      "tag": "c:doubleplate/iridium"
+    }
+  },
+  "pattern": [
+    "FDF",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:quantumitems6"
+  },
+  "show_notification": false
+}

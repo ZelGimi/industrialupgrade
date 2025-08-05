@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/alcled"
+    },
+    "B": {
+      "tag": "c:doubleplate/vanadoalumite"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/hybcore"
+    },
+    "E": {
+      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "DED",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:quarrymodules/ef"
+  },
+  "show_notification": false
+}

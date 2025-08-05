@@ -28,8 +28,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -49,7 +49,7 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
     public MachineRecipe output;
 
     public TileEntityRodFactory(BlockPos pos, BlockState state) {
-        super(2000, 1, 1,BlockBaseMachine3.reactor_rod_factory,pos,state);
+        super(2000, 1, 1, BlockBaseMachine3.reactor_rod_factory, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -293,7 +293,7 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
         }
         inputSlotA.load();
         this.getOutput();
-        onActivated(var1, var1.getUsedItemHand(), Direction.SOUTH, new Vec3(0,0,0));
+        onActivated(var1, var1.getUsedItemHand(), Direction.SOUTH, new Vec3(0, 0, 0));
     }
 
     @Override

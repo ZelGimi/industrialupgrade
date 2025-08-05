@@ -1,0 +1,13 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:blockprecious/sapphire_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "industrialupgrade:preciousgem/sapphire_gem"
+  }
+}

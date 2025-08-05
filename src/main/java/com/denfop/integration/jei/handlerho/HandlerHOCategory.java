@@ -34,10 +34,10 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileBaseHandlerHeavyOre) BlockBaseMachine1.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guihandlerho" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guihandlerho" +
                         ".png"), 3, 3, 140,
                 80
         );
@@ -75,14 +75,14 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
 
 
         for (int i = 0; i < size; i++) {
-          drawSplitString( stack,"" + recipe.nbt.getInt("input" + i) + "%", x, y, 140 - x, 4210752);
+            drawSplitString(stack, "" + recipe.nbt.getInt("input" + i) + "%", x, y, 140 - x, 4210752);
             y += 19;
         }
-      draw(stack, "" + temp + "°C", 62, 75, 4210752);
+        draw(stack, "" + temp + "°C", 62, 75, 4210752);
 
 
-     bindTexture(getTexture());
-        drawTexturedModalRect( stack,59, 34, 178, 34, xScale + 1, 14);
+        bindTexture(getTexture());
+        drawTexturedModalRect(stack, 59, 34, 178, 34, xScale + 1, 14);
 
     }
 
@@ -104,9 +104,8 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guihandlerho.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guihandlerho.png");
     }
 
 

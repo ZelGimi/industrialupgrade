@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/berylliumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:cokeoven/coke_oven_output_fluid"
+    },
+    "C": {
+      "tag": "c:plates/permalloy"
+    }
+  },
+  "pattern": [
+    " A ",
+    "CBC",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:adv_cokeoven/adv_coke_oven_output_fluid"
+  },
+  "show_notification": false
+}

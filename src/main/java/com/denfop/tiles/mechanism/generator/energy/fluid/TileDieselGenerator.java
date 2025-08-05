@@ -38,9 +38,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -175,8 +175,8 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnDieselGeneratorParticles(level,pos,level.random);
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnDieselGeneratorParticles(level, pos, level.random);
         }
         if (!this.fluidTank.getFluid().isEmpty()) {
             Fluid fluid = this.fluidTank.getFluid().getFluid();

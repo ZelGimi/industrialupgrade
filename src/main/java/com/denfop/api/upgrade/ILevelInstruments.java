@@ -1,18 +1,18 @@
 package com.denfop.api.upgrade;
 
-import com.denfop.utils.ModUtils;
+import com.denfop.datacomponent.DataComponentsInit;
 import net.minecraft.world.item.ItemStack;
 
 public interface ILevelInstruments {
 
     default int getLevel(ItemStack stack) {
-        return ModUtils.nbt(stack).getInt("level");
+        return stack.getOrDefault(DataComponentsInit.LEVEL, 0);
     }
 
     ;
 
     default int getExperience(ItemStack stack) {
-        return ModUtils.nbt(stack).getInt("experience");
+        return stack.getOrDefault(DataComponentsInit.EXPERIENCE, 0);
     }
 
     default int getMaxLevel(ItemStack stack) {
@@ -31,10 +31,10 @@ public interface ILevelInstruments {
         }
         if (maxLevel < exp) {
             exp -= maxLevel;
-            ModUtils.nbt(stack).putInt("level", getLevel(stack) + 1);
+            stack.set(DataComponentsInit.LEVEL, getLevel(stack) + 1);
             UpgradeSystem.system.updateLevel(stack);
         }
-        ModUtils.nbt(stack).putInt("experience", exp);
+        stack.set(DataComponentsInit.EXPERIENCE, exp);
     }
 
 }

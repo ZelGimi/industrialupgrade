@@ -24,8 +24,8 @@ public class GuiStorageExp<T extends ContainerStorageExp> extends GuiIU<Containe
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-    draw(poseStack, "Lvl:" + this.container.base.expirencelevel, 100, 51 - 5, 4210752);
-       draw(poseStack, "Lvl:" + this.container.base.expirencelevel1, 31, 51 - 5, 4210752);
+        draw(poseStack, "Lvl:" + this.container.base.expirencelevel, 100, 51 - 5, 4210752);
+        draw(poseStack, "Lvl:" + this.container.base.expirencelevel1, 31, 51 - 5, 4210752);
 
 
     }
@@ -37,7 +37,7 @@ public class GuiStorageExp<T extends ContainerStorageExp> extends GuiIU<Containe
         int xoffset = (this.width - this.imageWidth) / 2;
         int yoffset = (this.height - this.imageHeight) / 2;
 
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common.png"));
         drawTexturedModalRect(poseStack, xoffset + 149, yoffset + 22, 18,
                 34, 24, 55
         );
@@ -53,7 +53,7 @@ public class GuiStorageExp<T extends ContainerStorageExp> extends GuiIU<Containe
         }
         chargeLevel = Math.min(chargeLevel, 47);
         chargeLevel1 = Math.min(chargeLevel1, 47);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common.png"));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (chargeLevel > 0) {
             drawTexturedModalRect(poseStack, xoffset + 153, yoffset + 26 + 47 - chargeLevel, 50,
@@ -71,7 +71,7 @@ public class GuiStorageExp<T extends ContainerStorageExp> extends GuiIU<Containe
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

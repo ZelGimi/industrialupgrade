@@ -22,26 +22,25 @@ public class GuiSafetyDoom<T extends ContainerSafetyDoom> extends GuiIU<Containe
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisafety.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisafety.png");
     }
-
 
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
         if (this.container.base.full) {
-            this.drawTexturedModalRect(poseStack,this.guiLeft + 81, this.guiTop + 33, 192, 64, 16, 16);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 81, this.guiTop + 33, 192, 64, 16, 16);
         } else {
-            this.drawTexturedModalRect(poseStack,this.guiLeft + 81, this.guiTop + 33, 192, 81, 16, 16);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 81, this.guiTop + 33, 192, 81, 16, 16);
         }
     }
 
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 }

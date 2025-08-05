@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
+    "B": {
+      "item": "industrialupgrade:alloyingot/molybdenum_steel"
+    }
+  },
+  "pattern": [
+    " B ",
+    "AAA",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_585_element"
+  },
+  "show_notification": false
+}

@@ -22,11 +22,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 
@@ -39,7 +39,7 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     private int amount;
 
     public TileEntityBaseSteamTurbineTank(int blockLevel, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
-        super(tileBlock,pos,state);
+        super(tileBlock, pos, state);
         this.blockLevel = blockLevel;
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTankInsert("tank", 10000 * (blockLevel + 1));
@@ -61,7 +61,6 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     }
 
 
-
     public void updateField(String name, CustomPacketBuffer is) {
 
         if (name.equals("fluidTank")) {
@@ -79,13 +78,12 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
         if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null && this.getMain() != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     @Override

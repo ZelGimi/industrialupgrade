@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -43,15 +43,17 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         this.cableType = cableType;
         this.addedToEnergyNet = false;
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> info) {
-        HeatType type =this.cableType;
+        HeatType type = this.cableType;
         double capacity;
         capacity = type.capacity;
         info.add(Localization.translate("iu.transport.heat") + ModUtils.getString(capacity) + " °C");
 
 
     }
+
     public ICableItem getCableItem() {
         return cableType;
     }
@@ -143,7 +145,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         if (!this.getWorld().isClientSide && !addedToEnergyNet) {
             this.energyHeatConductorMap.clear();
             this.validHeatReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
 
@@ -154,7 +156,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     @Override
     public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
-        MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+        NeoForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
         this.needUpdate = true;
     }
 
@@ -164,7 +166,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         if (this.needUpdate) {
             this.energyHeatConductorMap.clear();
             this.validHeatReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
             this.needUpdate = false;
             this.updateConnectivity();
         }
@@ -176,7 +178,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
 
     public void onUnloaded() {
         if (!getLevel().isClientSide && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
             this.addedToEnergyNet = false;
         }
 

@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -28,13 +28,15 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
     IExchanger exchanger;
 
     public TileEntitySteamControllerBoiler(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.SteamBoilerMultiBlock,BlockSteamBoiler.steam_boiler_controller,pos,state);
+        super(InitMultiBlockSystem.SteamBoilerMultiBlock, BlockSteamBoiler.steam_boiler_controller, pos, state);
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.steam_boiler.info"));
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();

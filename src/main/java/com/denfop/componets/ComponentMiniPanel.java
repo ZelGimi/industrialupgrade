@@ -19,8 +19,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -194,7 +194,7 @@ public class ComponentMiniPanel extends AbstractComponent {
                 this.energyConductorMap.clear();
                 validReceivers.clear();
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
+                NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
             }
             this.loaded = true;
         }
@@ -219,14 +219,14 @@ public class ComponentMiniPanel extends AbstractComponent {
 
     public void onUnloaded() {
         if (this.delegate != null) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
             this.delegate = null;
         }
         this.loaded = false;
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeDouble(this.bonusCapacity);
@@ -353,7 +353,7 @@ public class ComponentMiniPanel extends AbstractComponent {
 
             assert !this.parent.getWorld().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
         }
 
         this.sourceDirections = sourceDirections;
@@ -367,7 +367,7 @@ public class ComponentMiniPanel extends AbstractComponent {
 
             assert !this.parent.getWorld().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
         }
 
 

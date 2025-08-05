@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/nichrome"
+    },
+    "B": {
+      "tag": "c:plates/cobalt"
+    },
+    "C": {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "id": "industrialupgrade:wiring/itemcable23"
+  },
+  "show_notification": false
+}

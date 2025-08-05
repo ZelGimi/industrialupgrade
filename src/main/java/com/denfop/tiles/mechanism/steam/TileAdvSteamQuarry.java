@@ -21,7 +21,6 @@ import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,10 +38,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.BlockEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,8 +61,8 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
     public FakePlayerSpawner entity;
     public boolean work;
 
-    public TileAdvSteamQuarry(BlockPos pos,BlockState state) {
-        super(BlockBaseMachine3.adv_steam_quarry,pos,state);
+    public TileAdvSteamQuarry(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.adv_steam_quarry, pos, state);
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance().get()
@@ -105,47 +104,41 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
         work = true;
     }
 
-    public static int onBlockBreakEvent(Level level,GameType gameType, ServerPlayer entityPlayer, BlockPos pos) {
+    public static int onBlockBreakEvent(Level level, GameType gameType, ServerPlayer entityPlayer, BlockPos pos) {
         Boolean preCancelEvent = false;
         ItemStack itemstack = entityPlayer.getMainHandItem();
-        if (!itemstack.isEmpty() && !itemstack.getItem().canAttackBlock(level.getBlockState(pos), level, pos, entityPlayer))
-        {
+        if (!itemstack.isEmpty() && !itemstack.getItem().canAttackBlock(level.getBlockState(pos), level, pos, entityPlayer)) {
             preCancelEvent = true;
         }
-        if (gameType.isBlockPlacingRestricted())
-        {
+        if (gameType.isBlockPlacingRestricted()) {
             if (gameType == GameType.SPECTATOR)
                 preCancelEvent = true;
 
-            if (!entityPlayer.mayBuild())
-            {
-                if (itemstack.isEmpty() || !itemstack.hasAdventureModeBreakTagForBlock(level.registryAccess().registryOrThrow(Registries.BLOCK), new BlockInWorld(level, pos, false)))
+            if (!entityPlayer.mayBuild()) {
+                if (itemstack.isEmpty() || !itemstack.canBreakBlockInAdventureMode(new BlockInWorld(level, pos, false)))
                     preCancelEvent = true;
             }
         }
-
 
 
         // Post the block break event
         BlockState state = level.getBlockState(pos);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, entityPlayer);
         event.setCanceled(preCancelEvent);
-        MinecraftForge.EVENT_BUS.post(event);
+        NeoForge.EVENT_BUS.post(event);
 
         // Handle if the event is canceled
-        if (event.isCanceled())
-        {
+        if (event.isCanceled()) {
             // Let the client know the block still exists
             entityPlayer.connection.send(new ClientboundBlockUpdatePacket(level, pos));
 
             // Update any tile entity data for this block
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity != null)
-            {
+            if (blockEntity != null) {
 
             }
         }
-        return event.isCanceled() ? -1 : event.getExpToDrop();
+        return event.isCanceled() ? -1 : 1;
     }
 
     @Override
@@ -213,11 +206,11 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
             final BlockState state = level.getBlockState(pos1);
             Block block1 = state.getBlock();
             steam.useEnergy(2);
-            if ((state.isAir()  || state.getDestroySpeed(level,pos1) < 0)&& onBlockBreakEvent(level,
+            if ((state.isAir() || state.getDestroySpeed(level, pos1) < 0) && onBlockBreakEvent(level,
                     GameType.SURVIVAL,
                     entity, pos1
             ) != -1) {
-                if (state.getDestroySpeed(level,pos1) < 0){
+                if (state.getDestroySpeed(level, pos1) < 0) {
                     return;
                 }
                 if (x == pos.getX() && z == pos.getZ()) {
@@ -280,7 +273,7 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
             } else {
                 if (x == this.getPos().getX() && z == this
                         .getPos()
-                        .getZ() && (block1 instanceof BlockTileEntity && ((BlockTileEntity)block1).item == stackPipe.getItem())) {
+                        .getZ() && (block1 instanceof BlockTileEntity && ((BlockTileEntity) block1).item == stackPipe.getItem())) {
 
                 }
                 if (x == this.pos.getX() + 3) {

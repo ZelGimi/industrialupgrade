@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvSocket extends TileEntityMainSocket implements ISocket {
 
     public TileEntityAdvSocket(BlockPos pos, BlockState state) {
-        super(20000,BlockGasReactor.adv_gas_socket,pos,state);
+        super(20000, BlockGasReactor.adv_gas_socket, pos, state);
     }
 
     @Override

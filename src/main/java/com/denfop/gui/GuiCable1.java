@@ -62,9 +62,9 @@ public class GuiCable1<T extends ContainerCable> extends GuiIU<ContainerCable> {
     @Override
     protected ResourceLocation getTexture() {
         if (!input) {
-            return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiinputtube.png");
+            return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiinputtube.png");
         } else {
-            return new ResourceLocation(Constants.MOD_ID, "textures/gui/guioutputtube.png");
+            return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guioutputtube.png");
         }
 
     }

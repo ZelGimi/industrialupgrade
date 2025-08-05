@@ -41,9 +41,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ContainerScreenEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.client.event.ContainerScreenEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -52,15 +52,16 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
-public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends AbstractContainerScreen<T> implements MenuAccess<T> {
+public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends AbstractContainerScreen<T> implements MenuAccess<T> {
     public static final int textHeight = 8;
-    protected static Runnable closeHandler;
     public static ResourceLocation currentTexture;
+    protected static Runnable closeHandler;
     public final T container;
     protected final List<GuiElement<?>> elements;
     private final Queue<Tooltip> queuedTooltips;
     public int guiLeft;
     public int guiTop;
+    public Component title;
     private boolean fixKeyEvents;
 
     public GuiCore(T container) {
@@ -83,24 +84,6 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
 
     }
 
-    public void drawSplitString(GuiGraphics poseStack, Font font, String str, int x, int y, int wrapWidth, int textColor) {
-        List<FormattedCharSequence> strs = font.split(FormattedText.of(str), wrapWidth);
-        for (FormattedCharSequence s : strs) {
-            poseStack.drawString(font, s, x, y, textColor, false);
-            y += 9;
-        }
-    }
-
-    public void drawSplitString(GuiGraphics poseStack, String str, int x, int y, int wrapWidth, int textColor) {
-        if (this.font == null)
-            font = Minecraft.getInstance().font;
-        List<FormattedCharSequence> strs = font.split(FormattedText.of(str), wrapWidth);
-        for (FormattedCharSequence s : strs) {
-            poseStack.drawString(font, s, x, y, textColor, false);
-            y += 9;
-        }
-    }
-
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
         ArrayList<ItemStack> ret = new ArrayList<>();
         Set<UpgradableProperty> properties = block.getUpgradableProperties();
@@ -115,7 +98,6 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         return ret;
     }
 
-
     public static void bindTexture(ResourceLocation resourceLocation) {
         currentTexture = resourceLocation;
         RenderSystem.setShaderTexture(0, resourceLocation);
@@ -124,6 +106,27 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
     public static void bindTexture(int i, ResourceLocation resourceLocation) {
         currentTexture = resourceLocation;
         RenderSystem.setShaderTexture(i, resourceLocation);
+    }
+
+    public void drawSplitString(GuiGraphics poseStack, Font font, String str, int x, int y, int wrapWidth, int textColor) {
+        List<FormattedCharSequence> strs = font.split(FormattedText.of(str), wrapWidth);
+        for (FormattedCharSequence s : strs) {
+            poseStack.drawString(font, s, x, y, textColor, false);
+            y += 9;
+        }
+    }
+
+    public void changeParams() {
+    }
+
+    public void drawSplitString(GuiGraphics poseStack, String str, int x, int y, int wrapWidth, int textColor) {
+        if (this.font == null)
+            font = Minecraft.getInstance().font;
+        List<FormattedCharSequence> strs = font.split(FormattedText.of(str), wrapWidth);
+        for (FormattedCharSequence s : strs) {
+            poseStack.drawString(font, s, x, y, textColor, false);
+            y += 9;
+        }
     }
 
     public float adjustTextScale(String text, int canvasWidth, int canvasHeight, float scale, float scaleStep) {
@@ -303,15 +306,77 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         guiGraphics.renderItemDecorations(font == null ? this.font : font, stack, x, y - (((AbstractContainerScreenAccessor) this).getDraggingItem().isEmpty() ? 0 : 8), text);
         guiGraphics.pose().popPose();
     }
+    public void renderItemTooltipGrid(GuiGraphics graphics, List<IInputItemStack> items, int mouseX, int mouseY) {
+        Minecraft mc = Minecraft.getInstance();
+        int screenWidth = width - mouseX;
+        int screenHeight = height - mouseY;
+
+        int itemSize = 18;
+        int padding = 6;
+        int maxColumns = Math.min(12, Math.max(1, (screenWidth - 20) / itemSize));
+        int columns = Math.min(maxColumns, items.size());
+
+        int itemsPerRow = columns;
+        int maxRows = Math.max(1, (screenHeight - 40) / itemSize);
+        int itemsPerPage = itemsPerRow * maxRows;
+
+        int totalPages = (int) Math.ceil((double) items.size() / itemsPerPage);
+
+        if (totalPages <= 0)
+            totalPages = 1;
+        int currentPage = (int) ((System.currentTimeMillis() / 2000L) % totalPages);
+
+        int startIndex = currentPage * itemsPerPage;
+        int endIndex = Math.min(startIndex + itemsPerPage, items.size());
+        List<IInputItemStack> visibleItems = items.subList(startIndex, endIndex);
+
+        int rows = (int) Math.ceil((double) visibleItems.size() / columns);
+
+        int tooltipWidth = columns * itemSize + padding * 2;
+        int tooltipHeight = rows * itemSize + padding * 2;
+
+        int x = mouseX + 12;
+        int y = mouseY - 12;
+
+        if (x + tooltipWidth > screenWidth) x = screenWidth - tooltipWidth - 4;
+        if (y + tooltipHeight > screenHeight) y = screenHeight - tooltipHeight - 4;
+        if (x < 4) x = 4;
+        if (y < 4) y = 4;
+
+
+        TooltipRenderUtil.renderTooltipBackground(graphics, x, y, tooltipWidth, tooltipHeight, 400);
+
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 400.0F);
+        RenderSystem.enableDepthTest();
+
+        long tick = System.currentTimeMillis() / 1000L;
+
+        for (int i = 0; i < visibleItems.size(); i++) {
+            int col = i % columns;
+            int row = i / columns;
+            int drawX = x + padding + col * itemSize;
+            int drawY = y + padding + row * itemSize;
+
+            List<ItemStack> stacks = visibleItems.get(i).getInputs();
+            ItemStack stack = stacks.get((int) (tick % stacks.size()));
+
+            graphics.renderItem(stack, drawX, drawY);
+        }
+
+        RenderSystem.disableDepthTest();
+        graphics.pose().popPose();
+    }
+
 
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.guiLeft = this.getGuiLeft();
         this.guiTop = this.getGuiTop();
-        this.renderBackground(guiGraphics);
+        this.renderTransparentBackground(guiGraphics);
         int i = this.leftPos;
         int j = this.topPos;
         this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
-        MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, guiGraphics, mouseX, mouseY));
+        NeoForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, guiGraphics, mouseX, mouseY));
         RenderSystem.disableDepthTest();
 
         for (Renderable renderable : this.renderables) {
@@ -331,21 +396,20 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
 
             if (this.isHovering(slot, (double) mouseX, (double) mouseY) && slot.isActive()) {
                 this.hoveredSlot = slot;
-                 j2 = slot.x;
-                 k2 = slot.y;
+                j2 = slot.x;
+                k2 = slot.y;
                 if (this.hoveredSlot.isHighlightable()) {
                     renderSlotHighlight(guiGraphics, j2, k2, 0, this.getSlotColor(k));
                 }
                 if (slot instanceof SlotInvSlot)
-                if ( ((SlotInvSlot)slot).invSlot.hasItemList() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-                    renderItemTooltipGrid(guiGraphics, ((SlotInvSlot)slot).invSlot.getStacks(((SlotInvSlot)slot).index), mouseX-guiLeft + 5, mouseY-guiTop + 5);
-                }
+                    if ( ((SlotInvSlot)slot).invSlot.hasItemList() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+                        renderItemTooltipGrid(guiGraphics, ((SlotInvSlot)slot).invSlot.getStacks(((SlotInvSlot)slot).index), mouseX-guiLeft + 5, mouseY-guiTop + 5);
+                    }
             }
         }
 
         this.renderLabels(guiGraphics, mouseX, mouseY);
-
-        MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, guiGraphics, mouseX, mouseY));
+        NeoForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, guiGraphics, mouseX, mouseY));
         ItemStack itemstack = ((AbstractContainerScreenAccessor) this).getDraggingItem().isEmpty() ? this.menu.getCarried() : ((AbstractContainerScreenAccessor) this).getDraggingItem();
         if (!itemstack.isEmpty()) {
             j2 = ((AbstractContainerScreenAccessor) this).getDraggingItem().isEmpty() ? 8 : 16;
@@ -378,14 +442,7 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
 
         guiGraphics.pose().popPose();
         RenderSystem.enableDepthTest();
-        this.changeParams();
-    }
-
-    public void changeParams() {
-    }
-
-    public boolean needRenderForeground() {
-        return true;
+        changeParams();
     }
 
     public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
@@ -479,6 +536,10 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
     }
 
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        if (font == null)
+            font = Minecraft.getInstance().font;
+        if (this.title == null)
+            this.title = Component.empty();
         this.drawBackgroundAndTitle(graphics, partialTick, mouseX - this.leftPos, mouseY - this.topPos);
         for (GuiElement<?> element : this.elements) {
             GuiElement<?> guiElement = element;
@@ -527,19 +588,7 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         if (this.menu.base instanceof IUpgradableBlock) {
             this.handleUpgradeTooltip(mouseX, mouseY);
         }
-        for (int k = 0; k < this.menu.slots.size(); ++k) {
-            Slot slot = this.menu.slots.get(k);
-            if (slot instanceof SlotInvSlot) {
-                int j2 = slot.x;
-                int k2 = slot.y;
-                if (this.isHovering(slot, mouseX, mouseY)) {
 
-                    if ( ((SlotInvSlot)slot).invSlot.hasItemList() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-                        renderItemTooltipGrid(graphics, ((SlotInvSlot)slot).invSlot.getStacks(((SlotInvSlot)slot).index),guiLeft+ j2,guiTop+ k2);
-                    }
-                }
-            }
-        }
         for (GuiElement<?> element : this.elements) {
             GuiElement<?> guiElement = element;
             if (guiElement.visible()) {
@@ -562,7 +611,8 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         }
     }
 
-    public boolean mouseScrolled(double d, double d2, double d3) {
+    @Override
+    public boolean mouseScrolled(double d, double d2, double d4, double d3) {
         ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
 
         for (GuiElement<?> element : this.elements) {
@@ -594,9 +644,9 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
                 }
             }
         }
-
-        return super.mouseScrolled(d, d2, d3);
+        return super.mouseScrolled(d, d2, d4, d3);
     }
+
 
     protected void mouseClicked(int i, int j, int k) {
         for (Renderable widget : this.renderables) {
@@ -734,13 +784,11 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
                                  double uE,
                                  double vE,
                                  boolean mirrorX) {
-        // Calculate final position for the rectangle
         x += this.guiLeft();
         y += this.guiTop();
         double xE = x + width;
         double yE = y + height;
 
-        // Handle mirroring of texture coordinates
         if (mirrorX) {
             double tmp = uS;
             uS = uE;
@@ -750,44 +798,18 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         // Ensure rendering state is prepared
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
+        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         Matrix4f matrix = graphics.pose().last().pose();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.vertex(matrix, (float) x, (float) y, 0).uv((float) uS, (float) vS).endVertex();
-        bufferBuilder.vertex(matrix, (float) x, (float) yE, 0).uv((float) uS, (float) vE).endVertex();
-        bufferBuilder.vertex(matrix, (float) xE, (float) yE, 0).uv((float) uE, (float) vE).endVertex();
-        bufferBuilder.vertex(matrix, (float) xE, (float) y, 0).uv((float) uE, (float) vS).endVertex();
-        tessellator.end();
+        bufferBuilder.addVertex(matrix, (float) x, (float) y, 0).setUv((float) uS, (float) vS);
+        bufferBuilder.addVertex(matrix, (float) x, (float) yE, 0).setUv((float) uS, (float) vE);
+        bufferBuilder.addVertex(matrix, (float) xE, (float) yE, 0).setUv((float) uE, (float) vE);
+        bufferBuilder.addVertex(matrix, (float) xE, (float) y, 0).setUv((float) uE, (float) vS);
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
 
 
     }
 
-    public void drawSprite1(GuiGraphics graphics, double x, double y, double width, double height, TextureAtlasSprite sprite, int color, double textureSize, boolean wrapX, boolean wrapY) {
-        if (sprite == null) {
-            sprite = ((TextureAtlas) this.minecraft.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS)).getSprite(MissingTextureAtlasSprite.getLocation());
-        }
-
-
-        textureSize *= 16.0D;
-        double xS;
-        for (xS = x; xS < x + width; xS += textureSize) {
-            double yS;
-            for (yS = y; yS < y + height; yS += textureSize) {
-                double segmentWidth = Math.min(textureSize, x + width - xS);
-                double segmentHeight = Math.min(textureSize, y + height - yS);
-                graphics.blit((int) xS, (int) yS, color, (int) segmentWidth, (int) segmentHeight, sprite);
-            }
-        }
-    }
-
-    public void drawSprite(GuiGraphics graphics,
-                           double x, double y,
-                           double width, double height,
-                           TextureAtlasSprite sprite,
-                           int color,
-                           double textureSize,
-                           boolean wrapX,
-                           boolean wrapY) {
+    public void drawSprite(GuiGraphics graphics, double x, double y, double width, double height, TextureAtlasSprite sprite, int color, double textureSize, boolean wrapX, boolean wrapY) {
         if (sprite == null) {
             sprite = ((TextureAtlas) Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS))
                     .getSprite(MissingTextureAtlasSprite.getLocation());
@@ -812,8 +834,8 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         Matrix4f matrix = graphics.pose().last().pose();
 
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+
 
         double remX = width % tileSize;
         double remY = height % tileSize;
@@ -852,22 +874,18 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
                 double tileYEnd = tileY + tileHeight;
                 double vEnd = vStart + (tileYEnd - tileY) / tileSize * vSize;
 
-                buffer.vertex(matrix, (float) tileX, (float) tileY, 0.0F)
-                        .uv((float) uStart, (float) vStart)
-                        .color(red, green, blue, alpha)
-                        .endVertex();
-                buffer.vertex(matrix, (float) tileX, (float) tileYEnd, 0.0F)
-                        .uv((float) uStart, (float) vEnd)
-                        .color(red, green, blue, alpha)
-                        .endVertex();
-                buffer.vertex(matrix, (float) tileXEnd, (float) tileYEnd, 0.0F)
-                        .uv((float) uEnd, (float) vEnd)
-                        .color(red, green, blue, alpha)
-                        .endVertex();
-                buffer.vertex(matrix, (float) tileXEnd, (float) tileY, 0.0F)
-                        .uv((float) uEnd, (float) vStart)
-                        .color(red, green, blue, alpha)
-                        .endVertex();
+                buffer.addVertex(matrix, (float) tileX, (float) tileY, 0.0F)
+                        .setUv((float) uStart, (float) vStart)
+                        .setColor(red, green, blue, alpha);
+                buffer.addVertex(matrix, (float) tileX, (float) tileYEnd, 0.0F)
+                        .setUv((float) uStart, (float) vEnd)
+                        .setColor(red, green, blue, alpha);
+                buffer.addVertex(matrix, (float) tileXEnd, (float) tileYEnd, 0.0F)
+                        .setUv((float) uEnd, (float) vEnd)
+                        .setColor(red, green, blue, alpha);
+                buffer.addVertex(matrix, (float) tileXEnd, (float) tileY, 0.0F)
+                        .setUv((float) uEnd, (float) vStart)
+                        .setColor(red, green, blue, alpha);
 
 
                 tileY += tileHeight;
@@ -878,13 +896,13 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         }
 
 
-        BufferUploader.drawWithShader(buffer.end());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
-
 
     public void drawItem(GuiGraphics graphics, int x, int y, ItemStack itemStack) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         graphics.renderItem(itemStack, x + this.guiLeft(), y + this.guiTop());
+
     }
 
     public void drawColoredRect(GuiGraphics poseStack, int x, int y, int width, int height, int color, BufferBuilder bufferBuilder) {
@@ -905,10 +923,10 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         }
 
 
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y, (float) z).color(color).endVertex();
-        bufferBuilder.vertex(matrix4f, (float) x, (float) y2, (float) z).color(color).endVertex();
-        bufferBuilder.vertex(matrix4f, (float) x2, (float) y2, (float) z).color(color).endVertex();
-        bufferBuilder.vertex(matrix4f, (float) x2, (float) y, (float) z).color(color).endVertex();
+        bufferBuilder.addVertex(matrix4f, (float) x, (float) y, (float) z).setColor(color);
+        bufferBuilder.addVertex(matrix4f, (float) x, (float) y2, (float) z).setColor(color);
+        bufferBuilder.addVertex(matrix4f, (float) x2, (float) y2, (float) z).setColor(color);
+        bufferBuilder.addVertex(matrix4f, (float) x2, (float) y, (float) z).setColor(color);
 
 
         if (translucent) {
@@ -988,69 +1006,6 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
     public String trimStringToWidthReverse(String string, int n) {
         return this.font.plainSubstrByWidth(string, n, true);
     }
-
-    public void renderItemTooltipGrid(GuiGraphics graphics, List<IInputItemStack> items, int mouseX, int mouseY) {
-        Minecraft mc = Minecraft.getInstance();
-        int screenWidth = width - mouseX;
-        int screenHeight = height - mouseY;
-
-        int itemSize = 18;
-        int padding = 6;
-        int maxColumns = Math.min(12, Math.max(1, (screenWidth - 20) / itemSize));
-        int columns = Math.min(maxColumns, items.size());
-
-        int itemsPerRow = columns;
-        int maxRows = Math.max(1, (screenHeight - 40) / itemSize);
-        int itemsPerPage = itemsPerRow * maxRows;
-
-        int totalPages = (int) Math.ceil((double) items.size() / itemsPerPage);
-
-        if (totalPages <= 0)
-            totalPages = 1;
-        int currentPage = (int) ((System.currentTimeMillis() / 2000L) % totalPages);
-
-        int startIndex = currentPage * itemsPerPage;
-        int endIndex = Math.min(startIndex + itemsPerPage, items.size());
-        List<IInputItemStack> visibleItems = items.subList(startIndex, endIndex);
-
-        int rows = (int) Math.ceil((double) visibleItems.size() / columns);
-
-        int tooltipWidth = columns * itemSize + padding * 2;
-        int tooltipHeight = rows * itemSize + padding * 2;
-
-        int x = mouseX + 12;
-        int y = mouseY - 12;
-
-        if (x + tooltipWidth > screenWidth) x = screenWidth - tooltipWidth - 4;
-        if (y + tooltipHeight > screenHeight) y = screenHeight - tooltipHeight - 4;
-        if (x < 4) x = 4;
-        if (y < 4) y = 4;
-
-
-        TooltipRenderUtil.renderTooltipBackground(graphics, x, y, tooltipWidth, tooltipHeight, 400);
-
-        graphics.pose().pushPose();
-        graphics.pose().translate(0.0F, 0.0F, 400.0F);
-        RenderSystem.enableDepthTest();
-
-        long tick = System.currentTimeMillis() / 1000L;
-
-        for (int i = 0; i < visibleItems.size(); i++) {
-            int col = i % columns;
-            int row = i / columns;
-            int drawX = x + padding + col * itemSize;
-            int drawY = y + padding + row * itemSize;
-
-            List<ItemStack> stacks = visibleItems.get(i).getInputs();
-            ItemStack stack = stacks.get((int) (tick % stacks.size()));
-
-            graphics.renderItem(stack, drawX, drawY);
-        }
-
-        RenderSystem.disableDepthTest();
-        graphics.pose().popPose();
-    }
-
 
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
@@ -1135,11 +1090,7 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         bindTexture(this.getTexture());
     }
 
-    protected ResourceLocation getTexture() {
-        return new ResourceLocation("missing");
-    }
-
-    ;
+    protected abstract ResourceLocation getTexture();
 
     public void drawTexturedModalRect(GuiGraphics poseStack, int i, int i1, int i2, int i3, int i4, int i5) {
         poseStack.blit(currentTexture, i, i1, i2, i3, i4, i5);
@@ -1152,7 +1103,7 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
         int y = canvasY;
 
 
-        List<String> lines = splitTextToLines(text, maxWidth,1);
+        List<String> lines = splitTextToLines(text, maxWidth, 1);
 
 
         for (int i = scale - 1; i < lines.size(); i++) {
@@ -1168,6 +1119,7 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
             y += lineHeight;
         }
     }
+
 
     private static class Tooltip {
         final int x;

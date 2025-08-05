@@ -14,8 +14,8 @@ import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityAnalyzerChest extends TileEntityInventory {
 
@@ -38,11 +38,11 @@ public class TileEntityAnalyzerChest extends TileEntityInventory {
 
     public IMultiTileBlock getTeBlock() {
 
-             return BlockBaseMachine3.analyzer_chest;
+        return BlockBaseMachine3.analyzer_chest;
     }
 
     public BlockTileEntity getBlock() {
-          return IUItem.basemachine2.getBlock(getTeBlock());
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 

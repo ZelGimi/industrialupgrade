@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:doubleplate/iridium"
+    },
+    "C": {
+      "tag": "c:gears/germanium"
+    },
+    "D": {
+      "tag": "c:gears/redbrass"
+    },
+    "E": {
+      "tag": "c:doubleplate/vitalium"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_71_element"
+  },
+  "show_notification": false
+}

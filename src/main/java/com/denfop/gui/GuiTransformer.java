@@ -14,8 +14,8 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiTransformer<T extends ContainerTransformer> extends GuiIU<ContainerTransformer> {
@@ -59,11 +59,11 @@ public class GuiTransformer<T extends ContainerTransformer> extends GuiIU<Contai
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int mouseX, int mouseY) {
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
-      draw(poseStack, Localization.translate("Transformer.gui.Output"), 16, 20, 2157374);
-      draw(poseStack, Localization.translate("Transformer.gui.Input"), 16, 35, 2157374);
-       draw(poseStack, this.container.base.getoutputflow() + " " + Localization.translate(
+        draw(poseStack, Localization.translate("Transformer.gui.Output"), 16, 20, 2157374);
+        draw(poseStack, Localization.translate("Transformer.gui.Input"), 16, 35, 2157374);
+        draw(poseStack, this.container.base.getoutputflow() + " " + Localization.translate(
                 Constants.ABBREVIATION + ".generic.text.EUt"), 62, 20, 2157374);
-       draw(poseStack, this.container.base.getinputflow() + " " + Localization.translate(
+        draw(poseStack, this.container.base.getinputflow() + " " + Localization.translate(
                 Constants.ABBREVIATION + ".generic.text.EUt"), 62, 35, 2157374);
         switch (this.container.base.getMode()) {
             case redstone:
@@ -81,10 +81,8 @@ public class GuiTransformer<T extends ContainerTransformer> extends GuiIU<Contai
     }
 
 
-
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

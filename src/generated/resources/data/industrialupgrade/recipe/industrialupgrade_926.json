@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/duralumin"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/per_reactor_plate"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:exchanger/per_exchanger"
+  },
+  "show_notification": false
+}

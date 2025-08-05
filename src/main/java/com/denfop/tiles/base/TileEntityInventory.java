@@ -35,15 +35,13 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,9 +90,9 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
         super.readContainerPacket(customPacketBuffer);
         try {
             CompoundTag invSlotsTag = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
-            for (int i = 0; i < invSlots.size(); i++){
+            for (int i = 0; i < invSlots.size(); i++) {
                 InvSlot invSlot = this.invSlots.get(i);
-                invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)));
+                invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)), customPacketBuffer.registryAccess());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -103,30 +101,21 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
-        CustomPacketBuffer customPacketBuffer =  super.writeContainerPacket();
+        CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         CompoundTag invSlotsTag = new CompoundTag();
 
-        for (int i = 0; i < invSlots.size(); i++){
+        for (int i = 0; i < invSlots.size(); i++) {
             CompoundTag invSlotTag = new CompoundTag();
             InvSlot invSlot = this.invSlots.get(i);
-            invSlot.writeToNbt(invSlotTag);
+            invSlot.writeToNbt(invSlotTag, customPacketBuffer.registryAccess());
             invSlotsTag.put(String.valueOf(i), invSlotTag);
         }
         try {
-            EncoderHandler.encode(customPacketBuffer,invSlotsTag);
+            EncoderHandler.encode(customPacketBuffer, invSlotsTag);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return customPacketBuffer;
-    }
-
-    @Override
-    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-        for (AbstractComponent component : componentList) {
-            if (component.onSneakingActivated(player, hand))
-                return true;
-        }
-        return super.onSneakingActivated(player, hand, side, vec3);
     }
 
     @Override
@@ -174,7 +163,7 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
         if (player.level().isClientSide)
             return;
         if (getGuiContainer(player) != null) {
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
             try {
                 EncoderHandler.encode(growingBuffer, this);
@@ -185,7 +174,8 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
             growingBuffer.flip();
 
             player.closeContainer();
-            NetworkHooks.openScreen((ServerPlayer) player, this, buf -> buf.writeBytes(growingBuffer));
+            ServerPlayer serverPlayer = (ServerPlayer) player;
+            serverPlayer.openMenu(this, buf -> buf.writeBytes(growingBuffer));
         }
     }
 
@@ -214,31 +204,32 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            if (facing == null) {
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK) {
+            if (side == null) {
                 if (this.itemHandler[this.itemHandler.length - 1] == null) {
                     this.itemHandler[this.itemHandler.length - 1] = new InvWrapper(this);
                 }
 
-                return LazyOptional.of(() -> this.itemHandler[this.itemHandler.length - 1]).cast();
+                return (T) this.itemHandler[this.itemHandler.length - 1];
             } else {
-                if (this.itemHandler[facing.ordinal()] == null) {
-                    this.itemHandler[facing.ordinal()] = new SidedInvWrapper(this, facing);
+                if (this.itemHandler[side.ordinal()] == null) {
+                    this.itemHandler[side.ordinal()] = new SidedInvWrapper(this, side);
                 }
 
-                return LazyOptional.of(() -> this.itemHandler[facing.ordinal()]).cast();
+                return (T) this.itemHandler[side.ordinal()];
             }
         } else {
             if (this.capabilityComponents == null) {
-                return super.getCapability(cap, facing);
+                return super.getCapability(cap, side);
             } else {
 
                 AbstractComponent comp = this.capabilityComponents.get(cap);
-                return comp == null ? super.getCapability(cap, facing) : LazyOptional.of(() -> comp.getCapability(cap, facing)).cast();
+                return comp == null ? super.getCapability(cap, side) : comp.getCapability(cap, side);
             }
         }
     }
+
 
     @Override
     public TileEntityInventory getParent() {
@@ -366,13 +357,12 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
     }
 
 
-
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            this.componentPrivate.onNetworkUpdate((CustomPacketBuffer) DecoderHandler.decode(customPacketBuffer));
             for (AbstractComponent component : this.componentList)
+                if ((!(component instanceof ComponentPrivate)))
                 component.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -382,32 +372,29 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
     @Override
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer packetBuffer = super.writePacket();
-        try {
-            EncoderHandler.encode(packetBuffer, this.componentPrivate);
-            for (AbstractComponent component : this.componentList)
-                packetBuffer.writeBytes(component.updateComponent());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        for (AbstractComponent component : this.componentList)
+            if ((!(component instanceof ComponentPrivate)))
+            packetBuffer.writeBytes(component.updateComponent());
         return packetBuffer;
     }
 
     public void readFromNBT(CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         CompoundTag invSlotsTag = nbtTagCompound.getCompound("InvSlots");
-        for (int i = 0; i < invSlots.size(); i++){
+        for (int i = 0; i < invSlots.size(); i++) {
             InvSlot invSlot = invSlots.get(i);
-            invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)));
+            invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)), provider);
         }
     }
 
     public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
         CompoundTag invSlotsTag = new CompoundTag();
-        for (int i = 0; i < invSlots.size(); i++){
+        for (int i = 0; i < invSlots.size(); i++) {
             InvSlot invSlot = invSlots.get(i);
             CompoundTag invSlotTag = new CompoundTag();
-            invSlot.writeToNbt(invSlotTag);
+            invSlot.writeToNbt(invSlotTag, provider);
             invSlotsTag.put(String.valueOf(i), invSlotTag);
         }
 

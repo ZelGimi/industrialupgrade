@@ -18,7 +18,7 @@ public class GuiPlantGardener<T extends ContainerPlantGardener> extends GuiIU<Co
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

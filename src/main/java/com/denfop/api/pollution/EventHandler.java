@@ -2,26 +2,27 @@ package com.denfop.api.pollution;
 
 
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public class EventHandler {
 
     @SubscribeEvent
-    public void tick(TickEvent.PlayerTickEvent event) {
-        if (event.player.level().dimension() != Level.OVERWORLD || event.player.level().isClientSide || event.phase == TickEvent.Phase.START) {
+    public void tick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().dimension() != Level.OVERWORLD || event.getEntity().level().isClientSide) {
             return;
         }
-        PollutionManager.pollutionManager.work(event.player);
+        PollutionManager.pollutionManager.work(event.getEntity());
 
     }
 
     @SubscribeEvent
-    public void tick(TickEvent.LevelTickEvent event) {
-        if (event.level.dimension() != Level.OVERWORLD || event.level.isClientSide || event.phase == TickEvent.Phase.START) {
+    public void tick(LevelTickEvent.Post event) {
+        if (event.getLevel().dimension() != Level.OVERWORLD || event.getLevel().isClientSide) {
             return;
         }
-        PollutionManager.pollutionManager.tick(event.level);
+        PollutionManager.pollutionManager.tick(event.getLevel());
     }
 
     @SubscribeEvent

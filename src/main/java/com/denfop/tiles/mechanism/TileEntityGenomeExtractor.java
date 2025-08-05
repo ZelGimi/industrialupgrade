@@ -19,6 +19,8 @@ import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenomeExtractor;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.bee.ItemJarBees;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -26,8 +28,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
+import java.io.IOException;
 
 public class TileEntityGenomeExtractor extends TileEntityInventory implements IUpdatableTileEvent {
 
@@ -40,7 +44,7 @@ public class TileEntityGenomeExtractor extends TileEntityInventory implements IU
     private boolean work;
 
     public TileEntityGenomeExtractor(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.genome_extractor,pos,state);
+        super(BlockBaseMachine3.genome_extractor, pos, state);
         this.slot = new InvSlotOutput(this, 1);
         this.input = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
@@ -78,14 +82,24 @@ public class TileEntityGenomeExtractor extends TileEntityInventory implements IU
         final boolean hasGenCrop = customPacketBuffer.readBoolean();
         final boolean hasGenBee = customPacketBuffer.readBoolean();
         if (hasGenCrop) {
-            ItemStack stack = customPacketBuffer.readItem();
+            ItemStack stack = ItemStack.EMPTY;
+            try {
+                stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             genCrop = new Genome(stack);
 
         } else {
             genCrop = null;
         }
         if (hasGenBee) {
-            ItemStack stack = customPacketBuffer.readItem();
+            ItemStack stack = ItemStack.EMPTY;
+            try {
+                stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             genBee = new com.denfop.api.bee.genetics.Genome(stack);
 
         } else {
@@ -99,10 +113,18 @@ public class TileEntityGenomeExtractor extends TileEntityInventory implements IU
         customPacketBuffer.writeBoolean(genCrop != null);
         customPacketBuffer.writeBoolean(genBee != null);
         if (genCrop != null) {
-            customPacketBuffer.writeItemStack(genCrop.getStack(),false);
+            try {
+                EncoderHandler.encode(customPacketBuffer, genCrop.getStack());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         if (genBee != null) {
-            customPacketBuffer.writeItemStack(genBee.getStack(),false);
+            try {
+                EncoderHandler.encode(customPacketBuffer, genBee.getStack());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return customPacketBuffer;
     }

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/neodymium"
+    },
+    "B": {
+      "tag": "c:plates/platinum"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_590_element"
+  },
+  "show_notification": false
+}

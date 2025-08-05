@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPlainsHive extends TileEntityHive {
 
     public TileEntityPlainsHive(BlockPos pos, BlockState state) {
-        super(BeeInit.PLAINS_BEE,BlockHive.plains_hive, pos ,state);
+        super(BeeInit.PLAINS_BEE, BlockHive.plains_hive, pos, state);
     }
 
     @Override

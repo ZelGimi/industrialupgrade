@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:gears/spinel"
+    },
+    "C": {
+      "item": "minecraft:gravel"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_231_element"
+  },
+  "show_notification": false
+}

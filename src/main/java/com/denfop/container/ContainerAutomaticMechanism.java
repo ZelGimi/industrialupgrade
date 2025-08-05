@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.Slot;
 public class ContainerAutomaticMechanism extends ContainerBase<TileEntityAutomaticMechanism> {
 
     public ContainerAutomaticMechanism(TileEntityAutomaticMechanism tileEntityAutomaticMechanism, Player player) {
-        super(tileEntityAutomaticMechanism,null);
+        super(tileEntityAutomaticMechanism, null);
         this.player = player;
         this.inventory = player.getInventory();
         for (int i = 0; i < 36; i++) {

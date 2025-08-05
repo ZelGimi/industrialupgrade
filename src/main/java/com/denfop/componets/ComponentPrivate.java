@@ -2,12 +2,12 @@ package com.denfop.componets;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityTesseract;
 import com.denfop.tiles.mechanism.TileEntitySafe;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,18 +44,7 @@ public class ComponentPrivate extends AbstractComponent {
 
         return null;
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.playersUUID.isEmpty()){
-            playersUUID.add( UUID.randomUUID());
-        }
-    }
 
-    @Override
-    public boolean isServer() {
-        return true;
-    }
     @Override
     public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         super.onBlockActivated(player, hand);
@@ -62,13 +52,12 @@ public class ComponentPrivate extends AbstractComponent {
         if (!this.activate && !stack.isEmpty() && this.players.contains(player.getName().getString())) {
             if (stack.getItem() == IUItem.module7.getItemFromMeta(0)) {
                 this.activate = true;
-                for (int m = 0; m < 9; m++) {
-                    CompoundTag nbt = ModUtils.nbt(stack);
-                    String name = "player_" + m;
-                    if (!nbt.getString(name).isEmpty()) {
-                        this.players.add(nbt.getString(name));
-                        this.playersUUID.add(getPlayerByUUID(player.level(), nbt.getString(name)).getUUID());
-                    }
+                List<String> stringList = stack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+                for (String s : stringList) {
+
+                    this.players.add(s);
+                    this.playersUUID.add(getPlayerByUUID(player.level(), s).getUUID());
+
                 }
                 stack.shrink(1);
                 return true;
@@ -113,8 +102,8 @@ public class ComponentPrivate extends AbstractComponent {
     @Override
     public boolean canUsePurifier(final Player player) {
         return
-              !(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe) &&
-                this.activate && (this.players.contains(
+                !(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe) &&
+                        this.activate && (this.players.contains(
                         player.getName().getString()) || player.isCreative());
     }
 
@@ -133,9 +122,9 @@ public class ComponentPrivate extends AbstractComponent {
     public List<ItemStack> getDrops() {
         final List<ItemStack> ret = super.getDrops();
         if (this.activate) {
-             if (!(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe)) {
-            ret.add(new ItemStack(IUItem.module7.getItemFromMeta(0)));
-              }
+            if (!(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe)) {
+                ret.add(new ItemStack(IUItem.module7.getItemFromMeta(0)));
+            }
         }
         return ret;
     }
@@ -171,7 +160,7 @@ public class ComponentPrivate extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeInt(this.players.size());
         buffer.writeBoolean(this.activate);
         this.players.forEach(buffer::writeString);
@@ -180,7 +169,7 @@ public class ComponentPrivate extends AbstractComponent {
     }
 
     public CustomPacketBuffer updateComponent() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(this.parent.registryAccess());
         buffer.writeInt(this.players.size());
         buffer.writeBoolean(this.activate);
         this.players.forEach(buffer::writeString);
@@ -189,11 +178,26 @@ public class ComponentPrivate extends AbstractComponent {
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.players.clear();
-        int size = is.readInt();
-        this.activate = is.readBoolean();
-        for (int i = 0; i < size; i++) {
-            this.players.add(is.readString());
+        try {
+            int size = is.readInt();
+            this.activate = is.readBoolean();
+            for (int i = 0; i < size; i++) {
+                this.players.add(is.readString());
+            }
+        }catch (Exception e){};
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.playersUUID.isEmpty()) {
+            playersUUID.add(UUID.randomUUID());
         }
+    }
+
+    @Override
+    public boolean isServer() {
+        return true;
     }
 
     public List<UUID> getPlayersUUID() {

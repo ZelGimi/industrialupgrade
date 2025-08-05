@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:upgrades/overclocker"
+    },
+    "B": {
+      "tag": "c:plates/vanadoalumite"
+    },
+    "C": {
+      "tag": "c:plates/tantalum"
+    },
+    "D": {
+      "tag": "c:plates/thallium"
+    }
+  },
+  "pattern": [
+    "D D",
+    "CBC",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_692_element"
+  },
+  "show_notification": false
+}

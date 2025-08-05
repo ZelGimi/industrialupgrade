@@ -2,6 +2,8 @@ package com.denfop.container;
 
 
 import com.denfop.api.bee.genetics.Genome;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.items.bee.ItemStackBeeAnalyzer;
 import com.denfop.utils.ModUtils;
@@ -22,7 +24,7 @@ public class ContainerBeeAnalyzer extends ContainerHandHeldInventory<ItemStackBe
     private final int current;
 
     public ContainerBeeAnalyzer(Player player, ItemStackBeeAnalyzer Toolbox1) {
-        super(Toolbox1,null);
+        super(Toolbox1, null);
         this.player = player;
         this.inventory = player.getInventory();
         inventorySize = Toolbox1.inventorySize;
@@ -45,7 +47,6 @@ public class ContainerBeeAnalyzer extends ContainerHandHeldInventory<ItemStackBe
                     Toolbox1.crop = null;
                     Toolbox1.genome = null;
                 } else {
-                    ModUtils.nbt(stack).putBoolean("analyzed", true);
                     Toolbox1.genome = new Genome(stack);
                     Toolbox1.crop = ItemJarBees.getBee(stack);
                 }
@@ -130,7 +131,7 @@ public class ContainerBeeAnalyzer extends ContainerHandHeldInventory<ItemStackBe
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tungsten"
+    },
+    "B": {
+      "tag": "c:plates/duralumin"
+    }
+  },
+  "pattern": [
+    "AB ",
+    "BA ",
+    "   "
+  ],
+  "result": {
+    "count": 2,
+    "id": "industrialupgrade:steam_turbine/steam_turbine_casing"
+  },
+  "show_notification": false
+}

@@ -19,7 +19,7 @@ public class GuiAutoFuse<T extends ContainerAutoFuse> extends GuiIU<ContainerAut
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

@@ -11,10 +11,12 @@ public class ItemCore<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public ItemCore(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public enum Types implements ISubEnum {
         advcore(0),
         hybcore(1),

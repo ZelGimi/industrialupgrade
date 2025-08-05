@@ -42,7 +42,7 @@ public class TileEntityMultiBlockElement extends TileEntityInventory implements 
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (this.getWorld().isClientSide)
             return true;
-        if (player.getItemInHand(hand).is(ItemTags.create(new ResourceLocation("forge", "tools/wrench"))))
+        if (player.getItemInHand(hand).is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench"))))
             return false;
         if (this.getMain() != null && !this.hasOwnInventory()) {
             for (AbstractComponent component : componentList) {

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring_storage/bar_mfsu"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/phocore"
+    },
+    "C": {
+      "item": "industrialupgrade:transformer_iu/lv"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "E": {
+      "item": "industrialupgrade:blockresource/reinforced_stone"
+    }
+  },
+  "pattern": [
+    "EDE",
+    "BBB",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_634_element"
+  },
+  "show_notification": false
+}

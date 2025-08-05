@@ -10,11 +10,13 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
 import com.denfop.audio.SoundHandler;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.armour.ISpecialArmor;
-import com.denfop.items.armour.material.ArmorMaterials;
+import com.denfop.items.bags.BagsDescription;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.register.Register;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
@@ -23,12 +25,14 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -40,34 +44,30 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
-import static net.minecraftforge.common.ForgeMod.SWIM_SPEED;
 
 public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemStackInventory, IEnergyItem,
-        IUpgradeItem, IItemTab{
+        IUpgradeItem, IItemTab {
 
-    protected final Map<MobEffect, Integer> potionRemovalCost = new IdentityHashMap<>();
+    protected final Map<Holder<MobEffect>, Integer> potionRemovalCost = new IdentityHashMap<>();
     private final List<EnumCapability> listCapability;
     private final double maxCharge;
     private final int tier;
@@ -79,12 +79,12 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
     private String nameItem;
 
     public ItemSpecialArmor(EnumSubTypeArmor subTypeArmor, EnumTypeArmor typeArmor) {
-        super(ArmorMaterials.ENERGY_ITEM, subTypeArmor.getEntityType(), new Properties().stacksTo(1).setNoRepair());
+        super(Register.ENERGY_ITEM, subTypeArmor.getEntityType(), new Properties().stacksTo(1).setNoRepair());
         final List<EnumCapability> list = new ArrayList<>(subTypeArmor.getCapabilities());
         list.removeIf(capability -> !typeArmor.getListCapability().contains(capability));
         this.listCapability = list;
         if (getEquipmentSlot() == EquipmentSlot.FEET) {
-            MinecraftForge.EVENT_BUS.register(this);
+            NeoForge.EVENT_BUS.register(this);
         }
         this.armor = typeArmor;
         this.name = typeArmor.name().toLowerCase() + "_" + subTypeArmor.name().toLowerCase();
@@ -92,7 +92,7 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
         this.tier = typeArmor.getTier();
         this.transferLimit = typeArmor.getMaxTransfer();
         if (this.listCapability.contains(EnumCapability.ACTIVE_EFFECT) || this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
-            potionRemovalCost.put(IUPotion.radiation, 20);
+            potionRemovalCost.put(IUPotion.rad, 20);
             if (this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
                 potionRemovalCost.put(MobEffects.POISON, 100);
                 potionRemovalCost.put(MobEffects.WITHER, 100);
@@ -162,7 +162,7 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="iu."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -198,45 +198,42 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity p_41406_, int p_41407_, boolean p_41408_) {
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
+        if (p_41407_ >= Inventory.INVENTORY_SIZE && p_41407_ < Inventory.INVENTORY_SIZE + 4 && p_41406_ instanceof Player player)
+            this.onArmorTick(itemStack, world, (Player) p_41406_);
     }
 
 
-
-
-
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         int suffix = (this.getEquipmentSlot() == EquipmentSlot.LEGS) ? 2 : 1;
         CompoundTag nbtData = ModUtils.nbt(stack);
         final String mode = nbtData.getString("mode");
         if (!mode.isEmpty() && armor.getSkinsList().contains(mode)) {
             if (suffix == 1) {
-                return Constants.TEXTURES + ":textures/armor/" + this.armor
+                return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.armor
                         .name()
-                        .toLowerCase() + "_" + mode.toLowerCase() + "_1.png";
+                        .toLowerCase() + "_" + mode.toLowerCase() + "_1" + ".png");
             } else {
-                return Constants.TEXTURES + ":textures/armor/" + this.armor
+                return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.armor
                         .name()
-                        .toLowerCase() + "_" + mode.toLowerCase() + "_2.png";
+                        .toLowerCase() + "_" + mode.toLowerCase() + "_2" + ".png");
             }
         }
 
         if (suffix == 1) {
-            return Constants.TEXTURES + ":textures/armor/" + this.armor.name().toLowerCase() + "_1.png";
+            return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.armor.name().toLowerCase() + "_1.png");
         } else {
-            return Constants.TEXTURES + ":textures/armor/" + this.armor.name().toLowerCase() + "_2.png";
+            return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.armor.name().toLowerCase() + "_2.png");
         }
-
     }
 
 
     @SubscribeEvent
-    public void Potion(LivingEvent.LivingTickEvent event) {
+    public void Potion(EntityTickEvent.Pre event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (player.level().isClientSide) return;
 
@@ -250,15 +247,15 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
 
         if (hasStepCap) {
             if (!nbtData.getBoolean("stepHeight")) {
-              
+
                 nbtData.putBoolean("stepHeight", true);
-                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(1F);
+                player.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1F);
             }
         } else {
             if (nbtData.getBoolean("stepHeight")) {
 
                 nbtData.putBoolean("stepHeight", false);
-                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(0F);
+                player.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(0F);
             }
         }
     }
@@ -288,9 +285,9 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
             forward = forward * f;
             if (player.isInWater() || player.isInLava()) {
 
-                strafe = strafe * (float) player.getAttribute(SWIM_SPEED.get()).getValue();
-                up = up * (float) player.getAttribute(SWIM_SPEED.get()).getValue();
-                forward = forward * (float) player.getAttribute(SWIM_SPEED.get()).getValue();
+                strafe = strafe * (float) player.getAttribute(Attributes.WATER_MOVEMENT_EFFICIENCY).getValue();
+                up = up * (float) player.getAttribute(Attributes.WATER_MOVEMENT_EFFICIENCY).getValue();
+                forward = forward * (float) player.getAttribute(Attributes.WATER_MOVEMENT_EFFICIENCY).getValue();
             }
             float f1 = Mth.sin(player.getYRot() * 0.017453292F);
             float f2 = Mth.cos(player.getYRot() * 0.017453292F);
@@ -349,12 +346,12 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     }
                 }
 
-                Nightvision = nbtData.getBoolean("Nightvision");
+                Nightvision = itemStack.getOrDefault(DataComponentsInit.NIGHT_VISION, false);
                 if (IUCore.keyboard.isArmorKey(player) && toggleTimer == 0) {
                     toggleTimer = 10;
                     Nightvision = !Nightvision;
                     if (!world.isClientSide()) {
-                        nbtData.putBoolean("Nightvision", Nightvision);
+                        itemStack.set(DataComponentsInit.NIGHT_VISION, Nightvision);
                         if (!world.isClientSide())
                             if (Nightvision) {
                                 IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
@@ -402,14 +399,14 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     int slot = -1;
                     for (int i = 0; i < player.getInventory().items.size(); i++) {
                         if (!player.getInventory().items.get(i).isEmpty()
-                                && player.getInventory().items.get(i).getItem().isEdible()) {
+                                && player.getInventory().items.get(i).getItem().getFoodProperties(player.getInventory().items.get(i), player) != null) {
                             slot = i;
                             break;
                         }
                     }
                     if (slot > -1) {
                         ItemStack stack = player.getInventory().items.get(slot);
-                        stack = stack.getItem().finishUsingItem(stack,world, player);
+                        stack = player.eat(world, stack);
                         if (stack.getCount() <= 0) {
                             player.getInventory().items.set(slot, ItemStack.EMPTY);
                         }
@@ -428,14 +425,14 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                 break;
             case CHEST:
 
-                if (nbtData.getBoolean("jetpack")) {
+
+                if (itemStack.getOrDefault(DataComponentsInit.JETPACK, false)) {
                     player.fallDistance = 0;
 
-                    if (nbtData.getBoolean("jump") && !nbtData.getBoolean("canFly") && !player.getAbilities().mayfly && IUCore.keyboard.isJumpKeyDown(
-                            player) && !nbtData.getBoolean(
-                            "isFlyActive") && toggleTimer == 0) {
+                    if (nbtData.getBoolean("jump") && !itemStack.getOrDefault(DataComponentsInit.JETPACK, false) && !player.getAbilities().mayfly && IUCore.keyboard.isJumpKeyDown(
+                            player) && toggleTimer == 0) {
                         toggleTimer = 10;
-                        nbtData.putBoolean("canFly", true);
+                        itemStack.getOrDefault(DataComponentsInit.JETPACK, true);
                     }
                     nbtData.putBoolean("jump", !player.onGround());
 
@@ -443,21 +440,21 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                         if (ElectricItem.manager.canUse(itemStack, 45)) {
                             ElectricItem.manager.use(itemStack, 45, null);
                         } else {
-                            nbtData.putBoolean("jetpack", false);
+                            itemStack.set(DataComponentsInit.JETPACK, false);
                         }
                     }
                 }
 
 
-                jetpack = nbtData.getBoolean("jetpack");
-                boolean vertical = nbtData.getBoolean("vertical");
+                jetpack = itemStack.getOrDefault(DataComponentsInit.JETPACK, false);
+                boolean vertical = itemStack.getOrDefault(DataComponentsInit.VERTICAL, false);
 
                 if (this.listCapability.contains(EnumCapability.VERTICAL_FLY) && IUCore.keyboard.isVerticalMode(player) && toggleTimer == 0) {
                     toggleTimer = 10;
                     vertical = !vertical;
                     if (!world.isClientSide()) {
 
-                        nbtData.putBoolean("vertical", vertical);
+                        itemStack.set(DataComponentsInit.VERTICAL, vertical);
                         if (!world.isClientSide())
                             if (vertical) {
                                 IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info2"));
@@ -485,13 +482,12 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     toggleTimer = 10;
                     if (!world.isClientSide()) {
                         save(itemStack, player);
-                        CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+                        CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
                         growingBuffer.writeByte(3);
 
                         growingBuffer.flip();
-                        NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, itemStack), buf -> buf.writeBytes(growingBuffer));
-
+                        player.openMenu(getInventory(player, itemStack), buf -> buf.writeBytes(growingBuffer));
 
                     }
 
@@ -510,7 +506,7 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     toggleTimer = 10;
                     jetpack = !jetpack;
                     if (!world.isClientSide()) {
-                        nbtData.putBoolean("jetpack", jetpack);
+                        itemStack.set(DataComponentsInit.JETPACK, jetpack);
 
                         if (jetpack) {
                             if (!world.isClientSide())
@@ -526,14 +522,14 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     }
                 }
                 if (this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
-                    jetpack = nbtData.getBoolean("jetpack");
+                    jetpack = itemStack.getOrDefault(DataComponentsInit.JETPACK, false);
                     int timer = nbtData.getInt("timer");
                     if (timer > 0) {
                         timer--;
                         nbtData.putInt("timer", timer);
                     } else {
                         if (jetpack) {
-                            nbtData.putBoolean("jetpack", false);
+                            itemStack.set(DataComponentsInit.JETPACK, false);
                             nbtData.putInt("reTimer", 5 * 20 * 60);
                             if (!world.isClientSide())
                                 IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
@@ -665,19 +661,18 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                         toggleTimer = 10;
                         if (!world.isClientSide()) {
                             save(itemStack, player);
-                            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+                            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
                             growingBuffer.writeByte(2);
 
                             growingBuffer.flip();
-                            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, itemStack), buf -> buf.writeBytes(growingBuffer));
-
+                            player.openMenu(getInventory(player, itemStack), buf -> buf.writeBytes(growingBuffer));
 
                         }
                     }
                 }
                 if (this.listCapability.contains(EnumCapability.MAGNET)) {
-                    boolean magnet = !nbtData.getBoolean("magnet");
+                    boolean magnet = !itemStack.getOrDefault(DataComponentsInit.ACTIVE, false);
 
                     if (IUCore.keyboard.isLeggingsMode(player) && IUCore.keyboard.isChangeKeyDown(player) && toggleTimer == 0) {
                         toggleTimer = 10;
@@ -690,19 +685,18 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                                 if (!world.isClientSide())
                                     IUCore.proxy.messagePlayer(player, "Magnet disabled.");
                             }
-                            nbtData.putBoolean("magnet", magnet);
+                            itemStack.set(DataComponentsInit.ACTIVE, magnet);
                         }
                     }
                     if (IUCore.keyboard.isLeggingsMode(player) && IUCore.keyboard.isSaveModeKeyDown(player) && toggleTimer == 0) {
                         toggleTimer = 10;
                         if (!world.isClientSide()) {
-                            int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
+                            int mode = itemStack.getOrDefault(DataComponentsInit.MODE, 0);
                             mode++;
                             if (mode > 2 || mode < 0) {
                                 mode = 0;
                             }
-
-                            ModUtils.NBTSetInteger(itemStack, "mode1", mode);
+                            itemStack.set(DataComponentsInit.MODE, mode);
                             if (!world.isClientSide())
                                 IUCore.proxy.messagePlayer(
                                         player,
@@ -711,7 +705,8 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                                 );
                         }
                     }
-                    int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
+                    int mode = itemStack.getOrDefault(DataComponentsInit.MODE, 0);
+                    ;
                     if (mode != 0) {
                         int radius = 11;
                         AABB axisalignedbb = new AABB(player.getX() - radius, player.getY() - radius,
@@ -815,30 +810,21 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
 
 
     public void save(ItemStack stack, Player player) {
-     /*   final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);*/
+
     }
 
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, Player player) {
-     /*   if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-            ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
-            if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAsThrown(stack);
-                player.closeScreen();
-            }
-        }
-*/
+
         return true;
     }
 
+
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> info, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack itemStack, @Nullable TooltipContext p_41422_, List<Component> info, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, p_41422_, info, p_41424_);
-        CompoundTag nbtData = ModUtils.nbt(itemStack);
 
         if (this.listCapability.contains(EnumCapability.FLY) || this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
-            info.add(Component.literal(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack"))));
+            info.add(Component.literal(Localization.translate("iu.fly") + " " + ModUtils.Boolean(itemStack.getOrDefault(DataComponentsInit.JETPACK, false))));
         }
 
 
@@ -881,21 +867,18 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
             if (this.listCapability.contains(EnumCapability.BAGS)) {
                 info.add(Component.literal("Open bag: " + KeyboardClient.bootsmode.getKey().getDisplayName().getString() + " + " + KeyboardClient.leggingsmode.getKey().getDisplayName().getString()));
 
-            /*    final NBTTagCompound nbt = ModUtils.nbt(itemStack);
-                if (nbt.hasKey("bag")) {
+                if (!itemStack.has(DataComponentsInit.DESCRIPTIONS_CONTAINER)) {
+                    return;
+                }
 
-                    List<BagsDescription> list = new ArrayList<>();
-                    final NBTTagCompound nbt1 = nbt.getCompoundTag("bag");
-                    int size = nbt1.getInteger("size");
-                    for (int i = 0; i < size; i++) {
-                        list.add(new BagsDescription(nbt1.getCompoundTag(String.valueOf(i))));
-                    }
-                    for (BagsDescription description : list) {
-                        info.add(TextFormatting.GREEN + "" + description.getCount() + "x " + description
-                                .getStack()
-                                .getDisplayName());
-                    }
-                }*/
+                List<BagsDescription> list = itemStack.getOrDefault(DataComponentsInit.DESCRIPTIONS_CONTAINER, Collections.emptyList());
+
+
+                for (BagsDescription description : list) {
+                    info.add(Component.literal(description.getCount() + "x ")
+                            .append(description.getStack().getHoverName())
+                            .withStyle(ChatFormatting.GREEN));
+                }
             }
             if (this.listCapability.contains(EnumCapability.FLY) || this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
                 info.add(Component.literal(Localization.translate("iu.fly_need")));
@@ -955,7 +938,7 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
             if (this.listCapability.contains(EnumCapability.MAGNET)) {
                 info.add(Component.literal(Localization.translate("iu.magnet_mode") + KeyboardClient.changemode.getKey().getDisplayName().getString() + " + " + KeyboardClient.leggingsmode.getKey().getDisplayName().getString()));
                 info.add(Component.literal(Localization.translate("iu.changemode_key") + KeyboardClient.leggingsmode.getKey().getDisplayName().getString() + " + " + KeyboardClient.savemode.getKey().getDisplayName().getString()));
-                int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
+                int mode = itemStack.getOrDefault(DataComponentsInit.MODE, 0);
                 if (mode > 2 || mode < 0) {
                     mode = 0;
                 }

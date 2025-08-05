@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:steam_boiler/steam_boiler_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_356_element"
+    },
+    "C": {
+      "tag": "c:gears/invar"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_boiler/steam_boiler_heat_exchanger"
+  },
+  "show_notification": false
+}

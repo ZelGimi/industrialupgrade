@@ -1,0 +1,48 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/osmiridium"
+    },
+    "B": {
+      "tag": "c:plates/niobiumtitanium"
+    },
+    "C": {
+      "item": "industrialupgrade:double_transformer/double_transformer"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "E": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 10,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/spectralcircuit"
+    },
+    "F": {
+      "item": "industrialupgrade:neutronium"
+    }
+  },
+  "pattern": [
+    "AFB",
+    "ECE",
+    "BDA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/quantum_transformer"
+  },
+  "show_notification": false
+}

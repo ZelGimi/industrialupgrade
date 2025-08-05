@@ -13,7 +13,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,12 +28,14 @@ public class ItemModuleTypePanel<T extends Enum<T> & ISubEnum> extends ItemMain<
     public static EnumSolarPanels getSolarType(int meta) {
         return EnumSolarPanels.getFromID(meta + 1);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level worldIn, List<Component> info, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack itemStack, @Nullable TooltipContext worldIn, List<Component> info, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, worldIn, info, p_41424_);
         EnumSolarPanels solar = getSolarType(this.getElement().getId());
 
@@ -62,8 +63,8 @@ public class ItemModuleTypePanel<T extends Enum<T> & ISubEnum> extends ItemMain<
                         .getDescriptionId())));
             }
         }
-        if (worldIn != null) {
-            if (worldIn.getGameTime() % 40 == 0) {
+        if (worldIn.level() != null) {
+            if (worldIn.level().getGameTime() % 40 == 0) {
                 number++;
             }
         }

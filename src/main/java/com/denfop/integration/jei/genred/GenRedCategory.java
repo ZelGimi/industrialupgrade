@@ -32,9 +32,9 @@ public class GenRedCategory extends GuiIU implements IRecipeCategory<GenRedHandl
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -83,7 +83,7 @@ public class GenRedCategory extends GuiIU implements IRecipeCategory<GenRedHandl
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

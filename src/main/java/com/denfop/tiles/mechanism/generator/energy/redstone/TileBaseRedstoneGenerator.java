@@ -6,7 +6,6 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.LightComponent;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRedstoneGenerator;
 import com.denfop.gui.GuiCore;
@@ -25,8 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;

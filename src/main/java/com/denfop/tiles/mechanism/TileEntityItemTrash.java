@@ -15,7 +15,7 @@ public class TileEntityItemTrash extends TileEntityInventory {
     private final InvSlot invSlot;
 
     public TileEntityItemTrash(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.item_trash,pos,state);
+        super(BlockBaseMachine3.item_trash, pos, state);
         this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 96) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -28,7 +28,6 @@ public class TileEntityItemTrash extends TileEntityInventory {
             }
         };
     }
-
 
 
     @Override

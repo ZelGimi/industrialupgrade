@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_92_element"
+    },
+    "C": {
+      "tag": "c:plates/manganese"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "CBC",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_116_element"
+  },
+  "show_notification": false
+}

@@ -32,7 +32,7 @@ public class GuiRadiationStorage<T extends ContainerRadiationStorage> extends Gu
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
 
-    super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         final int h = (this.width - this.imageWidth) / 2;
         final int k = (this.height - this.imageHeight) / 2;
         this.bindTexture();
@@ -44,7 +44,7 @@ public class GuiRadiationStorage<T extends ContainerRadiationStorage> extends Gu
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiradiationstorage.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiradiationstorage.png");
     }
 
 

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/aluminium"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/adv_reactor_plate"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:exchanger/adv_exchanger"
+  },
+  "show_notification": false
+}

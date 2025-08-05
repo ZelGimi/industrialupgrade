@@ -28,8 +28,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     public double max_value;
 
     public TileLimiter(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.limiter,pos,state);
+        super(BlockBaseMachine3.limiter, pos, state);
         this.energy = this.addComponent(new Energy(
                 this,
                 Double.MAX_VALUE,

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:itemspace/pluto_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/pluto_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/pluto_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/pluto_boulder"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spacecobblestone1/pluto_cobblestone"
+  }
+}

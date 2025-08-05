@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:ingots/bronze"
+    }
+  },
+  "pattern": [
+    "B B",
+    "BBB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy/wrench"
+  },
+  "show_notification": false
+}

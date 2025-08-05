@@ -12,6 +12,7 @@ public class ItemSunnariumPanel<T extends Enum<T> & ISubEnum> extends ItemMain<T
     public ItemSunnariumPanel(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;

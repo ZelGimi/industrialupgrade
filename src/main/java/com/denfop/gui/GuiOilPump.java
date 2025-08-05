@@ -6,8 +6,8 @@ import com.denfop.api.gui.*;
 import com.denfop.api.vein.Type;
 import com.denfop.container.ContainerOilPump;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiOilPump<T extends ContainerOilPump> extends GuiIU<ContainerOilPump> {
@@ -45,7 +45,7 @@ public class GuiOilPump<T extends ContainerOilPump> extends GuiIU<ContainerOilPu
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

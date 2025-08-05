@@ -34,10 +34,10 @@ public class DepositsCategory extends GuiIU implements IRecipeCategory<DepositsH
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
                 180
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
 
@@ -47,7 +47,6 @@ public class DepositsCategory extends GuiIU implements IRecipeCategory<DepositsH
     public String getTitles() {
         return Localization.translate("deposists.jei");
     }
-
 
 
     @SuppressWarnings("removal")
@@ -95,16 +94,15 @@ public class DepositsCategory extends GuiIU implements IRecipeCategory<DepositsH
         for (int i = 0; i < stackList.size(); i++) {
             int x = 5 + (i / 8) * 40;
             int y = 15 + (i % 8) * 20;
-            builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).addItemStack(stackList.get(i));
+            builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addItemStack(stackList.get(i));
 
 
         }
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

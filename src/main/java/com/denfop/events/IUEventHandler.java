@@ -1,6 +1,7 @@
 package com.denfop.events;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
@@ -18,6 +19,7 @@ import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.container.ContainerBags;
 import com.denfop.container.ContainerLeadBox;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.ItemBaseCircuit;
 import com.denfop.items.ItemCraftingElements;
@@ -68,20 +70,21 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.block.CropGrowEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -92,23 +95,25 @@ import java.util.stream.StreamSupport;
 import static com.denfop.tiles.lightning_rod.TileEntityLightningRodController.controllerMap;
 
 public class IUEventHandler {
+    public static TagKey<Item> electrumTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("c:ingots/electrum"));
+    public static TagKey<Item> coalDustTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("c:dusts/coal"));
 
-    public static TagKey<Item> electrumTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("forge:ingots/electrum"));
-    public static TagKey<Item> coalDustTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("forge:dusts/coal"));
     public static List<ItemEntity> entityItemList = new LinkedList<>();
     final ChatFormatting[] name = {ChatFormatting.DARK_PURPLE, ChatFormatting.YELLOW, ChatFormatting.BLUE,
             ChatFormatting.RED, ChatFormatting.GRAY, ChatFormatting.GREEN, ChatFormatting.DARK_AQUA, ChatFormatting.AQUA};
     final String[] mattertype = {"matter.name", "sun_matter.name", "aqua_matter.name", "nether_matter.name", "night_matter.name", "earth_matter.name", "end_matter.name", "aer_matter.name"};
-    Tuple<ItemStack, BaseMachineRecipe> tupleRecipe;
-    Tuple<ItemStack, BaseMachineRecipe> tupleReplicatorRecipe;
+    BaseMachineRecipe EMPTY = new BaseMachineRecipe(null, null);
+    Tuple<ItemStack, BaseMachineRecipe> tupleRecipe = new Tuple<>(ItemStack.EMPTY, EMPTY);
+    Tuple<ItemStack, BaseMachineRecipe> tupleReplicatorRecipe = new Tuple<>(ItemStack.EMPTY, EMPTY);
 
     public static boolean getUpgradeItem(ItemStack stack) {
         Item item = stack.getItem();
         return item instanceof IUpgradeItem;
 
     }
+
     @SubscribeEvent
-    public  void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
+    public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
         Level world = (Level) event.getLevel();
 
         if (world.isClientSide) return;
@@ -120,9 +125,8 @@ public class IUEventHandler {
 
         for (BlockEntity tile : chunk.getBlockEntities().values()) {
             if (!(tile instanceof TileEntityBlock te)) continue;
-            if (((TileEntityBlock) tile).getPos().equals(placingPos)) {
+            if (((TileEntityBlock) tile).getPos().equals(placingPos))
                 continue;
-            }
             AABB aabb = te.getAabb(false).move(te.getBlockPos());
             AABB placingAabb = new AABB(placingPos);
 
@@ -135,41 +139,41 @@ public class IUEventHandler {
 
 
     @SubscribeEvent
-    public void onWorldTick1(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            Level level = event.level;
-            if (level.dimension() == Level.OVERWORLD) {
-                if (TileEntityBlock.ticker % 120 == 0) {
-                    TileEntityBlock.ticker = 1;
-                    TileEntityBlock.updates.clear();
-                } else {
-                    TileEntityBlock.ticker++;
-                }
+    public void onWorldTick1(LevelTickEvent.Post event) {
+
+        Level level = event.getLevel();
+        if (level.dimension() == Level.OVERWORLD) {
+            if (TileEntityBlock.ticker % 120 == 0) {
+                TileEntityBlock.ticker = 1;
+                TileEntityBlock.updates.clear();
+            } else {
+                TileEntityBlock.ticker++;
             }
-            if (!level.isThundering() || level.isClientSide || level.getGameTime() % 20 != 0) {
-                return;
-            }
+        }
+        if (!level.isThundering() || level.isClientSide || level.getGameTime() % 20 != 0) {
+            return;
+        }
 
-            if (WorldBaseGen.random.nextInt(100) < 2) {
-                for (Map.Entry<BlockPos, IController> entry : controllerMap.entrySet()) {
-                    IController controller = entry.getValue();
+        if (WorldBaseGen.random.nextInt(100) < 2) {
+            for (Map.Entry<BlockPos, IController> entry : controllerMap.entrySet()) {
+                IController controller = entry.getValue();
 
-                    if (controller.isFull() && !controller.getTimer().isCanWork()) {
-                        BlockPos antennaPos = controller.getBlockAntennaPos();
+                if (controller.isFull() && !controller.getTimer().isCanWork()) {
+                    BlockPos antennaPos = controller.getBlockAntennaPos();
 
-                        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
-                        if (lightning != null) {
-                            lightning.moveTo(antennaPos.getX(), antennaPos.getY(), antennaPos.getZ());
-                            level.addFreshEntity(lightning);
-                            controller.getTimer().setCanWork(true);
-                            controller.getTimer().resetTime();
-                            controller.getEnergy().addEnergy(500000);
-                        }
-                        break;
+                    LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
+                    if (lightning != null) {
+                        lightning.moveTo(antennaPos.getX(), antennaPos.getY(), antennaPos.getZ());
+                        level.addFreshEntity(lightning);
+                        controller.getTimer().setCanWork(true);
+                        controller.getTimer().resetTime();
+                        controller.getEnergy().addEnergy(500000);
                     }
+                    break;
                 }
             }
         }
+
     }
 
     @SubscribeEvent
@@ -207,8 +211,8 @@ public class IUEventHandler {
     }
 
     @SubscribeEvent
-    public void bagPickup(EntityItemPickupEvent event) {
-        Player player = event.getEntity();
+    public void bagPickup(ItemEntityPickupEvent.Pre event) {
+        Player player = event.getPlayer();
         try {
             boolean isContainerBags = !(player.containerMenu instanceof ContainerBags);
             boolean isContainerBox = !(player.containerMenu instanceof ContainerLeadBox);
@@ -219,16 +223,15 @@ public class IUEventHandler {
                     if (stack.getItem() instanceof ItemEnergyBags) {
                         if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BAGS, stack)) {
                             ItemEnergyBags bags = (ItemEnergyBags) stack.getItem();
-                            ItemStack stack2 = event.getItem().getItem();
-                            if (!event.getItem().isRemoved() && !(stack2.getItem() instanceof ItemEnergyBags)) {
+                            ItemStack stack2 = event.getItemEntity().getItem();
+                            if (!event.getItemEntity().isRemoved() && !(stack2.getItem() instanceof ItemEnergyBags)) {
                                 if (bags.canInsert(player, stack, stack2)) {
                                     ItemStack stack1 = stack2.copy();
                                     stack1.setCount(Math.min(stack1.getCount(), stack1.getMaxStackSize()));
                                     bags.insert(player, stack, stack1);
-                                    event.getItem().setItem(stack1);
-                                    event.getItem().remove(Entity.RemovalReason.KILLED);
-                                    event.setResult(Event.Result.DENY);
-                                    event.setCanceled(true);
+                                    event.getItemEntity().setItem(stack1);
+                                    event.getItemEntity().remove(Entity.RemovalReason.KILLED);
+                                    event.setCanPickup(TriState.FALSE);
                                     return;
                                 }
                             }
@@ -242,15 +245,15 @@ public class IUEventHandler {
                     ItemStack stack = player.getInventory().getItem(i);
                     if (stack.getItem() instanceof ItemLeadBox) {
                         ItemLeadBox bags = (ItemLeadBox) stack.getItem();
-                        ItemStack stack2 = event.getItem().getItem();
-                        if (!event.getItem().isRemoved() && !(stack2.getItem() instanceof ItemLeadBox)) {
+                        ItemStack stack2 = event.getItemEntity().getItem();
+                        if (!event.getItemEntity().isRemoved() && !(stack2.getItem() instanceof ItemLeadBox)) {
                             if (bags.canInsert(player, stack, stack2)) {
                                 ItemStack stack1 = stack2.copy();
                                 stack1.setCount(Math.min(stack1.getCount(), stack1.getMaxStackSize()));
                                 bags.insert(player, stack, stack1);
-                                event.getItem().setItem(stack1);
-                                event.getItem().remove(Entity.RemovalReason.KILLED);
-                                event.setCanceled(true);
+                                event.getItemEntity().setItem(stack1);
+                                event.getItemEntity().remove(Entity.RemovalReason.KILLED);
+                                event.setCanPickup(TriState.FALSE);
                                 return;
                             }
                         }
@@ -262,7 +265,7 @@ public class IUEventHandler {
     }
 
     @SubscribeEvent
-    public void onCropGrowPre(BlockEvent.CropGrowEvent.Pre event) {
+    public void onCropGrowPre(CropGrowEvent.Pre event) {
         BlockPos pos = event.getPos();
         Level world = (Level) event.getLevel();
         ChunkPos chunkPos = new ChunkPos(pos);
@@ -274,7 +277,7 @@ public class IUEventHandler {
             int pollutionLevel = pollution.getLevelPollution().ordinal();
 
             if (pollutionLevel >= 4) {
-                event.setResult(Event.Result.DENY);
+                event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
             } else if (pollutionLevel >= 1) {
                 int chance = 0;
                 if (pollutionLevel == 1) {
@@ -286,14 +289,14 @@ public class IUEventHandler {
                 }
 
                 if (world.random.nextInt(100) < chance) {
-                    event.setResult(Event.Result.DENY);
+                    event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
                 }
             }
         }
     }
 
     @SubscribeEvent
-    public void onCropGrowPre1(BlockEvent.CropGrowEvent.Pre event) {
+    public void onCropGrowPre1(CropGrowEvent.Pre event) {
         BlockPos pos = event.getPos().below();
         Level world = (Level) event.getLevel();
         BlockState state = world.getBlockState(pos);
@@ -301,7 +304,7 @@ public class IUEventHandler {
 
         if (state.getBlock() == IUItem.humus.getBlock(0)) {
             if (world.random.nextFloat() < 0.5f) {
-                event.setResult(Event.Result.ALLOW);
+                event.setResult(CropGrowEvent.Pre.Result.GROW);
             }
         }
     }
@@ -312,7 +315,7 @@ public class IUEventHandler {
         if (event.getEntity().level().isClientSide) {
             return;
         }
-        new PacketColorPickerAllLoggIn();
+        new PacketColorPickerAllLoggIn(event.getEntity());
         new PacketRadiationUpdateValue(event.getEntity(), event.getEntity().getPersistentData().getDouble("radiation"));
     }
 
@@ -366,19 +369,15 @@ public class IUEventHandler {
     }
 
     @SubscribeEvent
-    public void FlyUpdate(LivingEvent.LivingTickEvent event) {
+    public void FlyUpdate(PlayerTickEvent.Pre event) {
 
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
         Player player = (Player) event.getEntity();
         CompoundTag nbtData = player.getPersistentData();
         if (!player.isCreative()) {
 
             if (!player.getInventory().armor.get(2).isEmpty()) {
                 if (canFly(player.getInventory().armor.get(2))) {
-                    CompoundTag nbtData1 = ModUtils.nbt(player.getInventory().armor.get(2));
-                    boolean jetpack = nbtData1.getBoolean("jetpack");
+                    boolean jetpack = player.getInventory().armor.get(2).getOrDefault(DataComponentsInit.JETPACK, false);
                     if (!jetpack) {
                         if (nbtData.getBoolean("isFlyActive")) {
                             nbtData.putBoolean("hasFly", true);
@@ -387,16 +386,28 @@ public class IUEventHandler {
                         }
                     } else {
                         if (!player.onGround()) {
-                            if (nbtData1.getBoolean("canFly")) {
+                            boolean pressed = IUCore.keyboard.isJumpKeyDown(player);
+                            if (pressed && !player.getInventory().armor
+                                    .get(2).getOrDefault(DataComponentsInit.FLY, false)) {
                                 setFly(player, true, player.getInventory().armor
                                         .get(2));
-                                nbtData1.putBoolean("canFly", false);
+                                player.getInventory().armor
+                                        .get(2).set(DataComponentsInit.FLY, true);
                                 nbtData.putBoolean("canjump", false);
+                            } else if (pressed && player.getInventory().armor
+                                    .get(2).getOrDefault(DataComponentsInit.FLY, false)) {
+                                setFly(player, false, player.getInventory().armor
+                                        .get(2));
+                                player.getInventory().armor
+                                        .get(2).set(DataComponentsInit.FLY, false);
+                                nbtData.putBoolean("canjump", true);
                             }
                         } else {
                             if (nbtData.getBoolean("isFlyActive")) {
                                 setFly(player, false, player.getInventory().armor
                                         .get(2));
+                                player.getInventory().armor
+                                        .get(2).set(DataComponentsInit.FLY, true);
                             }
                         }
                     }
@@ -423,9 +434,9 @@ public class IUEventHandler {
     }
 
     @SubscribeEvent
-    public void onWorldTick(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && !event.level.isClientSide) {
-            ServerLevel world = (ServerLevel) event.level;
+    public void onWorldTick(LevelTickEvent.Post event) {
+        if (!event.getLevel().isClientSide) {
+            ServerLevel world = (ServerLevel) event.getLevel();
             if (world.getGameTime() % 20 != 0)
                 return;
             LevelEntityGetter<Entity> iterable = (world).getEntities();
@@ -438,8 +449,6 @@ public class IUEventHandler {
                     if (itemEntity.isRemoved()) {
                         continue;
                     }
-                    BlockPos pos = new BlockPos((int) itemEntity.getX(), (int) itemEntity.getY(), (int) itemEntity.getZ());
-
                     if (itemEntity.isInWater()) {
                         ItemEntity entityItem = (checkAndTransform(world, itemEntity));
                         if (entityItem != null) {
@@ -466,39 +475,40 @@ public class IUEventHandler {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
-        if (item == IUItem.recipe_schedule.getItem()){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.receptor.info")));
-        }
-        if (item == IUItem.connect_item.getItem()){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.configure_cable.info")));
-        }
-        if (item == IUItem.crafting_elements.getStack(40)){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.dosimeter.info")));
-        }
-        if (item == IUItem.crafting_elements.getStack(143)){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.schedule_reactor.info")));
-        }
-        if (item == IUItem.veinsencor.getStack(0)){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.scanner_info")));
-        }
-        if (item == IUItem.efReader.getItem()){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.ef_meter.info")));
-        }
-        if (item == IUItem.facadeItem.getItem()){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.facade_item.info")));
-        }
-        if (item == IUItem.reactorData.getItem()){
-            event.getToolTip().add(Component.literal(Localization.translate("iu.reactor_data.info")));
-        }
+
         Player player = (Player) event.getEntity();
 
 
         if (item == IUItem.charged_redstone.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("charged_redstone.info")));
         }
-
+        if (item == IUItem.recipe_schedule.getItem()) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.receptor.info")));
+        }
+        if (item == IUItem.connect_item.getItem()) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.configure_cable.info")));
+        }
+        if (item == IUItem.crafting_elements.getStack(40)) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.dosimeter.info")));
+        }
+        if (item == IUItem.crafting_elements.getStack(143)) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.schedule_reactor.info")));
+        }
+        if (item == IUItem.veinsencor.getStack(0)) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.scanner_info")));
+        }
+        if (item == IUItem.efReader.getItem()) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.ef_meter.info")));
+        }
+        if (item == IUItem.facadeItem.getItem()) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.facade_item.info")));
+        }
+        if (item == IUItem.reactorData.getItem()) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.reactor_data.info")));
+        }
         if (stack.getItem() instanceof BlockItem) {
             BlockItem blockItem = (BlockItem) stack.getItem();
+
             BlockState state = blockItem.getBlock().defaultBlockState();
             List<Component> list = ModUtils.getInformationFromOre(state);
             if (!list.isEmpty()) {
@@ -512,7 +522,6 @@ public class IUEventHandler {
             event.getToolTip().add(Component.literal(Localization.translate("iu.radiation.warning")));
             event.getToolTip().add(Component.literal(Localization.translate("iu.radioprotector.info")));
         }
-
 
 
         for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
@@ -542,8 +551,7 @@ public class IUEventHandler {
         if ((item instanceof ItemBaseCircuit<?> && (((ItemBaseCircuit<?>) item).getElement().getId() == 9 || ((ItemBaseCircuit<?>) item).getElement().getId() == 10 || ((ItemBaseCircuit<?>) item).getElement().getId() == 11 || ((ItemBaseCircuit<?>) item).getElement().getId() == 21)) ||
                 (item instanceof ItemCraftingElements<?> && (((ItemCraftingElements<?>) item).getElement().getId() == 272 || ((ItemCraftingElements<?>) item).getElement().getId() == 273))) {
 
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            final int level = nbt.getInt("level");
+            final int level = stack.getOrDefault(DataComponentsInit.LEVEL_MICROCHIP, 0);
             if (level != 0) {
                 event.getToolTip().add(Component.literal(Localization.translate("circuit.level") + " " + level));
             }
@@ -561,8 +569,8 @@ public class IUEventHandler {
         }
 
         if (item instanceof ItemEntityModule<?>) {
-            CapturedMobUtils capturedMobUtils = CapturedMobUtils.create(stack);
-            if (capturedMobUtils != null) {
+            CapturedMobUtils capturedMobUtils = CapturedMobUtils.create(stack, event.getEntity().registryAccess());
+            if (capturedMobUtils != CapturedMobUtils.EMPTY) {
                 Entity entity = capturedMobUtils.getEntity(player.level(), true);
                 event.getToolTip().add(entity.getName());
             }
@@ -694,11 +702,13 @@ public class IUEventHandler {
     @OnlyIn(Dist.CLIENT)
     public void addInfo(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        if (IUItem.machineRecipe == null)
-            IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
-        if (IUItem.fluidMatterRecipe == null)
-            IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
+        if (stack.isEmpty())
+            return;
         try {
+            if (IUItem.machineRecipe == null)
+                IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
+            if (IUItem.fluidMatterRecipe == null)
+                IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
             if (tupleRecipe == null) {
                 for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.machineRecipe) {
                     if (entry.getKey().is(stack.getItem())) {
@@ -723,11 +733,11 @@ public class IUEventHandler {
                     }
                 }
                 if (tupleRecipe == null) {
-                    tupleRecipe = new Tuple<>(stack, null);
+                    tupleRecipe = new Tuple<>(stack, EMPTY);
                 }
             } else {
                 if (tupleRecipe.getA().is(stack.getItem())) {
-                    if (tupleRecipe.getB() != null) {
+                    if (tupleRecipe.getB() != EMPTY && tupleRecipe.getB() != null) {
                         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                             event.getToolTip().add(Component.nullToEmpty(Localization.translate("press.lshift")));
                         }
@@ -771,7 +781,7 @@ public class IUEventHandler {
                         }
                     }
                     if (!find) {
-                        tupleRecipe = new Tuple<>(stack, null);
+                        tupleRecipe = new Tuple<>(stack, EMPTY);
                     }
                 }
             }
@@ -799,41 +809,20 @@ public class IUEventHandler {
                     }
                 }
                 if (tupleReplicatorRecipe == null) {
-                    tupleReplicatorRecipe = new Tuple<>(stack, null);
+                    tupleReplicatorRecipe = new Tuple<>(stack, EMPTY);
                 }
             } else {
-                if (tupleReplicatorRecipe.getA().is(stack.getItem())) {
-                    if (tupleReplicatorRecipe.getB() != null) {
-                        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                            if (!event.getToolTip().contains(Component.nullToEmpty(Localization.translate("press.lshift")))) {
-                                event.getToolTip().add(Component.nullToEmpty(Localization.translate("press.lshift")));
-                            }
-                        }
-                        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-
-                            final RecipeOutput output1 = tupleReplicatorRecipe.getB().output;
-                            final double matter = output1.metadata.getDouble("matter");
-                            String usingMatter = ModUtils.getStringBukket(matter) + Localization.translate(Constants.ABBREVIATION +
-                                    ".generic.text.bucketUnit");
-                            event
-                                    .getToolTip()
-                                    .add(Component.nullToEmpty(Localization.translate(Constants.ABBREVIATION + ".replicator_using_matter") + ChatFormatting.DARK_PURPLE + usingMatter));
-
-                        }
-                    }
-                } else {
-                    tupleReplicatorRecipe = null;
-                    for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.fluidMatterRecipe) {
-                        if (entry.getKey().is(stack.getItem())) {
+                if (tupleReplicatorRecipe != null)
+                    if (tupleReplicatorRecipe.getA() != null && tupleReplicatorRecipe.getA().is(stack.getItem())) {
+                        if (tupleReplicatorRecipe.getB() != EMPTY) {
                             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                                 if (!event.getToolTip().contains(Component.nullToEmpty(Localization.translate("press.lshift")))) {
                                     event.getToolTip().add(Component.nullToEmpty(Localization.translate("press.lshift")));
                                 }
                             }
-                            tupleReplicatorRecipe = new Tuple<>(stack, entry.getValue());
                             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 
-                                final RecipeOutput output1 = entry.getValue().output;
+                                final RecipeOutput output1 = tupleReplicatorRecipe.getB().output;
                                 final double matter = output1.metadata.getDouble("matter");
                                 String usingMatter = ModUtils.getStringBukket(matter) + Localization.translate(Constants.ABBREVIATION +
                                         ".generic.text.bucketUnit");
@@ -842,15 +831,39 @@ public class IUEventHandler {
                                         .add(Component.nullToEmpty(Localization.translate(Constants.ABBREVIATION + ".replicator_using_matter") + ChatFormatting.DARK_PURPLE + usingMatter));
 
                             }
-                            break;
+                        }
+                    } else {
+                        tupleReplicatorRecipe = null;
+                        for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.fluidMatterRecipe) {
+                            if (entry.getKey().is(stack.getItem())) {
+                                if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                                    if (!event.getToolTip().contains(Component.nullToEmpty(Localization.translate("press.lshift")))) {
+                                        event.getToolTip().add(Component.nullToEmpty(Localization.translate("press.lshift")));
+                                    }
+                                }
+                                tupleReplicatorRecipe = new Tuple<>(stack, entry.getValue());
+                                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+
+                                    final RecipeOutput output1 = entry.getValue().output;
+                                    final double matter = output1.metadata.getDouble("matter");
+                                    String usingMatter = ModUtils.getStringBukket(matter) + Localization.translate(Constants.ABBREVIATION +
+                                            ".generic.text.bucketUnit");
+                                    event
+                                            .getToolTip()
+                                            .add(Component.nullToEmpty(Localization.translate(Constants.ABBREVIATION + ".replicator_using_matter") + ChatFormatting.DARK_PURPLE + usingMatter));
+
+                                }
+                                break;
+                            }
+                        }
+                        if (tupleReplicatorRecipe == null) {
+                            tupleReplicatorRecipe = new Tuple<>(stack, EMPTY);
                         }
                     }
-                    if (tupleReplicatorRecipe == null) {
-                        tupleReplicatorRecipe = new Tuple<>(stack, null);
-                    }
-                }
             }
-        }catch (Exception e){};
+        } catch (Exception e) {
+        }
+        ;
     }
 
     private ItemEntity checkAndTransform(ServerLevel world, ItemEntity entityItem) {

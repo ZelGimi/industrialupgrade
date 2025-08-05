@@ -1,6 +1,8 @@
 package com.denfop.items.armour.special;
 
 import com.denfop.container.ContainerHandHeldInventory;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -115,7 +117,9 @@ public class ContainerLegsBags extends ContainerHandHeldInventory<ItemStackLegsB
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
+
             }
         }
 

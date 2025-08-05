@@ -6,27 +6,27 @@ import com.denfop.api.sytem.InfoTile;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
-public abstract class EnergyNetDelegate  implements IEnergyTile {
+public abstract class EnergyNetDelegate implements IEnergyTile {
     public final BufferEnergy buffer;
     public final BlockPos worldPosition;
+    private final boolean clientSide;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    private final boolean clientSide;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
-    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     public double tick;
+    public boolean limit;
+    public double limit_amount = 0;
     protected double pastEnergy;
     protected double perenergy;
     protected double pastEnergy1;
     protected double perenergy1;
-    public boolean limit;
-    public double limit_amount = 0;
+    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    private long id;
 
     public EnergyNetDelegate(Energy block) {
         this.worldPosition = block.parent.pos;
@@ -41,7 +41,7 @@ public abstract class EnergyNetDelegate  implements IEnergyTile {
         this.clientSide = block.getLevel().isClientSide;
         sinkDirections = new HashSet<>();
         sourceDirections = sourceDirection;
-        this.buffer =bufferEnergy;
+        this.buffer = bufferEnergy;
     }
 
     public double getSourceEnergy() {
@@ -52,8 +52,6 @@ public abstract class EnergyNetDelegate  implements IEnergyTile {
             return Math.min(this.buffer.storage, this.limit_amount);
         }
     }
-
-    private long id;
 
     public long getIdNetwork() {
         return this.id;

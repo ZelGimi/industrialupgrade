@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:ores/iron"
+    },
+    "C": {
+      "tag": "c:ores/gold"
+    },
+    "D": {
+      "tag": "c:ores/emerald"
+    },
+    "E": {
+      "tag": "c:ores/diamond"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAD",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_53_element"
+  },
+  "show_notification": false
+}

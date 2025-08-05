@@ -20,8 +20,6 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.CapturedMobUtils;
 import com.denfop.utils.ModUtils;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -37,9 +35,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -62,7 +61,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     Energy energy;
     List<Integer> integerList = new LinkedList<>();
     AABB shieldBox;
-    AABB shieldDefaultBox = new AABB(-8, -8, -8, 9, 9, 9);
+    AABB shieldDefaultBox = new AABB(-8, -8, -8, 8, 8, 8);
     Vec3i center;
     LinkedList<LevelChunk> chunks = new LinkedList<>();
     List<UUID> uuidList = new LinkedList<>();
@@ -84,13 +83,14 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     double[][] z3 = new double[latitudeSegments][longitudeSegments];
     double[][] z4 = new double[latitudeSegments][longitudeSegments];
     @OnlyIn(Dist.CLIENT)
-    private  Function<RenderLevelStageEvent, Void> render;
+    private Function<RenderLevelStageEvent, Void> render;
     private double laserProgress;
     private byte mode = 0;
     private long lastShotTime = 0;
     private boolean isShooting = false;
+
     public TileEntityShield(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.shield,pos,state);
+        super(BlockBaseMachine3.shield, pos, state);
         energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
         slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
             @Override
@@ -112,7 +112,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                 integerList.clear();
                 for (int i = 0; i < this.size(); i++) {
                     if (!this.get(i).isEmpty()) {
-                        final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i));
+                        final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i), level.registryAccess());
                         assert captured != null;
                         LivingEntity entityLiving = (LivingEntity) captured.getEntity(((TileEntityShield) base).getWorld(), true);
                         integerList.add(entityLiving.getId());
@@ -122,7 +122,6 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         };
 
     }
-
 
 
     @Override
@@ -147,7 +146,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     public void onLoaded() {
         super.onLoaded();
         this.slot.update();
-        shieldBox = new AABB(this.getPos().offset(-8, -8, -8), this.getPos().offset(8, 8, 8));
+        shieldBox = new AABB(Vec3.atCenterOf(this.getPos().offset(-8, -8, -8)), Vec3.atCenterOf(this.getPos().offset(8, 8, 8)));
         center = this.getPos().offset(new Vec3i(0, 0, 0));
         int j2 = Mth.floor((shieldBox.minX - 2) / 16.0D);
         int k2 = Mth.ceil((shieldBox.maxX + 2) / 16.0D);
@@ -209,10 +208,10 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         }
     }
 
-    private  Function<RenderLevelStageEvent, Void> createFunction() {
+    private Function<RenderLevelStageEvent, Void> createFunction() {
         Function<RenderLevelStageEvent, Void> function = o -> {
             if (shieldBox == null) {
-                shieldBox = new AABB(this.getPos().offset(-8, -8, -8), this.getPos().offset(8, 8, 8));
+                shieldBox = new AABB(Vec3.atCenterOf(this.getPos().offset(-8, -8, -8)), Vec3.atCenterOf(this.getPos().offset(8, 8, 8)));
                 center = this.getPos().offset(new Vec3i(0, 0, 0));
                 int j2 = Mth.floor((shieldBox.minX - 2) / 16.0D);
                 int k2 = Mth.ceil((shieldBox.maxX + 2) / 16.0D);
@@ -259,7 +258,6 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     }
 
 
-
     public InvSlot getSlot() {
         return slot;
     }
@@ -300,7 +298,6 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     }
 
 
-
     @OnlyIn(Dist.CLIENT)
     private void renderShield(RenderLevelStageEvent event, AABB box, int color) {
 
@@ -317,20 +314,9 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         if (!write) {
             writeData();
         }
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(
-                GlStateManager.SourceFactor.SRC_ALPHA,
-                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO
-        );
-         RenderSystem.depthMask(false);
-        RenderSystem.disableDepthTest();
-        drawCircle(poseStack, bufferSource, pos, color1.getRed() / 255F, color1.getGreen()/ 255F, color1.getBlue()/ 255F, 0.5F);
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthMask(true);
-        RenderSystem.disableBlend();
+        drawCircle(poseStack, bufferSource, pos, color1.getRed() / 255F, color1.getGreen() / 255F, color1.getBlue() / 255F, 0.5F);
+
 
         poseStack.popPose();
     }
@@ -374,13 +360,14 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
             }
         }
     }
+
     @OnlyIn(Dist.CLIENT)
     private void drawCircle(PoseStack poseStack, VertexConsumer bufferSource, BlockPos pos, float r, float g, float b, float alpha) {
 
         float x = pos.getX() + 0.5F;
         float y = pos.getY() + 0.5F;
         float z = pos.getZ() + 0.5F;
-        float radius =8F;
+        float radius = 8F;
         Matrix4f matrix = poseStack.last().pose();
         Matrix3f matrix3f = poseStack.last().normal();
         for (int i = 0; i < latitudeSegments; i++) {
@@ -406,19 +393,17 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                 double y4 = this.y4[i][j];
                 double z4 = this.z4[i][j];
 
-               bufferSource.vertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).color(r, g, b, 0.5f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x2 * radius), (float) (y + y2 * radius), (float) (z + z2 * radius)).color(r, g, b, 0.5f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).color(r, g, b, 0.5f).endVertex();
+                bufferSource.addVertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).setColor(r, g, b, 0.5f);
+                bufferSource.addVertex(matrix, (float) (x + x2 * radius), (float) (y + y2 * radius), (float) (z + z2 * radius)).setColor(r, g, b, 0.5f);
+                bufferSource.addVertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).setColor(r, g, b, 0.5f);
 
-                bufferSource.vertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).color(r, g, b, 0.5f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x4 * radius), (float) (y + y4 * radius), (float) (z + z4 * radius)).color(r, g, b, 0.5f).endVertex();
-                bufferSource.vertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).color(r, g, b, 0.5f).endVertex();
+                bufferSource.addVertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).setColor(r, g, b, 0.5f);
+                bufferSource.addVertex(matrix, (float) (x + x4 * radius), (float) (y + y4 * radius), (float) (z + z4 * radius)).setColor(r, g, b, 0.5f);
+                bufferSource.addVertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).setColor(r, g, b, 0.5f);
             }
 
         }
     }
-
-
 
 
     @Override

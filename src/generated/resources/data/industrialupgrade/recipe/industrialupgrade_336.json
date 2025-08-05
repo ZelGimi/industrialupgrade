@@ -1,0 +1,13 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:baseblockalloy1/molybdenum_steel"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "industrialupgrade:alloyingot/molybdenum_steel"
+  }
+}

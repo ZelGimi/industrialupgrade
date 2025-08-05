@@ -54,7 +54,6 @@ public class GuiHeatGraphiteGraphiteController<T extends ContainerHeatGraphiteCo
     }
 
 
-
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
@@ -81,25 +80,24 @@ public class GuiHeatGraphiteGraphiteController<T extends ContainerHeatGraphiteCo
     }
 
 
-
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 67, 188, 3, 23, 23);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 83, this.guiTop + 67, 188, 3, 23, 23);
 
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 70 - 26, 188, 43, 22, 22);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 70 + 20, 211, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 83, this.guiTop + 70 - 26, 188, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 83, this.guiTop + 70 + 20, 211, 43, 22, 22);
 
 
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 60, this.guiTop + 67, 188, 43, 22, 22);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 106, this.guiTop + 67, 211, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 67, 188, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 106, this.guiTop + 67, 211, 43, 22, 22);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiheat4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiheat4.png");
     }
 
 }

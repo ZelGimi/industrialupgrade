@@ -36,9 +36,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
     protected short progress;
 
     public TileEntitySingleFluidAdapter(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.single_fluid_adapter,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.single_fluid_adapter, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -113,6 +113,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
                 outputfluidStack)));
 
     }
+
     public static void addRecipe(IInputItemStack container, FluidStack fluidStack, FluidStack outputfluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -129,6 +130,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
                 outputfluidStack)));
 
     }
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -170,7 +172,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
 
 
         addRecipe(
-                Recipes.inputFactory.getInput("forge:dusts/coal"),
+                Recipes.inputFactory.getInput("c:dusts/coal"),
                 new FluidStack(FluidName.fluidoxy.getInstance().get(), 400),
                 new FluidStack(FluidName.fluidcarbonmonoxide.getInstance().get()
                         , 200)

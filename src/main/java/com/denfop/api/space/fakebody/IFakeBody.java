@@ -4,6 +4,7 @@ import com.denfop.api.space.IBaseResource;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.utils.Timer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface IFakeBody {
 
     SpaceOperation getSpaceOperation();
 
-    CompoundTag writeNBTTagCompound(CompoundTag nbtTagCompound);
+    CompoundTag writeNBTTagCompound(CompoundTag nbtTagCompound, HolderLookup.Provider p_323640_);
 
     Timer getTimerTo();
 

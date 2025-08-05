@@ -35,8 +35,8 @@ public class InvSlotModules extends InvSlot {
     public void update() {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i));
-                assert captured != null;
+                final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i), this.tile.registryAccess());
+                assert captured != CapturedMobUtils.EMPTY;
                 LivingEntity entityLiving = (LivingEntity) captured.getEntity(tile.getWorld(), true);
                 this.tile.mobUtils[i] = entityLiving;
                 this.tile.loot_Tables[i] = IUCore.lootTables.get(captured.getResource());
@@ -64,7 +64,7 @@ public class InvSlotModules extends InvSlot {
             this.tile.lootContext[index] = null;
             this.tile.maxprogress[index] = 100;
             this.tile.description_mobs[index] = "";
-            final CapturedMobUtils captured = CapturedMobUtils.create(content);
+            final CapturedMobUtils captured = CapturedMobUtils.create(content, this.tile.registryAccess());
             assert captured != null;
             LivingEntity entityLiving = (LivingEntity) captured.getEntity(tile.getWorld(), true);
 

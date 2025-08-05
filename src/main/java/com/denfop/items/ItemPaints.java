@@ -24,10 +24,12 @@ public class ItemPaints<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         p_41423_.add(Component.literal(ModUtils.mode(getElement().getId())));
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public enum Types implements ISubEnum {
         emptybox(0),
         bluepaint(1),

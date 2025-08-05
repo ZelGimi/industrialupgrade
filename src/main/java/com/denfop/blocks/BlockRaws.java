@@ -8,7 +8,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -125,7 +124,7 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
 
         @Nonnull
         public String getName() {
-            return "raw_"+this.name;
+            return "raw_" + this.name;
         }
 
         @Override

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_504_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_480_element"
+    },
+    "C": {
+      "tag": "c:plates/tungsten"
+    },
+    "D": {
+      "tag": "c:plates/hafniumboride"
+    }
+  },
+  "pattern": [
+    "C B",
+    " BD",
+    "BDA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_691_element"
+  },
+  "show_notification": false
+}

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:water_reactors/water_imp_security"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_405_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:water_reactors/water_per_security"
+  },
+  "show_notification": false
+}

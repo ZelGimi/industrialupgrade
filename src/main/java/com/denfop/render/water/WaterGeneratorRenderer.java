@@ -40,7 +40,7 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWater
     ) {
         IWindMechanism windGen = tile;
         Level world = tile.getLevel();
-         BlockPos pos = tile.getBlockPos();
+        BlockPos pos = tile.getBlockPos();
         if (tile.getRotor() == null)
             return;
         int diameter = 3;
@@ -72,17 +72,17 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWater
         if (windGen.getSpace()) {
             angle = windGen.getAngle();
             IWindRotor rotor = tile.getRotor();
-            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0){
+            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0) {
                 angle = 0;
             }
             if (!Minecraft.getInstance().isPaused())
-            poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                poseStack.mulPose(Axis.XP.rotationDegrees(angle));
         }
 
         poseStack.translate(-0.2F, 0.0F, 0.0F);
 
         VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(rotorTexture));
-        model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+        model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
         poseStack.popPose();
     }

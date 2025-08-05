@@ -47,9 +47,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -342,7 +342,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public void addInformation(final ItemStack itemStack, final List<String> info) {
 
 
-        if (this.getWorld() == null) {
+        if (this.getWorld() == null || getBlockPos().equals(BlockPos.ZERO)) {
             info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
                     + ModUtils.getString(this.genDay) + " EF/t ");
             info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
@@ -444,7 +444,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public void onUnloaded() {
         super.onUnloaded();
         if (!this.getWorld().isClientSide() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
         }
 
@@ -466,7 +466,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
                 this.energyConductorMap.clear();
                 this.addedToEnergyNet = true;
                 validReceivers.clear();
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+                NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             }
 
 
@@ -475,6 +475,8 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     }
 
     private double experimental_generating() {
+        if (this.sunCoef == null)
+            this.sunCoef = EnergyNetGlobal.instance.getSunCoefficient(this.getWorld());
         double k = this.sunCoef.getCoef();
 
         double coef = this.coef;

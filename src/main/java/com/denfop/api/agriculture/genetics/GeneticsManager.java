@@ -12,9 +12,11 @@ import java.util.Map;
 
 import static com.denfop.api.agriculture.genetics.Genome.geneticBiomes;
 
-public class  GeneticsManager {
+public class GeneticsManager {
 
     public static GeneticsManager instance;
+    public static Map<EnumGenetic, List<GeneticTraits>> enumGeneticListMap = new HashMap<>();
+    public static Map<GeneticTraits, GeneticTraits> geneticTraitsMap = new HashMap<>();
 
     public GeneticsManager() {
 
@@ -29,12 +31,6 @@ public class  GeneticsManager {
     public GeneticsManager getInstance() {
         return instance;
     }
-
-
-
-
-    public static Map<EnumGenetic, List<GeneticTraits>> enumGeneticListMap = new HashMap<>();
-    public static Map<GeneticTraits,GeneticTraits> geneticTraitsMap = new HashMap<>();
 
     public void loadGenomeToCrop(Genome genome, ICrop crop) {
         genome.loadCrop(crop);
@@ -74,7 +70,7 @@ public class  GeneticsManager {
             case WEED_I:
             case WEED_II:
             case WEED_III:
-                crop.addChanceWeed(geneticTraits.getValue(Integer.class)*-1);
+                crop.addChanceWeed(geneticTraits.getValue(Integer.class) * -1);
                 break;
             case LIGHT_I:
             case LIGHT_II:
@@ -85,17 +81,17 @@ public class  GeneticsManager {
             case RADIATION_I:
             case RADIATION_II:
             case RADIATION_III:
-              crop.setRadiationRequirements(EnumLevelRadiation.LOW);
+                crop.setRadiationRequirements(EnumLevelRadiation.LOW);
                 break;
             case SEED_I:
             case SEED_II:
             case SEED_III:
-                crop.addSizeSeed(-1*geneticTraits.getValue(Integer.class));
+                crop.addSizeSeed(-1 * geneticTraits.getValue(Integer.class));
                 break;
             case YIELD_I:
             case YIELD_II:
             case YIELD_III:
-                crop.setYield(crop.getYield()-geneticTraits.getValue(Integer.class));
+                crop.setYield(crop.getYield() - geneticTraits.getValue(Integer.class));
                 break;
             case BEECOMBINE:
                 crop.setBeeCombine(false);
@@ -109,12 +105,12 @@ public class  GeneticsManager {
             case CHANCE_I:
             case CHANCE_II:
             case CHANCE_III:
-                crop.setChance(crop.getChance()-geneticTraits.getValue(Integer.class));
+                crop.setChance(crop.getChance() - geneticTraits.getValue(Integer.class));
                 break;
             case GROW_SPEED_I:
             case GROW_SPEED_II:
             case GROW_SPEED_III:
-                crop.setGrowthSpeed(crop.getGrowthSpeed()-geneticTraits.getValue(Double.class));
+                crop.setGrowthSpeed(crop.getGrowthSpeed() - geneticTraits.getValue(Double.class));
                 break;
             case WEATHER_I:
             case WEATHER_II:
@@ -123,12 +119,12 @@ public class  GeneticsManager {
             case GENOME_ADAPTIVE_I:
             case GENOME_ADAPTIVE_II:
             case GENOME_ADAPTIVE_III:
-                crop.setGenomeAdaptive(crop.getGenomeAdaptive()-geneticTraits.getValue(Integer.class));
+                crop.setGenomeAdaptive(crop.getGenomeAdaptive() - geneticTraits.getValue(Integer.class));
                 break;
             case GENOME_RESISTANCE_I:
             case GENOME_RESISTANCE_II:
             case GENOME_RESISTANCE_III:
-                crop.setGenomeResistance(crop.getGenomeResistance()-geneticTraits.getValue(Integer.class));
+                crop.setGenomeResistance(crop.getGenomeResistance() - geneticTraits.getValue(Integer.class));
                 break;
         }
     }
@@ -144,7 +140,7 @@ public class  GeneticsManager {
             case BIOME_II:
             case BIOME_III:
             case BIOME_IV:
-                final List< ResourceKey<Biome>> biomes = geneticBiomes.get(geneticTraits);
+                final List<ResourceKey<Biome>> biomes = geneticBiomes.get(geneticTraits);
                 biomes.forEach(crop::addBiome);
                 break;
             case AIR_I:
@@ -189,7 +185,7 @@ public class  GeneticsManager {
             case YIELD_I:
             case YIELD_II:
             case YIELD_III:
-                crop.setYield(crop.getYield()+geneticTraits.getValue(Integer.class));
+                crop.setYield(crop.getYield() + geneticTraits.getValue(Integer.class));
                 break;
             case BEECOMBINE:
                 crop.setBeeCombine(true);
@@ -203,12 +199,12 @@ public class  GeneticsManager {
             case CHANCE_I:
             case CHANCE_II:
             case CHANCE_III:
-                crop.setChance(crop.getChance()+geneticTraits.getValue(Integer.class));
+                crop.setChance(crop.getChance() + geneticTraits.getValue(Integer.class));
                 break;
             case GROW_SPEED_I:
             case GROW_SPEED_II:
             case GROW_SPEED_III:
-                crop.setGrowthSpeed(crop.getGrowthSpeed()+geneticTraits.getValue(Integer.class));
+                crop.setGrowthSpeed(crop.getGrowthSpeed() + geneticTraits.getValue(Integer.class));
                 break;
             case WEATHER_I:
             case WEATHER_II:
@@ -217,12 +213,12 @@ public class  GeneticsManager {
             case GENOME_ADAPTIVE_I:
             case GENOME_ADAPTIVE_II:
             case GENOME_ADAPTIVE_III:
-                crop.setGenomeAdaptive(crop.getGenomeAdaptive()+geneticTraits.getValue(Integer.class));
+                crop.setGenomeAdaptive(crop.getGenomeAdaptive() + geneticTraits.getValue(Integer.class));
                 break;
             case GENOME_RESISTANCE_I:
             case GENOME_RESISTANCE_II:
             case GENOME_RESISTANCE_III:
-                crop.setGenomeResistance(crop.getGenomeResistance()+geneticTraits.getValue(Integer.class));
+                crop.setGenomeResistance(crop.getGenomeResistance() + geneticTraits.getValue(Integer.class));
                 break;
         }
     }

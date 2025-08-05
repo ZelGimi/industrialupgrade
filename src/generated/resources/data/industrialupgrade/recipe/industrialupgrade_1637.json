@@ -1,0 +1,16 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:energy/wrench"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_278_element"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy/electric_wrench"
+  }
+}

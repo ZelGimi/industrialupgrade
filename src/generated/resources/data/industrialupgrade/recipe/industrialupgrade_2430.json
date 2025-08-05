@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "item": "industrialupgrade:tools/latex_pipette"
+    },
+    "C": {
+      "tag": "minecraft:terracotta"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "CBC",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/auto_latex_collector"
+  },
+  "show_notification": false
+}

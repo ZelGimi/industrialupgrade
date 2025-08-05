@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvCirculationPump extends TileEntityBaseCirculationPump {
 
     public TileEntityAdvCirculationPump(BlockPos pos, BlockState state) {
-        super(1,BlockHeatReactor.heat_adv_circulationpump,pos,state);
+        super(1, BlockHeatReactor.heat_adv_circulationpump, pos, state);
     }
 
     @Override

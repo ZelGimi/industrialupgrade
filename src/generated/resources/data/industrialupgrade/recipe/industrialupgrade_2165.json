@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_670_element"
+    }
+  },
+  "pattern": [
+    " C ",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/sheep_farm"
+  },
+  "show_notification": false
+}

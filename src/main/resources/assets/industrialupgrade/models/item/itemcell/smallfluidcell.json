@@ -1,5 +1,5 @@
 {
-    "parent": "forge:item/default",
+   "parent": "neoforge:item/default",
     "loader": "industrialupgrade:fluid_container",
     "textures": {
         "base": "industrialupgrade:item/small_empty_cell",
@@ -9,4 +9,6 @@
     "flip_gas": false,
     "apply_tint": true,
     "fluid": "minecraft:empty"
+	
+	
 }

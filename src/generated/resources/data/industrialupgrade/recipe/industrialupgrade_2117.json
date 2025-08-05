@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdust/nanoactivated_mixture_dust"
+    },
+    "C": {
+      "item": "industrialupgrade:itemdust/emerald_dust"
+    },
+    "D": {
+      "tag": "c:plates/ferromanganese"
+    },
+    "E": {
+      "tag": "c:plates/aluminumbronze"
+    }
+  },
+  "pattern": [
+    "EBE",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_671_element"
+  },
+  "show_notification": false
+}

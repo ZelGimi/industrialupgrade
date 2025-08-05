@@ -1,14 +1,15 @@
 package com.denfop;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ModConfig {
     public static final Common COMMON;
-    public static final ForgeConfigSpec COMMON_SPEC;
+    public static final ModConfigSpec COMMON_SPEC;
 
     static {
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
     }
@@ -16,32 +17,28 @@ public class ModConfig {
     public static class Common {
 
 
-        public final ForgeConfigSpec.BooleanValue newsystem;
+        public final ModConfigSpec.BooleanValue newsystem;
 
-        public final ForgeConfigSpec.BooleanValue enableEasyMode;
-        public final ForgeConfigSpec.BooleanValue cableEasyMode;
-        public final ForgeConfigSpec.BooleanValue enableExplosion;
-        public final ForgeConfigSpec.BooleanValue enableLosing;
+        public final ModConfigSpec.BooleanValue enableEasyMode;
+        public final ModConfigSpec.BooleanValue cableEasyMode;
+        public final ModConfigSpec.BooleanValue enableExplosion;
+        public final ModConfigSpec.BooleanValue enableLosing;
 
-        public final ForgeConfigSpec.IntValue maxVein;
-        public final ForgeConfigSpec.IntValue gasMaxVein;
-        public final ForgeConfigSpec.IntValue gasChance;
-        public final ForgeConfigSpec.BooleanValue airPollution;
-        public final ForgeConfigSpec.BooleanValue soilPollution;
-        public final ForgeConfigSpec.BooleanValue pressureWork;
-        public final ForgeConfigSpec.BooleanValue damageRadiation;
+        public final ModConfigSpec.IntValue maxVein;
 
+        public final ModConfigSpec.IntValue gasMaxVein;
+        public final ModConfigSpec.IntValue gasChance;
+        public final ModConfigSpec.BooleanValue airPollution;
+        public final ModConfigSpec.BooleanValue soilPollution;
+        public final ModConfigSpec.BooleanValue pressureWork;
+        public final ModConfigSpec.BooleanValue damageRadiation;
 
-        public Common(ForgeConfigSpec.Builder builder) {
-            builder.push("Vein");
+        public Common(ModConfigSpec.Builder builder) {
+            builder.push("General");
             maxVein = builder.comment("Maximum amount of ore in a vein").defineInRange("maxVein", 30000, 1, Integer.MAX_VALUE);
             gasMaxVein = builder.comment("Maximum amount of mb in a gas vein (not natural gas)").defineInRange("gasMaxVein", 200000, 1, Integer.MAX_VALUE);
             gasChance = builder.comment("Chance to get a gas vein (not natural gas)").defineInRange("gasChance", 25, 1, 100);
-            builder.pop();
 
-            builder.push("pollution");
-            airPollution = builder.comment("Air pollution").define("airPollution", true);
-            soilPollution = builder.comment("Soil pollution").define("soilPollution", true);
             builder.pop();
 
             builder.push("TransformerMode");
@@ -50,6 +47,11 @@ public class ModConfig {
             cableEasyMode = builder.comment("Unlimiting the conduction of energy in the cable").define("cableUnlimiting", false);
             enableExplosion = builder.comment("Enable explosion from mechanisms if transformer mode is on").define("enableExplosion", true);
             enableLosing = builder.comment("Enable lose energy in cables if transformer mode is on").define("enableLosing", true);
+            builder.pop();
+
+            builder.push("pollution");
+            airPollution = builder.comment("Air pollution").define("airPollution", true);
+            soilPollution = builder.comment("Soil pollution").define("soilPollution", true);
             builder.pop();
 
             builder.push("Pressure Network");
@@ -63,7 +65,6 @@ public class ModConfig {
                     .comment("Enable damage from radiation")
                     .define("radiationDamageEnabled", true);
             builder.pop();
-
         }
     }
 }

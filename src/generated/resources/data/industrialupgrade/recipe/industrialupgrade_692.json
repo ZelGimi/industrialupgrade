@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "D": {
+      "item": "industrialupgrade:coal_chunk"
+    }
+  },
+  "pattern": [
+    "D D",
+    "ABA",
+    "C C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spectral_box"
+  },
+  "show_notification": false
+}

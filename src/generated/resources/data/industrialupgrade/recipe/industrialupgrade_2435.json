@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemsunnarium/sunnarium2"
+    },
+    "B": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "C": {
+      "item": "industrialupgrade:radiationresources/curium_gem"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/quacore"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "powerutils:module_qe"
+  },
+  "show_notification": false
+}

@@ -31,19 +31,19 @@ public class GuiRadiationPurifier<T extends ContainerRadiationPurifier> extends 
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         if (this.container.base.radiation != null) {
             new Area(this, 13, 11, 28, 10).withTooltip(Localization.translate("radiation.dose") + Math.max(
                     1,
                     (int) this.container.base.radiation.getRadiation()
-            ) + " " + getUnit(this.container.base.radiation.getCoef()) + "Sv").drawForeground(poseStack,par1
+            ) + " " + getUnit(this.container.base.radiation.getCoef()) + "Sv").drawForeground(poseStack, par1
                     , par2);
         } else {
             new Area(this, 13, 11, 28, 10).withTooltip(Localization.translate("radiation.dose") + Math.max(
                     0.5,
                     0
-            ) + " " + getUnit(EnumCoefficient.NANO) + "Sv").drawForeground(poseStack,par1
+            ) + " " + getUnit(EnumCoefficient.NANO) + "Sv").drawForeground(poseStack, par1
                     , par2);
         }
     }
@@ -69,31 +69,31 @@ public class GuiRadiationPurifier<T extends ContainerRadiationPurifier> extends 
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
-    bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft + 3, this.guiTop + 3, 0, 0, 10, 10);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 3, this.guiTop + 3, 0, 0, 10, 10);
 
-      bindTexture(getTexture());
+        bindTexture(getTexture());
         this.bindTexture();
         if (this.container.base.radiation == null) {
-            this.drawTexturedRect(poseStack,41, 12, 1, 3, 180, 19);
+            this.drawTexturedRect(poseStack, 41, 12, 1, 3, 180, 19);
         } else {
             Radiation radiation = this.container.base.radiation;
             if (radiation.getLevel() == EnumLevelRadiation.LOW) {
                 final double translate = (6 * radiation.getRadiation() / 1000);
-                this.drawTexturedRect(poseStack,41 - translate, 12, 1, 3, 180, 19);
+                this.drawTexturedRect(poseStack, 41 - translate, 12, 1, 3, 180, 19);
             } else if (radiation.getLevel() == EnumLevelRadiation.DEFAULT) {
                 final double translate = (6 * radiation.getRadiation() / 1000);
-                this.drawTexturedRect(poseStack,41 - 6 - translate, 12, 1, 3, 180, 19);
+                this.drawTexturedRect(poseStack, 41 - 6 - translate, 12, 1, 3, 180, 19);
             } else if (radiation.getLevel() == EnumLevelRadiation.MEDIUM) {
                 final double translate = (6 * radiation.getRadiation() / 1000);
-                this.drawTexturedRect(poseStack,41 - 12 - translate, 12, 1, 3, 180, 19);
+                this.drawTexturedRect(poseStack, 41 - 12 - translate, 12, 1, 3, 180, 19);
             } else if (radiation.getLevel() == EnumLevelRadiation.HIGH) {
                 final double translate = (6 * radiation.getRadiation() / 1000);
-                this.drawTexturedRect(poseStack,41 - 18 - translate, 12, 1, 3, 180, 19);
+                this.drawTexturedRect(poseStack, 41 - 18 - translate, 12, 1, 3, 180, 19);
             } else if (radiation.getLevel() == EnumLevelRadiation.VERY_HIGH) {
                 final double translate = (6 * radiation.getRadiation() / 1000);
-                this.drawTexturedRect(poseStack,41 - 24 - translate, 12, 1, 3, 180, 19);
+                this.drawTexturedRect(poseStack, 41 - 24 - translate, 12, 1, 3, 180, 19);
             }
         }
     }
@@ -101,12 +101,12 @@ public class GuiRadiationPurifier<T extends ContainerRadiationPurifier> extends 
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guipurifier.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipurifier.png");
     }
 
 }

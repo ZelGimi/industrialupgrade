@@ -33,11 +33,11 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
-            ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
-      ));
-        this.jeiInform=jeiInform;
+                ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
+        ));
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -55,7 +55,6 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
     }
 
 
-
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -66,8 +65,8 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
 
     @Override
     public void draw(CropCrossoverHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      draw(stack, "+", 45, 48, 4210752);
-     draw(stack, "->", 65, 48, 4210752);
+        draw(stack, "+", 45, 48, 4210752);
+        draw(stack, "->", 65, 48, 4210752);
         this.drawSplitString(stack, Localization.translate("iu.cop.crossing"), 15, 78, 140 - 5, 4210752);
 
     }
@@ -80,15 +79,14 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
             builder.addSlot(RecipeIngredientRole.INPUT, 60 - 21, yDisplayPosition1).addItemStack(list.get(i));
 
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  85, 44).addItemStack(recipes.getOutputs());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).addItemStack(recipes.getOutputs());
 
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

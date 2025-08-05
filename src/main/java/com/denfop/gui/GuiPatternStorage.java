@@ -14,7 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 
 public class GuiPatternStorage<T extends ContainerPatternStorage> extends GuiIU<ContainerPatternStorage> {
 
-    private static final ResourceLocation background = new ResourceLocation(
+    private static final ResourceLocation background = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/GUIPatternStorage.png".toLowerCase()
     );
@@ -105,9 +105,9 @@ public class GuiPatternStorage<T extends ContainerPatternStorage> extends GuiIU<
     }
 
     @Override
-protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
-        super.drawForegroundLayer( poseStack,mouseX, mouseY);
-     draw( poseStack,Math.min(
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
+        draw(poseStack, Math.min(
                         container.base.index + 1,
                         container.base.maxIndex
                 ) + " / " + container.base.maxIndex, this.imageWidth / 2, 30
@@ -115,33 +115,32 @@ protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, fina
         );
 
 
-        draw( poseStack,Localization.translate(Constants.ABBREVIATION + ".generic.text.Name"), 10, 48
+        draw(poseStack, Localization.translate(Constants.ABBREVIATION + ".generic.text.Name"), 10, 48
                 , 16777215
         );
-        draw( poseStack,Localization.translate(Constants.ABBREVIATION + ".generic.text.UUMatte"), 10, 59
+        draw(poseStack, Localization.translate(Constants.ABBREVIATION + ".generic.text.UUMatte"), 10, 59
                 , 16777215
         );
-        draw( poseStack,Localization.translate(Constants.ABBREVIATION + ".generic.text.Energy"), 10, 70
+        draw(poseStack, Localization.translate(Constants.ABBREVIATION + ".generic.text.Energy"), 10, 70
                 , 16777215
         );
         if (this.container.base.pattern != null) {
-           draw( poseStack,this.container.base.pattern.getStack().getDisplayName(), 80, 49
+            draw(poseStack, this.container.base.pattern.getStack().getDisplayName(), 80, 49
                     , 16777215
             );
 
-            draw( poseStack,ModUtils.getString(container.base.patternUu) + Localization.translate(
-                            Constants.ABBREVIATION + ".generic.text.bucketUnit"), 105, 59, 16777215
+            draw(poseStack, ModUtils.getString(container.base.patternUu) + Localization.translate(
+                    Constants.ABBREVIATION + ".generic.text.bucketUnit"), 105, 59, 16777215
             );
-            draw( poseStack,ModUtils.getString(container.base.patternEu) + Localization.translate(
-                            Constants.ABBREVIATION + ".generic.text.EF"), 80, 70, 16777215
+            draw(poseStack, ModUtils.getString(container.base.patternEu) + Localization.translate(
+                    Constants.ABBREVIATION + ".generic.text.EF"), 80, 70, 16777215
             );
         }
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(
+        return ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "textures/gui/guimachine.png"
         );

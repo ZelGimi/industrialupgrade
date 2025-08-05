@@ -22,7 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> 
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
                 150
         );
         this.jeiInform = jeiInform;
@@ -75,6 +75,7 @@ public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> 
                 4210752
         );
     }
+
     public List<ItemStack> getInputs() {
         List<ItemStack> stack = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
@@ -86,6 +87,7 @@ public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> 
         stack.add(ItemStackHelper.fromData(IUItem.oilblock));
         return stack;
     }
+
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, VeinHandler recipe, IFocusGroup focuses) {
         List<FluidStack> fluids = Arrays.asList(new FluidStack(
@@ -97,12 +99,12 @@ public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> 
                 , new FluidStack(FluidName.fluidsour_light_oil.getInstance().get(), 1000)
                 , new FluidStack(FluidName.fluidsweet_medium_oil.getInstance().get(), 1000)
                 , new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance().get(), 1000));
-        fluids.forEach(fluidStack -> builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addFluidStack(fluidStack.getFluid(),fluidStack.getAmount()));
+        fluids.forEach(fluidStack -> builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addFluidStack(fluidStack.getFluid(), fluidStack.getAmount()));
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStacks(this.getInputs());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

@@ -6,15 +6,18 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -23,13 +26,15 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -41,7 +46,7 @@ import java.util.Map;
 public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem, ISpecialArmor,
         IUpgradeItem {
 
-    protected static final Map<MobEffect, Integer> potionRemovalCost = new HashMap<>();
+    protected static final Map<Holder<MobEffect>, Integer> potionRemovalCost = new HashMap<>();
     private final int solarType;
     private final String name;
     private double maxCharge;
@@ -127,7 +132,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         }
 
         potionRemovalCost.put(MobEffects.POISON, 100);
-        potionRemovalCost.put(IUPotion.radiation, 20);
+        potionRemovalCost.put(IUPotion.rad, 20);
         potionRemovalCost.put(MobEffects.WITHER, 100);
         potionRemovalCost.put(MobEffects.HUNGER, 200);
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SOLAR_HELMET.list));
@@ -142,11 +147,13 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
             p_41392_.add(new ItemStack(this, 1));
         }
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
 
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -159,22 +166,23 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         CompoundTag nbtData = ModUtils.nbt(stack);
         if (!nbtData.getString("mode").isEmpty()) {
-            return Constants.TEXTURES + ":textures/armor/" + this.name + "_" + nbtData.getString("mode") + ".png";
+            return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.name + "_" + nbtData.getString("mode").toLowerCase() + ".png");
         }
 
 
-        return Constants.TEXTURES + ":textures/armor/" + this.name + ".png";
+        return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.name + ".png");
     }
+
 
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
@@ -217,13 +225,13 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.INVISIBILITY, itemStack)) {
             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 300));
         }
-        boolean Nightvision = nbtData.getBoolean("Nightvision");
+        boolean Nightvision = itemStack.getOrDefault(DataComponentsInit.NIGHT_VISION, false);
         byte toggleTimer = nbtData.getByte("toggleTimer");
         if (IUCore.keyboard.isArmorKey(player) && toggleTimer == 0) {
             toggleTimer = 10;
             Nightvision = !Nightvision;
             if (!player.level().isClientSide()) {
-                nbtData.putBoolean("Nightvision", Nightvision);
+                itemStack.set(DataComponentsInit.NIGHT_VISION, Nightvision);
                 if (Nightvision) {
                     IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
                 } else {
@@ -287,21 +295,22 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
 
         double k = experimental_generating(worldObj);
         if (this.sunIsUp && this.skyIsVisible) {
-            this.storage = nbtData.getDouble("storage");
+            this.storage = itemStack.getOrDefault(DataComponentsInit.STORAGE, 0D);
             this.storage = this.storage + (this.genDay + this.genDay * 0.05 * genday) * k;
-            nbtData.putDouble("storage", this.storage);
-        }
-        if (this.skyIsVisible) {
-            this.storage = nbtData.getDouble("storage");
-            this.storage = this.storage + (this.genNight + this.genNight * 0.05 * gennight) * k;
-            nbtData.putDouble("storage", this.storage);
+            itemStack.set(DataComponentsInit.STORAGE, this.storage);
 
         }
-        if (nbtData.getDouble("storage") >= (maxStorage + maxStorage * 0.05 * storage)) {
-            nbtData.putDouble("storage", (maxStorage + maxStorage * 0.05 * storage));
+        if (this.skyIsVisible) {
+            this.storage = itemStack.getOrDefault(DataComponentsInit.STORAGE, 0D);
+            this.storage = this.storage + (this.genNight + this.genNight * 0.05 * gennight) * k;
+            itemStack.set(DataComponentsInit.STORAGE, this.storage);
+
         }
-        if (nbtData.getDouble("storage") < 0) {
-            nbtData.putDouble("storage", 0);
+        if (itemStack.getOrDefault(DataComponentsInit.STORAGE, 0D) >= (maxStorage + maxStorage * 0.05 * storage)) {
+            itemStack.set(DataComponentsInit.STORAGE, (maxStorage + maxStorage * 0.05 * storage));
+        }
+        if (itemStack.getOrDefault(DataComponentsInit.STORAGE, 0D) < 0) {
+            itemStack.set(DataComponentsInit.STORAGE, 0D);
         }
 
         for (MobEffectInstance effect : new LinkedList<>(player.getActiveEffects())) {
@@ -317,7 +326,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
             }
         }
 
-        double tempstorage = nbtData.getDouble("storage");
+        double tempstorage = itemStack.getOrDefault(DataComponentsInit.STORAGE, 0D);
         if (tempstorage > 0) {
             double energyLeft = tempstorage;
             for (int i = 0; i < player.getInventory().armor.size(); i++) {
@@ -330,7 +339,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
 
                         if (sentPacket > 0.0D) {
                             energyLeft = (energyLeft - sentPacket);
-                            nbtData.putDouble("storage", energyLeft);
+                            itemStack.set(DataComponentsInit.STORAGE, energyLeft);
                             ret = true;
 
                         }
@@ -348,7 +357,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
                         );
                         if (sentPacket > 0.0D) {
                             energyLeft -= sentPacket;
-                            nbtData.putDouble("storage", energyLeft);
+                            itemStack.set(DataComponentsInit.STORAGE, energyLeft);
                             ret = true;
 
                         }
@@ -389,7 +398,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         this.sunIsUp = player.level().isDay() && !rainWeather;
 
         this.skyIsVisible = player.level().canSeeSky(pos.above()) &&
-                (player.level().getBlockState(pos.above()).getMapColor(player.level(),pos.above()) ==
+                (player.level().getBlockState(pos.above()).getMapColor(player.level(), pos.above()) ==
                         MapColor.NONE) && !noSunWorld;
     }
 
@@ -444,8 +453,6 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
     }
 
 
-
-
     public boolean canProvideEnergy(final ItemStack itemStack) {
         return false;
     }
@@ -463,13 +470,14 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         return this.transferLimit;
     }
 
+
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> info, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack itemStack, @Nullable TooltipContext p_41422_, List<Component> info, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, p_41422_, info, p_41424_);
         CompoundTag nbtData1 = ModUtils.nbt(itemStack);
 
         info.add(Component.literal(Localization.translate("iu.storage.helmet") + " "
-                + ModUtils.getString(nbtData1.getDouble("storage")) + " EF"));
+                + ModUtils.getString(itemStack.getOrDefault(DataComponentsInit.STORAGE, 0D)) + " EF"));
 
         boolean with = this.solarType == 1;
         boolean without = this.solarType == 2 || this.solarType == 3;
@@ -491,12 +499,12 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity p_41406_, int p_41407_, boolean p_41408_) {
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
+        if (p_41407_ >= Inventory.INVENTORY_SIZE && p_41407_ < Inventory.INVENTORY_SIZE + 4 && p_41406_ instanceof Player player)
+            this.onArmorTick(itemStack, world, (Player) p_41406_);
     }
 
 

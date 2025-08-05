@@ -20,11 +20,7 @@ public class CentrifugeHandler {
         this.input = input;
         this.output = output;
         this.temperature = temperature;
-        this.container=container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<CentrifugeHandler> getRecipes() {
@@ -35,7 +31,7 @@ public class CentrifugeHandler {
     }
 
     public static CentrifugeHandler addRecipe(ItemStack input, List<ItemStack> output, short temperature, BaseMachineRecipe container) {
-        CentrifugeHandler recipe = new CentrifugeHandler(input, output, temperature,container);
+        CentrifugeHandler recipe = new CentrifugeHandler(input, output, temperature, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -61,13 +57,16 @@ public class CentrifugeHandler {
 
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items, container.getOutput().metadata.getShort("minHeat"),container
+                    container.getOutput().items, container.getOutput().metadata.getShort("minHeat"), container
             );
 
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

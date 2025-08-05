@@ -10,6 +10,7 @@ import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
+import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -18,23 +19,24 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.*;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.UpgradeRover;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRoverUpgradeBlock;
 import com.denfop.items.space.ItemSpaceUpgradeModule;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -43,7 +45,7 @@ import java.util.Set;
 public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements IHasRecipe {
 
     public TileEntityUpgradeRover(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.UPGRADE_ROVER, false,BlockBaseMachine3.upgrade_rover,pos,state);
+        super(1, 300, 1, EnumDoubleElectricMachine.UPGRADE_ROVER, false, BlockBaseMachine3.upgrade_rover, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -81,12 +83,13 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
                 }
 
                 module = module.copy();
-                CompoundTag nbt1 = ModUtils.nbt(stack1);
+                DataComponentMap components = stack1.getComponents();
                 if (module.getItem() instanceof ItemSpaceUpgradeModule<?>) {
                     if (SpaceUpgradeSystem.system.getRemaining(stack1) == 0) {
                         this.updateTick.setRecipeOutput(null);
                         return;
                     }
+
                     EnumTypeUpgrade type = ItemSpaceUpgradeModule.getType(((ItemSpaceUpgradeModule<?>) module.getItem()).getElement().getId());
                     boolean should = SpaceUpgradeSystem.system.shouldUpdate(type, stack1);
                     if (!should) {
@@ -96,16 +99,25 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
                     this.invSlotRecipes.consume();
                     this.outputSlot.add(processResult);
                     ItemStack stack = this.outputSlot.get(0);
-                    stack.setTag(nbt1);
-                    CompoundTag nbt = ModUtils.nbt(stack);
-                    ListTag modesTagList = nbt.getList("modes", 10);
-                    CompoundTag upgrade = new CompoundTag();
-                    upgrade.putInt("index", ((ItemSpaceUpgradeModule<?>) module.getItem()).getElement().getId());
-                    modesTagList.add(upgrade);
-                    nbt.put("modes", modesTagList);
+                    components.stream().forEach(typedDataComponent -> stack.set((DataComponentType<Object>) typedDataComponent.type(), (Object) typedDataComponent.value()));
+                    UpgradeRover upgradeItem = stack.get(DataComponentsInit.UPGRADE_ROVER);
+                    boolean find = false;
+                    List<SpaceUpgradeItemInform> upgradeItemInformList = upgradeItem.upgradeItemInforms();
+                    for (SpaceUpgradeItemInform upgradeItemInform : upgradeItemInformList) {
+                        if (upgradeItemInform.upgrade == type) {
+                            upgradeItemInform.number++;
+                            find = true;
+                            break;
+                        }
+                    }
+                    if (!find) {
+                        upgradeItemInformList.add(new SpaceUpgradeItemInform(type, 1));
+                    }
+                    upgradeItem = upgradeItem.updateUpgrades(stack, upgradeItemInformList);
+                    upgradeItem = upgradeItem.updateAmount(stack, upgradeItem.amount() + 1);
                     ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                     ElectricItem.manager.use(stack, 1, null);
-                    MinecraftForge.EVENT_BUS.post(new EventItemLoad(level, (IRoversItem) stack.getItem(), stack));
+                    NeoForge.EVENT_BUS.post(new EventItemLoad(level, (IRoversItem) stack.getItem(), stack));
                 }
 
             }

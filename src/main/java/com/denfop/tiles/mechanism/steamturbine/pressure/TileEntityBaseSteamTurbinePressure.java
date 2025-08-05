@@ -14,8 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityBaseSteamTurbinePressure extends TileEntityMultiBlockElement implements IPressure, IUpdatableTileEvent {
 
@@ -23,7 +23,7 @@ public class TileEntityBaseSteamTurbinePressure extends TileEntityMultiBlockElem
     private int pressure;
 
     public TileEntityBaseSteamTurbinePressure(int blockLevel, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
-        super(tileBlock,pos,state);
+        super(tileBlock, pos, state);
         this.blockLevel = blockLevel;
         this.pressure = 1;
 

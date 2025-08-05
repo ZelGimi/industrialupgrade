@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.*;
@@ -25,6 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
@@ -32,14 +34,15 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.ClientHooks;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -184,14 +187,14 @@ public class TileDoubleMolecular extends TileElectricMachine implements
 
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_REGENERATION),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_REGENERATION),
                 new ItemStack(IUItem.upgrademodule.getStack(17)
                         , 1),
                 4000000
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_INVISIBILITY),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_INVISIBILITY),
                 new ItemStack(IUItem.upgrademodule.getStack(22), 1),
                 4000000
         );
@@ -200,7 +203,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_POISON),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_POISON),
                 new ItemStack(IUItem.upgrademodule.getStack(19)),
                 4000000
         );
@@ -283,19 +286,19 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
 
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_FIRE_RESISTANCE),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_FIRE_RESISTANCE),
                 new ItemStack(IUItem.upgrademodule.getStack(7)),
                 2500000
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WATER_BREATHING),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_WATER_BREATHING),
                 new ItemStack(IUItem.upgrademodule.getStack(8)),
                 2500000
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_SWIFTNESS),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_SWIFTNESS),
                 new ItemStack(IUItem.upgrademodule.getStack(9)),
                 2500000
         );
@@ -308,7 +311,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
 
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_STRENGTH),
+                PotionContents.createItemStack(Items.POTION, Potions.LONG_STRENGTH),
                 new ItemStack(IUItem.upgrademodule.getStack(11)),
                 2500000
         );
@@ -326,7 +329,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS),
+                PotionContents.createItemStack(Items.POTION, Potions.SWIFTNESS),
                 new ItemStack(IUItem.upgrademodule.getStack(14)),
                 2500000
         );
@@ -484,13 +487,13 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.NIGHT_VISION),
+                PotionContents.createItemStack(Items.POTION, Potions.NIGHT_VISION),
                 new ItemStack(IUItem.upgrademodule.getStack(29)),
                 1500000
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.THORNS, 1)),
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(IUCore.registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.THORNS), 1)),
                 new ItemStack(IUItem.upgrademodule.getStack(30)),
                 1500000
         );
@@ -502,20 +505,20 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRONG_HARMING),
+                PotionContents.createItemStack(Items.POTION, Potions.STRONG_HARMING),
 
                 new ItemStack(IUItem.upgrademodule.getStack(32)),
                 1500000
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.PROJECTILE_PROTECTION, 1)),
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(IUCore.registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.PROJECTILE_PROTECTION), 1)),
                 new ItemStack(IUItem.upgrademodule.getStack(33)),
                 1500000
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.FALL_PROTECTION, 1)),
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(IUCore.registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FEATHER_FALLING), 1)),
                 new ItemStack(IUItem.upgrademodule.getStack(34)),
                 1500000
         );
@@ -533,7 +536,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule.getItem(), 1),
-                "forge:doubleplate/Invar",
+                "c:doubleplate/Invar",
                 new ItemStack(IUItem.upgrademodule.getStack(37)),
                 1500000
         );
@@ -586,7 +589,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                     this.getWorld(),
                     null, 0
             );
-            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+            this.transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                     this.bakedModel,
                     GROUND,
                     false
@@ -719,9 +722,9 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                             this.getWorld(),
                             null, 0
                     );
-                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                    this.transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                             this.bakedModel,
-                           GROUND,
+                            GROUND,
                             false
                     );
                 }

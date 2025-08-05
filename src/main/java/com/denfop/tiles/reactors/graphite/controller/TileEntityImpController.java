@@ -12,7 +12,7 @@ public class TileEntityImpController extends TileEntityMainController {
 
     public TileEntityImpController(BlockPos pos, BlockState state
     ) {
-        super(InitMultiBlockSystem.impGraphiteReactorMultiBlock, EnumGraphiteReactors.I,BlocksGraphiteReactors.graphite_imp_controller,pos,state);
+        super(InitMultiBlockSystem.impGraphiteReactorMultiBlock, EnumGraphiteReactors.I, BlocksGraphiteReactors.graphite_imp_controller, pos, state);
     }
 
     @Override

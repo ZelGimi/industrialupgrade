@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/yttrium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "C": {
+      "tag": "c:doubleplate/strontium"
+    },
+    "E": {
+      "tag": "c:plates/niobium"
+    }
+  },
+  "pattern": [
+    "ECE",
+    "ABA",
+    "ECE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_267_element"
+  },
+  "show_notification": false
+}

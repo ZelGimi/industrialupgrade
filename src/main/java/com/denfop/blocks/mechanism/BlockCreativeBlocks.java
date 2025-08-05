@@ -1,12 +1,8 @@
 package com.denfop.blocks.mechanism;
 
-import com.denfop.Constants;
-import com.denfop.api.IElectricBlock;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.blocks.state.HarvestTool;
-import com.denfop.tiles.base.TileConverterSolidMatter;
-import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.creative.*;
 import com.denfop.utils.ModUtils;
@@ -15,9 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -29,7 +23,6 @@ public enum BlockCreativeBlocks implements IMultiTileBlock {
     creative_quantum_storage(TileEntityCreativeQuantumStorage.class, 3),
     creative_radiation_storage(TileEntityCreativeRadiationStorage.class, 4),
     creative_tank_storage(TileEntityCreativeTank.class, 5),
-
     ;
 
 
@@ -39,7 +32,7 @@ public enum BlockCreativeBlocks implements IMultiTileBlock {
     int idBlock;
     private TileEntityBlock dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
 
     BlockCreativeBlocks(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, Rarity.UNCOMMON);
@@ -67,10 +60,6 @@ public enum BlockCreativeBlocks implements IMultiTileBlock {
     }
 
     public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
-        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
-            throw new IllegalAccessError("Don't mess with this please.");
-        }
         if (this.getTeClass() != null) {
             try {
                 this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
@@ -86,7 +75,7 @@ public enum BlockCreativeBlocks implements IMultiTileBlock {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 

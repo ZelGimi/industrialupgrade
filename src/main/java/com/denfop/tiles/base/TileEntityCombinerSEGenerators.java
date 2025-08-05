@@ -26,8 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     private boolean sunIsUp;
 
     public TileEntityCombinerSEGenerators(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.combiner_se_generators,pos,state);
+        super(BlockBaseMachine3.combiner_se_generators, pos, state);
         itemstack = new ItemStack(IUItem.sunnarium.getStack(4), 1);
         this.inputSlot = new InvSlotCombinerSEG(this);
         this.input = new InvSlotGenCombinerSunarrium(this);
@@ -89,10 +89,6 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     }
 
 
-
-
-
-
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
@@ -114,7 +110,6 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         }
         return packet;
     }
-
 
 
     public void onLoaded() {
@@ -232,8 +227,6 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
                 UpgradableProperty.ItemExtract
         );
     }
-
-
 
 
     public String getInventoryName() {

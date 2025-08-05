@@ -3,7 +3,7 @@ package com.denfop.api.upgrade.event;
 import com.denfop.api.upgrade.IUpgradeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class EventItemLoad extends LevelEvent {
 

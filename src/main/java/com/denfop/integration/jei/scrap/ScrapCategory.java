@@ -42,9 +42,9 @@ public class ScrapCategory extends GuiIU implements IRecipeCategory<ScrapHandler
     private final IDrawableStatic bg;
     private final ContainerMultiMachine container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
 
     public ScrapCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
@@ -52,7 +52,7 @@ public class ScrapCategory extends GuiIU implements IRecipeCategory<ScrapHandler
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileAssamplerScrap) BlockMoreMachine3.assamplerscrap.getDummyTe()), 1, true
         ));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
@@ -91,7 +91,7 @@ public class ScrapCategory extends GuiIU implements IRecipeCategory<ScrapHandler
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.machines_base3, 1, 4).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.machines_base3, 1, 4).getDescriptionId());
     }
 
 
@@ -112,9 +112,9 @@ public class ScrapCategory extends GuiIU implements IRecipeCategory<ScrapHandler
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ScrapCategory extends GuiIU implements IRecipeCategory<ScrapHandler
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
@@ -132,9 +132,8 @@ public class ScrapCategory extends GuiIU implements IRecipeCategory<ScrapHandler
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine3.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine3.png");
     }
 
 

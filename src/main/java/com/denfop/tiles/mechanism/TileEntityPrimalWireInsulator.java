@@ -30,9 +30,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +53,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
 
     public TileEntityPrimalWireInsulator(BlockPos pos, BlockState state) {
-        super(BlockPrimalWireInsulator.primal_wire_insulator, pos,state);
+        super(BlockPrimalWireInsulator.primal_wire_insulator, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "wire_insulator", this) {
             @Override
             public int getStackSizeLimit() {
@@ -74,10 +73,10 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return  LazyOptional.empty();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK)
+            return null;
+        return super.getCapability(cap, side);
     }
 
 
@@ -96,7 +95,6 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     }
 
 
-
     public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
@@ -110,7 +108,6 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     public IMultiTileBlock getTeBlock() {
         return BlockPrimalWireInsulator.primal_wire_insulator;
     }
-
 
 
     @Override
@@ -130,7 +127,8 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
 
     @Override
     public void initiate(final int soundEvent) {
-
+        if (soundEvent == 0) {
+        }
     }
 
     @Override
@@ -141,9 +139,8 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     @Override
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
         if (!this.getWorld().isClientSide) {
-            data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
-
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
         }
@@ -155,14 +152,14 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                inputSlotA.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -180,8 +177,8 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            inputSlotA.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
+            outputSlot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -312,8 +309,6 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     }
 
 
-
-
     private void changeState() {
         final ItemStack input = this.inputSlotA.get(0);
         final ItemStack input1 = this.inputSlotA.get(1);
@@ -375,7 +370,6 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     public void onUpdate() {
 
     }
-
 
 
     @Override

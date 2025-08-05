@@ -12,8 +12,8 @@ import java.util.List;
 public class EarthQuarryHandler {
 
     private static final List<EarthQuarryHandler> recipes = new ArrayList<>();
-    private final ItemStack input;
     public final double chance;
+    private final ItemStack input;
     private final ItemStack output;
 
     public EarthQuarryHandler(ItemStack input, double chance, ItemStack output) {
@@ -42,8 +42,8 @@ public class EarthQuarryHandler {
 
     public static void initRecipes() {
         addRecipe(new ItemStack(Blocks.DIRT), 10, ItemStackHelper.fromData(IUItem.ore2, 1, 1));
-        addRecipe(new ItemStack(Blocks.GRAVEL), 6,ItemStackHelper.fromData(IUItem.ore2, 1, 2));
-        addRecipe(new ItemStack(Blocks.SAND), 20,ItemStackHelper.fromData(IUItem.ore2, 1, 0));
+        addRecipe(new ItemStack(Blocks.GRAVEL), 6, ItemStackHelper.fromData(IUItem.ore2, 1, 2));
+        addRecipe(new ItemStack(Blocks.SAND), 20, ItemStackHelper.fromData(IUItem.ore2, 1, 0));
     }
 
     public double getChance() {

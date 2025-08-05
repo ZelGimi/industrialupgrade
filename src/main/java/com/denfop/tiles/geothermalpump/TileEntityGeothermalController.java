@@ -21,10 +21,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
     IExchanger exchanger;
 
     public TileEntityGeothermalController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.GeoThermalPumpMultiBlock,BlockGeothermalPump.geothermal_controller,pos,state);
+        super(InitMultiBlockSystem.GeoThermalPumpMultiBlock, BlockGeothermalPump.geothermal_controller, pos, state);
     }
 
     @Override

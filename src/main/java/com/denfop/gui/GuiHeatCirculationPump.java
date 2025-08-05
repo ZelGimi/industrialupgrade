@@ -15,7 +15,6 @@ public class GuiHeatCirculationPump<T extends ContainerHeatCirculationPump> exte
     }
 
 
-
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
@@ -26,7 +25,7 @@ public class GuiHeatCirculationPump<T extends ContainerHeatCirculationPump> exte
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiheat4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiheat4.png");
     }
 
 }

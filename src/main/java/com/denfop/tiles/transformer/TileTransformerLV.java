@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileTransformerLV extends TileTransformer {
 
     public TileTransformerLV(BlockPos pos, BlockState state) {
-        super(1, BlockTransformer.lv,pos,state);
+        super(1, BlockTransformer.lv, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

@@ -1,7 +1,6 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.ImageInterface;
 import com.denfop.container.ContainerSteamTurbineRod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,24 +17,23 @@ public class GuiSteamTurbineRod<T extends ContainerSteamTurbineRod> extends GuiI
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guisteamturbine_blades.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guisteamturbine_blades.png");
 
     }
 
 
-
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
-      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 }

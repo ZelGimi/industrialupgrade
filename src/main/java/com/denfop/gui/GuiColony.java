@@ -26,8 +26,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,14 +97,14 @@ public class GuiColony extends GuiDefaultResearchTable {
                 if (baseResource.getElement() instanceof ItemStack) {
                     ItemStack stack = (ItemStack) baseResource.getElement();
                     RenderSystem.enableBlend();
-                    new ItemStackImageText(tile, ((25 + 32 + 53 + (j % 4) * 18)) + guiLeft, (int) ((41 + 15 + 15 + 15 + 11 + 18 * (j / 4))) + guiTop, () -> stack,  Localization.translate("iu.space.colony_level")+" " + baseResource.getLevel()).drawForeground(poseStack, par1, par2);
+                    new ItemStackImageText(tile, ((25 + 32 + 53 + (j % 4) * 18)) + guiLeft, (int) ((41 + 15 + 15 + 15 + 11 + 18 * (j / 4))) + guiTop, () -> stack, Localization.translate("iu.space.colony_level") + " " + baseResource.getLevel()).drawForeground(poseStack, par1, par2);
                     RenderSystem.disableBlend();
                 } else if (baseResource.getElement() instanceof FluidStack) {
 
                     int fluidX = guiLeft + ((25 + 32 + 53 + (j % 4) * 18)) + 1;
                     int fluidY = guiTop + ((41 + 15 + 15 + 15 + 11 + 18 * (j / 4))) + 1;
                     FluidStack stack = ((FluidStack) baseResource.getElement());
-                    new FluidItem(tile, fluidX, fluidY, stack).withTooltip(() -> Localization.translate("iu.space.colony_level")+" " + baseResource.getLevel()).drawForeground(poseStack, par1, par2);
+                    new FluidItem(tile, fluidX, fluidY, stack).withTooltip(() -> Localization.translate("iu.space.colony_level") + " " + baseResource.getLevel()).drawForeground(poseStack, par1, par2);
 
                 }
                 j++;
@@ -162,7 +162,7 @@ public class GuiColony extends GuiDefaultResearchTable {
         int guiTop = getTile().guiTop + this.y + offsetY1;
         pose.pushPose();
         pose.translate(guiLeft + width - 20, guiTop + 5, 20);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"));
         pose.scale(0.5f, 0.5f, 1);
         if (!hoverDelete)
             getTile().drawTexturedModalRect(poseStack, 0, 0, 139, 32, 30, 30);
@@ -175,9 +175,9 @@ public class GuiColony extends GuiDefaultResearchTable {
 
             if (colony == null) {
                 if (SpaceNet.instance.getColonieNet().canAddColony(planet, getTile().container.player))
-                    getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30 + 7, guiTop + 25, 0, 0.75f, 0.75f, 0, 125, 103, 20);
+                    getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30 + 7, guiTop + 25, 0, 0.75f, 0.75f, 0, 125, 103, 20);
                 else {
-                    getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30 + 7, guiTop + 25, 0, 0.75f, 0.75f, 0, 145, 103, 20);
+                    getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30 + 7, guiTop + 25, 0, 0.75f, 0.75f, 0, 145, 103, 20);
                 }
 
                 getTile().drawCenteredText(poseStack, Localization.translate("iu.space.createcolony"), (float) (guiLeft + width / 2), guiTop + 25 + 4, 20, 0.5f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
@@ -225,46 +225,46 @@ public class GuiColony extends GuiDefaultResearchTable {
             } else if (levelColony >= 10) {
                 xPos = 102 - 44;
             }
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 15, guiTop + 15, 0, 0.75f, 0.75f, xPos, 22, 22, 22);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 18, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 18, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getExperience() * 1D / colony.getMaxExperience())), 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 15, guiTop + 15, 0, 0.75f, 0.75f, xPos, 22, 22, 22);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 18, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 18, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getExperience() * 1D / colony.getMaxExperience())), 55 - 43);
             getTile().drawCenteredText(poseStack, String.valueOf(colony.getLevel()), (float) (guiLeft + 33) + 65, guiTop + 20, 20, 0.75f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
             getTile().drawCenteredText(poseStack, String.valueOf(colony.getExperience() + "/" + colony.getMaxExperience()), (float) (guiLeft + 33) + 76 * 0.75f / 2, guiTop + 30, 20, 0.75f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 19, guiTop + 40, 0, 0.5f, 0.5f, 0, 57, 20, 20);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 19, guiTop + 40, 0, 0.5f, 0.5f, 0, 57, 20, 20);
             getTile().drawCenteredText(poseStack, Localization.translate("iu.space_colony_people") + (colony.getFreeWorkers() + colony.getWorkers()), (float) (guiLeft + 19) + 42, guiTop + 42, 20, 0.75f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 19, guiTop + 40 + 15, 0, 0.6f, 0.6f, 21, 57, 22, 22);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 19, guiTop + 40 + 15, 0, 0.6f, 0.6f, 21, 57, 22, 22);
             getTile().drawCenteredText(poseStack, Localization.translate("iu.space_colony_need") + colony.getNeedWorkers(), (float) (guiLeft + 19) + 40, guiTop + 44 + 15, 20, 0.75f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 17, 0, 0.5f, 0.5f, 160, 59, 20, 20);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 17, 0, 0.5f, 0.5f, 160, 59, 20, 20);
             getTile().drawCenteredText(poseStack, Localization.translate("iu.space_colony_free") + colony.getFreeWorkers(), (float) (guiLeft + 19) + 44, guiTop + 44 + 15 + 15, 20, 0.75f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15, 0, 0.6f, 0.6f, 62, 83, 17, 18);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getEnergy() * 1D / colony.getMaxEnergy())), 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15, 0, 0.6f, 0.6f, 62, 83, 17, 18);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getEnergy() * 1D / colony.getMaxEnergy())), 55 - 43);
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15, 0, 0.6f, 0.6f, 118, 86, 18, 18);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getFood() * 1D / colony.getFood())), 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15, 0, 0.6f, 0.6f, 118, 86, 18, 18);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getFood() * 1D / colony.getFood())), 55 - 43);
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 12, 0, 0.6f, 0.6f, 95, 81, 20, 22);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getOxygen() * 1D / colony.getMaxoxygen())), 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 12, 0, 0.6f, 0.6f, 95, 81, 20, 22);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getOxygen() * 1D / colony.getMaxoxygen())), 55 - 43);
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.5f, 0.5f, 33, 81, 24, 24);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getPercentEntertainment() - 0.8) / 0.7), 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.5f, 0.5f, 33, 81, 24, 24);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * (colony.getPercentEntertainment() - 0.8) / 0.7), 55 - 43);
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.6f, 0.6f, 140, 84, 159 - 143, 79 - 61);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * Math.min(1, (colony.getProtection() * 1D / colony
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.6f, 0.6f, 140, 84, 159 - 143, 79 - 61);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 1, 44, 76 - 0, 55 - 43);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 33, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.75f, 0.75f, 78, 44, (int) (76 * Math.min(1, (colony.getProtection() * 1D / colony
                     .getBuildingList()
                     .size() * 2))), 55 - 43);
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.6f, 0.6f, 45, 61, 20, 18);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 21, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 0, 0.6f, 0.6f, 45, 61, 20, 18);
             getTile().drawCenteredText(poseStack, Localization.translate("iu.space_colony_available_building") + colony.getAvailableBuilding(), (float) (guiLeft + 19) + 48, guiTop + 44 + 15 + 15 + 15 + 15 + 15 + 15 + 15, 20, 0.5f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
             RenderSystem.enableBlend();
@@ -274,7 +274,7 @@ public class GuiColony extends GuiDefaultResearchTable {
             List<EnumProblems> problems = colony.getProblems();
             for (int i = 0; i < problems.size(); i++) {
                 EnumProblems problem = problems.get(i);
-                getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 25 + 12 * i, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 3, 0, 0.6f, 0.6f, problem.getX(), problem.getY(), problem.getWidth(), problem.getHeight());
+                getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 25 + 12 * i, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 3, 0, 0.6f, 0.6f, problem.getX(), problem.getY(), problem.getWidth(), problem.getHeight());
 
             }
             RenderSystem.enableBlend();
@@ -285,18 +285,18 @@ public class GuiColony extends GuiDefaultResearchTable {
             new ImageSpaceInterface1(tile, 105, 40 + 15 + 15 + 15 + 8, 32 + 51, 40).drawBackground(poseStack, guiLeft, guiTop);
             RenderSystem.disableBlend();
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 11, 0, 0.4f, 0.4f, 0, 0, 14, 124);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 45, 0, 0.4f, 0.4f, 0, 252, 14, 4);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 11, 0, 0.4f, 0.4f, 0, 0, 14, 124);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 15 + 45, 0, 0.4f, 0.4f, 0, 252, 14, 4);
 
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 41 + 15 + 15 + 15 + 8, 0, 0.4f, 0.4f, 0, 0, 14, 94);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 41 + 15 + 15 + 15 + 8 + 33 + 4, 0, 0.4f, 0.4f, 0, 252, 14, 4);
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), (float) (guiLeft + 105 + 32 + 52 + 1.25f), guiTop + 41 + 15 + 15 + 15 + 8 + 1.25f + (float) (sliderPosition * sliderVertex * 0.4f), 0, 0.37f, 0.4f, 15, 3, 8, (int) ((1) * sliderVertex));
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), (float) (guiLeft + 105 + 32 + 52 + 1.25f), guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 11 + 1.25f + (float) (sliderStoragePosition * sliderStorageVertex * 0.4f), 0, 0.37f, 0.4f, 15, 3, 8, (int) ((1) * sliderStorageVertex));
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 41 + 15 + 15 + 15 + 8, 0, 0.4f, 0.4f, 0, 0, 14, 94);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), guiLeft + 105 + 32 + 52, guiTop + 41 + 15 + 15 + 15 + 8 + 33 + 4, 0, 0.4f, 0.4f, 0, 252, 14, 4);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), (float) (guiLeft + 105 + 32 + 52 + 1.25f), guiTop + 41 + 15 + 15 + 15 + 8 + 1.25f + (float) (sliderPosition * sliderVertex * 0.4f), 0, 0.37f, 0.4f, 15, 3, 8, (int) ((1) * sliderVertex));
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_slider.png"), (float) (guiLeft + 105 + 32 + 52 + 1.25f), guiTop + 40 + 15 + 15 + 15 + 15 + 15 + 15 + 11 + 1.25f + (float) (sliderStoragePosition * sliderStorageVertex * 0.4f), 0, 0.37f, 0.4f, 15, 3, 8, (int) ((1) * sliderStorageVertex));
             RenderSystem.enableBlend();
             new ImageSpaceInterface1(tile, 108, 21, 76, 14).drawBackground(poseStack, guiLeft, guiTop);
             RenderSystem.disableBlend();
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), (float) (guiLeft + 108) + 76 / 2 - 4, guiTop + 16 + 8, 0, 0.5f, 0.5f, 6, 83, 17, 17);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), (float) (guiLeft + 108) + 76 / 2 - 4, guiTop + 16 + 8, 0, 0.5f, 0.5f, 6, 83, 17, 17);
             int j = 0;
             for (int i = (int) (8 * sliderPosition); i < Math.min(resourceList.size(), (sliderPosition * 8) + 8); i++) {
                 DataItem<?> baseResource = resourceList.get(i);
@@ -376,7 +376,7 @@ public class GuiColony extends GuiDefaultResearchTable {
                 }
                 j++;
             }
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 101 + 7, guiTop + 55 - 17, 0, 0.75f, 0.75f, 152, 121, 103, 20);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 101 + 7, guiTop + 55 - 17, 0, 0.75f, 0.75f, 152, 121, 103, 20);
             if (getTile().container.base.getSends() != null) {
                 List<Timer> timers = getTile().container.base.getSends().getTimers();
                 if (timers != null && !timers.isEmpty()) {
@@ -391,10 +391,10 @@ public class GuiColony extends GuiDefaultResearchTable {
 
             }
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 100 + 7, guiTop + 55, 0, 0.75f, 0.75f, 0, 105, 103, 20);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 100 + 7, guiTop + 55, 0, 0.75f, 0.75f, 0, 105, 103, 20);
             getTile().drawCenteredText(poseStack, Localization.translate("iu.space.send_item"), guiLeft + 100 + 7 + (103 / 2f) * 0.75f, guiTop + 59, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
-            getTile().drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 100 + 7, guiTop + 55 + 20, 0, 0.75f, 0.75f, 0, 105, 103, 20);
+            getTile().drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 100 + 7, guiTop + 55 + 20, 0, 0.75f, 0.75f, 0, 105, 103, 20);
             getTile().drawCenteredText(poseStack, Localization.translate("iu.space.auto_" + getTile().container.base.colony.isAuto()), guiLeft + 100 + 7 + (103 / 2f) * 0.75f, guiTop + 59 + 21, 20, 0.5f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
         }
@@ -446,7 +446,7 @@ public class GuiColony extends GuiDefaultResearchTable {
         }
 
         if (mouseX >= x + offsetX1 + 108 && mouseX <= x + offsetX1 + 108 + 76 && mouseY >= y + offsetY1 + 21 && mouseY <= y + offsetY1 + 21 + 14) {
-            new PacketAddBuildingToColony(this.getTile().container.base.colony);
+            new PacketAddBuildingToColony(this.getTile().container.base.colony, this.getTile().container.player);
         }
 
 

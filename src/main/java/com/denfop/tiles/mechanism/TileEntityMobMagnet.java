@@ -22,7 +22,7 @@ public class TileEntityMobMagnet extends TileEntityInventory {
     private final Energy energy;
 
     public TileEntityMobMagnet(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.mob_magnet,pos,state);
+        super(BlockBaseMachine3.mob_magnet, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -56,7 +56,7 @@ public class TileEntityMobMagnet extends TileEntityInventory {
                     double y1 = this.worldPosition.getY() + 0.5D;
                     double z1 = this.worldPosition.getZ() + 0.5D;
 
-                    float distanceSqrd = (float)((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2) + (z1 - z2)*(z1 - z2));
+                    float distanceSqrd = (float) ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2));
                     if (distanceSqrd > 1.0F) {
                         Vec3 originalPos = new Vec3(x1, y1, z1);
                         Vec3 entityPos = entity.position().add(0.0D, entity.getBbHeight() / 2.0D, 0.0D);

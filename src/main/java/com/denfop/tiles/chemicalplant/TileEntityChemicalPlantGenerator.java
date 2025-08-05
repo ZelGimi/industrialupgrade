@@ -14,15 +14,15 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityChemicalPlantGenerator extends TileEntityMultiBlockElement implements IGenerator {
 
     private final ComponentBaseEnergy energy;
 
     public TileEntityChemicalPlantGenerator(BlockPos pos, BlockState state) {
-        super(BlockChemicalPlant.chemical_plant_generator,pos,state);
+        super(BlockChemicalPlant.chemical_plant_generator, pos, state);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
 
     }

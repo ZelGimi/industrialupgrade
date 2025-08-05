@@ -21,16 +21,13 @@ public interface IBee extends INetworkObject {
 
     List<IBee> getUnCompatibleBees();
 
+    void setUnCompatibleBees(List<IBee> bees);
+
     boolean isSun();
 
     boolean isNight();
 
-
-
-
     int getWeatherResistance();
-
-    void setUnCompatibleBees(List<IBee> bees);
 
     int getChance();
 
@@ -41,10 +38,11 @@ public interface IBee extends INetworkObject {
     List<ResourceKey<Biome>> getBiomes();
 
 
-    boolean canWorkInBiome( ResourceKey<Biome>  biomeName);
-    boolean canWorkInBiome(Biome  biomeName, Level level);
-    void addBiome( ResourceKey<Biome>  biomeName);
+    boolean canWorkInBiome(ResourceKey<Biome> biomeName);
 
+    boolean canWorkInBiome(Biome biomeName, Level level);
+
+    void addBiome(ResourceKey<Biome> biomeName);
 
 
     int getOffspring();

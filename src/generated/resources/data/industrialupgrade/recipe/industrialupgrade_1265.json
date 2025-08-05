@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tantalumtungstenhafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:chemistry/cathode"
+    },
+    "C": {
+      "item": "industrialupgrade:itemdust/silver_chloride_dust"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:chemistry/adv_cathode"
+  },
+  "show_notification": false
+}

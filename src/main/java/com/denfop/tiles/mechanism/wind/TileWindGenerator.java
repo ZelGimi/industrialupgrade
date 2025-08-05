@@ -42,9 +42,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 import org.joml.Vector3f;
 
 import java.io.IOException;
@@ -85,7 +85,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     private boolean can_work = true;
 
     public TileWindGenerator(EnumLevelGenerators levelGenerators, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelGenerators = levelGenerators;
         this.slot = new InvSlotWindRotor(this);
         this.slot_blades = new InvSlotRotorBlades(this);
@@ -108,7 +108,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            slot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -185,7 +185,6 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         }
         return super.onActivated(player, hand, side, vec3);
     }
-
 
 
     public boolean checkSpace() {
@@ -418,13 +417,13 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
         if (!this.slot.isEmpty()) {
-            MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this.getWorld(),
+            NeoForge.EVENT_BUS.post(new EventRotorItemLoad(this.getWorld(),
                     (IRotorUpgradeItem) this.slot.get(0).getItem(), this.slot.get(0)
             ));
         }
         this.change();
         this.setRotorSide(WindSystem.windSystem.getRotorSide(this.getFacing()));
-        MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), true));
+        NeoForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), true));
         new PacketUpdateFieldTile(this, "speed", speed);
         new PacketUpdateFieldTile(this, "space", space);
         new PacketUpdateFieldTile(this, "coefficient", coefficient);
@@ -448,7 +447,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
 
     @Override
     public void onUnloaded() {
-        MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
+        NeoForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
         super.onUnloaded();
     }
 
@@ -506,7 +505,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new CompoundTag()));
+            slot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
@@ -633,7 +632,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
             }
         }
         if (name.equals("slot")) {
-            this.slot.readFromNbt(getNBTFromSlot(is));
+            this.slot.readFromNbt(is.registryAccess(), getNBTFromSlot(is));
         }
         if (name.equals("space")) {
             try {

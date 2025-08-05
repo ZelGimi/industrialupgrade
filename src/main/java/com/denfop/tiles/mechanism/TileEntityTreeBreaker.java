@@ -30,13 +30,15 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgradableBlock {
 
@@ -48,13 +50,13 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     private ComponentVisibleArea visible;
 
     public TileEntityTreeBreaker(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.tree_breaker,pos,state);
+        super(BlockBaseMachine3.tree_breaker, pos, state);
         this.slot = new InvSlotOutput(this, 18);
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 5));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -63,11 +65,19 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
         visible = this.addComponent(new ComponentVisibleArea(this));
+
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract
         );
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        visible.aabb = searchArea;
+
     }
 
     @Override
@@ -92,12 +102,7 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
         return new GuiTreeBreaker((ContainerTreeBreaker) menu);
     }
 
-    @Override
-    public void onLoaded() {
-        super.onLoaded();
-        visible.aabb = searchArea;
 
-    }
     private void breakTreesInRadius() {
         for (int x = -RADIUS; x <= RADIUS; x++) {
             for (int z = -RADIUS; z <= RADIUS; z++) {
@@ -159,7 +164,6 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
             }
         }
     }
-
 
 
     @Override

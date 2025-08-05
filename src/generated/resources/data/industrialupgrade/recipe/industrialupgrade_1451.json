@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:basemachine/alloy_smelter"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_235_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_49_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_138_element"
+    }
+  },
+  "pattern": [
+    "F F",
+    "BAD",
+    "FEF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine1/adv_alloy_smelter"
+  },
+  "show_notification": false
+}

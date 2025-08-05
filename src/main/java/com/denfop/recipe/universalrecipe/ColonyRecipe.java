@@ -1,40 +1,42 @@
 package com.denfop.recipe.universalrecipe;
 
+import com.denfop.recipe.IInputItemStack;
+import com.denfop.recipe.InputItemStack;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ColonyRecipe implements Recipe<Container> {
-    private final ResourceLocation id;
-    private final String recipeType;
-    private final  List<ItemStack> inputs;
-    private final String typeOperation;
+public class ColonyRecipe implements Recipe<CraftingInput> {
 
-    public ColonyRecipe(ResourceLocation id, String recipeType,  List<ItemStack> inputs, String typeOperation) {
-        this.id = id;
+    private final String recipeType;
+    private final List<ItemStack> inputs;
+    private final String typeOperation;
+    public String bodyName;
+    public Short level;
+
+    public ColonyRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
         this.recipeType = recipeType;
         this.inputs = inputs;
         this.typeOperation = typeOperation;
     }
 
     @Override
-    public boolean matches(Container inv, Level world) {
+    public boolean matches(CraftingInput inv, Level world) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(CraftingInput container, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
-
 
 
     @Override
@@ -43,18 +45,15 @@ public class ColonyRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
 
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    public  List<ItemStack> getInputs() {
-        return inputs;
+    public List<IInputItemStack> getInputs() {
+        List<IInputItemStack> inputItemStackList = new ArrayList<>();
+        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
+        return inputItemStackList;
     }
 
     public String getTypeOperation() {
@@ -62,11 +61,9 @@ public class ColonyRecipe implements Recipe<Container> {
     }
 
 
-
     public String getRecipeType() {
         return recipeType;
     }
-
 
 
     @Override
@@ -78,4 +75,5 @@ public class ColonyRecipe implements Recipe<Container> {
     public RecipeType<?> getType() {
         return Register.COLONY_RECIPE.get();
     }
+
 }

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/spectralcircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_555_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_282_element"
+    },
+    "D": {
+      "tag": "c:plates/spinel"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/spectralcircuit_part3"
+  },
+  "show_notification": false
+}

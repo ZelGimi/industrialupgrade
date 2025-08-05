@@ -36,11 +36,10 @@ public class GuiRoverUpgradeBlock<T extends ContainerDoubleElectricMachine> exte
     }
 
 
-
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
-      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-      bindTexture(getTexture());
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
         int progress = (int) (27 * this.container.base.getProgress());
         int progress1 = (int) (27 * this.container.base.getProgress());
         final int xoffset = guiLeft;
@@ -65,21 +64,21 @@ public class GuiRoverUpgradeBlock<T extends ContainerDoubleElectricMachine> exte
             if (SpaceUpgradeSystem.system.getRemaining(stack1) == 0) {
                 allow = false;
                 drawTexturedModalRect(poseStack, xoffset + 36, yoffset + 38, 180, 32, 27, 16);
-                drawTexturedModalRect(poseStack,xoffset + 81, yoffset + 38, 180, 48, 27, 16);
+                drawTexturedModalRect(poseStack, xoffset + 81, yoffset + 38, 180, 48, 27, 16);
             } else if (module.getItem() instanceof ItemSpaceUpgradeModule) {
                 final EnumTypeUpgrade type = ItemSpaceUpgradeModule.getType(((ItemSpaceUpgradeModule<?>) module.getItem()).getElement().getId());
                 allow = SpaceUpgradeSystem.system.shouldUpdate(type, stack1);
 
                 if (allow) {
                     if (progress > 0) {
-                        drawTexturedModalRect(poseStack,xoffset + 36, yoffset + 38, 180, 7, progress, 16);
+                        drawTexturedModalRect(poseStack, xoffset + 36, yoffset + 38, 180, 7, progress, 16);
                     }
                     if (progress1 > 0) {
-                        drawTexturedModalRect(poseStack,xoffset + 81, yoffset + 38, 225, 7, progress1, 16);
+                        drawTexturedModalRect(poseStack, xoffset + 81, yoffset + 38, 225, 7, progress1, 16);
                     }
                 } else {
-                    drawTexturedModalRect(poseStack,xoffset + 36, yoffset + 38, 180, 32, 27, 16);
-                    drawTexturedModalRect(poseStack,xoffset + 81, yoffset + 38, 180, 48, 27, 16);
+                    drawTexturedModalRect(poseStack, xoffset + 36, yoffset + 38, 180, 32, 27, 16);
+                    drawTexturedModalRect(poseStack, xoffset + 81, yoffset + 38, 180, 48, 27, 16);
 
 
                 }
@@ -89,7 +88,7 @@ public class GuiRoverUpgradeBlock<T extends ContainerDoubleElectricMachine> exte
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
     }
 
 }

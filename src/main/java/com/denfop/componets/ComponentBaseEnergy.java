@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -170,7 +170,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
                 this.createDelegate();
                 this.energyConductorMap.clear();
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.LOAD, this.type,
+                NeoForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.LOAD, this.type,
                         this.delegate
                 ));
             }
@@ -200,7 +200,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.UNLOAD, this.type,
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.UNLOAD, this.type,
                     this.delegate
             ));
             this.delegate = null;
@@ -210,7 +210,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         this.setNetworkUpdate(player, buffer);
@@ -254,8 +254,8 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     public void blockBreak() {
-        if (this.getType() == EnergyType.RADIATION) {
-            new PacketUpdateRadiationValue(new ChunkPos(this.parent.getBlockPos()), (int) this.storage);
+        if (this.getType() == EnergyType.RADIATION && this.parent.getLevel() instanceof ServerLevel) {
+            new PacketUpdateRadiationValue(new ChunkPos(this.parent.getBlockPos()), this.storage, (ServerLevel) this.parent.getLevel());
         } else if (this.getType() == EnergyType.EXPERIENCE && this.storage > 0) {
             if (this.parent.getLevel() instanceof ServerLevel serverLevel) {
                 double f = 0.7;
@@ -375,7 +375,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
             assert !this.parent.getLevel().isClientSide;
             this.energyConductorMap.clear();
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.UNLOAD, this.type,
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.UNLOAD, this.type,
                     this.delegate
             ));
         }
@@ -392,7 +392,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
             assert !this.parent.getLevel().isClientSide;
             this.energyConductorMap.clear();
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.LOAD, this.type,
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.parent.getLevel(), EnumTypeEvent.LOAD, this.type,
                     this.delegate
             ));
         }

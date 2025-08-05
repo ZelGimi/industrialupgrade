@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,10 +35,12 @@ public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<
     public ItemUpgradePanelKit(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.UpgradeTab;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
@@ -76,7 +79,7 @@ public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<
             state.getBlock().destroy(world, pos, state);
 
 
-            AABB area = new AABB(pos.offset(-1, -1, -1), pos.offset(1, 1, 1));
+            AABB area = new AABB(Vec3.atCenterOf(pos.offset(-1, -1, -1)), Vec3.atCenterOf(pos.offset(1, 1, 1)));
             List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, area);
             for (ItemEntity item : items) {
                 item.discard();

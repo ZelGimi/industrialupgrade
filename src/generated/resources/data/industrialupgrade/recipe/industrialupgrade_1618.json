@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:gears/nickel"
+    },
+    "C": {
+      "tag": "c:plates/tin"
+    },
+    "D": {
+      "tag": "c:gears/silver"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_265_element"
+  },
+  "show_notification": false
+}

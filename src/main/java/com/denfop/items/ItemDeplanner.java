@@ -21,7 +21,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +32,19 @@ public class ItemDeplanner extends Item implements IItemTab {
     public ItemDeplanner() {
         super(new Properties().stacksTo(1).setNoRepair());
     }
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.deplanner.info")));
 
-    }
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
+    @Override
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_339594_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.deplanner.info")));
+
+    }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -55,7 +57,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -96,7 +98,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                         default -> throw new IllegalStateException("Unexpected value: ");
                     };
                     TileEntityBlock block = (TileEntityBlock) world.getBlockEntity(pos.offset(pos1));
-                    itemStackList.add(block.getPickBlock(null,null));
+                    itemStackList.add(block.getPickBlock(null, null));
                     world.removeBlockEntity(pos.offset(pos1));
                     world.setBlock(pos.offset(pos1), Blocks.AIR.defaultBlockState(), 3);
 

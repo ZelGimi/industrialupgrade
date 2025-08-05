@@ -56,11 +56,11 @@ public class LocalNet implements ILocalNet {
     public void remove(final ISource par1) {
         final SystemTick<ISource, Path> energyTick = this.senderPath.removeSource(par1);
         if (energyTick != null)
-        if (energyTick.getList() != null) {
-            for (Path path : energyTick.getList()) {
-                path.target.getEnergyTickList().remove(energyTick.getSource());
+            if (energyTick.getList() != null) {
+                for (Path path : energyTick.getList()) {
+                    path.target.getEnergyTickList().remove(energyTick.getSource());
+                }
             }
-        }
     }
 
 

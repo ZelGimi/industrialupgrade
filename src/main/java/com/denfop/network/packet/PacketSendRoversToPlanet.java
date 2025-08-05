@@ -9,7 +9,6 @@ import com.denfop.api.space.rovers.Rovers;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -20,12 +19,14 @@ import java.util.UUID;
 
 public class PacketSendRoversToPlanet implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketSendRoversToPlanet() {
 
     }
 
     public PacketSendRoversToPlanet(IResearchTable base, Player player, IBody iBody) {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
         customPacketBuffer.writeByte(getId());
         try {
             EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) base).getWorld());
@@ -38,7 +39,19 @@ public class PacketSendRoversToPlanet implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        IUCore.network.getClient().sendPacket(customPacketBuffer);
+
+        this.buffer = customPacketBuffer;
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -62,13 +75,11 @@ public class PacketSendRoversToPlanet implements IPacket {
                         IResearchTable tileEntityResearchTableSpace = (IResearchTable) tile;
                         if (tileEntityResearchTableSpace.getPlayer().equals(uuid)) {
                             IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(uuid);
-                            if (rocketLaunchPad != null) {
-                                TileEntityRocketLaunchPad entityRocketLaunchPad = (TileEntityRocketLaunchPad) world.getBlockEntity(rocketLaunchPad.getPos());
-                                if (entityRocketLaunchPad != null)
-                                    SpaceNet.instance.getResearchSystem().sendingOperation(new Rovers(
-                                            entityRocketLaunchPad.getRover(),
-                                            entityRocketLaunchPad.getRoverStack()
-                                    ), body1, tileEntityResearchTableSpace);
+                            if (rocketLaunchPad != null && rocketLaunchPad.getRover() != null) {
+                                SpaceNet.instance.getResearchSystem().sendingOperation(new Rovers(
+                                        rocketLaunchPad.getRover(),
+                                        rocketLaunchPad.getRoverStack()
+                                ), body1, tileEntityResearchTableSpace);
                             }
                         }
                     }

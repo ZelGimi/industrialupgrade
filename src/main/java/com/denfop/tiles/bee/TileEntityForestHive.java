@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityForestHive extends TileEntityHive {
 
     public TileEntityForestHive(BlockPos pos, BlockState state) {
-        super(BeeInit.FOREST_BEE,BlockHive.forest_hive, pos ,state);
+        super(BeeInit.FOREST_BEE, BlockHive.forest_hive, pos, state);
     }
 
     @Override

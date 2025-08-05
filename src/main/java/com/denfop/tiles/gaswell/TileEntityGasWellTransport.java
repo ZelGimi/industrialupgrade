@@ -12,7 +12,7 @@ public class TileEntityGasWellTransport extends TileEntityMultiBlockElement impl
 
 
     public TileEntityGasWellTransport(BlockPos pos, BlockState state) {
-        super( BlockGasWell.gas_well_transport, pos, state);
+        super(BlockGasWell.gas_well_transport, pos, state);
     }
 
     @Override

@@ -4,7 +4,7 @@ package com.denfop.integration.jei.plasticcreator;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,6 @@ public class PlasticCreatorHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<PlasticCreatorHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -42,7 +38,7 @@ public class PlasticCreatorHandler {
             ItemStack input, ItemStack input1, FluidStack input2,
             ItemStack output,
             BaseMachineRecipe container) {
-        PlasticCreatorHandler recipe = new PlasticCreatorHandler(input, input1, input2, output,container);
+        PlasticCreatorHandler recipe = new PlasticCreatorHandler(input, input1, input2, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -64,20 +60,23 @@ public class PlasticCreatorHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("plastic")) {
-        try {
-            addRecipe(
-                    container.input.getInputs().get(0).getInputs().get(0),
-                    container.input.getInputs().get(1).getInputs().get(0),
-                    container.input.getFluid(),
+            try {
+                addRecipe(
+                        container.input.getInputs().get(0).getInputs().get(0),
+                        container.input.getInputs().get(1).getInputs().get(0),
+                        container.input.getFluid(),
 
-                    container.getOutput().items.get(0), container
-            );
-        }catch (Exception e){
-            System.out.println(2);
-        }
+                        container.getOutput().items.get(0), container
+                );
+            } catch (Exception e) {
+                System.out.println(2);
+            }
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

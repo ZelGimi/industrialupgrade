@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/obsidian"
+    },
+    "D": {
+      "tag": "c:casings/cobalt"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/speed_birth_rate_2"
+  },
+  "show_notification": false
+}

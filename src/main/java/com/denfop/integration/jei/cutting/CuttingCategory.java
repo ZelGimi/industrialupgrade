@@ -52,11 +52,11 @@ public class CuttingCategory extends GuiIU implements IRecipeCategory<CuttingHan
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileCutting) BlockMoreMachine2.cutting.getDummyTe()), 1, true
         ));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
@@ -83,7 +83,7 @@ public class CuttingCategory extends GuiIU implements IRecipeCategory<CuttingHan
         this.componentList.add(progress_bar);
     }
 
-   @Nonnull
+    @Nonnull
     @Override
     public String getTitles() {
         return Localization.translate(ItemStackHelper.fromData(IUItem.machines_base2, 1, 8).getDescriptionId());
@@ -112,9 +112,9 @@ public class CuttingCategory extends GuiIU implements IRecipeCategory<CuttingHan
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
         bindTexture(getTexture());
     }
 
@@ -124,7 +124,7 @@ public class CuttingCategory extends GuiIU implements IRecipeCategory<CuttingHan
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
@@ -135,9 +135,8 @@ public class CuttingCategory extends GuiIU implements IRecipeCategory<CuttingHan
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine2.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIMachine2.png".toLowerCase());
     }
 
 

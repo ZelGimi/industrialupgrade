@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine/quad_macerator"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_622_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_52_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_602_element"
+    }
+  },
+  "pattern": [
+    "A A",
+    "DBE",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:photonic_machine/photonic_macerator"
+  },
+  "show_notification": false
+}

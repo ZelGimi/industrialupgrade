@@ -11,14 +11,16 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-public class PacketUpdateRelocator implements IPacket{
-    public PacketUpdateRelocator(){
+public class PacketUpdateRelocator implements IPacket {
+    private CustomPacketBuffer buffer;
+
+    public PacketUpdateRelocator() {
 
     }
 
     public PacketUpdateRelocator(Player player) {
-        if (player instanceof ServerPlayer serverPlayer){
-            CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        if (player instanceof ServerPlayer serverPlayer) {
+            CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
             Map<ResourceKey<Level>, Map<UUID, List<Point>>> map = RelocatorNetwork.instance.getWorldDataPoints();
             Map<ResourceKey<Level>, List<Point>> playerData = new HashMap<>();
 
@@ -39,8 +41,19 @@ public class PacketUpdateRelocator implements IPacket{
                     point.writeToBuffer(customPacketBuffer);
                 }
             }
-            IUCore.network.getServer().sendPacket(customPacketBuffer,serverPlayer);
+            this.buffer = customPacketBuffer;
+            IUCore.network.getServer().sendPacket(this, customPacketBuffer, serverPlayer);
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -61,7 +74,7 @@ public class PacketUpdateRelocator implements IPacket{
             for (int j = 0; j < pointsCount; j++) {
                 points.add(new Point(customPacketBuffer));
             }
-            RelocatorNetwork.instance.addPoints(entityPlayer,levelKey, points);
+            RelocatorNetwork.instance.addPoints(entityPlayer, levelKey, points);
         }
 
     }

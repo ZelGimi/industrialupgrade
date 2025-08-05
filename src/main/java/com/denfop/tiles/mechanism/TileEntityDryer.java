@@ -29,10 +29,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.*;
@@ -148,16 +147,13 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
         if (!this.getWorld().isClientSide && player
                 .getItemInHand(hand)
                 .getCapability(
-                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        Capabilities.FluidHandler.ITEM,
                         null
-                ).orElse((IFluidHandlerItem) player
-                        .getItemInHand(hand).getItem().initCapabilities(player
-                                .getItemInHand(hand), player
-                                .getItemInHand(hand).getTag())) != null && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
+                ) != null && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
 
 
             ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    this.getComp(Fluids.class).getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
             if (!level.isClientSide) {
                 new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
@@ -180,10 +176,10 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            outputSlot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank1.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -243,7 +239,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -252,7 +248,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

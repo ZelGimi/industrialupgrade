@@ -72,7 +72,6 @@ public class SlotInvSlot extends Slot {
     }
 
 
-
     public int getMaxStackSize() {
         return this.invSlot.getStackSizeLimit();
     }

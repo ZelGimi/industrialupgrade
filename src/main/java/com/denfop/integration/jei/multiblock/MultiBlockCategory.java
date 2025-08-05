@@ -36,7 +36,7 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     ) {
         super(((TileEntityMoonSpotter) BlockBaseMachine3.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 170
         );
@@ -52,7 +52,6 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -63,22 +62,23 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     @Override
     public void draw(MultiBlockHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         String name1 = Localization.translate("multiblock.jei1");
-        Minecraft   minecraft= Minecraft.getInstance();
+        Minecraft minecraft = Minecraft.getInstance();
         int xCenter = 140 / 2;
         int maxWidth = 140 - 20;
         int color = 4210752;
 
-        renderTextCentered(stack,minecraft, name1, xCenter, 25, maxWidth, color);
+        renderTextCentered(stack, minecraft, name1, xCenter, 25, maxWidth, color);
         int y = 2;
 
-        renderTextCentered(stack,minecraft, Localization.translate("multiblock.jei2"), xCenter, (57 + y * 25), maxWidth,
+        renderTextCentered(stack, minecraft, Localization.translate("multiblock.jei2"), xCenter, (57 + y * 25), maxWidth,
                 color
         );
 
-        renderTextCentered(stack,minecraft, Localization.translate("multiblock.jei3"), xCenter, (10 + y * 25) + 90, maxWidth,
+        renderTextCentered(stack, minecraft, Localization.translate("multiblock.jei3"), xCenter, (10 + y * 25) + 90, maxWidth,
                 color
         );
     }
+
     public void renderTextCentered(GuiGraphics stack, @Nonnull Minecraft minecraft, String text, int xCenter, int y, int maxWidth, int color) {
         Font fontRenderer = minecraft.font;
 
@@ -114,19 +114,18 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
         for (int i = 0; i < structure.itemStackList.size(); i++) {
             int x = 5 + (i % 6) * 20;
             int y = 45 + (i / 6) * 19;
-            builder.addSlot(RecipeIngredientRole.INPUT,x,y).addItemStack(structure.itemStackList.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, x, y).addItemStack(structure.itemStackList.get(i));
 
         }
         double y = 2;
 
-        builder.addSlot(RecipeIngredientRole.INPUT,61, (int) (5 + 27 + y * 23)).addItemStack(structure.itemStackList.get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 61, (int) (5 + 27 + y * 23)).addItemStack(structure.itemStackList.get(0));
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

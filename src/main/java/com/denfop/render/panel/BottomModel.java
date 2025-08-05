@@ -55,7 +55,7 @@ public class BottomModel<T extends Entity> extends EntityModel<T> {
                 break;
         }
 
-        this.glass =  partdefinition.addOrReplaceChild("glass", builder, PartPose.ZERO).bake(64, 64);
+        this.glass = partdefinition.addOrReplaceChild("glass", builder, PartPose.ZERO).bake(64, 64);
     }
 
 
@@ -65,7 +65,9 @@ public class BottomModel<T extends Entity> extends EntityModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack stack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        glass.render(stack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(PoseStack stack, VertexConsumer buffer, int i, int i1, int i2) {
+        glass.render(stack, buffer, i, i1, i2);
     }
+
+
 }

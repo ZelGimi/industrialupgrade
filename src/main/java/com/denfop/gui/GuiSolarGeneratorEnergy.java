@@ -10,8 +10,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,7 +20,7 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class GuiSolarGeneratorEnergy<T extends ContainerSolarGeneratorEnergy> extends GuiIU<ContainerSolarGeneratorEnergy> {
 
-    private static final ResourceLocation background = new ResourceLocation(
+    private static final ResourceLocation background = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/SunnariumGenerator.png".toLowerCase()
     );
@@ -61,7 +61,7 @@ public class GuiSolarGeneratorEnergy<T extends ContainerSolarGeneratorEnergy> ex
         int textY = (int) ((this.guiTop() + 6) / scale);
 
 
-       draw(poseStack, name, textX, textY, 4210752);
+        draw(poseStack, name, textX, textY, 4210752);
 
 
         pose.popPose();
@@ -114,7 +114,7 @@ public class GuiSolarGeneratorEnergy<T extends ContainerSolarGeneratorEnergy> ex
 
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, j + 3, k + 3, 0, 0, 10, 10);
     }
 

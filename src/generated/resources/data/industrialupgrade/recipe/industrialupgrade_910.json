@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_640_element"
+    },
+    "B": {
+      "tag": "c:ingots/superalloyrene"
+    },
+    "C": {
+      "item": "industrialupgrade:itemcore/admcore"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_639_element"
+    }
+  },
+  "pattern": [
+    " AB",
+    "ACD",
+    "BD "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_641_element"
+  },
+  "show_notification": false
+}

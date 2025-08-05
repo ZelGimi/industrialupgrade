@@ -30,16 +30,18 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityCollectorProductBee extends TileEntityInventory implements IUpgradableBlock {
 
@@ -57,14 +59,14 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     private final Fluids fluids;
     private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<List<TileEntityApiary>> list = new ArrayList<>();
     List<ChunkPos> chunks;
 
     public TileEntityCollectorProductBee(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.collector_product_bee,pos,state);
+        super(BlockBaseMachine3.collector_product_bee, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 1));
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTankExtract("tank", 10000, Fluids.fluidPredicate(FluidName.fluidhoney.getInstance().get()));
@@ -149,6 +151,7 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
             this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk));
         }
     }
+
 
     @Override
     @OnlyIn(Dist.CLIENT)

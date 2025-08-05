@@ -65,7 +65,7 @@ public enum ItemType implements ISubEnum, ICableItem {
         this.thickness = thickness;
         this.isOutput = isOutput;
         this.isItem = isItem;
-        this.texture = new ResourceLocation(
+        this.texture = ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "blocks/wiring/" + this.getMainPath() + "/" + this
                         .getNameCable()

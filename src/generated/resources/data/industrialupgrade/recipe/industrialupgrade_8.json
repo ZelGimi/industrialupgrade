@@ -1,0 +1,37 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    },
+    {
+      "tag": "c:ingots/cadmium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:baseblockingot1/cadmium"
+  }
+}

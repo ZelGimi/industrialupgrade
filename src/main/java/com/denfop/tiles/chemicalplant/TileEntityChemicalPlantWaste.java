@@ -14,8 +14,8 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityChemicalPlantWaste extends TileEntityMultiBlockElement implements IWaste {
 
@@ -23,7 +23,7 @@ public class TileEntityChemicalPlantWaste extends TileEntityMultiBlockElement im
     private final Fluids.InternalFluidTank fluidTank;
 
     public TileEntityChemicalPlantWaste(BlockPos pos, BlockState state) {
-        super(BlockChemicalPlant.chemical_plant_waste,pos,state);
+        super(BlockChemicalPlant.chemical_plant_waste, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluids", 10000);
         this.fluidTank.setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidcryogen.getInstance().get()));

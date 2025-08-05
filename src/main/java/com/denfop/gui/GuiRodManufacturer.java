@@ -49,8 +49,8 @@ public class GuiRodManufacturer<T extends ContainerRodManufacturer> extends GuiI
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
-        this.component.drawForeground(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        this.component.drawForeground(poseStack, par1, par2);
 
     }
 
@@ -63,7 +63,7 @@ public class GuiRodManufacturer<T extends ContainerRodManufacturer> extends GuiI
         if (progress > 0) {
             drawTexturedModalRect(poseStack, xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);
         }
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         this.component.drawBackground(poseStack, xoffset, yoffset);
 
@@ -71,7 +71,7 @@ public class GuiRodManufacturer<T extends ContainerRodManufacturer> extends GuiI
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

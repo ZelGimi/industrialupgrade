@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpSteamTurbineExchanger extends TileEntityBaseSteamTurbineExchanger {
 
     public TileEntityImpSteamTurbineExchanger(BlockPos pos, BlockState state) {
-        super(2,BlockSteamTurbine.steam_turbine_imp_exchanger,pos,state);
+        super(2, BlockSteamTurbine.steam_turbine_imp_exchanger, pos, state);
     }
 
     @Override

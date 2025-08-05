@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    },
+    "C": {
+      "tag": "c:plates/tin"
+    },
+    "D": {
+      "tag": "c:plates/copper"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_606_element"
+  },
+  "show_notification": false
+}

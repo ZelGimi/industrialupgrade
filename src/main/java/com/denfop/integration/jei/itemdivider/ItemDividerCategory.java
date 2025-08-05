@@ -34,8 +34,8 @@ public class ItemDividerCategory extends GuiIU implements IRecipeCategory<ItemDi
     private final ContainerFluidIntegrator container1;
     private final GuiComponent slots1;
     private final GuiComponent progress_bar;
-    private int progress;
     private final JeiInform jeiInform;
+    private int progress;
 
 
     public ItemDividerCategory(
@@ -44,7 +44,7 @@ public class ItemDividerCategory extends GuiIU implements IRecipeCategory<ItemDi
         super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
         );
@@ -85,19 +85,19 @@ public class ItemDividerCategory extends GuiIU implements IRecipeCategory<ItemDi
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, -50, 0);
-        this.slots1.drawBackground( stack, -50, 0);
+        this.slots.drawBackground(stack, -50, 0);
+        this.slots1.drawBackground(stack, -50, 0);
 
-        progress_bar.renderBar( stack, -35, 10, xScale);
+        progress_bar.renderBar(stack, -35, 10, xScale);
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack, this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ItemDividerHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 20 + 71,21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInputFluid().getFluid(), recipe.getInputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71,21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 20 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInputFluid().getFluid(), recipe.getInputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.INPUT, 30 - 20, 44).addItemStack(recipe.getInput());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 65, 44).addItemStack(recipe.getOutput());
 
@@ -109,7 +109,7 @@ public class ItemDividerCategory extends GuiIU implements IRecipeCategory<ItemDi
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -28,8 +28,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,7 +45,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     private int coef;
 
     public TileCooling(BlockPos pos, BlockState state) {
-        super(10000D, 14, 1,BlockBaseMachine3.cooling,pos,state);
+        super(10000D, 14, 1, BlockBaseMachine3.cooling, pos, state);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, tier));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);

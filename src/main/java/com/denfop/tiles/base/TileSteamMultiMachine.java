@@ -35,9 +35,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +58,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     private Fluids fluid = null;
 
     public TileSteamMultiMachine(int energyconsume, int OperationsPerTick, int type, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        this(1, energyconsume, OperationsPerTick, type,block,pos,state);
+        this(1, energyconsume, OperationsPerTick, type, block, pos, state);
     }
 
     public TileSteamMultiMachine(
@@ -67,7 +67,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
             int OperationsPerTick,
             int type,
             IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 1000));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 1));
@@ -176,7 +176,6 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     }
 
 
-
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
             switch (this.teBlock.getDefaultDrop()) {
@@ -205,20 +204,18 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand)) && fluid != null) {
             for (AbstractComponent component : componentList) {
                 if (component.onBlockActivated(player, hand))
                     return true;
             }
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluid.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluid.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public abstract EnumMultiMachine getMachine();

@@ -36,19 +36,20 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class MaceratorCategory extends GuiIU  implements IRecipeCategory<MaceratorHandler> {
+public class MaceratorCategory extends GuiIU implements IRecipeCategory<MaceratorHandler> {
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
     private final ContainerMultiMachine container1;
     private final GuiComponent progress_bar;
     private int progress = 0;
     private int energy = 0;
+
     public MaceratorCategory(IGuiHelper guiHelper, JeiInform jeiInform) {
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
@@ -81,9 +82,11 @@ public class MaceratorCategory extends GuiIU  implements IRecipeCategory<Macerat
     }
 
     @Override
-    public net.minecraft.network.chat.Component getTitle(){
+    public net.minecraft.network.chat.Component getTitle() {
         return super.getTitle();
-    };
+    }
+
+    ;
 
     @Override
     public RecipeType<MaceratorHandler> getRecipeType() {
@@ -111,7 +114,7 @@ public class MaceratorCategory extends GuiIU  implements IRecipeCategory<Macerat
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            layout.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            layout.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
@@ -131,13 +134,13 @@ public class MaceratorCategory extends GuiIU  implements IRecipeCategory<Macerat
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(poseStack,0, 0);
+        this.slots.drawBackground(poseStack, 0, 0);
 
-        progress_bar.renderBar(poseStack,0, 0, xScale);
-       GuiCore.bindTexture(getTexture());
+        progress_bar.renderBar(poseStack, 0, 0, xScale);
+        GuiCore.bindTexture(getTexture());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIMachine.png".toLowerCase());
     }
 }

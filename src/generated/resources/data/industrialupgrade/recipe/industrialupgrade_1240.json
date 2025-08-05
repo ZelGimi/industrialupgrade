@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_488_element"
+    },
+    "B": {
+      "tag": "c:plates/gadolinium"
+    },
+    "C": {
+      "tag": "c:plates/barium"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_491_element"
+  },
+  "show_notification": false
+}

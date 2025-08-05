@@ -10,13 +10,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerSteamTurbinePressure extends TileEntityBaseSteamTurbinePressure {
 
     public TileEntityPerSteamTurbinePressure(BlockPos pos, BlockState state) {
-        super(3, BlockSteamTurbine.steam_turbine_per_pressure,pos,state);
+        super(3, BlockSteamTurbine.steam_turbine_per_pressure, pos, state);
     }
 
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamTurbine.steam_turbine_per_pressure;
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.steam_turbine.getBlock(getTeBlock());

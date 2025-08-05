@@ -1,27 +1,20 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ImageScreen;
-import com.denfop.api.gui.MouseButton;
 import com.denfop.container.ContainerBase;
 import com.denfop.items.relocator.ItemStackRelocator;
 import com.denfop.items.relocator.Point;
 import com.denfop.network.packet.PacketAddRelocatorPoint;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 
 public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> extends GuiIU<ContainerBase<ItemStackRelocator>> {
 
     public EditBox textField;
-    boolean hoverAdd ;
+    boolean hoverAdd;
+
     public GuiRelocatorAddPoint(ContainerBase<ItemStackRelocator> guiContainer) {
         super(guiContainer);
         this.componentList.clear();
@@ -29,13 +22,12 @@ public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> e
         this.imageHeight = 77;
 
 
-
     }
 
     @Override
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        if (hoverAdd){
+        if (hoverAdd) {
             new PacketAddRelocatorPoint(minecraft.player, new Point(textField.getValue(), minecraft.player.blockPosition()));
 
         }
@@ -43,12 +35,13 @@ public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> e
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        return this.textField.charTyped(codePoint, modifiers) || super.charTyped(codePoint,modifiers);
+        return this.textField.charTyped(codePoint, modifiers) || super.charTyped(codePoint, modifiers);
     }
+
     @Override
     protected void init() {
         super.init();
-        this.textField = new EditBox(this.font, this.leftPos + 46, this.topPos + 28, 132-43, 12, Component.literal(""));
+        this.textField = new EditBox(this.font, this.leftPos + 46, this.topPos + 28, 132 - 43, 12, Component.literal(""));
         this.textField.setMaxLength(50);
         this.textField.setValue("");
         this.textField.setFocused(true);
@@ -77,7 +70,7 @@ public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> e
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
-        if (hoverAdd){
+        if (hoverAdd) {
             this.drawTexturedModalRect(poseStack, this.guiLeft + 79, this.guiTop + 40, 237, 0, 19, 20);
 
         }
@@ -101,7 +94,7 @@ public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> e
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirelocator_add.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirelocator_add.png");
     }
 
 }

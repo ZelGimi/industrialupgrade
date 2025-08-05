@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_217_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_121_element"
+    }
+  },
+  "pattern": [
+    " B ",
+    "DAD",
+    "DCD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine2/fisher"
+  },
+  "show_notification": false
+}

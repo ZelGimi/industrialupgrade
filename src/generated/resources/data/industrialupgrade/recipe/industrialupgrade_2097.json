@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "c:plates/hafniumcarbide"
+    },
+    "C": {
+      "tag": "c:plates/osmiridium"
+    },
+    "E": {
+      "tag": "c:plates/niobiumtitanium"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spaceupgrademodules/space_upgrademodule2"
+  },
+  "show_notification": false
+}

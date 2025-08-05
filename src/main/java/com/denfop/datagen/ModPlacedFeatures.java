@@ -5,7 +5,7 @@ import com.denfop.componets.Fluids;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -27,10 +27,10 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> PEAT_PLACED = registerKey("peat_placed");
 
     private static ResourceKey<PlacedFeature> registerKey(String name) {
-        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Constants.MOD_ID, name));
+        return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(Constants.MOD_ID, name));
     }
 
-    public static void bootstrap(BootstapContext<PlacedFeature> context) {
+    public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
         registerPlaced(context, RUB_TREE_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.RUB_TREE));
@@ -40,25 +40,25 @@ public class ModPlacedFeatures {
         registerPlaced(context, VOLCANO_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.VOLCANO));
         registerPlaced(context, OIL_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.OIL));
         registerPlaced(context, CALCIUM_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.CALCIUM),
-                PlacementUtils.HEIGHTMAP_TOP_SOLID,InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID, InSquarePlacement.spread(),
                 BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)),
                 BiomeFilter.biome());
         registerPlaced(context, SALTPETER_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.SALTPETER),
-                PlacementUtils.HEIGHTMAP_TOP_SOLID,InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID, InSquarePlacement.spread(),
                 BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)),
                 BiomeFilter.biome());
         registerPlaced(context, PEAT_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.PEAT),
-                PlacementUtils.HEIGHTMAP_TOP_SOLID,InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID, InSquarePlacement.spread(),
                 BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)),
                 BiomeFilter.biome());
     }
 
-    private static void registerPlaced(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key,
+    private static void registerPlaced(BootstrapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key,
                                        Holder<ConfiguredFeature<?, ?>> configuredFeature, PlacementModifier... modifiers) {
         context.register(key, new PlacedFeature(configuredFeature, List.of(modifiers)));
     }
 
-    private static void registerPlaced(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key,
+    private static void registerPlaced(BootstrapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key,
                                        Holder<ConfiguredFeature<?, ?>> configuredFeature) {
         context.register(key, new PlacedFeature(configuredFeature, List.of(
                 InSquarePlacement.spread(),

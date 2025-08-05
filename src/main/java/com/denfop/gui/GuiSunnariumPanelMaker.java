@@ -10,8 +10,8 @@ import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.tiles.mechanism.TileSunnariumPanelMaker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
@@ -56,7 +56,7 @@ public class GuiSunnariumPanelMaker<T extends ContainerDoubleElectricMachine> ex
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiSunnariumPanelMaker.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GuiSunnariumPanelMaker.png".toLowerCase());
     }
 
 }

@@ -17,6 +17,7 @@ import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGasPump;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGasPump;
 import com.denfop.invslot.InvSlot;
@@ -41,11 +42,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
     public int type;
 
     public TileGasPump(BlockPos pos, BlockState state) {
-        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidgas.getInstance().get()),BlockBaseMachine3.gas_pump,pos,state);
+        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidgas.getInstance().get()), BlockBaseMachine3.gas_pump, pos, state);
         this.containerslot = new InvSlotFluidByList(this,
                 InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidgas.getInstance().get()
@@ -208,7 +209,7 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
         ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
             CompoundTag nbt = ModUtils.nbt(drop);
             if (this.fluidTank.getFluidAmount() > 0) {
-                nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
+                nbt.put("fluid", this.fluidTank.getFluid().save(level.registryAccess(), new CompoundTag()));
             }
         }
         return drop;
@@ -227,8 +228,8 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
             this.maxcount = this.vein.getMaxCol();
             this.type = this.vein.getType().ordinal();
         }
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
             if (fluidStack != null) {
                 this.fluidTank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
             }
@@ -242,7 +243,7 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
         if (name.equals("fluidTank")) {
             try {
                 FluidTank fluidTank = (FluidTank) DecoderHandler.decode(is);
-                this.fluidTank.readFromNBT(fluidTank.writeToNBT(new CompoundTag()));
+                this.fluidTank.readFromNBT(is.registryAccess(), fluidTank.writeToNBT(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -277,8 +278,6 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
         }
         updateTileEntityField();
     }
-
-
 
 
     public void updateEntityServer() {
@@ -360,7 +359,6 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
     public String getInterruptSoundFile() {
         return "Machines/InterruptOne.ogg";
     }
-
 
 
     @Override

@@ -3,20 +3,21 @@ package com.denfop.items;
 import com.denfop.IUItem;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerUpgrade;
+import com.denfop.datacomponent.ContainerAdditionalItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GUIUpgrade;
 import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -28,33 +29,32 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
 
 
     public final ItemStack itemStack1;
-    public final ItemStack[] list;
+    public final List<ItemStack> list;
     public final int inventorySize;
+    public ContainerAdditionalItem containerAdditionItem;
     public List<FluidStack> fluidStackList;
 
     public ItemStackUpgradeModules(Player player, ItemStack stack) {
         super(player, stack, 0);
         this.itemStack1 = stack;
         inventorySize = 0;
-        this.list = new ItemStack[9];
-        Arrays.fill(this.list, ItemStack.EMPTY);
-        if (!player.level().isClientSide) {
-            CompoundTag nbt = ModUtils.nbt(containerStack);
-            ListTag contentList = nbt.getList("Items1", 10);
-
-            for (int i = 0; i < contentList.size(); ++i) {
-                CompoundTag slotNbt = contentList.getCompound(i);
-                int slot = slotNbt.getByte("Slot");
-                if (slot >= 0 && slot < this.list.length) {
-                    this.list[slot] = ItemStack.of(slotNbt);
-                }
-            }
+        this.containerAdditionItem = containerStack.get(DataComponentsInit.CONTAINER_ADDITIONAL);
+        if (this.containerAdditionItem == null) {
+            this.containerAdditionItem = ContainerAdditionalItem.EMPTY.updateItems(containerStack, new ArrayList<>());
+            containerStack.set(DataComponentsInit.CONTAINER_ADDITIONAL, containerAdditionItem);
         }
+        if (containerAdditionItem.listItem().isEmpty()) {
+            ItemStack[] object = new ItemStack[9];
+            Arrays.fill(object, ItemStack.EMPTY);
+            List<ItemStack> list = Arrays.asList(object);
+            containerAdditionItem = containerAdditionItem.updateItems(containerStack, list);
+        }
+        this.list = containerAdditionItem.listItem();
         this.fluidStackList = new ArrayList<>(Collections.nCopies(9, null));
         if (!(IUItem.ejectorUpgrade.is(itemStack1.getItem()) || IUItem.pullingUpgrade.is(itemStack1.getItem()))) {
             for (int i = 0; i < 9; i++) {
-                if (!this.list[i].isEmpty()) {
-                    IFluidHandlerItem handler = this.list[i].getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((CapabilityFluidHandlerItem) this.list[i].getItem().initCapabilities(this.list[i], this.list[i].getTag()));
+                if (!this.list.get(i).isEmpty()) {
+                    IFluidHandlerItem handler = this.list.get(i).getCapability(Capabilities.FluidHandler.ITEM, null);
                     final FluidStack containerFluid = handler.drain(2147483647, IFluidHandler.FluidAction.SIMULATE);
                     if (!containerFluid.isEmpty() && containerFluid.getAmount() > 0) {
                         fluidStackList.set(i, new FluidStack(containerFluid.getFluid(), 1));
@@ -69,20 +69,20 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
     }
 
     public ItemStack getItem(int slot) {
-        return slot >= inventorySize ? this.list[slot - inventorySize] : this.inventory[slot];
+        return slot >= inventorySize ? this.list.get(slot - inventorySize) : this.inventory.get(slot);
     }
 
     public ItemStack removeItem(int index, int amount) {
-        if (index < this.inventory.length) {
+        if (index < this.inventory.size()) {
             ItemStack stack;
-            if (index >= 0 && index < this.inventory.length && !ModUtils.isEmpty(stack = this.inventory[index])) {
+            if (index >= 0 && index < this.inventory.size() && !ModUtils.isEmpty(stack = this.inventory.get(index))) {
                 ItemStack ret;
                 if (amount >= ModUtils.getSize(stack)) {
                     ret = stack;
-                    this.inventory[index] = ModUtils.emptyStack;
+                    this.inventory.set(index, ModUtils.emptyStack);
                 } else {
                     ret = ModUtils.setSize(stack, amount);
-                    this.inventory[index] = ModUtils.decSize(stack, amount);
+                    this.inventory.set(index, ModUtils.decSize(stack, amount));
                 }
 
                 this.save();
@@ -92,15 +92,15 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
             }
         } else {
             ItemStack stack;
-            if (index - this.inventory.length < list.length && !ModUtils.isEmpty(stack =
-                    this.list[index - this.inventory.length])) {
+            if (index - this.inventory.size() < list.size() && !ModUtils.isEmpty(stack =
+                    this.list.get(index - this.inventory.size()))) {
                 ItemStack ret;
                 if (amount >= ModUtils.getSize(stack)) {
                     ret = stack;
-                    this.list[index - this.inventory.length] = ModUtils.emptyStack;
+                    this.list.set(index - this.inventory.size(), ModUtils.emptyStack);
                 } else {
                     ret = ModUtils.setSize(stack, amount);
-                    this.list[index - this.inventory.length] = ModUtils.decSize(stack, amount);
+                    this.list.set(index - this.inventory.size(), ModUtils.decSize(stack, amount));
                 }
 
                 this.save();
@@ -111,16 +111,20 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
         }
     }
 
+    public ContainerAdditionalItem getContainerAdditionItem() {
+        return containerAdditionItem;
+    }
+
     public void setItem(int slot, ItemStack stack) {
-        if (slot < this.inventory.length) {
+        if (slot < this.inventory.size()) {
             if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
                 stack = ModUtils.setSize(stack, this.getInventoryStackLimit());
             }
 
             if (ModUtils.isEmpty(stack)) {
-                this.inventory[slot] = ModUtils.emptyStack;
+                this.inventory.set(slot, ModUtils.emptyStack);
             } else {
-                this.inventory[slot] = stack;
+                this.inventory.set(slot, stack);
             }
         } else {
             if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
@@ -128,9 +132,9 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
             }
 
             if (ModUtils.isEmpty(stack)) {
-                this.list[slot - this.inventory.length] = ModUtils.emptyStack;
+                this.list.set(slot - this.inventory.size(), ModUtils.emptyStack);
             } else {
-                this.list[slot - this.inventory.length] = stack;
+                this.list.set(slot - this.inventory.size(), stack);
             }
         }
         this.save();
@@ -142,34 +146,22 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
             if (!this.cleared) {
                 boolean dropItself = false;
 
-                for (int i = 0; i < this.list.length; ++i) {
-                    if (this.isThisContainer(this.list[i])) {
-                        this.list[i] = null;
+                for (int i = 0; i < this.list.size(); ++i) {
+                    if (this.isThisContainer(this.list.get(i))) {
+                        this.list.set(i, ItemStack.EMPTY);
                         dropItself = true;
                     }
                 }
 
                 ListTag contentList = new ListTag();
 
-                int idx;
-                for (idx = 0; idx < this.list.length; ++idx) {
-                    if (!ModUtils.isEmpty(this.list[idx])) {
-                        CompoundTag nbt = new CompoundTag();
-                        nbt.putByte("Slot", (byte) idx);
-                        this.list[idx].save(nbt);
-                        contentList.add(nbt);
-                    }
-                }
-
-                ModUtils.nbt(this.containerStack).put("Items1", contentList);
-
-                this.containerStack = ModUtils.setSize(this.containerStack, 1);
+                this.containerAdditionItem = this.containerAdditionItem.updateItems(containerStack, list);
 
                 if (dropItself) {
                     ModUtils.dropAsEntity(this.player.level(), this.player.blockPosition(), this.containerStack);
                     this.clear();
                 } else {
-                    idx = this.getPlayerInventoryIndex();
+                    int idx = this.getPlayerInventoryIndex();
                     if (idx < -1) {
                         this.clear();
                     } else if (idx == -1) {
@@ -183,9 +175,6 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
         }
     }
 
-    public ItemStack[] getList() {
-        return list;
-    }
 
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {

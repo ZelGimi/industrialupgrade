@@ -38,25 +38,25 @@ public class GuiCompressor<T extends ContainerCompressor> extends GuiIU<Containe
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-     draw(poseStack, String.valueOf(this.container.base.getPressure()), 93, 60, ModUtils.convertRGBcolorToInt(15,
+        draw(poseStack, String.valueOf(this.container.base.getPressure()), 93, 60, ModUtils.convertRGBcolorToInt(15,
                 125, 205
         ));
     }
 
 
     @Override
-    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 57 - 26, 188, 43, 22, 22);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 80, this.guiTop + 57, 197, 26, 30, 15);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 57 + 20, 211, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 83, this.guiTop + 57 - 26, 188, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 80, this.guiTop + 57, 197, 26, 30, 15);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 83, this.guiTop + 57 + 20, 211, 43, 22, 22);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor5.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor5.png");
     }
 
 }

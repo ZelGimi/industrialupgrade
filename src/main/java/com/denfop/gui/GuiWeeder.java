@@ -17,10 +17,9 @@ public class GuiWeeder<T extends ContainerWeeder> extends GuiIU<ContainerWeeder>
     }
 
 
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

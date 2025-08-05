@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/bronze"
+    }
+  },
+  "pattern": [
+    "   ",
+    "A A",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/bronze_boots"
+  },
+  "show_notification": false
+}

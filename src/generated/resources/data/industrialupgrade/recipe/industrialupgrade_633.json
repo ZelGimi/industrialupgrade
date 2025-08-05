@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:itemspace/tethys_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/tethys_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/tethys_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/tethys_pebble"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:itemspace/tethys_boulder"
+  }
+}

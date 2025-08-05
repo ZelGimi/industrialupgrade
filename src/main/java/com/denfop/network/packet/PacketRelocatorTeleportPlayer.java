@@ -11,16 +11,29 @@ import java.util.UUID;
 
 public class PacketRelocatorTeleportPlayer implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketRelocatorTeleportPlayer() {
 
     }
 
     public PacketRelocatorTeleportPlayer(Player player, Point point) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(64);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(64, player.registryAccess());
         buffer.writeByte(getId());
         buffer.writeUUID(player.getUUID());
         point.writeToBuffer(buffer);
-        IUCore.network.getClient().sendPacket(buffer);
+        this.buffer = buffer;
+        IUCore.network.getClient().sendPacket(this, buffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

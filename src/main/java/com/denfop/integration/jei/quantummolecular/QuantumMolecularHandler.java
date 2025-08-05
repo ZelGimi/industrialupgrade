@@ -14,12 +14,13 @@ import java.util.List;
 public class QuantumMolecularHandler {
 
     private static final List<QuantumMolecularHandler> recipes = new ArrayList<>();
-    private final double energy;
-    private final ItemStack input, input1, output;
     public final String inputText;
     public final String inputText1;
     public final String outputText;
     public final String totalEU;
+    private final double energy;
+    private final ItemStack input, input1, output;
+
     public QuantumMolecularHandler(ItemStack input, ItemStack input1, ItemStack output, double energy) {
         this.input = input;
         this.input1 = input1;
@@ -28,7 +29,7 @@ public class QuantumMolecularHandler {
         String inputText = null;
         String inputText1 = null;
         if (!this.input.isEmpty() && !this.input1.isEmpty()) {
-            inputText =input.getDisplayName().getString();
+            inputText = input.getDisplayName().getString();
             inputText1 = input1.getDisplayName().getString();
         }
 

@@ -45,8 +45,8 @@ public class GuiWirelessMineralQuarry<T extends ContainerWirelessMineralQuarry> 
     }
 
     @Override
-protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         for (int i = 0, j = 0; i < 4; i++) {
             if (!this.container.base.invslot.get(i).isEmpty() && j < this.container.base.veinList.size()) {
@@ -64,14 +64,14 @@ protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final 
                                         ?
                                         "mb"
                                         : "") + "\n" + "x: " + (vein.getChunk().x << 4) + " z: " + (vein.getChunk().z << 4))
-                        .drawForeground(poseStack,par1, par2);
+                        .drawForeground(poseStack, par1, par2);
             }
         }
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
         for (int i = 0, j = 0; i < 4; i++) {
             if (!this.container.base.invslot.get(i).isEmpty() && j < this.container.base.veinList.size()) {
@@ -87,12 +87,12 @@ protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final 
             }
         }
 
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

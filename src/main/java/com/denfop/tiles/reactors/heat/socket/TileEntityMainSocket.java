@@ -12,15 +12,15 @@ import com.denfop.tiles.reactors.heat.ISocket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityMainSocket extends TileEntityMultiBlockElement implements ISocket {
 
     private final Energy energy;
 
     public TileEntityMainSocket(int Capacity, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.energy = this.addComponent(Energy.asBasicSource(this, Capacity, 14));
     }
 

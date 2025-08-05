@@ -11,8 +11,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -61,11 +61,12 @@ public class PollutionModel<T extends Entity> extends EntityModel<T> {
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight,
-                               int packedOverlay, float red, float green, float blue, float alpha) {
-        pollution.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+                               int packedOverlay, int col) {
+        pollution.render(poseStack, buffer, packedLight, packedOverlay, col);
     }
 
 }
+
 class ModelCord {
     private final int x;
     private final int z;

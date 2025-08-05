@@ -38,8 +38,8 @@ public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<Sm
     private final ContainerFluidIntegrator container1;
     private final GuiComponent slots1;
     private final GuiComponent progress_bar;
-    private int progress;
     JeiInform jeiInform;
+    private int progress;
 
     public SmelteryFurnaceCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
@@ -47,7 +47,7 @@ public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<Sm
         super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
         );
@@ -100,16 +100,15 @@ public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<Sm
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SmelteryFurnaceHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).setFluidRenderer(recipe.getOutputFluid().getAmount(),true,16, 16).addFluidStack(recipe.getOutputFluid().getFluid(),recipe.getOutputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).setFluidRenderer(recipe.getOutputFluid().getAmount(), true, 16, 16).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.INPUT, 60 - 20, 44 - 0).addItemStack(recipe.getInput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

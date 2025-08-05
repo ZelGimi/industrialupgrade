@@ -2,40 +2,30 @@ package com.denfop.items;
 
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
 
-import java.util.function.Supplier;
-
-public class ItemBucket extends BucketItem implements IItemTab {
+public class ItemBucket extends BucketItem implements IItemTab, ItemFluidCapabilities {
     private final FluidName fluidName;
     private String nameItem;
 
-    public ItemBucket(Supplier<? extends Fluid> supplier, FluidName fluidName) {
+    public ItemBucket(Fluid supplier, FluidName fluidName) {
         super(supplier, new Properties().setNoRepair().stacksTo(1));
-        this.fluidName=fluidName;
+        this.fluidName = fluidName;
     }
 
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.fluidCellTab;
     }
-    @Override
-    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, @Nullable CompoundTag nbt) {
-        return new FluidBucketWrapper(stack);
-    }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -51,6 +41,11 @@ public class ItemBucket extends BucketItem implements IItemTab {
             this.nameItem = pathBuilder.toString();
         }
 
-        return "item.forge.bucketFilled."+fluidName.getName().toLowerCase();
+        return "item.forge.bucketFilled." + fluidName.getName().toLowerCase();
+    }
+
+    @Override
+    public IFluidHandlerItem initCapabilities(ItemStack stack) {
+        return new FluidBucketWrapper(stack);
     }
 }

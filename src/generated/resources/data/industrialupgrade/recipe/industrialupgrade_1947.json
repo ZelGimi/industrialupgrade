@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:logs"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:corewater/core_wind"
+  },
+  "show_notification": false
+}

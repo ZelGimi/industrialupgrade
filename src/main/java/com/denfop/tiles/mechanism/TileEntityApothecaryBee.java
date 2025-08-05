@@ -24,11 +24,13 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityApothecaryBee extends TileEntityInventory {
 
@@ -36,15 +38,15 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
     private static final int RADIUS = 4;
     public final ComponentBaseEnergy energy;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<List<TileEntityApiary>> list = new ArrayList<>();
     List<ChunkPos> chunks;
     private ComponentVisibleArea visible;
 
     public TileEntityApothecaryBee(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.apothecary_bee,pos,state);
+        super(BlockBaseMachine3.apothecary_bee, pos, state);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 20000));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }

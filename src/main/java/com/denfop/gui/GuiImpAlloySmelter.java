@@ -45,16 +45,15 @@ public class GuiImpAlloySmelter<T extends ContainerImpAlloySmelter> extends GuiI
         componentList.add(new GuiComponent(this, 0, 0, getComponent(),
                 new Component<>(new ComponentRenderInventory(
                         EnumTypeComponentSlot.SLOT,
-                        Collections.singletonList(this.container.base.input_slot)
+                        Collections.singletonList(((TileEntityImpAlloySmelter) this.container.base).input_slot)
                 ))
         ));
     }
 
 
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

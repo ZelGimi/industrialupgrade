@@ -25,8 +25,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -42,7 +42,7 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
     private boolean doublescrap;
 
     public TileEntityAutoOpenBox(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.auto_open_box,pos,state);
+        super(BlockBaseMachine3.auto_open_box, pos, state);
         this.slot = new InvSlotOutput(this, 15);
         this.slot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override

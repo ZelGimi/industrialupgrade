@@ -1,54 +1,54 @@
 package com.denfop.network;
 
-import com.denfop.IUCore;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EnumTypePacket;
 import com.denfop.network.packet.IPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.UUID;
+import java.lang.reflect.InvocationTargetException;
 
 @OnlyIn(Dist.CLIENT)
 public class NetworkManagerClient extends NetworkManager {
 
 
     public NetworkManagerClient() {
-        super();
+
 
     }
 
     @Override
-    public void sendPacket(CustomPacketBuffer buffer) {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server == null) {
-            this.sendPacket(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(Minecraft.getInstance().player.getX(),Minecraft.getInstance().player.getY(),Minecraft.getInstance().player.getZ(),2,Minecraft.getInstance().player.level().dimension()))
-                    , buffer);
-            return;
-        }
-        UUID playerUUID = IUCore.proxy.getPlayerInstance().getUUID();
-        ServerPlayer serverPlayer = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(playerUUID);
-        this.sendPacket(PacketDistributor.PLAYER.with(() -> serverPlayer), buffer);
+    public void sendPacket(IPacket buffer) {
+        PacketDistributor.sendToServer(makePacket(buffer));
 
     }
 
-    public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
-        Minecraft.getInstance().getConnection().getConnection().send(makePacket(NetworkDirection.PLAY_TO_SERVER, buffer));
+    public void sendPacket(IPacket packet, Player player, CustomPacketBuffer buffer) {
+        PacketDistributor.sendToServer(makePacket(packet, buffer));
     }
-    public void onPacketData(CustomPacketBuffer is,  byte type) {
+
+    public void onPacketData(CustomPacketBuffer is, byte type) {
         Player player = Minecraft.getInstance().player;
         IPacket packet = this.packetMap.get(type);
+        try {
+            packet = packet.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
         if (packet != null && packet.getPacketType() == EnumTypePacket.SERVER) {
             packet.readPacket(is, player);
         }
     }
+
     protected boolean isClient() {
         return true;
     }

@@ -98,7 +98,7 @@ public class BlockTropicalRubWood<T extends Enum<T> & ISubEnum> extends BlockCor
                 int chance = 1;
                 if (!(p_60538_.getLevel().random.nextFloat() > chance)) {
                     Item item = this.getMultiData().getItem(RubberWoodState.plain_y.getId());
-                    spawnAsEntity(p_60538_.getLevel(),new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), new ItemStack(item, 1));
+                    spawnAsEntity(p_60538_.getLevel(), new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), new ItemStack(item, 1));
                     if (!p_60537_.getValue(stateProperty).isPlain() && p_60538_.getLevel().random.nextInt(6) == 0) {
                         spawnAsEntity(p_60538_.getLevel(), new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), IUItem.latex.copy());
                     }

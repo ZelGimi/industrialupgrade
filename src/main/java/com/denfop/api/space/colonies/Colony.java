@@ -9,10 +9,12 @@ import com.denfop.api.space.colonies.building.*;
 import com.denfop.api.space.colonies.enums.EnumHouses;
 import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -155,7 +157,7 @@ public class Colony implements IColony {
         }
     }
 
-    public Colony(CompoundTag tag, UUID fakeplayer) {
+    public Colony(CompoundTag tag, UUID fakeplayer, HolderLookup.Provider p_323640_) {
         this.body = SpaceNet.instance.getBodyFromName(tag.getString("name"));
         this.fakeplayer = fakeplayer;
         this.enumProblemsList = new LinkedList<>();
@@ -178,7 +180,7 @@ public class Colony implements IColony {
                     new OxygenFactory(nbt, this);
                     break;
                 case 7:
-                    new StorageBuilding(nbt, this);
+                    new StorageBuilding(nbt, p_323640_, this);
                     break;
                 case 0:
                     new ColonyHouse(nbt, this);
@@ -218,8 +220,8 @@ public class Colony implements IColony {
     }
 
     @Override
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+    public CustomPacketBuffer writePacket(RegistryAccess registryAccess) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(registryAccess);
         customPacketBuffer.writeString(body.getName());
         customPacketBuffer.writeShort(this.level);
         customPacketBuffer.writeInt(this.experience);
@@ -359,6 +361,7 @@ public class Colony implements IColony {
             if (toDelete > 0 && this.workers == 0) {
                 toDelete -= 1;
             }
+
 
             enumProblemsList.clear();
         } else {
@@ -690,7 +693,7 @@ public class Colony implements IColony {
 
 
     @Override
-    public CompoundTag writeNBT(final CompoundTag tag) {
+    public CompoundTag writeNBT(final CompoundTag tag, HolderLookup.Provider p_323640_) {
         tag.putString("name", this.body.getName());
         tag.putInt("workers", (short) this.workers);
         tag.putShort("needWorkers", this.needWorkers);
@@ -704,7 +707,7 @@ public class Colony implements IColony {
         tag.putInt("experience", experience);
         ListTag tagList = new ListTag();
         for (IColonyBuilding iColonyBuilding : this.list) {
-            tagList.add(iColonyBuilding.writeTag(new CompoundTag()));
+            tagList.add(iColonyBuilding.writeTag(new CompoundTag(), p_323640_));
         }
         tag.put("building", tagList);
         return tag;

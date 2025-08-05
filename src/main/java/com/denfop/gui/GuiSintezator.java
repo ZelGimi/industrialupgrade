@@ -13,7 +13,7 @@ public class GuiSintezator<T extends ContainerSinSolarPanel> extends GuiCore<Con
     private static ResourceLocation tex;
 
     static {
-        GuiSintezator.tex = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUI_Sintezator_Slots.png".toLowerCase());
+        GuiSintezator.tex = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GUI_Sintezator_Slots.png".toLowerCase());
     }
 
     private final ContainerSinSolarPanel container;
@@ -26,7 +26,7 @@ public class GuiSintezator<T extends ContainerSinSolarPanel> extends GuiCore<Con
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         final String storageString = Localization.translate("gui.SuperSolarPanel.storage") + ": ";
         final String maxOutputString = Localization.translate("gui.SuperSolarPanel.maxOutput") + ": ";
         final String generatingString = Localization.translate("gui.SuperSolarPanel.generating") + ": ";
@@ -36,7 +36,7 @@ public class GuiSintezator<T extends ContainerSinSolarPanel> extends GuiCore<Con
         String maxstorage_2 = ModUtils.getString(this.container.tileentity.storage);
         String tooltip;
         String output = ModUtils.getString(this.container.tileentity.production);
-       draw(poseStack, maxOutputString + output + (" " + energyPerTickString), 54, 40, 13487565);
+        draw(poseStack, maxOutputString + output + (" " + energyPerTickString), 54, 40, 13487565);
         draw(poseStack, tierString + this.container.tileentity.machineTire, 54, 20, 13487565);
 
         String generation = ModUtils.getString(this.container.tileentity.generating);
@@ -55,9 +55,9 @@ public class GuiSintezator<T extends ContainerSinSolarPanel> extends GuiCore<Con
 
     protected void renderBg(GuiGraphics poseStack, final float f, final int i, final int j) {
 
-       RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-       bindTexture(GuiSintezator.tex);
-        final int h =guiLeft;
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        bindTexture(GuiSintezator.tex);
+        final int h = guiLeft;
         final int k = guiTop;
         this.drawTexturedModalRect(poseStack, h, k, 0, 0, this.imageWidth, this.imageHeight);
 

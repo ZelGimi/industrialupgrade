@@ -17,7 +17,7 @@ import java.util.List;
 
 public class GuiElectricBlock<T extends ContainerElectricBlock> extends GuiIU<ContainerElectricBlock> {
 
-    private static final ResourceLocation background = new ResourceLocation(
+    private static final ResourceLocation background = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/GUIElectricBlockEuRf.png".toLowerCase()
     );
@@ -39,19 +39,19 @@ public class GuiElectricBlock<T extends ContainerElectricBlock> extends GuiIU<Co
     @Override
     protected ResourceLocation getTexture() {
         if (this.container.base.energy.getSourceTier() == 1) {
-            return new ResourceLocation(
+            return ResourceLocation.tryBuild(
                     Constants.MOD_ID,
                     "textures/gui/GUIElectricBlockEuRf1.png".toLowerCase()
             );
         }
         if (this.container.base.energy.getSourceTier() == 2) {
-            return new ResourceLocation(
+            return ResourceLocation.tryBuild(
                     Constants.MOD_ID,
                     "textures/gui/GUIElectricBlockEuRf2.png".toLowerCase()
             );
         }
 
-        return new ResourceLocation(
+        return ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "textures/gui/GUIElectricBlockEuRf.png".toLowerCase()
         );
@@ -60,7 +60,7 @@ public class GuiElectricBlock<T extends ContainerElectricBlock> extends GuiIU<Co
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-       draw(poseStack, this.name, (int) ((float) (this.imageWidth - this.getStringWidth(this.name)) / 2), 6,
+        draw(poseStack, this.name, (int) ((float) (this.imageWidth - this.getStringWidth(this.name)) / 2), 6,
                 4210752
         );
 
@@ -82,7 +82,6 @@ public class GuiElectricBlock<T extends ContainerElectricBlock> extends GuiIU<Co
     }
 
 
-
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture(getTexture());
@@ -90,7 +89,7 @@ public class GuiElectricBlock<T extends ContainerElectricBlock> extends GuiIU<Co
         int k = guiTop;
         drawTexturedModalRect(poseStack, j, k, 0, 0, this.imageWidth, this.imageHeight);
 
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, j + 3, k + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
         if (this.container.base.energy.getEnergy() > 0.0D) {

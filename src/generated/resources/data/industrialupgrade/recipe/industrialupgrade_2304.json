@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "c:plates/woods"
+    },
+    "C": {
+      "tag": "c:plates/bloodstone"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:double_molecular"
+  },
+  "show_notification": false
+}

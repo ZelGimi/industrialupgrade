@@ -14,7 +14,8 @@ import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.Fluids;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.UpgradeItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.IProperties;
@@ -30,6 +31,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
@@ -57,11 +59,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -95,7 +96,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
     private String nameItem;
 
     public ItemEnergyInstruments(EnumTypeInstruments type, EnumVarietyInstruments variety, String name) {
-        super(new Properties().setNoRepair().stacksTo(1));
+        super(new Properties().setNoRepair().stacksTo(1).component(DataComponentsInit.UPGRADE_ITEM, UpgradeItem.EMPTY).component(DataComponentsInit.ENERGY, 0D).component(DataComponentsInit.MODE, 0).attributes(DiggerItem.createAttributes(Tiers.IRON, Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getSpeed())));
         this.name = name;
         this.type = type;
         this.name_type = type.getType_name() == null ? type.name().toLowerCase() : type.getType_name();
@@ -130,8 +131,8 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         return maxLevel;
     }
 
-    @Override
-    public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
+
+    public boolean onDestroyed(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         Block block = state.getBlock();
         if (block.equals(Blocks.AIR)) {
             return false;
@@ -143,7 +144,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
             }
 
             if (!world.isClientSide) {
-                if (ForgeHooks.onBlockBreakEvent(world, ((ServerPlayer) entity).gameMode.getGameModeForPlayer(), (ServerPlayer) entity, pos) == -1) {
+                if (CommonHooks.fireBlockBreak(world, ((ServerPlayer) entity).gameMode.getGameModeForPlayer(), (ServerPlayer) entity, pos, state).isCanceled()) {
                     return false;
                 }
 
@@ -164,8 +165,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                     );
                     int random = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RANDOM, stack, upgradeItemInforms) ?
                             UpgradeSystem.system.getModules(EnumInfoUpgradeModules.RANDOM, stack, upgradeItemInforms).number : 0;
-                    CompoundTag nbt = ModUtils.nbt(stack);
-                    boolean black_list = nbt.getBoolean("black");
+                    boolean black_list = stack.getOrDefault(DataComponentsInit.BLACK_LIST, false);
 
                     block.destroy(world, pos, state);
                     block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
@@ -249,7 +249,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                             }
                         }
                     } else {
-                        if (nbt.getBoolean("black")) {
+                        if (stack.getOrDefault(DataComponentsInit.BLACK_LIST, false)) {
                             for (ItemEntity item : items) {
                                 if (!entity.level().isClientSide) {
                                     item.remove(Entity.RemovalReason.KILLED);
@@ -293,26 +293,24 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (IUCore.keyboard.isSaveModeKeyDown(player)) {
-            CompoundTag nbt = ModUtils.nbt(itemStack);
-            boolean save = !nbt.getBoolean("save");
+            boolean save = !itemStack.getOrDefault(DataComponentsInit.SAVE, false);
             if (!worldIn.isClientSide)
                 CommonProxy.sendPlayerMessage(
                         player,
                         ChatFormatting.GREEN + Localization.translate("message.savemode") +
                                 (save ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
                 );
-            nbt.putBoolean("save", save);
+            itemStack.set(DataComponentsInit.SAVE, save);
         }
         if (IUCore.keyboard.isBlackListModeKeyDown(player)) {
-            CompoundTag nbt = ModUtils.nbt(itemStack);
-            boolean black = !nbt.getBoolean("black");
+            boolean black = !itemStack.getOrDefault(DataComponentsInit.BLACK_LIST, false);
             if (!worldIn.isClientSide)
                 CommonProxy.sendPlayerMessage(
                         player,
                         ChatFormatting.GREEN + Localization.translate("message.blacklist") +
                                 (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
                 );
-            nbt.putBoolean("black", black);
+            itemStack.set(DataComponentsInit.BLACK_LIST, black);
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
             int toolMode = readToolMode(itemStack) + 1;
@@ -330,7 +328,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                 IUCore.proxy.messagePlayer(
                         player,
                         ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                                + operation.getTextFormatting() +  Localization.translate(operation.getName_mode())
+                                + operation.getTextFormatting() + Localization.translate(operation.getName_mode())
                 );
             }
             switch (operation) {
@@ -369,14 +367,14 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public int readToolMode(ItemStack itemstack) {
-        CompoundTag nbt = ModUtils.nbt(itemstack);
-        int toolMode = nbt.getInt("toolMode");
+        int toolMode = itemstack.get(DataComponentsInit.MODE);
 
         if (toolMode < 0 || toolMode >= this.operations.size()) {
             toolMode = 0;
@@ -386,11 +384,8 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean par5) {
-        CompoundTag nbt = ModUtils.nbt(itemStack);
-
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(world, this, itemStack, itemStack.getTag()));
+            NeoForge.EVENT_BUS.post(new EventItemBlackListLoad(world, this, itemStack, ModUtils.nbt(itemStack)));
         }
 
         if (entity instanceof Player) {
@@ -400,26 +395,16 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                         .is(itemStack.getItem())) {
 
 
-                    CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+                    CustomPacketBuffer growingBuffer = new CustomPacketBuffer(entity.registryAccess());
 
                     growingBuffer.writeByte(1);
 
                     growingBuffer.flip();
-                    NetworkHooks.openScreen((ServerPlayer) entity, getInventory((Player) entity, itemStack), buf -> buf.writeBytes(growingBuffer));
-
+                    ((Player) entity).openMenu(getInventory((Player) entity, itemStack), buf -> buf.writeBytes(growingBuffer));
                 }
             }
 
         }
-    }
-
-
-
-    public boolean isCorrectToolForDrops(BlockState p_150816_) {
-        for (TagKey<Block> blockTagKey : this.item_tools)
-            if (p_150816_.is(blockTagKey))
-                return true;
-        return super.isCorrectToolForDrops(p_150816_);
     }
 
 
@@ -466,18 +451,19 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         ));
     }
 
+
     @Override
-    public void appendHoverText(ItemStack par1ItemStack, @Nullable Level p_41422_, List<Component> par3List, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack par1ItemStack, @Nullable TooltipContext p_41422_, List<Component> par3List, TooltipFlag p_41424_) {
         super.appendHoverText(par1ItemStack, p_41422_, par3List, p_41424_);
         int toolMode = readToolMode(par1ItemStack);
         EnumOperations operations = this.operations.get(toolMode);
         par3List.add(Component.literal(ChatFormatting.GOLD + Localization.translate("message.text.mode") + ": "
                 + operations.getTextFormatting() + Localization.translate(operations.getName_mode())));
         par3List.add(Component.translatable(operations.getDescription()));
-        if (ModUtils.nbt(par1ItemStack).getBoolean("save")) {
+        if (par1ItemStack.getOrDefault(DataComponentsInit.SAVE, false)) {
             par3List.add(Component.literal(ChatFormatting.GREEN + Localization.translate("iu.savemode_allow")));
         }
-        if (ModUtils.nbt(par1ItemStack).getBoolean("black")) {
+        if (par1ItemStack.getOrDefault(DataComponentsInit.BLACK_LIST, false)) {
             par3List.add(Component.literal(ChatFormatting.DARK_GRAY + Localization.translate("iu.blacklist_allow")));
         }
         List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(par1ItemStack);
@@ -689,16 +675,16 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         }
 
         boolean lowPower = false;
-        boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
-        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
+        boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), stack) > 0;
+        int fortune = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), stack);
 
         int Yy;
         Yy = yRange > 0 ? yRange - 1 : 0;
-        CompoundTag nbt = ModUtils.nbt(stack);
+
         float energy = energy(stack, upgradeItemInforms);
 
 
-        boolean save = nbt.getBoolean("save");
+        boolean save = stack.getOrDefault(DataComponentsInit.SAVE, false);
         if (!player.isCreative()) {
             for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
                 for (int yPos = y - yRange + Yy; yPos <= y + yRange + Yy; yPos++) {
@@ -723,7 +709,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                                     );
                                 }
                                 if (!silktouch) {
-                                    ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos_block, fortune, stack
+                                    ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos_block, player, stack
                                             , localBlock));
                                 }
 
@@ -752,7 +738,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                         );
                     }
                     if (!silktouch) {
-                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, fortune, stack
+                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, player, stack
                                 , localBlock));
                     }
 
@@ -785,7 +771,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                         );
                     }
                     if (!silktouch) {
-                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, fortune, stack
+                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, player, stack
                                 , localBlock));
                     }
 
@@ -805,10 +791,12 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
     }
 
 
-    public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull Player player) {
+    public boolean mineBlock(ItemStack stack, Level p_41417_, BlockState state, BlockPos pos, LivingEntity p_41420_) {
+        if (!(p_41420_ instanceof Player player)) {
+            return false;
+        }
         EnumOperations operations = this.operations.get(readToolMode(stack));
         Level world = player.level();
-        BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         BlockHitResult mop = RetraceDiggingUtils.retrace(player);
         List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(stack);
@@ -818,14 +806,13 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         boolean generator = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.GENERATOR, stack, upgradeItemInforms);
         int random = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RANDOM, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.RANDOM, stack, upgradeItemInforms).number : 0;
-        CompoundTag nbt = ModUtils.nbt(stack);
-        boolean black_list = nbt.getBoolean("black");
+        boolean black_list = stack.getOrDefault(DataComponentsInit.BLACK_LIST, false);
         final List<String> list = UpgradeSystem.system.getBlackList(stack);
         switch (operations) {
             case DEFAULT:
 
                 if (block == Blocks.AIR) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
 
                 byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
@@ -837,7 +824,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
             case BIGHOLES:
 
                 if (block.equals(Blocks.AIR)) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
 
 
@@ -866,7 +853,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                 );
             case MEGAHOLES:
                 if (block.equals(Blocks.AIR)) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
 
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
@@ -895,7 +882,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
             case ULTRAHOLES:
 
                 if (block.equals(Blocks.AIR)) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
@@ -921,12 +908,11 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                 );
             case ORE:
                 if (block.equals(Blocks.AIR)) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
-
-                boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
-                int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
-
+                boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), stack) > 0;
+                int fortune = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), stack);
+                CompoundTag nbt = ModUtils.nbt(stack);
                 nbt.putInt("ore", 1);
                 float energy = energy(stack, upgradeItemInforms);
                 if (!mop.getType().equals(BlockHitResult.Type.MISS)) {
@@ -984,7 +970,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
             case TUNNEL:
 
                 if (block == Blocks.AIR) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
 
 
@@ -994,7 +980,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                 );
             case SHEARS:
                 if (block == Blocks.AIR) {
-                    return super.onBlockStartBreak(stack, pos, player);
+                    return super.mineBlock(stack, p_41417_, state, pos, player);
                 }
                 if (block.builtInRegistryHolder().is(BlockTags.LEAVES)) {
                     return break_shears(world, block, mop, player, pos, stack, upgradeItemInforms, smelter, comb, mac,
@@ -1079,7 +1065,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        Direction direction = getPlayerPOVHitResult(world,player, ClipContext.Fluid.NONE).getDirection();
+        Direction direction = getPlayerPOVHitResult(world, player, ClipContext.Fluid.NONE).getDirection();
         switch (direction.ordinal()) {
 
             case 0:
@@ -1100,8 +1086,8 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         }
 
         boolean lowPower = false;
-        boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
-        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
+        boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), stack) > 0;
+        int fortune = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), stack);
 
         CompoundTag nbt = ModUtils.nbt(stack);
         float energy = energy(stack, upgradeItemInforms);
@@ -1144,7 +1130,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                                     );
                                 }
                                 if (!silktouch) {
-                                    ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos_block, fortune, stack
+                                    ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos_block, player, stack
                                             , localBlock));
                                 }
 
@@ -1177,7 +1163,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                         );
                     }
                     if (!silktouch) {
-                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, fortune, stack
+                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, player, stack
                                 , localBlock));
                     }
 
@@ -1210,7 +1196,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                         );
                     }
                     if (!silktouch) {
-                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, fortune, stack
+                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos, player, stack
                                 , localBlock));
                     }
 
@@ -1273,7 +1259,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
 
                                     }
                                     if (!silktouch) {
-                                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos_block, fortune, stack
+                                        ExperienceUtils.addPlayerXP(player, getExperience(state, world, pos_block, player, stack
                                                 , localBlock));
                                     }
 
@@ -1305,11 +1291,11 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
             BlockState state,
             Level world,
             BlockPos pos_block,
-            int fortune,
+            Entity entity,
             ItemStack stack,
             final Block localBlock
     ) {
-        int col = localBlock.getExpDrop(state, world, world.random, pos_block, fortune, 0);
+        int col = localBlock.getExpDrop(state, world, pos_block, null, entity, stack);
         col *= UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EXPERIENCE, stack) ?
                 (UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EXPERIENCE, stack).number * 0.5 + 1) : 1;
         return col;
@@ -1374,7 +1360,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
 
             if (!world.isClientSide) {
 
-                if (ForgeHooks.onBlockBreakEvent(world, ((ServerPlayer) entity).gameMode.getGameModeForPlayer(), (ServerPlayer) entity, pos) == -1) {
+                if (CommonHooks.fireBlockBreak(world, ((ServerPlayer) entity).gameMode.getGameModeForPlayer(), (ServerPlayer) entity, pos, state).isCanceled()) {
                     return false;
                 }
 
@@ -1522,9 +1508,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
     }
 
     public void saveToolMode(ItemStack itemstack, int toolMode) {
-        CompoundTag nbt = ModUtils.nbt(itemstack);
-        nbt.putInt("toolMode", toolMode);
-        itemstack.setTag(nbt);
+        itemstack.set(DataComponentsInit.MODE, toolMode);
     }
 
 
@@ -1596,10 +1580,9 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack stack, ClientLevel level, LivingEntity entity, int p174679, String property) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
         String[] mode = {"", "Zelen", "Demon", "Dark", "Cold", "Ender", "Ukraine", "Fire", "Snow", "Taiga", "Desert", "Emerald"};
         for (int i = 0; i < mode.length; i++)
-            if (nbt.getString("mode").equals(mode[i]))
+            if (stack.getOrDefault(DataComponentsInit.SKIN, "").equals(mode[i]))
                 return i;
         return 0;
     }
@@ -1609,13 +1592,9 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         if (this.allowedIn(p_41391_)) {
             ItemStack stack = new ItemStack(this, 1);
 
-            CompoundTag nbt = ModUtils.nbt(stack);
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
-            nbt.putInt("ID_Item", Integer.MAX_VALUE);
             items.add(stack);
             ItemStack itemstack = new ItemStack(this, 1);
-            nbt = ModUtils.nbt(itemstack);
-            nbt.putInt("ID_Item", Integer.MAX_VALUE);
             items.add(itemstack);
         }
     }

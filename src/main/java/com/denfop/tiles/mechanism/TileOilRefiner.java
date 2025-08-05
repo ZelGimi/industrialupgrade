@@ -44,11 +44,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -103,10 +103,11 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
         }
         return ret;
     }
+
     @Override
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
-        CompoundTag compoundTag =  super.writeToNBT(nbttagcompound);
-        compoundTag.putInt("levelMech",levelMech);
+        CompoundTag compoundTag = super.writeToNBT(nbttagcompound);
+        compoundTag.putInt("levelMech", levelMech);
         return compoundTag;
     }
 
@@ -141,7 +142,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -151,7 +152,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank2.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -161,7 +162,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank3.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank3.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/advanced_charging_re_battery"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BCB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:battery/charging_energy_crystal"
+  },
+  "show_notification": false
+}

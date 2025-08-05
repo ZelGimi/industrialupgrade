@@ -11,9 +11,16 @@ public class ContainerResearchTableSpace extends ContainerFullInv<TileEntityRese
 
     public ContainerResearchTableSpace(TileEntityResearchTableSpace tileEntityResearchTableSpace, Player var1) {
         super(var1, tileEntityResearchTableSpace, 255);
-        this.addSlotToContainer(new SlotInvSlot(tileEntityResearchTableSpace.slotLens, 0, 197+9, 233));
+        this.addSlotToContainer(new SlotInvSlot(tileEntityResearchTableSpace.slotLens, 0, 197 + 9, 233));
         this.player = var1;
     }
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        this.base.timer = 5;
+    }
+
     protected void addPlayerInventorySlots(Inventory inventory, int width, int height) {
         int n4 = (width - 162) / 2;
 
@@ -25,12 +32,6 @@ public class ContainerResearchTableSpace extends ContainerFullInv<TileEntityRese
         }
 
     }
-    @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-        this.base.timer = 5;
-    }
-
 
 
 }

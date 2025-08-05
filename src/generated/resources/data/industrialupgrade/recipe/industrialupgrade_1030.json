@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:basemachine3/substitute"
+    },
+    "E": {
+      "item": "industrialupgrade:cutter"
+    }
+  },
+  "pattern": [
+    "EEE",
+    " B ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/energy_remover"
+  },
+  "show_notification": false
+}

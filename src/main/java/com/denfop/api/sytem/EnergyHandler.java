@@ -1,27 +1,27 @@
 package com.denfop.api.sytem;
 
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 public class EnergyHandler {
 
     public EnergyHandler() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.LevelTickEvent event) {
-        if (event.level.isClientSide) {
+    public void tick(final LevelTickEvent.Post event) {
+        if (event.getLevel().isClientSide) {
             return;
         }
-        if (event.phase == TickEvent.Phase.END) {
-            for (IGlobalNet globalNet : EnergyBase.listGlobal) {
-                globalNet.TickEnd(event.level.dimension());
-            }
+
+        for (IGlobalNet globalNet : EnergyBase.listGlobal) {
+            globalNet.TickEnd(event.getLevel().dimension());
         }
+
     }
 
     @SubscribeEvent

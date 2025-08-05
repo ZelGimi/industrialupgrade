@@ -11,6 +11,7 @@ public class ItemBlockSpace1 extends ItemBlockCore<BlockSpace1.Type> implements 
     public ItemBlockSpace1(BlockCore p_40565_, BlockSpace1.Type element) {
         super(p_40565_, element, new Properties(), IUCore.OreTab);
     }
+
     @Override
     public Item getItem() {
         return this;
@@ -19,6 +20,6 @@ public class ItemBlockSpace1 extends ItemBlockCore<BlockSpace1.Type> implements 
     @Override
     public String[] getTags() {
         String name = getElement().getName().split("_")[1];
-        return new String[]{"forge:ores/" + name, "forge:ores"};
+        return new String[]{"c:ores/" + name, "c:ores"};
     }
 }

@@ -29,9 +29,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     List<Channel> publicChannel = new ArrayList<>();
 
     public TileEntityTesseract(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.tesseract,pos,state);
+        super(BlockBaseMachine3.tesseract, pos, state);
         this.energy = this.addComponent(new Energy(this, Integer.MAX_VALUE, ModUtils.allFacings, ModUtils.allFacings, 14));
         this.fluids = this.addComponent(new Fluids(this));
         tank = this.fluids.addTank("tank", 64000);
@@ -80,7 +80,6 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
         return new GuiTesseract((ContainerTesseract) menu);
 
     }
-
 
 
     @Override
@@ -125,14 +124,14 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventLoadTesseract(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new EventLoadTesseract(this, this.getWorld()));
         }
     }
 
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnLoadTesseract(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new EventUnLoadTesseract(this, this.getWorld()));
         }
         super.onUnloaded();
     }
@@ -262,7 +261,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                 }
                 this.channel = new Channel(maxValue1, this, TypeMode.NONE, TypeChannel.NONE, false);
                 channelList.add(channel);
-                MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 break;
 
             case 2:
@@ -274,11 +273,11 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                 while (integerList2.contains(maxValue2) || maxValue2 < channel.getChannel()) {
                     maxValue2++;
                 }
-                MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                 channelList.remove(channel);
                 this.channel = new Channel(maxValue2, this, channel.getMode(), channel.getTypeChannel(), channel.isPrivate());
                 channelList.add(channel);
-                MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 break;
 
             case 3:
@@ -291,11 +290,11 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                     maxValue3--;
                 }
                 if (maxValue3 != -1) {
-                    MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                    NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                     channelList.remove(channel);
                     this.channel = new Channel(maxValue3, this, channel.getMode(), channel.getTypeChannel(), channel.isPrivate());
                     channelList.add(channel);
-                    MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                    NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 }
                 break;
 
@@ -304,7 +303,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                 var2 *= 10;
                 var2 = Math.round(var2);
                 int mode4 = ((int) var2) % 2;
-                MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                 if (mode4 == 0) {
                     switch (this.channel.getMode()) {
                         case INPUT:
@@ -336,7 +335,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                             break;
                     }
                 }
-                MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 break;
 
             case 5:
@@ -344,7 +343,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                 var2 *= 10;
                 var2 = Math.round(var2);
                 int mode5 = ((int) var2) % 3;
-                MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                 switch (mode5) {
                     case 0:
                         this.channel.setTypeChannel((this.channel.getTypeChannel() == TypeChannel.ENERGY)
@@ -363,25 +362,25 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
                         break;
                 }
 
-                MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 break;
 
             case 6:
-                MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                 this.channel.setPrivate(!this.channel.isPrivate());
-                MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 break;
 
             case 7:
-                MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                 this.channel.setActive(!this.channel.isActive());
-                MinecraftForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventAdderChannel(channel, this.getWorld()));
                 break;
             case 8:
                 this.channel = null;
                 break;
             case 9:
-                MinecraftForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
+                NeoForge.EVENT_BUS.post(new EventRemoverChannel(channel, this.getWorld()));
                 channelList.remove(channel);
                 channel = null;
                 break;

@@ -37,9 +37,9 @@ public class ConverterCategory extends GuiIU implements IRecipeCategory<Converte
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileCompressor) BlockSimpleMachine.compressor_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiconvertersolidmatter.png"), 3, 5,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiconvertersolidmatter.png"), 3, 5,
                 168,
                 135
         );
@@ -76,30 +76,29 @@ public class ConverterCategory extends GuiIU implements IRecipeCategory<Converte
         }
 
         bindTexture(getTexture());
-        drawTexturedModalRect( stack,116, 110, 176,
+        drawTexturedModalRect(stack, 116, 110, 176,
                 81, energylevel, 11
         );
 
 
-        drawTexturedModalRect( stack,78, 46, 176, 24, xScale, 16);
-        drawTexturedModalRect( stack,(166) - xScale, 46, 208 - xScale, 24, xScale, 16);
+        drawTexturedModalRect(stack, 78, 46, 176, 24, xScale, 16);
+        drawTexturedModalRect(stack, (166) - xScale, 46, 208 - xScale, 24, xScale, 16);
 
-        drawTexturedModalRect( stack,114, 9 + 1, 177, 42, 16, xScale);
+        drawTexturedModalRect(stack, 114, 9 + 1, 177, 42, 16, xScale);
 
-        drawTexturedModalRect( stack,114, 98 - xScale, 177, 74 - xScale, 16, xScale);
+        drawTexturedModalRect(stack, 114, 98 - xScale, 177, 74 - xScale, 16, xScale);
 
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ConverterHandler recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 113, 45).addItemStack(recipe.getOutput());
-        builder.addSlot(RecipeIngredientRole.INPUT,  47, 45).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 47, 45).addItemStack(recipe.getOutput());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiconvertersolidmatter.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiconvertersolidmatter.png");
     }
 
 

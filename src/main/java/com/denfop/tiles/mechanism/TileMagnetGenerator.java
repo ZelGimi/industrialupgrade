@@ -27,8 +27,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -144,8 +144,8 @@ public class TileMagnetGenerator extends TileElectricMachine {
             }
             return;
         }
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnMagneticGeneratorParticles(level,pos,level.random);
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnMagneticGeneratorParticles(level, pos, level.random);
         }
         if (this.getWorld().getGameTime() % 20 == 0) {
             timer--;

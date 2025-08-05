@@ -18,7 +18,7 @@ public class TileBioExtruder extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.Extruding.usagePerTick,
                 EnumMultiMachine.Extruding.lenghtOperation,
-                4,BlockBaseMachine3.bio_extruder,pos,state
+                4, BlockBaseMachine3.bio_extruder, pos, state
         );
     }
 

@@ -1,6 +1,7 @@
 package com.denfop.api.gasvein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 
@@ -26,7 +27,7 @@ public interface IGasVein {
 
     CompoundTag writeTag();
 
-    CustomPacketBuffer writePacket();
+    CustomPacketBuffer writePacket(RegistryAccess registryAccess);
 
 
     boolean isFind();

@@ -52,7 +52,7 @@ public class PressureNetGlobal implements IPressureNet {
     public IPressureTile getSubTile(final Level var1, final BlockPos var2) {
         final PressureNetLocal local = getForWorld(var1);
         if (local != null) {
-            return local.getSubTile(var1,var2);
+            return local.getSubTile(var1, var2);
         }
         return null;
     }

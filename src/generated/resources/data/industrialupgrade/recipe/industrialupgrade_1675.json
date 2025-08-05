@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tin"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:tools/treetap"
+    },
+    "D": {
+      "item": "industrialupgrade:upgrade_casing"
+    }
+  },
+  "pattern": [
+    "ACA",
+    " B ",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:upgrades/fluid_pulling"
+  },
+  "show_notification": false
+}

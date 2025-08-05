@@ -27,9 +27,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -95,11 +94,11 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank1.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                this.fluidTank2.readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -113,7 +112,7 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -131,7 +130,7 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
             try {
                 FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank2 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                    this.fluidTank2.readFromNBT(is.registryAccess(), fluidTank2.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -239,16 +238,13 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
         if (!this.getWorld().isClientSide && player
                 .getItemInHand(hand)
                 .getCapability(
-                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        Capabilities.FluidHandler.ITEM,
                         null
-                ).orElse((IFluidHandlerItem) player
-                        .getItemInHand(hand).getItem().initCapabilities(player
-                                .getItemInHand(hand), player
-                                .getItemInHand(hand).getTag())) != null && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
+                ) != null && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
 
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
 

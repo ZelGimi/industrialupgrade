@@ -1,0 +1,16 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:transformer_iu/uev"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_213_element"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:transformer_iu/umhv"
+  }
+}

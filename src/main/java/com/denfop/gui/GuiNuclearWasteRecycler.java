@@ -24,9 +24,8 @@ public class GuiNuclearWasteRecycler<T extends ContainerNuclearWasteRecycler> ex
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
-
 
 
 }

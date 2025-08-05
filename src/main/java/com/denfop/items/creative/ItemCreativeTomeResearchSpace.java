@@ -8,7 +8,6 @@ import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.Data;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,15 +17,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ItemCreativeTomeResearchSpace extends Item implements IItemTab {
     private String nameItem;
@@ -40,10 +38,12 @@ public class ItemCreativeTomeResearchSpace extends Item implements IItemTab {
         tooltip.add(Component.literal(Localization.translate("iu.tome_research1")));
         tooltip.add(Component.literal(Localization.translate("iu.tome_research2")));
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -61,6 +61,7 @@ public class ItemCreativeTomeResearchSpace extends Item implements IItemTab {
 
         return this.nameItem;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(
             @Nonnull final Level world,

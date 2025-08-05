@@ -46,8 +46,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -85,7 +85,7 @@ public class TileAutoSpawner extends TileElectricMachine
     public int fireAspect;
 
     public TileAutoSpawner(BlockPos pos, BlockState state) {
-        super(150000, 14, 27,BlockBaseMachine3.spawner,pos,state);
+        super(150000, 14, 27, BlockBaseMachine3.spawner, pos, state);
         this.module_slot = new InvSlotModules(this);
         this.module_upgrade = new InvSlotUpgradeModule(this);
         this.progress = new int[module_slot.size()];
@@ -182,7 +182,6 @@ public class TileAutoSpawner extends TileElectricMachine
     }
 
 
-
     @Override
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
@@ -216,7 +215,7 @@ public class TileAutoSpawner extends TileElectricMachine
                         this.energy2 -= this.costenergy * 4;
                     }
                 }
-                this.tempprogress[i] = (int) (this.maxprogress[i] -  (this.maxprogress[i] * this.speed  / 100D));
+                this.tempprogress[i] = (int) (this.maxprogress[i] - (this.maxprogress[i] * this.speed / 100D));
                 this.tempprogress[i] = Math.max(1, this.tempprogress[i]);
                 if (this.progress[i] >= this.tempprogress[i]) {
                     this.progress[i] = 0;
@@ -226,7 +225,7 @@ public class TileAutoSpawner extends TileElectricMachine
 
                     final LivingEntity entity = this.mobUtils[i];
                     dropItemFromEntity(entity, player.damageSources().playerAttack(player), this.loot_Tables[i], i);
-                    int exp = Math.max(entity.getExperienceReward(), 1);
+                    int exp = Math.max(entity.getExperienceReward((ServerLevel) level, entity), 1);
                     this.exp.addEnergy((exp + this.experience * exp / 100D));
 
 
@@ -250,16 +249,16 @@ public class TileAutoSpawner extends TileElectricMachine
                 }
                 if (lootcontext$builder == null) {
                     lootcontext$builder = this.lootContext[index] = (new LootParams.Builder((ServerLevel) this.level))
-                            .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
-                            .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_KILLER_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(),pos.getY(),pos.getZ()));
-                    List<LootPool> lootPools = ((LootTableAccessor)table).getPools();
+                            .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ATTACKING_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
+                            .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+                    List<LootPool> lootPools = ((LootTableAccessor) table).getPools();
                     this.lootPoolList[index] = lootPools;
                 }
                 final LootParams context = lootcontext$builder.create(LootContextParamSets.ENTITY);
 
                 List<ItemStack> list = Lists.newArrayList();
                 for (int j = 0; j < this.spawn; j++) {
-                    table.getRandomItems(context,list::add);
+                    table.getRandomItems(context, list::add);
                 }
                 for (ItemStack item : list) {
 
@@ -267,10 +266,10 @@ public class TileAutoSpawner extends TileElectricMachine
                     ItemStack smelt = ItemStack.EMPTY;
                     if (this.fireAspect > 0) {
                         MachineRecipe recipe = Recipes.recipes.getRecipeMachineMultiOutput(Recipes.recipes.getRecipe("furnace"), Recipes.recipes.getRecipeList("furnace"), false, Collections.singletonList(item));
-                       if (recipe != null) {
-                           smelt = recipe.getRecipe().output.items.get(0).copy();
-                           smelt.setCount(item.getCount());
-                       }
+                        if (recipe != null) {
+                            smelt = recipe.getRecipe().output.items.get(0).copy();
+                            smelt.setCount(item.getCount());
+                        }
                     }
                     if (smelt.isEmpty()) {
                         this.outputSlot.add(item);

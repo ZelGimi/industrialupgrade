@@ -22,8 +22,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class TileEntityAutoDigger extends TileEntityInventory {
     public double energyconsume;
 
     public TileEntityAutoDigger(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.auto_digger,pos,state);
+        super(BlockBaseMachine3.auto_digger, pos, state);
         this.chance = 0;
         this.col = 1;
         this.furnace = false;
@@ -112,7 +112,6 @@ public class TileEntityAutoDigger extends TileEntityInventory {
     public void setBaseMachineRecipe(int slotid, final BaseMachineRecipe baseMachineRecipe) {
         this.baseMachineRecipe[slotid] = baseMachineRecipe;
     }
-
 
 
     @Override

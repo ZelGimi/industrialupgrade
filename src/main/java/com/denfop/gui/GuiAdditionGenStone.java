@@ -34,7 +34,7 @@ public class GuiAdditionGenStone<T extends ContainerAdditionGenStone> extends Gu
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
         int xMin = guiLeft;
-        int yMin =guiTop;
+        int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 62 && x <= 79 && y >= 63 && y <= 80) {
@@ -59,38 +59,38 @@ public class GuiAdditionGenStone<T extends ContainerAdditionGenStone> extends Gu
                         , mouseY);
     }
 
-    protected void drawBackgroundAndTitle(GuiGraphics poseStack,  float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,  float f, int x, int y) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         int xoffset = guiLeft;
-        int yoffset =guiTop;
+        int yoffset = guiTop;
         bindTexture(getTexture());
 
 
         if (this.container.base.output == null) {
-           this.drawItemStack(poseStack, container.base.granite, 64,
-                     28
+            this.drawItemStack(poseStack, container.base.granite, 64,
+                    28
             );
         } else {
             switch (this.container.base.getMode()) {
                 case GRANITE:
-                    this.drawItemStack(poseStack,container.base.granite, 64,
-                             28
+                    this.drawItemStack(poseStack, container.base.granite, 64,
+                            28
                     );
                     break;
                 case DIORITE:
-                    this.drawItemStack(poseStack,container.base.diorite, 64,
+                    this.drawItemStack(poseStack, container.base.diorite, 64,
                             28
                     );
                     break;
                 case ANDESITE:
-                    this.drawItemStack(poseStack,container.base.andesite, 64,
+                    this.drawItemStack(poseStack, container.base.andesite, 64,
                             28
                     );
                     break;
@@ -100,17 +100,17 @@ public class GuiAdditionGenStone<T extends ContainerAdditionGenStone> extends Gu
 
         switch (this.container.base.getMode()) {
             case GRANITE:
-                this.drawItemStack(poseStack,container.base.granite,  63,
-                         64
+                this.drawItemStack(poseStack, container.base.granite, 63,
+                        64
                 );
                 break;
             case DIORITE:
-                this.drawItemStack(poseStack,container.base.diorite,  63,
+                this.drawItemStack(poseStack, container.base.diorite, 63,
                         64
                 );
                 break;
             case ANDESITE:
-                this.drawItemStack(poseStack,container.base.andesite, 63,
+                this.drawItemStack(poseStack, container.base.andesite, 63,
                         64
                 );
                 break;
@@ -120,7 +120,7 @@ public class GuiAdditionGenStone<T extends ContainerAdditionGenStone> extends Gu
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
     }
 
 }

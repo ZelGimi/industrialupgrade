@@ -14,8 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityBaseCompressor extends TileEntityMultiBlockElement implements ICompressor, IUpdatableTileEvent {
 
@@ -23,7 +23,7 @@ public class TileEntityBaseCompressor extends TileEntityMultiBlockElement implem
     private int pressure;
 
     public TileEntityBaseCompressor(int level, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.level = level;
         this.pressure = 1;
 

@@ -39,15 +39,15 @@ public class MoonSpooterCategory extends GuiIU implements IRecipeCategory<MoonSp
     private final IDrawableStatic bg;
     private final ContainerMoonSpotter container1;
     private final GuiComponent progress_bar;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform jeiInform;
 
     public MoonSpooterCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityMoonSpotter) BlockBaseMachine3.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -73,7 +73,6 @@ public class MoonSpooterCategory extends GuiIU implements IRecipeCategory<MoonSp
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -91,10 +90,10 @@ public class MoonSpooterCategory extends GuiIU implements IRecipeCategory<MoonSp
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar(stack,0, 0, xScale);
-       bindTexture(getTexture());
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        bindTexture(getTexture());
     }
 
     @Override
@@ -108,7 +107,7 @@ public class MoonSpooterCategory extends GuiIU implements IRecipeCategory<MoonSp
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
     }
 
     @Override
@@ -117,7 +116,7 @@ public class MoonSpooterCategory extends GuiIU implements IRecipeCategory<MoonSp
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

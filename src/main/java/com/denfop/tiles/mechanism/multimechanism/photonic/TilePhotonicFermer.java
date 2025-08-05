@@ -33,24 +33,28 @@ public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
             }
         };
     }
+
+    public int getFertilizer() {
+        return col;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        this.cold.storage = 0;
+    }
+
     @Override
     public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         this.col = customPacketBuffer.readInt();
     }
-    public int getFertilizer(){
-        return  col;
-    }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer packetBuffer = super.writeContainerPacket();
         packetBuffer.writeInt(col);
         return packetBuffer;
-    }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        this.cold.storage = 0;
     }
 
     @Override

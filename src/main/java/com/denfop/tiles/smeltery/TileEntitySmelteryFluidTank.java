@@ -8,7 +8,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement implements ITank {
 
@@ -16,7 +16,7 @@ public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement imp
     private final Fluids.InternalFluidTank fluidTank;
 
     public TileEntitySmelteryFluidTank(BlockPos pos, BlockState state) {
-        super(BlockSmeltery.smeltery_tank,pos,state);
+        super(BlockSmeltery.smeltery_tank, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTankExtract("fluids", 10000);
     }
@@ -31,7 +31,6 @@ public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement imp
     public boolean hasOwnInventory() {
         return true;
     }
-
 
 
     @Override

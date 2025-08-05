@@ -32,11 +32,11 @@ public class GuiSoilAnalyzer<T extends ContainerSoilAnalyzer> extends GuiIU<Cont
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         if (!this.container.base.analyzed) {
             new AdvArea(this, 28, 24, 147, 73)
                     .withTooltip(Localization.translate("gui.MolecularTransformer.progress") + ": " + (int) (this.container.base.progress.getBar() * 100) + " %")
-                    .drawForeground(poseStack,par1, par2);
+                    .drawForeground(poseStack, par1, par2);
         } else {
             Radiation radiation = this.container.base.radiation;
             if (radiation == null) {
@@ -53,10 +53,10 @@ public class GuiSoilAnalyzer<T extends ContainerSoilAnalyzer> extends GuiIU<Cont
                         ("\n" + Localization.translate(
                                 "radiation" +
                                         ".info1") + "\n" +
-                                Localization.translate(MobEffects.HUNGER.getDescriptionId()) + "\n" +
-                                Localization.translate(MobEffects.BLINDNESS.getDescriptionId()) + "\n" +
-                                Localization.translate(MobEffects.MOVEMENT_SLOWDOWN.getDescriptionId()) + "\n" +
-                                Localization.translate(MobEffects.POISON.getDescriptionId())) : "")
+                                Localization.translate(MobEffects.HUNGER.value().getDescriptionId()) + "\n" +
+                                Localization.translate(MobEffects.BLINDNESS.value().getDescriptionId()) + "\n" +
+                                Localization.translate(MobEffects.MOVEMENT_SLOWDOWN.value().getDescriptionId()) + "\n" +
+                                Localization.translate(MobEffects.POISON.value().getDescriptionId())) : "")
 
                         + (this.container.base.radiation.getLevel().ordinal() == 3 ?
                         ("\n" + Localization.translate(
@@ -66,7 +66,7 @@ public class GuiSoilAnalyzer<T extends ContainerSoilAnalyzer> extends GuiIU<Cont
                         ("\n" + Localization.translate(
                                 "radiation.info2") + "\n" +
                                 Localization.translate(IUPotion.radiation.getDescriptionId()) + "\n" +
-                                Localization.translate(MobEffects.WITHER.getDescriptionId())) : "")
+                                Localization.translate(MobEffects.WITHER.value().getDescriptionId())) : "")
                         + ((this.container.base.radiation.getLevel().ordinal() == 2) ?
                         ("\n" + Localization.translate(
                                 "radiation.info3")) : "")
@@ -76,7 +76,7 @@ public class GuiSoilAnalyzer<T extends ContainerSoilAnalyzer> extends GuiIU<Cont
                         + ("\n" + Localization.translate(
                         "radiation.info4") + "\n" +
                         getBlockStack(BlockBaseMachine3.radiation_purifier)
-                        .getDisplayName().getString())
+                                .getDisplayName().getString())
 
                 ).drawForeground(poseStack, par1
                         , par2);
@@ -103,7 +103,7 @@ public class GuiSoilAnalyzer<T extends ContainerSoilAnalyzer> extends GuiIU<Cont
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.container.base.radiation == null) {
             this.drawTexturedRect(poseStack, 38, 91, 5, 13, 181, 17);
         } else {
@@ -137,7 +137,7 @@ public class GuiSoilAnalyzer<T extends ContainerSoilAnalyzer> extends GuiIU<Cont
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisoilanalyzer.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisoilanalyzer.png");
     }
 
 }

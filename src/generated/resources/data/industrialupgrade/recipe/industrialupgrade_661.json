@@ -1,0 +1,45 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 7,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/quantumcircuit"
+    },
+    "D": {
+      "item": "industrialupgrade:armour/advjetpack"
+    },
+    "F": {
+      "item": "industrialupgrade:battery/re_battery"
+    },
+    "T": {
+      "tag": "c:doubleplate/muntsa"
+    }
+  },
+  "pattern": [
+    "TCT",
+    "CDC",
+    "BFB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/impjetpack"
+  },
+  "show_notification": false
+}

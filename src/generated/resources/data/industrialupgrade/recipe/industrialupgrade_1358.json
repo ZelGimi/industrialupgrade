@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:cyclotron/cyclotron_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_352_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
+  },
+  "pattern": [
+    " C ",
+    "DAD",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:cyclotron/cyclotron_positrons"
+  },
+  "show_notification": false
+}

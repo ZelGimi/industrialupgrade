@@ -12,12 +12,14 @@ import java.io.IOException;
 
 public class PacketItemStackUpdate implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketItemStackUpdate() {
 
     }
 
     public PacketItemStackUpdate(String name, Object o, ServerPlayer playerMP) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(playerMP.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeString(name);
         try {
@@ -25,7 +27,18 @@ public class PacketItemStackUpdate implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        IUCore.network.getServer().sendPacket(buffer, playerMP);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer, playerMP);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -43,15 +56,15 @@ public class PacketItemStackUpdate implements IPacket {
                 if (!(is.readerIndex() < is.writerIndex())) {
 
                     Level world = entityPlayer.level();
-                    apply(stack, bytes);
+                    apply(stack, bytes, world);
                 }
             }
         }
     }
 
 
-    private void apply(ItemStack stack, byte[] is) {
-        final CustomPacketBuffer buf = new CustomPacketBuffer();
+    private void apply(ItemStack stack, byte[] is, Level world) {
+        final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
         buf.writeBytes(is);
 
         ((IUpdatableItemStackEvent) stack.getItem()).updateField(buf.readString(), buf, stack);

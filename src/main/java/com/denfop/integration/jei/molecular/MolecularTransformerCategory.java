@@ -26,14 +26,15 @@ import javax.annotation.Nonnull;
 public class MolecularTransformerCategory extends GuiIU implements IRecipeCategory<MolecularTransformerHandler> {
 
     private final IDrawableStatic bg;
-    private int progress = 0;
     private final JeiInform jeiInform;
+    private int progress = 0;
+
     public MolecularTransformerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileModuleMachine) BlockBaseMachine.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew" +
                         ".png"), 10, 49, 203,
                 73
         );
@@ -63,14 +64,14 @@ public class MolecularTransformerCategory extends GuiIU implements IRecipeCatego
             progress = 0;
         }
         bindTexture();
-        drawTexturedModalRect(stack,23 - 10, 75 - 49, 242, 32, 14, (int) xScale);
+        drawTexturedModalRect(stack, 23 - 10, 75 - 49, 242, 32, 14, (int) xScale);
         int y = 5;
         int x = 49;
-        drawSplitString( stack, recipe.inputText, x, y, 200 - x, 16777215);
+        drawSplitString(stack, recipe.inputText, x, y, 200 - x, 16777215);
         y += 18;
-        drawSplitString( stack, recipe.outputText, x, y, 200 - x, 16777215);
+        drawSplitString(stack, recipe.outputText, x, y, 200 - x, 16777215);
         y += 18;
-       draw( stack,recipe.totalEU, x, y, 16777215);
+        draw(stack, recipe.totalEU, x, y, 16777215);
 
     }
 
@@ -81,14 +82,13 @@ public class MolecularTransformerCategory extends GuiIU implements IRecipeCatego
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MolecularTransformerHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,12,8).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,12,48).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 12, 8).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 12, 48).addItemStack(recipe.getOutput());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew.png");
     }
 
 

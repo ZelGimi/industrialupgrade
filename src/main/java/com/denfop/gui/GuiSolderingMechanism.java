@@ -8,8 +8,8 @@ import com.denfop.utils.Keyboard;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -170,7 +170,7 @@ public class GuiSolderingMechanism<T extends ContainerSolderingMechanism> extend
             this.drawTexturedModalRect(poseStack, this.guiLeft + pointer - 1, this.guiTop + 68, 177, 25, 4, 4);
 
         }
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
@@ -180,7 +180,7 @@ public class GuiSolderingMechanism<T extends ContainerSolderingMechanism> extend
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guisolderingmechanism.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guisolderingmechanism.png");
     }
 
 }

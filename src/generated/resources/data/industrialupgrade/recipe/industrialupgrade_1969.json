@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/ferromanganese"
+    },
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_496_element"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine3/oak_tank"
+    },
+    "E": {
+      "tag": "c:plates/iridium"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "EDE",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:mini_smeltery/mini_smeltery"
+  },
+  "show_notification": false
+}

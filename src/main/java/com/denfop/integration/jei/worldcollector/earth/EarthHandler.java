@@ -63,7 +63,7 @@ public class EarthHandler {
 
                         container.getOutput().items.get(0), container.getOutput().metadata.getDouble("need")
                 );
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(2);
             }
         }

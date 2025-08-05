@@ -14,8 +14,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiReplicator<T extends ContainerReplicator> extends GuiIU<ContainerReplicator> {
@@ -84,7 +84,7 @@ public class GuiReplicator<T extends ContainerReplicator> extends GuiIU<Containe
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIReplicator.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIReplicator.png".toLowerCase());
     }
 
     @Override
@@ -108,7 +108,7 @@ public class GuiReplicator<T extends ContainerReplicator> extends GuiIU<Containe
                     te.getMode() == TileBaseReplicator.Mode.SINGLE ? "" : ">"
             );
         }
-       draw(poseStack, data, 49,
+        draw(poseStack, data, 49,
                 36, container.base.getMode() == TileBaseReplicator.Mode.STOPPED ? 15461152 : 2157374
         );
         new Area(this, 80, 16, 9, 18).withTooltip(Localization.translate("Replicator.gui.info.last")).drawForeground(poseStack, par1, par2);

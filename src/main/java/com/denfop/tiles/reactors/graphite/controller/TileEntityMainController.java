@@ -33,6 +33,7 @@ import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -40,10 +41,10 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
     private List<ICooling> listCoolant = new ArrayList<>();
 
     public TileEntityMainController(final MultiBlockStructure multiBlockStructure, EnumGraphiteReactors enumFluidReactors, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(multiBlockStructure,block,pos,state);
+        super(multiBlockStructure, block, pos, state);
         this.enumFluidReactors = enumFluidReactors;
         this.reactorsModules = new InvSlotReactorModules<>(this);
         this.reactorsElements = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,
@@ -116,11 +117,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
         );
         this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation() * 100));
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.reactor_safety_doom.info"));
     }
+
     @Override
     public double getModuleStableHeat() {
         return reactorsModules.getStableHeat();
@@ -524,7 +527,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                     break;
                 case 2:
                     tank.setFluid(FluidName.fluidsteam.getInstance().get());
-                    if (!tank.getTank().getFluid().isEmpty()&& !tank
+                    if (!tank.getTank().getFluid().isEmpty() && !tank
                             .getTank()
                             .getFluid()
                             .getFluid()
@@ -753,38 +756,40 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                 this.getPos().getZ() + length, 25, false, Explosion.BlockInteraction.KEEP
         );
 
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(),3);
-            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
-                if (level.random.nextInt(2) == 0) {
-                    continue;
-                }
-                BlockPos pos1;
-                switch (Direction.values()[facing]) {
-                    case NORTH:
-                        pos1 = pos.offset(entry.getKey());
-                        break;
-                    case EAST:
-                        pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
-                        break;
-                    case WEST:
-                        pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
-                        break;
-                    case SOUTH:
-                        pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + facing);
-                }
-                level.setBlock(pos1, Blocks.AIR.defaultBlockState(),3);
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
+            if (level.random.nextInt(2) == 0) {
+                continue;
+            }
+            BlockPos pos1;
+            switch (Direction.values()[facing]) {
+                case NORTH:
+                    pos1 = pos.offset(entry.getKey());
+                    break;
+                case EAST:
+                    pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    break;
+                case WEST:
+                    pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    break;
+                case SOUTH:
+                    pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + facing);
+            }
+            level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 3);
 
 
         }
         if (this.level.dimension() == Level.OVERWORLD) {
             for (ChunkPos pos1 : chunkPosList) {
-                if (!pos1.equals(chunkPos)) {
-                    new PacketUpdateRadiationValue(pos1, (int) (rad * 10));
-                } else {
-                    new PacketUpdateRadiationValue(pos1, (int) (rad * 50));
+                if (!this.level.isClientSide) {
+                    if (!pos1.equals(chunkPos)) {
+                        new PacketUpdateRadiationValue(pos1, (int) (rad * 10), (ServerLevel) this.level);
+                    } else {
+                        new PacketUpdateRadiationValue(pos1, (int) (rad * 50), (ServerLevel) this.level);
+                    }
                 }
             }
         }

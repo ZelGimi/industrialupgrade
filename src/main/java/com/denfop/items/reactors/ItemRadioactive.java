@@ -15,10 +15,12 @@ public class ItemRadioactive extends Item implements IItemTab {
     public ItemRadioactive() {
         super(new Properties());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -31,7 +33,7 @@ public class ItemRadioactive extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

@@ -26,8 +26,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -48,7 +48,7 @@ public class TileWireInsulator extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileWireInsulator(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.electric_wire_insulator,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.electric_wire_insulator, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));

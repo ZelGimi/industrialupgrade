@@ -15,7 +15,7 @@ public class ImageScreen extends GuiElement<ImageScreen> {
     public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         mouseX = gui.guiLeft();
         mouseY = gui.guiTop();
-        gui.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/common2.png"));
+        gui.bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/common2.png"));
         RenderSystem.setShaderColor(1, 1, 1, 1);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x, mouseY + this.y, 0, 0, width - 3, height - 1);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x + width - 3, mouseY + this.y, 252, 0, 4, height - 1);

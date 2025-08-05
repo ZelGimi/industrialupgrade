@@ -5,8 +5,8 @@ import com.denfop.api.gui.*;
 import com.denfop.container.ContainerTank;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiTank<T extends ContainerTank> extends GuiIU<ContainerTank> {
@@ -42,7 +42,7 @@ public class GuiTank<T extends ContainerTank> extends GuiIU<ContainerTank> {
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

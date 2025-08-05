@@ -20,6 +20,6 @@ public class ItemBlockPreciousOre extends ItemBlockCore<BlockPreciousOre.Type> i
 
     @Override
     public String[] getTags() {
-        return new String[]{"forge:ores/" + getElement().getName().replace("_ore",""), "forge:ores"};
+        return new String[]{"c:ores/" + getElement().getName().replace("_ore", ""), "c:ores"};
     }
 }

@@ -67,6 +67,7 @@ public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
     public void put(int index, ItemStack content, boolean updates) {
         super.set(index, content);
     }
+
     @Override
     public ItemStack set(int i, ItemStack empty) {
         super.set(i, empty);
@@ -75,5 +76,8 @@ public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
 
     }
 
-
+    @Override
+    public int getStackSizeLimit() {
+        return 1;
+    }
 }

@@ -9,6 +9,8 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWirelessControllerReactors;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.ReactorData;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWirelessControllerReactors;
 import com.denfop.invslot.InvSlot;
@@ -18,17 +20,16 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.Keyboard;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class TileEntityWirelessControllerReactors extends TileEntityInventory im
     public List<TileMultiBlockBase> tileMultiBlockBaseList = new LinkedList<>();
 
     public TileEntityWirelessControllerReactors(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.wireless_controller_reactors,pos,state);
+        super(BlockBaseMachine3.wireless_controller_reactors, pos, state);
         this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 12) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -56,8 +57,7 @@ public class TileEntityWirelessControllerReactors extends TileEntityInventory im
                 if (!(stack.getItem() instanceof ItemReactorData)) {
                     return false;
                 }
-                final CompoundTag nbt = ModUtils.nbt(stack);
-                return !nbt.getString("name").isEmpty();
+                return stack.has(DataComponentsInit.REACTOR_DATA);
             }
         };
     }
@@ -103,8 +103,13 @@ public class TileEntityWirelessControllerReactors extends TileEntityInventory im
         tileMultiBlockBaseList.clear();
         itemStacks.clear();
         for (int i = 0; i < 12; i++) {
-            final CompoundTag nbt = ModUtils.nbt(this.invslot.get(i));
-            BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+            if (this.invslot.get(i).isEmpty()) {
+                this.tileMultiBlockBaseList.add(null);
+                this.itemStacks.add(ItemStack.EMPTY);
+                continue;
+            }
+            @Nullable ReactorData reactorData = this.invslot.get(i).get(DataComponentsInit.REACTOR_DATA);
+            BlockPos pos = reactorData.pos();
             BlockEntity tileEntity = this.getWorld().getBlockEntity(pos);
             if (tileEntity instanceof TileMultiBlockBase && tileEntity instanceof IAdvReactor) {
                 this.tileMultiBlockBaseList.add((TileMultiBlockBase) tileEntity);
@@ -129,8 +134,13 @@ public class TileEntityWirelessControllerReactors extends TileEntityInventory im
         itemStacks.clear();
         tileMultiBlockBaseList.clear();
         for (int i = 0; i < 12; i++) {
-            final CompoundTag nbt = ModUtils.nbt(this.invslot.get(i));
-            BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+            if (this.invslot.get(i).isEmpty()) {
+                this.tileMultiBlockBaseList.add(null);
+                this.itemStacks.add(ItemStack.EMPTY);
+                continue;
+            }
+            @Nullable ReactorData reactorData = this.invslot.get(i).get(DataComponentsInit.REACTOR_DATA);
+            BlockPos pos = reactorData.pos();
             BlockEntity tileEntity = this.getWorld().getBlockEntity(pos);
             if (tileEntity instanceof TileMultiBlockBase && tileEntity instanceof IAdvReactor) {
                 this.tileMultiBlockBaseList.add((TileMultiBlockBase) tileEntity);

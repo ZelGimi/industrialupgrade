@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:nuggets/electrum"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    },
+    "C": {
+      "tag": "c:ingots/gold"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_713_element"
+  },
+  "show_notification": false
+}

@@ -47,7 +47,7 @@ public class MatteryCategory extends GuiIU implements IRecipeCategory<MatteryHan
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityMatterFactory) BlockBaseMachine3.matter_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -73,7 +73,6 @@ public class MatteryCategory extends GuiIU implements IRecipeCategory<MatteryHan
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -91,9 +90,9 @@ public class MatteryCategory extends GuiIU implements IRecipeCategory<MatteryHan
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
         bindTexture(getTexture());
     }
 
@@ -103,7 +102,7 @@ public class MatteryCategory extends GuiIU implements IRecipeCategory<MatteryHan
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
@@ -117,7 +116,7 @@ public class MatteryCategory extends GuiIU implements IRecipeCategory<MatteryHan
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -35,7 +35,7 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
     public BlockPos AntennaMasPos;
 
     public TileEntityLightningRodController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.LightningRodMultiBlock,BlockLightningRod.lightning_rod_controller,pos,state);
+        super(InitMultiBlockSystem.LightningRodMultiBlock, BlockLightningRod.lightning_rod_controller, pos, state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 500000, 2));
         this.timer = new Timer(0, 5, 0);
         this.componentTimer = this.addComponent(new ComponentTimer(this, timer));
@@ -48,6 +48,7 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.lightning.info"));
     }
+
 
     @Override
     public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world, Direction direction, LivingEntity entity) {

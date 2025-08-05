@@ -17,8 +17,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement implements IRecuperator {
 
@@ -26,7 +26,7 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
     double power;
 
     public TileEntityGasTurbineRecuperator(BlockPos pos, BlockState state) {
-        super(BlockGasTurbine.gas_turbine_recuperator,pos,state);
+        super(BlockGasTurbine.gas_turbine_recuperator, pos, state);
         this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

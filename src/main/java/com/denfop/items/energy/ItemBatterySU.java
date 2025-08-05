@@ -24,6 +24,7 @@ public class ItemBatterySU extends Item implements IItemTab {
         this.capacity = capacity1;
         this.tier = tier1;
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
@@ -32,6 +33,7 @@ public class ItemBatterySU extends Item implements IItemTab {
 
         return "" + this.nameItem;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
@@ -46,8 +48,6 @@ public class ItemBatterySU extends Item implements IItemTab {
 
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
-
-
 
 
     @Override

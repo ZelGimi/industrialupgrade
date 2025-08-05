@@ -1,20 +1,22 @@
 package com.denfop.items;
 
 
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 
-public class CapabilityFluidHandlerItem extends FluidHandlerItemStack  {
+import java.util.function.Supplier;
 
-    public CapabilityFluidHandlerItem(ItemStack container, int capacity) {
-        super(container, capacity);
+public class CapabilityFluidHandlerItem extends FluidHandlerItemStack {
+
+    public CapabilityFluidHandlerItem(Supplier<DataComponentType<SimpleFluidContent>> componentType, ItemStack container, int capacity) {
+        super(componentType, container, capacity);
     }
 
     protected void setContainerToEmpty() {
         super.setContainerToEmpty();
-        if (this.container.getOrCreateTag().isEmpty()) {
-            this.container.setTag(null);
-        }
+
 
     }
 

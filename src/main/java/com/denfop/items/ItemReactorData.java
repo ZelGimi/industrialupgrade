@@ -4,11 +4,11 @@ import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.ReactorData;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -20,7 +20,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,15 +29,16 @@ public class ItemReactorData extends Item implements IItemTab {
     public ItemReactorData() {
         super(new Item.Properties().stacksTo(1).setNoRepair());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.reactor_sensor.info")));
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_339594_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactor_sensor.info")));
     }
 
     protected String getOrCreateDescriptionId() {
@@ -58,6 +58,7 @@ public class ItemReactorData extends Item implements IItemTab {
 
         return this.nameItem;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext p_41427_) {
         Level world = p_41427_.getLevel();
@@ -69,11 +70,7 @@ public class ItemReactorData extends Item implements IItemTab {
         BlockEntity tileEntity = world.getBlockEntity(p_41427_.getClickedPos());
         if (tileEntity instanceof TileMultiBlockBase && tileEntity instanceof IAdvReactor) {
             TileMultiBlockBase tileMultiBlockBase = (TileMultiBlockBase) tileEntity;
-            final CompoundTag nbt = ModUtils.nbt(player.getItemInHand(hand));
-            nbt.putInt("x", tileMultiBlockBase.getBlockPos().getX());
-            nbt.putInt("y", tileMultiBlockBase.getBlockPos().getY());
-            nbt.putInt("z", tileMultiBlockBase.getBlockPos().getZ());
-            nbt.putString("name", tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString());
+            player.getItemInHand(hand).set(DataComponentsInit.REACTOR_DATA, new ReactorData(tileMultiBlockBase.getBlockPos(), tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString()));
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

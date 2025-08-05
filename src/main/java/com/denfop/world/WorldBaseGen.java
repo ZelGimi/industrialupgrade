@@ -7,17 +7,14 @@ import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.TypeVein;
 import com.denfop.world.vein.VeinType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.*;
 
@@ -25,41 +22,26 @@ import static com.denfop.blocks.BlocksRadiationOre.BOOL_PROPERTY;
 import static com.denfop.register.Register.FEATURES;
 
 public class WorldBaseGen {
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> RUB_TREE_GENERATOR;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> RUB_TREE;
-    public static RegistryObject<PlacedFeature> RUB_TREE_PLACER;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> VEIN_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> GEN_GAS_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> GEN_HIVE_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> VOLCANO_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> OIL_GENERATOR ;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> VEIN;
-    public static RegistryObject<PlacedFeature> VEIN_PLACER;
-    public static RegistryObject<ConfiguredFeature<?, ?>> GEN_GAS;
-    public static RegistryObject<ConfiguredFeature<?, ?>> GEN_HIVE;
-    public static RegistryObject<PlacedFeature> GEN_GAS_PLACER;
-    public static RegistryObject<PlacedFeature> GEN_HIVE_PLACER;
-    public static RegistryObject<ConfiguredFeature<?, ?>> VOLCANO;
-    public static RegistryObject<PlacedFeature> VOLCANO_PLACER ;
-    public static RegistryObject<ConfiguredFeature<?, ?>> OIL;
-    public static RegistryObject<PlacedFeature> OIL_PLACER;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> CALCIUM;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> SALTPETER;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> PEAT;
-    public static RegistryObject<PlacedFeature> CALCIUM_PLACER ;
-    public static RegistryObject<PlacedFeature> SALTPETER_PLACER;
-    public static RegistryObject<PlacedFeature> PEAT_PLACER;
+    public static DeferredHolder<Feature<?>, HiveGenerator> GEN_HIVE_GENERATOR;
+    public static DeferredHolder<Feature<?>, RubTreeFeature> RUB_TREE_GENERATOR;
+
+
     public static List<VeinType> veinTypes = new ArrayList<>();
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
-    public static     Map<Integer, BlockState> blockStateMap = new HashMap<>();
-    public static    Map<Block, Integer> idToblockStateMap = new HashMap<>();
+    public static DeferredHolder<Feature<?>, AlgorithmVein> VEIN_GENERATOR;
+    public static DeferredHolder<Feature<?>, WorldGenGas> GEN_GAS_GENERATOR;
+    public static DeferredHolder<Feature<?>, WorldGenVolcano> VOLCANO_GENERATOR;
+    public static DeferredHolder<Feature<?>, WorldGenOil> OIL_GENERATOR;
+    public static Map<Integer, BlockState> blockStateMap = new HashMap<>();
+    public static Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
+
     public WorldBaseGen() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
         WorldGenGas.registerFluid();
 
 
-         RUB_TREE_GENERATOR = FEATURES.register("rub_tree",
+        RUB_TREE_GENERATOR = FEATURES.register("rub_tree",
                 () -> new RubTreeFeature(NoneFeatureConfiguration.CODEC));
         VEIN_GENERATOR = FEATURES.register("vein",
                 () -> new AlgorithmVein(NoneFeatureConfiguration.CODEC));
@@ -224,7 +206,7 @@ public class WorldBaseGen {
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(6)).get(), 6, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 60, 3),
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY, true), 60, 3),
                         new ChanceOre(IUItem.toriyore.getBlockState(0).setValue(BlockThoriumOre.BOOL_PROPERTY, true), 32, 0),
                         new ChanceOre(IUItem.radiationore.getBlockState(1).setValue(BOOL_PROPERTY, true), 4, 1),
                         new ChanceOre(IUItem.radiationore.getBlockState(0).setValue(BOOL_PROPERTY, true), 3, 0),
@@ -252,8 +234,8 @@ public class WorldBaseGen {
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(10)).get(), 10, TypeVein.SMALL,
                 new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 50, 8),
-                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 25, 3),
-                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY,true), 25, 0),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY, true), 25, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY, true), 25, 0),
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(11)).get(), 11, TypeVein.SMALL,
@@ -439,20 +421,20 @@ public class WorldBaseGen {
                 }
         ));
         int id = 0;
-        for (VeinType veinType : veinTypes){
-            if (veinType.getHeavyOre() != null){
+        for (VeinType veinType : veinTypes) {
+            if (veinType.getHeavyOre() != null) {
                 BlockState state = veinType.getHeavyOre().getBlock().defaultBlockState();
-                if (!idToblockStateMap.containsKey(state.getBlock())){
-                    idToblockStateMap.put(state.getBlock(),id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state)) {
+                    idToblockStateMap.put(state, id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
-            for (ChanceOre chanceOre : veinType.getOres()){
+            for (ChanceOre chanceOre : veinType.getOres()) {
                 BlockState state = chanceOre.getBlock();
-                if (!idToblockStateMap.containsKey(state.getBlock())){
-                    idToblockStateMap.put(state.getBlock(),id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state)) {
+                    idToblockStateMap.put(state, id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
@@ -461,11 +443,11 @@ public class WorldBaseGen {
 
 
     @SubscribeEvent
-    public void onWorldTick(TickEvent.LevelTickEvent event) {
-        if (!event.level.isClientSide() && event.level.dimension() == Level.OVERWORLD) {
+    public void onWorldTick(LevelTickEvent.Post event) {
+        if (!event.getLevel().isClientSide() && event.getLevel().dimension() == Level.OVERWORLD) {
             if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
                 GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
-                generatorVolcano.setWorld(event.level);
+                generatorVolcano.setWorld(event.getLevel());
                 generatorVolcano.generate();
                 if (generatorVolcano.isEnd()) {
                     WorldGenVolcano.generatorVolcanoList.remove(0);

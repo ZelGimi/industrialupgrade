@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_356_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_320_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_326_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_357_element"
+    }
+  },
+  "pattern": [
+    "EFE",
+    "CAC",
+    "DGD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:graphite_reactor/graphite_graphite_controller"
+  },
+  "show_notification": false
+}

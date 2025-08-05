@@ -26,8 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,8 +43,8 @@ public class TileRadiationPurifier extends TileElectricMachine {
     public Map<BlockPos, TileEntitySoilAnalyzer> booleanMap = new HashMap<>();
     private ItemStack stack;
 
-    public TileRadiationPurifier(BlockPos pos,BlockState state) {
-        super(50000, 14, 1,BlockBaseMachine3.radiation_purifier,pos,state);
+    public TileRadiationPurifier(BlockPos pos, BlockState state) {
+        super(50000, 14, 1, BlockBaseMachine3.radiation_purifier, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
@@ -117,7 +117,7 @@ public class TileRadiationPurifier extends TileElectricMachine {
                     }
                 }
                 if (canWork && this.outputSlot.canAdd(stack)) {
-                    if (this.radiation.removeRadiationWithType(1000)) {
+                    if (this.radiation.removeRadiationWithType(1000, this.getLevel())) {
                         this.energy.useEnergy(100);
                         this.outputSlot.add(stack);
                         this.setActive(true);

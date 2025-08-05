@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/mikhail"
+    },
+    "B": {
+      "tag": "c:plates/platinum"
+    },
+    "C": {
+      "item": "industrialupgrade:armour/hazmat_helmet"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_0_element"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/hazmathelmet"
+  },
+  "show_notification": false
+}

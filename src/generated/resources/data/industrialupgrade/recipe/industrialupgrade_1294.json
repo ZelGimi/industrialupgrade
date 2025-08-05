@@ -1,0 +1,37 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_32_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/steam_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_123_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_219_element"
+    },
+    "F": {
+      "tag": "c:plates/titanium"
+    },
+    "H": {
+      "tag": "c:plates/bismuth"
+    }
+  },
+  "pattern": [
+    "DAE",
+    "FBF",
+    "HCH"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/steam_handler_ore"
+  },
+  "show_notification": false
+}

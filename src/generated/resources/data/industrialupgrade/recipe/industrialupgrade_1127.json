@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:gears/mikhail"
+    },
+    "D": {
+      "tag": "c:gears/platinum"
+    },
+    "E": {
+      "tag": "c:doubleplate/redbrass"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "DAD",
+    "EEE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_90_element"
+  },
+  "show_notification": false
+}

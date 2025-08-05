@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    }
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:module_quickly"
+  },
+  "show_notification": false
+}

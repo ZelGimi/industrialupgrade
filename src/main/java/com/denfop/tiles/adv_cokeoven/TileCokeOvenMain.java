@@ -44,12 +44,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -85,7 +85,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     private boolean sound = true;
 
     public TileCokeOvenMain(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.advCokeOvenMultiBlock, BlockAdvCokeOven.adv_coke_oven_main,pos,state);
+        super(InitMultiBlockSystem.advCokeOvenMultiBlock, BlockAdvCokeOven.adv_coke_oven_main, pos, state);
         this.full = false;
         this.entityPlayerList = new ArrayList<>();
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidsteam.getInstance().get());
@@ -420,16 +420,13 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
         if (!(!this.full || !this.activate)) {
             if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
                 return ModUtils.interactWithFluidHandler(player, hand,
-                        this.blastInputFluid
-                                .getFluid()
-                                .getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                        this.level.getCapability(Capabilities.FluidHandler.BLOCK, this.getBlockPos(), side)
                 );
             }
         }
 
         return super.onActivated(player, hand, side, vec3);
     }
-
 
 
     @Override

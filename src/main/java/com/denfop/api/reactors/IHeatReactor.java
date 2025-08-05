@@ -2,7 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.api.multiblock.IMainMultiBlock;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public interface IHeatReactor extends IAdvReactor, IMainMultiBlock {
 

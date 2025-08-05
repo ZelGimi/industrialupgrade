@@ -9,19 +9,32 @@ import java.util.Map;
 
 public class PacketColorPickerAllLoggIn implements IPacket {
 
-    public PacketColorPickerAllLoggIn(Object object) {
+    private CustomPacketBuffer buffer;
+
+    public PacketColorPickerAllLoggIn() {
 
     }
 
-    public PacketColorPickerAllLoggIn() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+    public PacketColorPickerAllLoggIn(Player player) {
+        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeInt(IUCore.mapStreakInfo.size());
         for (Map.Entry<String, PlayerStreakInfo> playerStreakInfoEntry : new HashMap<>(IUCore.mapStreakInfo).entrySet()) {
             buffer.writeString(playerStreakInfoEntry.getKey());
-            buffer.writeBytes(playerStreakInfoEntry.getValue().writePacket());
+            buffer.writeBytes(playerStreakInfoEntry.getValue().writePacket(buffer.registryAccess()));
         }
-        IUCore.network.getServer().sendPacket(buffer);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, player, buffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

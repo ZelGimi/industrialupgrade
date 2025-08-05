@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "B": {
+      "item": "industrialupgrade:rotorupgrade_schemes"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "D": {
+      "tag": "c:doubleplate/redbrass"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/specore"
+    }
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "DED"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:rotors_upgrade/rotorupgrade17"
+  },
+  "show_notification": false
+}

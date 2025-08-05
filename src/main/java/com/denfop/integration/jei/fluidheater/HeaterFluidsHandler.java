@@ -3,7 +3,7 @@ package com.denfop.integration.jei.fluidheater;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;

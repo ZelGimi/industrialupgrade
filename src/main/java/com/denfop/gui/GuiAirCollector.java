@@ -15,7 +15,7 @@ public class GuiAirCollector<T extends ContainerAirCollector> extends GuiIU<Cont
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guiaircollector.png");
+        background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiaircollector.png");
     }
 
     public ContainerAirCollector container;
@@ -71,27 +71,27 @@ public class GuiAirCollector<T extends ContainerAirCollector> extends GuiIU<Cont
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
-        TankGauge.createNormal(this, 36, 20, container.base.fluidTank[0]).drawForeground(poseStack,par1, par2);
-        TankGauge.createNormal(this, 80, 20, container.base.fluidTank[1]).drawForeground(poseStack,par1, par2);
-        TankGauge.createNormal(this, 128, 20, container.base.fluidTank[2]).drawForeground(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        TankGauge.createNormal(this, 36, 20, container.base.fluidTank[0]).drawForeground(poseStack, par1, par2);
+        TankGauge.createNormal(this, 80, 20, container.base.fluidTank[1]).drawForeground(poseStack, par1, par2);
+        TankGauge.createNormal(this, 128, 20, container.base.fluidTank[2]).drawForeground(poseStack, par1, par2);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer( poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.container.base != null) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect( poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
-        TankGauge.createNormal(this, 36, 20, container.base.fluidTank[0]).drawBackground( poseStack,this.guiLeft, guiTop);
-        TankGauge.createNormal(this, 80, 20, container.base.fluidTank[1]).drawBackground( poseStack,this.guiLeft, guiTop);
-        TankGauge.createNormal(this, 128, 20, container.base.fluidTank[2]).drawBackground( poseStack,this.guiLeft, guiTop);
+        TankGauge.createNormal(this, 36, 20, container.base.fluidTank[0]).drawBackground(poseStack, this.guiLeft, guiTop);
+        TankGauge.createNormal(this, 80, 20, container.base.fluidTank[1]).drawBackground(poseStack, this.guiLeft, guiTop);
+        TankGauge.createNormal(this, 128, 20, container.base.fluidTank[2]).drawBackground(poseStack, this.guiLeft, guiTop);
 
     }
 

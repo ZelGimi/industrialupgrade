@@ -33,6 +33,7 @@ public class RadiationPellets<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     @Override
     public int getRadiationDuration() {
         return 200;

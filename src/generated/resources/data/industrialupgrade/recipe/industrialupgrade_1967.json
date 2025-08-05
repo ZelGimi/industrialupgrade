@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "tag": "minecraft:logs"
+    },
+    "C": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    "C C",
+    "ACA",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:primal_wire_insulator/primal_wire_insulator"
+  },
+  "show_notification": false
+}

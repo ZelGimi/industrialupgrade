@@ -6,15 +6,13 @@ import com.denfop.container.ContainerRelocatorAddPoint;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRelocator;
 import com.denfop.gui.GuiRelocatorAddPoint;
-import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +31,6 @@ public class ItemStackRelocator extends ItemStackInventory {
         }
     }
 
-    public void save() {
-        super.save();
-    }
 
     @Override
     public CustomPacketBuffer writeContainer() {
@@ -68,32 +63,6 @@ public class ItemStackRelocator extends ItemStackInventory {
     @Override
     public ItemStackInventory getParent() {
         return this;
-    }
-
-
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
-    }
-
-
-    @Nonnull
-    public String getName() {
-        return "toolbox";
-    }
-
-    public boolean hasCustomName() {
-        return false;
-    }
-
-
-    public int getStackSizeLimit() {
-        return 64;
     }
 
 

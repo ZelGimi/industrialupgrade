@@ -22,18 +22,18 @@ public class GuiCentrifuge<T extends ContainerCentrifuge> extends GuiIU<Containe
     }
 
     @Override
-protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
         poseStack.drawString(Minecraft.getInstance().font, "RPM: " + this.container.base.rpm,
                 68, 65,
-                0,false
+                0, false
         );
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

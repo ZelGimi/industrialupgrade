@@ -1,52 +1,53 @@
 package com.denfop.items.energy;
 
 import com.denfop.container.ContainerBase;
+import com.denfop.datacomponent.ContainerAdditionalItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.items.bags.BagsDescription;
 import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ItemStackMagnet extends ItemStackInventory {
 
     public final int inventorySize;
     public final ItemStack itemStack1;
-    public final ItemStack[] list;
+    public final List<ItemStack> list;
 
+    public ContainerAdditionalItem containerAdditionItem;
 
     public ItemStackMagnet(Player player, ItemStack stack, int inventorySize) {
         super(player, stack, inventorySize);
-        this.list = new ItemStack[9];
-        Arrays.fill(this.list, ItemStack.EMPTY);
+        this.containerAdditionItem = containerStack.get(DataComponentsInit.CONTAINER_ADDITIONAL);
+        if (this.containerAdditionItem == null) {
+            this.containerAdditionItem = ContainerAdditionalItem.EMPTY.updateItems(containerStack, new ArrayList<>());
+            containerStack.set(DataComponentsInit.CONTAINER_ADDITIONAL, containerAdditionItem);
+        }
+        if (containerAdditionItem.listItem().isEmpty()) {
+            ItemStack[] object = new ItemStack[9];
+            Arrays.fill(object, ItemStack.EMPTY);
+            List<ItemStack> list = Arrays.asList(object);
+            containerAdditionItem = containerAdditionItem.updateItems(containerStack, list);
+        }
+        this.list = containerAdditionItem.listItem();
         this.inventorySize = inventorySize;
         this.itemStack1 = stack;
-        if (!player.level().isClientSide()) {
-            CompoundTag nbt = ModUtils.nbt(containerStack);
-            ListTag contentList = nbt.getList("Items1", 10);
-
-            for (int i = 0; i < contentList.size(); ++i) {
-                CompoundTag slotNbt = contentList.getCompound(i);
-                int slot = slotNbt.getByte("Slot");
-                if (slot >= 0 && slot < this.list.length) {
-                    this.list[slot] = ItemStack.of(slotNbt);
-                }
-            }
-        }
 
     }
 
     @Override
     public ItemStack getItem(int slot) {
-        return slot >= inventorySize ? this.list[slot - inventorySize] : this.inventory[slot];
+        return slot >= inventorySize ? this.list.get(slot - inventorySize) : this.inventory.get(slot);
 
     }
 
@@ -56,34 +57,22 @@ public class ItemStackMagnet extends ItemStackInventory {
             if (!this.cleared) {
                 boolean dropItself = false;
 
-                for (int i = 0; i < this.list.length; ++i) {
-                    if (this.isThisContainer(this.list[i])) {
-                        this.list[i] = ItemStack.EMPTY;
+                for (int i = 0; i < this.list.size(); ++i) {
+                    if (this.isThisContainer(this.list.get(i))) {
+                        this.list.set(i, ItemStack.EMPTY);
                         dropItself = true;
                     }
                 }
 
                 ListTag contentList = new ListTag();
 
-                int idx;
-                for (idx = 0; idx < this.list.length; ++idx) {
-                    if (!ModUtils.isEmpty(this.list[idx])) {
-                        CompoundTag nbt = new CompoundTag();
-                        nbt.putByte("Slot", (byte) idx);
-                        this.list[idx].save(nbt);
-                        contentList.add(nbt);
-                    }
-                }
-
-                ModUtils.nbt(this.containerStack).put("Items1", contentList);
-
-                this.containerStack = ModUtils.setSize(this.containerStack, 1);
+                this.containerAdditionItem = this.containerAdditionItem.updateItems(containerStack, list);
 
                 if (dropItself) {
                     ModUtils.dropAsEntity(this.player.level(), this.player.blockPosition(), this.containerStack);
                     this.clear();
                 } else {
-                    idx = this.getPlayerInventoryIndex();
+                    int idx = this.getPlayerInventoryIndex();
                     if (idx < -1) {
                         this.clear();
                     } else if (idx == -1) {
@@ -99,15 +88,15 @@ public class ItemStackMagnet extends ItemStackInventory {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (slot < this.inventory.length) {
+        if (slot < this.inventory.size()) {
             if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
                 stack = ModUtils.setSize(stack, this.getInventoryStackLimit());
             }
 
             if (ModUtils.isEmpty(stack)) {
-                this.inventory[slot] = ModUtils.emptyStack;
+                this.inventory.set(slot, ModUtils.emptyStack);
             } else {
-                this.inventory[slot] = stack;
+                this.inventory.set(slot, stack);
             }
         } else {
             if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
@@ -115,9 +104,9 @@ public class ItemStackMagnet extends ItemStackInventory {
             }
 
             if (ModUtils.isEmpty(stack)) {
-                this.list[slot - this.inventory.length] = ModUtils.emptyStack;
+                this.list.set(slot - this.inventory.size(), ModUtils.emptyStack);
             } else {
-                this.list[slot - this.inventory.length] = stack;
+                this.list.set(slot - this.inventory.size(), stack);
             }
         }
         this.updatelist();
@@ -136,42 +125,23 @@ public class ItemStackMagnet extends ItemStackInventory {
             if (list.isEmpty()) {
                 list.add(new BagsDescription(stack));
             } else if (list.contains(new BagsDescription(stack))) {
-                list.get(list.indexOf(new BagsDescription(stack))).addCount(stack.getCount());
+                for (BagsDescription bagsDescription : list) {
+                    if (bagsDescription.equals(new BagsDescription(stack))) {
+                        bagsDescription.addCount(stack.getCount());
+                    }
+                }
             } else {
                 list.add(new BagsDescription(stack));
             }
         }
-        final CompoundTag nbt = ModUtils.nbt(itemStack1);
-        CompoundTag nbt1 = new CompoundTag();
-        nbt1.putInt("size", list.size());
-        for (int i = 0; i < list.size(); i++) {
-            nbt1.put(String.valueOf(i), list.get(i).write(new CompoundTag()));
-        }
-        nbt.put("bag", nbt1);
-    }
-
-    public void saveAndThrow(ItemStack stack) {
-        ListTag contentList = new ListTag();
-
-        for (int i = 0; i < this.inventory.length; ++i) {
-            if (!ModUtils.isEmpty(this.inventory[i])) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putByte("Slot", (byte) i);
-                this.inventory[i].save(nbt);
-                contentList.add(nbt);
-            }
-        }
-
-        ModUtils.nbt(stack).put("Items", contentList);
-        this.clear();
+        this.itemStack1.set(DataComponentsInit.DESCRIPTIONS_CONTAINER, list);
     }
 
 
     private boolean addWithoutSave(List<ItemStack> stacks, boolean simulate) {
 
         if (stacks != null && !stacks.isEmpty()) {
-            final CompoundTag nbt = ModUtils.nbt(this.itemStack1);
-            boolean white = nbt.getBoolean("white");
+            boolean white = itemStack1.getOrDefault(DataComponentsInit.BLACK_LIST, false);
             for (ItemStack stack : stacks) {
 
                 boolean can = false;
@@ -195,7 +165,7 @@ public class ItemStackMagnet extends ItemStackInventory {
                 if (!can) {
                     return false;
                 }
-                for (int i = 0; i < this.inventory.length; i++) {
+                for (int i = 0; i < this.inventory.size(); i++) {
                     if (this.get(i) == null || this.get(i).isEmpty()) {
                         if (!simulate) {
                             this.putWithoutSave(i, stack.copy());
@@ -205,15 +175,15 @@ public class ItemStackMagnet extends ItemStackInventory {
                     } else {
                         if (this.get(i).is(stack.getItem())) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTag() == null && this.get(i).getTag() == null) {
+                                if (stack.getComponents().isEmpty() && this.get(i).getComponents().isEmpty()) {
                                     if (!simulate) {
                                         this.get(i).grow(stack.getCount());
                                         stack.setCount(0);
                                     }
                                     return true;
                                 } else {
-                                    if (stack.getTag() != null &&
-                                            stack.getTag().equals(this.get(i).getTag())) {
+                                    if (!stack.getComponents().isEmpty() &&
+                                            stack.getComponents().equals(this.get(i).getComponents())) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
                                             stack.setCount(0);
@@ -247,21 +217,22 @@ public class ItemStackMagnet extends ItemStackInventory {
             content = ModUtils.emptyStack;
         }
 
-        this.inventory[index] = content;
+        this.inventory.set(index, content);
+        this.save();
     }
 
     @Override
     public ItemStack removeItem(int index, int amount) {
-        if (index < this.inventory.length) {
+        if (index < this.inventory.size()) {
             ItemStack stack;
-            if (index >= 0 && index < this.inventory.length && !ModUtils.isEmpty(stack = this.inventory[index])) {
+            if (index >= 0 && index < this.inventory.size() && !ModUtils.isEmpty(stack = this.inventory.get(index))) {
                 ItemStack ret;
                 if (amount >= ModUtils.getSize(stack)) {
                     ret = stack;
-                    this.inventory[index] = ModUtils.emptyStack;
+                    this.inventory.set(index, ModUtils.emptyStack);
                 } else {
                     ret = ModUtils.setSize(stack, amount);
-                    this.inventory[index] = ModUtils.decSize(stack, amount);
+                    this.inventory.set(index, ModUtils.decSize(stack, amount));
                 }
 
                 this.save();
@@ -271,15 +242,15 @@ public class ItemStackMagnet extends ItemStackInventory {
             }
         } else {
             ItemStack stack;
-            if (index - this.inventory.length < list.length && !ModUtils.isEmpty(stack =
-                    this.list[index - this.inventory.length])) {
+            if (index - this.inventory.size() < list.size() && !ModUtils.isEmpty(stack =
+                    this.list.get(index - this.inventory.size()))) {
                 ItemStack ret;
                 if (amount >= ModUtils.getSize(stack)) {
                     ret = stack;
-                    this.list[index - this.inventory.length] = ModUtils.emptyStack;
+                    this.list.set(index - this.inventory.size(), ModUtils.emptyStack);
                 } else {
                     ret = ModUtils.setSize(stack, amount);
-                    this.list[index - this.inventory.length] = ModUtils.decSize(stack, amount);
+                    this.list.set(index - this.inventory.size(), ModUtils.decSize(stack, amount));
                 }
 
                 this.save();
@@ -297,17 +268,6 @@ public class ItemStackMagnet extends ItemStackInventory {
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
-    }
-
-
-    @Override
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
         ContainerMagnet containerLeadBox = (ContainerMagnet) menu;
@@ -319,17 +279,12 @@ public class ItemStackMagnet extends ItemStackInventory {
     }
 
 
-    public ItemStack get(int index) {
-        return this.inventory[index];
-    }
-
     @Override
     public boolean canPlaceItem(int p_18952_, ItemStack itemstack) {
         if (itemstack.getItem() instanceof ItemMagnet) {
             return false;
         }
-        final CompoundTag nbt = ModUtils.nbt(this.itemStack1);
-        boolean white = nbt.getBoolean("white");
+        boolean white = itemStack1.getOrDefault(DataComponentsInit.BLACK_LIST, false);
         boolean can = false;
         if (white) {
             for (ItemStack stack1 : this.list) {
@@ -355,180 +310,5 @@ public class ItemStackMagnet extends ItemStackInventory {
         return !itemstack.isEmpty();
     }
 
-    protected void restore(ItemStack[] backup) {
-        if (backup.length != this.inventory.length) {
-            throw new IllegalArgumentException("invalid array size");
-        } else {
-            System.arraycopy(backup, 0, this.inventory, 0, this.inventory.length);
-
-        }
-    }
-
-    @Nonnull
-    public String getName() {
-        return "toolbox";
-    }
-
-    public boolean hasCustomName() {
-        return false;
-    }
-
-
-    public int add(Collection<ItemStack> stacks) {
-        return this.add(stacks, false);
-    }
-
-    public boolean add(ItemStack stack) {
-        if (stack == null) {
-            throw new NullPointerException("null ItemStack");
-        } else {
-            return this.add(Collections.singletonList(stack), false);
-        }
-    }
-
-    public boolean canAdd(Collection<ItemStack> stacks) {
-        return this.add(stacks, true) == 0;
-    }
-
-    public boolean canAdd(ItemStack stack) {
-        if (stack == null) {
-            throw new NullPointerException("null ItemStack");
-        } else {
-            return this.add(Collections.singletonList(stack), true);
-        }
-    }
-
-    protected ItemStack[] backup() {
-        ItemStack[] ret = new ItemStack[this.inventory.length];
-
-        for (int i = 0; i < this.inventory.length; ++i) {
-            ItemStack content = this.inventory[i];
-            ret[i] = ModUtils.isEmpty(content) ? ModUtils.emptyStack : content.copy();
-        }
-
-        return ret;
-    }
-
-    public void put(ItemStack content) {
-        this.put(0, content);
-    }
-
-    public void put(int index, ItemStack content) {
-        if (ModUtils.isEmpty(content)) {
-            content = ModUtils.emptyStack;
-        }
-
-        this.inventory[index] = content;
-        this.save();
-    }
-
-    public int getStackSizeLimit() {
-        return 64;
-    }
-
-    private boolean add(List<ItemStack> stacks, boolean simulate) {
-        if (stacks != null && !stacks.isEmpty()) {
-
-            for (ItemStack stack : stacks) {
-                for (int i = 0; i < this.inventory.length; i++) {
-                    if (this.get(i) == null || this.get(i).isEmpty()) {
-                        if (!simulate) {
-                            this.put(i, stack.copy());
-
-                        }
-                        return true;
-                    } else {
-                        if (this.get(i).is(stack.getItem())) {
-                            if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTag() == null && this.get(i).getTag() == null) {
-                                    if (!simulate) {
-                                        this.get(i).grow(stack.getCount());
-                                    }
-                                    return true;
-                                } else {
-                                    if (stack.getTag() != null &&
-                                            stack.getTag().equals(this.get(i).getTag())) {
-                                        if (!simulate) {
-                                            this.get(i).grow(stack.getCount());
-
-                                        }
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-
-    private int add(Collection<ItemStack> stacks, boolean simulate) {
-        if (stacks != null && !stacks.isEmpty()) {
-            ItemStack[] backup = simulate ? this.backup() : null;
-            int totalAmount = 0;
-            Iterator var5 = stacks.iterator();
-
-            while (true) {
-                ItemStack stack;
-                int amount;
-                do {
-                    if (!var5.hasNext()) {
-                        if (simulate) {
-                            this.restore(backup);
-                        }
-
-                        return totalAmount;
-                    }
-
-                    stack = (ItemStack) var5.next();
-                    amount = ModUtils.getSize(stack);
-                } while (amount <= 0);
-
-                label74:
-                for (int pass = 0; pass < 2; ++pass) {
-                    for (int i = 0; i < this.inventorySize; ++i) {
-                        ItemStack existingStack = this.get(i);
-                        int space = this.getStackSizeLimit();
-                        if (!ModUtils.isEmpty(existingStack)) {
-                            space = Math.min(space, existingStack.getMaxStackSize()) - ModUtils.getSize(existingStack);
-                        }
-
-                        if (space > 0) {
-                            if (pass == 0 && !ModUtils.isEmpty(existingStack) && ModUtils.checkItemEqualityStrict(
-                                    stack,
-                                    existingStack
-                            )) {
-                                if (space >= amount) {
-                                    existingStack.grow(amount);
-                                    this.put(i, existingStack);
-                                    amount = 0;
-                                    break label74;
-                                }
-                                existingStack.grow(space);
-                                this.put(i, existingStack);
-                                amount -= space;
-                            } else if (pass == 1 && ModUtils.isEmpty(existingStack)) {
-                                if (space >= amount) {
-                                    this.put(i, ModUtils.setSize(stack, amount));
-                                    amount = 0;
-                                    break label74;
-                                }
-
-                                this.put(i, ModUtils.setSize(stack, space));
-                                amount -= space;
-                            }
-                        }
-                    }
-                }
-
-                totalAmount += amount;
-            }
-        } else {
-            return 0;
-        }
-    }
 
 }

@@ -6,10 +6,11 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
+import com.denfop.datacomponent.ContainerAdditionalItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.ItemStackUpgradeModules;
 import com.denfop.tiles.base.FakePlayerSpawner;
@@ -19,17 +20,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -91,7 +90,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 inv_slots.add(slot);
             }
         });
-        main_handler = base.getCapability(ForgeCapabilities.ITEM_HANDLER, base.getFacing()).orElse(null);
+        main_handler = base.getCapability(Capabilities.ItemHandler.BLOCK, base.getFacing());
         fluids = base.getParent().getComp(Fluids.class);
         if (fluids != null) {
             fluids.getAllTanks().forEach(fluidTankList::add);
@@ -112,7 +111,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
     }
 
     public static Direction getDirection(ItemStack stack) {
-        int rawDir = ModUtils.nbt(stack).getByte("dir");
+        int rawDir = stack.getOrDefault(DataComponentsInit.DIRECTION, (byte) 0);
         return rawDir >= 1 && rawDir <= 6 ? Direction.values()[rawDir - 1] : null;
     }
 
@@ -203,8 +202,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                     this.ejectorUpgrade = true;
                     this.facings[i] = getDirection(stack);
                     IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                    List<ItemStack> stacks =
-                            Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack))).getInventory());
+                    List<ItemStack> stacks = stack.getOrDefault(DataComponentsInit.CONTAINER_ADDITIONAL, ContainerAdditionalItem.EMPTY).listItem();
                     stacks = stacks.stream()
                             .filter(stack1 -> !stack1.isEmpty())
                             .collect(Collectors.toList());
@@ -226,8 +224,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                     this.pullingUpgrade = true;
                     this.facings[i] = getDirection(stack);
                     IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                    List<ItemStack> stacks =
-                            Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack))).getInventory());
+                    List<ItemStack> stacks = stack.getOrDefault(DataComponentsInit.CONTAINER_ADDITIONAL, ContainerAdditionalItem.EMPTY).listItem();
                     stacks = stacks.stream()
                             .filter(stack1 -> !stack1.isEmpty())
                             .collect(Collectors.toList());
@@ -352,7 +349,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 for (Direction facing : enumFacings) {
                     BlockPos pos = this.tile.getBlockPos().offset(facing.getNormal());
                     final BlockEntity tile1 = this.tile.getLevel().getBlockEntity(pos);
-                    final IItemHandler handler = getItemHandler(tile1, facing.getOpposite());
+                    final IItemHandler handler = getItemHandler(pos, this.base.getParent().getParent().getLevel(), facing.getOpposite());
                     if (!(tile1 instanceof Container)) {
                         if (handler == null) {
                             this.iItemHandlerMap.put(facing, null);
@@ -372,8 +369,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 this.iFluidHandlerMap.clear();
                 for (Direction facing : enumFacings) {
                     BlockPos pos = this.tile.getBlockPos().offset(facing.getNormal());
-                    final BlockEntity tile1 = this.tile.getLevel().getBlockEntity(pos);
-                    final IFluidHandler handler = getFluidHandler(tile1, facing.getOpposite());
+                    final IFluidHandler handler = getFluidHandler(pos, this.tile.getLevel(), facing.getOpposite());
                     this.iFluidHandlerMap.put(facing, handler);
                 }
             }
@@ -469,41 +465,34 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         }
     }
 
-    public IItemHandler getItemHandler(@Nullable BlockEntity tile, Direction side) {
+    public IItemHandler getItemHandler(BlockPos pos, Level level, Direction side) {
         if (tile == null) {
             return null;
         }
 
-        IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, side).orElse(null);
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, side);
 
-        if (handler == null) {
-            if (side != null && tile instanceof WorldlyContainer) {
-                handler = new SidedInvWrapper((WorldlyContainer) tile, side);
-            } else if (tile instanceof Container) {
-                handler = new InvWrapper((Container) tile);
-            }
-        }
 
         return handler;
     }
 
-    public IFluidHandler getFluidHandler(@Nullable BlockEntity tile, Direction side) {
+    public IFluidHandler getFluidHandler(@Nullable BlockPos pos, Level level, Direction side) {
         if (tile == null) {
             return null;
         }
 
-        return tile.getCapability(
-                ForgeCapabilities.FLUID_HANDLER,
+        return level.getCapability(
+                Capabilities.FluidHandler.BLOCK, pos,
                 side
-        ).orElse(null);
+        );
     }
 
     public boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
-        if (a.isEmpty() || !(a.getItem() == b.getItem()) || a.hasTag() != b.hasTag()) {
+        if (a.isEmpty() || !(a.getItem() == b.getItem()) || a.getComponents().isEmpty() != b.getComponents().isEmpty()) {
             return false;
         }
 
-        return (!a.hasTag() || a.getTag().equals(b.getTag()));
+        return (a.getComponents().isEmpty() || a.getComponents().equals(b.getComponents()));
     }
 
     private void tickPullIn(int i) {
@@ -1134,8 +1123,8 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     slot.set(j, ItemStack.EMPTY);
                                     insertItem1(handler, took, false, slots);
                                 } else if (stack != took) {
-                                   int count =  slot.get(j).getCount()-stack.getCount();
-                                    slot.get(j).shrink( count);
+                                    int count = slot.get(j).getCount() - stack.getCount();
+                                    slot.get(j).shrink(count);
                                     stack.setCount(count);
                                     insertItem1(handler, stack, false, slots);
                                 }

@@ -43,26 +43,25 @@ public class GuiCombinerSE<T extends ContainerCombinerSE> extends GuiIU<Containe
 
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer( poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
 
         if (this.container.base != null) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect( poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 
     }
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(poseStack,mouseX, mouseY);
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        draw(poseStack,Localization.translate("gui.SuperSolarPanel.generating") +
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        draw(poseStack, Localization.translate("gui.SuperSolarPanel.generating") +
                         ": " + (int) this.container.base.generation + Localization.translate("iu.machines_work_energy_type_se"),
                 9, 105, ModUtils.convertRGBcolorToInt(0, 0, 0)
         );
     }
-
 
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -86,7 +85,7 @@ public class GuiCombinerSE<T extends ContainerCombinerSE> extends GuiIU<Containe
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

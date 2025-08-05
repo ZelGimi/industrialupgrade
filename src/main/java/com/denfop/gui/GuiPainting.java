@@ -13,8 +13,8 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,6 +49,7 @@ public class GuiPainting<T extends ContainerDoubleElectricMachine> extends GuiIU
                 super.drawBackground(poseStack, mouseX, mouseY);
                 ItemStack stack = container.base.inputSlotA.get(0).getItem() instanceof ItemPaints
                         ? container.base.inputSlotA.get(1) : container.base.inputSlotA.get(0);
+                stack = stack.copy();
                 stack = ModUtils.mode(container.base.output.getRecipe().output.metadata, stack);
                 if (!ModUtils.isEmpty(stack)) {
 
@@ -84,7 +85,7 @@ public class GuiPainting<T extends ContainerDoubleElectricMachine> extends GuiIU
         if (!this.container.base.inputSlotA.get(1).isEmpty() && !this.container.base.inputSlotA
                 .get(0)
                 .isEmpty() && this.container.base.output != null) {
-           draw(poseStack, ModUtils.mode(this.container.base.output.getRecipe().output.metadata), 80, 63, 4210752);
+            draw(poseStack, ModUtils.mode(this.container.base.output.getRecipe().output.items.get(0)), 80, 63, 4210752);
         }
     }
 
@@ -109,7 +110,7 @@ public class GuiPainting<T extends ContainerDoubleElectricMachine> extends GuiIU
 
         bindTexture(getTexture());
 
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         this.drawTexturedModalRect(poseStack, this.guiLeft() + 165, this.guiTop(), 0, 0, 10, 10);
         bindTexture(this.getTexture());
 
@@ -126,7 +127,7 @@ public class GuiPainting<T extends ContainerDoubleElectricMachine> extends GuiIU
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIPainter.png".toLowerCase());
     }
 
 }

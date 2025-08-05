@@ -96,7 +96,7 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
                 }
             }
         }
-        super.renderSlot(p_97800_,p_97801_);
+        super.renderSlot(p_97800_, p_97801_);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         if (!this.container.base.work) {
             this.visible = par1 >= 160 && par1 <= 186 && par2 >= 135 && par2 <= 161;
         } else {
@@ -137,8 +137,8 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
                                             if (this.container.base.heat_sensor) {
                                                 PoseStack pose = poseStack.pose();
                                                 pose.pushPose();
-                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(    String.valueOf((int) component.getHeat())) / 2,slotInvSlot.y + 5,0);
-                                                pose.scale(0.75f,0.75f,1f);
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf((int) component.getHeat())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
                                                 draw(poseStack,
                                                         String.valueOf((int) component.getHeat()),
                                                         0,
@@ -154,8 +154,8 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
                                                     .getType() != EnumTypeComponent.ROD) {
                                                 PoseStack pose = poseStack.pose();
                                                 pose.pushPose();
-                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(     String.valueOf(-1 * component.getDamage())) / 2,slotInvSlot.y + 5,0);
-                                                pose.scale(0.75f,0.75f,1f);
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf(-1 * component.getDamage())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
                                                 draw(poseStack,
                                                         String.valueOf(-1 * component.getDamage()),
                                                         0,
@@ -223,11 +223,11 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
             new AdvArea(this, 201, 10, 215, 85)
                     .withTooltip(Localization.translate("iu.reactor_info.energy") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
                             "/" + ModUtils.getString(this.container.base.energy.getCapacity()))
-                    .drawForeground(poseStack,par1, par2);
+                    .drawForeground(poseStack, par1, par2);
         } else {
             new AdvArea(this, 201, 10, 215, 85)
                     .withTooltip(Localization.translate("iu.reactor_info.upgrade1"))
-                    .drawForeground(poseStack,par1, par2);
+                    .drawForeground(poseStack, par1, par2);
         }
     }
 
@@ -322,7 +322,7 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
                         , 238, 86, 17, 17);
                 break;
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common1.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common1.png"));
 
         double bar = this.container.base.heat / this.container.base.getMaxHeat();
         bar = Math.min(bar, 1);
@@ -335,16 +335,16 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
     protected ResourceLocation getTexture() {
         switch (this.container.base.getMaxLevelReactor()) {
             case 1:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite.png");
             case 2:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite1.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite1.png");
             case 3:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite2.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite2.png");
             case 4:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite3.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite3.png");
 
         }
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite4.png");
     }
 
 }

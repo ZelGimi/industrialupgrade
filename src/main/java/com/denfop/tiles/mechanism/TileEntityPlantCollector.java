@@ -32,13 +32,15 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityPlantCollector extends TileEntityInventory implements IUpgradableBlock {
 
@@ -51,15 +53,15 @@ public class TileEntityPlantCollector extends TileEntityInventory implements IUp
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
     List<ChunkPos> chunks;
     private ComponentVisibleArea visible;
 
     public TileEntityPlantCollector(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.plant_collector,pos,state);
+        super(BlockBaseMachine3.plant_collector, pos, state);
         this.output = new InvSlotOutput(this, 18);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);

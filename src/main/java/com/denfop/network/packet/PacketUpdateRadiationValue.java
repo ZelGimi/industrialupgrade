@@ -5,6 +5,8 @@ import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 
@@ -12,31 +14,46 @@ import java.io.IOException;
 
 public class PacketUpdateRadiationValue implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
+    ;
     public PacketUpdateRadiationValue() {
     }
 
-    ;
+    public PacketUpdateRadiationValue(ChunkPos pos, double radiation, ServerLevel level) {
+        for (ServerPlayer player : level.players()) {
+            Radiation radiation1 = RadiationSystem.rad_system.getMap().get(pos);
+            if (radiation1 == null) {
+                radiation1 = new Radiation(pos);
+                ;
+                RadiationSystem.rad_system.addRadiation(radiation1);
+            }
 
-    public PacketUpdateRadiationValue(ChunkPos pos, double radiation) {
-        Radiation radiation1 = RadiationSystem.rad_system.getMap().get(pos);
-        if (radiation1 == null) {
-            radiation1 = new Radiation(pos);
-            ;
-            RadiationSystem.rad_system.addRadiation(radiation1);
+            radiation1.addRadiation(radiation);
+            CustomPacketBuffer buffer = new CustomPacketBuffer(64, null);
+            try {
+                buffer.writeByte(this.getId());
+                EncoderHandler.encode(buffer, radiation1);
+
+
+            } catch (IOException var5) {
+                throw new RuntimeException(var5);
+            }
+
+            buffer.flip();
+            this.buffer = buffer;
+            IUCore.network.getServer().sendPacket(this, player, buffer);
         }
-        radiation1.addRadiation(radiation);
-        CustomPacketBuffer buffer = new CustomPacketBuffer(64);
-        try {
-            buffer.writeByte(this.getId());
-            EncoderHandler.encode(buffer, radiation1);
+    }
 
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
 
-        } catch (IOException var5) {
-            throw new RuntimeException(var5);
-        }
-
-        buffer.flip();
-        IUCore.network.getServer().sendPacket(buffer);
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

@@ -27,12 +27,13 @@ public class OilPumpCategory extends GuiIU implements IRecipeCategory<OilPumpHan
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
+
     public OilPumpCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -56,7 +57,7 @@ public class OilPumpCategory extends GuiIU implements IRecipeCategory<OilPumpHan
 
     @Override
     public void draw(OilPumpHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("iu.oilpump.info"),
                 10,
                 5,
@@ -67,7 +68,7 @@ public class OilPumpCategory extends GuiIU implements IRecipeCategory<OilPumpHan
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, OilPumpHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,95, 21).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
 
     }
 
@@ -77,7 +78,7 @@ public class OilPumpCategory extends GuiIU implements IRecipeCategory<OilPumpHan
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

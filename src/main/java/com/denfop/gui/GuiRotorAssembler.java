@@ -14,8 +14,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiRotorAssembler<T extends ContainerRotorAssembler> extends GuiIU<ContainerRotorAssembler> {
 
-    public final ResourceLocation rotors_gui = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotors.png");
-    public final ResourceLocation rotors_gui1 = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotors1.png");
+    public final ResourceLocation rotors_gui = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guirotors.png");
+    public final ResourceLocation rotors_gui1 = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guirotors1.png");
 
     public GuiRotorAssembler(ContainerRotorAssembler guiContainer) {
         super(guiContainer);
@@ -30,7 +30,7 @@ public class GuiRotorAssembler<T extends ContainerRotorAssembler> extends GuiIU<
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
 
     }
 
@@ -40,14 +40,14 @@ public class GuiRotorAssembler<T extends ContainerRotorAssembler> extends GuiIU<
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(poseStack,mouseX, mouseY);
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack, partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
-      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         // progress 18 pixels
         int progress = (int) (16 * (this.container.base.progress / 100D));
         int j = guiLeft;
@@ -58,20 +58,20 @@ public class GuiRotorAssembler<T extends ContainerRotorAssembler> extends GuiIU<
             ItemStack stack = this.container.base.recipe.getRecipe().output.items.get(0);
             int index = ((IWindRotor) stack.getItem()).getIndex();
             setTexture(rotors_gui1);
-            drawTexturedModalRect( poseStack, j + 80, k + 63, 32 * (index % 8),
+            drawTexturedModalRect(poseStack, j + 80, k + 63, 32 * (index % 8),
                     32 * (index / 8), 32, 32
             );
             setTexture(rotors_gui);
-            drawTexturedModalRect( poseStack, j + 80, k + 9 + progress, 32 * (index % 8),
+            drawTexturedModalRect(poseStack, j + 80, k + 9 + progress, 32 * (index % 8),
                     55 * (index / 8), 32, 54
             );
-            drawTexturedModalRect( poseStack, j + 80, k + 95 - progress, 32 * (index % 8),
+            drawTexturedModalRect(poseStack, j + 80, k + 95 - progress, 32 * (index % 8),
                     55 * (index / 8), 32, 54
             );
-            drawTexturedModalRect( poseStack, j + 26 + progress, k + 63, 55 * (index % 4),
+            drawTexturedModalRect(poseStack, j + 26 + progress, k + 63, 55 * (index % 4),
                     112 + 33 * (index / 4), 54, 32
             );
-            drawTexturedModalRect( poseStack, j + 112 - progress, k + 63, 55 * (index % 4),
+            drawTexturedModalRect(poseStack, j + 112 - progress, k + 63, 55 * (index % 4),
                     112 + 33 * (index / 4), 54, 32
             );
 
@@ -82,7 +82,7 @@ public class GuiRotorAssembler<T extends ContainerRotorAssembler> extends GuiIU<
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 }

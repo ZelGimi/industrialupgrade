@@ -35,6 +35,7 @@ public class BlockOres3<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
         BlockTagsProvider.list.add(this);
 
     }
+
     @Override
     public Block getBlock() {
         return this;
@@ -97,7 +98,6 @@ public class BlockOres3<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
                 return WorldBaseGen.random.nextInt(100) < 50 ? 2 : 1;
         }
     }
-
 
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {

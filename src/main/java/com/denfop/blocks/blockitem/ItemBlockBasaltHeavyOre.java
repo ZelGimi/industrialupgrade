@@ -20,7 +20,7 @@ public class ItemBlockBasaltHeavyOre extends ItemBlockCore<BlockBasaltHeavyOre.T
 
     @Override
     public String[] getTags() {
-        return new String[]{"forge:ores/" + getElement().getName().toLowerCase(), "forge:ores"};
+        return new String[]{"c:ores/" + getElement().getName().toLowerCase(), "c:ores"};
     }
 
 }

@@ -38,7 +38,7 @@ public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHan
         ));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guipallet" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipallet" +
                         ".png"), 5, 3, 165,
                 77
         );
@@ -61,15 +61,15 @@ public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHan
 
     @Override
     public void draw(PelletsHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      bindTexture(getTexture());
+        bindTexture(getTexture());
         for (int x = 30; x <= 86 - 18; x += 18) {
             for (int y = 18; y <= 36; y += 18) {
-                this.drawTexturedModalRect( stack,0 + x, 0 + y, 179, 30, 18, 18);
+                this.drawTexturedModalRect(stack, 0 + x, 0 + y, 179, 30, 18, 18);
             }
         }
         final double num = 20000 / Math.ceil(recipe.getInput());
 
-     drawSplitString(stack,
+        drawSplitString(stack,
                 String.format("%.2f☢ -> 50 EF", num),
                 90,
                 30,
@@ -92,7 +92,7 @@ public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHan
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guipallet.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipallet.png");
     }
 
 

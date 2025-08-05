@@ -1,0 +1,51 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:gas_reactor/gas_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_324_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_320_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_342_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_321_element"
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 3,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:crafting_elements/crafting_273_element"
+    }
+  },
+  "pattern": [
+    "EGF",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_reactor/gas_controller"
+  },
+  "show_notification": false
+}

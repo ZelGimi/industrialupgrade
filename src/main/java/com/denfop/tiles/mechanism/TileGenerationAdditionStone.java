@@ -26,7 +26,7 @@ public class TileGenerationAdditionStone extends TileBaseAdditionGenStone implem
     private final AirPollutionComponent pollutionAir;
 
     public TileGenerationAdditionStone(BlockPos pos, BlockState state) {
-        super(1, 100, 12,BlockBaseMachine3.gen_addition_stone,pos,state);
+        super(1, 100, 12, BlockBaseMachine3.gen_addition_stone, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "genadditionstone", this);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));

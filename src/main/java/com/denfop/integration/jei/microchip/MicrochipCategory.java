@@ -36,7 +36,7 @@ public class MicrochipCategory extends GuiIU implements IRecipeCategory<Microchi
     ) {
         super(((TileEntityMatterFactory) BlockBaseMachine3.matter_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICirsuit".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUICirsuit".toLowerCase() +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -77,40 +77,40 @@ public class MicrochipCategory extends GuiIU implements IRecipeCategory<Microchi
 
         draw(stack, "" + recipe.getTemperature() + "°C", 70, 80, 4210752);
 
-      bindTexture(getTexture());
+        bindTexture(getTexture());
         int temperature = 38 * recipe.getTemperature() / 5000;
         if (temperature > 0) {
             drawTexturedModalRect(stack, 67, 60, 176, 21, temperature + 1, 11);
         }
-        drawTexturedModalRect(stack,25, 9, 176, 34, (int) (xScale + 1), 32);
+        drawTexturedModalRect(stack, 25, 9, 176, 34, (int) (xScale + 1), 32);
 
 
-        drawTexturedModalRect(stack,57, 13, 176, 65, (int) (xScale1 + 1), 21);
+        drawTexturedModalRect(stack, 57, 13, 176, 65, (int) (xScale1 + 1), 21);
 
 
-        drawTexturedModalRect(stack,86, 19, 176, 86, (int) (xScale2 + 1), 7);
+        drawTexturedModalRect(stack, 86, 19, 176, 86, (int) (xScale2 + 1), 7);
 
 
-        drawTexturedModalRect(stack,2, 72 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(stack, 2, 72 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MicrochipHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,7, 6).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,7, 27).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT,40, 6).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT,40, 26).addItemStack(recipe.getInput3());
-        builder.addSlot(RecipeIngredientRole.INPUT,68, 16).addItemStack(recipe.getInput4());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,109, 16).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 7, 6).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 7, 27).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 40, 6).addItemStack(recipe.getInput2());
+        builder.addSlot(RecipeIngredientRole.INPUT, 40, 26).addItemStack(recipe.getInput3());
+        builder.addSlot(RecipeIngredientRole.INPUT, 68, 16).addItemStack(recipe.getInput4());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 16).addItemStack(recipe.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICirsuit.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUICirsuit.png".toLowerCase());
     }
 
 

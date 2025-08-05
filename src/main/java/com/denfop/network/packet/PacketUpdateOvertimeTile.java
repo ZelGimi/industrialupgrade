@@ -13,24 +13,37 @@ import java.io.IOException;
 
 public class PacketUpdateOvertimeTile implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateOvertimeTile() {
 
     }
 
     public PacketUpdateOvertimeTile(CustomPacketBuffer data, ServerPlayer player) {
-        IUCore.network.getServer().sendPacket(data, player);
+        this.buffer = data;
+        IUCore.network.getServer().sendPacket(this, data, player);
     }
 
     public static void apply(BlockPos pos, Level world, byte[] is) {
         if (world.isLoaded(pos)) {
             BlockEntity te = world.getBlockEntity(pos);
-            final CustomPacketBuffer buf = new CustomPacketBuffer();
+            final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
             buf.writeBytes(is);
             if (te != null) {
                 ((TileEntityBlock) te).readUpdatePacket(buf);
             }
 
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

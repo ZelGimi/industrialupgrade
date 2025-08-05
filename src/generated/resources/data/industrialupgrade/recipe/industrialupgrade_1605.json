@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:glass"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdust/energium_dust"
+    },
+    "C": {
+      "tag": "c:dusts/silver"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "count": 6,
+    "id": "industrialupgrade:wiring/glass_1"
+  },
+  "show_notification": false
+}

@@ -1,23 +1,15 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.recipes.ScrapboxRecipeManager;
-import com.denfop.utils.ModUtils;
+import com.denfop.datacomponent.DataComponentsInit;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Locale;
 
@@ -29,41 +21,21 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
-        if (!player.getItemInHand(hand).is(IUItem.scrapBox.getItem())) {
-            return super.use(pLevel, player, hand);
-        } else {
-            int i = 0;
-            ItemStack stack = player.getItemInHand(hand);
-            while (i < 1) {
-                if (!pLevel.isClientSide) {
-                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox);
-                    player.drop(drop, false);
-                }
-                i++;
-            }
-            stack.shrink(1);
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
-
-        }
-
-    }
-
-    @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ElementsTab;
     }
+
     @Override
     public String[] properties() {
         if (getElement().getId() != 272 && getElement().getId() != 273)
             return new String[]{};
         return new String[]{"level"};
     }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel world, LivingEntity entity, int p174679, String property) {
-        final CompoundTag nbt = ModUtils.nbt(itemStack);
-        int level = nbt.getInt("level");
+        int level = itemStack.getOrDefault(DataComponentsInit.LEVEL_MICROCHIP, 0);
         if (level == 0)
             return 0;
         level = switch (this.getElement().getId()) {
@@ -854,8 +826,6 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
         crafting_766_element(),
         crafting_767_element(),
         crafting_768_element(),
-
-
         crafting_769_element(),
         crafting_770_element(),
         crafting_771_element(),

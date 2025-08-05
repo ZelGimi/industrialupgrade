@@ -11,13 +11,13 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class GlobalRenderManager {
     public static long tick = 0;
 
     public GlobalRenderManager() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     public static void addRender(Level world, BlockPos pos, Function<RenderLevelStageEvent, Void> globalRender) {
@@ -57,11 +57,11 @@ public class GlobalRenderManager {
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void onWorldTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.player.level().isClientSide && tick != event.player
+    public void onWorldTick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide && tick != event.getEntity()
                 .level()
                 .getGameTime()) {
-            tick = event.player.level().getGameTime();
+            tick = event.getEntity().level().getGameTime();
             Screen guiScreen = Minecraft.getInstance().screen;
             if (guiScreen instanceof GuiIU) {
                 double ticks = 4;
@@ -104,6 +104,7 @@ public class GlobalRenderManager {
                         function.apply(event);
                     }
                     ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
+
                     poseStack.popPose();
                 }
             }

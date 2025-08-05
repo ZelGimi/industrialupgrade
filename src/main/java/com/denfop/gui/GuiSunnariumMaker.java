@@ -9,8 +9,8 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerSunnariumMaker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
@@ -56,7 +56,7 @@ public class GuiSunnariumMaker<T extends ContainerSunnariumMaker> extends GuiIU<
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiSunnariumMaker.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GuiSunnariumMaker.png".toLowerCase());
     }
 
 }

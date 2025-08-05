@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "B": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "C": {
+      "tag": "c:plates/carbon"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    }
+  },
+  "pattern": [
+    "BA ",
+    "BA ",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy_tools/nano_saber"
+  },
+  "show_notification": false
+}

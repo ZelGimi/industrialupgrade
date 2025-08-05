@@ -5,6 +5,7 @@ import com.denfop.DataBlock;
 import com.denfop.DataMultiBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
@@ -68,13 +69,14 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (data != null)
             return new ItemStack(this.data.getItem(getMetaFromState(state)));
         if (multiData != null)
             return new ItemStack(this.multiData.getItem(getMetaFromState(state)));
         return ItemStack.EMPTY;
     }
+
 
     public DataMultiBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> getMultiData() {
         return multiData;
@@ -87,30 +89,10 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
         List<ItemStack> drops = NonNullList.create();
         if (tool.isEmpty() && (p_60538_.getOptionalParameter(THIS_ENTITY) instanceof Player player))
             tool = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0)
-            drops = getDropsSilk(p_60538_.getLevel(), pos, state, 0);
-        else
-            drops = getDrops(p_60538_.getLevel(), pos, state, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool));
+        drops = getDrops(p_60538_.getLevel(), pos, state, EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), tool));
         return drops;
     }
 
-
-    public List<ItemStack> getDropsSilk(
-            @Nonnull final Level world,
-            @Nonnull final BlockPos pos,
-            @Nonnull final BlockState state,
-            final int fortune
-    ) {
-        if (data != null) {
-            return List.of(new ItemStack(this.getData().getItem(getMetaFromState(state))));
-
-        }
-        if (multiData != null) {
-            return List.of(new ItemStack(this.getMultiData().getItem(getMetaFromState(state))));
-
-        }
-        return List.of(ItemStack.EMPTY);
-    }
 
     public List<ItemStack> getDrops(
             @Nonnull final Level world,

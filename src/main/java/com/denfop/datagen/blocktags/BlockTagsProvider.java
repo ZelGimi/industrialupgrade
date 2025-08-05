@@ -6,28 +6,28 @@ import com.denfop.IUItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import oshi.util.tuples.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsProvider {
+public class BlockTagsProvider extends net.neoforged.neoforge.common.data.BlockTagsProvider {
     public static List<IBlockTag> list = new LinkedList<>();
     private final String key;
 
     public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        this(packOutput,lookupProvider, IUCore.MODID,existingFileHelper);
+        this(packOutput, lookupProvider, IUCore.MODID, existingFileHelper);
 
     }
-    public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider,String modid, ExistingFileHelper existingFileHelper) {
-        super(packOutput,lookupProvider, modid,existingFileHelper);
+
+    public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modid, ExistingFileHelper existingFileHelper) {
+        super(packOutput, lookupProvider, modid, existingFileHelper);
         this.key = modid;
     }
 
@@ -53,6 +53,7 @@ public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsP
             this.tag(BlockTags.SAPLINGS).add(IUItem.rubberSapling.getBlock().get());
         }
     }
+
     private TagKey<Block> getLevelFromInteger(Integer b) {
         return switch (b) {
             default -> Tags.Blocks.NEEDS_WOOD_TOOL;
@@ -67,8 +68,7 @@ public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsP
             case "pickaxe" -> BlockTags.MINEABLE_WITH_PICKAXE;
             case "axe" -> BlockTags.MINEABLE_WITH_AXE;
             case "shovel" -> BlockTags.MINEABLE_WITH_SHOVEL;
-            case "wrench" -> BlockTags.create(new ResourceLocation("mineable/wrench"));
-            default -> BlockTags.MINEABLE_WITH_HOE;
+            default -> BlockTags.MINEABLE_WITH_PICKAXE;
         };
     }
 }

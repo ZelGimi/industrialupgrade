@@ -5,24 +5,25 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.IUFluid;
 import com.denfop.blocks.fluid.IUFluidType;
 import com.denfop.items.ItemBucket;
-import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import static com.denfop.DataItem.objects;
 import static com.denfop.register.Register.BLOCKS;
 import static com.denfop.register.Register.ITEMS;
 
 public class FluidHandler {
-    public final RegistryObject<IUFluid> source;
-    public final RegistryObject<IUFluid> flowing;
-    private final IUFluidType fluidType;
-    private final RegistryObject<LiquidBlock> liquedBlock;
-    private ForgeFlowingFluid.Properties properties;
+
+    public final IUFluidType fluidType;
+    public final DeferredHolder<Block, BlockFluidIU> liquedBlock;
+    public final DeferredHolder<Fluid, IUFluid> source;
+    public final DeferredHolder<Fluid, IUFluid> flowing;
+    private BaseFlowingFluid.Properties properties;
 
     public FluidHandler(IUFluidType fluidType, FluidName fluidName) {
         this.fluidType = fluidType;
@@ -30,15 +31,15 @@ public class FluidHandler {
         this.flowing = Register.FLUIDS.register(fluidName.getName().toLowerCase() + "_flowing",
                 () -> new IUFluid(this.properties, false));
         MapColor steam = MapColor.COLOR_GRAY;
-        RegistryObject<Item> bucket = ITEMS.register("bucket/" + fluidName.name().toLowerCase().replace("fluid",""), () -> new ItemBucket(source,fluidName));
+        DeferredHolder<Item, Item> bucket = ITEMS.register("bucket/" + fluidName.name().toLowerCase().replace("fluid", ""), () -> new ItemBucket(source.get(), fluidName));
         objects.add(bucket);
-        RegistryObject<LiquidBlock> blockRegistryObject = BLOCKS.register("fluid/" + fluidName.name().toLowerCase(), () -> new BlockFluidIU(source, BlockBehaviour.Properties.of().mapColor(steam).replaceable().liquid().lightLevel(state -> source.get().getFluidType().getLightLevel())));
+        DeferredHolder<Block, BlockFluidIU> blockRegistryObject = BLOCKS.register("fluid/" + fluidName.name().toLowerCase(), () -> new BlockFluidIU(source, BlockBehaviour.Properties.of().mapColor(steam).liquid().lightLevel(state -> source.get().getFluidType().getLightLevel()).replaceable()));
         this.liquedBlock = blockRegistryObject;
-        this.properties = new ForgeFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).bucket(bucket).levelDecreasePerBlock(2).block(blockRegistryObject);
+        this.properties = new BaseFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).levelDecreasePerBlock(2).bucket(bucket).block(blockRegistryObject);
 
     }
 
-    public RegistryObject<LiquidBlock> getLiquedBlock() {
+    public DeferredHolder<Block, BlockFluidIU> getLiquedBlock() {
         return liquedBlock;
     }
 
@@ -46,11 +47,11 @@ public class FluidHandler {
         return fluidType;
     }
 
-    public ForgeFlowingFluid.Properties getProperties() {
+    public BaseFlowingFluid.Properties getProperties() {
         return properties;
     }
 
-    public void setProperties(ForgeFlowingFluid.Properties properties) {
+    public void setProperties(BaseFlowingFluid.Properties properties) {
         this.properties = properties;
     }
 

@@ -24,11 +24,9 @@ public class GuiAmpereStorage<T extends ContainerAmpereStorage> extends GuiIU<Co
     }
 
 
-
-
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_amperestorage.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_amperestorage.png");
 
     }
 

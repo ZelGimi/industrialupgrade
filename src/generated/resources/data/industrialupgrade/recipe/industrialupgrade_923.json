@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/iron"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/reactor_plate"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:exchanger/simple_exchanger"
+  },
+  "show_notification": false
+}

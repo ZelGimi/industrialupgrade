@@ -28,8 +28,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -99,7 +99,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
             public void operateOnce(final List<ItemStack> processResult) {
                 for (int i = 0; i < col.length; i++) {
                     RandomSource rand = level.random;
-                    if ((100-col[i]) <= rand.nextInt(100)) {
+                    if ((100 - col[i]) <= rand.nextInt(100)) {
                         this.outputSlot.add(processResult.get(i));
                     }
                 }
@@ -134,19 +134,19 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
 
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnMineralSeparatorParticles(level,pos,level.random);
-        }
-    }
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnMineralSeparatorParticles(level, pos, level.random);
+        }
+    }
 
     protected double getCoef() {
         switch (this.enumTypeSlot) {

@@ -25,9 +25,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -54,7 +54,7 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
                 300,
                 1,
                 12,
-                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()),BlockBaseMachine3.genetic_polymerizer,pos,state
+                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()), BlockBaseMachine3.genetic_polymerizer, pos, state
         );
         this.outputSlot1 = new InvSlotOutput(this, 1);
         this.fluidSlot = new InvSlotFluidByList(

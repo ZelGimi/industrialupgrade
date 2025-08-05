@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/carbon"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_478_element"
+    },
+    "C": {
+      "tag": "c:gems/topaz"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BAB",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/volcano_hazmat_helmet"
+  },
+  "show_notification": false
+}

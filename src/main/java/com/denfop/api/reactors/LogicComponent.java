@@ -41,7 +41,7 @@ public class LogicComponent {
         this.componentVent = this.getItem() instanceof ItemComponentVent;
         if (stack != null && stack.getItem() instanceof IDamageItem damageItem) {
             this.maxDamage = (damageItem).getMaxCustomDamage(stack);
-            this.maxDamageItem =damageItem.getCustomDamage(stack);
+            this.maxDamageItem = damageItem.getCustomDamage(stack);
         } else {
             this.maxDamage = 0;
             this.maxDamageItem = 0;
@@ -160,7 +160,7 @@ public class LogicComponent {
                         this.item.damageItem(this.stack, damage);
                     }
                     if (this.maxDamageItem > 0 && this.getItem().getType() == EnumTypeComponent.COOLANT_ROD) {
-                        this.item.damageItem(this.stack,  damage);
+                        this.item.damageItem(this.stack, damage);
                     }
                     this.maxDamageItem -= damage * -1;
 
@@ -172,7 +172,7 @@ public class LogicComponent {
                     }
                 } else {
                     if (this.damage >= 150 * getItem().getLevel()) {
-                        this.item.damageItem(this.stack,  damage);
+                        this.item.damageItem(this.stack, damage);
                         this.maxDamageItem = 1;
                     }
                 }

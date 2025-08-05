@@ -33,8 +33,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
     protected double guiProgress;
 
     public TileEntityElectricDryer(BlockPos pos, BlockState state) {
-        super(100, 1, 1,BlockBaseMachine3.electric_dryer,pos,state);
+        super(100, 1, 1, BlockBaseMachine3.electric_dryer, pos, state);
         this.progress = 0;
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));

@@ -11,13 +11,13 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiSlider extends AbstractWidget {
 
-    protected static final ResourceLocation TEXTURES = new ResourceLocation(Constants.MOD_ID, "textures/gui/slider.png");
+    protected static final ResourceLocation TEXTURES = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/slider.png");
     private final String name;
     private final float min;
     private final float max;
@@ -102,14 +102,13 @@ public class GuiSlider extends AbstractWidget {
     }
 
 
-
     protected int getHoverState(boolean p_146114_1_) {
         return 0;
     }
 
     public boolean mouseDragged(double p_146119_2_, double p_146119_3_, int button, double dragX, double dragY) {
         if (this.visible) {
-            if (this.isMouseDown && this.isMouseOver(this.getX(),p_146119_3_)) {
+            if (this.isMouseDown && this.isMouseOver(this.getX(), p_146119_3_)) {
                 updateSliderPosition(p_146119_2_);
                 this.displayString1 = this.getDisplayString();
                 this.responder.setEntryValue(this.id, this.getSliderValue());
@@ -135,7 +134,7 @@ public class GuiSlider extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int i, int i1, float v) {
-       GuiCore.bindTexture(TEXTURES);
+        GuiCore.bindTexture(TEXTURES);
         guiGraphics.blit(GuiCore.currentTexture, this.getX(),
                 this.getY(), 0, 255
                 , this.width, 1
@@ -195,7 +194,7 @@ public class GuiSlider extends AbstractWidget {
     }
 
     private boolean isMouseOver(int mouseX, int mouseY) {
-        return mouseX >= this.getX() - 4  && mouseX < this.getX() + 4 + width &&
+        return mouseX >= this.getX() - 4 && mouseX < this.getX() + 4 + width &&
                 mouseY >= this.getY() - 4 && mouseY < this.getY() + 8 + height;
     }
 

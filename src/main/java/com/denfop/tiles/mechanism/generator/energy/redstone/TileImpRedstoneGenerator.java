@@ -16,7 +16,7 @@ public class TileImpRedstoneGenerator extends TileBaseRedstoneGenerator {
     private final AirPollutionComponent pollutionAir;
 
     public TileImpRedstoneGenerator(BlockPos pos, BlockState state) {
-        super(3.4, 4,BlockBaseMachine3.imp_redstone_generator,pos,state);
+        super(3.4, 4, BlockBaseMachine3.imp_redstone_generator, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }

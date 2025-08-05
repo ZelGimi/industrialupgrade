@@ -22,7 +22,7 @@ public class BasicRecipeTwo {
 
     public static Item IMP_SENSOR;
 
-    public static Item PER_SENSOR ;
+    public static Item PER_SENSOR;
     public static Item PHOTON_SENSOR;
 
     public static void recipe() {
@@ -39,7 +39,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "forge:plates/StainlessSteel",
+                ('B'), "c:plates/StainlessSteel",
 
                 ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
@@ -47,7 +47,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "forge:plates/StainlessSteel",
+                ('B'), "c:plates/StainlessSteel",
 
                 ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
@@ -55,7 +55,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "forge:plates/Stellite",
+                ('B'), "c:plates/Stellite",
 
                 ('C'), Items.REDSTONE
         );
@@ -63,7 +63,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "forge:plates/Stellite",
+                ('B'), "c:plates/Stellite",
 
                 ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
@@ -71,7 +71,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "forge:plates/Stellite",
+                ('B'), "c:plates/Stellite",
 
                 ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
@@ -94,7 +94,7 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'),     ItemStackHelper.fromData(
+                ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         219
@@ -140,7 +140,7 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'),    ItemStackHelper.fromData(
+                ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         33
@@ -151,7 +151,7 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'),     ItemStackHelper.fromData(
+                ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         64
@@ -346,7 +346,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "forge:plates/Iron",
+                ('B'), "c:plates/Iron",
 
                 ('C'), ItemStackHelper.fromData(IUItem.advBattery, 1)
         );
@@ -358,20 +358,20 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "forge:plates/Iron",
+                ('B'), "c:plates/Iron",
 
                 ('C'), ItemStackHelper.fromData(IUItem.sunnarium, 1, 4),
 
                 ('D'),
-                "forge:plates/Germanium"
+                "c:plates/Germanium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2), "DBD", "CAC", "DBD",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
 
-                ('B'), "forge:plates/CobaltChrome",
+                ('B'), "c:plates/CobaltChrome",
 
-                ('C'), "forge:plates/NiobiumTitanium",
+                ('C'), "c:plates/NiobiumTitanium",
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
@@ -380,9 +380,9 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
 
-                ('B'), "forge:plates/Woods",
+                ('B'), "c:plates/Woods",
 
-                ('C'), "forge:plates/Permalloy",
+                ('C'), "c:plates/Permalloy",
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
@@ -393,7 +393,7 @@ public class BasicRecipeTwo {
 
                 ('B'), ItemStackHelper.fromData(IUItem.heat_exchange, 1),
 
-                ('C'), "forge:plates/NiobiumTitanium",
+                ('C'), "c:plates/NiobiumTitanium",
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
@@ -404,7 +404,7 @@ public class BasicRecipeTwo {
 
                 ('B'), ItemStackHelper.fromData(IUItem.heat_exchange, 1),
 
-                ('C'), "forge:plates/NiobiumTitanium",
+                ('C'), "c:plates/NiobiumTitanium",
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
@@ -415,7 +415,7 @@ public class BasicRecipeTwo {
 
                 ('B'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 186),
 
-                ('C'), "forge:plates/NiobiumTitanium",
+                ('C'), "c:plates/NiobiumTitanium",
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
@@ -426,7 +426,7 @@ public class BasicRecipeTwo {
 
                 ('B'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 186),
 
-                ('C'), "forge:plates/NiobiumTitanium",
+                ('C'), "c:plates/NiobiumTitanium",
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
@@ -523,105 +523,105 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
-                ('C'), "forge:doubleplate/Alcled",
+                ('C'), "c:doubleplate/Alcled",
 
                 ('D'),
-                "forge:plates/Zinc",
+                "c:plates/Zinc",
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 6), " C ", "DAD", " C ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
-                ('C'), "forge:plates/HafniumBoride",
+                ('C'), "c:plates/HafniumBoride",
 
                 ('D'),
-                "forge:plates/TantalumTungstenHafnium",
+                "c:plates/TantalumTungstenHafnium",
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 1), " C ", "DAD", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 352),
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 3), " C ", "DAD", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 43),
 
                 ('D'),
                 IUItem.cooling_mixture,
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 2), " C ", "DAD", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 43),
 
                 ('D'),
                 IUItem.cryogenic_cooling_mixture,
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 7), " C ", "DAD", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 155),
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 4), " C ", " A ", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 470),
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 8), " C ", " A ", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 110),
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 0), "BCB", "DAD", "   ",
 
@@ -634,28 +634,28 @@ public class BasicRecipeTwo {
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 5), " C ", " A ", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "forge:doubleplate/Muntsa",
+                ('B'), "c:doubleplate/Muntsa",
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 68),
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
-                ('E'), "forge:plates/Caravky"
+                ('E'), "c:plates/Caravky"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 65), "BBB", " A ", "CCC",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "forge:plates/Germanium",
+                ('B'), "c:plates/Germanium",
 
-                ('C'), "forge:plates/Chromium"
+                ('C'), "c:plates/Chromium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 22), "BCB", "BCB", " A ",
                 ('A'), DEFAULT_SENSOR, ('B'), Blocks.GLASS,
@@ -1480,7 +1480,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 48), "D D", "CAB", "D D",
                 ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 47),
-                ('C'),     ItemStackHelper.fromData(
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
@@ -1489,7 +1489,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 49), "   ", "CAB", "   ",
                 ('A'), IUItem.advancedMachine,
-                ('C'), IUItem.elemotor, ('B'),     ItemStackHelper.fromData(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         170
@@ -1854,7 +1854,7 @@ public class BasicRecipeTwo {
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11),
 
                 ('B'),
-                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), 'E', "forge:plates/Permalloy"
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), 'E', "c:plates/Permalloy"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 12), " D ", "BAC", "E H",
 
@@ -1984,7 +1984,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 14), "CDC", "ABA", "CDC",
 
                 ('D'),
-                ("forge:plates/Nichrome"),
+                ("c:plates/Nichrome"),
                 ('A'), ItemStackHelper.fromData(IUItem.impmagnet, 1),
 
                 ('B'), ItemStackHelper.fromData(IUItem.basemachine, 1, 15),
@@ -2046,9 +2046,9 @@ public class BasicRecipeTwo {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 67),
 
                 ('D'),
-                ("forge:plates/Nichrome"),
+                ("c:plates/Nichrome"),
                 ('C'),
-                ("forge:plates/Caravky"),
+                ("c:plates/Caravky"),
                 ('A'),
                 IUItem.upgradeblock,
 
@@ -2069,7 +2069,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 226), "BBB", "CAC", "DED",
 
                 ('D'),
-                ("forge:plates/Alumel"),
+                ("c:plates/Alumel"),
                 ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('A'), DEFAULT_SENSOR,
@@ -2081,19 +2081,19 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 227), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Aluminium", ('C'), Blocks.COBBLESTONE
+                ('A'), DEFAULT_SENSOR, ('B'), "c:gears/Aluminium", ('C'), Blocks.COBBLESTONE
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 229), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Zinc", ('C'), Blocks.OBSIDIAN
+                ('A'), DEFAULT_SENSOR, ('B'), "c:gears/Zinc", ('C'), Blocks.OBSIDIAN
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 230), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Manganese", ('C'), Blocks.SAND
+                ('A'), DEFAULT_SENSOR, ('B'), "c:gears/Manganese", ('C'), Blocks.SAND
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 231), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Spinel", ('C'), Blocks.GRAVEL
+                ('A'), DEFAULT_SENSOR, ('B'), "c:gears/Spinel", ('C'), Blocks.GRAVEL
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 228),
@@ -2106,31 +2106,31 @@ public class BasicRecipeTwo {
                 ('B'),
                 Items.LAVA_BUCKET,
                 ('C'),
-                "forge:plates/Redbrass"
+                "c:plates/Redbrass"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234), " C ", "BAB", "   ",
-                ('A'), ADV_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), ADV_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.energy_crystal,
                         1,
                         32767
                 )
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232), " C ", "BAB", "   ",
-                ('A'), IMP_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), IMP_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
                 )
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 233), " C ", "BAB", "   ",
-                ('A'), PER_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), PER_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
                 )
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 629), " C ", "BAB", "   ",
-                ('A'), PHOTON_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), PHOTON_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
@@ -2144,12 +2144,12 @@ public class BasicRecipeTwo {
                 ('A'),
                 ADV_SENSOR,
                 ('B'),
-                "forge:plates/Alumel",
+                "c:plates/Alumel",
                 ('C'),
-                "forge:plates/Ferromanganese",
+                "c:plates/Ferromanganese",
 
                 ('D'),
-                "forge:plates/Duralumin"
+                "c:plates/Duralumin"
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 618),
@@ -2159,12 +2159,12 @@ public class BasicRecipeTwo {
                 ('A'),
                 IMP_SENSOR,
                 ('B'),
-                "forge:plates/Vanadoalumite",
+                "c:plates/Vanadoalumite",
                 ('C'),
-                "forge:plates/AluminiumSilicon",
+                "c:plates/AluminiumSilicon",
 
                 ('D'),
-                "forge:plates/Vitalium"
+                "c:plates/Vitalium"
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 619),
@@ -2174,12 +2174,12 @@ public class BasicRecipeTwo {
                 ('A'),
                 PER_SENSOR,
                 ('B'),
-                "forge:plates/StainlessSteel",
+                "c:plates/StainlessSteel",
                 ('C'),
-                "forge:plates/Inconel",
+                "c:plates/Inconel",
 
                 ('D'),
-                "forge:plates/Permalloy"
+                "c:plates/Permalloy"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 236), "B B", "BAB", "B B",
 
@@ -2200,7 +2200,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 IUItem.FluidCell,
                 ('C'),
-                "forge:plates/vanady"
+                "c:plates/vanady"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 239), "B B", "BAB", "B B",
 
@@ -2214,14 +2214,14 @@ public class BasicRecipeTwo {
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), "forge:plates/Chromium",
+                ('B'), "c:plates/Chromium",
 
-                ('C'), "forge:plates/Cobalt",
+                ('C'), "c:plates/Cobalt",
 
                 ('D'),
-                "forge:plates/Nichrome",
+                "c:plates/Nichrome",
 
-                ('E'), "forge:plates/Alcled"
+                ('E'), "c:plates/Alcled"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 244), " D ", "BAC", "DDD",
 
@@ -2231,19 +2231,19 @@ public class BasicRecipeTwo {
                         32767
                 ), ('C'), ItemStackHelper.fromData(IUItem.cathode, 1, 32767),
                 ('D'),
-                "forge:plates/Iron"
+                "c:plates/Iron"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 241), " B ", "BAB", " B ",
-                ('A'), DEFAULT_SENSOR, ('B'), "forge:plateDense/Iron"
+                ('A'), DEFAULT_SENSOR, ('B'), "c:plateDense/Iron"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 248), " B ", "BAB", " B ",
-                ('A'), ADV_SENSOR, ('B'), "forge:plateDense/Iron"
+                ('A'), ADV_SENSOR, ('B'), "c:plateDense/Iron"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 245), " B ", "BAB", " B ",
-                ('A'), IMP_SENSOR, ('B'), "forge:plateDense/Iron"
+                ('A'), IMP_SENSOR, ('B'), "c:plateDense/Iron"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 242), " B ", "BAB", " B ",
-                ('A'), DEFAULT_SENSOR, ('B'), "forge:plates/Lead"
+                ('A'), DEFAULT_SENSOR, ('B'), "c:plates/Lead"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 249), " A ", "ABA", " A ",
                 ('A'), ItemStackHelper.fromData(IUItem.nanoBox), ('B'), ADV_SENSOR
@@ -2685,7 +2685,7 @@ public class BasicRecipeTwo {
                         1,
                         37
                 ),
-                ('A'), "forge:dusts/Coal", ('B'),
+                ('A'), "c:dusts/Coal", ('B'),
                 Blocks.GLASS
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 9), "   ", "CAD", " B ",
@@ -2751,7 +2751,7 @@ public class BasicRecipeTwo {
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 175),
 
                 ('C'),
-                ("forge:doubleplate/Duralumin"),
+                ("c:doubleplate/Duralumin"),
                 ('E'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -2981,14 +2981,14 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.veinsencor, 1), " BC", "BDB", "BAB",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ('B'), "forge:plates/Iron", ('C'), Items.REDSTONE, ('D'),
-                "forge:plates/Chromium"
+                ('B'), "c:plates/Iron", ('C'), Items.REDSTONE, ('D'),
+                "c:plates/Chromium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 169), "CED", "ABA", "CFD",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
-                ('B'), "forge:plates/Iron",
+                ('B'), "c:plates/Iron",
 
                 ('C'), Items.REDSTONE,
 
@@ -3005,7 +3005,7 @@ public class BasicRecipeTwo {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 169), IUItem.advancedMachine
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 261), " C ", "BAB", " D ",
-                ('A'), ADV_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), ADV_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.energy_crystal,
                         1,
                         32767
@@ -3014,7 +3014,7 @@ public class BasicRecipeTwo {
                 Blocks.REDSTONE_BLOCK
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 628), " C ", "BAB", " D ",
-                ('A'), PHOTON_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), PHOTON_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.energy_crystal,
                         1,
                         32767
@@ -3023,7 +3023,7 @@ public class BasicRecipeTwo {
                 Blocks.REDSTONE_BLOCK
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 259), " C ", "BAB", " D ",
-                ('A'), IMP_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), IMP_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
@@ -3032,7 +3032,7 @@ public class BasicRecipeTwo {
                 Blocks.REDSTONE_BLOCK
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 260), " C ", "BAB", " D ",
-                ('A'), PER_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('A'), PER_SENSOR, ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
@@ -3044,7 +3044,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "forge:plates/Iron",
+                ('B'), "c:plates/Iron",
 
                 ('C'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
                 ('D'),
@@ -3150,18 +3150,18 @@ public class BasicRecipeTwo {
                 IUItem.compressIridiumplate,
                 (
                         'D'),
-                "forge:doubleplate/Invar"
+                "c:doubleplate/Invar"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 262), "CCC", "BAB", "DED",
 
-                ('B'), "forge:gears/Alumel",
+                ('B'), "c:gears/Alumel",
 
-                ('C'), "forge:plates/Aluminumbronze",
+                ('C'), "c:plates/Aluminumbronze",
 
-                ('D'), "forge:plates/Titanium",
+                ('D'), "c:plates/Titanium",
 
                 ('E'),
-                "forge:plates/Iron",
+                "c:plates/Iron",
 
                 ('A'), DEFAULT_SENSOR
         );
@@ -3171,11 +3171,11 @@ public class BasicRecipeTwo {
                 "ACA",
                 "ADA",
                 ('A'),
-                "forge:plates/Redbrass",
+                "c:plates/Redbrass",
                 ('B'),
-                "forge:plates/Iron",
+                "c:plates/Iron",
                 ('C'),
-                "forge:plates/Titanium",
+                "c:plates/Titanium",
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
@@ -3204,9 +3204,9 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "forge:gears/Iridium",
+                ('B'), "c:gears/Iridium",
 
-                ('F'), "forge:gears/Magnesium"
+                ('F'), "c:gears/Magnesium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 252), "CDE", "BAB", "FFF",
 
@@ -3219,9 +3219,9 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "forge:gears/Iridium",
+                ('B'), "c:gears/Iridium",
 
-                ('F'), "forge:gears/Magnesium"
+                ('F'), "c:gears/Magnesium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 254), "CDE", "BAB", "FFF",
 
@@ -3234,9 +3234,9 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "forge:gears/Iridium",
+                ('B'), "c:gears/Iridium",
 
-                ('F'), "forge:gears/Magnesium"
+                ('F'), "c:gears/Magnesium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 631), "CDE", "BAB", "FFF",
 
@@ -3249,18 +3249,18 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "forge:gears/Iridium",
+                ('B'), "c:gears/Iridium",
 
-                ('F'), "forge:gears/Magnesium"
+                ('F'), "c:gears/Magnesium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 257), "CEC", "ABA", "DED",
 
                 ('D'),
-                ("forge:gems/Curium"),
+                ("c:gems/Curium"),
                 ('C'),
-                ("forge:doubleplate/Caravky"),
+                ("c:doubleplate/Caravky"),
                 ('E'),
-                ("forge:plates/Duralumin"),
+                ("c:plates/Duralumin"),
                 ('A'),
                 ItemStackHelper.fromData(IUItem.core, 1, 8),
 
@@ -3269,11 +3269,11 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 253), "CEC", "ABA", "DED",
 
                 ('D'),
-                ("forge:doubleplate/Germanium"),
+                ("c:doubleplate/Germanium"),
                 ('C'),
-                ("forge:doubleplate/Alcled"),
+                ("c:doubleplate/Alcled"),
                 ('E'),
-                ("forge:plates/Vitalium"),
+                ("c:plates/Vitalium"),
                 ('A'),
                 ItemStackHelper.fromData(IUItem.core, 1, 11),
 
@@ -3286,7 +3286,7 @@ public class BasicRecipeTwo {
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('E'),
-                ("forge:plates/Titanium"),
+                ("c:plates/Titanium"),
                 ('A'),
                 ItemStackHelper.fromData(IUItem.core, 1, 12),
 
@@ -3366,7 +3366,7 @@ public class BasicRecipeTwo {
 
                 ('B'), IUItem.energiumDust,
 
-                ('C'), "forge:dusts/Silver"
+                ('C'), "c:dusts/Silver"
         );
         Recipes.recipe.addRecipe(IUItem.coil, "AAA", "ABA", "AAA",
 
@@ -3383,7 +3383,7 @@ public class BasicRecipeTwo {
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
                 ('D'),
-                "forge:casings/Iron",
+                "c:casings/Iron",
 
                 ('E'), IUItem.elemotor
         );
@@ -3396,7 +3396,7 @@ public class BasicRecipeTwo {
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('D'),
-                "forge:casings/Iron",
+                "c:casings/Iron",
 
                 ('E'), IUItem.elemotor
         );
@@ -3405,7 +3405,7 @@ public class BasicRecipeTwo {
 
                 ('A'), IUItem.insulatedTinCableItem,
 
-                ('C'), "forge:casings/AluminiumLithium",
+                ('C'), "c:casings/AluminiumLithium",
 
                 ('D'), ItemStackHelper.fromData(IUItem.charged_redstone), 'E', ItemStackHelper.fromData(IUItem.charged_quartz)
         );
@@ -3419,19 +3419,19 @@ public class BasicRecipeTwo {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 476),
 
                 ('B'),
-                "forge:dusts/Lead", 'E', ItemStackHelper.fromData(IUItem.charged_redstone, 1)
+                "c:dusts/Lead", 'E', ItemStackHelper.fromData(IUItem.charged_redstone, 1)
         );
 
         Recipes.recipe.addRecipe(IUItem.energyStorageUpgrade, "FEF", "BDB", "ACA",
 
-                ('A'), "forge:plates/Carbon",
+                ('A'), "c:plates/Carbon",
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('D'), ItemStackHelper.fromData(IUItem.advBattery, 1),
 
                 ('B'),
-                IUItem.insulatedCopperCableItem, 'E', IUItem.upgrade_casing, 'F', "forge:plates/Obsidian"
+                IUItem.insulatedCopperCableItem, 'E', IUItem.upgrade_casing, 'F', "c:plates/Obsidian"
         );
         Recipes.recipe.addShapelessRecipe(
                 ItemStackHelper.fromData(IUItem.frequency_transmitter),
@@ -3444,7 +3444,7 @@ public class BasicRecipeTwo {
 
                 ('B'), Items.REDSTONE,
 
-                ('C'), "forge:dusts/Coal"
+                ('C'), "c:dusts/Coal"
         );
 
 
@@ -3500,18 +3500,18 @@ public class BasicRecipeTwo {
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), "forge:gears/Nickel",
+                ('B'), "c:gears/Nickel",
 
-                ('C'), "forge:plates/Tin",
+                ('C'), "c:plates/Tin",
 
                 ('D'),
-                "forge:gears/Silver"
+                "c:gears/Silver"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 263), " C ", "BAB", "DDD",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "forge:doubleplate/Nichrome",
+                ('B'), "c:doubleplate/Nichrome",
 
                 ('C'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
@@ -3542,27 +3542,27 @@ public class BasicRecipeTwo {
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), "forge:doubleplate/Nichrome",
+                ('B'), "c:doubleplate/Nichrome",
 
                 ('C'), IUItem.tinCan,
 
                 ('D'),
-                "forge:plates/Vanadoalumite"
+                "c:plates/Vanadoalumite"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.coolingsensor, 1), "CBC", "BDB", "BAB",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.coolpipes,
                         1,
                         3
                 ), ('D'),
-                "forge:doubleplate/Mikhail"
+                "c:doubleplate/Mikhail"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.heatsensor, 1), "CBC", "BDB", "BAB",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
+                ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.pipes,
                         1,
                         3
@@ -3594,7 +3594,7 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 501),
 
-                ('C'), "forge:plates/Carbon",
+                ('C'), "c:plates/Carbon",
 
                 ('D'),
                 Blocks.IRON_BARS
@@ -3622,12 +3622,12 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(
                 IUItem.sprayer,
-                "B  ", " B ", " AB", ('B'), "forge:casings/Iron", ('A'), IUItem.fluidCell
+                "B  ", " B ", " AB", ('B'), "c:casings/Iron", ('A'), IUItem.fluidCell
         );
         Recipes.recipe.addRecipe(IUItem.treetap
                 , " B ", "BBB", "B  ", ('B'), "planks");
         Recipes.recipe.addRecipe(IUItem.wrench
-                , "B B", "BBB", " B ", ('B'), "forge:ingots/Bronze");
+                , "B B", "BBB", " B ", ('B'), "c:ingots/Bronze");
         Recipes.recipe.addShapelessRecipe(IUItem.electric_wrench
                 , IUItem.wrench, IUItem.powerunitsmall);
         Recipes.recipe.addShapelessRecipe(IUItem.electric_treetap
@@ -3635,7 +3635,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(
                 IUItem.chainsaw
                 ,
-                " BB", "BBB", "AB ", ('B'), "forge:plates/Iron", ('A'), IUItem.powerunit
+                " BB", "BBB", "AB ", ('B'), "c:plates/Iron", ('A'), IUItem.powerunit
         );
         Recipes.recipe.addRecipe(
                 IUItem.drill
@@ -3645,7 +3645,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(IUItem.diamond_drill
                 , "   ", " B ", "BAB",
 
-                ('B'), "forge:gems/Diamond",
+                ('B'), "c:gems/Diamond",
 
                 ('A'), ItemStackHelper.fromData(IUItem.drill, 1, 32767)
         );
@@ -3658,7 +3658,7 @@ public class BasicRecipeTwo {
 
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
-                ('C'), "forge:plates/Carbon",
+                ('C'), "c:plates/Carbon",
 
                 ('D'),
                 IUItem.reinforcedGlass,
@@ -3672,7 +3672,7 @@ public class BasicRecipeTwo {
                 ,
                 "CAC", "BAB", "A A", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
-                ('A'), "forge:casings/Iron",
+                ('A'), "c:casings/Iron",
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
@@ -3680,7 +3680,7 @@ public class BasicRecipeTwo {
                 ,
                 "ACA", "ABA", "ACA", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
-                ('A'), "forge:dusts/Lapis",
+                ('A'), "c:dusts/Lapis",
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
@@ -3715,23 +3715,23 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.charging_energy_crystal, 1, 32767)
         );
         Recipes.recipe.addRecipe(IUItem.ForgeHammer
-                , "AA ", "ABB", "AA ", ('B'),Items.STICK,
-                ('A'), "forge:ingots/Iron"
+                , "AA ", "ABB", "AA ", ('B'), Items.STICK,
+                ('A'), "c:ingots/Iron"
         );
         Recipes.recipe.addRecipe(IUItem.ForgeHammer
                 , " AA", "BBA", " AA", ('B'), Items.STICK,
-                ('A'), "forge:ingots/Iron"
+                ('A'), "c:ingots/Iron"
         );
         Recipes.recipe.addRecipe(IUItem.cutter
-                , "A A", " A ", "B B", ('B'), "forge:ingots/Copper",
-                ('A'), "forge:plates/Iron"
+                , "A A", " A ", "B B", ('B'), "c:ingots/Copper",
+                ('A'), "c:plates/Iron"
         );
         Recipes.recipe.addRecipe(
                 IUItem.advanced_batpack
                 ,
                 "BAB", "BCB", "B B", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "forge:casings/Copper"
+                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "c:casings/Copper"
         );
         Recipes.recipe.addRecipe(
                 IUItem.batpack
@@ -3742,23 +3742,23 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(IUItem.nanosaber
                 , "BA ", "BA ", "CDC", ('B'), Items.GLOWSTONE_DUST,
-                ('A'), IUItem.advancedAlloy, ('C'), "forge:plates/Carbon", ('D'),
+                ('A'), IUItem.advancedAlloy, ('C'), "c:plates/Carbon", ('D'),
                 ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767)
         );
 
 
         Recipes.recipe.addRecipe(IUItem.mixedMetalIngot, "AAA", "BBB", "CCC",
-                ('A'), "forge:plates/Iron", ('B'), "forge:plates/Copper", ('C'), "forge:plates/Tin"
+                ('A'), "c:plates/Iron", ('B'), "c:plates/Copper", ('C'), "c:plates/Tin"
         );
         Recipes.recipe.addRecipe(IUItem.rawcrystalmemory, "ABA", "BAB", "ABA",
-                ('A'), "forge:dusts/Silicon_Dioxide", ('B'), "forge:dusts/Obsidian"
+                ('A'), "c:dusts/Silicon_Dioxide", ('B'), "c:dusts/Obsidian"
         );
         Recipes.recipe.addRecipe(IUItem.carbonFiber, "AA ", "AA ", "   ",
-                ('A'), "forge:dusts/Coal"
+                ('A'), "c:dusts/Coal"
         );
         Recipes.recipe.addShapelessRecipe(IUItem.carbonMesh, IUItem.carbonFiber, IUItem.carbonFiber);
         Recipes.recipe.addRecipe(IUItem.copperboiler, "AAA", "A A", "AAA",
-                ('A'), "forge:casings/Copper"
+                ('A'), "c:casings/Copper"
         );
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
                 ('A'), Items.SUGAR_CANE
@@ -3784,28 +3784,28 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.fluidCell.getItemStack(), 3), " A ", "ABA", " A ",
 
-                ('A'), "forge:casings/Tin",
+                ('A'), "c:casings/Tin",
 
                 ('B'),
                 Blocks.GLASS_PANE
         );
         Recipes.recipe.addRecipe(IUItem.coalBall, "AAA", "ABA", "AAA",
-                ('A'), "forge:dusts/Coal", ('B'), Items.FLINT
+                ('A'), "c:dusts/Coal", ('B'), Items.FLINT
         );
         Recipes.recipe.addRecipe(IUItem.coal_chunk, "AAA", "ABA", "AAA",
                 ('A'), IUItem.compressedCoalBall, ('B'), Blocks.OBSIDIAN
         );
 
         Recipes.recipe.addRecipe(IUItem.cfPowder, "ACA", "ABA", "ACA",
-                ('A'), "forge:dusts/Stone", ('B'), Items.CLAY_BALL,
+                ('A'), "c:dusts/Stone", ('B'), Items.CLAY_BALL,
                 ('C'), Blocks.SAND
         );
 
         Recipes.recipe.addRecipe(IUItem.heatconducto, "ABA", "ABA", "ABA",
-                ('A'), IUItem.rubber, ('B'), "forge:plates/Copper"
+                ('A'), IUItem.rubber, ('B'), "c:plates/Copper"
         );
         Recipes.recipe.addRecipe(IUItem.ejectorUpgrade, "ABA", " D ", "ACA",
-                ('A'), "forge:plates/Tin", ('B'), Blocks.PISTON, 'C', IUItem.upgrade_casing, 'D', IUItem.motors_with_improved_bearings_
+                ('A'), "c:plates/Tin", ('B'), Blocks.PISTON, 'C', IUItem.upgrade_casing, 'D', IUItem.motors_with_improved_bearings_
         );
         Recipes.recipe.addRecipe(
                 IUItem.pullingUpgrade,
@@ -3813,7 +3813,7 @@ public class BasicRecipeTwo {
                 " D ",
                 "ACA",
                 ('A'),
-                "forge:plates/Tin",
+                "c:plates/Tin",
                 ('B'),
                 Blocks.STICKY_PISTON,
                 'C',
@@ -3822,10 +3822,10 @@ public class BasicRecipeTwo {
                 IUItem.motors_with_improved_bearings_
         );
         Recipes.recipe.addRecipe(IUItem.fluidEjectorUpgrade, "ADA", " B ", "ACA",
-                ('A'), "forge:plates/Tin", ('B'), IUItem.elemotor, 'C', IUItem.upgrade_casing, 'D', IUItem.fluidCell
+                ('A'), "c:plates/Tin", ('B'), IUItem.elemotor, 'C', IUItem.upgrade_casing, 'D', IUItem.fluidCell
         );
         Recipes.recipe.addRecipe(IUItem.fluidpullingUpgrade, "ACA", " B ", "ADA",
-                ('A'), "forge:plates/Tin", ('B'), IUItem.elemotor, ('C'), ItemStackHelper.fromData(
+                ('A'), "c:plates/Tin", ('B'), IUItem.elemotor, ('C'), ItemStackHelper.fromData(
                         IUItem.treetap,
                         1,
                         32767
@@ -3834,7 +3834,7 @@ public class BasicRecipeTwo {
 
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gasChamber), "ABA", "BBB", "CAC",
-                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 601), ('B'), "forge:plates/Iron", ('C'), "forge:gears/Invar"
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 601), ('B'), "c:plates/Iron", ('C'), "c:gears/Invar"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 464)
@@ -3843,13 +3843,13 @@ public class BasicRecipeTwo {
                 , "AAA", "AAA", "AAA", ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 464));
 
         Recipes.recipe.addRecipe(IUItem.bronze_helmet
-                , "AAA", "A A", "   ", ('A'), "forge:ingots/Bronze");
+                , "AAA", "A A", "   ", ('A'), "c:ingots/Bronze");
         Recipes.recipe.addRecipe(IUItem.bronze_leggings
-                , "AAA", "A A", "A A", ('A'), "forge:ingots/Bronze");
+                , "AAA", "A A", "A A", ('A'), "c:ingots/Bronze");
         Recipes.recipe.addRecipe(IUItem.bronze_boots
-                , "   ", "A A", "A A", ('A'), "forge:ingots/Bronze");
+                , "   ", "A A", "A A", ('A'), "c:ingots/Bronze");
         Recipes.recipe.addRecipe(IUItem.bronze_chestplate
-                , "A A", "AAA", "AAA", ('A'), "forge:ingots/Bronze");
+                , "A A", "AAA", "AAA", ('A'), "c:ingots/Bronze");
 
 
         Recipes.recipe.addRecipe(IUItem.UranFuel, "AAA", "BBB", "AAA",
@@ -3871,7 +3871,7 @@ public class BasicRecipeTwo {
 
                 ('A'), IUItem.charged_redstone,
 
-                ('B'), "forge:dusts/diamond", 'C', Items.QUARTZ
+                ('B'), "c:dusts/diamond", 'C', Items.QUARTZ
         );
 
         Recipes.recipe.addRecipe(
@@ -3880,11 +3880,11 @@ public class BasicRecipeTwo {
                 "CDC",
                 "ABA",
                 ('A'),
-                "forge:plates/Steel",
+                "c:plates/Steel",
                 ('B'),
                 IUItem.advancedAlloy,
                 ('C'),
-                "forge:plates/Carbon",
+                "c:plates/Carbon",
                 ('D'),
                 IUItem.machine
         );
@@ -3952,7 +3952,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_helmet,
                 ('B'),
-                "forge:doubleplate/Ferromanganese",
+                "c:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -3966,7 +3966,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_chestplate,
                 ('B'),
-                "forge:doubleplate/Ferromanganese",
+                "c:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -3980,7 +3980,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_boots,
                 ('B'),
-                "forge:doubleplate/Ferromanganese",
+                "c:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -3994,7 +3994,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_leggings,
                 ('B'),
-                "forge:doubleplate/Ferromanganese",
+                "c:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -4112,27 +4112,27 @@ public class BasicRecipeTwo {
                 ('D'),
                 IUItem.doublecompressIridiumplate, 'E', IUItem.adv_spectral_box, 'F', IUItem.compressAlloy
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 437), " AA", "BCA", "BB ", 'A', "forge:plates/Steel", 'B',
-                IUItem.advancedAlloy, 'C', "forge:rods/Invar"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 437), " AA", "BCA", "BB ", 'A', "c:plates/Steel", 'B',
+                IUItem.advancedAlloy, 'C', "c:rods/Invar"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 337), " AA", "A A", "AA ", 'A', "forge:plates/Iron");
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 339), " AA", "A A", "AA ", 'A', "forge:plates/Gold");
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 305), " AA", "A A", "AA ", 'A', "forge:gems/Diamond");
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 341), " AA", "A A", "AA ", 'A', "forge:gems/Emerald");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 337), " AA", "A A", "AA ", 'A', "c:plates/Iron");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 339), " AA", "A A", "AA ", 'A', "c:plates/Gold");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 305), " AA", "A A", "AA ", 'A', "c:gems/Diamond");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 341), " AA", "A A", "AA ", 'A', "c:gems/Emerald");
 
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 433), "BAB", "ABA", "BAB",
 
-                ('A'), "forge:plates/Zinc",
+                ('A'), "c:plates/Zinc",
 
 
-                ('B'), "forge:plates/Iridium"
+                ('B'), "c:plates/Iridium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 367),
-                " A ", "ABA", "CCC", 'A', "forge:plates/Beryllium", 'B', "forge:plates/Iron", 'C', "forge:plates/Bor"
+                " A ", "ABA", "CCC", 'A', "c:plates/Beryllium", 'B', "c:plates/Iron", 'C', "c:plates/Bor"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 415),
-                " A ", "ABA", "CCC", 'A', "forge:plates/Gold", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 367), 'C', "forge:plates/Electrum"
+                " A ", "ABA", "CCC", 'A', "c:plates/Gold", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 367), 'C', "c:plates/Electrum"
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 380),
@@ -4140,15 +4140,15 @@ public class BasicRecipeTwo {
                 "ABA",
                 "CCC",
                 'A',
-                "forge:plates/Mikhail",
+                "c:plates/Mikhail",
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 415),
                 'C',
-                "forge:plates/vanady"
+                "c:plates/vanady"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 396),
-                " A ", "ABA", "CCC", 'A', "forge:plates/Cadmium", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 380), 'C', "forge:plates/Spinel"
+                " A ", "ABA", "CCC", 'A', "c:plates/Cadmium", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 380), 'C', "c:plates/Spinel"
         );
 
         Recipes.recipe.addRecipe(
@@ -4161,9 +4161,9 @@ public class BasicRecipeTwo {
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "forge:ingots/Osmium",
+                "c:ingots/Osmium",
                 'D',
-                "forge:plates/Platinum"
+                "c:plates/Platinum"
         );
 
         Recipes.recipe.addRecipe(
@@ -4176,9 +4176,9 @@ public class BasicRecipeTwo {
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "forge:ingots/Osmium",
+                "c:ingots/Osmium",
                 'D',
-                "forge:plates/Titanium"
+                "c:plates/Titanium"
         );
 
         Recipes.recipe.addRecipe(
@@ -4191,9 +4191,9 @@ public class BasicRecipeTwo {
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "forge:ingots/Osmium",
+                "c:ingots/Osmium",
                 'D',
-                "forge:plates/Zinc"
+                "c:plates/Zinc"
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 333),
@@ -4205,9 +4205,9 @@ public class BasicRecipeTwo {
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "forge:ingots/Osmium",
+                "c:ingots/Osmium",
                 'D',
-                "forge:plates/Tungsten"
+                "c:plates/Tungsten"
         );
 
         Recipes.recipe.addRecipe(
@@ -4222,7 +4222,7 @@ public class BasicRecipeTwo {
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 'D',
-                "forge:plateDense/Gold"
+                "c:plateDense/Gold"
         );
 
         Recipes.recipe.addRecipe(
@@ -4237,7 +4237,7 @@ public class BasicRecipeTwo {
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 'D',
-                "forge:doubleplate/Osmium"
+                "c:doubleplate/Osmium"
         );
 
         Recipes.recipe.addRecipe(
@@ -4252,13 +4252,13 @@ public class BasicRecipeTwo {
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 'D',
-                "forge:doubleplate/Osmium"
+                "c:doubleplate/Osmium"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 428),
                 "BCB", "DAD", " ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 436), 'B', IUItem.nanoBox, 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
-                'D', "forge:plateDense/Gold"
+                'D', "c:plateDense/Gold"
         );
 
         Recipes.recipe.addRecipe(
@@ -4273,7 +4273,7 @@ public class BasicRecipeTwo {
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 'D',
-                "forge:doubleplate/Osmium"
+                "c:doubleplate/Osmium"
         );
 
         Recipes.recipe.addRecipe(
@@ -4288,7 +4288,7 @@ public class BasicRecipeTwo {
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 'D',
-                "forge:doubleplate/Osmium"
+                "c:doubleplate/Osmium"
         );
         // water reactor
         // 366

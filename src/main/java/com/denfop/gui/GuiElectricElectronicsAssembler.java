@@ -35,8 +35,6 @@ public class GuiElectricElectronicsAssembler<T extends ContainerElectricElectron
     }
 
 
-
-
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
@@ -44,13 +42,12 @@ public class GuiElectricElectronicsAssembler<T extends ContainerElectricElectron
     }
 
 
-
     public String getName() {
         return "";
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

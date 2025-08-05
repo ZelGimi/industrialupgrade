@@ -14,15 +14,15 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityChest extends TileEntityMultiBlockElement implements IEarthChest {
 
     private final InvSlot slot;
 
     public TileEntityChest(BlockPos pos, BlockState state) {
-        super(BlockEarthQuarry.earth_chest,pos,state);
+        super(BlockEarthQuarry.earth_chest, pos, state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 9);
     }
 

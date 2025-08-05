@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntitySimpleInputPort extends TileEntityInputFluid {
 
     public TileEntitySimpleInputPort(BlockPos pos, BlockState state) {
-        super( BlockWaterReactors.water_input, pos, state);
+        super(BlockWaterReactors.water_input, pos, state);
     }
 
     @Override

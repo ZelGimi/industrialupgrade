@@ -124,7 +124,7 @@ public final class ScrapboxRecipeManager {
         this.addDrop(Items.WOODEN_HOE, 5.01F);
         this.addDrop(Blocks.DIRT, 5.0F);
         this.addDrop(Items.STICK, 4.0F);
-        this.addDrop(Blocks.GRASS, 3.0F);
+        this.addDrop(Blocks.GRASS_BLOCK, 3.0F);
         this.addDrop(Blocks.GRAVEL, 3.0F);
         this.addDrop(Blocks.NETHERRACK, 2.0F);
         this.addDrop(Items.ROTTEN_FLESH, 2.0F);

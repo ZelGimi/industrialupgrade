@@ -3,10 +3,11 @@ package com.denfop;
 import com.denfop.mixin.access.DeferredRegisterAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +18,8 @@ import static com.denfop.register.Register.BLOCKS;
 import static com.denfop.register.Register.ITEMS;
 
 public class DataSimpleBlock<E extends Block, F extends BlockItem> {
-    private final RegistryObject<E> block;
-    private RegistryObject<F> itemBlock;
+    private final DeferredHolder<Block, E> block;
+    private DeferredHolder<Item, F> itemBlock;
 
 
     public DataSimpleBlock(Class<E> blockClass, Class<F> itemClass, String mainPath, String name) {
@@ -34,9 +35,9 @@ public class DataSimpleBlock<E extends Block, F extends BlockItem> {
                 }
             };
 
-            final ResourceLocation key = new ResourceLocation(IUCore.MODID, mainPath + "/" + name.toLowerCase());
+            final ResourceLocation key = ResourceLocation.tryBuild(IUCore.MODID, mainPath + "/" + name.toLowerCase());
 
-            RegistryObject<E> ret = RegistryObject.create(key, BLOCKS.getRegistryKey(), IUCore.MODID);
+            DeferredHolder<Block, E> ret = DeferredHolder.create(BLOCKS.getRegistryKey(), key);
 
             var entries = ((DeferredRegisterAccessor) BLOCKS).getEntries();
             if (entries.putIfAbsent(ret, supplier) != null) {
@@ -51,7 +52,7 @@ public class DataSimpleBlock<E extends Block, F extends BlockItem> {
 
     }
 
-    private void registerBlockItem(RegistryObject<E> block, Class<F> itemClass, String mainPath, String name) {
+    private void registerBlockItem(DeferredHolder<Block, E> block, Class<F> itemClass, String mainPath, String name) {
         int indexMax = 0;
         try {
             Constructor<F> constructor = (Constructor<F>) itemClass.getConstructors()[0];
@@ -63,8 +64,8 @@ public class DataSimpleBlock<E extends Block, F extends BlockItem> {
                 }
             };
 
-            final ResourceLocation key = new ResourceLocation(IUCore.MODID, mainPath + "/" + name.toLowerCase());
-            RegistryObject<F> ret = RegistryObject.create(key, ITEMS.getRegistryKey(), IUCore.MODID);
+            final ResourceLocation key = ResourceLocation.tryBuild(IUCore.MODID, mainPath + "/" + name.toLowerCase());
+            DeferredHolder<Item, F> ret = DeferredHolder.create(ITEMS.getRegistryKey(), key);
             var entries = ((DeferredRegisterAccessor) ITEMS).getEntries();
             objects.add(ret);
             if (entries.putIfAbsent(ret, supplier) != null) {
@@ -77,7 +78,7 @@ public class DataSimpleBlock<E extends Block, F extends BlockItem> {
 
     }
 
-    public RegistryObject<E> getBlock() {
+    public DeferredHolder<Block, E> getBlock() {
         return block;
     }
 
@@ -93,39 +94,6 @@ public class DataSimpleBlock<E extends Block, F extends BlockItem> {
         return block.get().defaultBlockState();
     }
 
-/*    private void registerBlockItem(T type, RegistryObject<E> block, Class<F> itemClass) {
-        int indexMax = 0;
-        Map<T, RegistryObject<F>> map = new HashMap<>();
-
-        try {
-            Constructor<F> constructor = (Constructor<F>) itemClass.getConstructors()[0];
-            Supplier<? extends F> supplier = () -> {
-                try {
-                    return constructor.newInstance(block.get(), type);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            };
-
-            final ResourceLocation key = new ResourceLocation(IUCore.MODID, type.getMainPath() + "/" + type.getSerializedName());
-            if (indexMax < type.getId())
-                indexMax = type.getId();
-
-            RegistryObject<F> ret = RegistryObject.create(key, ITEMS.getRegistryKey(), IUCore.MODID);
-            var entries = ((DeferredRegisterAccessor) ITEMS).getEntries();
-            if (entries.putIfAbsent(ret, supplier) != null) {
-                throw new IllegalArgumentException("Duplicate registration " + type);
-            }
-            map.put(type, ret);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        registryObjectList = new ArrayList<>(Collections.nCopies(indexMax + 1, null));
-        for (Map.Entry<T, RegistryObject<F>> entry : map.entrySet()) {
-            registryObjectList.set(entry.getKey().getId(), entry.getValue());
-        }
-    }*/
 
     public F getItem() {
         return itemBlock.get();

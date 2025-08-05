@@ -46,7 +46,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -89,7 +89,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
         if (xScale >= 1) {
             progress = 0;
         }
-     drawSplitString( stack,
+        drawSplitString(stack,
                 ModUtils.getString(recipe.getEnergy()) + "QE",
                 10,
                 28,
@@ -108,7 +108,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
         final List<ItemStack> inputs = Arrays.asList(recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT,slots1.get(i).getJeiX() + 51, slots1.get(i).getJeiY() - 9).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.OUTPUT, slots1.get(i).getJeiX() + 51, slots1.get(i).getJeiY() - 9).addItemStack(inputs.get(i));
 
 
         }
@@ -116,7 +116,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

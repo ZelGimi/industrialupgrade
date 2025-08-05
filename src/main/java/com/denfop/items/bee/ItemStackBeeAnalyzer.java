@@ -10,17 +10,11 @@ import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBeeAnalyzer;
 import com.denfop.gui.GuiBeeAnalyzer;
 import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ItemStackBeeAnalyzer extends ItemStackInventory {
 
@@ -148,25 +142,6 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
         this.radiationPollution = EnumLevelRadiation.LOW;
     }
 
-    public void save() {
-        super.save();
-    }
-
-    public void saveAndThrow(ItemStack stack) {
-        ListTag contentList = new ListTag();
-
-        for (int i = 0; i < this.inventory.length; ++i) {
-            if (!ModUtils.isEmpty(this.inventory[i])) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putByte("Slot", (byte) i);
-                this.inventory[i].save(nbt);
-                contentList.add(nbt);
-            }
-        }
-
-        ModUtils.nbt(stack).put("Items", contentList);
-        this.clear();
-    }
 
     public ContainerBeeAnalyzer getGuiContainer(Player player) {
         return new ContainerBeeAnalyzer(player, this);
@@ -181,42 +156,6 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
     public ItemStackInventory getParent() {
         return this;
     }
-
-
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
-    }
-
-
-    public ItemStack get(int index) {
-        return this.inventory[index];
-    }
-
-    protected void restore(ItemStack[] backup) {
-        if (backup.length != this.inventory.length) {
-            throw new IllegalArgumentException("invalid array size");
-        } else {
-            System.arraycopy(backup, 0, this.inventory, 0, this.inventory.length);
-
-        }
-    }
-
-    @Nonnull
-    public String getName() {
-        return "toolbox";
-    }
-
-    public boolean hasCustomName() {
-        return false;
-    }
-
-
 
 
 }

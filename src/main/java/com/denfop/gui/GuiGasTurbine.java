@@ -2,12 +2,10 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.componets.ComponentButton;
+import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGasTurbineController;
 import com.denfop.network.packet.PacketUpdateServerTile;
-import com.denfop.tiles.gasturbine.TileEntityGasTurbineController;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -17,8 +15,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +25,7 @@ import java.util.List;
 public class GuiGasTurbine<T extends ContainerGasTurbineController> extends GuiIU<ContainerGasTurbineController> {
 
     boolean hoverButton;
+
     public GuiGasTurbine(ContainerGasTurbineController guiContainer) {
         super(guiContainer);
         componentList.clear();
@@ -89,9 +88,9 @@ public class GuiGasTurbine<T extends ContainerGasTurbineController> extends GuiI
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(poseStack,mouseX+
+                    this.gui.drawSprite(poseStack, mouseX +
                                     fluidX,
-                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -132,7 +131,7 @@ public class GuiGasTurbine<T extends ContainerGasTurbineController> extends GuiI
     @Override
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        if (hoverButton){
+        if (hoverButton) {
             new PacketUpdateServerTile(this.container.base, 0);
         }
     }
@@ -146,23 +145,23 @@ public class GuiGasTurbine<T extends ContainerGasTurbineController> extends GuiI
         if (par1 >= 7 && par2 >= 39 && par1 <= 28 && par2 <= 61)
             hoverButton = true;
 
-        new AdvArea(this,7,65,168,79).withTooltip(  ModUtils.getString(Math.min(
+        new AdvArea(this, 7, 65, 168, 79).withTooltip(ModUtils.getString(Math.min(
                 this.container.base.energy.getEnergy().getEnergy(),
                 this.container.base.energy.getEnergy().getCapacity()
         )) + "/" + ModUtils.getString(this.container.base.energy.getEnergy().getCapacity()) + " " +
-                "EF").drawForeground(poseStack,par1,par2);
+                "EF").drawForeground(poseStack, par1, par2);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack, partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
         poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name =this.container.base.getDisplayName().getString();
+        String name = this.container.base.getDisplayName().getString();
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
@@ -181,29 +180,29 @@ public class GuiGasTurbine<T extends ContainerGasTurbineController> extends GuiI
         int textY = (int) ((this.guiTop + 3) / scale);
 
 
-        poseStack.drawString(Minecraft.getInstance().font,name, textX, textY, 4210752,false);
-        pose.scale(1/scale,1/scale,1);
+        poseStack.drawString(Minecraft.getInstance().font, name, textX, textY, 4210752, false);
+        pose.scale(1 / scale, 1 / scale, 1);
 
         pose.popPose();
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-      bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, 10, 10);
         bindTexture();
-        if (hoverButton){
-            drawTexturedModalRect(poseStack,this.guiLeft+7, this.guiTop+39, 234, 0, 23, 23);
+        if (hoverButton) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 7, this.guiTop + 39, 234, 0, 23, 23);
 
         }
-        if (container.base.work){
-            drawTexturedModalRect(poseStack,this.guiLeft+7, this.guiTop+39, 234, 24, 22, 23);
+        if (container.base.work) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 7, this.guiTop + 39, 234, 24, 22, 23);
 
         }
-        drawTexturedModalRect(poseStack,this.guiLeft+11, this.guiTop+69, 11, 172, (int) (this.container.base.energy.getEnergy().getFillRatio() * 154), 8);
+        drawTexturedModalRect(poseStack, this.guiLeft + 11, this.guiTop + 69, 11, 172, (int) (this.container.base.energy.getEnergy().getFillRatio() * 154), 8);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigas_turbine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigas_turbine.png");
     }
 
 }

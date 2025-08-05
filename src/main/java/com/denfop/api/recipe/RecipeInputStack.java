@@ -2,6 +2,7 @@ package com.denfop.api.recipe;
 
 import com.denfop.api.Recipes;
 import com.denfop.recipe.IInputItemStack;
+import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
@@ -17,7 +18,7 @@ public class RecipeInputStack implements IRecipeInputStack {
     }
 
     public RecipeInputStack(ItemStack input) {
-        this.input = Recipes.inputFactory.getInput(input);
+        this.input = Recipes.inputFactory.getInput(Collections.singletonList(input));
 
     }
 
@@ -26,22 +27,23 @@ public class RecipeInputStack implements IRecipeInputStack {
         return input.getInputs();
     }
 
-    public IInputItemStack getInput() {
-        return input;
-    }
-
     @Override
     public boolean matched(final ItemStack stack) {
         for (ItemStack input : getItemStack()) {
             if (input.getItem() == stack.getItem()) {
-                if (stack.getTag() == null || input.getTag() == null) {
+                if (stack.getComponents().isEmpty() || input.getComponents().isEmpty()) {
                     return true;
                 } else {
-                    return stack.getTag().equals(input.getTag());
+                    return ModUtils.checkItemEquality(input, stack);
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public IInputItemStack getInput() {
+        return input;
     }
 
     @Override
@@ -57,10 +59,10 @@ public class RecipeInputStack implements IRecipeInputStack {
 
             for (ItemStack input1 : that.getItemStack()) {
                 if (input.getItem() == input1.getItem()) {
-                    if (input.getTag() == null) {
+                    if (input.getComponents().isEmpty()) {
                         return true;
                     } else {
-                        return input.getTag().equals(input1.getTag());
+                        return input.getComponents().equals(input1.getComponents());
                     }
                 }
             }

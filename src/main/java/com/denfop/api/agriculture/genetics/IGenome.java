@@ -1,7 +1,7 @@
 package com.denfop.api.agriculture.genetics;
 
 import com.denfop.api.agriculture.ICrop;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public interface IGenome {
 
@@ -15,5 +15,5 @@ public interface IGenome {
 
     Genome copy();
 
-    CompoundTag writeNBT(CompoundTag nbtTagCompound);
+    void writeNBT(ItemStack stack);
 }

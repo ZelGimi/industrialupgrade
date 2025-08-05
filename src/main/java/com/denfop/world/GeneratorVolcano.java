@@ -13,11 +13,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -74,239 +74,243 @@ public class GeneratorVolcano {
 
 
         this.position2 = new BlockPos(p159749.origin().getX(), 30, p159749.origin().getZ());
-        this.thread = new Thread(() -> {
-            if (y == baseHeight) {
-                while (!genChest) {
-                    int index = rand.nextInt(blockPosList1.size());
-                    if (rand.nextDouble() >= 0.95) {
-                        BlockPos pos = blockPosList1.get(index);
-                        while (true) {
-                            if (!world.getBlockState(pos).isAir()) {
-                                pos = pos.above();
-                            }
-                            // generateChest(pos);
-                            break;
-                        }
-                        genChest = true;
-                    } else {
-                        BlockPos pos = blockPosList1.remove(index);
-                        if (blockPosList1.isEmpty()) {
+        this.thread = new Thread() {
+            @Override
+            public void run() {
+                if (y == baseHeight) {
+                    while (!genChest) {
+                        int index = rand.nextInt(blockPosList1.size());
+                        if (rand.nextDouble() >= 0.95) {
+                            BlockPos pos = blockPosList1.get(index);
                             while (true) {
                                 if (!world.getBlockState(pos).isAir()) {
                                     pos = pos.above();
                                 }
-                                //   generateChest(pos);
+                                // generateChest(pos);
                                 break;
                             }
                             genChest = true;
+                        } else {
+                            BlockPos pos = blockPosList1.remove(index);
+                            if (blockPosList1.isEmpty()) {
+                                while (true) {
+                                    if (!world.getBlockState(pos).isAir()) {
+                                        pos = pos.above();
+                                    }
+                                    //   generateChest(pos);
+                                    break;
+                                }
+                                genChest = true;
+                            }
                         }
                     }
+                    end = true;
+                    return;
                 }
-                end = true;
-                return;
-            }
-            int radius = baseRadius - y / 2;
-            if (radius < 10) {
+                int radius = baseRadius - y / 2;
+                if (radius < 10) {
+                    for (int x = -radius; x <= radius; x++) {
+                        for (int z = -radius; z <= radius; z++) {
+                            if (x * x + z * z <= radius * radius) {
+                                BlockPos pos = position.offset(x, y, z);
+                                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                            }
+                        }
+                    }
+                    y++;
+                    return;
+                }
                 for (int x = -radius; x <= radius; x++) {
                     for (int z = -radius; z <= radius; z++) {
                         if (x * x + z * z <= radius * radius) {
                             BlockPos pos = position.offset(x, y, z);
-                            world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                        }
-                    }
-                }
-                y++;
-                return;
-            }
-            for (int x = -radius; x <= radius; x++) {
-                for (int z = -radius; z <= radius; z++) {
-                    if (x * x + z * z <= radius * radius) {
-                        BlockPos pos = position.offset(x, y, z);
-                        if (y >= baseHeight - 1 || x * x + z * z > (radius - 2) * (radius - 2)) {
-                            world.setBlock(pos, getBlockState(maxbaseHeight, y, rand), 3);
-                            if (y < baseHeight - 5 && y > maxbaseHeight * 0.1 && rand.nextDouble() < stalagmiteChance) {
-                                for (int i = 1; i <= rand.nextInt(3); i++) {
-                                    BlockPos belowPos = pos.below(i);
-                                    world.setBlock(belowPos, getBlockState(maxbaseHeight, y, rand), 3);
-                                }
-                            } else if (y < maxbaseHeight * 0.6 && y > maxbaseHeight * 0.1 && rand.nextDouble() < 0.05) {
+                            if (y >= baseHeight - 1 || x * x + z * z > (radius - 2) * (radius - 2)) {
                                 world.setBlock(pos, getBlockState(maxbaseHeight, y, rand), 3);
-                                for (int i = 1; i <= 3 + rand.nextInt(6); i++) {
-                                    BlockPos belowPos = pos.below(i);
-                                    world.setBlock(belowPos, getBlockStatePylon(maxbaseHeight, y, rand), 3);
+                                if (y < baseHeight - 5 && y > maxbaseHeight * 0.1 && rand.nextDouble() < stalagmiteChance) {
+                                    for (int i = 1; i <= rand.nextInt(3); i++) {
+                                        BlockPos belowPos = pos.below(i);
+                                        world.setBlock(belowPos, getBlockState(maxbaseHeight, y, rand), 3);
+                                    }
+                                } else if (y < maxbaseHeight * 0.6 && y > maxbaseHeight * 0.1 && rand.nextDouble() < 0.05) {
+                                    world.setBlock(pos, getBlockState(maxbaseHeight, y, rand), 3);
+                                    for (int i = 1; i <= 3 + rand.nextInt(6); i++) {
+                                        BlockPos belowPos = pos.below(i);
+                                        world.setBlock(belowPos, getBlockStatePylon(maxbaseHeight, y, rand), 3);
+                                    }
+                                } else if (y < maxbaseHeight * 0.25 && y > maxbaseHeight * 0.025 && rand.nextDouble() < lavaFlowChance) {
+                                    BlockPos belowPos = pos.below();
+                                    setBlockState1(
+                                            world,
+                                            belowPos,
+                                            FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(),
+                                            3
+                                    );
                                 }
-                            } else if (y < maxbaseHeight * 0.25 && y > maxbaseHeight * 0.025 && rand.nextDouble() < lavaFlowChance) {
-                                BlockPos belowPos = pos.below();
+                                if (rand.nextInt(1000) > 20) {
+                                    continue;
+                                }
+                                BlockPos belowPos = pos.above();
                                 setBlockState1(
                                         world,
                                         belowPos,
                                         FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(),
                                         3
                                 );
-                            }
-                            if (rand.nextInt(1000) > 20) {
-                                continue;
-                            }
-                            BlockPos belowPos = pos.above();
-                            setBlockState1(
-                                    world,
-                                    belowPos,
-                                    FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(),
-                                    3
-                            );
 
-                        } else {
-                            if (y == 0) {
-                                if (rand.nextDouble() < protrusionChance) {
-                                    final int type = rand.nextInt(5);
-                                    if (type == 0) {
-                                        BlockPos protrusionPos = pos.above(0);
-                                        setBlockState1(world, protrusionPos, getBlockDownState(y, rand), 3);
-                                        blockPosList1.add(protrusionPos);
-                                    } else if (type == 1) {
-                                        int protrusionSize = rand.nextInt(5) + 2;
-                                        for (int i = 0; i < protrusionSize; i++) {
-                                            BlockPos protrusionPos = pos.above(i);
-                                            blockPosList.add(protrusionPos);
-                                            setBlockState1(
-                                                    world,
-                                                    protrusionPos,
-                                                    getBlockStatePylon(maxbaseHeight, y, rand),
-                                                    3
-                                            );
-                                        }
-                                        blockPosList1.add(pos.above(protrusionSize - 1));
-                                    } else if (type == 2) {
-                                        for (int x1 = -1; x1 < 2; x1++) {
-                                            for (int z1 = -1; z1 < 2; z1++) {
-                                                BlockPos protrusionPos = pos.offset(x1, 0, z1);
+                            } else {
+                                if (y == 0) {
+                                    if (rand.nextDouble() < protrusionChance) {
+                                        final int type = rand.nextInt(5);
+                                        if (type == 0) {
+                                            BlockPos protrusionPos = pos.above(0);
+                                            setBlockState1(world, protrusionPos, getBlockDownState(y, rand), 3);
+                                            blockPosList1.add(protrusionPos);
+                                        } else if (type == 1) {
+                                            int protrusionSize = rand.nextInt(5) + 2;
+                                            for (int i = 0; i < protrusionSize; i++) {
+                                                BlockPos protrusionPos = pos.above(i);
                                                 blockPosList.add(protrusionPos);
                                                 setBlockState1(
                                                         world,
                                                         protrusionPos,
-                                                        getBlockDownState(y, rand),
+                                                        getBlockStatePylon(maxbaseHeight, y, rand),
                                                         3
                                                 );
-                                                blockPosList1.add(protrusionPos);
                                             }
-                                        }
+                                            blockPosList1.add(pos.above(protrusionSize - 1));
+                                        } else if (type == 2) {
+                                            for (int x1 = -1; x1 < 2; x1++) {
+                                                for (int z1 = -1; z1 < 2; z1++) {
+                                                    BlockPos protrusionPos = pos.offset(x1, 0, z1);
+                                                    blockPosList.add(protrusionPos);
+                                                    setBlockState1(
+                                                            world,
+                                                            protrusionPos,
+                                                            getBlockDownState(y, rand),
+                                                            3
+                                                    );
+                                                    blockPosList1.add(protrusionPos);
+                                                }
+                                            }
 
 
-                                        for (int[] offset : protrusionOffsets) {
-                                            for (int yy = 0; yy < offset[1]; yy++) {
-                                                BlockPos protrusionPos = pos.offset(offset[0], yy, offset[2]);
+                                            for (int[] offset : protrusionOffsets) {
+                                                for (int yy = 0; yy < offset[1]; yy++) {
+                                                    BlockPos protrusionPos = pos.offset(offset[0], yy, offset[2]);
+                                                    blockPosList.add(protrusionPos);
+                                                    setBlockState1(
+                                                            world,
+                                                            protrusionPos,
+                                                            getBlockState(maxbaseHeight, y, rand),
+                                                            3
+                                                    );
+                                                }
+
+                                            }
+
+                                        } else if (type == 3) {
+                                            for (int x1 = -1; x1 < 2; x1++) {
+                                                for (int z1 = -1; z1 < 2; z1++) {
+                                                    BlockPos protrusionPos = pos.offset(x1, 0, z1);
+                                                    blockPosList.add(protrusionPos);
+                                                    setBlockState1(
+                                                            world,
+                                                            protrusionPos,
+                                                            getBlockDownState(y, rand),
+                                                            3
+                                                    );
+                                                    blockPosList1.add(protrusionPos);
+                                                }
+                                            }
+                                            int protrusionSize = rand.nextInt(5) + 2;
+                                            for (int i = 0; i < protrusionSize; i++) {
+                                                BlockPos protrusionPos = pos.above(i);
                                                 blockPosList.add(protrusionPos);
                                                 setBlockState1(
                                                         world,
                                                         protrusionPos,
-                                                        getBlockState(maxbaseHeight, y, rand),
+                                                        getBlockStatePylon(maxbaseHeight, y, rand),
                                                         3
                                                 );
                                             }
-
-                                        }
-
-                                    } else if (type == 3) {
-                                        for (int x1 = -1; x1 < 2; x1++) {
-                                            for (int z1 = -1; z1 < 2; z1++) {
-                                                BlockPos protrusionPos = pos.offset(x1, 0, z1);
-                                                blockPosList.add(protrusionPos);
-                                                setBlockState1(
-                                                        world,
-                                                        protrusionPos,
-                                                        getBlockDownState(y, rand),
-                                                        3
-                                                );
-                                                blockPosList1.add(protrusionPos);
-                                            }
-                                        }
-                                        int protrusionSize = rand.nextInt(5) + 2;
-                                        for (int i = 0; i < protrusionSize; i++) {
-                                            BlockPos protrusionPos = pos.above(i);
-                                            blockPosList.add(protrusionPos);
-                                            setBlockState1(
-                                                    world,
-                                                    protrusionPos,
-                                                    getBlockStatePylon(maxbaseHeight, y, rand),
-                                                    3
-                                            );
-                                        }
-                                        protrusionSize = rand.nextInt(protrusionSize);
-                                        for (int i = 0; i < protrusionSize; i++) {
-                                            BlockPos protrusionPos = pos.above(i);
-                                            for (int z1 = -1; z1 < 2; z1 += 2) {
-                                                final BlockPos pos1 = protrusionPos.east(z1);
-                                                blockPosList.add(pos1);
-                                                setBlockState1(world, pos1, getBlockState(maxbaseHeight, y, rand), 32);
-                                            }
-                                            for (int x1 = -1; x1 < 2; x1 += 2) {
-                                                final BlockPos pos1 = protrusionPos.north(x1);
-                                                blockPosList.add(pos1);
-
-                                                setBlockState1(world, pos1, getBlockState(maxbaseHeight, y, rand), 3);
-                                            }
-                                        }
-
-
-                                    } else {
-                                        for (int x1 = -1; x1 < 2; x1++) {
-                                            for (int z1 = -1; z1 < 2; z1++) {
-                                                BlockPos protrusionPos = pos.offset(x1, 0, z1);
-                                                blockPosList.add(protrusionPos);
-                                                blockPosList1.add(protrusionPos);
-                                                setBlockState1(
-                                                        world,
-                                                        protrusionPos,
-                                                        getBlockState(maxbaseHeight, y, rand),
-                                                        3
-                                                );
-                                            }
-                                        }
-                                        int protrusionSize = rand.nextInt(5) + 2;
-                                        for (int i = 0; i < protrusionSize; i++) {
-                                            BlockPos protrusionPos = pos.above(i);
-                                            blockPosList.add(protrusionPos);
-                                            setBlockState1(world, protrusionPos, getBlockState(maxbaseHeight, y, rand), 3);
-                                        }
-                                        protrusionSize = rand.nextInt(protrusionSize);
-                                        for (int i = 0; i < protrusionSize; i++) {
-                                            BlockPos protrusionPos = pos.above(i);
-                                            for (int z1 = -1; z1 < 2; z1 += 2) {
-                                                for (int x1 = -1; x1 < 2; x1 += 2) {
-                                                    BlockPos pos1 = protrusionPos.east(z1);
-                                                    pos1 = pos1.north(x1);
+                                            protrusionSize = rand.nextInt(protrusionSize);
+                                            for (int i = 0; i < protrusionSize; i++) {
+                                                BlockPos protrusionPos = pos.above(i);
+                                                for (int z1 = -1; z1 < 2; z1 += 2) {
+                                                    final BlockPos pos1 = protrusionPos.east(z1);
                                                     blockPosList.add(pos1);
+                                                    setBlockState1(world, pos1, getBlockState(maxbaseHeight, y, rand), 32);
+                                                }
+                                                for (int x1 = -1; x1 < 2; x1 += 2) {
+                                                    final BlockPos pos1 = protrusionPos.north(x1);
+                                                    blockPosList.add(pos1);
+
                                                     setBlockState1(world, pos1, getBlockState(maxbaseHeight, y, rand), 3);
                                                 }
                                             }
 
+
+                                        } else {
+                                            for (int x1 = -1; x1 < 2; x1++) {
+                                                for (int z1 = -1; z1 < 2; z1++) {
+                                                    BlockPos protrusionPos = pos.offset(x1, 0, z1);
+                                                    blockPosList.add(protrusionPos);
+                                                    blockPosList1.add(protrusionPos);
+                                                    setBlockState1(
+                                                            world,
+                                                            protrusionPos,
+                                                            getBlockState(maxbaseHeight, y, rand),
+                                                            3
+                                                    );
+                                                }
+                                            }
+                                            int protrusionSize = rand.nextInt(5) + 2;
+                                            for (int i = 0; i < protrusionSize; i++) {
+                                                BlockPos protrusionPos = pos.above(i);
+                                                blockPosList.add(protrusionPos);
+                                                setBlockState1(world, protrusionPos, getBlockState(maxbaseHeight, y, rand), 3);
+                                            }
+                                            protrusionSize = rand.nextInt(protrusionSize);
+                                            for (int i = 0; i < protrusionSize; i++) {
+                                                BlockPos protrusionPos = pos.above(i);
+                                                for (int z1 = -1; z1 < 2; z1 += 2) {
+                                                    for (int x1 = -1; x1 < 2; x1 += 2) {
+                                                        BlockPos pos1 = protrusionPos.east(z1);
+                                                        pos1 = pos1.north(x1);
+                                                        blockPosList.add(pos1);
+                                                        setBlockState1(world, pos1, getBlockState(maxbaseHeight, y, rand), 3);
+                                                    }
+                                                }
+
+                                            }
+
                                         }
 
+                                    } else {
+                                        final boolean remove = blockPosList.remove(pos);
+                                        if (!remove) {
+                                            setBlockState1(world, pos, FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(), 3);
+                                        }
                                     }
-
                                 } else {
-                                    final boolean remove = blockPosList.remove(pos);
-                                    if (!remove) {
-                                        setBlockState1(world, pos, FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(), 3);
-                                    }
-                                }
-                            } else {
-                                if (blockPosList.isEmpty() || y > 10) {
+                                    if (blockPosList.isEmpty() || y > 10) {
 
-                                    setBlockState1(world, pos, Blocks.AIR.defaultBlockState(), 3);
-                                } else {
-                                    boolean remove = blockPosList.remove(pos);
-                                    if (!remove) {
                                         setBlockState1(world, pos, Blocks.AIR.defaultBlockState(), 3);
+                                    } else {
+                                        boolean remove = blockPosList.remove(pos);
+                                        if (!remove) {
+                                            setBlockState1(world, pos, Blocks.AIR.defaultBlockState(), 3);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+                y += 1;
             }
-            y += 1;
-        });
+
+        };
         this.thread.setPriority(1);
     }
 
@@ -335,11 +339,13 @@ public class GeneratorVolcano {
             if (basalts_ores == null) {
                 initBasaltsOres();
             }
-            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(),position2.getZ());
+
+            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(), position2.getZ());
             BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
+
             this.position = checkPos.above(maxbaseHeight / 2);
             if (position.getY() > 60)
-                position = position.below(position.getY()-60);
+                position = position.below(position.getY() - 60);
             this.y = 0;
             this.end = false;
         }
@@ -530,6 +536,7 @@ public class GeneratorVolcano {
     }
 
     public void setBlockState1(Level level, BlockPos p_46605_, BlockState p_46606_, int p_46607_) {
+
         level.setBlock(p_46605_, p_46606_, p_46607_);
     }
 

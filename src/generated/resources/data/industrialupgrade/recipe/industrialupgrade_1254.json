@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/aluminumbronze"
+    },
+    "B": {
+      "tag": "c:plates/bronze"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
+  },
+  "show_notification": false
+}

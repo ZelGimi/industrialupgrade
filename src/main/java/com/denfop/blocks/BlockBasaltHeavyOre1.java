@@ -6,6 +6,7 @@ import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,17 +39,13 @@ public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCor
 
     }
 
-
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return new ItemStack(IUItem.mineral.getItem(getMetaFromState(state)));
     }
 
     @Override
-    public List<ItemStack> getDrops(      @Nonnull final Level world,
-                                          @Nonnull final BlockPos pos,
-                                          @Nonnull final BlockState state,
-                                          final int fortune) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = new ArrayList<>();
         drops.add(new ItemStack(IUItem.mineral.getItem(this.getMetaFromState(state))));
         drops.add(new ItemStack(IUItem.basalts.getItem(0)));
@@ -56,7 +54,7 @@ public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCor
 
     @Override
     public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-        int levelEnchant = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
+        int levelEnchant = EnchantmentHelper.getItemEnchantmentLevel(((Level) level).registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), player.getMainHandItem());
         return levelEnchant == 0;
 
     }

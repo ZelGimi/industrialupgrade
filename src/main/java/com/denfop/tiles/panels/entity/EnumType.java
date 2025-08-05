@@ -37,7 +37,7 @@ public enum EnumType {
         this.meta = meta;
         this.coefficient_nether = coefficient_nether;
         this.coefficient_end = coefficient_end;
-        this.texture = new ResourceLocation(
+        this.texture = ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 ("textures/gui/GUI" + name + "SolarPanel.png").toLowerCase()
         );

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/spinel"
+    },
+    "B": {
+      "tag": "c:doubleplate/manganese"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_116_element"
+    }
+  },
+  "pattern": [
+    " B ",
+    "ACA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_120_element"
+  },
+  "show_notification": false
+}

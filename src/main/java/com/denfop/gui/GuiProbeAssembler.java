@@ -27,9 +27,9 @@ public class GuiProbeAssembler<T extends ContainerProbeAssembler> extends GuiIU<
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack, partialTicks, mouseX, mouseY);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect( poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class GuiProbeAssembler<T extends ContainerProbeAssembler> extends GuiIU<
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiprobe_assembler.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiprobe_assembler.png");
     }
 
 }

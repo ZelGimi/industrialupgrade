@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/silver"
+    },
+    "C": {
+      "tag": "c:storage_blocks/iridium"
+    },
+    "D": {
+      "item": "industrialupgrade:block_anvil/block_anvil"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "ADA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:block_strong_anvil/block_strong_anvil"
+  },
+  "show_notification": false
+}

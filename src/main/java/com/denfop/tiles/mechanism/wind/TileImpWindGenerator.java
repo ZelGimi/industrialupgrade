@@ -12,7 +12,7 @@ public class TileImpWindGenerator extends TileWindGenerator {
 
 
     public TileImpWindGenerator(BlockPos pos, BlockState state) {
-        super(EnumLevelGenerators.THREE,BlockBaseMachine3.imp_wind_generator,pos,state);
+        super(EnumLevelGenerators.THREE, BlockBaseMachine3.imp_wind_generator, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

@@ -23,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,31 +37,18 @@ public class TileEntityMachineCharge extends TileEntityInventory {
     Map<ChunkPos, List<IEnergySink>> chunkPosListMap = new HashMap<>();
 
     public TileEntityMachineCharge(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.machine_charger,pos,state);
+        super(BlockBaseMachine3.machine_charger, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1000000000, 14));
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.machine_charger.info"));
-    }
-    @Override
-    public BlockTileEntity getBlock() {
-        return IUItem.basemachine2.getBlock(getTeBlock());
-    }
-
-    @Override
-    public IMultiTileBlock getTeBlock() {
-        return BlockBaseMachine3.machine_charger;
-    }
-
-    @Override
-    public ContainerMachineCharger getGuiContainer(final Player var1) {
-        return new ContainerMachineCharger(this, var1);
     }
 
     @Override
@@ -85,8 +72,25 @@ public class TileEntityMachineCharge extends TileEntityInventory {
             }
         }
 
-        visible.aabb = new AABB(minX,level.getMinBuildHeight(),minZ,maxX,level.getMaxBuildHeight(),maxZ);
+        visible.aabb = new AABB(minX, level.getMinBuildHeight(), minZ, maxX, level.getMaxBuildHeight(), maxZ);
     }
+
+    @Override
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2.getBlock(getTeBlock());
+    }
+
+    @Override
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.machine_charger;
+    }
+
+    @Override
+    public ContainerMachineCharger getGuiContainer(final Player var1) {
+        return new ContainerMachineCharger(this, var1);
+    }
+
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {

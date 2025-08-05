@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:research_lens/lens_2"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/mythril"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:research_lens/lens_3"
+  },
+  "show_notification": false
+}

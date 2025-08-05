@@ -22,13 +22,14 @@ public class ItemBlockAlloy extends ItemBlockCore<BlocksAlloy.Type> implements I
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem = "iu."+this.getElement().getName()+"_block.name";
+            this.nameItem = "iu." + this.getElement().getName() + "_block.name";
         }
 
         return "" + this.nameItem;
     }
+
     @Override
     public String[] getTags() {
-        return new String[]{"forge:storage_blocks/" + getElement().getName().replace("_", "").replace("_", ""), "forge:storage_blocks"};
+        return new String[]{"c:storage_blocks/" + getElement().getName().replace("_", "").replace("_", ""), "c:storage_blocks"};
     }
 }

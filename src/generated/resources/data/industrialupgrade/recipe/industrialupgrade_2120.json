@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:plates/strontium"
+    },
+    "C": {
+      "tag": "minecraft:saplings"
+    },
+    "D": {
+      "tag": "c:plates/hafnium"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_674_element"
+  },
+  "show_notification": false
+}

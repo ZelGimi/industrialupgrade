@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tantalum"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_621_element"
+    },
+    "C": {
+      "tag": "c:plates/arsenic"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_120_element"
+    }
+  },
+  "pattern": [
+    " A ",
+    "CDC",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_622_element"
+  },
+  "show_notification": false
+}

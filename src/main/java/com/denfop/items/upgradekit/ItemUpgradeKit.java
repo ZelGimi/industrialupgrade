@@ -6,6 +6,7 @@ import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.wiring.EnumElectricBlock;
+import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,10 +46,12 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         tooltip.add(Component.translatable("waring_kit"));
         super.appendHoverText(stack, world, tooltip, flag);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.UpgradeTab;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
@@ -70,7 +74,7 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
                         ? IUItem.chargepadelectricblock.getItem(tile.getElectricBlock().meta)
                         : IUItem.electricblock.getItem(tile.getElectricBlock().meta), 1);
 
-                CompoundTag nbt = stack1.getOrCreateTag();
+                CompoundTag nbt = ModUtils.nbt(stack1);
                 nbt.putDouble("energy", tile.energy.getEnergy());
 
                 BlockState state = world.getBlockState(pos);
@@ -81,7 +85,7 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
                 block.destroy(world, pos, state);
 
                 List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class,
-                        new AABB(pos.offset(-1, -1, -1), pos.offset(1, 1, 1)));
+                        new AABB(Vec3.atCenterOf(pos.offset(-1, -1, -1)), Vec3.atCenterOf(pos.offset(1, 1, 1))));
 
                 for (ItemEntity item : items) {
                     item.discard();

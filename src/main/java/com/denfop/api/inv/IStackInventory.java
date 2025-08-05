@@ -9,5 +9,5 @@ public interface IStackInventory extends IInventory {
 
     ItemStackInventory getParent();
 
-    GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> menu);
+    GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> menu);
 }

@@ -138,8 +138,8 @@ public class TileGearMachine extends TileMultiMachine {
         for (int i = 0; i < itemNames().size(); i++) {
 
             addrecipe(
-                    "forge:ingots/" + itemNames().get(i).toLowerCase(),
-                    "forge:gears/" + itemNames().get(i).toLowerCase()
+                    "c:ingots/" + itemNames().get(i).toLowerCase(),
+                    "c:gears/" + itemNames().get(i).toLowerCase()
             );
 
 
@@ -147,8 +147,8 @@ public class TileGearMachine extends TileMultiMachine {
         for (int i = 0; i < itemNames7().size(); i++) {
 
             addrecipe(
-                    "forge:ingots/" + itemNames7().get(i).toLowerCase(),
-                    "forge:gears/" + itemNames7().get(i).toLowerCase()
+                    "c:ingots/" + itemNames7().get(i).toLowerCase(),
+                    "c:gears/" + itemNames7().get(i).toLowerCase()
             );
 
 
@@ -156,23 +156,23 @@ public class TileGearMachine extends TileMultiMachine {
         for (int i = 0; i < itemNames1().size(); i++) {
 
             addrecipe(
-                    "forge:ingots/" + itemNames1().get(i).toLowerCase(),
-                    "forge:gears/" + itemNames1().get(i).toLowerCase()
+                    "c:ingots/" + itemNames1().get(i).toLowerCase(),
+                    "c:gears/" + itemNames1().get(i).toLowerCase()
             );
 
 
         }
         addrecipe(
-                "forge:ingots/Osmium".toLowerCase(),
-                "forge:gears/Osmium".toLowerCase()
+                "c:ingots/Osmium".toLowerCase(),
+                "c:gears/Osmium".toLowerCase()
         );
         addrecipe(
-                "forge:ingots/Tantalum".toLowerCase(),
-                "forge:gears/Tantalum".toLowerCase()
+                "c:ingots/Tantalum".toLowerCase(),
+                "c:gears/Tantalum".toLowerCase()
         );
         addrecipe(
-                "forge:ingots/Cadmium".toLowerCase(),
-                "forge:gears/Cadmium".toLowerCase()
+                "c:ingots/Cadmium".toLowerCase(),
+                "c:gears/Cadmium".toLowerCase()
         );
     }
 

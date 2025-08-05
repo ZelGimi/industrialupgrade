@@ -9,7 +9,6 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class ItemToolWrench extends Item implements IItemTab {
     String nameItem;
 
     public ItemToolWrench() {
-        super(new Properties().durability(120).defaultDurability(0).setNoRepair());
+        super(new Properties().durability(120).setNoRepair());
     }
 
     public static WrenchResult wrenchBlock(Level level, BlockPos pos, Direction side, Player player, boolean remove) {
@@ -44,7 +44,7 @@ public class ItemToolWrench extends Item implements IItemTab {
             if (block instanceof IWrenchable wrenchable) {
                 Direction currentFacing = wrenchable.getFacing(level, pos);
                 Direction newFacing = currentFacing;
-                int experience;
+                BlockEvent.BreakEvent experience;
 
                 if (!IUCore.keyboard.isChangeKeyDown(player)) {
                     newFacing = player.isShiftKeyDown() ? side.getOpposite() : side;
@@ -68,12 +68,10 @@ public class ItemToolWrench extends Item implements IItemTab {
                     if (!level.isClientSide) {
                         BlockEntity te = level.getBlockEntity(pos);
                         if (player instanceof ServerPlayer serverPlayer) {
-                            experience = ForgeHooks.onBlockBreakEvent(level, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos);
-                            if (experience < 0) {
+                            experience = CommonHooks.fireBlockBreak(level, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos, state);
+                            if (experience.isCanceled()) {
                                 return WrenchResult.Nothing;
                             }
-                        } else {
-                            experience = 0;
                         }
 
                         block.playerWillDestroy(level, pos, state, player);
@@ -90,9 +88,7 @@ public class ItemToolWrench extends Item implements IItemTab {
                         }
 
                         wrenchable.wrenchBreak(level, pos);
-                        if (!player.isCreative() && experience > 0) {
-                            block.popExperience((ServerLevel) level, pos, experience);
-                        }
+
                     }
 
                     return WrenchResult.Removed;
@@ -159,7 +155,7 @@ public class ItemToolWrench extends Item implements IItemTab {
 
 
     public void damage(ItemStack stack, int amount, Player player) {
-        stack.hurtAndBreak(amount, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        stack.hurtAndBreak(amount, player, EquipmentSlot.MAINHAND);
     }
 
     protected String getOrCreateDescriptionId() {

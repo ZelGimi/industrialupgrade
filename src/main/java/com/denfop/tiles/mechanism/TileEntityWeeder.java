@@ -33,13 +33,15 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityWeeder extends TileEntityInventory implements IUpgradableBlock {
 
@@ -49,8 +51,8 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     public final InvSlotUpgrade upgradeSlot;
     private final ComponentUpgradeSlots componentUpgrade;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
     List<ChunkPos> chunks;
@@ -58,7 +60,7 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     private ComponentVisibleArea visible;
 
     public TileEntityWeeder(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.weeder,pos,state);
+        super(BlockBaseMachine3.weeder, pos, state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -164,7 +166,7 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
                 for (TileEntityCrop crop : crops) {
                     if (this.energy.getEnergy() > 5 && !this.slot.get(0).isEmpty() && crop.isLoaded) {
                         if (this.contains(crop.getPos()) && crop.getCrop() != null && crop.getCrop().getId() == 3) {
-                            this.slot.get(0).hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                            this.slot.get(0).hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
                             crop.resetCrop();
                             this.energy.useEnergy(5);
                         }

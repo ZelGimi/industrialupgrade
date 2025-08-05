@@ -38,9 +38,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -74,7 +74,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
     protected short progress;
 
     public TileEntitySolidFluidMixer(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.solid_fluid_mixer,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.solid_fluid_mixer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -124,6 +124,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
                 outputfluidStack, outputfluidStack1)));
 
     }
+
     public static void addRecipe(
             IInputItemStack container, FluidStack fluidStack, FluidStack outputfluidStack,
             FluidStack outputfluidStack1
@@ -143,6 +144,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
                 outputfluidStack, outputfluidStack1)));
 
     }
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -175,7 +177,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(Recipes.inputFactory.getInput("forge:dusts/coal"),
+        addRecipe(Recipes.inputFactory.getInput("c:dusts/coal"),
                 new FluidStack(FluidName.fluidnitricoxide.getInstance().get(), 200),
                 new FluidStack(FluidName.fluidazot.getInstance().get()
                         , 200), new FluidStack(FluidName.fluidco2.getInstance().get()

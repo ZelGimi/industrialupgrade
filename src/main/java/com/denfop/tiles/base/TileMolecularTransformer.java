@@ -38,9 +38,10 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.ClientHooks;
 
 import java.io.IOException;
 import java.util.List;
@@ -94,12 +95,14 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
         for (int i = 0; i < 4; i++) {
             this.output_stack[i] = new ItemStack(Items.AIR);
-            this.inputSlot[i] = new InvSlotRecipes(this, "molecular", this){
+            this.inputSlot[i] = new InvSlotRecipes(this, "molecular", this) {
                 @Override
-                public boolean accepts(ItemStack itemStack, int index) {
-                    return getIndex() < maxAmount;
+                public boolean accepts(final ItemStack itemStack, final int index) {
+                    return index < maxAmount;
                 }
-            }; this.inputSlot[i].setIndex(i);
+            };
+            ;
+            this.inputSlot[i].setIndex(i);
             this.outputSlot[i] = new InvSlotOutput(this, 1);
         }
         Recipes.recipes.addInitRecipes(this);
@@ -150,7 +153,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                 15500000D
         );
 
-        addrecipe("forge:ingots/Spinel", new ItemStack(IUItem.iuingot.getStack(5), 1), 2500000);
+        addrecipe("c:ingots/Spinel", new ItemStack(IUItem.iuingot.getStack(5), 1), 2500000);
 
         addrecipe(new ItemStack(IUItem.photoniy.getItem()), new ItemStack(IUItem.photoniy_ingot.getItem()), 12000000D);
 
@@ -159,7 +162,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         addrecipe(new ItemStack(Blocks.SAND), new ItemStack(Blocks.GRAVEL, 1), 45000D);
 
 
-        addrecipe("forge:ingots/Iridium", new ItemStack(IUItem.core.getStack(0), 1), 1500D);
+        addrecipe("c:ingots/Iridium", new ItemStack(IUItem.core.getStack(0), 1), 1500D);
 
         addrecipe(new ItemStack(IUItem.core.getStack(0), 4), new ItemStack(IUItem.core.getStack(1)), 11720D);
 
@@ -220,7 +223,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
     public double getInput() {
         return EnergyNetGlobal.instance
-                .getNodeStats(this.energy.getDelegate(),this.level)
+                .getNodeStats(this.energy.getDelegate(), this.level)
                 .getEnergyIn();
     }
 
@@ -327,9 +330,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                             this.getWorld(),
                             null, 0
                     );
-                    this.transformedModel[i] = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                    this.transformedModel[i] = ClientHooks.handleCameraTransforms(new PoseStack(),
                             this.bakedModel[i],
-                           GROUND,
+                            GROUND,
                             false
                     );
                 } else {
@@ -528,9 +531,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                                 this.getWorld(),
                                 null, 0
                         );
-                        this.transformedModel[i] = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                        this.transformedModel[i] = ClientHooks.handleCameraTransforms(new PoseStack(),
                                 this.bakedModel[i],
-                              GROUND,
+                                GROUND,
                                 false
                         );
                     } else {

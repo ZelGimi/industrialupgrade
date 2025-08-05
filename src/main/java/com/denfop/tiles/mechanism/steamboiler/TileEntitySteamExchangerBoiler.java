@@ -18,8 +18,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement 
     public final InvSlot slot1;
 
     public TileEntitySteamExchangerBoiler(BlockPos pos, BlockState state) {
-        super(BlockSteamBoiler.steam_boiler_heat_exchanger,pos,state);
+        super(BlockSteamBoiler.steam_boiler_heat_exchanger, pos, state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

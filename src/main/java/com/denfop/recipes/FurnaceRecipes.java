@@ -126,9 +126,8 @@ public class FurnaceRecipes {
         FurnaceProvider.addSmelting(IUItem.rawcrystalmemory, new ItemStack(IUItem.crystalMemory.getItem()), 0.1f);
         FurnaceProvider.addSmelting(IUItem.latex, IUItem.rubber, 0.1f);
 
-        FurnaceProvider.addSmelting(  ItemStackHelper.fromData(IUItem.crafting_elements, 1, 773),  ItemStackHelper.fromData(IUItem.crafting_elements, 1, 772), 0.1f);
-        FurnaceProvider.addSmelting(  ItemStackHelper.fromData(IUItem.crafting_elements, 1, 770),  ItemStackHelper.fromData(IUItem.crafting_elements, 1, 771), 0.1f);
-
+        FurnaceProvider.addSmelting(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 773), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 772), 0.1f);
+        FurnaceProvider.addSmelting(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 770), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 771), 0.1f);
 
         for (int i = 0; i < 32; i++) {
             FurnaceProvider.addSmelting(new ItemStack(IUItem.alloysdust.getStack(i), 1), new ItemStack(IUItem.alloysingot.getStack(i), 1), 0.6f);

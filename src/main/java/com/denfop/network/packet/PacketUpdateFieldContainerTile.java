@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.io.IOException;
 
 public class PacketUpdateFieldContainerTile implements IPacket {
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateFieldContainerTile() {
 
     }
@@ -22,19 +24,30 @@ public class PacketUpdateFieldContainerTile implements IPacket {
 
     public PacketUpdateFieldContainerTile(CustomPacketBuffer customPacketBuffer, ServerPlayer entityPlayer) {
 
-        IUCore.network.getServer().sendPacket(customPacketBuffer, entityPlayer);
+        this.buffer = customPacketBuffer;
+        IUCore.network.getServer().sendPacket(this, customPacketBuffer, entityPlayer);
     }
 
     public static void apply(BlockPos pos, Level world, byte[] is) {
         if (world.isLoaded(pos)) {
             BlockEntity te = world.getBlockEntity(pos);
-            final CustomPacketBuffer buf = new CustomPacketBuffer();
+            final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
             buf.writeBytes(is);
             if (te != null) {
                 ((TileEntityBlock) te).readContainerPacket(buf);
             }
 
         }
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

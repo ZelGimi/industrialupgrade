@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " AA",
+    "BBA",
+    " AA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:forge_hammer"
+  },
+  "show_notification": false
+}

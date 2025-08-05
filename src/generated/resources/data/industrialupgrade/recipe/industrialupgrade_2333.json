@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:lightning_rod/lightning_rod_casing"
+    }
+  },
+  "pattern": [
+    " A ",
+    " A ",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:lightning_rod/lightning_rod_receiver"
+  },
+  "show_notification": false
+}

@@ -26,15 +26,16 @@ import javax.annotation.Nonnull;
 public class SunnariumCategory extends GuiIU implements IRecipeCategory<SunnariumHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public SunnariumCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker".toLowerCase() +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -74,29 +75,29 @@ public class SunnariumCategory extends GuiIU implements IRecipeCategory<Sunnariu
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack, +9, 59 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(stack, +9, 59 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
 
-        drawTexturedModalRect( stack, +46, +21, 177, 20, xScale + 1, 33);
-        drawTexturedModalRect( stack, +82, +21, 177, 56, xScale1 + 1, 33);
+        drawTexturedModalRect(stack, +46, +21, 177, 20, xScale + 1, 33);
+        drawTexturedModalRect(stack, +82, +21, 177, 56, xScale1 + 1, 33);
 
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SunnariumHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,29,18).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,65,18).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT,29,40).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT,65,40).addItemStack(recipe.getInput3());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,100,29).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 29, 18).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 65, 18).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 29, 40).addItemStack(recipe.getInput2());
+        builder.addSlot(RecipeIngredientRole.INPUT, 65, 40).addItemStack(recipe.getInput3());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 100, 29).addItemStack(recipe.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker.png".toLowerCase());
     }
 
 

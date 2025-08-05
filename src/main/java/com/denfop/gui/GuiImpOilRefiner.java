@@ -16,7 +16,7 @@ public class GuiImpOilRefiner<T extends ContainerImpOilRefiner> extends GuiIU<Co
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     public ContainerImpOilRefiner container;
@@ -67,15 +67,15 @@ public class GuiImpOilRefiner<T extends ContainerImpOilRefiner> extends GuiIU<Co
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.container.base != null) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 
     }

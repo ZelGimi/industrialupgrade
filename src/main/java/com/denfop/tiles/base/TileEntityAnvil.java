@@ -9,7 +9,6 @@ import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
 import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockAnvil;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.effects.EffectsRegister;
@@ -22,12 +21,13 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,11 +36,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,12 +122,10 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return LazyOptional.empty();
-        }
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        return super.getCapability(cap, side);
     }
+
 
     public List<AABB> getAabbs(boolean forCollision) {
         if (!(facing == 4 || facing == 5)) {
@@ -142,10 +138,8 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.primal_repair"));
         tooltip.add(Localization.translate("iu.primal_repair.info"));
-
         tooltip.add(Localization.translate("primitive_rcm.info"));
         tooltip.add(Localization.translate("primitive_use.info") + IUItem.ForgeHammer.getItem().getDescription().getString());
-
     }
 
     @Override
@@ -204,14 +198,16 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                InvSlot invSlot = ((InvSlot) (DecoderHandler.decode(is)));
+                inputSlotA.read(invSlot);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                InvSlot invSlot = ((InvSlot) (DecoderHandler.decode(is)));
+                outputSlot.read(invSlot);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -234,19 +230,18 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
             spawnItemParticles(level, pos, this.inputSlotA.get(0));
         }
     }
+
     @OnlyIn(Dist.CLIENT)
     private void spawnItemParticles(Level world, BlockPos pos, ItemStack stack) {
+
         Random rand = new Random();
 
         for (int i = 0; i < 1; i++) {
             double offsetX = -0.05;
             double offsetY = 0.05;
             double offsetZ = -0.05;
-            world.addParticle(
-                    EffectsRegister.ANVIL.get(),
-                            pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
-                            offsetX, offsetY, offsetZ
-            );
+            world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.inputSlotA.get(0)), pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5f, offsetX, offsetY, offsetZ);
+
         }
     }
 
@@ -254,8 +249,10 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            InvSlot invSlot = ((InvSlot) (DecoderHandler.decode(customPacketBuffer)));
+            inputSlotA.read(invSlot);
+            invSlot = ((InvSlot) (DecoderHandler.decode(customPacketBuffer)));
+            outputSlot.read(invSlot);
             this.durability = (int) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -316,11 +313,11 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     this.output.getRecipe().output.items.get(
                             0))) {
                 progress += 10;
-                new PacketUpdateFieldTile(this, "effect", true);
                 this.getCooldownTracker().setTick(10);
                 if (stack.getItem() == IUItem.ObsidianForgeHammer.getItem()) {
                     progress += 10;
                 }
+                new PacketUpdateFieldTile(this, "effect", true);
                 progress += (int) (data.getOrDefault(player.getUUID(), 0.0) / 5D);
                 if (!this.getWorld().isClientSide) {
                     this.initiate(0);
@@ -360,7 +357,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     }
                     if (WorldBaseGen.random.nextInt(100) < data.getOrDefault(player.getUUID(), 0.0) & this.output != null && this.outputSlot.canAdd(
                             this.output.getRecipe().output.items.get(
-                                    0))){
+                                    0))) {
                         this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                         this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                         if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
@@ -399,6 +396,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                         if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                         }
+
                         return true;
                     }
                 } else {
@@ -466,42 +464,42 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     "anvil",
                     new BaseMachineRecipe(
                             new Input(
-                                    input.getInput("forge:ingots/" + s.toLowerCase(), 1)
+                                    input.getInput("c:ingots/" + s.toLowerCase(), 1)
 
                             ),
-                            new RecipeOutput(null, input.getInput("forge:plates/" + s.toLowerCase()).getInputs())
+                            new RecipeOutput(null, input.getInput("c:plates/" + s.toLowerCase()).getInputs())
                     )
             );
             Recipes.recipes.addRecipe(
                     "anvil",
                     new BaseMachineRecipe(
                             new Input(
-                                    input.getInput("forge:plates/" + s.toLowerCase(), 1)
+                                    input.getInput("c:plates/" + s.toLowerCase(), 1)
 
                             ),
-                            new RecipeOutput(null, input.getInput("forge:casings/" + s.toLowerCase(), 2).getInputs())
+                            new RecipeOutput(null, input.getInput("c:casings/" + s.toLowerCase(), 2).getInputs())
                     )
             );
         }
-          for (String s : RegisterOreDictionary.list_baseore1) {
+        for (String s : RegisterOreDictionary.list_baseore1) {
             Recipes.recipes.addRecipe(
                     "anvil",
                     new BaseMachineRecipe(
                             new Input(
-                                    input.getInput("forge:ingots/" + s, 1)
+                                    input.getInput("c:ingots/" + s, 1)
 
                             ),
-                            new RecipeOutput(null,  input.getInput("forge:plates/" + s).getInputs().get(0))
+                            new RecipeOutput(null, input.getInput("c:plates/" + s).getInputs().get(0))
                     )
             );
             Recipes.recipes.addRecipe(
                     "anvil",
                     new BaseMachineRecipe(
                             new Input(
-                                    input.getInput("forge:plates/" + s, 1)
+                                    input.getInput("c:plates/" + s, 1)
 
                             ),
-                            new RecipeOutput(null,  input.getInput("forge:casings/" + s,2).getInputs().get(0))
+                            new RecipeOutput(null, input.getInput("c:casings/" + s, 2).getInputs().get(0))
                     )
             );
         }
@@ -510,20 +508,20 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     "anvil",
                     new BaseMachineRecipe(
                             new Input(
-                                    input.getInput("forge:ingots/" + s, 1)
+                                    input.getInput("c:ingots/" + s, 1)
 
                             ),
-                            new RecipeOutput(null, input.getInput("forge:plates/" + s).getInputs().get(0))
+                            new RecipeOutput(null, input.getInput("c:plates/" + s).getInputs().get(0))
                     )
             );
             Recipes.recipes.addRecipe(
                     "anvil",
                     new BaseMachineRecipe(
                             new Input(
-                                    input.getInput("forge:plates/" + s, 1)
+                                    input.getInput("c:plates/" + s, 1)
 
                             ),
-                            new RecipeOutput(null,  input.getInput("forge:casings/" + s,2).getInputs().get(0))
+                            new RecipeOutput(null, input.getInput("c:casings/" + s, 2).getInputs().get(0))
                     )
             );
         }
@@ -531,10 +529,10 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Iron", 1)
+                                input.getInput("c:ingots/Iron", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Iron").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Iron").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
@@ -551,31 +549,20 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:plates/Iron", 1)
+                                input.getInput("c:plates/Iron", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:casings/Iron",2).getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:casings/Iron", 2).getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Gold", 1)
+                                input.getInput("c:ingots/Gold", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Gold").getInputs().get(0))
-                )
-        );
-
-        Recipes.recipes.addRecipe(
-                "anvil",
-                new BaseMachineRecipe(
-                        new Input(
-                                input.getInput("forge:ingots/Lead", 1)
-
-                        ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Lead").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Gold").getInputs().get(0))
                 )
         );
 
@@ -583,100 +570,111 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Tin", 1)
+                                input.getInput("c:ingots/Lead", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Tin").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Lead").getInputs().get(0))
+                )
+        );
+
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("c:ingots/Tin", 1)
+
+                        ),
+                        new RecipeOutput(null, input.getInput("c:plates/Tin").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:plates/Tin", 1)
+                                input.getInput("c:plates/Tin", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:casings/Tin",2).getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:casings/Tin", 2).getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:plates/Bronze", 1)
+                                input.getInput("c:plates/Bronze", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:casings/Bronze", 2).getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:casings/Bronze", 2).getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Osmium", 1)
+                                input.getInput("c:ingots/Osmium", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Osmium").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Osmium").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Tantalum", 1)
+                                input.getInput("c:ingots/Tantalum", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Tantalum").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Tantalum").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Cadmium", 1)
+                                input.getInput("c:ingots/Cadmium", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Cadmium").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Cadmium").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Steel", 1)
+                                input.getInput("c:ingots/Steel", 1)
 
                         ),
-                        new RecipeOutput(null, input.getInput("forge:plates/Steel").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Steel").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Bronze", 1)
+                                input.getInput("c:ingots/Bronze", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:plates/Bronze").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Bronze").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:ingots/Copper", 1)
+                                input.getInput("c:ingots/Copper", 1)
 
                         ),
-                        new RecipeOutput(null, input.getInput("forge:plates/Copper").getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:plates/Copper").getInputs().get(0))
                 )
         );
         Recipes.recipes.addRecipe(
                 "anvil",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput("forge:plates/Copper", 1)
+                                input.getInput("c:plates/Copper", 1)
 
                         ),
-                        new RecipeOutput(null,  input.getInput("forge:casings/Copper", 2).getInputs().get(0))
+                        new RecipeOutput(null, input.getInput("c:casings/Copper", 2).getInputs().get(0))
                 )
         );
     }
@@ -693,14 +691,12 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
 
     @Override
     public SoundEvent getSound() {
-        return EnumSound.molot.getSoundEvent();
+        return null;
     }
 
     @Override
     public void initiate(final int soundEvent) {
-        if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 0.2F, 1);
-        }
+
     }
 
     @Override

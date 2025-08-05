@@ -22,7 +22,7 @@ public class ItemImage extends GuiElement<ItemImage> {
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
             RenderSystem.enableBlend();
-            this.gui.drawItem(poseStack, this.x, this.y, stack);
+            gui.drawItem(poseStack, this.x, this.y, stack);
             RenderSystem.disableBlend();
         }
     }

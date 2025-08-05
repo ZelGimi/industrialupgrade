@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,17 +30,19 @@ public class ItemGasSensor extends Item implements IItemTab {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.gas_sensor.info")));
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.gas_sensor.info1")));
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.gas_sensor.info2")));
-    }
-
-    @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
+    @Override
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_339594_, p_41423_, p_41424_);
+
+        p_41423_.add(Component.literal(Localization.translate("iu.gas_sensor.info")));
+        p_41423_.add(Component.literal(Localization.translate("iu.gas_sensor.info1")));
+        p_41423_.add(Component.literal(Localization.translate("iu.gas_sensor.info2")));
+    }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));

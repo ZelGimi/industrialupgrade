@@ -20,13 +20,15 @@ public class ItemAlloysDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
-        return new String[]{"forge:dusts/" + getElement().getName().replace("_alloy", "").replace("_", ""), "forge:dusts"};
+        return new String[]{"c:dusts/" + getElement().getName().replace("_alloy", "").replace("_", ""), "c:dusts"};
     }
 
     protected String getOrCreateDescriptionId() {

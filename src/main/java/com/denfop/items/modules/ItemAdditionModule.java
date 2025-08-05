@@ -4,16 +4,15 @@ import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.componets.Energy;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.WirelessConnection;
 import com.denfop.items.ItemMain;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -26,17 +25,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public ItemAdditionModule(T element) {
         super(new Item.Properties(), element);
     }
 
+
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> info, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack itemStack, @Nullable TooltipContext p_41422_, List<Component> info, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, p_41422_, info, p_41424_);
         int meta = this.getElement().getId();
         switch (meta) {
@@ -44,12 +44,9 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
                 info.add(Component.literal(Localization.translate("iu.modules")));
                 info.add(Component.literal(Localization.translate("personality")));
                 info.add(Component.literal(Localization.translate("personality1")));
-                for (int i = 0; i < 9; i++) {
-                    CompoundTag nbt = ModUtils.nbt(itemStack);
-                    String name = "player_" + i;
-                    if (!nbt.getString(name).isEmpty()) {
-                        info.add(Component.literal(nbt.getString(name)));
-                    }
+                List<String> stringList = itemStack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+                for (String s : stringList) {
+                    info.add(Component.literal(s));
                 }
                 break;
             case 1:
@@ -75,26 +72,29 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
                 info.add(Component.literal(Localization.translate("storagemodul1")));
                 break;
             case 10:
-                CompoundTag nbttagcompound = ModUtils.nbt(itemStack);
                 info.add(Component.literal(Localization.translate("iu.modules")));
                 info.add(Component.literal(Localization.translate("wirelles")));
-                info.add(Component.literal(Localization.translate("iu.World") + ": " + new ResourceLocation(nbttagcompound.getString("World")).getPath()));
+                if (itemStack.has(DataComponentsInit.WIRELESS)) {
+                    WirelessConnection wirelessConnection = itemStack.get(DataComponentsInit.WIRELESS);
+                    info.add(Component.literal(Localization.translate("iu.World") + ": " + wirelessConnection.world().getPath()));
 
-                info.add(Component.literal(Localization.translate("iu.tier") + nbttagcompound.getInt("tier")));
-                info.add(Component.literal(Localization.translate("iu.Xcoord") + ": " + nbttagcompound.getInt("Xcoord")));
-                info.add(Component.literal(Localization.translate("iu.Ycoord") + ": " + nbttagcompound.getInt("Ycoord")));
-                info.add(Component.literal(Localization.translate("iu.Zcoord") + ": " + nbttagcompound.getInt("Zcoord")));
-                if (nbttagcompound.getBoolean("change")) {
-                    info.add(Component.literal(Localization.translate("mode.storage")));
+                    info.add(Component.literal(Localization.translate("iu.tier") + wirelessConnection.tier()));
+                    info.add(Component.literal(Localization.translate("iu.Xcoord") + ": " + wirelessConnection.x()));
+                    info.add(Component.literal(Localization.translate("iu.Ycoord") + ": " + wirelessConnection.y()));
+                    info.add(Component.literal(Localization.translate("iu.Zcoord") + ": " + wirelessConnection.z()));
+                    if (wirelessConnection.change()) {
+                        info.add(Component.literal(Localization.translate("mode.storage")));
 
-                } else {
-                    info.add(Component.literal(Localization.translate("mode.panel")));
+                    } else {
+                        info.add(Component.literal(Localization.translate("mode.panel")));
 
+                    }
                 }
         }
     }
+
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack,UseOnContext context) {
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
@@ -102,33 +102,22 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
         InteractionHand hand = context.getHand();
 
 
-       if (this.getElement().getId() == 10) {
+        if (this.getElement().getId() == 10) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof TileEntityInventory tile) {
                 if (tile.getComp(Energy.class) != null) {
-                    CompoundTag tag = stack.getOrCreateTag();
-                    boolean charge = tag.getBoolean("change");
+                    WirelessConnection wirelessConnection = stack.getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
+                    boolean charge = wirelessConnection.change();
                     if (tile instanceof TileElectricBlock && charge) {
                         return InteractionResult.PASS;
                     }
-
-                    tag.putInt("Xcoord", tile.getBlockPos().getX());
-                    tag.putInt("Ycoord", tile.getBlockPos().getY());
-                    tag.putInt("Zcoord", tile.getBlockPos().getZ());
-                    tag.putInt("tier", tile.getComp(Energy.class).getSinkTier());
-                    tag.putString("World1", level.dimension().location().toString());
-                    tag.putString("World", level.dimension().location().toString());
-                    tag.putString("Name", Objects.requireNonNull(tile.getDisplayName()).getString());
+                    wirelessConnection = new WirelessConnection(level.dimension().location(), tile.getComp(Energy.class).getSinkTier(), tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ(), wirelessConnection.change());
+                    stack.set(DataComponentsInit.WIRELESS, wirelessConnection);
                     return InteractionResult.SUCCESS;
                 } else if (tile instanceof TileEntityAnalyzerChest) {
-                    CompoundTag tag = stack.getOrCreateTag();
-                    tag.putInt("Xcoord", tile.getBlockPos().getX());
-                    tag.putInt("Ycoord", tile.getBlockPos().getY());
-                    tag.putInt("Zcoord", tile.getBlockPos().getZ());
-                    tag.putInt("tier", 0);
-                    tag.putString("World1", level.dimension().location().toString());
-                    tag.putString("World", level.dimension().location().toString());
-                    tag.putString("Name", Localization.translate(Objects.requireNonNull(tile.getDisplayName()).getString()));
+                    WirelessConnection wirelessConnection = stack.getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
+                    wirelessConnection = new WirelessConnection(level.dimension().location(), 0, tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ(), wirelessConnection.change());
+                    stack.set(DataComponentsInit.WIRELESS, wirelessConnection);
                     return InteractionResult.SUCCESS;
                 }
             }

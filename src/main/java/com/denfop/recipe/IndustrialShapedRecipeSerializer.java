@@ -5,79 +5,57 @@ import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class IndustrialShapedRecipeSerializer implements RecipeSerializer<BaseRecipe> {
-
-    @Override
-    public BaseRecipe fromJson(ResourceLocation id, JsonObject json) {
-        String group = GsonHelper.getAsString(json, "group", "");
-        CraftingBookCategory category = CraftingBookCategory.CODEC.byName(
-                GsonHelper.getAsString(json, "category", "misc"), CraftingBookCategory.MISC
-        );
-
-        JsonArray patternArray = GsonHelper.getAsJsonArray(json, "pattern");
-        List<String> pattern = new ArrayList<>();
-        for (JsonElement line : patternArray) {
-            pattern.add(line.getAsString());
-        }
-        RecipeGrid grid = new RecipeGrid(pattern);
-
-        JsonObject keyJson = GsonHelper.getAsJsonObject(json, "key");
+    public static final MapCodec<BaseRecipe> CODEC = RecordCodecBuilder.mapCodec((p_340778_) -> p_340778_.group(Codec.STRING.optionalFieldOf("group", "").forGetter(BaseRecipe::getGroup), CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(BaseRecipe::category), ShapedRecipePattern.MAP_CODEC.forGetter(BaseRecipe::getPattern), ItemStack.STRICT_CODEC.fieldOf("result").forGetter(BaseRecipe::getOutput), Codec.BOOL.optionalFieldOf("show_notification", true).forGetter((p_311731_) -> false)).apply(p_340778_, (group, category, pattern, result, show) -> {
+        ShapedRecipePattern.Data data = (pattern).getData().orElseGet(() -> new ShapedRecipePattern.Data(new HashMap<>(), new ArrayList<>()));
+        RecipeGrid grid = new RecipeGrid(new ArrayList<>(data.pattern()));
         List<PartRecipe> partRecipes = new ArrayList<>();
 
-        for (Map.Entry<String, JsonElement> entry : keyJson.entrySet()) {
-            String symbol = entry.getKey();
-            if (symbol.length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + symbol + "' is not a single character.");
-            }
-            char character = symbol.charAt(0);
+        for (Map.Entry<Character, Ingredient> entry : data.key().entrySet()) {
 
-            Ingredient ingredient = Ingredient.fromJson(entry.getValue(), false);
+
+            Ingredient ingredient = entry.getValue();
             IInputItemStack input = Recipes.inputFactory.getInput(ingredient);
 
-            partRecipes.add(new PartRecipe(String.valueOf(character), input));
+            partRecipes.add(new PartRecipe(String.valueOf(entry.getKey()), input));
         }
+        return new BaseRecipe(group, category, result, grid, partRecipes);
 
-        JsonObject resultJson = GsonHelper.getAsJsonObject(json, "result");
-        ItemStack result = ShapedRecipe.itemStackFromJson(resultJson);
+    }));
+    public static final StreamCodec<RegistryFriendlyByteBuf, BaseRecipe> STREAM_CODEC = StreamCodec.of(IndustrialShapedRecipeSerializer::toNetwork, IndustrialShapedRecipeSerializer::fromNetwork);
 
-        return new BaseRecipe(id,group,category,result, grid, partRecipes);
+
+    public IndustrialShapedRecipeSerializer() {
     }
 
-
-
-
-
-    @Override
-    public @Nullable BaseRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf pBuffer) {
-
-        return BaseRecipe.create(id,new CustomPacketBuffer(pBuffer));
+    private static BaseRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
+        return BaseRecipe.create(new CustomPacketBuffer(pBuffer));
     }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, BaseRecipe recipe) {
-        recipe.toNetwork(buf);
+    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, BaseRecipe p_320586_) {
+        p_320586_.toNetwork(p_320738_);
+    }
+
+    public MapCodec<BaseRecipe> codec() {
+        return CODEC;
+    }
+
+    public StreamCodec<RegistryFriendlyByteBuf, BaseRecipe> streamCodec() {
+        return STREAM_CODEC;
     }
 }

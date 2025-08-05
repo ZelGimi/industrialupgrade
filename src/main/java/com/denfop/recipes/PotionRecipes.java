@@ -1,12 +1,7 @@
 package com.denfop.recipes;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
@@ -17,9 +12,6 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class PotionRecipes {
     public static final List<Ingredient> containers = new ArrayList<>();
@@ -33,6 +25,10 @@ public class PotionRecipes {
         addMix(Potions.WATER, Items.GLOWSTONE_DUST, Potions.THICK);
         addMix(Potions.WATER, Items.REDSTONE, Potions.MUNDANE);
         addMix(Potions.WATER, Items.NETHER_WART, Potions.AWKWARD);
+        addStartMix(Items.BREEZE_ROD, Potions.WIND_CHARGED);
+        addStartMix(Items.SLIME_BLOCK, Potions.OOZING);
+        addStartMix(Items.STONE, Potions.INFESTED);
+        addStartMix(Items.COBWEB, Potions.WEAVING);
         addMix(Potions.AWKWARD, Items.GOLDEN_CARROT, Potions.NIGHT_VISION);
         addMix(Potions.NIGHT_VISION, Items.REDSTONE, Potions.LONG_NIGHT_VISION);
         addMix(Potions.NIGHT_VISION, Items.FERMENTED_SPIDER_EYE, Potions.INVISIBILITY);
@@ -92,122 +88,12 @@ public class PotionRecipes {
 
     }
 
-    public static void addMix(Potion p_341151_, Item p_341216_, Potion p_340841_) {
-        potionMixes.add(new Mix(new Holder() {
-            @Override
-            public Object value() {
-                return p_341151_;
-            }
-
-            @Override
-            public boolean isBound() {
-                return false;
-            }
-
-            @Override
-            public boolean is(ResourceLocation pLocation) {
-                return false;
-            }
-
-            @Override
-            public boolean is(ResourceKey pResourceKey) {
-                return false;
-            }
-
-            @Override
-            public boolean is(Predicate pPredicate) {
-                return false;
-            }
-
-            @Override
-            public boolean is(TagKey pTagKey) {
-                return false;
-            }
-
-            @Override
-            public Stream<TagKey> tags() {
-                return null;
-            }
-
-            @Override
-            public Either unwrap() {
-                return null;
-            }
-
-            @Override
-            public Optional<ResourceKey> unwrapKey() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Kind kind() {
-                return null;
-            }
-
-            @Override
-            public boolean canSerializeIn(HolderOwner pOwner) {
-                return false;
-            }
-        }, Ingredient.of(new ItemLike[]{p_341216_}), new Holder() {
-            @Override
-            public Object value() {
-                return p_340841_;
-            }
-
-            @Override
-            public boolean isBound() {
-                return false;
-            }
-
-            @Override
-            public boolean is(ResourceLocation pLocation) {
-                return false;
-            }
-
-            @Override
-            public boolean is(ResourceKey pResourceKey) {
-                return false;
-            }
-
-            @Override
-            public boolean is(Predicate pPredicate) {
-                return false;
-            }
-
-            @Override
-            public boolean is(TagKey pTagKey) {
-                return false;
-            }
-
-            @Override
-            public Stream<TagKey> tags() {
-                return null;
-            }
-
-            @Override
-            public Either unwrap() {
-                return null;
-            }
-
-            @Override
-            public Optional<ResourceKey> unwrapKey() {
-                return Optional.empty();
-            }
-
-            @Override
-            public Kind kind() {
-                return null;
-            }
-
-            @Override
-            public boolean canSerializeIn(HolderOwner pOwner) {
-                return false;
-            }
-        }));
+    public static void addMix(Holder<Potion> p_341151_, Item p_341216_, Holder<Potion> p_340841_) {
+        potionMixes.add(new Mix(p_341151_, Ingredient.of(new ItemLike[]{p_341216_}), p_340841_));
 
     }
 
-    public static void addStartMix(Item p_341103_,Potion p_341346_) {
+    public static void addStartMix(Item p_341103_, Holder<Potion> p_341346_) {
 
         addMix(Potions.WATER, p_341103_, Potions.MUNDANE);
         addMix(Potions.AWKWARD, p_341103_, p_341346_);
@@ -215,6 +101,6 @@ public class PotionRecipes {
 
     }
 
-    public  static record Mix<T>(Holder<T> from, Ingredient ingredient, Holder<T> to) {
+    public static record Mix<T>(Holder<T> from, Ingredient ingredient, Holder<T> to) {
     }
 }

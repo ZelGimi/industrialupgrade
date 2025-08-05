@@ -9,14 +9,15 @@ import java.util.Map;
 
 public class VeinType {
 
+    public static Map<Integer, VeinType> veinTypeMap = new HashMap<>();
+    public static int maxId = 0;
     private final List<ChanceOre> ores;
     private final IMineral heavyOre;
     private final int deposits_meta;
     private final int meta;
     private TypeVein vein;
-    public static Map<Integer, VeinType> veinTypeMap = new HashMap<>();
     private int id;
-    public static int maxId = 0;
+
     public VeinType(IMineral heavyOre, int meta, int deposits_meta, TypeVein vein, ChanceOre... ores) {
         this.heavyOre = heavyOre;
         this.vein = vein;
@@ -24,16 +25,8 @@ public class VeinType {
         this.deposits_meta = deposits_meta;
         this.ores = Arrays.asList(ores);
         this.id = maxId;
-        veinTypeMap.put(id,this);
+        veinTypeMap.put(id, this);
         maxId++;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public VeinType(IMineral heavyOre, int meta, TypeVein vein, ChanceOre... ores) {
@@ -43,8 +36,12 @@ public class VeinType {
         this.deposits_meta = meta;
         this.ores = Arrays.asList(ores);
         this.id = maxId;
-        veinTypeMap.put(id,this);
+        veinTypeMap.put(id, this);
         maxId++;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getMeta() {

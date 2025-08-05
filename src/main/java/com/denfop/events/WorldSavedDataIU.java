@@ -20,9 +20,9 @@ import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
 import com.denfop.world.vein.noise.ShellCluster;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceKey;
@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.*;
 
 import static com.denfop.api.guidebook.GuideBookCore.uuidGuideMap;
-import static com.denfop.world.vein.AlgorithmVein.*;
+import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
+import static com.denfop.world.vein.AlgorithmVein.volcano;
 
 public class WorldSavedDataIU extends SavedData {
 
@@ -50,15 +51,26 @@ public class WorldSavedDataIU extends SavedData {
         super();
     }
 
+
     public WorldSavedDataIU(String name) {
         super();
+    }
+
+    public static WorldSavedDataIU create() {
+        return new WorldSavedDataIU();
+    }
+
+    public static WorldSavedDataIU load(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        WorldSavedDataIU dataIU = create();
+        dataIU.readNBT(compound, lookupProvider);
+        return dataIU;
     }
 
     public static void loadShellClusterChunks(CompoundTag tag) {
         Map<Integer, Map<Integer, Tuple<Color, Integer>>> result = new HashMap<>();
         ShellCluster cluster = new ShellCluster();
-        cluster.point = new com.denfop.world.vein.noise.Point( tag.getCompound("volcano").getInt("x"), tag.getCompound("volcano").getInt("z"));
-        volcano =cluster;
+        cluster.point = new com.denfop.world.vein.noise.Point(tag.getCompound("volcano").getInt("x"), tag.getCompound("volcano").getInt("z"));
+        volcano = cluster;
         ListTag outerList = tag.getList("shellClusterChunks", 10);
 
         for (int i = 0; i < outerList.size(); i++) {
@@ -84,34 +96,10 @@ public class WorldSavedDataIU extends SavedData {
 
             result.put(outerKey, innerMap);
         }
-        shellClusterChuncks = result;
-        Map<Integer, Map<Integer, List<Integer>>> veinMap = new HashMap<>();
-        ListTag outerVeinList = tag.getList("veinCoordination", 10);
-
-        for (int i = 0; i < outerVeinList.size(); i++) {
-            CompoundTag outerTag = outerVeinList.getCompound(i);
-            int outerKey = outerTag.getInt("outer");
-
-            Map<Integer, List<Integer>> innerMap = new HashMap<>();
-            ListTag innerList = outerTag.getList("innerList", 10);
-
-            for (int j = 0; j < innerList.size(); j++) {
-                CompoundTag innerTag = innerList.getCompound(j);
-                int innerKey = innerTag.getInt("inner");
-
-                ListTag coordsList = innerTag.getList("coords", 3);
-                List<Integer> coords = new ArrayList<>();
-                for (int k = 0; k < coordsList.size(); k++) {
-                    coords.add(coordsList.getInt(k));
-                }
-
-                innerMap.put(innerKey, coords);
-            }
-
-            veinMap.put(outerKey, innerMap);
-        }
-
-        veinCoordination = veinMap;
+        if (!result.isEmpty())
+            shellClusterChuncks = Collections.unmodifiableMap(result);
+        else
+            shellClusterChuncks = new HashMap<>();
     }
 
     public static CompoundTag saveShellClusterChunks() {
@@ -151,45 +139,17 @@ public class WorldSavedDataIU extends SavedData {
         }
 
         tag.put("shellClusterChunks", outerList);
-        ListTag veinOuterList = new ListTag();
-        for (Map.Entry<Integer, Map<Integer, List<Integer>>> outer : veinCoordination.entrySet()) {
-            int outerKey = outer.getKey();
-            CompoundTag outerTag = new CompoundTag();
-            outerTag.putInt("outer", outerKey);
-
-            ListTag innerList = new ListTag();
-            for (Map.Entry<Integer, List<Integer>> inner : outer.getValue().entrySet()) {
-                int innerKey = inner.getKey();
-                List<Integer> coords = inner.getValue();
-
-                CompoundTag innerTag = new CompoundTag();
-                innerTag.putInt("inner", innerKey);
-
-                ListTag coordsList = new ListTag();
-                for (Integer coord : coords) {
-                    coordsList.add(IntTag.valueOf(coord));
-                }
-
-                innerTag.put("coords", coordsList);
-                innerList.add(innerTag);
-            }
-
-            outerTag.put("innerList", innerList);
-            veinOuterList.add(outerTag);
-        }
-
-        tag.put("veinCoordination", veinOuterList);
         return tag;
     }
 
-    public WorldSavedDataIU(@Nonnull CompoundTag compound) {
-
+    public void readNBT(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        SpaceNet.instance.getFakeSpaceSystem().unload();
         if (compound.contains("shells")) {
+            if (shellClusterChuncks == null)
+                shellClusterChuncks = new HashMap<>();
             shellClusterChuncks.clear();
             loadShellClusterChunks(compound.getCompound("shells"));
         }
-
-        SpaceNet.instance.getFakeSpaceSystem().unload();
         if (compound.contains("fakePlayers")) {
             ListTag fakePlayersList = compound.getList("fakePlayers", 10);
             for (int i = 0; i < fakePlayersList.size(); i++) {
@@ -209,21 +169,21 @@ public class WorldSavedDataIU extends SavedData {
                     CompoundTag nbt1 = fakesBody.getCompound(ii);
                     byte id = nbt1.getByte("id");
                     if (id == 0) {
-                        FakePlanet fakePlanet = new FakePlanet(nbt1);
+                        FakePlanet fakePlanet = new FakePlanet(nbt1, lookupProvider);
                         fakeBodies.add(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(fakePlanet.getPlanet(),
                                 fakePlanet.getSpaceOperation());
                     }
                     if (id == 1) {
-                        FakeSatellite fakePlanet = new FakeSatellite(nbt1);
+                        FakeSatellite fakePlanet = new FakeSatellite(nbt1, lookupProvider);
                         fakeBodies.add(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(fakePlanet.getSatellite(),
                                 fakePlanet.getSpaceOperation());
                     }
                     if (id == 2) {
-                        FakeAsteroid fakePlanet = new FakeAsteroid(nbt1);
+                        FakeAsteroid fakePlanet = new FakeAsteroid(nbt1, lookupProvider);
                         fakeBodies.add(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(fakePlanet.getAsteroid(),
@@ -249,7 +209,7 @@ public class WorldSavedDataIU extends SavedData {
             ListTag coloniesList = compound.getList("colonies", 10);
             for (int i = 0; i < coloniesList.size(); i++) {
                 CompoundTag colonyTag = coloniesList.getCompound(i);
-                SpaceNet.instance.getColonieNet().addColony(colonyTag);
+                SpaceNet.instance.getColonieNet().addColony(colonyTag, lookupProvider);
             }
         }
 
@@ -338,7 +298,7 @@ public class WorldSavedDataIU extends SavedData {
 
             for (int i = 0; i < nbtTagList.size(); i++) {
                 CompoundTag tag9 = nbtTagList.getCompound(i);
-                ResourceKey<Level> resourceKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag9.getString("id")));
+                ResourceKey<Level> resourceKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag9.getString("id")));
                 ListTag nbtTagList1 = tag9.getList("listUUID", 10);
                 Map<UUID, List<Point>> uuidMap = new HashMap<>();
                 for (int j = 0; j < nbtTagList1.size(); j++) {
@@ -411,7 +371,7 @@ public class WorldSavedDataIU extends SavedData {
 
     @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound, HolderLookup.Provider p_323640_) {
         compound = new CompoundTag();
 
         ListTag fakePlayersList = new ListTag();
@@ -434,7 +394,7 @@ public class WorldSavedDataIU extends SavedData {
                 if (fakeBody instanceof IFakeAsteroid) {
                     nbt1.putByte("id", (byte) 2);
                 }
-                fakeBody.writeNBTTagCompound(nbt1);
+                fakeBody.writeNBTTagCompound(nbt1, p_323640_);
                 fakesBody.add(nbt1);
             }
             nbt.put("fakesBody", fakesBody);
@@ -457,7 +417,7 @@ public class WorldSavedDataIU extends SavedData {
 
         ListTag coloniesList = new ListTag();
         for (UUID player : SpaceNet.instance.getColonieNet().getList()) {
-            coloniesList.add(SpaceNet.instance.getColonieNet().writeNBT(new CompoundTag(), player));
+            coloniesList.add(SpaceNet.instance.getColonieNet().writeNBT(new CompoundTag(), player, p_323640_));
         }
         compound.put("colonies", coloniesList);
 
@@ -465,7 +425,6 @@ public class WorldSavedDataIU extends SavedData {
         for (Radiation radiation : RadiationSystem.rad_system.radiationList) {
             radiationsList.add(radiation.writeCompound());
         }
-
         compound.put("radiations", radiationsList);
         ListTag primitive = new ListTag();
         for (Map.Entry<EnumPrimitive, Map<UUID, Double>> entry : PrimitiveHandler.getMapPrimitives().entrySet()) {
@@ -570,7 +529,6 @@ public class WorldSavedDataIU extends SavedData {
             data.put("list", list);
             compound.put("guide_book", data);
         }
-
         compound.put("shells", saveShellClusterChunks());
         this.tagCompound = compound;
         return compound;

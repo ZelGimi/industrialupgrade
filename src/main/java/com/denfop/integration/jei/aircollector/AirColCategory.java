@@ -28,14 +28,15 @@ import java.util.List;
 public class AirColCategory extends GuiIU implements IRecipeCategory<AirColHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform<AirColCategory, AirColHandler> jeiInform;
     private int energy = 0;
-    private final JeiInform<AirColCategory, AirColHandler>jeiInform;
+
     public AirColCategory(
             final IGuiHelper guiHelper, JeiInform<AirColCategory, AirColHandler> jeiInform
     ) {
         super(((TileAdvOilRefiner) BlockAdvRefiner.adv_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -74,9 +75,9 @@ public class AirColCategory extends GuiIU implements IRecipeCategory<AirColHandl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AirColHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,24, 24).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput().getFluid(),recipes.getOutput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,64, 24).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput1().getFluid(),recipes.getOutput1().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,104, 24).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput2().getFluid(),recipes.getOutput2().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 24, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipes.getOutput().getFluid(), recipes.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 64, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipes.getOutput1().getFluid(), recipes.getOutput1().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipes.getOutput2().getFluid(), recipes.getOutput2().getAmount());
     }
 
     @Override
@@ -94,10 +95,8 @@ public class AirColCategory extends GuiIU implements IRecipeCategory<AirColHandl
     }
 
 
-
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiaircollector.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiaircollector.png");
     }
 
 

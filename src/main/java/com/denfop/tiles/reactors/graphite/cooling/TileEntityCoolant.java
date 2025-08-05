@@ -15,7 +15,7 @@ public class TileEntityCoolant extends TileEntityMultiBlockElement implements IC
     private IGraphiteReactor gasReactor;
 
     public TileEntityCoolant(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelBlock = levelBlock;
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 8 * Math.pow(2, this.levelBlock), 14));
     }

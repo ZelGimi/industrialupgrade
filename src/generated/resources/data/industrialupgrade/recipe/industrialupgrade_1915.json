@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BBB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/oak_tank"
+  },
+  "show_notification": false
+}

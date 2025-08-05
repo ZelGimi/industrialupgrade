@@ -60,43 +60,41 @@ public class GuiEarthController<T extends ContainerEarthController> extends GuiI
     }
 
 
-
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         if (this.container.base.work) {
             if (this.container.base.indexChunk < this.container.base.max) {
-               draw( poseStack,
+                draw(poseStack,
                         Localization.translate("earth_quarry.controller_work"), 30, 55,
                         ModUtils.convertRGBcolorToInt(56, 56, 56)
                 );
             }
         } else if (this.container.base.indexChunk == this.container.base.max) {
-            draw( poseStack,Localization.translate("earth_quarry.send_work"), 60, 34,
+            draw(poseStack, Localization.translate("earth_quarry.send_work"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         }
-        draw( poseStack,Localization.translate("earth_quarry.block_ores") + container.base.block_Col, 40, 70,
+        draw(poseStack, Localization.translate("earth_quarry.block_ores") + container.base.block_Col, 40, 70,
                 ModUtils.convertRGBcolorToInt(56, 56, 56)
         );
         handleUpgradeTooltip(par1, par2);
     }
 
 
-
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(poseStack,partialTicks, mouseX, mouseY);
+        super.drawBackgroundAndTitle(poseStack, partialTicks, mouseX, mouseY);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, 10, 10);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

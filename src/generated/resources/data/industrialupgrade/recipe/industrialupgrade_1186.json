@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/molybdenumsteel"
+    },
+    "B": {
+      "tag": "c:plates/niobium"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BCB",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_584_element"
+  },
+  "show_notification": false
+}

@@ -5,6 +5,7 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.container.ContainerMultiMachine;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
@@ -21,7 +22,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -30,9 +30,9 @@ import javax.annotation.Nonnull;
 public class PaintingCategory extends GuiIU implements IRecipeCategory<PaintingHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform jeiInform;
 
     public PaintingCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
@@ -42,7 +42,7 @@ public class PaintingCategory extends GuiIU implements IRecipeCategory<PaintingH
         ));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIPainter".toLowerCase() +
                         ".png"), 3, 3, 140,
                 75
         );
@@ -71,22 +71,23 @@ public class PaintingCategory extends GuiIU implements IRecipeCategory<PaintingH
         if (xScale >= 9) {
             progress = 0;
         }
-      draw(stack,ModUtils.mode(recipe.metadata), 64, 59, 4210752);
-    bindTexture(getTexture());
+        ItemStack stack1 = recipe.getOutput().copy();
+        stack1.set(DataComponentsInit.SKIN, recipe.metadata.getString("mode"));
+        draw(stack, ModUtils.mode(stack1), 64, 59, 4210752);
+        bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,76, 35, 179, 34, xScale, 13);
+        drawTexturedModalRect(stack, 76, 35, 179, 34, xScale, 13);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PaintingHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,26,33).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,48,33).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,103,33).addItemStack(recipe.getOutput());
-        final ItemStack item = recipe.getOutput();
-        final CompoundTag nbt = ModUtils.nbt(item);
-        nbt.putString("mode", recipe.metadata.getString("mode"));
-        builder.addSlot(RecipeIngredientRole.RENDER_ONLY,103,33).addItemStack(item);
+        builder.addSlot(RecipeIngredientRole.INPUT, 26, 33).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 48, 33).addItemStack(recipe.getInput1());
+        ItemStack stack1 = recipe.getOutput().copy();
+        stack1.set(DataComponentsInit.SKIN, recipe.metadata.getString("mode"));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 33).addItemStack(stack1);
+        builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 103, 33).addItemStack(stack1);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class PaintingCategory extends GuiIU implements IRecipeCategory<PaintingH
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIPainter.png".toLowerCase());
     }
 
 

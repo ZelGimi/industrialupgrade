@@ -4,7 +4,7 @@ import com.denfop.api.upgrade.IUpgradeWithBlackList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class EventItemBlackListLoad extends LevelEvent {
 

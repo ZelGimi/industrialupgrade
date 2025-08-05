@@ -18,8 +18,8 @@ import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -99,6 +99,7 @@ public class TileEntityPerSecurity extends TileEntityMultiBlockElement implement
     public void setSecurity(final EnumTypeSecurity typeSecurity) {
         this.security = typeSecurity;
     }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {

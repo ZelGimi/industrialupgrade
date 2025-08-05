@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:daynight_solar_panel_glass/pho"
+    },
+    "B": {
+      "item": "industrialupgrade:excitednucleus/phocore"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "D": {
+      "item": "industrialupgrade:machines/admin_solar_panel"
+    },
+    "E": {
+      "item": "industrialupgrade:excitednucleus/admcore"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "C C",
+    "DED"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:upgradekitpanel/upgradepanelkit8"
+  },
+  "show_notification": false
+}

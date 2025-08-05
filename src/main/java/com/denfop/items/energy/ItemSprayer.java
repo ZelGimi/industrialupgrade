@@ -5,28 +5,28 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
-import com.denfop.items.CapabilityFluidHandlerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemFluidContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -39,27 +39,25 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
 
     private static boolean canPlaceFoam(Level world, BlockPos pos, Target target) {
         if (target == Target.Any) {
-            return world.getBlockState(pos).canBeReplaced() && world.getBlockEntity(pos) == null;
+            return world.getBlockState(pos).canBeReplaced();
         } else {
             return false;
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
-
-        list.add(Component.literal(Localization.translate( "iu.sprayer.info")));
+        list.add(Component.literal(Localization.translate("iu.sprayer.info")));
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide && IUCore.keyboard.isChangeKeyDown(player)) {
             ItemStack stack = player.getItemInHand(hand);
-            CompoundTag nbtData = stack.getOrCreateTag();
-            int mode = nbtData.getInt("mode");
+            int mode = stack.getOrDefault(DataComponentsInit.MODE, 0);
             mode = mode == 0 ? 1 : 0;
-            nbtData.putInt("mode", mode);
+            stack.set(DataComponentsInit.MODE, mode);
             String sMode = mode == 0 ? "iu.tooltip.mode.normal" : "iu.tooltip.mode.single";
             player.displayClientMessage(Component.translatable("iu.tooltip.mode", sMode), true);
         }
@@ -79,7 +77,7 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
         }
 
         int maxFoamBlocks = 0;
-        IFluidHandlerItem fs = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((CapabilityFluidHandlerItem) this.initCapabilities(stack, stack.getTag()));
+        IFluidHandlerItem fs = stack.getCapability(Capabilities.FluidHandler.ITEM, null);
         FluidStack fluid = fs.getFluidInTank(0);
         if (!fluid.isEmpty() && fluid.getAmount() > 0) {
             maxFoamBlocks += fluid.getAmount() / this.getFluidPerFoam();
@@ -141,8 +139,7 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
     }
 
     protected int getMaxFoamBlocks(ItemStack stack) {
-        CompoundTag nbtData = stack.getOrCreateTag();
-        return nbtData.getInt("mode") == 0 ? 10 : 1;
+        return stack.getOrDefault(DataComponentsInit.MODE, 0) == 0 ? 10 : 1;
     }
 
     protected int getFluidPerFoam() {
@@ -150,10 +147,10 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
     }
 
 
-
     public boolean canfill(Fluid fluid) {
         return fluid == FluidName.fluidconstruction_foam.getInstance().get();
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -161,6 +158,7 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
             p_41392_.add(this.getItemStack(FluidName.fluidconstruction_foam.getInstance().get()));
         }
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;

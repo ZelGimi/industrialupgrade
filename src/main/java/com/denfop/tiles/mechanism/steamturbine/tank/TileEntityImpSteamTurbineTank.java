@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpSteamTurbineTank extends TileEntityBaseSteamTurbineTank {
 
     public TileEntityImpSteamTurbineTank(BlockPos pos, BlockState state) {
-        super(2, BlockSteamTurbine.steam_turbine_imp_tank,pos,state);
+        super(2, BlockSteamTurbine.steam_turbine_imp_tank, pos, state);
     }
 
     @Override

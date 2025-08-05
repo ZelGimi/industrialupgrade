@@ -30,10 +30,6 @@ public class AdvAlloySmelterHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<AdvAlloySmelterHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -48,7 +44,7 @@ public class AdvAlloySmelterHandler {
             ItemStack output,
             final short temperature,
             BaseMachineRecipe container) {
-        AdvAlloySmelterHandler recipe = new AdvAlloySmelterHandler(input, input1, input2, output, temperature,container);
+        AdvAlloySmelterHandler recipe = new AdvAlloySmelterHandler(input, input1, input2, output, temperature, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -68,18 +64,23 @@ public class AdvAlloySmelterHandler {
 
     public static void initRecipes() {
 
-            for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("advalloysmelter")) {
-                try {
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("advalloysmelter")) {
+            try {
                 addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                         container.input.getInputs().get(1).getInputs().get(0), container.input.getInputs().get(2).getInputs().get(0),
-                        container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"),container
+                        container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"), container
                 );
-                }catch (Exception e){
-                    System.out.println(e);
-                };
-
+            } catch (Exception e) {
+                System.out.println(e);
             }
+            ;
 
+        }
+
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
@@ -97,7 +98,6 @@ public class AdvAlloySmelterHandler {
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
-
 
 
 }

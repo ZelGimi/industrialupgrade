@@ -29,8 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -51,7 +51,7 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileEntityLaserPolisher(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.laser_polisher,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.laser_polisher, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -157,16 +157,16 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(502)),  IUItem.advIronIngot);
-        addRecipe("forge:ores/Diamond", new ItemStack(Items.DIAMOND, 4));
-        addRecipe("forge:ores/Coal", new ItemStack(Items.COAL, 5));
-        addRecipe("forge:ores/Quartz", new ItemStack(Items.QUARTZ, 4));
-        addRecipe("forge:ores/Lapis", new ItemStack(Items.LAPIS_LAZULI, 5));
-        addRecipe("forge:ores/Sulfur", new ItemStack(IUItem.iudust.getStack(31), 4));
-        addRecipe("forge:ores/Bor", new ItemStack(IUItem.crafting_elements.getStack(448)));
-        addRecipe("forge:ores/Boron", new ItemStack(IUItem.crafting_elements.getStack(448)));
-        addRecipe("forge:ores/Redstone", new ItemStack(Items.REDSTONE, 5));
-        addRecipe("forge:dusts/Quartz", new ItemStack(Items.QUARTZ));
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(502)), IUItem.advIronIngot);
+        addRecipe("c:ores/Diamond", new ItemStack(Items.DIAMOND, 4));
+        addRecipe("c:ores/Coal", new ItemStack(Items.COAL, 5));
+        addRecipe("c:ores/Quartz", new ItemStack(Items.QUARTZ, 4));
+        addRecipe("c:ores/Lapis", new ItemStack(Items.LAPIS_LAZULI, 5));
+        addRecipe("c:ores/Sulfur", new ItemStack(IUItem.iudust.getStack(31), 4));
+        addRecipe("c:ores/Bor", new ItemStack(IUItem.crafting_elements.getStack(448)));
+        addRecipe("c:ores/Boron", new ItemStack(IUItem.crafting_elements.getStack(448)));
+        addRecipe("c:ores/Redstone", new ItemStack(Items.REDSTONE, 5));
+        addRecipe("c:dusts/Quartz", new ItemStack(Items.QUARTZ));
         addRecipe(319, new ItemStack(IUItem.crafting_elements.getStack(357)));
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(493)), new ItemStack(IUItem.crafting_elements.getStack(495)));
         addRecipe(IUItem.sulfurDust, new ItemStack(IUItem.crafting_elements.getStack(476)));
@@ -176,10 +176,10 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
 
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(503)), new ItemStack(IUItem.crafting_elements.getStack(504)));
         addRecipe(new ItemStack(IUItem.ore2.getItem()), new ItemStack(IUItem.crafting_elements.getStack(447)));
-        addRecipe("forge:ores/Lithium", new ItemStack(IUItem.crafting_elements.getStack(447)));
+        addRecipe("c:ores/Lithium", new ItemStack(IUItem.crafting_elements.getStack(447)));
         addRecipe(new ItemStack(IUItem.ore2.getItem(2)), new ItemStack(IUItem.crafting_elements.getStack(448)));
         addRecipe(new ItemStack(IUItem.ore2.getItem(1)), new ItemStack(IUItem.crafting_elements.getStack(449)));
-        addRecipe("forge:ores/Beryllium", new ItemStack(IUItem.crafting_elements.getStack(449)));
+        addRecipe("c:ores/Beryllium", new ItemStack(IUItem.crafting_elements.getStack(449)));
         addRecipe(
                 IUItem.coal_chunk,
                 new ItemStack(Items.DIAMOND)
@@ -193,110 +193,110 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(0)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(0)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(0)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(1)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(1)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(1)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(2)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(2)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(2)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(3)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(3)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(3)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(4)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(6)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(6)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(5)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(7)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(7)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(6)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(8)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(8)))
+        ));
 
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(7)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(9)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(9)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(8)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(10)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(10)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(9)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(11)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(11)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(10)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(12)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(12)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(10)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(12)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(12)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(11)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(14)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(14)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(12)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(15)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(15)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(13)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(16)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(16)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(14)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(17)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(17)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(15)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(18)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(18)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(16)))),
-                        new RecipeOutput(null, new ItemStack(Items.COPPER_INGOT))
-                        ));
+                new RecipeOutput(null, new ItemStack(Items.COPPER_INGOT))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(17)))),
-                        new RecipeOutput(null, new ItemStack(Items.GOLD_INGOT, 1)))
-                );
+                new RecipeOutput(null, new ItemStack(Items.GOLD_INGOT, 1)))
+        );
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(18)))),
-                        new RecipeOutput(null, new ItemStack(Items.IRON_INGOT, 1)))
-                );
+                new RecipeOutput(null, new ItemStack(Items.IRON_INGOT, 1)))
+        );
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(19)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(22)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(22)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(20)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(24)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(24)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(22)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(25)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(25)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(23)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(26)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(26)))
+        ));
         Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                 new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(24)))),
-                        new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(27)))
-                        ));
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(27)))
+        ));
         for (int i = 25; i < 40; i++) {
             Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                     new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(i)))),
-                            new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(i + 3)))
-                            ));
+                    new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(i + 3)))
+            ));
         }
     }
 

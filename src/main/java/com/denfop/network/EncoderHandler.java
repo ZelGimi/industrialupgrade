@@ -15,7 +15,9 @@ import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufOutputStream;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
@@ -29,8 +31,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -215,7 +217,7 @@ public class EncoderHandler {
                 os.writeByte((Byte) o);
                 break;
             case network_object:
-                os.writeBytes(((INetworkObject) o).writePacket());
+                os.writeBytes(((INetworkObject) o).writePacket(os));
                 break;
             case Character:
                 os.writeChar((Character) o);
@@ -226,7 +228,7 @@ public class EncoderHandler {
                 os.writeInt(chunkpos.z);
                 break;
             case DataOre:
-                os.writeBytes(((DataOre) o).getCustomPacket());
+                os.writeBytes(((DataOre) o).getCustomPacket(os.registryAccess()));
                 break;
             case Collection:
                 encode(os, ((Collection) o).toArray(), false);
@@ -238,7 +240,7 @@ public class EncoderHandler {
                 os.writeDouble((Double) o);
                 break;
             case Enchantment:
-                encode(os, BuiltInRegistries.ENCHANTMENT.getKey((Enchantment) o), false);
+                encode(os, os.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getKey((Enchantment) o), false);
                 break;
             case Enum:
                 os.writeVarInt(((Enum) o).ordinal());
@@ -249,6 +251,10 @@ public class EncoderHandler {
             case Fluid:
                 encode(os, BuiltInRegistries.FLUID.getKey((Fluid) o), false);
                 break;
+            case DataComponentPatch:
+                DataComponentPatch componentPatch = (DataComponentPatch) o;
+                DataComponentPatch.STREAM_CODEC.encode(os, componentPatch);
+                break;
             case FluidStack:
                 FluidStack fs = (FluidStack) o;
                 if (!fs.isEmpty())
@@ -256,8 +262,9 @@ public class EncoderHandler {
                 else
                     encode(os, Fluids.EMPTY, false);
                 os.writeInt(fs.getAmount());
-                if (!fs.isEmpty())
-                encode(os, fs.getTag(), true);
+                os.writeBoolean(!fs.getComponentsPatch().isEmpty());
+                if (!fs.getComponentsPatch().isEmpty())
+                    encode(os, fs.getComponentsPatch(), true);
                 break;
             case FluidTank:
                 FluidTank tank = (FluidTank) o;
@@ -292,7 +299,9 @@ public class EncoderHandler {
                 } else {
                     os.writeByte(ModUtils.getSize(stack));
                     encode(os, stack.getItem(), false);
-                    encode(os, stack.getTag(), true);
+                    os.writeBoolean(!stack.getComponentsPatch().isEmpty());
+                    if (!stack.getComponentsPatch().isEmpty())
+                        encode(os, stack.getComponentsPatch(), true);
                 }
                 break;
             case Long:
@@ -349,15 +358,15 @@ public class EncoderHandler {
                 break;
             case Vein:
                 Vein vein = (Vein) o;
-                os.writeBytes(vein.writePacket());
+                os.writeBytes(vein.writePacket(os.registryAccess()));
                 break;
             case RecipeInfo:
                 RecipeInfo recipeInfo = (RecipeInfo) o;
-                os.writeBytes(recipeInfo.getPacket());
+                os.writeBytes(recipeInfo.getPacket(os.registryAccess()));
                 break;
             case Radiation:
                 Radiation radiation = (Radiation) o;
-                os.writeBytes(radiation.writePacket());
+                os.writeBytes(radiation.writePacket(os));
                 break;
             /* case FAKE_PLANET:
                 break;

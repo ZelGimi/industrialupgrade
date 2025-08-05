@@ -1,0 +1,42 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:doubleplate/ferromanganese"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 5,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/nanocircuit"
+    },
+    "D": {
+      "item": "industrialupgrade:armour/jetpack"
+    },
+    "F": {
+      "item": "industrialupgrade:single_use_battery"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "CDC",
+    "BFB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/advjetpack"
+  },
+  "show_notification": false
+}

@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -84,7 +84,7 @@ public interface IMultiTileBlock extends ISubEnum {
 
     void setIdBlock(int id);
 
-    void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType);
+    void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType);
 
     void setDefaultState(BlockState blockState);
 }

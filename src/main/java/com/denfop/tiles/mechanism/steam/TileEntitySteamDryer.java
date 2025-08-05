@@ -36,9 +36,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -64,7 +64,7 @@ public class TileEntitySteamDryer extends TileElectricMachine implements IHasRec
     protected double guiProgress;
 
     public TileEntitySteamDryer(BlockPos pos, BlockState state) {
-        super(0, 1, 1,BlockBaseMachine3.steamdryer,pos,state);
+        super(0, 1, 1, BlockBaseMachine3.steamdryer, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 100;
@@ -263,13 +263,12 @@ public class TileEntitySteamDryer extends TileElectricMachine implements IHasRec
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
 }

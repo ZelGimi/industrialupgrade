@@ -1,8 +1,8 @@
 package com.denfop.recipe;
 
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +21,7 @@ public interface IInputItemStack {
 
     TagKey<Item> getTag();
 
-    CompoundTag writeNBT();
     void growAmount(int count);
+
+    CompoundTag writeNBT(HolderLookup.Provider provider);
 }

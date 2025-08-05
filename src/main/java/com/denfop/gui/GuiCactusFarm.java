@@ -18,7 +18,7 @@ public class GuiCactusFarm<T extends ContainerCactusFarm> extends GuiIU<Containe
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

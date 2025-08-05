@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    }
+  },
+  "pattern": [
+    "AAA",
+    " B ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_60_element"
+  },
+  "show_notification": false
+}

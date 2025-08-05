@@ -21,8 +21,8 @@ public class QuarryItem {
         List<TagKey<Item>> list = stack.getTags().toList();
         try {
             oreDict = list.get(0);
-        }catch (Exception e){
-            oreDict = new TagKey<>(Registries.ITEM,new ResourceLocation("","unknown"));
+        } catch (Exception e) {
+            oreDict = new TagKey<>(Registries.ITEM, ResourceLocation.tryBuild("", "unknown"));
         }
     }
 
@@ -32,7 +32,7 @@ public class QuarryItem {
     }
 
     public QuarryItem(String oreDict) {
-        this.oreDict = new TagKey<>(Registries.ITEM, new ResourceLocation(oreDict));
+        this.oreDict = new TagKey<>(Registries.ITEM, ResourceLocation.parse(oreDict));
         this.stack = new Ingredient.TagValue(this.oreDict).getItems().stream().toList().get(0);
 
     }

@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEnderAssembler extends TileBaseWorldCollector {
 
     public TileEnderAssembler(BlockPos pos, BlockState state) {
-        super(EnumTypeCollector.END,BlockBaseMachine3.ender_assembler,pos,state);
+        super(EnumTypeCollector.END, BlockBaseMachine3.ender_assembler, pos, state);
     }
 
     public void init() {
@@ -33,7 +33,6 @@ public class TileEnderAssembler extends TileBaseWorldCollector {
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
-
 
 
 }

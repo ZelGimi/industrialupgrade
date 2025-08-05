@@ -41,8 +41,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     private SunCoef sunCoef;
 
     public TileEntityMiniPanels(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.minipanel,pos,state);
+        super(BlockBaseMachine3.minipanel, pos, state);
         this.component = this.addComponent(ComponentMiniPanel.asBasicSource(this, 0, 14));
         this.invSlotGlass = new InvSlotGlassMiniPanels(this);
         this.invSlotStorage = new InvSlotStorageMiniPanels(this);
@@ -104,9 +104,9 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public void addInformation(final ItemStack itemStack, final List<String> info) {
-        info.add(Localization.translate(  "iu.minipanel.info"));
-        info.add(Localization.translate(  "iu.minipanel.info2"));
-        info.add(Localization.translate(  "iu.minipanel.info3"));
+        info.add(Localization.translate("iu.minipanel.info"));
+        info.add(Localization.translate("iu.minipanel.info2"));
+        info.add(Localization.translate("iu.minipanel.info3"));
 
         if (this.getWorld() != null) {
 
@@ -151,9 +151,9 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
         super.readContainerPacket(customPacketBuffer);
         try {
             generating = (double) DecoderHandler.decode(customPacketBuffer);
-            invSlotGlass.readFromNbt(getNBTFromSlot(customPacketBuffer));
-            invSlotStorage.readFromNbt(getNBTFromSlot(customPacketBuffer));
-            invSlotOutput.readFromNbt(getNBTFromSlot(customPacketBuffer));
+            invSlotGlass.readFromNbt(customPacketBuffer.registryAccess(), getNBTFromSlot(customPacketBuffer));
+            invSlotStorage.readFromNbt(customPacketBuffer.registryAccess(), getNBTFromSlot(customPacketBuffer));
+            invSlotOutput.readFromNbt(customPacketBuffer.registryAccess(), getNBTFromSlot(customPacketBuffer));
             bonusGeneration = (double) DecoderHandler.decode(customPacketBuffer);
             rain = (boolean) DecoderHandler.decode(customPacketBuffer);
             noSunWorld = (boolean) DecoderHandler.decode(customPacketBuffer);
@@ -198,8 +198,6 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     }
 
 
-
-
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
@@ -219,7 +217,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             pollution.onNetworkUpdate(customPacketBuffer);
             timer.onNetworkUpdate(customPacketBuffer);
             component.onNetworkUpdate(customPacketBuffer);
-            invSlotGlass.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new CompoundTag()));
+            invSlotGlass.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -275,7 +273,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
         super.onLoaded();
         if (!level.isClientSide) {
             this.biome = this.level.getBiome(this.pos);
-            this.canRain = (this.biome.get().getPrecipitationAt(this.pos) == Biome.Precipitation.RAIN || this.biome.get().getModifiedClimateSettings().downfall() > 0.0F);
+            this.canRain = (this.biome.value().getPrecipitationAt(this.pos) == Biome.Precipitation.RAIN || this.biome.value().getModifiedClimateSettings().downfall() > 0.0F);
             this.hasSky = this.level.dimensionType().hasSkyLight();
             updateVisibility();
             SolarEnergySystem.system.calculateCores(this);
@@ -288,13 +286,13 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     }
 
     public void updateVisibility() {
-        this.wetBiome = this.biome.get().getModifiedClimateSettings().downfall() > 0.0F;
+        this.wetBiome = this.biome.value().getModifiedClimateSettings().downfall() > 0.0F;
         this.noSunWorld = this.level.dimension() == Level.NETHER;
 
         this.rain = this.wetBiome && (this.level.isRaining() || this.level.isThundering());
         this.sunIsUp = this.level.isDay();
         this.skyIsVisible = this.level.canSeeSky(this.pos.above()) &&
-                this.level.getBlockState(this.pos.above()).getMapColor(level,pos.above()) == MapColor.NONE &&
+                this.level.getBlockState(this.pos.above()).getMapColor(level, pos.above()) == MapColor.NONE &&
                 !this.noSunWorld;
 
         if (!this.skyIsVisible) {

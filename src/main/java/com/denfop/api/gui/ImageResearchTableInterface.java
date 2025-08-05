@@ -15,7 +15,7 @@ public class ImageResearchTableInterface extends GuiElement<ImageResearchTableIn
     public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         mouseX = gui.guiLeft();
         mouseY = gui.guiTop();
-        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/guiresearch_table.png"));
+        GuiCore.bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/guiresearch_table.png"));
         RenderSystem.setShaderColor(1, 1, 1, 1);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x, mouseY + this.y, 0, 0, width - 5, height - 5);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x + width - 6, mouseY + this.y, 251, 0, 6, height - 5);

@@ -54,7 +54,7 @@ public class PositronConverterHandler {
 
     public static void initRecipes() {
 
-        addRecipe(2000,  ItemStackHelper.fromData(IUItem.crafting_elements, 1, 352), ItemStackHelper.fromData(IUItem.proton));
+        addRecipe(2000, ItemStackHelper.fromData(IUItem.crafting_elements, 1, 352), ItemStackHelper.fromData(IUItem.proton));
 
 
     }

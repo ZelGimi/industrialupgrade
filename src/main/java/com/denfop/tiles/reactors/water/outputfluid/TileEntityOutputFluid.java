@@ -8,9 +8,8 @@ import com.denfop.tiles.reactors.water.inputfluid.FluidHandlerReactor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +21,7 @@ public class TileEntityOutputFluid extends TileEntityMultiBlockElement implement
     public List<Fluids> internalFluidTankList = new ArrayList<>();
 
     public TileEntityOutputFluid(IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
     }
 
     @Override
@@ -36,12 +35,12 @@ public class TileEntityOutputFluid extends TileEntityMultiBlockElement implement
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER)
-            return LazyOptional.of( () -> (T) new FluidHandlerReactor(this.internalFluidTankList)).cast();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.FluidHandler.BLOCK) {
+            return (T) new FluidHandlerReactor(this.internalFluidTankList);
+        }
+        return super.getCapability(cap, side);
     }
-
 
 
 }

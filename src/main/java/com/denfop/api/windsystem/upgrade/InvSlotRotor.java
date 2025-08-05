@@ -29,7 +29,7 @@ public class InvSlotRotor extends InvSlot implements ITypeSlot {
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-         return stack.getItem() instanceof ItemWindRotor;
+        return stack.getItem() instanceof ItemWindRotor;
     }
 
     @Override

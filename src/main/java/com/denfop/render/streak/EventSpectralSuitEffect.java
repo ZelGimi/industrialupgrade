@@ -6,17 +6,15 @@ import com.denfop.gui.GuiCore;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent.Post;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -28,7 +26,7 @@ import static com.denfop.IUCore.mapStreakInfo;
 
 public class EventSpectralSuitEffect {
 
-    public static final ResourceLocation texture = new ResourceLocation(Constants.TEXTURES_ITEMS + "effect.png");
+    public static final ResourceLocation texture = ResourceLocation.parse(Constants.TEXTURES_ITEMS + "effect.png");
     private static final Map<String, ArrayList<EventSpectralSuitEffect.StreakLocation>> playerLoc = new HashMap();
     public final int[] red = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 240, 222, 186, 150, 124, 96, 67, 40, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 34, 56, 78, 102, 121, 145, 176, 201, 218, 230, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
     public final int[] green = {0, 24, 36, 54, 72, 96, 120, 145, 172, 192, 216, 234, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 234, 214, 195, 176, 153, 137, 112, 94, 86, 55, 31, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -64,7 +62,7 @@ public class EventSpectralSuitEffect {
     }
 
     @SubscribeEvent
-    public void onRenderPlayer(Post event) {
+    public void onRenderPlayer(RenderPlayerEvent.Post event) {
         this.render(true, event.getPartialTick(), event.getPoseStack());
     }
 
@@ -72,7 +70,7 @@ public class EventSpectralSuitEffect {
     public void onRenderWorldLast(RenderLevelStageEvent event) {
 
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS)
-            this.render(false, event.getPartialTick(), event.getPoseStack());
+            this.render(false, event.getPartialTick().getGameTimeDeltaTicks(), event.getPoseStack());
     }
 
     public void render(boolean ignore, float partialTicks, PoseStack poseStack) {
@@ -201,14 +199,14 @@ public class EventSpectralSuitEffect {
 
                             Color color = new Color((float) red, (float) green, (float) blue, startAlpha);
                             GuiCore.bindTexture(texture);
-                            BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-                            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+                            BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+
 
                             Matrix4f matrix4f = poseStack.last().pose();
                             RenderSystem.setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1);
 
-                            buffer.vertex(matrix4f, 0.0f, 0.0f, 0.0f).uv((float) infoStart.startU, 1.0f).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
-                            buffer.vertex(matrix4f, 0.0f, 0.0F + infoStart.height, 0.0f).uv((float) infoStart.startU, 0.0f).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+                            buffer.addVertex(matrix4f, 0.0f, 0.0f, 0.0f).setUv((float) infoStart.startU, 1.0f).setColor(color.getRed(), color.getGreen(), color.getBlue(), 255);
+                            buffer.addVertex(matrix4f, 0.0f, 0.0F + infoStart.height, 0.0f).setUv((float) infoStart.startU, 0.0f).setColor(color.getRed(), color.getGreen(), color.getBlue(), 255);
 
                             double endTex = infoEnd.startU - (double) start + (double) i;
                             if (endTex > infoStart.startU) {
@@ -223,11 +221,11 @@ public class EventSpectralSuitEffect {
                                 ++endTex;
                             }
 
-                            buffer.vertex(matrix4f, (float) Math.abs(nextPosX - grad1), (float) (nextPosY - posY + (double) infoEnd.height), (float) Math.abs(nextPosZ - posZ)).uv((float) endTex, 0.0f).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
-                            buffer.vertex(matrix4f, (float) Math.abs(nextPosX - grad1), (float) (nextPosY - posY), (float) Math.abs(nextPosZ - posZ)).uv((float) endTex, 1.0f).color(color.getRed(), color.getGreen(), color.getBlue(), 255).endVertex();
+                            buffer.addVertex(matrix4f, (float) Math.abs(nextPosX - grad1), (float) (nextPosY - posY + (double) infoEnd.height), (float) Math.abs(nextPosZ - posZ)).setUv((float) endTex, 0.0f).setColor(color.getRed(), color.getGreen(), color.getBlue(), 255);
+                            buffer.addVertex(matrix4f, (float) Math.abs(nextPosX - grad1), (float) (nextPosY - posY), (float) Math.abs(nextPosZ - posZ)).setUv((float) endTex, 1.0f).setColor(color.getRed(), color.getGreen(), color.getBlue(), 255);
 
 
-                            BufferUploader.drawWithShader(buffer.end());
+                            BufferUploader.drawWithShader(buffer.buildOrThrow());
                             RenderSystem.enableBlend();
                             RenderSystem.enableCull();
                             RenderSystem.disableDepthTest();
@@ -245,9 +243,9 @@ public class EventSpectralSuitEffect {
     }
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END) {
-            Player player = event.player;
+    public void onPlayerTick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide) {
+            Player player = event.getEntity();
             if (this.isRenderStreak(player)) {
                 ArrayList<EventSpectralSuitEffect.StreakLocation> loc = getPlayerStreakLocationInfo(player);
                 EventSpectralSuitEffect.StreakLocation oldest = loc.get(0);
@@ -267,6 +265,7 @@ public class EventSpectralSuitEffect {
 
     private boolean isRenderStreak(Player player) {
         NonNullList<ItemStack> armors = player.getInventory().armor;
+
         return Minecraft.getInstance().screen == null && armors.get(2).getItem() == IUItem.spectral_chestplate.getItem();
     }
 
@@ -293,8 +292,8 @@ public class EventSpectralSuitEffect {
             this.posY = player.getBoundingBox().minY;
             this.posZ = player.getZ();
             this.renderYawOffset = player.yBodyRot;
-            this.rotationYawHead = player.getViewYRot(Minecraft.getInstance().getPartialTick());
-            this.rotationPitch = player.getViewXRot(Minecraft.getInstance().getPartialTick());
+            this.rotationYawHead = player.getViewYRot(1.0F);
+            this.rotationPitch = player.getViewXRot(1.0F);
 
             this.isSprinting = player.isSprinting();
             this.lastTick = player.level().getGameTime();

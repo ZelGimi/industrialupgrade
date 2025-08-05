@@ -61,7 +61,7 @@ public class GuiMagnetGenerator<T extends ContainerMagnetGenerator> extends GuiI
         String name = Localization.translate(this.container.base.getName());
 
         int nmPos = (this.imageWidth - this.getStringWidth(name)) / 2;
-    draw(pose, name, nmPos, 6, 4210752);
+        draw(pose, name, nmPos, 6, 4210752);
     }
 
     protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
@@ -72,7 +72,7 @@ public class GuiMagnetGenerator<T extends ContainerMagnetGenerator> extends GuiI
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

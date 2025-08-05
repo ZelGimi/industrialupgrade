@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntitySimpleSocket extends TileEntityMainSocket {
 
     public TileEntitySimpleSocket(BlockPos pos, BlockState state) {
-        super(10000,BlockHeatReactor.heat_socket,pos,state);
+        super(10000, BlockHeatReactor.heat_socket, pos, state);
     }
 
     @Override

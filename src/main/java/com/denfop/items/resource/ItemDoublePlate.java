@@ -18,10 +18,12 @@ public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -46,7 +48,7 @@ public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
                 break;
 
         }
-        return new String[]{"forge:doubleplate/" + name.replace("_doubleplate", ""), "forge:doubleplate"};
+        return new String[]{"c:doubleplate/" + name.replace("_doubleplate", ""), "c:doubleplate"};
     }
 
     public enum ItemDoublePlateTypes implements ISubEnum {

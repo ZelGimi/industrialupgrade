@@ -15,9 +15,10 @@ public class JeiInterface<C extends GuiIU & com.denfop.integration.jei.IRecipeCa
 
     private final C instance;
 
-    public JeiInterface(C instance){
-        this.instance=instance;
+    public JeiInterface(C instance) {
+        this.instance = instance;
     }
+
     @Override
     public RecipeType getRecipeType() {
         return instance.getRecipeType();
@@ -41,7 +42,7 @@ public class JeiInterface<C extends GuiIU & com.denfop.integration.jei.IRecipeCa
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, Object recipe, IFocusGroup focuses) {
-        instance.setRecipe(builder,recipe,focuses);
+        instance.setRecipe(builder, recipe, focuses);
     }
 
     @Override

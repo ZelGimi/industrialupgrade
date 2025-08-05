@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tungsten"
+    },
+    "B": {
+      "tag": "c:plates/titanium"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_480_element"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "CCC"
+  ],
+  "result": {
+    "count": 8,
+    "id": "industrialupgrade:crafting_elements/crafting_122_element"
+  },
+  "show_notification": false
+}

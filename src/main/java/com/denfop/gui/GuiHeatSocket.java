@@ -21,7 +21,6 @@ public class GuiHeatSocket<T extends ContainerHeatSocket> extends GuiIU<Containe
     }
 
 
-
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
@@ -30,7 +29,7 @@ public class GuiHeatSocket<T extends ContainerHeatSocket> extends GuiIU<Containe
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiheat4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiheat4.png");
     }
 
 }

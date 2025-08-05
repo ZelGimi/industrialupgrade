@@ -5,8 +5,8 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.mechanism.*;
-import com.denfop.entity.SmallBee;
 import com.denfop.entity.EntityNuclearBombPrimed;
+import com.denfop.entity.SmallBee;
 import com.denfop.items.ItemUpgradeModule;
 import com.denfop.items.*;
 import com.denfop.items.armour.*;
@@ -40,7 +40,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.*;
 
@@ -49,7 +49,7 @@ public class IUItem {
 
     public static final Map<Integer, EnumSolarPanels> map1 = new HashMap<>();
     public static DataItem<ItemCraftingElements.Types, ItemCraftingElements> crafting_elements;
-    public static RegistryObject<EntityType<EntityNuclearBombPrimed>> entity_nuclear_bomb;
+
     public static DataItem<ItemBaseCircuit.Types, ItemBaseCircuit> basecircuit;
     public static DataItem<ItemCasing.Types, ItemCasing> casing;
     public static DataItem<ItemCrushed.Types, ItemCrushed> crushed;
@@ -830,12 +830,13 @@ public class IUItem {
     public static DataSimpleItem<ItemAxe, ResourceLocation> topaz_axe;
     public static DataSimpleItem<ItemShovel, ResourceLocation> topaz_shovel;
     public static DataSimpleItem<ItemShovel, ResourceLocation> sapphire_shovel;
+    public static DeferredHolder<EntityType<?>, EntityType<EntityNuclearBombPrimed>> entity_nuclear_bomb;
+    public static DeferredHolder<EntityType<?>, EntityType<SmallBee>> entity_bee;
     public static DataSimpleItem<ItemBook, ResourceLocation> book;
-    public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBattery;
-    public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBatteryWireless;
-    public static DataSimpleItem<ItemCreativeTomeResearchSpace, ResourceLocation> creativeTomeResearch;
     public static DataBlockEntity<BlockCreativeBlocks> creativeBlock;
-    public static RegistryObject<EntityType<SmallBee>> entity_bee;
+    public static DataSimpleItem<ItemCreativeTomeResearchSpace, ResourceLocation> creativeTomeResearch;
+    public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBatteryWireless;
+    public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBattery;
     public static DataBlock<BlockRaws.Type, BlockRaws, ItemBlockRaws> rawsBlock;
     public static DataSimpleItem<ItemPipette, ResourceLocation> pipette;
     public static DataBlock<BlockPlanksRubberWood.Type, BlockPlanksRubberWood, ItemBlockRubberPlanks> blockRubberWoods;

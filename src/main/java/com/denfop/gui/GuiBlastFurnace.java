@@ -6,7 +6,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerBlastFurnace;
@@ -18,10 +17,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,7 +125,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 47;
+                        fluidHeight = 48;
                     }
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -203,7 +202,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 47;
+                        fluidHeight = 48;
                     }
 
                     Fluid fluid = fs.getFluid();
@@ -316,7 +315,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
         if (progress > 0) {
             drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 46, 177, 19, progress, 11);
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
         bindTexture(getTexture());
@@ -334,7 +333,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiblastfurnace.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiblastfurnace.png");
     }
 
 }

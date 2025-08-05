@@ -22,7 +22,7 @@ public class TileSteamCutting extends TileSteamMultiMachine {
         super(
                 EnumMultiMachine.Cutting.usagePerTick,
                 EnumMultiMachine.Cutting.lenghtOperation,
-                4,BlockBaseMachine3.steam_cutting,pos,state
+                4, BlockBaseMachine3.steam_cutting, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.125));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));

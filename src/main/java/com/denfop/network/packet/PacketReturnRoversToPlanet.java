@@ -17,16 +17,18 @@ import java.util.UUID;
 
 public class PacketReturnRoversToPlanet implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketReturnRoversToPlanet() {
 
     }
 
     public PacketReturnRoversToPlanet(IResearchTable base, Player player, IBody iBody) {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
         customPacketBuffer.writeByte(getId());
         try {
-            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock)base).getWorld());
-            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock)base).getPos());
+            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) base).getWorld());
+            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) base).getPos());
             EncoderHandler.encode(customPacketBuffer, player.getUUID());
             customPacketBuffer.writeBoolean(iBody != null);
             if (iBody != null) {
@@ -35,7 +37,18 @@ public class PacketReturnRoversToPlanet implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        IUCore.network.getClient().sendPacket(customPacketBuffer);
+        this.buffer = customPacketBuffer;
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

@@ -20,11 +20,7 @@ public class EnrichHandler {
         this.input1 = input1;
         this.output = output;
         this.radAmount = radAmount;
-        this.container=container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<EnrichHandler> getRecipes() {
@@ -35,7 +31,7 @@ public class EnrichHandler {
     }
 
     public static EnrichHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, final int radAmount, BaseMachineRecipe container) {
-        EnrichHandler recipe = new EnrichHandler(input, input1, output, radAmount,container);
+        EnrichHandler recipe = new EnrichHandler(input, input1, output, radAmount, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -66,6 +62,10 @@ public class EnrichHandler {
 
 
         }
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public int getRadAmount() {

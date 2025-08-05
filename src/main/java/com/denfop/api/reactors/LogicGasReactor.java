@@ -1,8 +1,8 @@
 package com.denfop.api.reactors;
 
 import com.denfop.blocks.FluidName;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 public class LogicGasReactor extends LogicReactor {
 

@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_376_element"
+    }
+  },
+  "pattern": [
+    "AA ",
+    "AA ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_reactor/imp_gas_casing"
+  },
+  "show_notification": false
+}

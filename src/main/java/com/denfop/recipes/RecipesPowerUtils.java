@@ -15,16 +15,16 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('B'), new ItemStack(IUItem.tranformer.getItem(8), 1),
 
-                Character.valueOf('C'), ItemStackHelper.fromData(IUItem.basecircuit, 1,3),
+                Character.valueOf('C'), ItemStackHelper.fromData(IUItem.basecircuit, 1, 3),
 
                 Character.valueOf('D'),
                 new ItemStack(IUItem.electricblock.getItem(5), 1)});
-             Recipes.recipe.addRecipe(ItemStackHelper.fromData(PowerUtils.module_fe), new Object[]{
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(PowerUtils.module_fe), new Object[]{
                 "ABA", "CDC", "ABA",
 
                 Character.valueOf('A'), ItemStackHelper.fromData(IUItem.basecircuit),
 
-                Character.valueOf('B'),ItemStackHelper.fromData(IUItem.tranformer, 1, 8),
+                Character.valueOf('B'), ItemStackHelper.fromData(IUItem.tranformer, 1, 8),
 
                 Character.valueOf('C'), ItemStackHelper.fromData(IUItem.basecircuit, 1, 4),
 
@@ -38,7 +38,7 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
-                Character.valueOf('C'),ItemStackHelper.fromData(PowerUtils.module_ic),
+                Character.valueOf('C'), ItemStackHelper.fromData(PowerUtils.module_ic),
 
                 Character.valueOf('D'),
                 IUItem.machine,
@@ -58,12 +58,12 @@ public class RecipesPowerUtils {
                 IUItem.machine,
 
                 Character.valueOf('E'), ItemStackHelper.fromData(PowerUtils.module_qe)});
-        Recipes.recipe.addRecipe( ItemStackHelper.fromData(PowerUtils.module_qe), new Object[]{
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(PowerUtils.module_qe), new Object[]{
                 "ABA", "CDC", "ABA",
 
-                Character.valueOf('A'),  ItemStackHelper.fromData(IUItem.sunnarium, 1, 3),
+                Character.valueOf('A'), ItemStackHelper.fromData(IUItem.sunnarium, 1, 3),
 
-                Character.valueOf('B'),  ItemStackHelper.fromData(IUItem.quantumtool),
+                Character.valueOf('B'), ItemStackHelper.fromData(IUItem.quantumtool),
 
                 Character.valueOf('C'), ItemStackHelper.fromData(IUItem.radiationresources, 1, 2),
 

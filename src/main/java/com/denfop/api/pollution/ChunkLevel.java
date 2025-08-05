@@ -45,8 +45,8 @@ public class ChunkLevel implements INetworkObject {
         return tag;
     }
 
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+    public CustomPacketBuffer writePacket(CustomPacketBuffer o) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(o.registryAccess());
         customPacketBuffer.writeDouble(this.pollution);
         customPacketBuffer.writeInt(this.levelPollution.ordinal());
         customPacketBuffer.writeInt(this.pos.x);

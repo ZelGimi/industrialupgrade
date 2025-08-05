@@ -2,7 +2,7 @@ package com.denfop.datagen;
 
 import com.denfop.Constants;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageEffects;
@@ -17,10 +17,10 @@ public class DamageTypes {
     public static final ResourceKey<DamageType> beeObject = registerKey("bee");
 
     private static ResourceKey<DamageType> registerKey(String name) {
-        return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Constants.MOD_ID, name));
+        return ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.tryBuild(Constants.MOD_ID, name));
     }
 
-    public static void bootstrap(BootstapContext<DamageType> pContext) {
+    public static void bootstrap(BootstrapContext<DamageType> pContext) {
         pContext.register(currentObject, new DamageType("current", 0.1F, DamageEffects.HURT));
         pContext.register(radiationObject, new DamageType("radiation", 0.1F, DamageEffects.HURT));
         pContext.register(frostbiteObject, new DamageType("frostbite", 0.1F, DamageEffects.HURT));

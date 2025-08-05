@@ -9,7 +9,6 @@ import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
@@ -32,8 +31,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -119,13 +118,7 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
             }
         };
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnFusionCoreParticles(level,pos,level.random);
-        }
-    }
+
     public static void addsynthesis(ItemStack container, ItemStack fill, int number, ItemStack output, int rad) {
         CompoundTag nbt = ModUtils.nbt();
         nbt.putInt("percent", number);
@@ -139,6 +132,14 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
                 ),
                 new RecipeOutput(nbt, output)
         ));
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnFusionCoreParticles(level, pos, level.random);
+        }
     }
 
     @Override

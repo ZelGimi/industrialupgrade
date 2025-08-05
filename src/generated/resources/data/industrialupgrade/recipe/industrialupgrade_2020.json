@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/cobaltchrome"
+    },
+    "B": {
+      "tag": "c:plates/vitalium"
+    }
+  },
+  "pattern": [
+    " AA",
+    "ABA",
+    "AA "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_698_element"
+  },
+  "show_notification": false
+}

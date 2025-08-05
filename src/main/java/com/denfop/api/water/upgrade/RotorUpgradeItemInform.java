@@ -2,12 +2,28 @@ package com.denfop.api.water.upgrade;
 
 import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public class RotorUpgradeItemInform {
 
+    public static final Codec<RotorUpgradeItemInform> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.xmap(EnumInfoRotorUpgradeModules::valueOf, EnumInfoRotorUpgradeModules::name).fieldOf("upgrade").forGetter(obj -> obj.upgrade),
+            Codec.INT.fieldOf("number").forGetter(obj -> obj.number)
+    ).apply(instance, RotorUpgradeItemInform::new));
+    public static final StreamCodec<FriendlyByteBuf, RotorUpgradeItemInform> STREAM_CODEC = StreamCodec.of(
+            (buf, value) -> {
+                buf.writeEnum(value.upgrade);
+                buf.writeInt(value.number);
+            },
+            buf -> new RotorUpgradeItemInform(buf.readEnum(EnumInfoRotorUpgradeModules.class), buf.readInt())
+    );
     public final EnumInfoRotorUpgradeModules upgrade;
-    public final int number;
+    public int number;
+
 
     public RotorUpgradeItemInform(EnumInfoRotorUpgradeModules modules, int number) {
         this.upgrade = modules;

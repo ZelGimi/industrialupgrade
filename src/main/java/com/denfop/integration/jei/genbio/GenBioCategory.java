@@ -36,9 +36,9 @@ public class GenBioCategory extends GuiIU implements IRecipeCategory<GenBioHandl
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileGearMachine) BlockMoreMachine3.gearing.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -66,14 +66,14 @@ public class GenBioCategory extends GuiIU implements IRecipeCategory<GenBioHandl
 
     @Override
     public void draw(GenBioHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      drawSplitString(stack,
+        drawSplitString(stack,
                 Localization.translate("iu.windgenerator1"),
                 10,
                 30,
                 140 - 10,
                 4210752
         );
-       drawSplitString(stack,
+        drawSplitString(stack,
                 ModUtils.getString(recipe.getEnergy()),
                 10,
                 30 + 7,
@@ -84,12 +84,12 @@ public class GenBioCategory extends GuiIU implements IRecipeCategory<GenBioHandl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenBioHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,96, 22).setFluidRenderer( 10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 96, 22).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

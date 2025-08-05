@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "B": {
+      "tag": "c:doubleplate/nimonic"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/adv_proton_energy_coupler"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:reactors/imp_proton_energy_coupler"
+  },
+  "show_notification": false
+}

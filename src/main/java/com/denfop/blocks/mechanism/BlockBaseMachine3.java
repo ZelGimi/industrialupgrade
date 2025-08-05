@@ -1,6 +1,7 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.state.DefaultDrop;
@@ -76,13 +77,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.util.Set;
+
+;
 
 public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     radiation_purifier(TileRadiationPurifier.class, 1),
@@ -94,19 +96,19 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     antimagnet(TileEntityAntiMagnet.class, 7),
     antiupgradeblock(TileAntiUpgradeBlock.class, 8),
     watergenerator(TileWaterGenerator.class, 9),
-      cooling(TileCooling.class, 10),
+    cooling(TileCooling.class, 10),
     aircollector(TileAirCollector.class, 11),
-     combiner_se_generators(TileEntityCombinerSEGenerators.class, 12),
+    combiner_se_generators(TileEntityCombinerSEGenerators.class, 12),
     probe_assembler(TileEntityProbeAssembler.class, 13),
- research_table_space(TileEntityResearchTableSpace.class, 14),
+    research_table_space(TileEntityResearchTableSpace.class, 14),
     rocket_assembler(TileEntityRocketAssembler.class, 15),
-rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
+    rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     rotor_assembler(TileEntityRotorAssembler.class, 17),
     rotor_modifier(TileEntityRotorModifier.class, 18),
     satellite_assembler(TileEntitySatelliteAssembler.class, 19),
     soil_analyzer(TileEntitySoilAnalyzer.class, 20),
     rods_manufacturer(TileEntityRodManufacturer.class, 21),
-   ender_assembler(TileEnderAssembler.class, 23),
+    ender_assembler(TileEnderAssembler.class, 23),
     gas_combiner(TileEntityGasCombiner.class, 26),
     analyzer_chest(TileEntityAnalyzerChest.class, 27),
     simple_wind_generator(TileSimpleWindGenerator.class, 28),
@@ -207,7 +209,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     wireless_oil_pump(TileEntityWirelessOilPump.class, 128),
     wireless_mineral_quarry(TileEntityWirelessMineralQuarry.class, 129),
     wireless_controller_reactors(TileEntityWirelessControllerReactors.class, 130),
-   simulation_reactors(TileEntitySimulatorReactor.class, 131),
+    simulation_reactors(TileEntitySimulatorReactor.class, 131),
     radiation_storage(TileEntitySimpleRadiationStorage.class, 132),
     wireless_controller_graphite_reactors(TileEntityWirelessGraphiteController.class, 133),
     wireless_controller_heat_reactors(TileEntityWirelessHeatController.class, 134),
@@ -231,9 +233,9 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     fluid_cooling(TileFluidCooling.class, 152),
     solid_cooling(TileSolidCooling.class, 153),
     imp_alloy_smelter(TileEntityImpAlloySmelter.class, 154),
-  per_alloy_smelter(TileEntityPerAlloySmelter.class, 155),
-   fluid_mixer(TileEntityFluidMixer.class, 156),
-   solid_fluid_mixer(TileEntitySolidFluidMixer.class, 157),
+    per_alloy_smelter(TileEntityPerAlloySmelter.class, 155),
+    fluid_mixer(TileEntityFluidMixer.class, 156),
+    solid_fluid_mixer(TileEntitySolidFluidMixer.class, 157),
     fluid_heater(TileEntityFluidHeater.class, 158),
     silicon_crystal_handler(TileEntitySiliconCrystalHandler.class, 159),
     neutronseparator(TileEntityNeutronSeparator.class, 160),
@@ -241,7 +243,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     itemmanipulator(TileEntityItemManipulator.class, 162),
     steamboiler(TileEntitySteamBoiler.class, 163, EnumTypeCasing.STEAM),
     steampressureconverter(TileEntitySteamPressureConverter.class, 164, EnumTypeCasing.STEAM),
-       steamdryer(TileEntitySteamDryer.class, 165, EnumTypeCasing.STEAM),
+    steamdryer(TileEntitySteamDryer.class, 165, EnumTypeCasing.STEAM),
     steam_macerator(TileSteamMacerator.class, 166, EnumTypeCasing.STEAM),
     steam_compressor(TileSteamCompressor.class, 167, EnumTypeCasing.STEAM),
     steam_extractor(TileSteamExtractor.class, 168, EnumTypeCasing.STEAM),
@@ -257,7 +259,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     steam_peat_generator(TileSteamPeatGenerator.class, 178, EnumTypeCasing.STEAM),
     steam_handler_ore(TileSteamHandlerHeavyOre.class, 179, EnumTypeCasing.STEAM),
     steam_electrolyzer(TileSteamElectrolyzer.class, 180, EnumTypeCasing.STEAM),
-   steam_ampere_generator(TileEntitySteamAmpereGenerator.class, 181, EnumTypeCasing.STEAM),
+    steam_ampere_generator(TileEntitySteamAmpereGenerator.class, 181, EnumTypeCasing.STEAM),
     steam_solid_fluid_mixer(TileEntitySteamSolidFluidMixer.class, 182, EnumTypeCasing.STEAM),
     programming_table(TileEntityProgrammingTable.class, 183),
     electronic_assembler(TileEntityElectronicsAssembler.class, 184),
@@ -311,7 +313,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     weeder(TileEntityWeeder.class, 232),
     apothecary_bee(TileEntityApothecaryBee.class, 233),
     collector_product_bee(TileEntityCollectorProductBee.class, 234),
-   incubator(TileEntityIncubator.class, 235),
+    incubator(TileEntityIncubator.class, 235),
     insulator(TileEntityInsulator.class, 236),
     rna_collector(TileEntityRNACollector.class, 237),
     mutatron(TileEntityMutatron.class, 238),
@@ -338,7 +340,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     ampere_storage(TileEntityAmpereStorage.class, 259),
     bio_generator(TileEntityBioGenerator.class, 260),
     steam_generator(TileEntitySteamGenerator.class, 261),
- auto_latex_collector(TileEntityAutoLatexCollector.class,262),
+    auto_latex_collector(TileEntityAutoLatexCollector.class,262),
     ;
 
 
@@ -348,7 +350,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     int idBlock;
     private TileEntityBlock dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
 
     ;
 
@@ -376,22 +378,22 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     }
 
     public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
+        final ModContainer mc = IUCore.instance.modContainer;
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
         if (this.getTeClass() != null) {
-         for (Constructor<?> constructor : this.teClass.getConstructors()) {
-          try {
+            for (Constructor<?> constructor : this.teClass.getConstructors()) {
+                try {
 
-           this.dummyTe = (TileEntityBlock)constructor.newInstance(BlockPos.ZERO, defaultState);
+                    this.dummyTe = (TileEntityBlock) constructor.newInstance(BlockPos.ZERO, defaultState);
 
-          } catch (Exception e) {
-           e.printStackTrace();
-          }
-          if (dummyTe != null)
-           break;
-         }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (dummyTe != null)
+                    break;
+            }
         }
     }
 
@@ -401,7 +403,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 
@@ -460,7 +462,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
             return HarvestTool.Axe;
         }
         if (this == BlockBaseMachine3.steel_tank
-                ||  this == BlockBaseMachine3.quarry_pipe  ||  this == BlockBaseMachine3.auto_latex_collector
+                || this == BlockBaseMachine3.quarry_pipe   || this == BlockBaseMachine3.auto_latex_collector
         ) {
             return HarvestTool.Pickaxe;
         }
@@ -473,8 +475,8 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     @Override
     @Nonnull
     public DefaultDrop getDefaultDrop() {
-      if (this == oak_tank || this == steel_tank
-                  || this == quarry_pipe  ||  this == BlockBaseMachine3.auto_latex_collector
+        if (this == oak_tank || this == steel_tank
+                || this == quarry_pipe   || this == BlockBaseMachine3.auto_latex_collector
         ) {
             return DefaultDrop.Self;
         }
@@ -487,7 +489,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
 
     @Override
     public boolean allowWrenchRotating() {
-        return this != BlockBaseMachine3.rolling_machine  && this.rarity != EnumTypeCasing.BIO && this.rarity != EnumTypeCasing.STEAM;
+        return this != BlockBaseMachine3.rolling_machine && this.rarity != EnumTypeCasing.BIO && this.rarity != EnumTypeCasing.STEAM;
     }
 
 

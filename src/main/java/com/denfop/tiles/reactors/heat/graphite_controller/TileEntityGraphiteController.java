@@ -1,6 +1,5 @@
 package com.denfop.tiles.reactors.heat.graphite_controller;
 
-import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.reactors.IHeatReactor;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -19,10 +18,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
@@ -34,7 +31,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     private int index;
 
     public TileEntityGraphiteController(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
@@ -42,7 +39,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
-                final int itemDamage = ((ItemCraftingElements<?>)stack.getItem()).getElement().getId();
+                final int itemDamage = ((ItemCraftingElements<?>) stack.getItem()).getElement().getId();
                 switch (itemDamage) {
                     case 357:
                         return ((TileEntityGraphiteController) this.base).getBlockLevel() >= 0;
@@ -87,7 +84,6 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
         return new GuiHeatGraphiteGraphiteController((ContainerHeatGraphiteController) menu);
     }
-
 
 
     @Override
@@ -157,7 +153,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     @Override
     public void consumeGraphite() {
         if (!this.slot.get(0).isEmpty()) {
-            final int itemDamage =  ((ItemCraftingElements<?>)this.getSlot().get(0).getItem()).getElement().getId();
+            final int itemDamage = ((ItemCraftingElements<?>) this.getSlot().get(0).getItem()).getElement().getId();
             this.slot.get(0).shrink(1);
             switch (itemDamage) {
                 case 357:

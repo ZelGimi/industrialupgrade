@@ -56,7 +56,7 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlockBaseMachine.per_matter.getIDBlock())
                 || (itemStack
                 .getItem()
-                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlocksPhotonicMachine.photonic_gen_matter.getIDBlock() && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getId() ==12)
+                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlocksPhotonicMachine.photonic_gen_matter.getIDBlock() && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getId() == 12)
 
                 ;
 
@@ -81,7 +81,6 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 return 700000;
             case 12:
                 return 600000;
-
         }
         return 1000000;
     }

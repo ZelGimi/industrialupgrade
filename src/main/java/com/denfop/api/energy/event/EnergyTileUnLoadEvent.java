@@ -2,7 +2,7 @@ package com.denfop.api.energy.event;
 
 import com.denfop.api.energy.IEnergyTile;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 
 public class EnergyTileUnLoadEvent extends LevelEvent {

@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_165_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_72_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "H": {
+      "item": "industrialupgrade:basemachine3/rolling_machine"
+    }
+  },
+  "pattern": [
+    " B ",
+    "DAE",
+    "C H"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:moremachine2/rolling"
+  },
+  "show_notification": false
+}

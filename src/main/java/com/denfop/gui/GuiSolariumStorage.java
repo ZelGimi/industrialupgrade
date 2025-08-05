@@ -43,7 +43,7 @@ public class GuiSolariumStorage<T extends ContainerSolariumStorage> extends GuiI
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolariumstorage.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisolariumstorage.png");
     }
 
 }

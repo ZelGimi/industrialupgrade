@@ -36,8 +36,8 @@ import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 
 public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> implements BlockEntityRenderer<T> {
     private static final Map<List<Serializable>, Integer> textureSizeCache = new HashMap<>();
-    private static final ResourceLocation plazmaTextloc = new ResourceLocation(Constants.MOD_ID, "textures/block/plazma.png");
-    private static final ResourceLocation particlesTextloc = new ResourceLocation(
+    private static final ResourceLocation plazmaTextloc = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/block/plazma.png");
+    private static final ResourceLocation particlesTextloc = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/block/particles.png"
     );
@@ -62,7 +62,7 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
             InputStream inputstream = Minecraft
                     .getInstance()
                     .getResourceManager()
-                    .getResource(new ResourceLocation(Constants.MOD_ID, s))
+                    .getResource(ResourceLocation.tryBuild(Constants.MOD_ID, s))
                     .get().open();
             BufferedImage bi = ImageIO.read(inputstream);
             int size = bi.getWidth() / dv;
@@ -78,12 +78,12 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
     public void render(T te, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         if (te.getActive()) {
-            renderCore(te, poseStack, bufferSource, packedLight, combinedOverlay);
-            renderItem(te, poseStack, bufferSource, packedLight, combinedOverlay);
+            renderCore(te, poseStack, bufferSource, packedLight, combinedOverlay, partialTicks);
+            renderItem(te, poseStack, bufferSource, packedLight, combinedOverlay, partialTicks);
         }
     }
 
-    public void renderItem(IIsMolecular te, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
+    public void renderItem(IIsMolecular te, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, float partialTicks) {
         ItemStack itemStack = te.getItemStack();
         if (itemStack.isEmpty()) {
             return;
@@ -96,7 +96,7 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
             poseStack.pushPose();
 
 
-            int count = transformModelCount(te, poseStack, buffer, Minecraft.getInstance().getPartialTick());
+            int count = transformModelCount(te, poseStack, buffer, partialTicks);
 
             for (int i = 0; i < count; ++i) {
                 poseStack.pushPose();
@@ -117,7 +117,7 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
                 }
 
                 BakedModel transformedModel = te.getTransformedModel();
-                contex.getItemRenderer().render(itemStack,FIXED, false, poseStack, buffer, light, overlay, transformedModel);
+                contex.getItemRenderer().render(itemStack, FIXED, false, poseStack, buffer, light, overlay, transformedModel);
                 poseStack.popPose();
             }
 
@@ -161,7 +161,7 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
         return modelCount;
     }
 
-    private void renderCore(T te, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
+    private void renderCore(T te, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlay, float partialTicks) {
         this.ticker++;
         if (ticker % 2 != 0) {
             return;
@@ -196,9 +196,8 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
+        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         RenderSystem.enableDepthTest();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         RenderSystem.setShaderTexture(0, plazmaTextloc);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         int i = this.ticker % 16;
@@ -218,42 +217,38 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
         float f4 = (float) upVec.x;
         float f5 = (float) upVec.z;
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * -scaleCore + upVec.x * -scaleCore),
                         (float) (posY + rightVec.y * -scaleCore + upVec.y * -scaleCore),
                         (float) (posZ + rightVec.z * -scaleCore + upVec.z * -scaleCore))
-                .uv(x1, x3)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x1, x3)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * -scaleCore + upVec.x * scaleCore),
                         (float) (posY + rightVec.y * -scaleCore + upVec.y * scaleCore),
                         (float) (posZ + rightVec.z * -scaleCore + upVec.z * scaleCore))
-                .uv(x1, x2)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x1, x2)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * scaleCore + upVec.x * scaleCore),
                         (float) (posY + rightVec.y * scaleCore + upVec.y * scaleCore),
                         (float) (posZ + rightVec.z * scaleCore + upVec.z * scaleCore))
-                .uv(x0, x2)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x0, x2)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * scaleCore + upVec.x * -scaleCore),
                         (float) (posY + rightVec.y * scaleCore + upVec.y * -scaleCore),
                         (float) (posZ + rightVec.z * scaleCore + upVec.z * -scaleCore))
-                .uv(x0, x3)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x0, x3)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-        BufferUploader.drawWithShader(buffer.end());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         poseStack.popPose();
@@ -274,13 +269,12 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
         x3 = ((i / 8F * size2) + float_sizeMinus0_01) / size8;
         float var11 = Mth.sin(this.ticker / 10.0F) * 0.1F;
         scaleCore = 0.4F + var11;
-        buffer = tesselator.getBuilder();
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
         RenderSystem.enableDepthTest();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         RenderSystem.setShaderTexture(0, plazmaTextloc);
         if (te.getMode() != 0) {
-            RenderSystem.setShaderTexture(0, new ResourceLocation(
+            RenderSystem.setShaderTexture(0, ResourceLocation.tryBuild(
                     Constants.MOD_ID,
                     "textures/models/particles" + te.getMode() + ".png"
             ));
@@ -290,41 +284,41 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * -scaleCore + upVec.x * -scaleCore),
                         (float) (posY + rightVec.y * -scaleCore + upVec.y * -scaleCore),
                         (float) (posZ + rightVec.z * -scaleCore + upVec.z * -scaleCore))
-                .uv(x1, x3)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x1, x3)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+        ;
 
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * -scaleCore + upVec.x * scaleCore),
                         (float) (posY + rightVec.y * -scaleCore + upVec.y * scaleCore),
                         (float) (posZ + rightVec.z * -scaleCore + upVec.z * scaleCore))
-                .uv(x1, x2)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x1, x2)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+        ;
 
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * scaleCore + upVec.x * scaleCore),
                         (float) (posY + rightVec.y * scaleCore + upVec.y * scaleCore),
                         (float) (posZ + rightVec.z * scaleCore + upVec.z * scaleCore))
-                .uv(x0, x2)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
+                .setUv(x0, x2)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+        ;
 
         buffer
-                .vertex(matrix,
+                .addVertex(matrix,
                         (float) (posX + rightVec.x * scaleCore + upVec.x * -scaleCore),
                         (float) (posY + rightVec.y * scaleCore + upVec.y * -scaleCore),
                         (float) (posZ + rightVec.z * scaleCore + upVec.z * -scaleCore))
-                .uv(x0, x3)
-                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+                .setUv(x0, x3)
+                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+        ;
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         poseStack.popPose();

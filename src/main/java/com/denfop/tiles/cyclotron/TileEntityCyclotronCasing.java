@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityCyclotronCasing extends TileEntityMultiBlockElement implements ICasing {
 
-    public TileEntityCyclotronCasing( BlockPos pos, BlockState state) {
+    public TileEntityCyclotronCasing(BlockPos pos, BlockState state) {
         super(BlockCyclotron.cyclotron_casing, pos, state);
     }
 

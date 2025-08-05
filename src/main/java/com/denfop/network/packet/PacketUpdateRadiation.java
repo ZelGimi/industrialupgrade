@@ -5,29 +5,47 @@ import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
 
 public class PacketUpdateRadiation implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateRadiation() {
 
     }
 
-    public PacketUpdateRadiation(Radiation radiation) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(64);
-        try {
-            buffer.writeByte(this.getId());
-            EncoderHandler.encode(buffer, radiation);
+    public PacketUpdateRadiation(Radiation radiation, ServerLevel serverLevel) {
+        for (ServerPlayer player : serverLevel.players()) {
+            CustomPacketBuffer buffer = new CustomPacketBuffer(64, serverLevel.registryAccess());
+            try {
+                buffer.writeByte(this.getId());
+                EncoderHandler.encode(buffer, radiation);
 
 
-        } catch (IOException var5) {
-            throw new RuntimeException(var5);
+            } catch (IOException var5) {
+                throw new RuntimeException(var5);
+            }
+
+            buffer.flip();
+            this.buffer = buffer;
+
+            IUCore.network.getServer().sendPacket(this, player, buffer);
         }
+    }
 
-        buffer.flip();
-        IUCore.network.getServer().sendPacket(buffer);
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

@@ -24,6 +24,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -33,14 +34,16 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -74,6 +77,16 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.LAPPACK.list));
 
     }
+
+    public static int readToolMode(ItemStack itemstack) {
+        CompoundTag nbttagcompound = ModUtils.nbt(itemstack);
+        int toolMode = nbttagcompound.getInt("toolMode");
+        if (toolMode < 0 || toolMode > 1) {
+            toolMode = 0;
+        }
+        return toolMode;
+    }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -83,6 +96,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
             p_41392_.add(new ItemStack(this, 1));
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -95,30 +109,21 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
 
-    public static int readToolMode(ItemStack itemstack) {
-        CompoundTag nbttagcompound = ModUtils.nbt(itemstack);
-        int toolMode = nbttagcompound.getInt("toolMode");
-        if (toolMode < 0 || toolMode > 1) {
-            toolMode = 0;
-        }
-        return toolMode;
-    }
-
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity p_41406_, int p_41407_, boolean p_41408_) {
         super.inventoryTick(stack, worldIn, p_41406_, p_41407_, p_41408_);
-        CompoundTag nbt = ModUtils.nbt(stack);
 
         if (!UpgradeSystem.system.hasInMap(stack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(worldIn, this, stack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(worldIn, this, stack));
         }
+        if (p_41407_ >= Inventory.INVENTORY_SIZE && p_41407_ < Inventory.INVENTORY_SIZE + 4 && p_41406_ instanceof Player player)
+            this.onArmorTick(stack, worldIn, (Player) p_41406_);
     }
 
 
@@ -134,16 +139,17 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
         return 0.4;
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-
+    @Override
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         CompoundTag nbtData = ModUtils.nbt(stack);
         if (!nbtData.getString("mode").isEmpty()) {
-            return Constants.TEXTURES + ":textures/armor/" + this.name + "_" + nbtData.getString("mode") + ".png";
+            return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.name + "_" + nbtData.getString("mode") + ".png");
         }
 
 
-        return Constants.TEXTURES + ":textures/armor/" + this.name + ".png";
+        return ResourceLocation.parse(Constants.TEXTURES + ":textures/armor/" + this.name + ".png");
     }
+
 
     public ISpecialArmor.ArmorProperties getProperties(
             LivingEntity player,
@@ -179,7 +185,6 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
     public int getItemEnchantability() {
         return 0;
     }
-
 
 
     public boolean canProvideEnergy(ItemStack itemStack) {
@@ -238,10 +243,10 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
 
 
     @Override
-    public void appendHoverText(ItemStack par1ItemStack, @Nullable Level p_41422_, List<Component> par3List, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack par1ItemStack, @Nullable TooltipContext p_41422_, List<Component> par3List, TooltipFlag p_41424_) {
         super.appendHoverText(par1ItemStack, p_41422_, par3List, p_41424_);
         int toolMode = readToolMode(par1ItemStack);
-        par3List.add(Component.literal(Localization.translate( "iu.lappack.info")));
+        par3List.add(Component.literal(Localization.translate("iu.lappack.info")));
         if (toolMode == 0) {
             par3List.add(Component.literal(ChatFormatting.GOLD + Localization.translate("iu.message.text.powerSupply") + ": " + ChatFormatting.RED + Localization.translate(
                     "iu.message.text.disabled")));
@@ -260,7 +265,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
         }
     }
 
-    @Override
+
     public void onArmorTick(ItemStack itemStack, Level world, Player player) {
         if (world.isClientSide)
             return;

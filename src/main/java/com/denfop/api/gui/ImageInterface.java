@@ -15,7 +15,7 @@ public class ImageInterface extends GuiElement<ImageInterface> {
     public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         mouseX = gui.guiLeft();
         mouseY = gui.guiTop();
-        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/common3.png"));
+        GuiCore.bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/common3.png"));
         RenderSystem.setShaderColor(1, 1, 1, 1);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x, mouseY + this.y, 0, 0, width - 4, height - 4);
         gui.drawTexturedModalRect(poseStack, mouseX + this.x + width - 4, mouseY + this.y, 252, 0, 4, height - 4);

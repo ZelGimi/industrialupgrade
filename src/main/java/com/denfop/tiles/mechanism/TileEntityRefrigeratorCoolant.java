@@ -26,9 +26,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -42,7 +42,7 @@ public class TileEntityRefrigeratorCoolant extends TileElectricMachine implement
     public final InvSlotTank fluidSlot;
 
     public TileEntityRefrigeratorCoolant(BlockPos pos, BlockState state) {
-        super(400, 14, 1,BlockBaseMachine3.refrigerator_coolant,pos,state);
+        super(400, 14, 1, BlockBaseMachine3.refrigerator_coolant, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = fluids.addTankInsert("input", 10000, Fluids.fluidPredicate(
@@ -140,7 +140,6 @@ public class TileEntityRefrigeratorCoolant extends TileElectricMachine implement
 
     public void onLoaded() {
         super.onLoaded();
-
 
 
     }

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_582_element"
+    },
+    "B": {
+      "item": "industrialupgrade:alloyplate/ferromanganese"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/gadolinium"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_599_element"
+  },
+  "show_notification": false
+}

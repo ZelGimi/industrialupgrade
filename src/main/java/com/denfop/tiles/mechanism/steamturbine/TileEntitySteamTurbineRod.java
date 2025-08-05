@@ -21,8 +21,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
     List<ISteamBlade> list = new ArrayList<>();
 
     public TileEntitySteamTurbineRod(BlockPos pos, BlockState state) {
-        super(BlockSteamTurbine.steam_turbine_rod,pos,state);
+        super(BlockSteamTurbine.steam_turbine_rod, pos, state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -81,7 +81,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
 
     @Override
     public CustomPacketBuffer writeUpdatePacket() {
-        CustomPacketBuffer customPacketBuffer =  super.writeUpdatePacket();
+        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
         return customPacketBuffer;
     }
 
@@ -94,7 +94,6 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
     public ContainerSteamTurbineRod getGuiContainer(final Player entityPlayer) {
         return new ContainerSteamTurbineRod(this, entityPlayer);
     }
-
 
 
     @Override
@@ -127,7 +126,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer customPacketBuffer = super.writePacket();
         try {
-            EncoderHandler.encode(customPacketBuffer, slot.writeToNbt(new CompoundTag()));
+            EncoderHandler.encode(customPacketBuffer, slot.writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -139,7 +138,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
         super.readPacket(customPacketBuffer);
         try {
             CompoundTag tagCompound = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
-            this.slot.readFromNbt(tagCompound);
+            this.slot.readFromNbt(customPacketBuffer.registryAccess(), tagCompound);
             this.slot.update();
         } catch (IOException e) {
             throw new RuntimeException(e);

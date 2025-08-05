@@ -41,7 +41,7 @@ public class ModulatorCategory extends GuiIU implements IRecipeCategory<Modulato
     ) {
         super(((TileModuleMachine) BlockBaseMachine.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 174,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 174,
                 91
         );
         this.jeiInform = jeiInform;
@@ -75,23 +75,22 @@ public class ModulatorCategory extends GuiIU implements IRecipeCategory<Modulato
     @Override
     public void draw(ModulatorHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ModulatorHandler recipe, IFocusGroup focuses) {
 
         final List<SlotInvSlot> slots1 = container1.getSlots();
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(ItemStackHelper.fromData(IUItem.module9, 1, 13));
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(1).getJeiX(), slots1.get(1).getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(ItemStackHelper.fromData(IUItem.module9, 1, 13));
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(1).getJeiX(), slots1.get(1).getJeiY()).addItemStack(recipe.getOutput());
 
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
     }
 
 

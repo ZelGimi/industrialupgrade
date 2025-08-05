@@ -8,13 +8,12 @@ import com.denfop.container.ContainerGasWellTank;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,9 +82,9 @@ public class GuiGasWellTank<T extends ContainerGasWellTank> extends GuiIU<Contai
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(poseStack,mouseX+
+                    this.gui.drawSprite(poseStack, mouseX +
                                     fluidX,
-                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -107,7 +106,7 @@ public class GuiGasWellTank<T extends ContainerGasWellTank> extends GuiIU<Contai
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigaswell_tank.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigaswell_tank.png");
     }
 
 }

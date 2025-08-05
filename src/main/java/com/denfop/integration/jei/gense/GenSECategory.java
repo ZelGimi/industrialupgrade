@@ -33,9 +33,9 @@ public class GenSECategory extends GuiIU implements IRecipeCategory<GenSEHandler
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png"), 3, 3, 160,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png"), 3, 3, 160,
                 75
         );
     }
@@ -70,9 +70,8 @@ public class GenSECategory extends GuiIU implements IRecipeCategory<GenSEHandler
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png");
     }
 
 

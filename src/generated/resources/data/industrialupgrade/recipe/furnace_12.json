@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/haumea_cobblestone"
+  },
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spacestone/haumea_stone"
+  }
+}

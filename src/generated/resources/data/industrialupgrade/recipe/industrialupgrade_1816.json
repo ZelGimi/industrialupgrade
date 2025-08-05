@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_imp_circulationpump"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_392_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_368_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "BEB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:heat_reactors/heat_per_circulationpump"
+  },
+  "show_notification": false
+}

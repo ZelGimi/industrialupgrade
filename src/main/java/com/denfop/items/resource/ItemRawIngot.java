@@ -18,10 +18,12 @@ public class ItemRawIngot<T extends Enum<T> & ISubEnum> extends ItemMain<T> impl
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -35,7 +37,7 @@ public class ItemRawIngot<T extends Enum<T> & ISubEnum> extends ItemMain<T> impl
 
 
         }
-        return new String[]{"forge:raw_ingots/" + name, "forge:raw_ingots"};
+        return new String[]{"c:raw_ingots/" + name, "c:raw_ingots"};
     }
 
     public enum Types implements ISubEnum {

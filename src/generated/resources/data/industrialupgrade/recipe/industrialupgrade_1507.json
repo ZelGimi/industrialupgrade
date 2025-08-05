@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:simplemachine/generator_matter"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_56_element"
+    },
+    "D": {
+      "item": "industrialupgrade:module_stack"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_240_element"
+    }
+  },
+  "pattern": [
+    " E ",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine2/combiner_matter"
+  },
+  "show_notification": false
+}

@@ -10,8 +10,8 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -158,17 +158,17 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                 List<Double> time;
                 if (!this.container.base.queue) {
 
-                   draw(poseStack, input + this.container.base.inputSlot[0].get(0).getDisplayName().getString(),
+                    draw(poseStack, input + this.container.base.inputSlot[0].get(0).getDisplayName().getString(),
                             this.guiLeft + 60, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                   draw(poseStack,
+                    draw(poseStack,
                             output + output1.getRecipe().output.items.get(0).getDisplayName().getString(),
                             this.guiLeft + 60,
                             this.guiTop + 65,
                             ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
-                   draw(poseStack, energyPerOperation + ModUtils.getString(container.base.energySlots[0]) +
+                    draw(poseStack, energyPerOperation + ModUtils.getString(container.base.energySlots[0]) +
                                     " EF",
                             this.guiLeft + 60, this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -179,7 +179,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                                 this.guiLeft + 60, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                     }
-                  draw(poseStack,
+                    draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                             this.guiLeft + 60, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -196,7 +196,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
 
-                  draw(poseStack,
+                    draw(poseStack,
                             Localization.translate("iu.timetoend") + time1 + time2 + time3,
                             this.guiLeft + 60, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -233,7 +233,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                                 this.guiTop + 65,
                                 ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
-                       draw(poseStack, energyPerOperation + ModUtils.getString(this.container.base.energySlots[0]) + " EF",
+                        draw(poseStack, energyPerOperation + ModUtils.getString(this.container.base.energySlots[0]) + " EF",
                                 this.guiLeft + 60, this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                         if (this.container.base.getProgress(0) * 100 <= 100) {
@@ -245,7 +245,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                         }
 
 
-                       draw(poseStack,
+                        draw(poseStack,
                                 "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                                 this.guiLeft + 60, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
@@ -284,7 +284,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                         this.container.base.outputSlot[i])) {
                     this.bindTexture();
                     drawTexturedModalRect(poseStack, this.guiLeft + 26 + i * 20, this.guiTop + 76, 44, 235, 14, (int) chargeLevel);
-                   draw(poseStack,
+                    draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                             this.guiLeft + 85, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -305,7 +305,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") : "";
 
-                   draw(poseStack,
+                    draw(poseStack,
                             Localization.translate("iu.timetoend") + time1 + time2 + time3,
                             this.guiLeft + 85, this.guiTop + 65 + i * 10, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -320,7 +320,7 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
                         this.container.base.outputSlot[i])) {
                     this.bindTexture();
                     drawTexturedModalRect(poseStack, this.guiLeft + 10 + i * 19, this.guiTop + 76, 44, 235, 14, (int) chargeLevel);
-                   draw(poseStack,
+                    draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                             this.guiLeft + 100, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -361,89 +361,89 @@ public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends G
         if (container.base.maxAmount == 1) {
             if (this.container.base.redstoneMode == 1) {
 
-                return new ResourceLocation(
+                return ResourceLocation.tryBuild(
                         Constants.MOD_ID,
                         "textures/gui/guimoleculartransformernew_chemical_green.png"
                 );
             } else if (this.container.base.redstoneMode == 2) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_gold.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_gold.png");
             } else if (this.container.base.redstoneMode == 3) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_red.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_red.png");
             } else if (this.container.base.redstoneMode == 4) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_silver.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_silver.png");
             } else if (this.container.base.redstoneMode == 5) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_violet.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_violet.png");
             } else if (this.container.base.redstoneMode == 6) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_blue.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_blue.png");
             } else if (this.container.base.redstoneMode == 7) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_green.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew_green.png");
             } else {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew.png");
             }
         } else if (container.base.maxAmount == 2) {
             if (this.container.base.redstoneMode == 1) {
 
-                return new ResourceLocation(
+                return ResourceLocation.tryBuild(
                         Constants.MOD_ID,
                         "textures/gui/guidualmoleculartransformernew_chemical_green.png"
                 );
             } else if (this.container.base.redstoneMode == 2) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_gold.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_gold.png");
             } else if (this.container.base.redstoneMode == 3) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_red.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_red.png");
             } else if (this.container.base.redstoneMode == 4) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_silver.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_silver.png");
             } else if (this.container.base.redstoneMode == 5) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_violet.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_violet.png");
             } else if (this.container.base.redstoneMode == 6) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_blue.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_blue.png");
             } else if (this.container.base.redstoneMode == 7) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_green.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew_green.png");
             } else {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidualmoleculartransformernew.png");
             }
         } else {
             if (this.container.base.redstoneMode == 1) {
 
-                return new ResourceLocation(
+                return ResourceLocation.tryBuild(
                         Constants.MOD_ID,
                         "textures/gui/guiquadmoleculartransformernew_chemical_green.png"
                 );
             } else if (this.container.base.redstoneMode == 2) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_gold.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_gold.png");
             } else if (this.container.base.redstoneMode == 3) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_red.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_red.png");
             } else if (this.container.base.redstoneMode == 4) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_silver.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_silver.png");
             } else if (this.container.base.redstoneMode == 5) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_violet.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_violet.png");
             } else if (this.container.base.redstoneMode == 6) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_blue.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_blue.png");
             } else if (this.container.base.redstoneMode == 7) {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_green.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew_green.png");
             } else {
 
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquadmoleculartransformernew.png");
             }
         }
     }

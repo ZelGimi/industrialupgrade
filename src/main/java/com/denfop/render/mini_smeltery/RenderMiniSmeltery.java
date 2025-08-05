@@ -12,9 +12,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class RenderMiniSmeltery {
     public static void render(TileEntityMiniSmeltery te, RenderLevelStageEvent event) {
@@ -29,15 +29,16 @@ public class RenderMiniSmeltery {
 
             poseStack.pushPose();
             poseStack.translate(0.175, 0, 0.175);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale, 0.82f,0);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale, 0.82f);
             poseStack.popPose();
         }
 
         ItemStack outputItem = te.outputSlot.get(0);
-        if (te.outputSlot.isEmpty() && te.fluidTank1.getFluidAmount() > 144) {
+        if (te.outputSlot.isEmpty() && te.fluidTank1.getFluidAmount() > 0) {
+            final float scale = (te.fluidTank1.getFluidAmount() - 144) * 1F / te.fluidTank1.getCapacity();
             poseStack.pushPose();
             poseStack.translate(0.04, 0.975, 0.04);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f,1);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f, 1);
             poseStack.popPose();
         }
         if (!outputItem.isEmpty()) {
@@ -57,10 +58,9 @@ public class RenderMiniSmeltery {
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             itemRenderer.renderStatic(outputItem,
-                   ItemDisplayContext.GROUND,
+                    ItemDisplayContext.GROUND,
                     0xF000F0, OverlayTexture.NO_OVERLAY,
-                    poseStack, bufferSource,te.getLevel(), 0);
-            ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
+                    poseStack, bufferSource, te.getLevel(), 0);
 
             poseStack.popPose();
         }

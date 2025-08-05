@@ -4,15 +4,12 @@ import com.denfop.IUItem;
 import com.denfop.api.bee.IBee;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.datagen.DamageTypes;
 import com.denfop.items.energy.ItemNet;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,9 +40,8 @@ public class TileEntityHive extends TileEntityBlock {
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
         ItemStack stack = new ItemStack(IUItem.jarBees.getStack(0));
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putInt("bee_id", bee.getId());
-        nbt.putInt("swarm", WorldBaseGen.random.nextInt(bee.getMaxSwarm() / 2) + 15);
+        stack.set(DataComponentsInit.BEE, bee.getId());
+        stack.set(DataComponentsInit.SWARM, WorldBaseGen.random.nextInt(bee.getMaxSwarm() / 2) + 15);
         return Collections.singletonList(stack);
     }
 
@@ -55,8 +51,7 @@ public class TileEntityHive extends TileEntityBlock {
     }
 
     public void onClicked(Player player) {
-
-        player.hurt(new DamageSource(player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.beeObject)), 5);
+        player.hurt(player.damageSources().source(DamageTypes.beeObject), 5);
     }
 
     @Override

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/cobalt"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_572_element"
+    },
+    "C": {
+      "tag": "c:plates/chromium"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_577_element"
+  },
+  "show_notification": false
+}

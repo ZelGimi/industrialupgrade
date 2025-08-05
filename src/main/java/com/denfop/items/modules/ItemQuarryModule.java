@@ -3,20 +3,19 @@ package com.denfop.items.modules;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemMain;
-import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,12 +23,14 @@ public class ItemQuarryModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
     public ItemQuarryModule(T element) {
         super(new Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack itemStack, @Nullable TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, p_41422_, p_41423_, p_41424_);
         int meta = getElement().getId();
         switch (meta) {
@@ -47,23 +48,19 @@ public class ItemQuarryModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
                 break;
             case 12:
                 p_41423_.add(Component.literal(Localization.translate("iu.blacklist")));
-                CompoundTag nbt = ModUtils.nbt(itemStack);
-                int size = nbt.getInt("size");
-                for (int i = 0; i < size; i++) {
-                    String l = "number_" + i;
-                    String ore = ModUtils.NBTGetString(itemStack, l);
-                    ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation(ore))).iterator().next().get());
+                List<String> stringList = itemStack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+
+                for (String ore : stringList) {
+                    ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(ResourceLocation.parse(ore))).iterator().next().value());
                     p_41423_.add(stack.getDisplayName());
                 }
                 break;
             case 13:
                 p_41423_.add(Component.literal(Localization.translate("iu.whitelist")));
-                nbt = ModUtils.nbt(itemStack);
-                size = nbt.getInt("size");
-                for (int i = 0; i < size; i++) {
-                    String l = "number_" + i;
-                    String ore = ModUtils.NBTGetString(itemStack, l);
-                    ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation(ore))).iterator().next().get());
+                stringList = itemStack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+
+                for (String ore : stringList) {
+                    ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(ResourceLocation.parse(ore))).iterator().next().value());
                     p_41423_.add(stack.getDisplayName());
                 }
 

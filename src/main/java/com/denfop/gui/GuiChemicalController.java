@@ -63,7 +63,7 @@ public class GuiChemicalController<T extends ContainerChemicalController> extend
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
 
         handleUpgradeTooltip(par1, par2);
         if (!this.container.base.work) {
@@ -75,40 +75,40 @@ public class GuiChemicalController<T extends ContainerChemicalController> extend
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
     }
 
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(poseStack,partialTicks, mouseX, mouseY);
+        super.drawBackgroundAndTitle(poseStack, partialTicks, mouseX, mouseY);
 
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture();
-        drawTexturedModalRect(poseStack,this.guiLeft + 70,
+        drawTexturedModalRect(poseStack, this.guiLeft + 70,
                 this.guiTop + 35
                 , 231, 1, 24, 24
         );
         if (this.container.base.work) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 70,
+            drawTexturedModalRect(poseStack, this.guiLeft + 70,
                     this.guiTop + 35
                     , 231, 51, 24, 24
             );
         }
         if (this.visible) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 70,
+            drawTexturedModalRect(poseStack, this.guiLeft + 70,
                     this.guiTop + 35
                     , 231, 26, 24, 24
             );
         }
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, 10, 10);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
     }
 
 }

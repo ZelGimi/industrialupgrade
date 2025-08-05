@@ -1,9 +1,10 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.IEnergySink;
+import com.denfop.api.energy.IEnergySource;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
-import com.denfop.api.sytem.InfoTile;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotDischarge;
@@ -17,11 +18,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -47,7 +45,6 @@ public class Energy extends AbstractComponent {
     public boolean limit;
     public double limit_amount = 0;
 
-    Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
 
     private ChunkPos chunkPos;
 
@@ -141,7 +138,7 @@ public class Energy extends AbstractComponent {
     @Override
     public void updateEntityServer() {
         if (this.delegate != null)
-            this.delegate.limit_amount=limit_amount;
+            this.delegate.limit_amount = limit_amount;
         if (!managedSlots.isEmpty()) {
             for (InvSlot slot : managedSlots) {
                 if (slot instanceof InvSlotDischarge) {
@@ -211,7 +208,7 @@ public class Energy extends AbstractComponent {
         if (!this.parent.getLevel().isClientSide) {
             if (!(this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty())) {
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
+                NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
             }
             this.loaded = true;
         }
@@ -249,14 +246,14 @@ public class Energy extends AbstractComponent {
 
     public void onUnloaded() {
         if (this.delegate != null) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
             this.delegate = null;
         }
         this.loaded = false;
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.buffer.capacity);
         buffer.writeDouble(this.buffer.storage);
         buffer.writeDouble(this.limit_amount);
@@ -440,7 +437,7 @@ public class Energy extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
         this.sinkDirections = sinkDirections;
@@ -457,7 +454,7 @@ public class Energy extends AbstractComponent {
             assert !this.parent.getLevel().isClientSide;
             delegate.energyConductorMap.clear();
             delegate.validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
 
@@ -469,7 +466,7 @@ public class Energy extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
         this.sinkDirections = new HashSet<>(sinkDirections);
@@ -485,7 +482,7 @@ public class Energy extends AbstractComponent {
             this.delegate.sinkDirections = new HashSet<>(sinkDirections);
             delegate.energyConductorMap.clear();
             assert !this.parent.getLevel().isClientSide;
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
 

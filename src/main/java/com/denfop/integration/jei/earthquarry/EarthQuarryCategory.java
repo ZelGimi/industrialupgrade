@@ -31,11 +31,11 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     ) {
         super(((TileEntityElectricDryer) BlockBaseMachine3.electric_dryer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein" +
                         ".png"), 3, 3, 140,
                 140
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
 
@@ -45,7 +45,6 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     public String getTitles() {
         return Localization.translate("earth_quarry.jei");
     }
-
 
 
     @SuppressWarnings("removal")
@@ -60,10 +59,10 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     public void draw(EarthQuarryHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         int y = 20;
         int x = 25;
-       drawSplitString(stack,Localization.translate("earth_quarry.jei1"), 5, 3,
+        drawSplitString(stack, Localization.translate("earth_quarry.jei1"), 5, 3,
                 140 - 5, 4210752
         );
-        drawSplitString(stack," + " + recipe.chance + "%" + " ->", 20, 30,
+        drawSplitString(stack, " + " + recipe.chance + "%" + " ->", 20, 30,
                 140 - 5, 4210752
         );
 
@@ -82,9 +81,8 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

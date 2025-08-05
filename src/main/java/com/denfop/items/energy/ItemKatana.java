@@ -9,6 +9,7 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.items.armour.special.ItemSpecialArmor;
@@ -16,19 +17,15 @@ import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -36,16 +33,21 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.NeoForge;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -53,8 +55,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
+import static net.minecraft.world.item.SwordItem.createToolProperties;
 
-public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem, IProperties, IItemTab {
+public class ItemKatana extends TieredItem implements IEnergyItem, IUpgradeItem, IProperties, IItemTab {
     public final int maxCharge;
     public final int transferLimit;
     public final int tier;
@@ -63,7 +66,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
     private String nameItem;
 
     public ItemKatana() {
-        super(1, 2, Tiers.DIAMOND, new TagKey<>(Registries.BLOCK,new ResourceLocation("","block")), new Properties().setNoRepair().setNoRepair().stacksTo(1));
+        super(Tiers.DIAMOND, new Properties().setNoRepair().setNoRepair().stacksTo(1).component(DataComponentsInit.ENERGY, 0D).component(DataComponentsInit.ACTIVE, false).component(DataComponentsInit.MODE, 0).component(DataComponentsInit.SKIN, "").component(DataComponents.TOOL, createToolProperties()));
         this.soundTicker = 0;
         this.maxCharge = 500000;
         this.transferLimit = 5000;
@@ -72,24 +75,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         IUCore.proxy.addProperties(this);
         runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list));
     }
-    public boolean isBarVisible(final ItemStack stack) {
-        return true;
-    }
 
-    public int getBarColor(ItemStack stack) {
-        return ModUtils.convertRGBcolorToInt(33, 91, 199);
-    }
-
-    public int getBarWidth(ItemStack stack) {
-
-        return 13 - (int) (13.0F * Math.min(
-                Math.max(
-                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
-                        0.0
-                ),
-                1.0
-        ));
-    }
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -108,6 +94,24 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         return this.nameItem;
     }
 
+    public boolean isBarVisible(final ItemStack stack) {
+        return true;
+    }
+
+    public int getBarColor(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        ));
+    }
 
     public String[] properties() {
         return new String[]{"type"};
@@ -116,8 +120,8 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack stack, ClientLevel world, LivingEntity entityIn, int p174679, String property) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        switch (nbt.getString("type")) {
+
+        switch (stack.getOrDefault(DataComponentsInit.SKIN, "")) {
             case "":
                 return 0;
             case "yellow":
@@ -149,22 +153,21 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         return true;
     }
 
+
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (slot != EquipmentSlot.MAINHAND) {
-            return super.getAttributeModifiers(slot, stack);
-        } else {
-            int saberdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
-                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0;
-            int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+
+        int saberdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0;
+        int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
 
 
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-            builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", 2, AttributeModifier.Operation.ADDITION));
-            builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", dmg, AttributeModifier.Operation.ADDITION));
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+        builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, 2, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, dmg, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
 
-            return builder.build();
-        }
+        return builder.build();
+
     }
 
     @Override
@@ -194,8 +197,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
 
             if (source instanceof ServerPlayer player) {
                 new PacketSoundPlayer("katana", player);
-                CompoundTag nbtData = stack.getOrCreateTag();
-                boolean iaidoActive = nbtData.getBoolean("iaidoMode");
+                boolean iaidoActive = stack.getOrDefault(DataComponentsInit.ACTIVE, false);
 
                 if (iaidoActive) {
                     player.getCooldowns().addCooldown(this, 60);
@@ -245,8 +247,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
         if (entity instanceof Player player && !world.isClientSide) {
             ItemCooldowns cooldownTracker = player.getCooldowns();
@@ -259,25 +260,24 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
     @Override
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        CompoundTag nbt = stack.getOrCreateTag();
 
         if (!IUCore.keyboard.isChangeKeyDown(player)) {
-            switch (nbt.getString("type")) {
+            switch (stack.getOrDefault(DataComponentsInit.SKIN, "")) {
                 case "":
-                    nbt.putString("type", "yellow");
+                    stack.set(DataComponentsInit.SKIN, "yellow");
                     break;
                 case "yellow":
-                    nbt.putString("type", "green");
+                    stack.set(DataComponentsInit.SKIN, "green");
                     break;
                 case "green":
-                    nbt.putString("type", "pink");
+                    stack.set(DataComponentsInit.SKIN, "pink");
                     break;
                 case "pink":
-                    nbt.putString("type", "");
+                    stack.set(DataComponentsInit.SKIN, "");
                     break;
             }
         } else {
-            nbt.putBoolean("iaidoMode", !nbt.getBoolean("iaidoMode"));
+            stack.set(DataComponentsInit.ACTIVE, !stack.getOrDefault(DataComponentsInit.ACTIVE, false));
         }
 
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
@@ -310,9 +310,15 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
-        return net.minecraftforge.common.ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
+    public boolean isCorrectToolForDrops(ItemStack p_336002_, BlockState pBlock) {
+        return pBlock.is(Blocks.COBWEB);
     }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(itemAbility);
+    }
+
 
     @Override
     public double getTransferEnergy(ItemStack itemStack) {
@@ -326,10 +332,11 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         return super.onDroppedByPlayer(item, player);
     }
 
+
     @Override
     public void appendHoverText(
             ItemStack stack,
-            Level worldIn,
+            TooltipContext worldIn,
             List<Component> tooltip,
             TooltipFlag flagIn
     ) {
@@ -345,12 +352,14 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
 
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
             ElectricItemManager.addChargeVariants(this, p_41392_);
         }
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;

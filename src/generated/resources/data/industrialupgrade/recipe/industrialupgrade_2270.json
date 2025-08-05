@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_pressure"
+    },
+    "B": {
+      "tag": "c:plates/molybdenumsteel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_1_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_426_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_425_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_579_element"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "FEF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_turbine/steam_turbine_adv_pressure"
+  },
+  "show_notification": false
+}

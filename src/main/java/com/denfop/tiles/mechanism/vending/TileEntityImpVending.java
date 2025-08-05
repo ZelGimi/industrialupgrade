@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpVending extends TileEntityBaseVending {
 
     public TileEntityImpVending(BlockPos pos, BlockState state) {
-        super(EnumTypeStyle.IMPROVED,BlockBaseMachine3.imp_vending,pos,state);
+        super(EnumTypeStyle.IMPROVED, BlockBaseMachine3.imp_vending, pos, state);
     }
 
     @Override

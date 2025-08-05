@@ -1,0 +1,45 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "C": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "D": {
+      "tag": "c:plates/alumel"
+    },
+    "E": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 7,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/quantumcircuit"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "DED"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_226_element"
+  },
+  "show_notification": false
+}

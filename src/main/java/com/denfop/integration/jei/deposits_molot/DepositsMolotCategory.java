@@ -34,10 +34,10 @@ public class DepositsMolotCategory extends GuiIU implements IRecipeCategory<Depo
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
                 180
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
 
@@ -61,7 +61,7 @@ public class DepositsMolotCategory extends GuiIU implements IRecipeCategory<Depo
         int y = 20;
         int x = 25;
         VeinType vein = recipe.getVeinType();
-       this.drawSplitString(stack, Localization.translate("deposists.jei2") + " " + (vein.getHeavyOre() != null ?
+        this.drawSplitString(stack, Localization.translate("deposists.jei2") + " " + (vein.getHeavyOre() != null ?
                         new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
                         new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
                         ).getDisplayName().getString()), 5, 3,
@@ -77,14 +77,13 @@ public class DepositsMolotCategory extends GuiIU implements IRecipeCategory<Depo
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DepositsMolotHandler recipe, IFocusGroup focuses) {
-       builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(new ItemStack(IUItem.molot.getItem()));
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(new ItemStack(IUItem.molot.getItem()));
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStacks(recipe.getInputs());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

@@ -12,7 +12,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class PollutionManager {
     public PollutionManager() {
         this.wind = WindSystem.windSystem;
         this.random = new Random();
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
+        NeoForge.EVENT_BUS.register(new EventHandler());
     }
 
     public void work(Player player) {
@@ -62,7 +62,7 @@ public class PollutionManager {
                         if (pollution.getLevelPollution().ordinal() >= 3) {
                             player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
                             if (pollution.getLevelPollution().ordinal() >= 4) {
-                                player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
+                                player.addEffect(new MobEffectInstance(IUPotion.poison, 200, 0));
 
                             }
                         }
@@ -245,9 +245,8 @@ public class PollutionManager {
                     }
                 }
             }
-
-        if (world.getGameTime() % 6000 == 0) {
-            if (ModConfig.COMMON.airPollution.get())
+        if (ModConfig.COMMON.airPollution.get())
+            if (world.getGameTime() % 6000 == 0) {
                 for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionAir.entrySet()) {
                     ChunkLevel chunkLevel = entry.getValue();
                     if (chunkLevel != null) {
@@ -259,7 +258,7 @@ public class PollutionManager {
                         }
                     }
                 }
-        }
+            }
         if (ModConfig.COMMON.airPollution.get())
             for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionAirChunks.entrySet()) {
                 ChunkLevel chunkLevel = pollutionAir.get(entry.getKey());

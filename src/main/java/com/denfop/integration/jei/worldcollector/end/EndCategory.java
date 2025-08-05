@@ -27,9 +27,10 @@ import javax.annotation.Nonnull;
 public class EndCategory extends GuiIU implements IRecipeCategory<EndHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public EndCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
@@ -37,7 +38,7 @@ public class EndCategory extends GuiIU implements IRecipeCategory<EndHandler> {
 
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiendassembler" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiendassembler" +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -51,7 +52,7 @@ public class EndCategory extends GuiIU implements IRecipeCategory<EndHandler> {
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 23).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 23).getDescriptionId());
     }
 
 
@@ -75,13 +76,13 @@ public class EndCategory extends GuiIU implements IRecipeCategory<EndHandler> {
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,
+        drawTexturedModalRect(stack,
                 25 + 1, 12 + 51 - energylevel, 179, 2 + 51 - energylevel,
                 5, energylevel
         );
 
 
-        drawTexturedModalRect( stack,+66 - 5, +34 - 5, 177, 60, xScale, 18);
+        drawTexturedModalRect(stack, +66 - 5, +34 - 5, 177, 60, xScale, 18);
         drawSplitString(stack,
                 Localization.translate("iu.need_info") + recipe.getNeed() + Localization.translate("iu.need_info_matter"),
                 79,
@@ -93,12 +94,12 @@ public class EndCategory extends GuiIU implements IRecipeCategory<EndHandler> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EndHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,39,19).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,105,30).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 39, 19).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 30).addItemStack(recipe.getOutput());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiendassembler.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiendassembler.png");
     }
 
 

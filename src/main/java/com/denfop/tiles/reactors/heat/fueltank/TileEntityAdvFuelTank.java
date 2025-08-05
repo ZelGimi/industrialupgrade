@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvFuelTank extends TileEntityMainTank {
 
     public TileEntityAdvFuelTank(BlockPos pos, BlockState state) {
-        super(40000,BlockHeatReactor.heat_adv_fueltank,pos,state);
+        super(40000, BlockHeatReactor.heat_adv_fueltank, pos, state);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
 import com.denfop.world.WorldBaseGen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class CommonProxy {
         }
     }
 
-    public void removePotion(LivingEntity entity, MobEffect potion) {
+    public void removePotion(LivingEntity entity, Holder<MobEffect> potion) {
         entity.removeEffect(potion);
     }
 

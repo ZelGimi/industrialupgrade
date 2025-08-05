@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gems/diamond"
+    },
+    "B": {
+      "item": "industrialupgrade:pumps/imp_pump"
+    },
+    "C": {
+      "tag": "c:plates/osmium"
+    }
+  },
+  "pattern": [
+    "A A",
+    "CBC",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:pumps/per_pump"
+  },
+  "show_notification": false
+}

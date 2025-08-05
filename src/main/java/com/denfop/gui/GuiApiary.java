@@ -14,8 +14,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +53,7 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
     }
 
     @Override
-    public boolean mouseScrolled(double d, double d2, double d3) {
+    public boolean mouseScrolled(double d, double d2, double d4, double d3) {
         ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
         int mouseX = (int) (d - this.guiLeft);
         int mouseY = (int) (d2 - this.guiTop);
@@ -89,7 +89,7 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
             }
         }
 
-        return super.mouseScrolled(d, d2, d3);
+        return super.mouseScrolled(d, d2, d4,d3);
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -148,7 +148,7 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiapiary.png");
+        return  ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiapiary.png");
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
@@ -222,7 +222,7 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
                 12,
                 renderHeight
         );
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture( ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems2"
+    },
+    "D": {
+      "tag": "c:doubleplate/alumel"
+    }
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade9"
+  },
+  "show_notification": false
+}

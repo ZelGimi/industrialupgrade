@@ -22,7 +22,7 @@ public class GuiChemicalGenerator<T extends ContainerDefaultMultiElement> extend
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
     }
 
 }

@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -60,20 +62,24 @@ public class BlockDeposits1<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape Deposits = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
+    Map<Integer, List<String>> mapInf = new HashMap<>();
 
     public BlockDeposits1(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of().mapColor(MapColor.STONE).destroyTime(3f).noOcclusion().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
         BlockTagsProvider.list.add(this);
     }
-    Map<Integer, List<String>> mapInf = new HashMap<>();
+
+    public static boolean isFree(BlockState p_53242_) {
+        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || p_53242_.liquid() || p_53242_.canBeReplaced();
+    }
 
     @Override
     public List<String> getInformationFromMeta() {
         int meta = this.getElement().getId();
         List<String> inf = mapInf.get(meta);
         if (inf == null) {
-            final VeinType vein = WorldBaseGen.veinTypes.get(16 +meta);
+            final VeinType vein = WorldBaseGen.veinTypes.get(16 + meta);
             List<String> stringList = new ArrayList<>();
             final String s = Localization.translate("deposists.jei1") + (vein.getHeavyOre() != null ?
                     new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
@@ -109,9 +115,6 @@ public class BlockDeposits1<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
             return inf;
         }
     }
-    public static boolean isFree(BlockState p_53242_) {
-        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || p_53242_.liquid() || p_53242_.canBeReplaced();
-    }
 
     @Override
     int getMetaFromState(BlockState state) {
@@ -120,20 +123,22 @@ public class BlockDeposits1<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
 
     @Override
     public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-        int levelEnchant = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, player.getMainHandItem());
+        int levelEnchant = EnchantmentHelper.getItemEnchantmentLevel(player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), player.getMainHandItem());
         return levelEnchant == 0;
+
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
         ItemStack tool = p_60538_.getParameter(TOOL);
         BlockPos pos = new BlockPos((int) p_60538_.getParameter(ORIGIN).x, (int) p_60538_.getParameter(ORIGIN).y, (int) p_60538_.getParameter(ORIGIN).z);
         List<ItemStack> drops = NonNullList.create();
-        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool),tool);
+        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), tool), tool);
         return drops;
     }
 
     public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune, ItemStack tool) {
-        List<ItemStack>   drops = new ArrayList<>();
+        List<ItemStack> drops = new ArrayList<>();
         if (tool.getItem() instanceof ItemHammer) {
             final int meta = getMetaFromState(state);
             final VeinType vein = WorldBaseGen.veinTypes.get(16 + meta);
@@ -157,7 +162,7 @@ public class BlockDeposits1<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
                     }
                     List<ItemStack> stacks = new ArrayList<>();
                     for (int i = 0; i < col.length; i++) {
-                        final RandomSource rand =world.random;
+                        final RandomSource rand = world.random;
                         if ((rand.nextInt(100) < col[i])) {
                             stacks.add(output.getRecipe().output.items.get(i));
                         }
@@ -186,8 +191,9 @@ public class BlockDeposits1<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
         }
         return drops;
     }
+
     @Override
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+    public ItemStack getCloneItemStack(LevelReader p_304395_, BlockPos p_49824_, BlockState pState) {
         final int meta = getMetaFromState(pState);
         final VeinType vein = WorldBaseGen.veinTypes.get(16 + meta);
         if (vein.getHeavyOre() == null) {
@@ -198,8 +204,9 @@ public class BlockDeposits1<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
         }
     }
 
+
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         final int meta = getMetaFromState(state);
         final VeinType vein = WorldBaseGen.veinTypes.get(16 + meta);
         if (vein.getHeavyOre() == null) {

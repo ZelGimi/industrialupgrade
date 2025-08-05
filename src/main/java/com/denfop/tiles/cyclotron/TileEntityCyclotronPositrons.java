@@ -15,8 +15,8 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityCyclotronPositrons extends TileEntityMultiBlockElement implements IPositrons {
 
@@ -24,7 +24,7 @@ public class TileEntityCyclotronPositrons extends TileEntityMultiBlockElement im
     private final ComponentBaseEnergy positrons;
 
     public TileEntityCyclotronPositrons(BlockPos pos, BlockState state) {
-        super( BlockCyclotron.cyclotron_positrons, pos, state);
+        super(BlockCyclotron.cyclotron_positrons, pos, state);
         this.positrons = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.POSITRONS, this, 10000));
     }
 

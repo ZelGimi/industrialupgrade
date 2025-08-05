@@ -12,9 +12,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,15 +25,15 @@ public class TileEntityInputFluid extends TileEntityMultiBlockElement implements
     public List<Fluids> internalFluidTankList = new ArrayList<>();
 
     public TileEntityInputFluid(IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
     }
 
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand))!= null) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
             for (Fluids fluids : internalFluidTankList) {
                 if (ModUtils.interactWithFluidHandler(player, hand,
-                        fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                        fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
                 )) {
                     return true;
                 }
@@ -45,14 +44,15 @@ public class TileEntityInputFluid extends TileEntityMultiBlockElement implements
         }
     }
 
-
-
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER)
-            return LazyOptional.of( () -> (T) new FluidHandlerReactor(this.internalFluidTankList)).cast();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.FluidHandler.BLOCK) {
+            return (T) new FluidHandlerReactor(this.internalFluidTankList);
+        }
+        return super.getCapability(cap, side);
     }
+
+
     @Override
     public void addFluids(final Fluids fluids) {
         internalFluidTankList.add(fluids);

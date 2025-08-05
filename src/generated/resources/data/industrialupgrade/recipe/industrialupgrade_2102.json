@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:gears/alcled"
+    },
+    "C": {
+      "tag": "c:doubleplate/thallium"
+    },
+    "E": {
+      "tag": "c:plates/chromium"
+    }
+  },
+  "pattern": [
+    "BEB",
+    "CAC",
+    "EEE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_657_element"
+  },
+  "show_notification": false
+}

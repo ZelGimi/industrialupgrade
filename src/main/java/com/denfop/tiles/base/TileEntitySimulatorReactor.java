@@ -8,6 +8,8 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSimulationReactors;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.ReactorSchedule;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSimulationReactors;
 import com.denfop.invslot.InvSlot;
@@ -16,17 +18,16 @@ import com.denfop.items.ItemCraftingElements;
 import com.denfop.items.reactors.ItemComponentVent;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     public int levelReactor = -1;
     public EnumReactors reactors;
     public CreativeReactor reactor;
-    public boolean work = true;
+    public boolean work;
     public boolean explode;
     public LogicCreativeReactor logicReactor;
     public double output;
@@ -48,7 +49,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     private boolean needUpdate = false;
 
     public TileEntitySimulatorReactor(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.simulation_reactors,pos,state);
+        super(BlockBaseMachine3.simulation_reactors, pos, state);
         this.invSlot = new InvSlotSimulatorReactor(this, InvSlot.TypeItemSlot.INPUT, 80) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -116,7 +117,6 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             }
         };
     }
-
 
 
     @Override
@@ -242,51 +242,32 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             if (!this.scheduleSlot.isEmpty()) {
                 needUpdate = false;
                 ItemStack stack = this.scheduleSlot.get(0);
-                final CompoundTag nbt = ModUtils.nbt(stack);
-
                 final List<ItemStack> infoStack = this.logicReactor.getInfoStack();
-                final ListTag stacks = new ListTag();
-                for (ItemStack stack1 : infoStack) {
-                    CompoundTag contentTag = new  CompoundTag();
-                    stack1.save(contentTag);
-                    stacks.add(contentTag);
-                }
-                nbt.putInt("type", type);
-                nbt.putInt("level", levelReactor);
-                nbt.putString("name", this.reactors.getNameReactor().toLowerCase());
-                nbt.putInt(
-                        "generation",
-                        (int) (this.logicReactor.getGeneration() * (this.reactors.getType() == ITypeRector.GAS_COOLING_FAST
-                                ? 1.175
-                                :
-                                1))
-                );
-                nbt.putInt(
-                        "rad",
-                        this.logicReactor.getRadGeneration()
-                );
-                nbt.put("Items", stacks);
+                List<ItemStack> stacksItem = new ArrayList<>();
+                List<Integer> indexItem = new ArrayList<>();
                 for (int y = 0; y < this.reactors.getHeight(); y++) {
                     for (int x = 0; x < this.reactors.getWidth(); x++) {
-                        CompoundTag tag = new CompoundTag();
                         ItemStack stack1 = this.reactor.getItemAt(x, y);
                         if (stack1.isEmpty()) {
-                            tag.putBoolean("empty", true);
-                            nbt.put(String.valueOf(y * this.reactors.getWidth() + x), tag);
+                            stacksItem.add(ItemStack.EMPTY);
+                            indexItem.add(y * this.reactors.getWidth() + x);
                         } else {
-                            tag.putBoolean("empty", false);
-                            for (int i = 0; i < infoStack.size(); i++) {
-                                if (infoStack.get(i).is(stack1.getItem())) {
-                                    tag.putInt("index", i);
-
+                            for (ItemStack itemStack : infoStack) {
+                                if (itemStack.is(stack1.getItem())) {
+                                    stacksItem.add(stack1);
+                                    indexItem.add(y * this.reactors.getWidth() + x);
                                     break;
                                 }
                             }
-                            nbt.put(String.valueOf(y * this.reactors.getWidth() + x), tag);
                         }
                     }
                 }
-
+                ReactorSchedule reactorSchedule = new ReactorSchedule(type, levelReactor, this.reactors.getNameReactor().toLowerCase(),
+                        (int) (this.logicReactor.getGeneration() * (this.reactors.getType() == ITypeRector.GAS_COOLING_FAST
+                                ? 1.175
+                                :
+                                1)), this.logicReactor.getRadGeneration(), stacksItem, indexItem);
+                stack.set(DataComponentsInit.REACTOR_SCHEDULE, reactorSchedule);
             }
         }
         if (work && !explode && this.reactors != null && logicReactor != null) {

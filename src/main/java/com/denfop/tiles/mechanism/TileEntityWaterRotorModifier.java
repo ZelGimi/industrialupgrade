@@ -24,13 +24,12 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,15 +41,16 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
     public final InvSlotRotorWater rotor_slot;
 
     public TileEntityWaterRotorModifier(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.water_modifier,pos,state);
+        super(BlockBaseMachine3.water_modifier, pos, state);
         slot = new InvSlotWaterUpgrade(this);
         rotor_slot = new InvSlotRotorWater(slot);
     }
+
     @Override
     public List<ItemStack> getAuxDrops(int fortune) {
         List<ItemStack> ret = new ArrayList<>();
         for (final InvSlot slot : this.invSlots) {
-            if (!(slot instanceof VirtualSlot)  && !(slot instanceof InvSlotWaterUpgrade && !this.rotor_slot.isEmpty())) {
+            if (!(slot instanceof VirtualSlot) && !(slot instanceof InvSlotWaterUpgrade && !this.rotor_slot.isEmpty())) {
                 for (final ItemStack stack : slot) {
                     if (!ModUtils.isEmpty(stack)) {
                         ret.add(stack);
@@ -65,6 +65,7 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
         }
         return ret;
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.water_modifier;
     }
@@ -74,12 +75,11 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
     }
 
 
-
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
-        rotor_slot.readFromNbt(getNBTFromSlot(customPacketBuffer));
-        slot.readFromNbt(getNBTFromSlot(customPacketBuffer));
+        rotor_slot.readFromNbt(customPacketBuffer.registryAccess(), getNBTFromSlot(customPacketBuffer));
+        slot.readFromNbt(customPacketBuffer.registryAccess(), getNBTFromSlot(customPacketBuffer));
 
     }
 
@@ -125,29 +125,26 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
     public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0) {
             if (!this.rotor_slot.get(0).isEmpty()) {
-                for (int i = 0; i < this.slot.size(); i++) {
-                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
-                    if (!this.slot.get(i).isEmpty()) {
-                        CompoundTag nbt = ModUtils.nbt(this.getItemStack());
-                        nbt.putString(
-                                "mode_module" + i,
-                                (com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules.getFromID(((ItemWaterRotorsUpgrade<?>) this.slot.get(i).getItem()).getElement().getId())).name
-                        );
-                        MinecraftForge.EVENT_BUS.post(new com.denfop.api.water.upgrade.event.EventRotorItemLoad(this
+                RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), 0);
+                List<ItemStack> stacks = new ArrayList<>(this.slot);
+                this.slot.update();
+                for (int i = 0; i < stacks.size(); i++) {
+                    if (!stacks.get(i).isEmpty()) {
+                        RotorUpgradeSystem.instance.addUpdate(this.getItemStack(), this.getParent().getWorld(), (com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules.getFromID(((ItemWaterRotorsUpgrade<?>) stacks.get(i).getItem()).getElement().getId())));
+
+                        NeoForge.EVENT_BUS.post(new com.denfop.api.water.upgrade.event.EventRotorItemLoad(this
                                 .getParent().getWorld(), (com.denfop.api.water.upgrade.IRotorUpgradeItem) this
                                 .getItemStack().getItem(), this
                                 .getItemStack()));
                     }
                 }
+                this.slot.update(this.rotor_slot.get(0));
             }
         } else {
             if (!this.rotor_slot.get(0).isEmpty()) {
                 for (int i = 0; i < this.slot.size(); i++) {
                     RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
-                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.water.upgrade.event.EventRotorItemLoad(this
-                            .getParent().getWorld(), (com.denfop.api.water.upgrade.IRotorUpgradeItem) this
-                            .getItemStack().getItem(), this
-                            .getItemStack()));
+
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.denfop.api.pollution;
 
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class PollutionAirLoadEvent extends LevelEvent {
 

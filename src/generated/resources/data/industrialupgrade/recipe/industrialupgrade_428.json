@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/glass2"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdoubleplates/lead_doubleplate"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "D": {
+      "item": "industrialupgrade:itemdoubleplates/gold_doubleplate"
+    }
+  },
+  "pattern": [
+    "DAD",
+    "BCB",
+    "DAD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/glass3"
+  },
+  "show_notification": false
+}

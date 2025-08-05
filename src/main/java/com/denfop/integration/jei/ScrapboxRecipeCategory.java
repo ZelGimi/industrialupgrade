@@ -30,7 +30,7 @@ public class ScrapboxRecipeCategory extends GuiIU implements IRecipeCategory<Scr
     ) {
         super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(
-                new ResourceLocation(Constants.MOD_ID + ":textures/gui/ScrapboxRecipes.png".toLowerCase()),
+                ResourceLocation.parse(Constants.MOD_ID + ":textures/gui/ScrapboxRecipes.png".toLowerCase()),
                 55,
                 30,
                 82,
@@ -69,17 +69,17 @@ public class ScrapboxRecipeCategory extends GuiIU implements IRecipeCategory<Scr
             text = "  " + String.format("%.2f", value * 100.0F);
         }
 
-      draw(stack,text + "%", 86, 9, 4210752);
+        draw(stack, text + "%", 86, 9, 4210752);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ScrapboxRecipeHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,1,5).addItemStack(IUItem.scrapBox);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,61,5).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 5).addItemStack(IUItem.scrapBox);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5).addItemStack(recipe.getOutput());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

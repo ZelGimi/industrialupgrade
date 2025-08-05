@@ -13,6 +13,8 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWirelessMineralQuarry;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.VeinInfo;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWirelessMineralQuarry;
 import com.denfop.invslot.InvSlot;
@@ -23,7 +25,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Keyboard;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,8 +34,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -51,7 +52,7 @@ public class TileEntityWirelessMineralQuarry extends TileEntityInventory impleme
     public int levelBlock;
 
     public TileEntityWirelessMineralQuarry(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.wireless_mineral_quarry,pos,state);
+        super(BlockBaseMachine3.wireless_mineral_quarry, pos, state);
         this.output = new InvSlotOutput(this, 18);
         this.energy = this.addComponent(Energy.asBasicSink(this, 50000, 14));
         this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
@@ -67,9 +68,9 @@ public class TileEntityWirelessMineralQuarry extends TileEntityInventory impleme
                 if (!(stack.getItem() instanceof ItemVeinSensor)) {
                     return false;
                 }
-                final CompoundTag nbt = ModUtils.nbt(stack);
-                if (!nbt.getString("type").isEmpty()) {
-                    return !nbt.getString("type").equals("oil") && !nbt.getString("type").equals("gas");
+
+                if (stack.has(DataComponentsInit.VEIN_INFO)) {
+                    return !stack.get(DataComponentsInit.VEIN_INFO).type().equals("oil") && !stack.get(DataComponentsInit.VEIN_INFO).type().equals("gas");
                 }
                 return false;
             }
@@ -233,9 +234,9 @@ public class TileEntityWirelessMineralQuarry extends TileEntityInventory impleme
             if (stack.isEmpty()) {
                 continue;
             }
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            int x = nbt.getInt("x");
-            int z = nbt.getInt("z");
+            VeinInfo veinInfo = stack.get(DataComponentsInit.VEIN_INFO);
+            int x = veinInfo.x();
+            int z = veinInfo.z();
             ChunkPos chunkPos = new ChunkPos(x >> 4, z >> 4);
             final Vein vein = VeinSystem.system.getVein(chunkPos);
             if (vein.isFind() && vein.getType() == Type.VEIN) {

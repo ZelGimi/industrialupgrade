@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
+    },
+    "E": {
+      "item": "industrialupgrade:coal_chunk"
+    }
+  },
+  "pattern": [
+    "DAD",
+    "ABA",
+    "CEC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:adv_spectral_box"
+  },
+  "show_notification": false
+}

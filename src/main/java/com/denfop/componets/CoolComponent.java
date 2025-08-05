@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -103,6 +103,20 @@ public class CoolComponent extends AbstractComponent {
         return new CoolComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
+    public TypePurifierJob getPurifierJob() {
+        return TypePurifierJob.ItemStack;
+    }
+
+    public boolean canUsePurifier(Player player) {
+        return this.upgrade;
+    }
+
+    public ItemStack getItemStackUpgrade() {
+        this.upgrade = false;
+        this.meta = 0;
+        return new ItemStack(IUItem.coolupgrade.getStack(meta));
+    }
+
     public void readFromNbt(CompoundTag nbt) {
         this.storage = nbt.getDouble("storage");
         this.upgrade = nbt.getBoolean("upgrade");
@@ -132,7 +146,7 @@ public class CoolComponent extends AbstractComponent {
                 this.createDelegate();
                 this.energyCoolConductorMap.clear();
                 this.validColdReceivers.clear();
-                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.parent.getLevel()));
+                NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.parent.getLevel()));
             }
 
             this.loaded = true;
@@ -173,7 +187,7 @@ public class CoolComponent extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.parent.getLevel()));
+            NeoForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.parent.getLevel()));
             this.delegate = null;
         }
 
@@ -202,7 +216,7 @@ public class CoolComponent extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeInt(this.meta);
@@ -266,21 +280,6 @@ public class CoolComponent extends AbstractComponent {
 
         return amount;
     }
-
-    public TypePurifierJob getPurifierJob() {
-        return TypePurifierJob.ItemStack;
-    }
-
-    public boolean canUsePurifier(Player player) {
-        return this.upgrade;
-    }
-
-    public ItemStack getItemStackUpgrade() {
-        this.upgrade = false;
-        this.meta = 0;
-        return new ItemStack(IUItem.coolupgrade.getStack(meta));
-    }
-
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -349,7 +348,7 @@ public class CoolComponent extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.world));
+            NeoForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.world));
         }
 
         this.sinkDirections = sinkDirections;
@@ -366,7 +365,7 @@ public class CoolComponent extends AbstractComponent {
 
             this.energyCoolConductorMap.clear();
             this.validColdReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.world));
+            NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.world));
         }
 
 

@@ -122,18 +122,18 @@ public class InitMultiBlockSystem {
         );
         cokeOvenMultiBlock.add(cokeOvenMultiBlock.getPos().offset(0, 1, 1), IInputItem.class,
                 new ItemStack(IUItem.cokeoven.getItem(1))
-                );
+        );
         cokeOvenMultiBlock.add(cokeOvenMultiBlock.getPos().offset(0, 0, 2), IInputFluid.class,
                 new ItemStack(IUItem.cokeoven.getItem(4)), Direction.SOUTH
-                );
+        );
         cokeOvenMultiBlock.add(cokeOvenMultiBlock.getPos().offset(-1, 0, 1), IOutputFluid.class,
                 new ItemStack(IUItem.cokeoven.getItem(3)), Direction.EAST
-                );
+        );
 
 
         cokeOvenMultiBlock.add(cokeOvenMultiBlock.getPos().offset(1, 0, 1), IHeat.class,
                 new ItemStack(IUItem.cokeoven.getItem(2)), Direction.WEST
-                );
+        );
         pos1 = cokeOvenMultiBlock.getPos().offset(0, 0, 1);
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
@@ -142,29 +142,29 @@ public class InitMultiBlockSystem {
                             pos1.offset(i, j, k),
                             IPart.class,
                             new ItemStack(IUItem.cokeoven.getItem(5))
-                            );
+                    );
                 }
             }
         }
         advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos(),
                 com.denfop.tiles.adv_cokeoven.IMain.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(0)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(0, 2, 1), com.denfop.tiles.adv_cokeoven.IInputItem.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(1))
-                );
+        );
         advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(0, 0, 2), com.denfop.tiles.adv_cokeoven.IInputFluid.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(4)), Direction.SOUTH
-                );
+        );
         advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(-1, 0, 1), com.denfop.tiles.adv_cokeoven.IOutputFluid.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(3)), Direction.EAST
-                );
+        );
 
 
         advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(1, 0, 1), com.denfop.tiles.adv_cokeoven.IHeat.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(2)), Direction.WEST
-                );
+        );
         pos1 = advCokeOvenMultiBlock.getPos().offset(0, 0, 1);
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 3; j++) {
@@ -173,7 +173,7 @@ public class InitMultiBlockSystem {
                             pos1.offset(i, j, k),
                             com.denfop.tiles.adv_cokeoven.IPart.class,
                             new ItemStack(IUItem.adv_cokeoven.getItem(5))
-                            );
+                    );
                 }
             }
         }

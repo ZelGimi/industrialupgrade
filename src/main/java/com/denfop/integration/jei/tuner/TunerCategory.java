@@ -35,12 +35,13 @@ public class TunerCategory extends GuiIU implements IRecipeCategory<TunerHandler
     private final IDrawableStatic bg;
     private final ContainerTunerWireless container1;
     JeiInform jeiInform;
+
     public TunerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileTunerWireless) BlockBaseMachine3.tuner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 169,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 169,
                 75
         );
         this.jeiInform = jeiInform;
@@ -79,14 +80,13 @@ public class TunerCategory extends GuiIU implements IRecipeCategory<TunerHandler
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TunerHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.getSlots();
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(recipe.getOutput());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitunerwireless_jei.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guitunerwireless_jei.png");
     }
 
 

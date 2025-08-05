@@ -28,8 +28,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,7 +43,7 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
     public int fuel = 0;
 
     public TilePeatGenerator(BlockPos pos, BlockState state) {
-        super(0, 1, 0,BlockBaseMachine3.peat_generator,pos,state);
+        super(0, 1, 0, BlockBaseMachine3.peat_generator, pos, state);
         energy = this.addComponent(Energy.asBasicSource(this, 150000, 1));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override

@@ -62,18 +62,18 @@ public class GuiSteamBioGenerator<T extends ContainerBioGenerator> extends GuiIU
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer( poseStack,f, x, y);
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         bindTexture(getTexture());
 
         int progress = (int) (32 * this.container.base.getProgress());
@@ -81,17 +81,17 @@ public class GuiSteamBioGenerator<T extends ContainerBioGenerator> extends GuiIU
         int yoffset = guiTop;
 
         if (progress > 0) {
-            drawTexturedModalRect( poseStack,xoffset + 88, yoffset + 40, 177, 41, progress, 19);
+            drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString( poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect( poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guisteam_machine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guisteam_machine.png");
     }
 
 }

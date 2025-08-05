@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/spectralcircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:stick/manganese"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/spectralcircuit_part2"
+  },
+  "show_notification": false
+}

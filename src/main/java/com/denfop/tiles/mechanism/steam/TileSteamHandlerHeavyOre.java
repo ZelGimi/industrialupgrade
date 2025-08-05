@@ -29,8 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -58,7 +58,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
 
     public TileSteamHandlerHeavyOre(
             BlockPos pos, BlockState state) {
-        super(0, 1, 1,BlockBaseMachine3.steam_handler_ore,pos,state);
+        super(0, 1, 1, BlockBaseMachine3.steam_handler_ore, pos, state);
         this.enumTypeSlot = EnumTypeStyle.DEFAULT;
         this.outputSlot = new InvSlotOutput(this, 3 + 2 * enumTypeSlot.ordinal());
         this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
@@ -151,7 +151,6 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
             tooltip.add(Localization.translate("iu.heatmachine.info"));
 
         }
-
         tooltip.add(Localization.translate( "iu.steam_separator"));
         super.addInformation(stack, tooltip);
     }
@@ -162,6 +161,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
@@ -200,6 +200,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
 
         }
     }
+
     public void onUnloaded() {
         super.onUnloaded();
     }

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/aluminiumsilicon"
+    },
+    "B": {
+      "tag": "c:plates/vitalium"
+    },
+    "C": {
+      "tag": "c:plates/cobaltchrome"
+    }
+  },
+  "pattern": [
+    " AB",
+    "ABC",
+    " BC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_766_element"
+  },
+  "show_notification": false
+}

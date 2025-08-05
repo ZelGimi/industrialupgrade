@@ -8,13 +8,13 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GUIEFReader<T extends ContainerEFReader> extends GuiIU<ContainerEFReader> {
 
-    private static final ResourceLocation background = new ResourceLocation(
+    private static final ResourceLocation background = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/gui/guitooleumeter.png"
     );
@@ -43,7 +43,7 @@ public class GUIEFReader<T extends ContainerEFReader> extends GuiIU<ContainerEFR
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-      draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 0);
+        draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 0);
         draw(poseStack, Localization.translate("itemToolMEter.mode") + " Sink",
                 (169 + this.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 18,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
@@ -58,11 +58,11 @@ public class GUIEFReader<T extends ContainerEFReader> extends GuiIU<ContainerEFR
                     12, 18,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-           draw(poseStack, ModUtils.getString(this.energySink) + " EF/t",
+            draw(poseStack, ModUtils.getString(this.energySink) + " EF/t",
                     12, 28,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-           draw(poseStack, Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
+            draw(poseStack, Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
                             " " +
                             "EF/t",
                     8, 38,
@@ -79,7 +79,7 @@ public class GUIEFReader<T extends ContainerEFReader> extends GuiIU<ContainerEFR
         }
         if (this.mode == 1) {
 
-           draw(poseStack, Localization.translate("itemToolMEter.mode.EnergyOut") + ":",
+            draw(poseStack, Localization.translate("itemToolMEter.mode.EnergyOut") + ":",
                     12, 18,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
@@ -106,7 +106,7 @@ public class GUIEFReader<T extends ContainerEFReader> extends GuiIU<ContainerEFR
                 12, 78,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
-      draw(poseStack, Localization.translate("itemToolMEter.mode.reset"),
+        draw(poseStack, Localization.translate("itemToolMEter.mode.reset"),
                 38, 101,
                 ModUtils.convertRGBcolorToInt(0, 0, 0)
         );

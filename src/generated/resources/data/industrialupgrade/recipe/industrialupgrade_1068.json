@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/lead"
+    },
+    "B": {
+      "tag": "c:plates/tungsten"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_479_element"
+    }
+  },
+  "pattern": [
+    "AB ",
+    "BA ",
+    "CC "
+  ],
+  "result": {
+    "count": 2,
+    "id": "industrialupgrade:crafting_elements/crafting_363_element"
+  },
+  "show_notification": false
+}

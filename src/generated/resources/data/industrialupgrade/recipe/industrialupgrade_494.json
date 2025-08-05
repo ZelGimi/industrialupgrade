@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemsunnarium/sunnarium_plate"
+    },
+    "B": {
+      "item": "industrialupgrade:itemiucrafring/itemirradiantglasspane"
+    },
+    "C": {
+      "item": "industrialupgrade:stick/mikhail"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:photoniumglass/photoniyglass1"
+  },
+  "show_notification": false
+}

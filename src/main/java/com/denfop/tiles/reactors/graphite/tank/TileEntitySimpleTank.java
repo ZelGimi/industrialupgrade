@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntitySimpleTank extends TileEntityMainTank {
 
     public TileEntitySimpleTank(BlockPos pos, BlockState state) {
-        super(10000,BlocksGraphiteReactors.graphite_tank,pos,state);
+        super(10000, BlocksGraphiteReactors.graphite_tank, pos, state);
     }
 
     @Override

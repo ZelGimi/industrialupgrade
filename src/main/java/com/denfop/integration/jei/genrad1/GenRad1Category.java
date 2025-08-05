@@ -30,9 +30,9 @@ public class GenRad1Category extends GuiIU implements IRecipeCategory<GenRad1Han
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guipurifier" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipurifier" +
                         ".png"), 5, 4, 165,
                 77
         );
@@ -60,12 +60,12 @@ public class GenRad1Category extends GuiIU implements IRecipeCategory<GenRad1Han
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenRad1Handler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,78 - 4, 35 - 2).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 78 - 4, 35 - 2).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guipurifier.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipurifier.png");
     }
 
 

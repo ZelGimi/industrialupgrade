@@ -6,6 +6,7 @@ import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +15,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -57,13 +57,14 @@ public class BlockPreciousOre<T extends Enum<T> & ISubEnum> extends BlockCore<T>
     }
 
     @Override
-    public List<ItemStack> getDrops(  @Nonnull final Level world,
-                                      @Nonnull final BlockPos pos,
-                                      @Nonnull final BlockState state,
-                                      final int fortune) {
-        RandomSource rand = world.random;
+    public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
+        RandomSource rand = p_60538_.getLevel().random;
 
         List<ItemStack> list = new ArrayList<>();
+        ItemStack stack = p_60538_.getOptionalParameter(LootContextParams.TOOL);
+        int fortune = 0;
+        if (stack != null)
+            fortune = EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), stack);
         int count = quantityDropped(fortune, rand);
         for (int i = 0; i < count; i++) {
             if (this.getElement().getId() != 3) {

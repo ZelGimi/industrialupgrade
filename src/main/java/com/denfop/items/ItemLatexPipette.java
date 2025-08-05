@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -27,10 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -43,10 +42,11 @@ public class ItemLatexPipette extends ItemFluidContainer implements  IItemTab {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
         list.add(Component.literal(Localization.translate("iu.latex_pipette.info")));
     }
+
 
 
     @Override
@@ -193,7 +193,7 @@ public class ItemLatexPipette extends ItemFluidContainer implements  IItemTab {
         BlockPos pos = context.getClickedPos();
         Direction side = context.getClickedFace();
         BlockState state = world.getBlockState(pos);
-      ItemStack stack =  context.getItemInHand();
+        ItemStack stack =  context.getItemInHand();
         if (state.getBlock() == IUItem.rubWood.getBlock().get()) {
             if (attemptExtract(player, world, pos, side, state, null,stack)) {
                 return InteractionResult.SUCCESS;

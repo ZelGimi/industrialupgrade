@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/chromium"
+    },
+    "B": {
+      "tag": "c:plates/stellite"
+    },
+    "C": {
+      "item": "industrialupgrade:wiring/copper"
+    }
+  },
+  "pattern": [
+    "ABC",
+    "BBC",
+    "ABC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_596_element"
+  },
+  "show_notification": false
+}

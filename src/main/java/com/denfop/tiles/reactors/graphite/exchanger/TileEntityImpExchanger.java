@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpExchanger extends TileEntityExchanger {
 
     public TileEntityImpExchanger(BlockPos pos, BlockState state) {
-        super(2,BlocksGraphiteReactors.graphite_imp_exchanger,pos,state);
+        super(2, BlocksGraphiteReactors.graphite_imp_exchanger, pos, state);
     }
 
     @Override

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:energy/impmagnet"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine1/magnet_generator"
+    },
+    "C": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "D": {
+      "tag": "c:plates/nichrome"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine1/magnet"
+  },
+  "show_notification": false
+}

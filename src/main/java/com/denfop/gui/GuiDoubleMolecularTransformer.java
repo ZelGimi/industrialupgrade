@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiDoubleMolecularTransformer<T extends ContainerBaseDoubleMolecular> extends GuiCore<ContainerBaseDoubleMolecular> {
@@ -75,17 +75,17 @@ public class GuiDoubleMolecularTransformer<T extends ContainerBaseDoubleMolecula
                 drawTexturedModalRect(poseStack, this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
                 bindTexture(getTexture());
 
-               draw(poseStack, input + this.container.base.inputSlot.get(0).getDisplayName().getString(),
+                draw(poseStack, input + this.container.base.inputSlot.get(0).getDisplayName().getString(),
                         this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
                 draw(poseStack, input + this.container.base.inputSlot.get(1).getDisplayName().getString(),
                         this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
 
-               draw(poseStack, output + output3.getRecipe().output.items.get(0).getDisplayName().getString(), this.guiLeft + 73,
+                draw(poseStack, output + output3.getRecipe().output.items.get(0).getDisplayName().getString(), this.guiLeft + 73,
                         this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
-               draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
+                draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
                                 "energy")) +
                                 " EF",
                         this.guiLeft + 73, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
@@ -96,7 +96,7 @@ public class GuiDoubleMolecularTransformer<T extends ContainerBaseDoubleMolecula
                             this.guiLeft + 73, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                 }
-               draw(poseStack,
+                draw(poseStack,
                         "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
                         this.guiLeft + 73, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
@@ -124,11 +124,11 @@ public class GuiDoubleMolecularTransformer<T extends ContainerBaseDoubleMolecula
                     bindTexture(getTexture());
                     drawTexturedModalRect(poseStack, this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
                     bindTexture(getTexture());
-                   draw(poseStack, input + col * size + "x" + this.container.base.inputSlot.get(0).getDisplayName().getString(),
+                    draw(poseStack, input + col * size + "x" + this.container.base.inputSlot.get(0).getDisplayName().getString(),
                             this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                   draw(poseStack, input + col1 * size + "x" + this.container.base.inputSlot
+                    draw(poseStack, input + col1 * size + "x" + this.container.base.inputSlot
                                     .get(1)
                                     .getDisplayName().getString(),
                             this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
@@ -140,19 +140,19 @@ public class GuiDoubleMolecularTransformer<T extends ContainerBaseDoubleMolecula
                             , this.guiLeft + 73,
                             this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
-                   draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
+                    draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
                                     "energy") * size) + " EF",
                             this.guiLeft + 73, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                     if (this.container.base.getProgress() * 100 <= 100) {
-                       draw(poseStack,
+                        draw(poseStack,
                                 progress + floor_double(this.container.base.getProgress() * 100) + "%",
                                 this.guiLeft + 73, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                     }
 
 
-                  draw(poseStack,
+                    draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
                             this.guiLeft + 73, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -173,31 +173,31 @@ public class GuiDoubleMolecularTransformer<T extends ContainerBaseDoubleMolecula
 
         if (this.container.base.redstoneMode == 1) {
 
-            return new ResourceLocation(
+            return ResourceLocation.tryBuild(
                     Constants.TEXTURES,
                     "textures/gui/guiDoubleMolecularTransformerNew_chemical_green.png".toLowerCase()
             );
         } else if (this.container.base.redstoneMode == 2) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_gold.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_gold.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 3) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_red.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_red.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 4) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_silver.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_silver.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 5) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_violet.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_violet.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 6) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_blue.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_blue.png".toLowerCase());
         } else if (this.container.base.redstoneMode == 7) {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_green.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew_green.png".toLowerCase());
         } else {
 
-            return new ResourceLocation(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew.png".toLowerCase());
+            return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guiDoubleMolecularTransformerNew.png".toLowerCase());
         }
     }
 

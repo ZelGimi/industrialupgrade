@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvInterCooler extends TileEntityBaseInterCooler {
 
     public TileEntityAdvInterCooler(BlockPos pos, BlockState state) {
-        super(1,BlockGasReactor.adv_gas_intercooler,pos,state);
+        super(1, BlockGasReactor.adv_gas_intercooler, pos, state);
     }
 
     @Override

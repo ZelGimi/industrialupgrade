@@ -18,7 +18,7 @@ public class TileBioCutting extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.Cutting.usagePerTick,
                 EnumMultiMachine.Cutting.lenghtOperation,
-                4,BlockBaseMachine3.bio_cutting,pos,state
+                4, BlockBaseMachine3.bio_cutting, pos, state
         );
     }
 

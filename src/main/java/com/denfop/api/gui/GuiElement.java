@@ -17,25 +17,25 @@ import java.util.List;
 
 public abstract class GuiElement<T extends GuiElement<T>> {
 
-    public static final ResourceLocation commonTexture = new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png");
-    public static final ResourceLocation commonTexture1 = new ResourceLocation(
+    public static final ResourceLocation commonTexture = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common.png");
+    public static final ResourceLocation commonTexture1 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/gui_progressbars.png"
     );
-    public static final ResourceLocation commonTexture2 = new ResourceLocation(
+    public static final ResourceLocation commonTexture2 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/gui_progressbars1.png"
     );
-    public static final ResourceLocation commonTexture3 = new ResourceLocation(
+    public static final ResourceLocation commonTexture3 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/steam_progressbars.png"
     );
-    public static final ResourceLocation commonTexture4 = new ResourceLocation(
+    public static final ResourceLocation commonTexture4 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/bio_progressbars.png"
     );
 
-    public static final ResourceLocation commonTexture5 = new ResourceLocation(
+    public static final ResourceLocation commonTexture5 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/guispace_progress.png"
     );

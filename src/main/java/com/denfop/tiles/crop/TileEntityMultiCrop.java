@@ -46,10 +46,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -82,7 +82,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     private ChunkLevel chunkLevel;
 
     public TileEntityMultiCrop(int col, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         tickPest = new int[col];
         pestUse = new int[col];
         enumSoils = new EnumSoil[col];
@@ -174,7 +174,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
@@ -288,10 +288,9 @@ public class TileEntityMultiCrop extends TileEntityInventory {
             }
             this.chunkLevel = chunkLevel;
             this.chunk = this.getWorld().getChunkAt(pos);
-            this.biome = this.getWorld().getBiome(pos).get();
+            this.biome = this.getWorld().getBiome(pos).value();
         }
     }
-
 
 
     @Override

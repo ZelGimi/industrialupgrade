@@ -62,7 +62,7 @@ public class GuiSteamSqueezer<T extends ContainerSteamSqueezer> extends GuiIU<Co
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer( poseStack, par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
@@ -77,22 +77,22 @@ public class GuiSteamSqueezer<T extends ContainerSteamSqueezer> extends GuiIU<Co
         bindTexture(getTexture());
 
         int progress = (int) (32 * this.container.base.getProgress());
-        int xoffset =guiLeft;
-        int yoffset =guiTop;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
 
         if (progress > 0) {
             drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
         this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guisteam_machine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guisteam_machine.png");
     }
 
 }

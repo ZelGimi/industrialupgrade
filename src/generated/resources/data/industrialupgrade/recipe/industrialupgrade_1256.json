@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/titanium"
+    },
+    "B": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_354_element"
+    },
+    "D": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    " B ",
+    "ADA",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:primal_laser_polisher/primal_laser_polisher"
+  },
+  "show_notification": false
+}

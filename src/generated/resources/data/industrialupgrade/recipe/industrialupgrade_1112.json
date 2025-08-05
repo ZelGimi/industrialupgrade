@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "A A",
+    "A A",
+    "   "
+  ],
+  "result": {
+    "count": 4,
+    "id": "industrialupgrade:crop/crop"
+  },
+  "show_notification": false
+}

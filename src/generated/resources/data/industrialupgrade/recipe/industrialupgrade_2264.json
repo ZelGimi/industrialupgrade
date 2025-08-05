@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_imp_tank"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_396_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_50_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_107_element"
+    }
+  },
+  "pattern": [
+    "C D",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_turbine/steam_turbine_per_tank"
+  },
+  "show_notification": false
+}

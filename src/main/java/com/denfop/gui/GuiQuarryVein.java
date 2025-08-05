@@ -26,7 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,7 +87,7 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
         Holder<Biome> biome = this.container.base.getWorld().getBiome(this.container.base.getBlockPos());
         ResourceLocation biomeKey = this.container.base.getWorld().registryAccess()
                 .registryOrThrow(Registries.BIOME)
-                .getKey(biome.get());
+                .getKey(biome.value());
         lst.add(Localization.translate("iu.biome") + Localization.translate("biome." + biomeKey.getNamespace() + "." + biomeKey.getPath()));
         int col = biome.is(IS_HILL) ? 25 : 0;
         int col1 = (biome.is(IS_TAIGA) || biome.is(Tags.Biomes.IS_SNOWY)) ? 15 : 0;
@@ -196,21 +196,21 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
                 break;
         }
         int nmPos = (this.imageWidth - this.getStringWidth(name)) / 2;
-       draw(poseStack, name, nmPos, 4, 4210752);
+        draw(poseStack, name, nmPos, 4, 4210752);
         draw(poseStack, Localization.translate("iu.level"), 122, 23, 4210752);
 
         switch (this.container.base.levelMech) {
             case 2:
-               draw(poseStack, ChatFormatting.GOLD + Localization.translate("iu.advanced"), 122, 31, 4210752);
+                draw(poseStack, ChatFormatting.GOLD + Localization.translate("iu.advanced"), 122, 31, 4210752);
                 break;
             case 3:
-              draw(poseStack, ChatFormatting.BLUE + Localization.translate("iu.improved"), 122, 31, 4210752);
+                draw(poseStack, ChatFormatting.BLUE + Localization.translate("iu.improved"), 122, 31, 4210752);
                 break;
             case 4:
-              draw(poseStack, ChatFormatting.DARK_PURPLE + Localization.translate("iu.perfect"), 122, 31, 4210752);
+                draw(poseStack, ChatFormatting.DARK_PURPLE + Localization.translate("iu.perfect"), 122, 31, 4210752);
                 break;
             default:
-               draw(poseStack, Localization.translate("iu.simply"), 122, 31, 4210752);
+                draw(poseStack, Localization.translate("iu.simply"), 122, 31, 4210752);
                 break;
         }
         handleUpgradeTooltip1(par1, par2);
@@ -229,14 +229,14 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
 
         if (this.container.base.vein != VeinSystem.system.getEMPTY() && this.container.base.vein.get()) {
             if (this.container.base.vein.getType() == Type.EMPTY || this.container.base.vein.getMaxCol() == 0) {
-               draw(poseStack,
+                draw(poseStack,
                         Localization.translate("iu.empty"),
                         20,
                         34,
                         ModUtils.convertRGBcolorToInt(13, 229, 34)
                 );
             } else {
-               draw(poseStack,
+                draw(poseStack,
                         Localization.translate("iu.find"),
                         11,
                         34,
@@ -285,8 +285,8 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
         int m = this.container.base.progress * 34 / 1200;
         ShaderInstance shader = RenderSystem.getShader();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
         for (int x1 = 74; x1 <= 112; x1++) {
             for (int y1 = 14; y1 <= 79; y1++) {
 
@@ -294,7 +294,7 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
 
             }
         }
-        BufferUploader.drawWithShader(bufferBuilder.end());
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
         RenderSystem.setShader(() -> shader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -312,7 +312,7 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
             default:
                 break;
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, h + 3, k + 3, 0, 0, 10, 10);
         bindTexture(getTexture());
 
@@ -342,7 +342,7 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquarryvein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquarryvein.png");
     }
 
 }

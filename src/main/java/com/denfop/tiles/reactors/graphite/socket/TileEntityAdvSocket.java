@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvSocket extends TileEntityMainSocket {
 
     public TileEntityAdvSocket(BlockPos pos, BlockState state) {
-        super(20000,BlocksGraphiteReactors.graphite_adv_socket,pos,state);
+        super(20000, BlocksGraphiteReactors.graphite_adv_socket, pos, state);
     }
 
     @Override

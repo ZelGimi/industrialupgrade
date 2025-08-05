@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:basemachine2/adv_pump"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_83_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_245_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    }
+  },
+  "pattern": [
+    "F F",
+    "CAE",
+    "FBF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine2/imp_pump"
+  },
+  "show_notification": false
+}

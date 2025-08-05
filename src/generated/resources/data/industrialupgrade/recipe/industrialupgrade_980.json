@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:machineblock"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_47_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_323_element"
+    }
+  },
+  "pattern": [
+    " F ",
+    "CAD",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/socket_factory"
+  },
+  "show_notification": false
+}

@@ -14,6 +14,7 @@ public class EnergyTile implements IEnergyTile {
         return null;
     }
 
+
     @Override
     public BlockPos getPos() {
         return null;

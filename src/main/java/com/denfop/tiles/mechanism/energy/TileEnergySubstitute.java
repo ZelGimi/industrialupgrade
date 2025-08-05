@@ -33,9 +33,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -59,7 +59,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
 
 
     public TileEnergySubstitute(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.substitute,pos,state);
+        super(BlockBaseMachine3.substitute, pos, state);
         slot = new InvSlotSubstitute(this);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
@@ -139,7 +139,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
+            NeoForge.EVENT_BUS.post(new EventLoadController(this, level));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
             this.slot.onChanged();
 
@@ -170,11 +170,10 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     }
 
 
-
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
+            NeoForge.EVENT_BUS.post(new EventUnloadController(this, level));
         }
         super.onUnloaded();
     }
@@ -246,32 +245,32 @@ public class TileEnergySubstitute extends TileEntityInventory implements
 
                             if (stack.is(main_cableItem.getStack().getItem()) && main_cableItem.getStack().getItem() instanceof ItemBlockTileEntity<?> && (ModUtils.nbt(main_cableItem.getStack()).equals(
                                     ModUtils.nbt(stack)))) {
-                                    TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
-                                            conductor,level);
-                                    final List<ItemStack> drops = tile.getBlock().getDrops(level,
-                                            tile.getPos(),
-                                            tile.getBlockState(),
-                                            null
-                                    );
-                                    if (!drops.isEmpty()) {
-                                        itemStackList.add(drops.get(0));
-                                    }
-                                    tile.onUnloaded();
-                                    conductor.removeConductor();
-                                    BlockPos pos = tile.getPos();
-                                  ItemBlockTileEntity<?> itemBlockTileEntity = (ItemBlockTileEntity<?>) main_cableItem.getStack().getItem();
-                                  if (itemBlockTileEntity.placeTeBlock(main_cableItem.getStack(),
-                                            fakePlayer,
-                                            this.getWorld(),
-                                            pos
-                                  )) {
-                                        stack.shrink(1);
-                                        main_cableItem.shrink(1);
-                                        com.denfop.tiles.transport.tiles.TileEntityCable cable =
-                                                (com.denfop.tiles.transport.tiles.TileEntityCable) this.getWorld().getBlockEntity(
-                                                        pos);
-                                        break;
-                                    }
+                                TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
+                                        conductor, level);
+                                final List<ItemStack> drops = tile.getBlock().getDrops(level,
+                                        tile.getPos(),
+                                        tile.getBlockState(),
+                                        null
+                                );
+                                if (!drops.isEmpty()) {
+                                    itemStackList.add(drops.get(0));
+                                }
+                                tile.onUnloaded();
+                                conductor.removeConductor();
+                                BlockPos pos = tile.getPos();
+                                ItemBlockTileEntity<?> itemBlockTileEntity = (ItemBlockTileEntity<?>) main_cableItem.getStack().getItem();
+                                if (itemBlockTileEntity.placeTeBlock(main_cableItem.getStack(),
+                                        fakePlayer,
+                                        this.getWorld(),
+                                        pos
+                                )) {
+                                    stack.shrink(1);
+                                    main_cableItem.shrink(1);
+                                    com.denfop.tiles.transport.tiles.TileEntityCable cable =
+                                            (com.denfop.tiles.transport.tiles.TileEntityCable) this.getWorld().getBlockEntity(
+                                                    pos);
+                                    break;
+                                }
                             }
                         }
                         if (main_cableItem.getCount() == 0) {

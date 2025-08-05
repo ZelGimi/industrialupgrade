@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerSolarDestiller;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,11 +11,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<ContainerSolarDestiller> {
@@ -42,7 +40,7 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                         fluidX += 3;
                         fluidY += 3;
                         fluidWidth = 17;
-                        fluidHeight = 44;
+                        fluidHeight = 45;
                     }
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -87,7 +85,7 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                         fluidX += 3;
                         fluidY += 3;
                         fluidWidth = 17;
-                        fluidHeight = 44;
+                        fluidHeight = 45;
                     }
 
                     Fluid fluid = fs.getFluid();
@@ -150,17 +148,17 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
     protected ResourceLocation getTexture() {
         switch (container.base.getStyle()) {
             case DEFAULT:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolardestiller.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisolardestiller.png");
             case ADVANCED:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiadvsolardestiller.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiadvsolardestiller.png");
             case IMPROVED:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiimpsolardestiller.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiimpsolardestiller.png");
             case PERFECT:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guipersolardestiller.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipersolardestiller.png");
             case PHOTONIC:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiphosolardestiller.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiphosolardestiller.png");
         }
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolardestiller.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisolardestiller.png");
 
     }
 

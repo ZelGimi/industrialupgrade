@@ -37,9 +37,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
     protected double guiProgress;
 
     public TileEntityGasCombiner(BlockPos pos, BlockState state) {
-        super(100, 1, 3,BlockBaseMachine3.gas_combiner,pos,state);
+        super(100, 1, 3, BlockBaseMachine3.gas_combiner, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -249,7 +249,7 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(new FluidStack(
                 FluidName.fluidchlorum.getInstance().get(),
                 200
-        ),   new FluidStack(FluidName.fluidhyd.getInstance().get(), 200)), Collections.singletonList(new FluidStack(FluidName.fluidhydrogenchloride.getInstance().get(), 400))));
+        ), new FluidStack(FluidName.fluidhyd.getInstance().get(), 200)), Collections.singletonList(new FluidStack(FluidName.fluidhydrogenchloride.getInstance().get(), 400))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidbenz.getInstance().get(), 500), new FluidStack(
@@ -540,7 +540,6 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
         this.fluid_handler.consume();
         this.fluid_handler.fillFluid();
     }
-
 
 
     public IMultiTileBlock getTeBlock() {

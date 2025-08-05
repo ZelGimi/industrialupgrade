@@ -8,6 +8,7 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.proxy.CommonProxy;
@@ -25,7 +26,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,12 +47,12 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,56 +69,22 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
     private String nameItem;
 
     public ItemGraviTool() {
-        super(Tiers.IRON, new Properties().stacksTo(1).setNoRepair());
+        super(Tiers.IRON, new Properties().stacksTo(1).setNoRepair().component(DataComponentsInit.MODE, 0));
         IUCore.proxy.addProperties(this);
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, getUpgradeModules()));
 
     }
-    public boolean isBarVisible(final ItemStack stack) {
-        return true;
-    }
 
-    public int getBarColor(ItemStack stack) {
-        return ModUtils.convertRGBcolorToInt(33, 91, 199);
-    }
-
-    public int getBarWidth(ItemStack stack) {
-
-        return 13 - (int) (13.0F * Math.min(
-                Math.max(
-                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
-                        0.0
-                ),
-                1.0
-        ));
-    }
-    protected String getOrCreateDescriptionId() {
-        if (this.nameItem == null) {
-            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
-            String targetString = "industrialupgrade.";
-            String replacement = "";
-            if (replacement != null) {
-                int index = pathBuilder.indexOf(targetString);
-                while (index != -1) {
-                    pathBuilder.replace(index, index + targetString.length(), replacement);
-                    index = pathBuilder.indexOf(targetString, index + replacement.length());
-                }
-            }
-            this.nameItem = "item.GraviTool";
-        }
-
-        return this.nameItem;
-    }
     public static GraviToolMode readToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInt("toolMode"));
+        return GraviToolMode.getFromID(stack.getOrDefault(DataComponentsInit.MODE, 0));
     }
 
     public static GraviToolMode readNextToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInt("toolMode") + 1);
+        return GraviToolMode.getFromID(stack.getOrDefault(DataComponentsInit.MODE, 0) + 1);
     }
 
     public static void saveToolMode(ItemStack stack, ItemGraviTool.GraviToolMode mode) {
-        ModUtils.nbt(stack).putInt("toolMode", mode.ordinal());
+        stack.set(DataComponentsInit.MODE, mode.ordinal());
     }
 
     public static boolean hasNecessaryPower(ItemStack stack, double usage, Player player) {
@@ -149,12 +115,41 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
         return false;
     }
 
-    public static boolean hasToolMode(ItemStack stack) {
-        if (!stack.hasTag()) {
-            return false;
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item.GraviTool";
         }
-        assert stack.getTag() != null;
-        return stack.getTag().contains("toolMode", 4);
+
+        return this.nameItem;
+    }
+
+    public boolean isBarVisible(final ItemStack stack) {
+        return true;
+    }
+
+    public int getBarColor(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        ));
     }
 
     @Override
@@ -168,8 +163,10 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
         return readToolMode(itemStack).ordinal() * 0.25f;
     }
 
-    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-        return ToolActions.DEFAULT_HOE_ACTIONS.contains(toolAction) && readToolMode(stack) == GraviToolMode.HOE;
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return net.neoforged.neoforge.common.ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility) && readToolMode(stack) == GraviToolMode.HOE;
     }
 
     @Override
@@ -192,11 +189,12 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
         return super.use(world, player, hand);
     }
 
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(
             @Nonnull ItemStack stack,
-            @Nullable Level world,
+            @Nullable TooltipContext world,
             @Nonnull List<Component> tooltip,
             @Nonnull TooltipFlag flag
     ) {
@@ -376,11 +374,9 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
         if (!world.isClientSide) {
-            CompoundTag nbt = itemStack.getOrCreateTag();
 
             if (!UpgradeSystem.system.hasInMap(itemStack)) {
-                nbt.putBoolean("hasID", false);
-                MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+                NeoForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
             }
         }
     }
@@ -461,20 +457,18 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
                 player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
                 if (!world.isClientSide) {
                     BlockEntity te = world.getBlockEntity(pos);
-                    int experience;
+                    BlockEvent.BreakEvent experience;
 
                     if (player instanceof ServerPlayer) {
-                        experience = ForgeHooks.onBlockBreakEvent(
+                        experience = CommonHooks.fireBlockBreak(
                                 world,
                                 ((ServerPlayer) player).gameMode.getGameModeForPlayer(),
                                 (ServerPlayer) player,
-                                pos
+                                pos, state
                         );
-                        if (experience < 0) {
+                        if (experience.isCanceled()) {
                             return false;
                         }
-                    } else {
-                        experience = 0;
                     }
 
                     block.playerWillDestroy(world, pos, state, player);
@@ -494,9 +488,7 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
 
                     wrenchable.wrenchBreak(world, pos);
 
-                    if (!player.isCreative() && experience > 0) {
-                        block.popExperience((ServerLevel) world, pos, experience);
-                    }
+
                 }
                 return checkNecessaryPower(stack, ROTATE, player);
             }
@@ -518,7 +510,6 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
         }
         return false;
     }
-
 
 
     @Override
@@ -549,12 +540,14 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
-         if (this.allowedIn(p_41391_)) {
+        if (this.allowedIn(p_41391_)) {
             ElectricItemManager.addChargeVariants(this, p_41392_);
         }
     }
+
     public enum GraviToolMode {
         HOE(ChatFormatting.GOLD),
         TREETAP(ChatFormatting.LIGHT_PURPLE),

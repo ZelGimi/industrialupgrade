@@ -14,8 +14,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiWaterRotorAssembler<T extends ContainerWaterRotorAssembler> extends GuiIU<ContainerWaterRotorAssembler> {
 
-    public final ResourceLocation rotors_gui = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotors.png");
-    public final ResourceLocation rotors_gui1 = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotors1.png");
+    public final ResourceLocation rotors_gui = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guirotors.png");
+    public final ResourceLocation rotors_gui1 = ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guirotors1.png");
 
     public GuiWaterRotorAssembler(ContainerWaterRotorAssembler guiContainer) {
         super(guiContainer);
@@ -30,7 +30,7 @@ public class GuiWaterRotorAssembler<T extends ContainerWaterRotorAssembler> exte
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
 
     }
 
@@ -39,12 +39,11 @@ public class GuiWaterRotorAssembler<T extends ContainerWaterRotorAssembler> exte
     }
 
 
-
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int progress = (int) (16 * (this.container.base.progress / 100D));
         int j = guiLeft;
         int k = guiTop;
@@ -54,20 +53,20 @@ public class GuiWaterRotorAssembler<T extends ContainerWaterRotorAssembler> exte
             ItemStack stack = this.container.base.recipe.getRecipe().output.items.get(0);
             int index = ((IWindRotor) stack.getItem()).getIndex();
             setTexture(rotors_gui1);
-            drawTexturedModalRect(poseStack,j + 80, k + 63, 32 * (index % 8),
+            drawTexturedModalRect(poseStack, j + 80, k + 63, 32 * (index % 8),
                     32 * (index / 8), 32, 32
             );
             setTexture(rotors_gui);
-            drawTexturedModalRect(poseStack,j + 80, k + 9 + progress, 32 * (index % 8),
+            drawTexturedModalRect(poseStack, j + 80, k + 9 + progress, 32 * (index % 8),
                     55 * (index / 8), 32, 54
             );
-            drawTexturedModalRect(poseStack,j + 80, k + 95 - progress, 32 * (index % 8),
+            drawTexturedModalRect(poseStack, j + 80, k + 95 - progress, 32 * (index % 8),
                     55 * (index / 8), 32, 54
             );
-            drawTexturedModalRect(poseStack,j + 26 + progress, k + 63, 55 * (index % 4),
+            drawTexturedModalRect(poseStack, j + 26 + progress, k + 63, 55 * (index % 4),
                     112 + 33 * (index / 4), 54, 32
             );
-            drawTexturedModalRect(poseStack,j + 112 - progress, k + 63, 55 * (index % 4),
+            drawTexturedModalRect(poseStack, j + 112 - progress, k + 63, 55 * (index % 4),
                     112 + 33 * (index / 4), 54, 32
             );
 

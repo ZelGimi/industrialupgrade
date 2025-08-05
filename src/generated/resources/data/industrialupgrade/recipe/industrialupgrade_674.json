@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/lead"
+    },
+    "B": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:bags/lead_box"
+  },
+  "show_notification": false
+}

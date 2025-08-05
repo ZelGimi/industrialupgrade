@@ -44,4 +44,5 @@ public interface IRotorUpgradeSystem {
 
     Map<Integer, ItemStack> getList(final ItemStack stack);
 
+    void addUpdate(ItemStack itemStack, Level world, EnumInfoRotorUpgradeModules fromID);
 }

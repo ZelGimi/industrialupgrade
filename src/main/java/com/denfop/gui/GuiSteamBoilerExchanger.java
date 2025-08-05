@@ -17,17 +17,17 @@ public class GuiSteamBoilerExchanger<T extends ContainerDefaultMultiElement> ext
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
-       RenderSystem.setShaderColor(1, 1, 1, 1);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         bindTexture();
         if (((TileEntitySteamExchangerBoiler) container.base).isWork()) {
-            this.drawTexturedModalRect(poseStack,this.guiLeft + 129, this.guiTop + 13, 243, 1, 12, 64);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 129, this.guiTop + 13, 243, 1, 12, 64);
         }
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteamboilerexchanger.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteamboilerexchanger.png");
     }
 
 }

@@ -36,9 +36,11 @@ public enum EnumSubTypeArmor {
     public EquipmentSlot getEntityEquipmentSlot() {
         return entityEquipmentSlot.getSlot();
     }
+
     public ArmorItem.Type getEntityType() {
         return entityEquipmentSlot;
     }
+
     public List<EnumCapability> getCapabilities() {
         return capabilities;
     }

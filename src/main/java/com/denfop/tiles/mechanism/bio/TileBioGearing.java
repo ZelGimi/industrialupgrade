@@ -18,7 +18,7 @@ public class TileBioGearing extends TileBioMultiMachine {
         super(
                 EnumMultiMachine.Gearing.usagePerTick,
                 EnumMultiMachine.Gearing.lenghtOperation,
-                4,BlockBaseMachine3.bio_gearing,pos,state
+                4, BlockBaseMachine3.bio_gearing, pos, state
         );
     }
 

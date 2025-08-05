@@ -2,7 +2,7 @@ package com.denfop.invslot;
 
 
 import net.minecraft.world.Container;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Objects;
 

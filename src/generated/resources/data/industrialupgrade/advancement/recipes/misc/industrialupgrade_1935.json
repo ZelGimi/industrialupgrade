@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "any": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:air"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "industrialupgrade:industrialupgrade_1935"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "any"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "industrialupgrade:industrialupgrade_1935"
+    ]
+  }
+}

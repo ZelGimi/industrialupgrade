@@ -41,11 +41,11 @@ public class GuiShield<T extends ContainerShield> extends GuiIU<ContainerShield>
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-     draw(poseStack, Localization.translate("iu.shield" + (container.base.visibleShield ? ".visible" :
+        draw(poseStack, Localization.translate("iu.shield" + (container.base.visibleShield ? ".visible" :
                         ".invisible")),
                 10, 42, 0
         );
-       draw(poseStack, Localization.translate("iu.laser" + (container.base.visibleLaser ? ".visible" :
+        draw(poseStack, Localization.translate("iu.laser" + (container.base.visibleLaser ? ".visible" :
                         ".invisible")),
                 93, 42, 0
         );
@@ -53,7 +53,7 @@ public class GuiShield<T extends ContainerShield> extends GuiIU<ContainerShield>
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

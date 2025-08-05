@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:machineblock"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_30_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "CAD",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/moon_spotter"
+  },
+  "show_notification": false
+}

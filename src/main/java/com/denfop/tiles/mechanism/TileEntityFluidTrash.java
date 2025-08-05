@@ -8,14 +8,14 @@ import com.denfop.componets.Fluids;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 public class TileEntityFluidTrash extends TileEntityInventory {
 
     private final Fluids.InternalFluidTank tank;
 
     public TileEntityFluidTrash(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.fluid_trash,pos,state);
+        super(BlockBaseMachine3.fluid_trash, pos, state);
         final Fluids fluids = this.addComponent(new Fluids(this));
         tank = fluids.addTankInsert("tank", Integer.MAX_VALUE);
     }
@@ -37,7 +37,6 @@ public class TileEntityFluidTrash extends TileEntityInventory {
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.fluid_trash;
     }
-
 
 
 }

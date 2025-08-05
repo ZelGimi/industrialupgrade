@@ -27,7 +27,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -46,11 +46,11 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityElectricDryer) BlockBaseMachine3.electric_dryer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
@@ -99,11 +99,11 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler
             progress = 0;
         }
         bindTexture(getTexture());
-        this.slots.drawBackground( stack,65, -65);
-        progress_bar.renderBar( stack,0, 0, xScale);
+        this.slots.drawBackground(stack, 65, -65);
+        progress_bar.renderBar(stack, 0, 0, xScale);
 
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack,this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
@@ -112,15 +112,14 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotOutput.class);
         final List<FluidStack> inputs = Collections.singletonList(recipes.getInput());
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT,slots1.get(0).getJeiX() + 65, slots1.get(0).getJeiY() - 65).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, slots1.get(0).getJeiX() + 65, slots1.get(0).getJeiY() - 65).addItemStack(recipes.getOutput());
 
-        builder.addSlot(RecipeIngredientRole.INPUT,47, 25).setFluidRenderer(1000,true,12,47).addFluidStack(inputs.get(0).getFluid(),inputs.get(0).getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 47, 25).setFluidRenderer(1000, true, 12, 47).addFluidStack(inputs.get(0).getFluid(), inputs.get(0).getAmount());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_138_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine3/centrifuge_iu"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_47_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_15_element"
+    }
+  },
+  "pattern": [
+    "A A",
+    "DBE",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:moremachine3/doublecentrifuge"
+  },
+  "show_notification": false
+}

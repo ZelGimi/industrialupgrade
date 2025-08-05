@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -48,7 +48,7 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileEntityRocketAssembler(BlockPos pos, BlockState state) {
-        super(800, 1, 1,BlockBaseMachine3.rocket_assembler,pos,state);
+        super(800, 1, 1, BlockBaseMachine3.rocket_assembler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -185,7 +185,6 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
     }
 
 
-
     public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
@@ -194,24 +193,24 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
     public void init() {
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(726)), new ItemStack(IUItem.crafting_elements.getStack(745)),
                 new ItemStack(IUItem.crafting_elements.getStack(742)), new ItemStack(IUItem.crafting_elements.getStack(744)),
-                        new ItemStack(IUItem.crafting_elements.getStack(743)), new ItemStack(IUItem.crafting_elements.getStack(695)),
-                                new ItemStack(IUItem.rocket.getItem())
-                        );
+                new ItemStack(IUItem.crafting_elements.getStack(743)), new ItemStack(IUItem.crafting_elements.getStack(695)),
+                new ItemStack(IUItem.rocket.getItem())
+        );
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(707)), new ItemStack(IUItem.crafting_elements.getStack(763)),
                 new ItemStack(IUItem.crafting_elements.getStack(761)), new ItemStack(IUItem.crafting_elements.getStack(764))
-                        , new ItemStack(IUItem.crafting_elements.getStack(762)), new ItemStack(IUItem.crafting_elements.getStack(702)),
-                        new ItemStack(IUItem.adv_rocket.getItem())
-                );
+                , new ItemStack(IUItem.crafting_elements.getStack(762)), new ItemStack(IUItem.crafting_elements.getStack(702)),
+                new ItemStack(IUItem.adv_rocket.getItem())
+        );
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(727)), new ItemStack(IUItem.crafting_elements.getStack(751)),
                 new ItemStack(IUItem.crafting_elements.getStack(748)), new ItemStack(IUItem.crafting_elements.getStack(750)),
-                        new ItemStack(IUItem.crafting_elements.getStack(749)), new ItemStack(IUItem.crafting_elements.getStack(692)),
-                                new ItemStack(IUItem.imp_rocket.getItem())
-                        );
+                new ItemStack(IUItem.crafting_elements.getStack(749)), new ItemStack(IUItem.crafting_elements.getStack(692)),
+                new ItemStack(IUItem.imp_rocket.getItem())
+        );
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(711)), new ItemStack(IUItem.crafting_elements.getStack(757)),
                 new ItemStack(IUItem.crafting_elements.getStack(754)), new ItemStack(IUItem.crafting_elements.getStack(756)),
-                        new ItemStack(IUItem.crafting_elements.getStack(755)), new ItemStack(IUItem.crafting_elements.getStack(699)),
-                                new ItemStack(IUItem.per_rocket.getItem())
-                        );
+                new ItemStack(IUItem.crafting_elements.getStack(755)), new ItemStack(IUItem.crafting_elements.getStack(699)),
+                new ItemStack(IUItem.per_rocket.getItem())
+        );
     }
 
 }

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "c:plates/aluminiumlithium"
+    },
+    "C": {
+      "tag": "c:plates/tantalumtungstenhafnium"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_143_element"
+  },
+  "show_notification": false
+}

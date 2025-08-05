@@ -18,10 +18,12 @@ public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -45,7 +47,7 @@ public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
                 name = "mithril";
                 break;
         }
-        return new String[]{"forge:plates/" + name.split("_")[0], "forge:plates"};
+        return new String[]{"c:plates/" + name.split("_")[0], "c:plates"};
     }
 
     public enum Types implements ISubEnum {

@@ -21,8 +21,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.ClientHooks;
 
 import java.io.IOException;
 
@@ -37,7 +38,7 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
     private BakedModel transformedModel;
 
     public TileCrystallize(BlockPos pos, BlockState state) {
-        super(EnumTypeCollector.DEFAULT,BlockBaseMachine3.crystallize,pos,state);
+        super(EnumTypeCollector.DEFAULT, BlockBaseMachine3.crystallize, pos, state);
     }
 
     public void init() {
@@ -125,7 +126,7 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
                             this.getWorld(),
                             null, 0
                     );
-                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                    this.transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                             this.bakedModel,
                             GROUND,
                             false
@@ -147,9 +148,9 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
                     this.getWorld(),
                     null, 0
             );
-            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+            this.transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                     this.bakedModel,
-                   GROUND,
+                    GROUND,
                     false
             );
         } catch (IOException e) {
@@ -161,7 +162,6 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
     public BakedModel getTransformedModel() {
         return this.transformedModel;
     }
-
 
 
     @Override

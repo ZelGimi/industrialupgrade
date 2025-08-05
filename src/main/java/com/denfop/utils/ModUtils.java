@@ -5,8 +5,10 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.radiationsystem.EnumCoefficient;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemFluidCell;
+import com.denfop.items.ItemSmallFluidCell;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
@@ -16,14 +18,16 @@ import com.denfop.world.vein.VeinType;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
@@ -33,6 +37,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
@@ -43,18 +48,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.FluidActionResult;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +72,10 @@ import java.util.*;
 
 public class ModUtils {
 
-    public static final Set<String> ignoredNbtKeys = new HashSet<>(Arrays.asList("damage", "charge", "energy", "advDmg"));
+    public static final Set<DataComponentType<?>> ignoredNbtKeys = new HashSet<>(Arrays.asList(DataComponents.DAMAGE, DataComponentsInit.ENERGY.get(), DataComponentsInit.ACTIVE.get(), DataComponentsInit.MODE.get(), DataComponentsInit.BLACK_LIST.get(), DataComponentsInit.EXPERIENCE.get(), DataComponentsInit.GENOME_CROP.get(), DataComponentsInit.GENOME_BEE.get(), DataComponentsInit.SAVE.get()
+            , DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.CONTAINER, DataComponents.FOOD, DataComponents.ENCHANTMENTS, DataComponents.STORED_ENCHANTMENTS, DataComponents.CUSTOM_NAME, DataComponents.TOOL, DataComponents.UNBREAKABLE, DataComponents.RARITY, DataComponents.REPAIR_COST, DataComponentsInit.LEVEL.get(), DataComponentsInit.UPGRADE_ITEM.get(), DataComponentsInit.WIND_UPGRADE.get()
+            , DataComponentsInit.WATER_UPGRADE.get(), DataComponentsInit.SKIN.get(), DataComponentsInit.FLY.get(), DataComponentsInit.JETPACK.get(), DataComponentsInit.DIRECTION.get(), DataComponentsInit.CONTAINER.get(), DataComponentsInit.CONTAINER_ADDITIONAL.get(), DataComponentsInit.LIST_STRING.get(), DataComponentsInit.LIST_INTEGER.get(), DataComponentsInit.LIST_STACK.get(), DataComponentsInit.BEE_LIST.get(), DataComponentsInit.MOB.get()
+            , DataComponentsInit.NAME.get(), DataComponentsInit.WIRELESS.get(), DataComponentsInit.DESCRIPTIONS_CONTAINER.get(), DataComponentsInit.VEIN_INFO.get(), DataComponentsInit.UPGRADE_KIT.get(), DataComponentsInit.REACTOR_DATA.get(), DataComponentsInit.REACTOR_SCHEDULE.get(), DataComponentsInit.TELEPORT.get(), DataComponents.LORE, DataComponents.RARITY, DataComponents.REPAIR_COST, DataComponents.ATTRIBUTE_MODIFIERS));
     private static final Direction[] BY_2D_DATA = Arrays.stream(Direction.values()).filter((p_235685_) -> p_235685_.getAxis().isHorizontal()).sorted(Comparator.comparingInt(Direction::get2DDataValue)).toArray(Direction[]::new);
     public static Logger log;
     public static Direction[] facings = Direction.values();
@@ -90,6 +98,9 @@ public class ModUtils {
         allFacings = Collections.unmodifiableSet(EnumSet.allOf(Direction.class));
     }
 
+    public static Vec3 getVecFromVec3i(Vec3i vec3i) {
+        return new Vec3(vec3i.getX(), vec3i.getY(), vec3i.getZ());
+    }
 
     public static double getEnergyValue(ItemStack stack) {
         if (ModUtils.isEmpty(stack)) {
@@ -148,7 +159,7 @@ public class ModUtils {
                 ItemStack invStack = player.getInventory().items.get(i);
                 if (isEmpty(invStack)) {
                     sizeLeft -= maxStackSize;
-                } else if (checkItemEqualityStrict(stack, invStack) && getSize(invStack) < maxStackSize) {
+                } else if (checkNbtEquality(stack.getComponents(), invStack.getComponents()) && getSize(invStack) < maxStackSize) {
                     sizeLeft -= maxStackSize - getSize(invStack);
                 }
             }
@@ -194,26 +205,52 @@ public class ModUtils {
     }
 
     public static boolean checkItemEqualityStrict(ItemStack a, ItemStack b) {
-        return isEmpty(a) && isEmpty(b) || !isEmpty(a) && !isEmpty(b) && a.is(b.getItem()) && checkNbtEqualityStrict(a, b);
+        return isEmpty(a) && isEmpty(b) || !isEmpty(a) && !isEmpty(b) && a.is(b.getItem()) && checkNbtEquality(a.getComponents(), b.getComponents());
     }
 
     private static boolean checkNbtEquality(ItemStack a, ItemStack b) {
-        return NbtUtils.compareNbt(a.getTag(), b.getTag(), true);
+        return areAllDataComponentsEqual(a, b);
     }
 
-    public static boolean checkNbtEquality(CompoundTag a, CompoundTag b) {
+    public static boolean areAllDataComponentsEqual(ItemStack stack1, ItemStack stack2) {
+        if (stack1.isEmpty() && stack2.isEmpty()) return true;
+        if (stack1.isEmpty() || stack2.isEmpty()) return false;
+
+        for (DataComponentType<?> type : stack1.getComponents().keySet()) {
+            if (ignoredNbtKeys.contains(type))
+                continue;
+            boolean has1 = stack1.has(type);
+            boolean has2 = stack2.has(type);
+            if (!has1) {
+                continue;
+            }
+            if (!has2)
+                return false;
+
+            if (has1) {
+                Object comp1 = stack1.get(type);
+                Object comp2 = stack2.get(type);
+
+                if (!comp1.equals(comp2)) return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean checkNbtEquality(DataComponentMap a, DataComponentMap b) {
         if (a == b) {
             return true;
         } else {
-            Set<String> keysA = a != null ? a.getAllKeys() : Collections.emptySet();
-            Set<String> keysB = b != null ? b.getAllKeys() : Collections.emptySet();
+            Set<DataComponentType<?>> keysA = a != null ? a.keySet() : Collections.emptySet();
+            Set<DataComponentType<?>> keysB = b != null ? b.keySet() : Collections.emptySet();
             if (keysA.isEmpty() && keysB.isEmpty()) {
                 return true;
             }
-            Set<String> toCheck = new HashSet<>(Math.max(keysA.size(), keysB.size()));
-            Iterator<String> var5 = keysA.iterator();
+            Set<DataComponentType<?>> toCheck = new HashSet<>(Math.max(keysA.size(), keysB.size()));
+            Iterator<DataComponentType<?>> var5 = keysA.iterator();
 
-            String key;
+            DataComponentType<?> key;
             while (var5.hasNext()) {
                 key = var5.next();
                 if (!ignoredNbtKeys.contains(key)) {
@@ -246,29 +283,16 @@ public class ModUtils {
                 }
 
                 key = var5.next();
-            } while (a.get(key).equals(b.get(key)));
+            } while (Objects.equals(Objects.requireNonNull(a).get(key), Objects.requireNonNull(b).get(key)));
 
             return false;
         }
     }
 
-    public static boolean checkNbtEqualityStrict(ItemStack a, ItemStack b) {
-        CompoundTag nbtA = a.getTag();
-        CompoundTag nbtB = b.getTag();
-        if (nbtA == null && nbtB == null)
-            return true;
-        if (nbtA == nbtB) {
-            return true;
-        } else {
-            if (nbtA == null)
-                return false;
-            return nbtA.equals(nbtB);
-        }
-    }
 
     public static boolean isEmpty(ItemStack stack) {
         if (stack == emptyStack || stack == null) return true;
-        stack.getItem();
+
         return stack.getCount() <= 0;
     }
 
@@ -302,17 +326,60 @@ public class ModUtils {
         log.info(message);
     }
 
+    // TODO: нужно решить
+ /*   public static ItemStack getCellFromFluid(String name) {
+        for (CellType cellType : CellType.values()) {
+            if (cellType.getFluid() == null) {
+                continue;
+            }
+            if (cellType.getFluid().getName().trim().equals(name.trim())) {
+                return new ItemStack(IUItem.cell_all, 1, cellType.ordinal());
+            }
+        }
+        return new ItemStack(IUItem.cell_all, 1, 0);
+    }
 
+    public static ItemStack getCellFromFluid(Fluid name) {
+        for (CellType cellType : CellType.values()) {
+            if (cellType.getFluid() == null) {
+                continue;
+            }
+            if (cellType.getFluid().equals(name)) {
+                return new ItemStack(IUItem.cell_all, 1, cellType.ordinal());
+            }
+        }
+        return new ItemStack(IUItem.cell_all, 1, 0);
+    }
+*/
+    public static CompoundTag nbt() {
+        return new CompoundTag();
+    }
+
+    public static CompoundTag nbt(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return new CompoundTag();
+        }
+        CompoundTag NBTTagCompound = stack.get(DataComponentsInit.DATA);
+        if (NBTTagCompound == null) {
+            NBTTagCompound = new CompoundTag();
+        }
+        stack.set(DataComponentsInit.DATA, NBTTagCompound.copy());
+        return stack.get(DataComponentsInit.DATA);
+    }
+
+    public static CompoundTag nbtOrNull(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return stack.get(DataComponentsInit.DATA);
+    }
 
     public static List<ItemStack> getListFromModule(ItemStack stack) {
         List<ItemStack> stacks = new ArrayList<>();
         if (!stack.isEmpty()) {
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            int size = nbt.getInt("size");
-            for (int j = 0; j < size; j++) {
-                String l = "number_" + j;
-                String temp = ModUtils.NBTGetString(stack, l);
-                TagKey<Item> tag = new TagKey<>(Registries.ITEM, new ResourceLocation(temp));
+            List<String> stringList = stack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+            for (String temp : stringList) {
+                TagKey<Item> tag = new TagKey<>(Registries.ITEM, ResourceLocation.parse(temp));
                 List<ItemStack> list = new Ingredient.TagValue(tag).getItems().stream().toList();
                 stacks.addAll(list);
 
@@ -324,12 +391,9 @@ public class ModUtils {
     public static List<QuarryItem> getQuarryListFromModule(ItemStack stack) {
         List<QuarryItem> stacks = new ArrayList<>();
         if (!stack.isEmpty()) {
-            final CompoundTag nbt = ModUtils.nbt(stack);
-            int size = nbt.getInt("size");
-            for (int j = 0; j < size; j++) {
-                String l = "number_" + j;
-                String temp = ModUtils.NBTGetString(stack, l);
-                stacks.add(new QuarryItem(temp));
+            List<String> stringList = stack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
+            for (String s : stringList) {
+                stacks.add(new QuarryItem(s));
 
             }
         }
@@ -411,17 +475,6 @@ public class ModUtils {
         return list;
     }
 
-    public static void NBTSetString(ItemStack stack, String name, String string) {
-        if (string == null) {
-            return;
-        }
-        CompoundTag NBTTagCompound = stack.getTag();
-        if (NBTTagCompound == null) {
-            NBTTagCompound = new CompoundTag();
-        }
-        NBTTagCompound.putString(name, string);
-        stack.setTag(NBTTagCompound);
-    }
 
     public static int getsum1(List<Integer> sum) {
         int sum_sum = 0;
@@ -449,12 +502,11 @@ public class ModUtils {
     }
 
     public static void mode(ItemStack stack, List<Component> list) {
-        CompoundTag nbt = nbt(stack);
-        list.add(Component.literal(mode(nbt)));
+        list.add(Component.literal(mode(stack)));
     }
 
-    public static String mode(CompoundTag nbt) {
-        String mode = nbt.getString("mode");
+    public static String mode(ItemStack stack) {
+        String mode = stack.getOrDefault(DataComponentsInit.SKIN, "");
         if (mode.isEmpty()) {
             return Localization.translate("defaultskin");
         }
@@ -480,8 +532,7 @@ public class ModUtils {
         if (mode.isEmpty()) {
             return stack1;
         }
-        nbt = nbt(stack1);
-        nbt.putString("mode", mode);
+        stack1.set(DataComponentsInit.SKIN, mode);
         return stack1;
     }
 
@@ -517,42 +568,36 @@ public class ModUtils {
     }
 
     public static String getString(float number) {
+        float gg;
+        int i;
+
+        i = (int) Math.log10(number);
         String maxstorage_2 = "0";
-        double i = Math.log10(number);
         if (i > -3 && i < 0) {
-            maxstorage_2 = String.format("%.0fm", number * 10E2D);
+            gg = number * 1000;
+            maxstorage_2 = String.format("%.0fm", gg);
         } else if (i <= -3 && i > -6) {
-            maxstorage_2 = String.format("%.0fµ", number * 10E5D);
+            gg = number * 1000000;
+            maxstorage_2 = String.format("%.2fµ", gg);
         } else if (i <= -6 && i > -9) {
-            maxstorage_2 = String.format("%.0fn", number * 10E8D);
+            gg = number * 1000000000;
+            maxstorage_2 = String.format("%.2fn", gg);
         } else if (i <= -9 && i > -12) {
-            maxstorage_2 = String.format("%.0fp", number * 10E11D);
-        } else if (i < 3) {
-            maxstorage_2 = String.format("%.0f", number);
-        } else if (i < 6) {
+            gg = number * 1000000000000F;
+            maxstorage_2 = String.format("%.2fp", gg);
+        } else if (i >= 0 && i < 3 && number <= 1000) {
 
-            maxstorage_2 = String.format("%.2fK", number / 10E2D);
-        } else if (i < 9) {
-
-            maxstorage_2 = String.format("%.2fM", number / 10E5D);
-        } else if (i < 12) {
-
-            maxstorage_2 = String.format("%.2fG", number / 10E8D);
-        } else if (i < 15) {
-
-            maxstorage_2 = String.format("%.2fT", number / 10E11D);
-        } else if (i < 18) {
-
-            maxstorage_2 = String.format("%.2fP", number / 10E14D);
-        } else if (i < 21) {
-
-            maxstorage_2 = String.format("%.2fE", number / 10E17D);
-        } else if (i < 24) {
-
-            maxstorage_2 = String.format("%.2fZ", number / 10E20D);
-        } else if (i < 27) {
-
-            maxstorage_2 = String.format("%.2fY", number / 10E23D);
+            gg = number;
+            maxstorage_2 = String.format("%.0f", gg);
+        } else if (i >= 3 && i < 6) {
+            gg = number / (1000);
+            maxstorage_2 = String.format("%.2fK", gg);
+        } else if (i >= 6 && i < 9) {
+            gg = number / (1000000);
+            maxstorage_2 = String.format("%.2fM", gg);
+        } else if (i >= 9 && i < 12) {
+            gg = number / (1000000000);
+            maxstorage_2 = String.format("%.2fG", gg);
         }
         return maxstorage_2;
 
@@ -574,42 +619,36 @@ public class ModUtils {
     }
 
     public static String getString1(double number) {
+        double gg;
+        int i;
+
+        i = (int) Math.log10(number);
         String maxstorage_2 = "0";
-        double i = Math.log10(number);
         if (i > -3 && i < 0) {
-            maxstorage_2 = String.format("%.0fm", number * 10E2D);
+            gg = number * 1000;
+            maxstorage_2 = String.format("%.0fm", gg);
         } else if (i <= -3 && i > -6) {
-            maxstorage_2 = String.format("%.0fµ", number * 10E5D);
+            gg = number * 1000000;
+            maxstorage_2 = String.format("%.0fµ", gg);
         } else if (i <= -6 && i > -9) {
-            maxstorage_2 = String.format("%.0fn", number * 10E8D);
+            gg = number * 1000000000;
+            maxstorage_2 = String.format("%.0fn", gg);
         } else if (i <= -9 && i > -12) {
-            maxstorage_2 = String.format("%.0fp", number * 10E11D);
-        } else if (i < 3) {
-            maxstorage_2 = String.format("%.0f", number);
-        } else if (i < 6) {
+            gg = number * 1000000000000D;
+            maxstorage_2 = String.format("%.0fp", gg);
+        } else if (i >= 0 && i < 3 && number <= 1000) {
 
-            maxstorage_2 = String.format("%.2fK", number / 10E2D);
-        } else if (i < 9) {
-
-            maxstorage_2 = String.format("%.2fM", number / 10E5D);
-        } else if (i < 12) {
-
-            maxstorage_2 = String.format("%.2fG", number / 10E8D);
-        } else if (i < 15) {
-
-            maxstorage_2 = String.format("%.2fT", number / 10E11D);
-        } else if (i < 18) {
-
-            maxstorage_2 = String.format("%.2fP", number / 10E14D);
-        } else if (i < 21) {
-
-            maxstorage_2 = String.format("%.2fE", number / 10E17D);
-        } else if (i < 24) {
-
-            maxstorage_2 = String.format("%.2fZ", number / 10E20D);
-        } else if (i < 27) {
-
-            maxstorage_2 = String.format("%.2fY", number / 10E23D);
+            gg = number;
+            maxstorage_2 = String.format("%.0f", gg);
+        } else if (i >= 3 && i < 6 && number >= 1000 && number < 1000000) {
+            gg = number / (1000);
+            maxstorage_2 = String.format("%.2fK", gg);
+        } else if (i >= 6 && i < 9 && number >= 1000000 && number < 1000000000) {
+            gg = number / (1000000);
+            maxstorage_2 = String.format("%.2fM", gg);
+        } else if (i >= 9 && i < 12 && number >= 1000000000 && number < 2100000000) {
+            gg = number / (1000000000);
+            maxstorage_2 = String.format("%.2fG", gg);
         }
         return maxstorage_2;
     }
@@ -698,28 +737,6 @@ public class ModUtils {
 
     }
 
-    public static CompoundTag nbt() {
-        return new CompoundTag();
-    }
-
-    public static CompoundTag nbt(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return new CompoundTag();
-        }
-        CompoundTag NBTTagCompound = stack.getTag();
-        if (NBTTagCompound == null) {
-            NBTTagCompound = new CompoundTag();
-        }
-        stack.setTag(NBTTagCompound);
-        return NBTTagCompound;
-    }
-
-    public static CompoundTag nbtOrNull(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return null;
-        }
-        return stack.getTag();
-    }
 
     public static int slot(List<Integer> list) {
         int meta = 0;
@@ -733,52 +750,17 @@ public class ModUtils {
         return meta;
     }
 
-    public static String NBTGetString(ItemStack stack, String name) {
-        if (name == null) {
-            return "";
-        }
-        if (stack == null) {
-            return "";
-        }
-        CompoundTag NBTTagCompound = nbt(stack);
-
-        return NBTTagCompound.getString(name);
-
-    }
-
-    public static int NBTGetInteger(ItemStack stack, String name) {
-        if (name == null) {
-            return 0;
-        }
-        CompoundTag NBTTagCompound = stack.getTag();
-        if (NBTTagCompound == null) {
-            return 0;
-        }
-
-        return NBTTagCompound.getInt(name);
-    }
-
-    public static void NBTSetInteger(ItemStack stack, String name, int string) {
-        if (name == null) {
-            return;
-        }
-        CompoundTag NBTTagCompound = stack.getTag();
-        if (NBTTagCompound == null) {
-            NBTTagCompound = new CompoundTag();
-        }
-        NBTTagCompound.putInt(name, string);
-        stack.setTag(NBTTagCompound);
-    }
 
     public static int convertRGBcolorToInt(int r, int g, int b) {
         float divColor = 255.0F;
         Color tmpColor = new Color(r / divColor, g / divColor, b / divColor);
         return tmpColor.getRGB();
     }
+
     public static int convertRGBAcolorToInt(int r, int g, int b) {
         return ((250 & 0xFF) << 24) |
                 ((r & 0xFF) << 16) |
-                ((g & 0xFF) << 8)  |
+                ((g & 0xFF) << 8) |
                 (b & 0xFF);
     }
 
@@ -787,8 +769,7 @@ public class ModUtils {
             return null;
         }
 
-        @NotNull LazyOptional<IItemHandler> capability = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, side);
-        IItemHandler handler = capability.orElseGet(() -> null);
+        @org.jetbrains.annotations.Nullable IItemHandler handler = tile.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, tile.getBlockPos(), side);
         if (handler == null) {
             if (side != null && tile instanceof WorldlyContainer) {
                 handler = new SidedInvWrapper((WorldlyContainer) tile, side);
@@ -1026,8 +1007,9 @@ public class ModUtils {
 
 
     public static ItemStack getRecipeFromType(Level world, ItemStack stack1, RecipeType<SmeltingRecipe> type) {
-        List<SmeltingRecipe> recipes = world.getRecipeManager().getAllRecipesFor(type);
-        for (SmeltingRecipe recipe : recipes) {
+        List<RecipeHolder<SmeltingRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(type);
+        for (RecipeHolder<SmeltingRecipe> recipe1 : recipes) {
+            SmeltingRecipe recipe = recipe1.value();
             if (recipe.getIngredients().size() > 1)
                 return ItemStack.EMPTY;
             else if (recipe.getIngredients().get(0).test(stack1))
@@ -1166,8 +1148,8 @@ public class ModUtils {
                             slot.set(j, ItemStack.EMPTY);
                             insertItem(handler, took, false, slots);
                         } else if (stack1 != took) {
-                            int count =  slot.get(j).getCount()-stack1.getCount();
-                            slot.get(j).shrink( count);
+                            int count = slot.get(j).getCount() - stack1.getCount();
+                            slot.get(j).shrink(count);
                             stack1.setCount(count);
                             insertItem(handler, stack1, false, slots);
                         }
@@ -1177,8 +1159,8 @@ public class ModUtils {
                             slot.set(j, ItemStack.EMPTY);
                             insertItem1(handler, took, false, slots);
                         } else if (stack1 != took) {
-                            int count =  slot.get(j).getCount()-stack1.getCount();
-                            slot.get(j).shrink( count);
+                            int count = slot.get(j).getCount() - stack1.getCount();
+                            slot.get(j).shrink(count);
                             stack1.setCount(count);
                             insertItem1(handler, stack1, false, slots);
                         }
@@ -1209,11 +1191,11 @@ public class ModUtils {
     }
 
     public static boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
-        if (a.isEmpty() || !a.is(b.getItem()) || a.hasTag() != b.hasTag()) {
+        if (a.isEmpty() || !a.is(b.getItem())) {
             return false;
         }
 
-        return (!a.hasTag() || a.getTag().equals(b.getTag()));
+        return true;
     }
 
     @Nonnull
@@ -1279,19 +1261,18 @@ public class ModUtils {
     }
 
 
-    @NotNull
     public static FluidActionResult tryFillContainer(@NotNull ItemStack container, IFluidHandler fluidSource, int maxAmount, @org.jetbrains.annotations.Nullable Player player, boolean doFill) {
-        ItemStack containerCopy = ItemHandlerHelper.copyStackWithSize(container, 1);
-        IFluidHandlerItem containerFluidHandler = containerCopy.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse((IFluidHandlerItem) containerCopy.getItem().initCapabilities(containerCopy, containerCopy.getTag()));
-        for (int i = 0; i < fluidSource.getTanks();i++) {
-            FluidStack simulatedTransfer = tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, false,i);
+        ItemStack containerCopy = copyStackWithSize(container, 1);
+        IFluidHandlerItem containerFluidHandler = containerCopy.getCapability(Capabilities.FluidHandler.ITEM);
+        for (int i = 0; i < fluidSource.getTanks(); i++) {
+            FluidStack simulatedTransfer = tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, false, i);
             if (!simulatedTransfer.isEmpty()) {
                 if (doFill) {
-                    tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, true,i);
+                    tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, true, i);
                     if (player != null) {
                         SoundEvent soundevent = simulatedTransfer.getFluid().getFluidType().getSound(simulatedTransfer, SoundActions.BUCKET_FILL);
                         if (soundevent != null)
-                        player.level().playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
+                            player.level().playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
                     }
                 } else {
                     // We are acting on a COPY of the stack, so performing changes on the source is acceptable even if we are simulating.
@@ -1347,6 +1328,15 @@ public class ModUtils {
         return FluidActionResult.FAILURE;
     }
 
+    @NotNull
+    public static ItemStack copyStackWithSize(@NotNull ItemStack itemStack, int size) {
+        if (size == 0)
+            return ItemStack.EMPTY;
+        ItemStack copy = itemStack.copy();
+        copy.setCount(size);
+        return copy;
+    }
+
     public static boolean interactWithFluidHandler(
             @Nonnull Player player,
             @Nonnull InteractionHand hand,
@@ -1359,7 +1349,7 @@ public class ModUtils {
         ItemStack heldItem = player.getItemInHand(hand);
         if (!heldItem.isEmpty()) {
 
-            IItemHandler playerInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(new InvWrapper(player.getInventory()));
+            IItemHandler playerInventory = player.getCapability(Capabilities.ItemHandler.ENTITY, null);
             if (playerInventory != null) {
                 FluidActionResult fluidActionResult = tryFillContainerAndStow(heldItem, handler, playerInventory,
                         Integer.MAX_VALUE, player, true
@@ -1368,10 +1358,10 @@ public class ModUtils {
                     final FluidStack stack = null;
                     int sizeTanks = handler.getTanks();
                     int capacity = -1;
-                    @NotNull ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(heldItem, 1);
+                    @NotNull ItemStack stack1 = copyStackWithSize(heldItem, 1);
                     IFluidHandlerItem containerFluidHandler = FluidHandlerFix.getFluidHandler(stack1);
                     for (int i = 0; i < sizeTanks; i++) {
-                        if ((handler.getFluidInTank(i).isEmpty() && handler.fill(containerFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE) > 0) || (!handler.getFluidInTank(i).isEmpty() && handler.getFluidInTank(i).isFluidEqual(containerFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE)) && handler.fill(containerFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE) > 0)) {
+                        if ((handler.getFluidInTank(i).isEmpty() && handler.fill(containerFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE) > 0) || (!handler.getFluidInTank(i).isEmpty() && FluidStack.isSameFluid(handler.getFluidInTank(i), containerFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE)) && handler.fill(containerFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.SIMULATE) > 0)) {
                             capacity = handler.getTankCapacity(i) - (handler.getFluidInTank(i).isEmpty() ? 0 :
                                     handler.getFluidInTank(i).getAmount());
 
@@ -1439,7 +1429,7 @@ public class ModUtils {
 
     @NotNull
     public static FluidActionResult tryEmptyContainer(@NotNull ItemStack container, IFluidHandler fluidDestination, int maxAmount, @org.jetbrains.annotations.Nullable Player player, boolean doDrain) {
-        ItemStack containerCopy = ItemHandlerHelper.copyStackWithSize(container, 1); // do not modify the input
+        ItemStack containerCopy = copyStackWithSize(container, 1); // do not modify the input
         IFluidHandlerItem containerFluidHandler;
         containerFluidHandler = FluidHandlerFix.getFluidHandler(containerCopy);
         if (containerFluidHandler != null) {
@@ -1455,7 +1445,7 @@ public class ModUtils {
             if (doDrain && player != null) {
                 SoundEvent soundevent = transfer.getFluid().getFluidType().getSound(transfer, SoundActions.BUCKET_EMPTY);
                 if (soundevent != null)
-                player.level().playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    player.level().playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
 
             ItemStack resultContainer = containerFluidHandler.getContainer();
@@ -1469,13 +1459,14 @@ public class ModUtils {
         FluidStack stack = fluidSource.getFluidInTank(index).copy();
         if (stack.isEmpty())
             return FluidStack.EMPTY;
-        stack.setAmount(Math.min(stack.getAmount(),maxAmount));
+        stack.setAmount(Math.min(stack.getAmount(), maxAmount));
         FluidStack drainable = fluidSource.drain(stack, IFluidHandler.FluidAction.SIMULATE);
         if (!drainable.isEmpty()) {
             return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
         }
         return FluidStack.EMPTY;
     }
+
     @NotNull
     public static FluidStack tryFluidTransfer(IFluidHandler fluidDestination, IFluidHandler fluidSource, int maxAmount, boolean doTransfer) {
         FluidStack drainable = fluidSource.drain(maxAmount, IFluidHandler.FluidAction.SIMULATE);
@@ -1488,7 +1479,7 @@ public class ModUtils {
     @NotNull
     public static FluidStack tryFluidTransfer(IFluidHandler fluidDestination, IFluidHandler fluidSource, FluidStack resource, boolean doTransfer) {
         FluidStack drainable = fluidSource.drain(resource, IFluidHandler.FluidAction.SIMULATE);
-        if (!drainable.isEmpty() && resource.isFluidEqual(drainable)) {
+        if (!drainable.isEmpty() && FluidStack.isSameFluid(resource, drainable)) {
             return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
         }
         return FluidStack.EMPTY;
@@ -1510,8 +1501,6 @@ public class ModUtils {
         }
         return FluidStack.EMPTY;
     }
-
-
 
 
     public static Direction getFacingFromTwoPositions(BlockPos fromPos, BlockPos toPos) {
@@ -1561,4 +1550,6 @@ public class ModUtils {
         }
         return stringList;
     }
+
+
 }

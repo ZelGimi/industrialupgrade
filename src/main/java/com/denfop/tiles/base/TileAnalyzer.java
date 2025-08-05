@@ -37,8 +37,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -233,7 +233,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
         int size = nbttagcompound.getInt("size_DataOre");
         final CompoundTag dataOreTag = nbttagcompound.getCompound("DataOre");
         for (int i = 0; i < size; i++) {
-            this.dataOreList.add(new DataOre(dataOreTag.getCompound(String.valueOf(i))));
+            this.dataOreList.add(new DataOre(this.provider, dataOreTag.getCompound(String.valueOf(i))));
         }
 
         this.analysis = nbttagcompound.getBoolean("analysis");
@@ -399,8 +399,8 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                         List<TagKey<Item>> ints = stack.getItemHolder().tags().toList();
                         if (!stack.isEmpty()) {
                             if ((blockstate
-                                    .getMapColor(level,pos1) == MapColor.METAL || blockstate
-                                    .getMapColor(level,pos1) == MapColor.STONE) && !ints.isEmpty()) {
+                                    .getMapColor(level, pos1) == MapColor.METAL || blockstate
+                                    .getMapColor(level, pos1) == MapColor.STONE) && !ints.isEmpty()) {
 
                                 for (TagKey<Item> id : ints) {
                                     String name = id.location().getPath();
@@ -610,7 +610,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                 if (dataOre.getVeinsList() != null && !dataOre.getVeinsList().isEmpty()) {
                     Vein vein = dataOre.getVeinsList().get(indexVein);
                     indexVein++;
-                    if (vein.getCol() > 0) {
+                    if (vein.getCol() >= 0) {
                         for (TileEntityAnalyzerChest analyzerChest : target1) {
                             final int col1 = Math.min(vein.getCol(), 64);
                             if (vein.getCol() <= 0) {
@@ -679,7 +679,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
         final CompoundTag dataOreTag = new CompoundTag();
 
         for (int i = 0; i < dataOreList.size(); i++) {
-            dataOreTag.put(String.valueOf(i), this.dataOreList.get(i).getTagCompound());
+            dataOreTag.put(String.valueOf(i), this.dataOreList.get(i).getTagCompound(this.provider));
         }
         nbttagcompound.put("DataOre", dataOreTag);
         return nbttagcompound;

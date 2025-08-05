@@ -2,9 +2,9 @@ package com.denfop.integration.jei.recycler;
 
 
 import com.denfop.IUItem;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class RecyclerHandler {
     }
 
     public static void initRecipes() {
-        for (Item container : ForgeRegistries.ITEMS) {
+        for (Item container : BuiltInRegistries.ITEM) {
 
 
             addRecipe(

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:compresscarbonultra"
+    },
+    "B": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "C": {
+      "item": "minecraft:glowstone"
+    },
+    "D": {
+      "item": "industrialupgrade:energy_tools/nano_saber"
+    }
+  },
+  "pattern": [
+    "AD ",
+    "AB ",
+    "CC "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy_tools/katana"
+  },
+  "show_notification": false
+}

@@ -9,9 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public class EventUpdate {
 
@@ -25,7 +25,7 @@ public class EventUpdate {
     public void onPlayerTick(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-         if (!this.playerNotified) {
+        if (!this.playerNotified) {
             this.playerNotified = true;
             sendModCheckMessage(player);
         }
@@ -36,11 +36,11 @@ public class EventUpdate {
             String modVersion = Constants.MOD_VERSION;
 
             boolean hasPowerUtilities = ModList.get().isLoaded("powerutils");
-            boolean hasSimplyQuarry =  ModList.get().isLoaded("simplyquarries");
-            boolean hasQuantumGenerators =  ModList.get().isLoaded("quantumgenerators");
-            boolean hasJEI =  ModList.get().isLoaded("jei");
-            boolean oneprobe =  ModList.get().isLoaded("oneprobe");
-            boolean jade =  ModList.get().isLoaded("jade");
+            boolean hasSimplyQuarry = ModList.get().isLoaded("simplyquarries");
+            boolean hasQuantumGenerators = ModList.get().isLoaded("quantumgenerators");
+            boolean hasJEI = ModList.get().isLoaded("jei");
+            boolean oneprobe = ModList.get().isLoaded("oneprobe");
+            boolean jade = ModList.get().isLoaded("jade");
 
             String message = ChatFormatting.DARK_GRAY + "================" + "\n" +
                     ChatFormatting.GREEN + Localization.translate("iu.mod.name") + " " + modVersion + "\n" +
@@ -61,7 +61,7 @@ public class EventUpdate {
 
 
     private String formatAddonStatus(String addonName, boolean isInstalled) {
-        return  ChatFormatting.WHITE + " " + addonName + ": " + (isInstalled
+        return ChatFormatting.WHITE + " " + addonName + ": " + (isInstalled
                 ? ChatFormatting.GREEN + "[" + "\u2611" + "]"
                 : ChatFormatting.RED + "[" + "\u274C" + "]");
     }

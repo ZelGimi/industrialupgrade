@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerCasing extends TileEntityMultiBlockElement implements ICasing {
 
     public TileEntityPerCasing(BlockPos pos, BlockState state) {
-        super( BlockWaterReactors.water_per_casing, pos, state);
+        super(BlockWaterReactors.water_per_casing, pos, state);
     }
 
     @Override

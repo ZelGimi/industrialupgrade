@@ -1,15 +1,10 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.*;
 import com.denfop.api.space.*;
-import com.denfop.api.space.colonies.api.IColony;
-import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.fakebody.Data;
-import com.denfop.api.space.fakebody.IFakeBody;
-import com.denfop.api.space.rovers.enums.EnumRoversLevel;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerResearchTableSpace;
@@ -17,8 +12,6 @@ import com.denfop.network.packet.PacketAddBuildingToColony;
 import com.denfop.network.packet.PacketUpdateBody;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -26,73 +19,76 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import org.joml.Matrix4f;
 
 import java.lang.System;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 import static com.denfop.api.space.BaseSpaceSystem.rocketFuel;
 import static com.denfop.api.space.BaseSpaceSystem.rocketFuelCoef;
 import static com.mojang.blaze3d.systems.RenderSystem.disableScissor;
-import static net.minecraft.world.item.ItemDisplayContext.GUI;
 
 public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extends GuiIU<ContainerResearchTableSpace> {
 
     public final List<float[]> cachedStars = new ArrayList<>();
-
+    private final float ANIMATION_DURATION = 900f;
     public int mode = 0;
-
     public IStar star;
     public IBody focusedPlanet = null;
     public boolean starsGenerated1 = false;
     public boolean hoverColonies = false;
     public boolean hoverResource = false;
     public boolean hoverExpedition = false;
-
     public int textIndex = 0;
     public boolean starsGenerated = false;
-
     public float scale = 1.0F;
     public int offsetX = 0, offsetY = 0;
     public boolean isDragging = false;
     public int lastMouseX, lastMouseY;
-
+    public Result minimumLimit;
+    public List<GuiDefaultResearchTable> defaultResearchGuis = new ArrayList<>();
     boolean hoverUp = false;
     boolean hoverOpen = false;
     boolean hoverDown = false;
+    int systemId = 0;
+    List<ISystem> systems;
+    double scaleWindow = -1f;
+    boolean hoverBack = false;
+    int valuePage = 0;
+    int maxValuePage = 9;
+    boolean hoverNextStar = false;
+    boolean hoverBackStar = false;
+    Map<Integer, Integer> rocketPlanetRequirements = Map.of(
+            1, 1,
+            2, 1,
+            3, 3,
+            4, 5
+    );
+    Map<Integer, Integer> fuelPlanetRequirements = Map.of(
+            1, 1,
+            2, 1,
+            3, 5,
+            4, 6
+    );
     private int addPoint;
     private int valueBody = 0;
-    public Result minimumLimit;
-    public List<GuiDefaultResearchTable> defaultResearchGuis = new ArrayList<>();
+    private float scaleBackStar = 1.0f;
+    private float scaleNextStar = 1.0f;
+    private boolean growingBack = true;
+    private boolean growingNext = true;
+    private float animationProgress = 1.0f;
+    private boolean animating = false;
+    private boolean animatingForward = true;
+    private long animationStartTime;
 
     public GuiResearchTableSpace(ContainerResearchTableSpace guiContainer) {
         super(guiContainer, EnumTypeStyle.PERFECT);
         imageHeight = 255;
         imageWidth = 255;
         this.componentList.clear();
-
-    }
-
-
-
-
-    @Override
-    public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        imageHeight = 255;
-        imageWidth = 255;
-        this.leftPos = (this.width - this.imageWidth) / 2;
-        this.topPos = (this.height - this.imageHeight) / 2;
-        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
 
     }
 
@@ -105,6 +101,16 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         double d3 = (double) (p_239263_ - p_239261_) * d0;
         double d4 = (double) (p_239264_ - p_239262_) * d0;
         RenderSystem.enableScissor((int) d1, (int) d2, Math.max(0, (int) d3), Math.max(0, (int) d4));
+    }
+
+    @Override
+    public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
+        imageHeight = 255;
+        imageWidth = 255;
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.topPos = (this.height - this.imageHeight) / 2;
+        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
+
     }
 
     @Override
@@ -133,7 +139,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         pose.scale((float) ((0.5 / 128D) * size), (float) ((0.5 / 128D) * size / 32), 1);
 
         RenderSystem.setShaderColor(0, 0, 1, 1);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common2.png"));
         drawTexturedModalRect(poseStack, -128, -128, 0, 0, 256, 256);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         pose.popPose();
@@ -152,21 +158,20 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
         Matrix4f matrix = poseStack.pose().last().pose();
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
+        BufferBuilder buffer;
 
         for (float[] star : cachedStars) {
-            buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION);
 
-            buffer.vertex(matrix, star[0], star[1], 0).endVertex();
-            buffer.vertex(matrix, star[0] * 1.001f, star[1] * 1.001f, 0).endVertex();
-            tessellator.end();
+            buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION);
+
+            buffer.addVertex(matrix, star[0], star[1], 0);
+            buffer.addVertex(matrix, star[0] * 1.001f, star[1] * 1.001f, 0);
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
         }
 
 
         RenderSystem.disableBlend();
     }
-
-
 
     private void generateStars(PoseStack poseStack, int x, int y, int width, int height, int starCount) {
         Random random = new Random();
@@ -179,17 +184,10 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
     }
 
-
-
     private void drawLine(PoseStack poseStack, BufferBuilder buffer, double x1, double y1, double x2, double y2) {
-        buffer.vertex(poseStack.last().pose(), (float) x1, (float) y1, 0).color(0, 255, 1, 255).endVertex();
-        buffer.vertex(poseStack.last().pose(), (float) x2, (float) y2, 0).color(0, 255, 1, 255).endVertex();
+        buffer.addVertex(poseStack.last().pose(), (float) x1, (float) y1, 0).setColor(0, 255, 1, 255);
+        buffer.addVertex(poseStack.last().pose(), (float) x2, (float) y2, 0).setColor(0, 255, 1, 255);
     }
-
-
-
-    int systemId = 0;
-    List<ISystem> systems;
 
     protected void drawBackground(GuiGraphics poseStack) {
         componentList.forEach(guiComponent -> guiComponent.drawBackground(poseStack, guiLeft(), guiTop()));
@@ -203,11 +201,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         imageWidth = 9000;
     }
 
-    private float scaleBackStar = 1.0f;
-    private float scaleNextStar = 1.0f;
-    private boolean growingBack = true;
-    private boolean growingNext = true;
-
     private void drawScaledTexture(GuiGraphics graphics, float x, float y, int u, int v, int w, int h, float scale) {
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
@@ -218,13 +211,9 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         poseStack.popPose();
     }
 
-    double scaleWindow = -1f;
-
     public boolean needRenderForeground() {
         return false;
     }
-
-    boolean hoverBack = false;
 
     public void drawRect(GuiGraphics poseStack, ResourceLocation texture, float x, float y, float z, float scaleX, float scaleY, int u, int v, int w, int h) {
         PoseStack pose = poseStack.pose();
@@ -249,11 +238,11 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
     public void drawAvailability(GuiGraphics poseStack, boolean available, String label, float x, float y, float z) {
         drawRect(poseStack,
-                new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"),
+                ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"),
                 x, y, z, 0.7f, 0.7f,
                 0, available ? 125 : 145, 103, 20
         );
-        drawCenteredText(poseStack, available ? Localization.translate("iu.space.planet.available")+" " + label :Localization.translate("iu.space.planet.unavailable")+" " + label,
+        drawCenteredText(poseStack, available ? Localization.translate("iu.space.planet.available") + " " + label : Localization.translate("iu.space.planet.unavailable") + " " + label,
                 x + (102 / 2f) * 0.7f, y + 5, z + 5, 0.6f,
                 ModUtils.convertRGBAcolorToInt(255, 255, 255)
         );
@@ -284,10 +273,10 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         this.addPoint = 0;
         valueBody = 0;
         for (int i = 0; i < 9; i++)
-            drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 6 + 18 + i * 18, guiTop + 231, 0, 1f, 1f, 222, 1, 20, 20);
+            drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 6 + 18 + i * 18, guiTop + 231, 0, 1f, 1f, 222, 1, 20, 20);
         for (int i = 10; i < 11; i++) {
             RenderSystem.enableBlend();
-            drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 6 + 18 + i * 18, guiTop + 231, 0, 1f, 1f, 201, 1, 20, 20);
+            drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 6 + 18 + i * 18, guiTop + 231, 0, 1f, 1f, 201, 1, 20, 20);
             RenderSystem.disableBlend();
         }
         if (mode == 0) {
@@ -298,7 +287,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
             boolean isScissor = !defaultResearchGuis.isEmpty();
             if (!isScissor) {
 
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 9, guiTop + 28, 20, 0.5f, 0.5f, !hoverBack ? 139 : 170, 1, 30, 30);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 9, guiTop + 28, 20, 0.5f, 0.5f, !hoverBack ? 139 : 170, 1, 30, 30);
                 RenderSystem.enableBlend();
                 new ImageSpaceInterface1(this, 25, 25, 200, 200).drawBackground(poseStack, guiLeft, guiTop);
                 RenderSystem.disableBlend();
@@ -306,31 +295,31 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                 RenderSystem.enableBlend();
                 new ImageSpaceInterface3(this, 45, 33, 37, 36).drawBackground(poseStack, guiLeft, guiTop);
                 RenderSystem.disableBlend();
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70, 0, 0.63f, 0.63f, 0, 105, 103, 20);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70, 0, 0.63f, 0.63f, 0, 105, 103, 20);
 
                 drawCenteredText(poseStack, Localization.translate("iu.body." + focusedPlanet.getName()), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 70 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70 + 17, 20, 0.5f, 0.5f, 0, 182, 127, 49);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70 + 17, 20, 0.5f, 0.5f, 0, 182, 127, 49);
 
                 Data data = this.container.base.dataMap.get(focusedPlanet);
                 int percent = (int) (data.getPercent() * 122 / 100D);
 
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 33, guiTop + 70 + 17, 20, 0.5f, 0.5f, 5, 165, percent, 17);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 33, guiTop + 70 + 17, 20, 0.5f, 0.5f, 5, 165, percent, 17);
 
                 if (data.getPercent() >= 0)
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70 + 26 - 0.5f, 20, 0.5f, 0.5f, 142, 63, 26, 46);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70 + 26 - 0.5f, 20, 0.5f, 0.5f, 142, 63, 26, 46);
                 if (data.getPercent() >= 20)
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 45, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 169, 63, 21, 46);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 45, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 169, 63, 21, 46);
                 if (data.getPercent() >= 50)
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 57.5f, guiTop + 70 + 26, 20, 0.5f, 0.5f, 190, 64, 26, 42);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 57.5f, guiTop + 70 + 26, 20, 0.5f, 0.5f, 190, 64, 26, 42);
                 if (data.getPercent() >= 80)
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 71.5f, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 216, 63, 20, 42);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 71.5f, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 216, 63, 20, 42);
                 if (data.getPercent() >= 100)
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 83, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 236, 63, 20, 42);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 83, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 236, 63, 20, 42);
 
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 115, 0, 0.63f, 0.63f, 0, 105, 103, 20);
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 135, 0, 0.63f, 0.63f, 0, 105, 103, 20);
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 155, 0, 0.63f, 0.63f, 0, data.getPercent() >= 100 ? 105 : 145, 103, 20);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 115, 0, 0.63f, 0.63f, 0, 105, 103, 20);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 135, 0, 0.63f, 0.63f, 0, 105, 103, 20);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 155, 0, 0.63f, 0.63f, 0, data.getPercent() >= 100 ? 105 : 145, 103, 20);
 
                 drawCenteredText(poseStack, Localization.translate("iu.space.planet.resource"), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 115 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
                 drawCenteredText(poseStack, Localization.translate("iu.space.planet.expedition"), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 135 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
@@ -340,31 +329,31 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                 new ImageSpaceInterface1(this, 30, 170, 66, 40).drawBackground(poseStack, guiLeft, guiTop);
                 RenderSystem.disableBlend();
 
-                bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"));
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 175, 0, 0.63f, 0.63f, 0, 0, 21, 21);
+                bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"));
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 175, 0, 0.63f, 0.63f, 0, 0, 21, 21);
 
                 Result result = minimumLimit;
                 drawLevelIcon(poseStack, result.allocations.fuelLevel, guiLeft + 43, guiTop + 182, 0, 0.63f);
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 58, guiTop + 175, 0, 0.63f, 0.63f, 168, 21, 24, 23);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 58, guiTop + 175, 0, 0.63f, 0.63f, 168, 21, 24, 23);
                 drawLevelIcon(poseStack, result.allocations.rocketLevel, guiLeft + 66, guiTop + 182, 0, 0.63f);
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 80, guiTop + 175, 0, 0.63f, 0.63f, 22, 23, 13, 20);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 80, guiTop + 175, 0, 0.63f, 0.63f, 22, 23, 13, 20);
 
-                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 78, guiTop + 192, 0, 0.63f, 0.63f, 192, 22, 21, 21);
+                drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 78, guiTop + 192, 0, 0.63f, 0.63f, 192, 22, 21, 21);
 
 
                 int temperature = focusedPlanet.getTemperature();
                 if (temperature > 150) {
                     int count = (int) Math.ceil((temperature - 150) / 350D);
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 192, 0, 0.63f, 0.63f, 44, 0, 21, 21);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 192, 0, 0.63f, 0.63f, 44, 0, 21, 21);
                     drawLevelIcon(poseStack, count, guiLeft + 45, guiTop + 200, 0, 0.63f);
                 } else if (temperature < -125) {
                     int count = (int) Math.ceil((Math.abs(temperature) - 125) / 37D);
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 192, 0, 0.63f, 0.63f, 22, 0, 21, 21);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 192, 0, 0.63f, 0.63f, 22, 0, 21, 21);
                     drawLevelIcon(poseStack, count, guiLeft + 45, guiTop + 200, 0, 0.63f);
                 }
 
                 if ((focusedPlanet instanceof IPlanet p && p.getPressure()) || (focusedPlanet instanceof ISatellite s && s.getPressure())) {
-                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 58, guiTop + 192, 0, 0.63f, 0.63f, 66, 0, 21, 21);
+                    drawRect(poseStack, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 58, guiTop + 192, 0, 0.63f, 0.63f, 66, 0, 21, 21);
                 }
                 RenderSystem.enableBlend();
                 new ImageSpaceInterface1(this, 110, 33, 100, 100).drawBackground(poseStack, guiLeft, guiTop);
@@ -412,12 +401,12 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
     private void renderStarSystem(GuiGraphics poseStack, PoseStack pose, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common2.png"));
         this.drawTexturedModalRect(poseStack, guiLeft + 30, guiTop + 30, 2, 2, 175, 175);
         RenderSystem.setShaderColor(1, 1, 1.0F, 1.0F);
         pose.pushPose();
         pose.translate(guiLeft + 9, guiTop + 28, 20);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png"));
         pose.scale(0.5f, 0.5f, 1);
         if (!hoverBack)
             drawTexturedModalRect(poseStack, 0, 0, 139, 1, 30, 30);
@@ -479,9 +468,9 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
             pose.scale((float) scale, (float) scale, (float) scale);
 
             Tesselator tessellator = Tesselator.getInstance();
-            BufferBuilder buffer = tessellator.getBuilder();
+            BufferBuilder buffer;
 
-            buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+            buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
             drawLine(pose, buffer, (-squareSize / 2), -squareSize / 2, -squareSize / 4D, -squareSize / 2);
             drawLine(pose, buffer, (squareSize / 2), -squareSize / 2, squareSize / 4D, -squareSize / 2);
 
@@ -493,7 +482,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
             drawLine(pose, buffer, -squareSize / 2, -squareSize / 2, -squareSize / 2, -squareSize / 4);
             drawLine(pose, buffer, -squareSize / 2, squareSize / 2, -squareSize / 2, squareSize / 4);
-            tessellator.end();
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
 
             pose.popPose();
 
@@ -532,7 +521,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
         star.getAsteroidList().forEach(iAsteroid -> iAsteroid
                 .getMiniAsteroid()
-                .forEach(asteroid -> this.renderAsteroid(poseStack, asteroid,iAsteroid)));
+                .forEach(asteroid -> this.renderAsteroid(poseStack, asteroid, iAsteroid)));
         pose.popPose();
         disableScissor();
         new ImageSpaceInterface(this, 30 - 2, 30 - 2, 175 + 4, 175 + 4).drawBackground(poseStack, this.guiLeft, guiTop);
@@ -544,7 +533,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         maxValuePage = list.size();
         int tempMaxValuePage = Math.min(9, maxValuePage - valuePage);
         int j = 0;
-        ResourceLocation back1 = new ResourceLocation("industrialupgrade", "textures/gui/gui_space_other.png");
+        ResourceLocation back1 = ResourceLocation.tryBuild("industrialupgrade", "textures/gui/gui_space_other.png");
         bindTexture(back1);
         float scaleSpeed = 0.02f;
         float maxScale = 1.2f;
@@ -738,7 +727,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
         this.addPoint = addedPoint;
         bindTexture(back1);
-        if (tempMaxValuePage > 0  && (maxValuePage - valuePage) > 9) {
+        if (tempMaxValuePage > 0 && (maxValuePage - valuePage) > 9) {
             pose.pushPose();
             pose.translate(guiLeft + 230, guiTop + (tempMaxValuePage - 1) * 19 + addedPoint, 20);
             pose.scale(scaleNextStar * 0.5f, scaleNextStar * 0.5f, 1);
@@ -771,9 +760,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
     }
 
-    int valuePage = 0;
-    int maxValuePage = 9;
-
     private void startAnimation(boolean forward) {
         if (animating) return;
         this.animating = true;
@@ -782,18 +768,11 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         this.animationProgress = 0f;
     }
 
-    private float animationProgress = 1.0f;
-    private boolean animating = false;
-    private boolean animatingForward = true;
-    private long animationStartTime;
-    private final float ANIMATION_DURATION = 900f;
-
-
     private void renderMainMenu(GuiGraphics poseStack, PoseStack pose, float partialTicks, int mouseX, int mouseY) {
         List<ISystem> systems1 = SpaceNet.instance.getSystem();
         this.systems = systems1.stream().filter(iSystem -> !iSystem.getStarList().isEmpty()).collect(Collectors.toList());
         new ImageSpaceInterface(this, imageWidth / 2 - 80 + 30, 30 + 30, 90, 90).drawBackground(poseStack, this.guiLeft, guiTop);
-        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/gui_space_main.png"));
+        GuiCore.bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/gui_space_main.png"));
         RenderSystem.setShaderColor(1, 1, 1, 1);
         pose.pushPose();
         int width1 = 90;
@@ -812,7 +791,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         pose.popPose();
 
 
-        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/gui_space_main.png"));
+        GuiCore.bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/gui_space_main.png"));
         RenderSystem.setShaderColor(1, 1, 1, 1);
         pose.pushPose();
         width1 = 90;
@@ -890,7 +869,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
         disableScissor();
         pose.popPose();
-        ResourceLocation background1 = new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png");
+        ResourceLocation background1 = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_other.png");
         bindTexture(background1);
         float scaleSpeed = 0.02f;
         float maxScale = 1.2f;
@@ -950,8 +929,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
     }
 
-
-
     private void renderAsteroid(GuiGraphics poseStack, MiniAsteroid miniAsteroid, IAsteroid asteroid) {
         double time = container.base.getWorld().getGameTime();
         double angle = 2 * Math.PI * (time * miniAsteroid.getRotationSpeed()) / 800D;
@@ -976,28 +953,28 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
+        BufferBuilder buffer;
 
-        buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
+        buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
         int segments = (int) (32 * Math.max(1, radius / 2));
         for (int i = 0; i <= segments; i++) {
             float angle = (float) (2 * Math.PI * i / segments);
             float x = (float) (radius * Math.cos(angle));
             float y = (float) (radius * Math.sin(angle));
             if (hasPressure) {
-                buffer.vertex(matrix, x, y, 0.0F).color(255, 0, 0, 255).endVertex();
+                buffer.addVertex(matrix, x, y, 0.0F).setColor(255, 0, 0, 255);
 
             } else if (hasOxygen) {
-                buffer.vertex(matrix, x, y, 0.0F).color(0, 255, 0, 255).endVertex();
+                buffer.addVertex(matrix, x, y, 0.0F).setColor(0, 255, 0, 255);
 
             } else {
-                buffer.vertex(matrix, x, y, 0.0F).color(0, 0, 255, 255).endVertex();
+                buffer.addVertex(matrix, x, y, 0.0F).setColor(0, 0, 255, 255);
 
             }
         }
 
 
-        tessellator.end();
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.disableBlend();
     }
 
@@ -1026,7 +1003,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
     }
 
     @Override
-    public boolean mouseScrolled(double d, double d2, double d3) {
+    public boolean mouseScrolled(double d, double d2, double d4, double d3) {
         int mouseX = (int) (d - this.guiLeft);
         int mouseY = (int) (d2 - this.guiTop);
         if (mode == 1 && mouseX >= 30 && mouseY >= 30 && mouseX <= 30 + 175 && mouseY <= 30 + 175) {
@@ -1065,7 +1042,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                 }
                 if (prevValue != valuePage)
                     container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
-                return  true;
+                return true;
             }
         } else if (mode == 2) {
             for (int ii = 0; ii < defaultResearchGuis.size(); ii++) {
@@ -1075,7 +1052,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                     return true;
             }
         }
-        return super.mouseScrolled(d, d2, d3);
+        return super.mouseScrolled(d, d2, d4, d3);
     }
 
     private void renderPlanet(GuiGraphics poseStack, IBody planet) {
@@ -1113,24 +1090,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         pose.popPose();
     }
 
-
-
-
-
-
-
-
-
-
-    public void renderBackground(GuiGraphics pGuiGraphics) {
-        if (this.minecraft.level != null) {
-            pGuiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
-        } else {
-            this.renderDirtBackground(pGuiGraphics);
-        }
-
-    }
-
     @Override
     protected void mouseClicked(final int i, final int j, final int k) {
         imageHeight = 255;
@@ -1142,7 +1101,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         int x = i - xMin;
         int y = j - yMin;
         if (mode == 0) {
-            if (x >= 255 / 2 - 80 && x <= 255 / 2 - 80 + 90 && y >= 30+ 30 && y <= 120+ 30) {
+            if (x >= 255 / 2 - 80 && x <= 255 / 2 - 80 + 90 && y >= 30 + 30 && y <= 120 + 30) {
                 this.mode = 1;
                 this.star = this.systems.get(systemId).getStarList().get(0);
                 valuePage = 0;
@@ -1377,7 +1336,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                     defaultResearchGuis.add(new GuiResourceBody(this));
                 }
             }
-            if (hoverColonies && defaultResearchGuis.isEmpty() && ((focusedPlanet instanceof  IPlanet && ((IPlanet) focusedPlanet).canHaveColonies())||(focusedPlanet instanceof  ISatellite && ((ISatellite) focusedPlanet).canHaveColonies())||!(focusedPlanet instanceof IAsteroid))) {
+            if (hoverColonies && defaultResearchGuis.isEmpty() && ((focusedPlanet instanceof IPlanet && ((IPlanet) focusedPlanet).canHaveColonies()) || (focusedPlanet instanceof ISatellite && ((ISatellite) focusedPlanet).canHaveColonies()) || !(focusedPlanet instanceof IAsteroid))) {
                 boolean find = false;
                 for (GuiDefaultResearchTable defaultResearchTable : defaultResearchGuis) {
                     if (defaultResearchTable instanceof GuiColony) {
@@ -1410,7 +1369,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
             }
         } else if (mode == 5) {
             if (x > 130 && x <= 130 + 16 && y > 16 && y < 16 + 16) {
-                new PacketAddBuildingToColony(this.container.base.colony);
+                new PacketAddBuildingToColony(this.container.base.colony, container.player);
             }
         }
         if (isClickedButton)
@@ -1445,70 +1404,64 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         poseStack.popPose();
     }
 
-
-
     private void renderCube(PoseStack poseStack, float radius) {
         float halfSize = radius / 2.0f;
 
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
+        BufferBuilder buffer;
 
         RenderSystem.disableCull();
         RenderSystem.enableDepthTest();
 
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         Matrix4f matrix = poseStack.last().pose();
 
         // Front
-        buffer.vertex(matrix, -halfSize, -halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, halfSize, -halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, -halfSize, -halfSize, -halfSize).setUv(0.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, -halfSize, -halfSize).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, halfSize, -halfSize).setUv(1.0F, 1.0F);
+        buffer.addVertex(matrix, -halfSize, halfSize, -halfSize).setUv(0.0F, 1.0F);
 
         // Back
-        buffer.vertex(matrix, -halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, -halfSize, halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, -halfSize, -halfSize, halfSize).setUv(0.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, -halfSize, halfSize).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, halfSize, halfSize).setUv(1.0F, 1.0F);
+        buffer.addVertex(matrix, -halfSize, halfSize, halfSize).setUv(0.0F, 1.0F);
 
         // Left
-        buffer.vertex(matrix, -halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, -halfSize, -halfSize, halfSize).setUv(0.0F, 0.0F);
+        buffer.addVertex(matrix, -halfSize, -halfSize, -halfSize).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, -halfSize, halfSize, -halfSize).setUv(1.0F, 1.0F);
+        buffer.addVertex(matrix, -halfSize, halfSize, halfSize).setUv(0.0F, 1.0F);
 
         // Right
-        buffer.vertex(matrix, halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, halfSize, -halfSize, halfSize).setUv(0.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, -halfSize, -halfSize).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, halfSize, -halfSize).setUv(1.0F, 1.0F);
+        buffer.addVertex(matrix, halfSize, halfSize, halfSize).setUv(0.0F, 1.0F);
 
         // Top
-        buffer.vertex(matrix, -halfSize, halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, -halfSize, halfSize, -halfSize).setUv(0.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, halfSize, -halfSize).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, halfSize, halfSize).setUv(1.0F, 1.0F);
+        buffer.addVertex(matrix, -halfSize, halfSize, halfSize).setUv(0.0F, 1.0F);
 
         // Bottom
-        buffer.vertex(matrix, -halfSize, -halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, halfSize, -halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -halfSize, -halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, -halfSize, -halfSize, -halfSize).setUv(0.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, -halfSize, -halfSize).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, halfSize, -halfSize, halfSize).setUv(1.0F, 1.0F);
+        buffer.addVertex(matrix, -halfSize, -halfSize, halfSize).setUv(0.0F, 1.0F);
 
-        tessellator.end();
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.enableCull();
         RenderSystem.disableDepthTest();
     }
 
-
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
 
     }
-
-    boolean hoverNextStar = false;
-    boolean hoverBackStar = false;
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
@@ -1525,14 +1478,14 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
             hoverOpen = false;
             int tempMaxValuePage = Math.min(9, maxValuePage - valuePage);
             if (valuePage > 0)
-            if (par1 >= 230 && par1 <= 230 + 16 && par2 >= 30 && par2 <= 30 + 19 * 0.65) {
-                hoverUp = true;
-            }
+                if (par1 >= 230 && par1 <= 230 + 16 && par2 >= 30 && par2 <= 30 + 19 * 0.65) {
+                    hoverUp = true;
+                }
 
             if (tempMaxValuePage > 0 && (maxValuePage - valuePage) > 9)
-            if (par1 >= 230 && par1 <= 230 + 16 && par2 >= (tempMaxValuePage-1)  * 19 + this.addPoint && par2 <(tempMaxValuePage-1)  * 19 + 19 * 0.65 + this.addPoint) {
-                hoverDown = true;
-            }
+                if (par1 >= 230 && par1 <= 230 + 16 && par2 >= (tempMaxValuePage - 1) * 19 + this.addPoint && par2 < (tempMaxValuePage - 1) * 19 + 19 * 0.65 + this.addPoint) {
+                    hoverDown = true;
+                }
             if (par1 >= 9 && par1 <= 9 + 15 && par2 >= 28 && par2 <= 30 + 15) {
                 hoverBack = true;
             }
@@ -1666,10 +1619,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
     }
 
-
-
-
-
     public String getInformationFromBody(IBody body, double data) {
         if (body instanceof IPlanet) {
             IPlanet focusedPlanet = (IPlanet) body;
@@ -1719,9 +1668,8 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiresearch_table.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiresearch_table.png");
     }
-
 
     private Result computeUncoveredSeconds(List<FuelAllocation> allocations,
                                            Map<Integer, Double> fuelEfficiency,
@@ -1734,7 +1682,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
             double rocketCoef = 1.0 + fa.upgrades * 0.125;
             seconds += (fa.fuelUsed / (double) fuelPerSecond) * fuelCoef * rocketCoef;
             if (totalSeconds - seconds <= 0) {
-                fa.remaining =   (fa.fuelUsed / fuelPerSecond);
+                fa.remaining = (fa.fuelUsed / fuelPerSecond);
                 return new Result(fa, fa.upgrades);
             }
         }
@@ -1796,13 +1744,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         return result;
     }
 
-    Map<Integer, Integer> rocketPlanetRequirements = Map.of(
-            1, 1,
-            2, 1,
-            3, 3,
-            4, 5
-    );
-
     public Result findOptimalUpgradeDistribution(
             int totalSeconds,
             int planetLevel
@@ -1838,13 +1779,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
         return results.isEmpty() ? new Result(null, -1) : results.get(0);
     }
-
-    Map<Integer, Integer> fuelPlanetRequirements = Map.of(
-            1, 1,
-            2, 1,
-            3, 5,
-            4, 6
-    );
 }
 
 class Result {
@@ -1855,7 +1789,6 @@ class Result {
         this.allocations = allocations;
         this.totalUpgrades = totalUpgrades;
     }
-
 
 
 }

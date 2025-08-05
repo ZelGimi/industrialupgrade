@@ -15,14 +15,13 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityItemManipulator extends TileElectricMachine
         implements IUpdatableTileEvent {
@@ -35,7 +34,7 @@ public class TileEntityItemManipulator extends TileElectricMachine
     int type = 0;
 
     public TileEntityItemManipulator(BlockPos pos, BlockState state) {
-        super(0, 0, 0,BlockBaseMachine3.itemmanipulator,pos,state);
+        super(0, 0, 0, BlockBaseMachine3.itemmanipulator, pos, state);
 
 
         this.inputslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {

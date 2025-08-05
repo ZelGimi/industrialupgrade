@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "c:plates/aluminiumlithium"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/bloodstone"
+    },
+    "E": {
+      "tag": "c:plates/duralumin"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spaceupgrademodules/space_upgrademodule5"
+  },
+  "show_notification": false
+}

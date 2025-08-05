@@ -24,14 +24,14 @@ public class GuiPalletGenerator<T extends ContainerPalletGenerator> extends GuiI
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
-        this.drawTexturedModalRect( poseStack,this.guiLeft + 49, this.guiTop + 17, 179, 30, 18, 18);
-        this.drawTexturedModalRect( poseStack,this.guiLeft + 49, this.guiTop + 35, 179, 30, 18, 18);
-        this.drawTexturedModalRect( poseStack,this.guiLeft + 67, this.guiTop + 17, 179, 30, 18, 18);
-        this.drawTexturedModalRect( poseStack,this.guiLeft + 67, this.guiTop + 35, 179, 30, 18, 18);
-        this.drawTexturedModalRect( poseStack,this.guiLeft + 85, this.guiTop + 17, 179, 30, 18, 18);
-        this.drawTexturedModalRect( poseStack,this.guiLeft + 85, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 49, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 49, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 67, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 67, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 85, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 85, this.guiTop + 35, 179, 30, 18, 18);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class GuiPalletGenerator<T extends ContainerPalletGenerator> extends GuiI
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guipallet.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guipallet.png");
     }
 
 }

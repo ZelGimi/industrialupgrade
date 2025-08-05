@@ -23,8 +23,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -39,7 +39,7 @@ public class TileEntityNightConverter extends TileElectricMachine implements
     public MachineRecipe output;
 
     public TileEntityNightConverter(BlockPos pos, BlockState state) {
-        super(0, 14, 1,BlockBaseMachine3.night_converter,pos,state);
+        super(0, 14, 1, BlockBaseMachine3.night_converter, pos, state);
         inputSlotA = new InvSlotRecipes(this, "solar_glass_recipe", this);
         inputSlotA.setStackSizeLimit(1);
         this.ne = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.NIGHT, this, 10000));

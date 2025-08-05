@@ -33,9 +33,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -75,7 +75,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     private long id;
 
     public TileSintezator(BlockPos pos, BlockState state) {
-        super(BlockSintezator.sintezator,pos,state);
+        super(BlockSintezator.sintezator, pos, state);
         this.facing = 2;
         this.storage = 0;
         this.sunIsUp = false;
@@ -206,7 +206,6 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     }
 
 
-
     public void intialize() {
         this.noSunWorld = this.getWorld().dimensionType().hasSkyLight();
         this.updateVisibility();
@@ -298,7 +297,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         if (!level.isClientSide && !addedToEnergyNet) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = true;
             new PacketUpdateFieldTile(this, "slot", this.inputslot);
 
@@ -312,7 +311,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
 
     public void onUnloaded() {
         if (!level.isClientSide && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
         }
 
@@ -386,7 +385,6 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         }
         super.updateField(name, is);
     }
-
 
 
     public ContainerSinSolarPanel getGuiContainer(Player entityPlayer) {

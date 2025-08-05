@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/tantalumtungstenhafnium"
+    },
+    "B": {
+      "tag": "c:plates/niobiumtitanium"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/auto_digger"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_68_element"
+    },
+    "E": {
+      "tag": "c:plates/duralumin"
+    },
+    "F": {
+      "item": "industrialupgrade:basemachine3/alkalineearthquarry"
+    }
+  },
+  "pattern": [
+    "ADA",
+    "BCB",
+    "EFE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/quantum_miner"
+  },
+  "show_notification": false
+}

@@ -24,10 +24,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -48,7 +48,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     private boolean put = false;
 
     public TileEntityAutomaticMechanism(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.automatic_mechanism,pos,state);
+        super(BlockBaseMachine3.automatic_mechanism, pos, state);
         this.slot = new SlotInfo(this, 36, false) {
             @Override
             public ItemStack set(final int index, final ItemStack stack) {
@@ -68,14 +68,9 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
         for (Direction facing1 : Direction.values()) {
             typeUpgradeMap.put(facing1, Upgrade.NONE);
         }
-        main_handler = this.getCapability(ForgeCapabilities.ITEM_HANDLER, this.getFacing()).orElse(null);
+        main_handler = this.getCapability(Capabilities.ItemHandler.BLOCK, this.getFacing());
     }
-    @Override
-    public void addInformation(ItemStack stack, List<String> tooltip) {
-        super.addInformation(stack, tooltip);
-        tooltip.add(Localization.translate("iu.automation_mechanism.info"));
-        tooltip.add(Localization.translate("iu.automation_mechanism.info1"));
-    }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
@@ -83,6 +78,13 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
             customPacketBuffer.writeInt(this.typeUpgradeMap.get(facing1).ordinal());
         }
         return customPacketBuffer;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.automation_mechanism.info"));
+        tooltip.add(Localization.translate("iu.automation_mechanism.info1"));
     }
 
     @Override
@@ -524,11 +526,11 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     }
 
     public boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
-        if (a.isEmpty() || !a.is(b.getItem()) || a.hasTag() != b.hasTag()) {
+        if (a.isEmpty() || !a.is(b.getItem()) || a.getComponents().isEmpty() != b.getComponents().isEmpty()) {
             return false;
         }
 
-        return (!a.hasTag() || a.getTag().equals(b.getTag()));
+        return (a.getComponents().isEmpty() || a.getComponents().equals(b.getComponents()));
     }
 
     @Nonnull

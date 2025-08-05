@@ -43,7 +43,7 @@ public enum HeatColdType implements ISubEnum, ICableItem {
         this.loss = loss;
         this.capacity = capacity;
         this.capacity1 = capacity1;
-        this.texture = new ResourceLocation(
+        this.texture = ResourceLocation.tryBuild(
                 Constants.MOD_ID,
                 "blocks/wiring/" + this.getMainPath() + "/" + this
                         .getNameCable()

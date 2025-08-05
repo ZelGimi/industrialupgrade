@@ -35,7 +35,7 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
         super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -53,7 +53,6 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -63,18 +62,18 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
 
     @Override
     public void draw(PrimalRollingHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        drawSplitString( stack,Localization.translate("iu.rolling.jei"), 5, 3,
+        drawSplitString(stack, Localization.translate("iu.rolling.jei"), 5, 3,
                 150 - 5, 4210752
         );
-        drawSplitString( stack,"+", 26, 31,
+        drawSplitString(stack, "+", 26, 31,
                 150 - 5, 4210752
         );
-      drawSplitString( stack,"->", 47, 31,
-              150 - 5, 4210752
+        drawSplitString(stack, "->", 47, 31,
+                150 - 5, 4210752
         );
-      drawSplitString( stack,Localization.translate("iu.rolling.jei1") + "." + Localization.translate(
+        drawSplitString(stack, Localization.translate("iu.rolling.jei1") + "." + Localization.translate(
                         "iu.rolling.jei2"), 5, 45,
-              150 - 5, 4210752
+                150 - 5, 4210752
         );
     }
 
@@ -87,9 +86,8 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

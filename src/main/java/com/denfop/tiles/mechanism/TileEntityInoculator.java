@@ -17,6 +17,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.*;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerInoculator;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiInoculator;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -24,14 +25,12 @@ import com.denfop.items.bee.ItemJarBees;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -47,7 +46,7 @@ public class TileEntityInoculator extends TileElectricMachine implements IHasRec
     public MachineRecipe output;
 
     public TileEntityInoculator(BlockPos pos, BlockState state) {
-        super(300, 1, 1,BlockBaseMachine3.inoculator,pos,state);
+        super(300, 1, 1, BlockBaseMachine3.inoculator, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.inputSlotA = new InvSlotRecipes(this, "inoculator", this) {
             @Override
@@ -166,9 +165,7 @@ public class TileEntityInoculator extends TileElectricMachine implements IHasRec
                 continue;
             }
             ItemStack input = new ItemStack(IUItem.crops.getStack(0));
-
-            final CompoundTag nbt = ModUtils.nbt(input);
-            nbt.putInt("crop_id", i);
+            input.set(DataComponentsInit.CROP, i);
             for (GeneticTraits traits : GeneticTraits.values()) {
                 addRecipe(input, new ItemStack(IUItem.genome_crop.getStack(traits.ordinal()), 1));
             }

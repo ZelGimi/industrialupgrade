@@ -3,13 +3,14 @@ package com.denfop.items.upgradekit;
 import com.denfop.IUCore;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemMain;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,10 +39,18 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
     public ItemUpgradeMachinesKit(T element) {
         super(new Item.Properties(), element);
     }
+
+    @Override
+    public void inventoryTick(ItemStack p_41404_, Level p_41405_, Entity p_41406_, int p_41407_, boolean p_41408_) {
+        super.inventoryTick(p_41404_, p_41405_, p_41406_, p_41407_, p_41408_);
+
+    }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.UpgradeTab;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
@@ -53,13 +62,10 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
             return InteractionResult.PASS;
         }
 
-        CompoundTag nbt = stack.getOrCreateTag();
 
-        if (nbt.contains("input")) {
-            CompoundTag inputNBT = nbt.getCompound("input");
-            ItemStack input = ItemStack.of(inputNBT);
-            CompoundTag outputNBT = nbt.getCompound("output");
-            ItemStack output = ItemStack.of(outputNBT);
+        if (stack.has(DataComponentsInit.UPGRADE_KIT)) {
+            ItemStack input = stack.get(DataComponentsInit.UPGRADE_KIT).input();
+            ItemStack output = stack.get(DataComponentsInit.UPGRADE_KIT).output();
 
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if (tileEntity instanceof TileEntityBlock tileEntityBlock) {
@@ -74,7 +80,7 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
                     block.destroy(world, pos, state);
 
                     List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class,
-                            new AABB(pos.offset(-1, -1, -1), pos.offset(1, 1, 1)));
+                            new AABB(Vec3.atCenterOf(pos.offset(-1, -1, -1)), Vec3.atCenterOf(pos.offset(1, 1, 1))));
 
                     for (ItemEntity item : items) {
                         item.discard();
@@ -89,7 +95,7 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
             }
             return InteractionResult.PASS;
         } else {
-            boolean hooks = ForgeHooks.onRightClickBlock(player, hand, pos, new BlockHitResult(
+            boolean hooks = CommonHooks.onRightClickBlock(player, hand, pos, new BlockHitResult(
                     new Vec3(context.getClickLocation().x, context.getClickLocation().y, context.getClickLocation().z), context.getClickedFace(), pos, false)).isCanceled();
             if (hooks) {
                 return InteractionResult.SUCCESS;
@@ -107,10 +113,9 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
     ) {
         tooltip.add(Component.translatable("waring_kit"));
 
-        CompoundTag nbt = stack.getTag();
-        if (nbt != null && nbt.contains("input")) {
-            CompoundTag inputTag = nbt.getCompound("input");
-            ItemStack inputStack = ItemStack.of(inputTag);
+
+        if (stack.has(DataComponentsInit.UPGRADE_KIT)) {
+            ItemStack inputStack = stack.get(DataComponentsInit.UPGRADE_KIT).input();
             tooltip.add(Component.translatable("using_kit").append(inputStack.getHoverName()));
         }
 

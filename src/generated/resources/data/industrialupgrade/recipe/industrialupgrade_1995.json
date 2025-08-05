@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/orichalcum"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_0_element"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BBA",
+    "AAA"
+  ],
+  "result": {
+    "count": 2,
+    "id": "industrialupgrade:crafting_elements/crafting_721_element"
+  },
+  "show_notification": false
+}

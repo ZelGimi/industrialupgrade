@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/tin"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CCC",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring_storage/batbox_iu"
+  },
+  "show_notification": false
+}

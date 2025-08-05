@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityCasing extends TileEntityMultiBlockElement implements ICasing {
 
 
-    public TileEntityCasing( BlockPos pos, BlockState state) {
+    public TileEntityCasing(BlockPos pos, BlockState state) {
         super(BlockEarthQuarry.earth_casing, pos, state);
     }
 

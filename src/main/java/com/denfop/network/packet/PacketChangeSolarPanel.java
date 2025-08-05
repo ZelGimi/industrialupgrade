@@ -24,6 +24,8 @@ import java.util.List;
 
 public class PacketChangeSolarPanel implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketChangeSolarPanel() {
 
     }
@@ -58,7 +60,7 @@ public class PacketChangeSolarPanel implements IPacket {
             }
         }
         tileSolarPanel.onLoaded();
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(tileEntityBlock.getLevel().registryAccess());
         buffer.writeByte(this.getId());
         try {
             EncoderHandler.encode(buffer, pos);
@@ -67,7 +69,18 @@ public class PacketChangeSolarPanel implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        IUCore.network.getServer().sendPacket(buffer);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

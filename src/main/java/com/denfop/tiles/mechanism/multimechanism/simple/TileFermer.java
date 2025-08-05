@@ -151,6 +151,23 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
     }
 
     @Override
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        this.col = customPacketBuffer.readInt();
+    }
+
+    public int getFertilizer() {
+        return col;
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
+        packetBuffer.writeInt(col);
+        return packetBuffer;
+    }
+
+    @Override
     public InvSlot getFertilizerSlot() {
         return fertilizerSlot;
     }
@@ -165,21 +182,6 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
     @Override
     public boolean canoperate(final int size) {
         return !fertilizerSlot.isEmpty() && fertilizerSlot.get(0).getCount() * 8 + col >= size;
-    }
-    public int getFertilizer(){
-        return  col;
-    }
-    @Override
-    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
-        super.readContainerPacket(customPacketBuffer);
-        this.col = customPacketBuffer.readInt();
-    }
-
-    @Override
-    public CustomPacketBuffer writeContainerPacket() {
-        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
-        packetBuffer.writeInt(col);
-        return packetBuffer;
     }
 
     @Override

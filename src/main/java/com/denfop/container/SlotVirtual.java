@@ -3,14 +3,16 @@ package com.denfop.container;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.invslot.InvSlot;
-import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -73,7 +75,7 @@ public class SlotVirtual extends Slot {
                 itemstack12.setCount(1);
                 IFluidHandlerItem handler = null;
                 try {
-                    handler = FluidHandlerFix.getFluidHandler(itemstack12);
+                    handler = itemstack12.getCapability(Capabilities.FluidHandler.ITEM, null);
                 } catch (Exception e) {
                 }
                 ;
@@ -85,24 +87,21 @@ public class SlotVirtual extends Slot {
 
                         this.container.setItem(this.getSlotIndex(), itemstack12);
                         if (this.slotInfo.getFluidStackList() == null || this.slotInfo.getFluidStackList().isEmpty()) {
-                            this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), FluidStack.EMPTY)));
+                            this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), null)));
                         }
                         this.slotInfo.getFluidStackList().set(index, containerFluid);
-                    }else{
-                        this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
                     }
                 }
             }
         } else {
 
             if (this.slotInfo.isFluid()) {
-                ItemStack stack = this.slotInfo.get(index);
-                if (FluidHandlerFix.hasFluidHandler(stack)) {
-                    this.slotInfo.getFluidStackList().set(index, new FluidStack(FluidHandlerFix.getFluidHandler(stack).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), 1));
-                }else{
-                    this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
-                }
+                Block block = Block.byItem(this.slotInfo.get(index).getItem());
+                if (block != Blocks.AIR) {
 
+                    this.slotInfo.getFluidStackList().set(index, null);
+
+                }
             }
             set(itemstack12);
         }

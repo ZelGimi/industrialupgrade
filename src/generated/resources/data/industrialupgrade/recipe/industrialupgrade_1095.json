@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_424_element"
+    },
+    "B": {
+      "tag": "c:plates/platinum"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_371_element"
+  },
+  "show_notification": false
+}

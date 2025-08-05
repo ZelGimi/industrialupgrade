@@ -1,9 +1,10 @@
 package com.denfop.api.space;
 
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public interface IBaseResource {
 
@@ -21,7 +22,7 @@ public interface IBaseResource {
 
     int getPercentPanel();
 
-    CompoundTag writeNBTTag(CompoundTag tagCompound);
+    CompoundTag writeNBTTag(CompoundTag tagCompound, HolderLookup.Provider p_323640_);
 
     EnumTypeRovers getTypeRovers();
 

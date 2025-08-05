@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine2/triple_cutting"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_120_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_136_element"
+    }
+  },
+  "pattern": [
+    "A A",
+    "DBE",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:moremachine2/quad_cutting"
+  },
+  "show_notification": false
+}

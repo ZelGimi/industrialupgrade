@@ -22,6 +22,7 @@ public class ItemNuclearResource<T extends Enum<T> & ISubEnum> extends ItemMain<
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
         if (entity instanceof LivingEntity) {

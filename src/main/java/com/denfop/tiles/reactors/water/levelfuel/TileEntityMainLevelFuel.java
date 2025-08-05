@@ -12,13 +12,13 @@ import com.denfop.tiles.reactors.water.controller.TileEntityMainController;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityMainLevelFuel extends TileEntityMultiBlockElement implements ILevelFuel {
 
     public TileEntityMainLevelFuel(IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
-        super(tileBlock,pos,state);
+        super(tileBlock, pos, state);
 
     }
 

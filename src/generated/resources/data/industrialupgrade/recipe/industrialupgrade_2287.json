@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/molybdenum"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/tantalum"
+    },
+    "D": {
+      "tag": "c:casings/silver"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/storage_jelly_2"
+  },
+  "show_notification": false
+}

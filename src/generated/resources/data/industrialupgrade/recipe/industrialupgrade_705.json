@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/sincore"
+    },
+    "C": {
+      "item": "industrialupgrade:rotors_upgrade/rotorupgrade7"
+    },
+    "D": {
+      "item": "industrialupgrade:quantumitems4"
+    }
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:rotors_upgrade/rotorupgrade8"
+  },
+  "show_notification": false
+}

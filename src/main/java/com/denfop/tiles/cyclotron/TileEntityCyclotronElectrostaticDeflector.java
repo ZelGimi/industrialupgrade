@@ -14,8 +14,8 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityCyclotronElectrostaticDeflector extends TileEntityMultiBlockElement implements IElectrostaticDeflector {
 
@@ -23,7 +23,7 @@ public class TileEntityCyclotronElectrostaticDeflector extends TileEntityMultiBl
     private final InvSlotOutput outputSlot;
 
     public TileEntityCyclotronElectrostaticDeflector(BlockPos pos, BlockState state) {
-        super(BlockCyclotron.cyclotron_electrostatic_deflector,pos,state);
+        super(BlockCyclotron.cyclotron_electrostatic_deflector, pos, state);
         this.outputSlot = new InvSlotOutput(this, 1);
     }
 

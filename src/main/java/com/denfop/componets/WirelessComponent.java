@@ -45,7 +45,7 @@ public class WirelessComponent extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeBoolean(this.hasUpdate);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);

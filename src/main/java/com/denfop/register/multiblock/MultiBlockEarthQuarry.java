@@ -16,203 +16,203 @@ public class MultiBlockEarthQuarry {
         );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -1, 0), IAnalyzer.class,
                 new ItemStack(IUItem.earthQuarry.getItem(1)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -1, 2), ITransport.class,
                 new ItemStack(IUItem.earthQuarry.getItem(5)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, -1, 2), IEarthChest.class,
                 new ItemStack(IUItem.earthQuarry.getItem(4)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, -1, 2), IEarthChest.class,
                 new ItemStack(IUItem.earthQuarry.getItem(4)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -1, 1), ITransport.class,
                 new ItemStack(IUItem.earthQuarry.getItem(5)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -2, 1), ITransport.class,
                 new ItemStack(IUItem.earthQuarry.getItem(5)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -3, 1), ITransport.class,
                 new ItemStack(IUItem.earthQuarry.getItem(5)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -4, 1), IRigDrill.class,
                 new ItemStack(IUItem.earthQuarry.getItem(3)),
-                        Direction.SOUTH
-                );
+                Direction.SOUTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, 1, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, 0, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, 0, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, 0, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, 0, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, 0, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, 0, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, 0, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, 0, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, 1, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, 1, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, -1, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, -1, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, -1, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, -1, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, -1, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, -1, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -1, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -1, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -1, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -1, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -1, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -1, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -2, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -3, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, -2, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(1, -3, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, -2, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-1, -3, 1), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -2, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(0, -3, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -2, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -3, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -2, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -3, 0), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
 
 
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -2, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(-2, -3, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -2, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
         EarthQuarryMultiBlock.add(EarthQuarryMultiBlock.getPos().offset(2, -3, 2), ICasing.class,
                 new ItemStack(IUItem.earthQuarry.getItem(2)),
-                        Direction.NORTH
-                );
+                Direction.NORTH
+        );
     }
 
 }

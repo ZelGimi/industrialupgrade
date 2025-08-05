@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/aluminumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring_storage/cesu_iu"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring_storage/mfe_iu"
+  },
+  "show_notification": false
+}

@@ -18,6 +18,7 @@ public class ItemCanister extends ItemFluidContainer implements IItemTab {
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -27,9 +28,8 @@ public class ItemCanister extends ItemFluidContainer implements IItemTab {
         }
     }
 
-
     public boolean canfill(Fluid fluid) {
-        return fluid == FluidName.fluidmotoroil.getInstance().get() || fluid == FluidName.fluidsteam_oil.getInstance().get() ;
+        return fluid == FluidName.fluidmotoroil.getInstance().get() || fluid == FluidName.fluidsteam_oil.getInstance().get();
     }
 
 }

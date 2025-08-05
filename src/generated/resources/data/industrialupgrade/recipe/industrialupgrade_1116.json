@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_24_element"
+    },
+    "B": {
+      "tag": "c:plates/platinum"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    },
+    "D": {
+      "tag": "c:plates/tin"
+    },
+    "E": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_131_element"
+  },
+  "show_notification": false
+}

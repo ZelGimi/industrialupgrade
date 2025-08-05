@@ -30,8 +30,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -54,7 +54,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
     public MachineRecipe output;
 
     public TileEntityElectronicsAssembler(BlockPos pos, BlockState state) {
-        super(300, 1, 1,BlockBaseMachine3.electronic_assembler,pos,state);
+        super(300, 1, 1, BlockBaseMachine3.electronic_assembler, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "electronics", this);
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.output = null;
@@ -198,229 +198,229 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(570)),
-                                new ItemStack(IUItem.crafting_elements.getStack(571)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(572)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(539))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(570)),
+                new ItemStack(IUItem.crafting_elements.getStack(571)),
+                new ItemStack(IUItem.crafting_elements.getStack(572)),
+                new ItemStack(IUItem.crafting_elements.getStack(539))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(573)),
-                                new ItemStack(IUItem.crafting_elements.getStack(562)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(572)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(547))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(573)),
+                new ItemStack(IUItem.crafting_elements.getStack(562)),
+                new ItemStack(IUItem.crafting_elements.getStack(572)),
+                new ItemStack(IUItem.crafting_elements.getStack(547))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(573)),
-                                new ItemStack(IUItem.crafting_elements.getStack(595)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(577)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(535))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(573)),
+                new ItemStack(IUItem.crafting_elements.getStack(595)),
+                new ItemStack(IUItem.crafting_elements.getStack(577)),
+                new ItemStack(IUItem.crafting_elements.getStack(535))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(590)),
-                                new ItemStack(IUItem.crafting_elements.getStack(595)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(577)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(544))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(590)),
+                new ItemStack(IUItem.crafting_elements.getStack(595)),
+                new ItemStack(IUItem.crafting_elements.getStack(577)),
+                new ItemStack(IUItem.crafting_elements.getStack(544))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(590)),
-                                new ItemStack(IUItem.crafting_elements.getStack(595)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(575)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(553))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(590)),
+                new ItemStack(IUItem.crafting_elements.getStack(595)),
+                new ItemStack(IUItem.crafting_elements.getStack(575)),
+                new ItemStack(IUItem.crafting_elements.getStack(553))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(559)),
-                                new ItemStack(IUItem.crafting_elements.getStack(595)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(575)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(550))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(559)),
+                new ItemStack(IUItem.crafting_elements.getStack(595)),
+                new ItemStack(IUItem.crafting_elements.getStack(575)),
+                new ItemStack(IUItem.crafting_elements.getStack(550))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(559)),
-                                new ItemStack(IUItem.crafting_elements.getStack(586)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(575)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(537))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(559)),
+                new ItemStack(IUItem.crafting_elements.getStack(586)),
+                new ItemStack(IUItem.crafting_elements.getStack(575)),
+                new ItemStack(IUItem.crafting_elements.getStack(537))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(578), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(593)),
-                        new ItemStack(IUItem.crafting_elements.getStack(559)),
-                                new ItemStack(IUItem.crafting_elements.getStack(586)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(587)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(546))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(559)),
+                new ItemStack(IUItem.crafting_elements.getStack(586)),
+                new ItemStack(IUItem.crafting_elements.getStack(587)),
+                new ItemStack(IUItem.crafting_elements.getStack(546))
+        );
 
 
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(580)),
-                        new ItemStack(IUItem.crafting_elements.getStack(576)),
-                                new ItemStack(IUItem.crafting_elements.getStack(569)),
-                                        new ItemStack(IUItem.basecircuit.getStack(15)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(538))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(576)),
+                new ItemStack(IUItem.crafting_elements.getStack(569)),
+                new ItemStack(IUItem.basecircuit.getStack(15)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(538))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(560)),
-                        new ItemStack(IUItem.crafting_elements.getStack(576)),
-                                new ItemStack(IUItem.crafting_elements.getStack(569)),
-                                        new ItemStack(IUItem.basecircuit.getStack(12)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(557))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(576)),
+                new ItemStack(IUItem.crafting_elements.getStack(569)),
+                new ItemStack(IUItem.basecircuit.getStack(12)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(557))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(560)),
-                        new ItemStack(IUItem.crafting_elements.getStack(576)),
-                                new ItemStack(IUItem.crafting_elements.getStack(600)),
-                                        new ItemStack(IUItem.basecircuit.getStack(12)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(552))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(576)),
+                new ItemStack(IUItem.crafting_elements.getStack(600)),
+                new ItemStack(IUItem.basecircuit.getStack(12)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(552))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(560)),
-                        new ItemStack(IUItem.crafting_elements.getStack(566)),
-                                new ItemStack(IUItem.crafting_elements.getStack(591)),
-                                        new ItemStack(IUItem.basecircuit.getStack(0)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(542))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(566)),
+                new ItemStack(IUItem.crafting_elements.getStack(591)),
+                new ItemStack(IUItem.basecircuit.getStack(0)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(542))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(560)),
-                        new ItemStack(IUItem.crafting_elements.getStack(584)),
-                                new ItemStack(IUItem.crafting_elements.getStack(591)),
-                                        new ItemStack(IUItem.basecircuit.getStack(1)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(540))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(584)),
+                new ItemStack(IUItem.crafting_elements.getStack(591)),
+                new ItemStack(IUItem.basecircuit.getStack(1)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(540))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(560)),
-                        new ItemStack(IUItem.crafting_elements.getStack(584)),
-                                new ItemStack(IUItem.crafting_elements.getStack(561)),
-                                        new ItemStack(IUItem.basecircuit.getStack(1)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(548))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(584)),
+                new ItemStack(IUItem.crafting_elements.getStack(561)),
+                new ItemStack(IUItem.basecircuit.getStack(1)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(548))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(589)),
-                        new ItemStack(IUItem.crafting_elements.getStack(564)),
-                                new ItemStack(IUItem.crafting_elements.getStack(561)),
-                                        new ItemStack(IUItem.basecircuit.getStack(2)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(536))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(564)),
+                new ItemStack(IUItem.crafting_elements.getStack(561)),
+                new ItemStack(IUItem.basecircuit.getStack(2)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(536))
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements.getStack(596)),
-                        new ItemStack(IUItem.crafting_elements.getStack(564)),
-                                new ItemStack(IUItem.crafting_elements.getStack(561)),
-                                        new ItemStack(IUItem.basecircuit.getStack(18)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(574)),
-                                                        new ItemStack(IUItem.crafting_elements.getStack(554))
-                                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(564)),
+                new ItemStack(IUItem.crafting_elements.getStack(561)),
+                new ItemStack(IUItem.basecircuit.getStack(18)),
+                new ItemStack(IUItem.crafting_elements.getStack(574)),
+                new ItemStack(IUItem.crafting_elements.getStack(554))
+        );
 
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(15)),
-                        new ItemStack(IUItem.crafting_elements.getStack(582)),
-                                new ItemStack(IUItem.crafting_elements.getStack(494)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(568), 2),
-                                        new ItemStack(IUItem.crafting_elements.getStack(588)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(533))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(582)),
+                new ItemStack(IUItem.crafting_elements.getStack(494)),
+                new ItemStack(IUItem.crafting_elements.getStack(568), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(588)),
+                new ItemStack(IUItem.crafting_elements.getStack(533))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(16), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(582)),
-                        new ItemStack(IUItem.crafting_elements.getStack(494)),
-                                new ItemStack(IUItem.crafting_elements.getStack(568), 2),
-                                new ItemStack(IUItem.crafting_elements.getStack(588)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(541))
-                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(494)),
+                new ItemStack(IUItem.crafting_elements.getStack(568), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(588)),
+                new ItemStack(IUItem.crafting_elements.getStack(541))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(13)),
-                        new ItemStack(IUItem.crafting_elements.getStack(599)),
-                                new ItemStack(IUItem.crafting_elements.getStack(533)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(568), 2),
-                                        new ItemStack(IUItem.crafting_elements.getStack(588)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(543))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(599)),
+                new ItemStack(IUItem.crafting_elements.getStack(533)),
+                new ItemStack(IUItem.crafting_elements.getStack(568), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(588)),
+                new ItemStack(IUItem.crafting_elements.getStack(543))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(13), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(599)),
-                        new ItemStack(IUItem.crafting_elements.getStack(541)),
-                                new ItemStack(IUItem.crafting_elements.getStack(567), 2),
-                                new ItemStack(IUItem.crafting_elements.getStack(588)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(545))
-                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(541)),
+                new ItemStack(IUItem.crafting_elements.getStack(567), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(588)),
+                new ItemStack(IUItem.crafting_elements.getStack(545))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(3)),
-                        new ItemStack(IUItem.crafting_elements.getStack(583)),
-                                new ItemStack(IUItem.crafting_elements.getStack(543)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(567), 2),
-                                        new ItemStack(IUItem.crafting_elements.getStack(598)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(549))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(583)),
+                new ItemStack(IUItem.crafting_elements.getStack(543)),
+                new ItemStack(IUItem.crafting_elements.getStack(567), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(598)),
+                new ItemStack(IUItem.crafting_elements.getStack(549))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(3), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(583)),
-                        new ItemStack(IUItem.crafting_elements.getStack(545)),
-                                new ItemStack(IUItem.crafting_elements.getStack(567), 2),
-                                new ItemStack(IUItem.crafting_elements.getStack(598)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(551))
-                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(545)),
+                new ItemStack(IUItem.crafting_elements.getStack(567), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(598)),
+                new ItemStack(IUItem.crafting_elements.getStack(551))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(4)),
-                        new ItemStack(IUItem.crafting_elements.getStack(583)),
-                                new ItemStack(IUItem.crafting_elements.getStack(549)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(565), 2),
-                                        new ItemStack(IUItem.crafting_elements.getStack(592)),
-                                                new ItemStack(IUItem.crafting_elements.getStack(555))
-                                                );
+                new ItemStack(IUItem.crafting_elements.getStack(583)),
+                new ItemStack(IUItem.crafting_elements.getStack(549)),
+                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(592)),
+                new ItemStack(IUItem.crafting_elements.getStack(555))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(4), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(583)),
-                        new ItemStack(IUItem.crafting_elements.getStack(551)),
-                                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
-                                new ItemStack(IUItem.crafting_elements.getStack(592)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(556))
-                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(551)),
+                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(592)),
+                new ItemStack(IUItem.crafting_elements.getStack(556))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(5), 2),
                 new ItemStack(IUItem.crafting_elements.getStack(597)),
-                        new ItemStack(IUItem.crafting_elements.getStack(555)),
-                                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
-                                new ItemStack(IUItem.crafting_elements.getStack(594)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(558))
-                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(555)),
+                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(594)),
+                new ItemStack(IUItem.crafting_elements.getStack(558))
+        );
 
         addRecipe(
                 new ItemStack(IUItem.basecircuit.getStack(19), 3),
                 new ItemStack(IUItem.crafting_elements.getStack(597)),
-                        new ItemStack(IUItem.crafting_elements.getStack(556)),
-                                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
-                                new ItemStack(IUItem.crafting_elements.getStack(594)),
-                                        new ItemStack(IUItem.crafting_elements.getStack(534))
-                                        );
+                new ItemStack(IUItem.crafting_elements.getStack(556)),
+                new ItemStack(IUItem.crafting_elements.getStack(565), 2),
+                new ItemStack(IUItem.crafting_elements.getStack(594)),
+                new ItemStack(IUItem.crafting_elements.getStack(534))
+        );
     }
 
     @Override

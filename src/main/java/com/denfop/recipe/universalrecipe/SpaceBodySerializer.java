@@ -8,131 +8,115 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputFluidStack;
 import com.denfop.recipe.InputItemStack;
 import com.denfop.recipe.InputOreDict;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static com.denfop.api.space.SpaceInit.regBaseResource;
-import static com.denfop.api.space.SpaceInit.regPlanet;
 
 public class SpaceBodySerializer implements RecipeSerializer<SpaceBodyRecipe> {
-    public static final SpaceBodySerializer INSTANCE = new SpaceBodySerializer();
 
-    @Override
-    public SpaceBodyRecipe fromJson(ResourceLocation id, JsonObject json) {
-        String bodyName = GsonHelper.getAsString(json, "body");
-
-        List<IInputItemStack> input = new ArrayList<>();
-        if (GsonHelper.isValidNode(json, "inputs")) {
-            JsonArray inArray = GsonHelper.getAsJsonArray(json, "inputs");
-            for (JsonElement el : inArray) {
-                JsonObject obj = el.getAsJsonObject();
-                String type = GsonHelper.getAsString(obj, "type");
-                String itemId = GsonHelper.getAsString(obj, "id");
-                int amount = GsonHelper.getAsInt(obj, "amount", 1);
-
-                switch (type) {
-                    case "item":
-                        ItemStack stack = new ItemStack(
-                                ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)),
-                                amount
-                        );
-                        input.add(new InputItemStack(stack));
-                        break;
-                    case "tag":
-                        input.add(new InputOreDict(itemId, amount));
-                        break;
-                    case "fluid":
-                        FluidStack fluidStack = new FluidStack(
-                                ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemId)),
-                                amount
-                        );
-                        input.add(new InputFluidStack(fluidStack));
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown input type: " + type);
-                }
-            }
-        }
-        String roverType = GsonHelper.getAsString(json, "typeRover");
-        String operationType = GsonHelper.getAsString(json, "typeOperation");
-        int percent = GsonHelper.getAsInt(json, "percent");
-        int chance = GsonHelper.getAsInt(json, "chance");
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpaceBodyRecipe> STREAM_CODEC = StreamCodec.of(SpaceBodySerializer::toNetwork, SpaceBodySerializer::fromNetwork);
+    static Codec<IInputItemStack> singleInputCodec = RecordCodecBuilder.create(inst -> inst.group(
+            Codec.STRING.fieldOf("type").forGetter(i -> i instanceof InputFluidStack ? "fluid" : "item"),
+            ResourceLocation.CODEC.fieldOf("id").forGetter(i -> BuiltInRegistries.ITEM.getKey(i.getInputs().get(0).getItem())),
+            Codec.INT.fieldOf("amount").orElse(1).forGetter(i -> i.getInputs().get(0).getCount())
+    ).apply(inst, (type, id, amt) -> {
+        if ("fluid".equals(type))
+            return new InputFluidStack(new FluidStack(BuiltInRegistries.FLUID.get(id), amt));
+        else if ("tag".equals(type))
+            return new InputOreDict(id.getNamespace() + ":" + id.getPath(), amt);
+        else return new InputItemStack(new ItemStack(BuiltInRegistries.ITEM.get(id), amt));
+    }));
+    public static final MapCodec<SpaceBodyRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("body").forGetter(SpaceBodyRecipe::bodyName),
+            Codec.INT.fieldOf("percent").forGetter(SpaceBodyRecipe::percent),
+            Codec.INT.fieldOf("chance").forGetter(SpaceBodyRecipe::chance),
+            Codec.STRING.fieldOf("typeRover").forGetter(SpaceBodyRecipe::typeRover),
+            Codec.STRING.fieldOf("typeOperation").forGetter(SpaceBodyRecipe::typeOperation),
+            Codec.list(singleInputCodec).fieldOf("inputs").forGetter(SpaceBodyRecipe::getInputs)
+    ).apply(instance, (bodyName, percent, chance, roverType, operationType, input) -> {
         IBody body = SpaceNet.instance.getBodyFromName(bodyName.toLowerCase());
+
         if (body != null)
             if (operationType.equals("add")) {
                 switch (roverType) {
                     case "rover":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->    new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROVERS));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROVERS));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->   new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROVERS));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROVERS));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->    new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROVERS));
+                                regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROVERS));
 
                         }
                         break;
                     case "probe":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->     new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.PROBE));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.PROBE));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->     new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.PROBE));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.PROBE));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->   new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.PROBE));
+                                regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.PROBE));
 
                         }
                         break;
                     case "satellite":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->    new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.SATELLITE));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.SATELLITE));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->    new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->  new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
+                                regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
 
                         }
                         break;
                     case "rocket":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->     new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROCKET));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROCKET));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->   new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROCKET));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROCKET));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->   new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROCKET));
+                                regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROCKET));
 
                         }
                         break;
                 }
             }
 
+        return new SpaceBodyRecipe("", Collections.emptyList(), "");
+    }));
 
-        return new SpaceBodyRecipe(id, "", Collections.emptyList(), "");
+    private static SpaceBodyRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
+
+        return new SpaceBodyRecipe("", new ArrayList<>(), "");
+    }
+
+    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, SpaceBodyRecipe p_320586_) {
+
     }
 
     @Override
-    public SpaceBodyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new SpaceBodyRecipe(id, "", new ArrayList<>(), "");
+    public MapCodec<SpaceBodyRecipe> codec() {
+        return MAP_CODEC;
     }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, SpaceBodyRecipe recipe) {
-
-
+    public StreamCodec<RegistryFriendlyByteBuf, SpaceBodyRecipe> streamCodec() {
+        return STREAM_CODEC;
     }
+
 }

@@ -36,9 +36,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
     private boolean sound = true;
 
     public TileGasGenerator(BlockPos pos, BlockState state) {
-        super(24,BlockBaseMachine3.gas_generator,pos,state);
+        super(24, BlockBaseMachine3.gas_generator, pos, state);
         this.fluidSlot = new InvSlotFluidByList(this, "fluidSlot", 1, FluidName.fluidgas.getInstance().get(),
                 InvSlotFluid.TypeFluidSlot.INPUT
         );

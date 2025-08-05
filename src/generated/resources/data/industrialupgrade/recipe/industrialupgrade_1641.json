@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:energy_tools/drill"
+    },
+    "B": {
+      "tag": "c:gems/diamond"
+    }
+  },
+  "pattern": [
+    "   ",
+    " B ",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy_tools/diamond_drill"
+  },
+  "show_notification": false
+}

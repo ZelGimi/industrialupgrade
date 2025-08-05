@@ -37,32 +37,30 @@ public class GuiGraphiteGraphiteController<T extends ContainerGraphiteController
     }
 
 
-
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
-        draw(poseStack,Localization.translate("reactor.level_graphite") + this.container.base.getLevelGraphite(),
+        super.drawForegroundLayer(poseStack, par1, par2);
+        draw(poseStack, Localization.translate("reactor.level_graphite") + this.container.base.getLevelGraphite(),
                 23 - 6
                 , 10,
                 ModUtils.convertRGBcolorToInt(15,
                         125, 205
                 )
         );
-        draw(poseStack,Localization.translate("reactor.level_fuel_graphite") + ModUtils.getString(this.container.base.getFuelGraphite()),
+        draw(poseStack, Localization.translate("reactor.level_fuel_graphite") + ModUtils.getString(this.container.base.getFuelGraphite()),
                 23 - 6
                 , 20,
                 ModUtils.convertRGBcolorToInt(15,
                         125, 205
                 )
         );
-       draw(poseStack,Localization.translate("reactor.index_graphite") + this.container.base.getIndex(),
+        draw(poseStack, Localization.translate("reactor.index_graphite") + this.container.base.getIndex(),
                 23 - 6, 30,
                 ModUtils.convertRGBcolorToInt(15,
                         125, 205
                 )
         );
     }
-
 
 
     @Override
@@ -79,7 +77,7 @@ public class GuiGraphiteGraphiteController<T extends ContainerGraphiteController
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite4.png");
     }
 
 }

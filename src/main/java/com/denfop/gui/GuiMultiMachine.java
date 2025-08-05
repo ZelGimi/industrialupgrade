@@ -95,9 +95,9 @@ public class GuiMultiMachine<T extends ContainerMultiMachine> extends GuiIU<Cont
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         this.drawForeground(poseStack, mouseX, mouseY);
-        if (this.container.base.getMachine().type == EnumTypeMachines.FARMER){
-            draw(poseStack,String.valueOf(this.container.base.getFertilizer()),12,35, ModUtils.convertRGBcolorToInt(0,0,0));
-                new Area(this,10,33,10,10).withTooltip(Localization.translate("iu.farmer.fertilizer.info")+"\n"+Localization.translate("iu.farmer.fertilizer.info1")).drawForeground(poseStack,mouseX,mouseY);
+        if (this.container.base.getMachine().type == EnumTypeMachines.FARMER) {
+            draw(poseStack, String.valueOf(this.container.base.getFertilizer()), 12, 35, ModUtils.convertRGBcolorToInt(0, 0, 0));
+            new Area(this, 10, 33, 10, 10).withTooltip(Localization.translate("iu.farmer.fertilizer.info") + "\n" + Localization.translate("iu.farmer.fertilizer.info1")).drawForeground(poseStack, mouseX, mouseY);
         }
         int i = 0;
         for (Slot slot : this.container.slots) {
@@ -135,7 +135,7 @@ public class GuiMultiMachine<T extends ContainerMultiMachine> extends GuiIU<Cont
             guiElement.drawBackground(poseStack, x - this.guiLeft, y - this.guiTop);
 
         }
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         bindTexture(getTexture());
         int xoffset = guiLeft;
@@ -191,7 +191,7 @@ public class GuiMultiMachine<T extends ContainerMultiMachine> extends GuiIU<Cont
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main.png");
     }
 
 }

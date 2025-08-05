@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/muntsa"
+    },
+    "B": {
+      "item": "industrialupgrade:imp_bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/osmium"
+    },
+    "D": {
+      "tag": "c:casings/gold"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/producing_3"
+  },
+  "show_notification": false
+}

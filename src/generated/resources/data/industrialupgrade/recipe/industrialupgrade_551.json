@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "c:plates/invar"
+    },
+    "C": {
+      "tag": "c:plates/electrum"
+    },
+    "D": {
+      "tag": "c:plates/caravky"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:additionmodule/personality"
+  },
+  "show_notification": false
+}

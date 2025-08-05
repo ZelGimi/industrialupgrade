@@ -6,13 +6,13 @@ import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import com.denfop.blocks.FluidName;
 import com.denfop.utils.Timer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,11 +58,11 @@ public class FakePlanet implements IFakePlanet {
         timerFromPlanet.setCanWork(false);
     }
 
-    public FakePlanet(final CompoundTag nbtTagCompound) {
+    public FakePlanet(final CompoundTag nbtTagCompound, HolderLookup.Provider lookupProvider) {
         player = nbtTagCompound.getUUID("uuid");
         this.planet = (IPlanet) SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("body"));
         this.data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(player).get(planet);
-        ItemStack stack = ItemStack.of(nbtTagCompound.getCompound("rover"));
+        ItemStack stack = ItemStack.parseOptional(lookupProvider, nbtTagCompound.getCompound("rover"));
         this.rovers = new Rovers((IRoversItem) stack.getItem(), stack);
         this.timerToPlanet = new Timer(nbtTagCompound.getCompound("timerTo"));
         this.timerFromPlanet = new Timer(nbtTagCompound.getCompound("timerFrom"));
@@ -70,7 +70,7 @@ public class FakePlanet implements IFakePlanet {
         final ListTag tagList = nbtTagCompound.getList("baseResource", 10);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tagCompound = tagList.getCompound(i);
-            IBaseResource baseResource = new BaseResource(tagCompound);
+            IBaseResource baseResource = new BaseResource(tagCompound, lookupProvider);
             iBaseResourceList.add(baseResource);
         }
         SpaceUpgradeSystem.system.updateListFromNBT(rovers.getItem(), rovers.getItemStack());
@@ -111,17 +111,17 @@ public class FakePlanet implements IFakePlanet {
     }
 
     @Override
-    public CompoundTag writeNBTTagCompound(final CompoundTag nbtTagCompound) {
+    public CompoundTag writeNBTTagCompound(final CompoundTag nbtTagCompound, HolderLookup.Provider p_323640_) {
         nbtTagCompound.putUUID("uuid", player);
         nbtTagCompound.putString("body", planet.getName());
-        nbtTagCompound.put("rover", this.rovers.getItemStack().save(new CompoundTag()));
+        nbtTagCompound.put("rover", this.rovers.getItemStack().save(p_323640_));
         nbtTagCompound.put("timerTo", timerToPlanet.writeNBT(new CompoundTag()));
         nbtTagCompound.put("timerFrom", timerFromPlanet.writeNBT(new CompoundTag()));
         nbtTagCompound.put("operation", spaceOperation.writeTag(new CompoundTag()));
         ListTag tagList = new ListTag();
         for (IBaseResource baseResource : iBaseResourceList) {
             CompoundTag nbt = new CompoundTag();
-            baseResource.writeNBTTag(nbt);
+            baseResource.writeNBTTag(nbt, p_323640_);
             tagList.add(nbt);
         }
         nbtTagCompound.put("baseResource", tagList);

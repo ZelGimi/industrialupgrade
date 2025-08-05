@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_233_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_106_element"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine1/imp_geo"
+    }
+  },
+  "pattern": [
+    "B B",
+    "ADC",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine1/per_geo"
+  },
+  "show_notification": false
+}

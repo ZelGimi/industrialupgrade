@@ -36,7 +36,7 @@ public class GuiAnalyzer<T extends ContainerAnalyzer> extends GuiIU<ContainerAna
 
     public GuiAnalyzer(ContainerAnalyzer container1) {
         super(container1);
-        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiAnalyzer.png".toLowerCase());
+        this.background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiAnalyzer.png".toLowerCase());
         this.container = container1;
         this.name = Localization.translate("iu.blockAnalyzer.name".toLowerCase());
         this.imageHeight = 256;
@@ -228,26 +228,26 @@ public class GuiAnalyzer<T extends ContainerAnalyzer> extends GuiIU<ContainerAna
 
         poseStack.drawString(Minecraft.getInstance().font, Localization.translate("startchunk") +
                         "X:" + chunk + " Z:" + chunk1,
-                10, +18, ModUtils.convertRGBcolorToInt(13, 229, 34),false
+                10, +18, ModUtils.convertRGBcolorToInt(13, 229, 34), false
         );
         poseStack.drawString(Minecraft.getInstance().font, Localization.translate("endchunk") +
                         "X:" + endchunk + " Z:" + endchunk1,
-                10, 39, ModUtils.convertRGBcolorToInt(13, 229, 34),false
+                10, 39, ModUtils.convertRGBcolorToInt(13, 229, 34), false
         );
 
         poseStack.drawString(Minecraft.getInstance().font,
                 ChatFormatting.GREEN + Localization.translate("analyze") +
                         ChatFormatting.WHITE + ModUtils.getString(this.container.base.breakblock),
-                10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217),false
+                10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), false
         );
         poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("ore") +
                         ChatFormatting.WHITE + ModUtils.getString(this.container.base.numberores),
-                10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217),false
+                10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), false
         );
 
         poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("procent_ore") +
                         ChatFormatting.WHITE + ModUtils.getString1(((this.container.base.numberores / (this.container.base.breakblock * 1D)) * 100)) + "%",
-                10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217),false
+                10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), false
         );
         int average = 0;
         for (DataOre dataOre : this.container.base.dataOreList) {
@@ -270,7 +270,7 @@ public class GuiAnalyzer<T extends ContainerAnalyzer> extends GuiIU<ContainerAna
 
         if (!(this.container.base.inputslotA.isEmpty())) {
             if (!(this.container.base.getDataOreList().isEmpty())) {
-                TagKey<Item> id = this.container.base.inputslotA.get(0).getItemHolder().getTagKeys().toList().get(0);
+                TagKey<Item> id = this.container.base.inputslotA.get(0).getTags().toList().get(0);
                 String name = id.location().getPath();
                 if (this.container.base.getDataOreList().contains(name)) {
                     DataOre dataOre = this.container.base.getDataOreList().get(name);

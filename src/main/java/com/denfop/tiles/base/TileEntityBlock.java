@@ -23,6 +23,9 @@ import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -44,14 +47,12 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.PlantType;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +61,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class TileEntityBlock extends BlockEntity {
-    public static final PlantType noCrop = PlantType.get("nocrop");
     public static final List<AABB> defaultAabbs = Collections.singletonList(new AABB(
             0.0,
             0.0,
@@ -69,10 +69,12 @@ public abstract class TileEntityBlock extends BlockEntity {
             1.0,
             1.0
     ));
+    public static int ticker = 1;
+    public static Map<ResourceKey<Level>, List<ChunkPos>> updates = new ConcurrentHashMap<>();
     public final IMultiTileBlock teBlock;
     public final BlockTileEntity block;
     public BlockPos pos;
-    public Map<Capability<?>, AbstractComponent> capabilityComponents;
+    public Map<BlockCapability<?, ?>, AbstractComponent> capabilityComponents;
     public List<AbstractComponent> componentList = new ArrayList<>();
     public List<AbstractComponent> updateServerList = new ArrayList<>();
     public List<AbstractComponent> updateClientList = new ArrayList<>();
@@ -81,10 +83,12 @@ public abstract class TileEntityBlock extends BlockEntity {
     public AirPollutionComponent pollutionAir;
     public String active = "";
     public boolean isLoaded;
-    public static int ticker = 1;
     public byte facing;
+    public HolderLookup.Provider provider;
+    public BlockState blockState;
     boolean hasHashCode = false;
     CooldownTracker cooldownTracker = new CooldownTracker();
+    boolean loaded = false;
     private boolean isClientLoaded;
     private int hashCode;
 
@@ -166,13 +170,19 @@ public abstract class TileEntityBlock extends BlockEntity {
         }
     }
 
+    public RegistryAccess registryAccess() {
+        return getWorld().registryAccess();
+    }
+
     @Override
     public void setChanged() {
-        super.setChanged();
         if (!this.getLevel().isClientSide()) {
             for (final AbstractComponent abstractComponent : this.componentList) {
                 abstractComponent.markDirty();
             }
+        }
+        if (this.level != null) {
+            setChanged(this.level, this.worldPosition, this.blockState);
         }
     }
 
@@ -208,11 +218,11 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public void readFromNBT(CompoundTag nbt) {
-
         this.facing = nbt.getByte("facing");
+
         this.active = nbt.getString("active");
-        if (!this.componentList.isEmpty() && nbt.contains("components", 10)) {
-            CompoundTag componentsNbt = nbt.getCompound("components");
+        if (!this.componentList.isEmpty() && nbt.contains("component_mod", 10)) {
+            CompoundTag componentsNbt = nbt.getCompound("component_mod");
             for (int i = 0; i < this.componentList.size(); i++) {
                 final AbstractComponent component = this.componentList.get(i);
                 CompoundTag componentNbt = componentsNbt.getCompound("component_" + i);
@@ -222,14 +232,13 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        this.readFromNBT(nbt);
+    protected void loadAdditional(CompoundTag p_338466_, HolderLookup.Provider p_338445_) {
+        super.loadAdditional(p_338466_, p_338445_);
+        this.provider = p_338445_;
+        this.readFromNBT(p_338466_);
     }
 
-
     public void onLoaded() {
-
         this.pos = worldPosition;
         this.componentList.forEach(AbstractComponent::onLoaded);
         this.rerender();
@@ -240,9 +249,13 @@ public abstract class TileEntityBlock extends BlockEntity {
         this.hashCode();
     }
 
+    public CompoundTag writeToNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        this.provider = provider;
+        return writeToNBT(nbt);
+    }
+
     public CompoundTag writeToNBT(CompoundTag nbt) {
         nbt.putByte("facing", this.facing);
-
         nbt.putString("active", this.active);
         if (!this.componentList.isEmpty()) {
             CompoundTag componentsNbt = new CompoundTag();
@@ -255,16 +268,16 @@ public abstract class TileEntityBlock extends BlockEntity {
                 }
                 componentsNbt.put("component_" + i, nbt1);
             }
-            nbt.put("components", componentsNbt);
+            nbt.put("component_mod", componentsNbt);
         }
         return nbt;
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(nbt);
-        writeToNBT(nbt);
-
+    protected void saveAdditional(CompoundTag p_187471_, HolderLookup.Provider p_323635_) {
+        super.saveAdditional(p_187471_, p_323635_);
+        this.provider = p_323635_;
+        writeToNBT(p_187471_);
     }
 
     @javax.annotation.Nullable
@@ -274,12 +287,10 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider p_323910_) {
         new PacketUpdateTile(this);
-        return super.getUpdateTag();
+        return super.getUpdateTag(p_323910_);
     }
-
-    public static Map<ResourceKey<Level>, List<ChunkPos>> updates = new ConcurrentHashMap<>();
 
     public void tick() {
 
@@ -295,7 +306,6 @@ public abstract class TileEntityBlock extends BlockEntity {
                 }
             }
         }
-
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -337,7 +347,6 @@ public abstract class TileEntityBlock extends BlockEntity {
         }
     }
 
-
     @Override
     public void setRemoved() {
         if (loaded)
@@ -345,12 +354,11 @@ public abstract class TileEntityBlock extends BlockEntity {
         super.setRemoved();
     }
 
-    boolean loaded = false;
-
     @Override
     public void onLoad() {
-        super.onLoad();
+
         if (!this.loaded) {
+            super.onLoad();
             loaded = true;
             Level world = this.getLevel();
             if (this.worldPosition != null) {
@@ -367,10 +375,10 @@ public abstract class TileEntityBlock extends BlockEntity {
             for (Direction direction : Direction.values())
                 if (!this.getLevel().isClientSide) {
                     BlockPos neighborPos = pos.offset(direction.getNormal());
-                    BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
                     BlockState neighbor = getLevel().getBlockState(neighborPos);
-                    if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>)) && blockEntity != null) {
-                        IEnergyStorage storage = blockEntity.getCapability(ForgeCapabilities.ENERGY, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos)).orElse(null);
+                    if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>))) {
+                        IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos));
+                        BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
                         if (storage != null && !blockEntity.isRemoved()) {
                             IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
                             if (energyTile == EnergyNetGlobal.EMPTY) {
@@ -383,7 +391,7 @@ public abstract class TileEntityBlock extends BlockEntity {
                                     energyForge = new EnergyForgeSource(blockEntity);
                                 }
                                 if (energyForge != null) {
-                                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                                    NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
                                 }
                             }
                         }
@@ -416,14 +424,15 @@ public abstract class TileEntityBlock extends BlockEntity {
             }
         }
         if (!this.getLevel().isClientSide) {
-            BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
 
-            if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>)) && blockEntity != null) {
-                IEnergyStorage storage = blockEntity.getCapability(ForgeCapabilities.ENERGY, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos)).orElse(null);
+
+            if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>))) {
+                IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos));
+                BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
                 if (storage != null && !blockEntity.isRemoved()) {
                     IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
                     if (energyTile != EnergyNetGlobal.EMPTY) {
-                        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
+                        NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
                     }
                     EnergyForge energyForge = null;
                     if (storage.canExtract() && storage.canReceive()) {
@@ -434,13 +443,13 @@ public abstract class TileEntityBlock extends BlockEntity {
                         energyForge = new EnergyForgeSource(blockEntity);
                     }
                     if (energyForge != null) {
-                        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                        NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
                     }
                 }
             } else if (this instanceof IEnergyTile || this.getComp(Energy.class) != null) {
                 IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
                 if (energyTile != EnergyNetGlobal.EMPTY && energyTile instanceof EnergyForge) {
-                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
+                    NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
                 }
             }
         }
@@ -473,7 +482,6 @@ public abstract class TileEntityBlock extends BlockEntity {
                         this.facing = temp;
                         return false;
                     }
-
                 }
             }
         }
@@ -504,12 +512,10 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public int getLightOpacity() {
-
         return 0;
     }
 
     public int getLightValue() {
-
         return 0;
     }
 
@@ -522,7 +528,7 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public CustomPacketBuffer writeUpdatePacket() {
-        return new CustomPacketBuffer();
+        return new CustomPacketBuffer(this.getLevel().registryAccess());
     }
 
     public void readUpdatePacket(CustomPacketBuffer packetBuffer) {
@@ -533,7 +539,7 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public CustomPacketBuffer writeContainerPacket() {
-        return new CustomPacketBuffer();
+        return new CustomPacketBuffer(this.getWorld().registryAccess());
     }
 
     public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
@@ -663,6 +669,18 @@ public abstract class TileEntityBlock extends BlockEntity {
     public void onEntityCollision(Entity entity) {
     }
 
+    private void validateBlockState(BlockState p_353132_) {
+        if (!this.isValidBlockState(p_353132_)) {
+            String var10002 = this.getNameForReporting();
+            throw new IllegalStateException("Invalid block entity " + var10002 + " state at " + String.valueOf(this.worldPosition) + ", got " + String.valueOf(p_353132_));
+        }
+    }
+
+    private String getNameForReporting() {
+        String var10000 = String.valueOf(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(this.getType()));
+        return var10000 + " // " + this.getClass().getCanonicalName();
+    }
+
     @Override
     public BlockState getBlockState() {
         if (this.blockState == null) {
@@ -684,6 +702,12 @@ public abstract class TileEntityBlock extends BlockEntity {
         return this.blockState;
     }
 
+    @Deprecated
+    public void setBlockState(BlockState p_155251_) {
+        this.validateBlockState(p_155251_);
+        this.blockState = p_155251_;
+    }
+
     public abstract IMultiTileBlock getTeBlock();
 
     public abstract BlockTileEntity getBlock();
@@ -698,9 +722,6 @@ public abstract class TileEntityBlock extends BlockEntity {
         return hashCode;
     }
 
-    public PlantType getPlantType() {
-        return noCrop;
-    }
 
     public <T extends AbstractComponent> T getComp(String cls) {
         for (AbstractComponent component : this.componentList) {
@@ -731,13 +752,13 @@ public abstract class TileEntityBlock extends BlockEntity {
         return componentList;
     }
 
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
         if (this.capabilityComponents == null) {
-            return super.getCapability(cap, side);
+            return null;
         } else {
 
             AbstractComponent comp = this.capabilityComponents.get(cap);
-            return comp == null ? super.getCapability(cap, side) : LazyOptional.of(() -> comp.getCapability(cap, side)).cast();
+            return comp == null ? null : comp.getCapability(cap, side);
         }
     }
 
@@ -758,7 +779,7 @@ public abstract class TileEntityBlock extends BlockEntity {
                 this.updateServerList.add(component);
             }
 
-            for (final Capability<?> capability : component.getProvidedCapabilities(null)) {
+            for (final BlockCapability<?, ?> capability : component.getProvidedCapabilities(null)) {
                 this.addComponentCapability(capability, component);
             }
 
@@ -781,14 +802,14 @@ public abstract class TileEntityBlock extends BlockEntity {
                 this.updateServerList.remove(component);
             }
 
-            for (final Capability<?> capability : component.getProvidedCapabilities(null)) {
+            for (final BlockCapability<?, ?> capability : component.getProvidedCapabilities(null)) {
                 this.removeComponentCapability(capability, component);
             }
 
         }
     }
 
-    public void addComponentCapability(Capability<?> cap, AbstractComponent component) {
+    public void addComponentCapability(BlockCapability<?, ?> cap, AbstractComponent component) {
         if (this.capabilityComponents == null) {
             this.capabilityComponents = new IdentityHashMap<>();
         }
@@ -799,7 +820,7 @@ public abstract class TileEntityBlock extends BlockEntity {
 
     }
 
-    public void removeComponentCapability(Capability<?> cap, AbstractComponent component) {
+    public void removeComponentCapability(BlockCapability<?, ?> cap, AbstractComponent component) {
         if (this.capabilityComponents == null) {
             this.capabilityComponents = new IdentityHashMap<>();
         }
@@ -831,11 +852,14 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-
+        for (AbstractComponent component : componentList) {
+            if (component.onSneakingActivated(player, hand))
+                return true;
+        }
         return this.getLevel().isClientSide;
     }
 
-    public Map<Capability<?>, AbstractComponent> getCapabilityComponents() {
+    public Map<BlockCapability<?, ?>, AbstractComponent> getCapabilityComponents() {
         return capabilityComponents;
     }
 
@@ -843,7 +867,6 @@ public abstract class TileEntityBlock extends BlockEntity {
         for (AbstractComponent component : this.componentList) {
             component.blockBreak();
         }
-
     }
 
     public void wrenchBreak() {
@@ -1038,7 +1061,7 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public CustomPacketBuffer writePacket() {
-        final CustomPacketBuffer packet = new CustomPacketBuffer();
+        final CustomPacketBuffer packet = new CustomPacketBuffer(this.getLevel().registryAccess());
         packet.writeShort(this.teBlock.getIDBlock());
         packet.writeString(this.active);
         packet.writeByte(this.facing);
@@ -1048,7 +1071,7 @@ public abstract class TileEntityBlock extends BlockEntity {
     public CompoundTag getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
         try {
             InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
-            return slot.writeToNbt(new CompoundTag());
+            return slot.writeToNbt(new CompoundTag(), customPacketBuffer.registryAccess());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -69,7 +69,7 @@ public class GuiWirelessControllerHeatReactors<T extends ContainerWirelessContro
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         for (int i = 0; i < this.container.base.itemStacks.size(); i++) {
             if (!this.container.base.invslot.get(0).isEmpty()) {
@@ -79,7 +79,7 @@ public class GuiWirelessControllerHeatReactors<T extends ContainerWirelessContro
                             i);
                     BlockPos pos = tileMultiBlockBase.getPos();
                     new Area(this, 8 + i * 18, 25, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
-                            ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack,par1, par2);
+                            ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
                 }
             }
         }
@@ -87,7 +87,7 @@ public class GuiWirelessControllerHeatReactors<T extends ContainerWirelessContro
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
 
         for (int i = 0; i < this.container.base.itemStacks.size(); i++) {
@@ -95,18 +95,18 @@ public class GuiWirelessControllerHeatReactors<T extends ContainerWirelessContro
                 ItemStack stack = this.container.base.itemStacks.get(i);
                 if (!stack.isEmpty()) {
                     new ItemStackImage(this, 8 + i * 18, 25, () -> stack).drawBackground(
-                            poseStack,   this.guiLeft,
+                            poseStack, this.guiLeft,
                             this.guiTop
                     );
                 }
             }
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

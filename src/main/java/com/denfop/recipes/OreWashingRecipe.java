@@ -32,31 +32,31 @@ public class OreWashingRecipe {
         addrecipe(18, new ItemStack(IUItem.smalldust.getStack(15), 2));
         addrecipe(new ItemStack(Blocks.GRAVEL));
         addrecipe(
-                "forge:crushed/Iron",
-                "forge:purifiedcrushed/Iron",
+                "c:crushed/Iron",
+                "c:purifiedcrushed/Iron",
                 new ItemStack(IUItem.smallGoldDust.getItem(), 2)
         );
-        addrecipe("forge:crushed/Tin", "forge:purifiedcrushed/Tin", new ItemStack(IUItem.smallTinDust.getItem(), 2
+        addrecipe("c:crushed/Tin", "c:purifiedcrushed/Tin", new ItemStack(IUItem.smallTinDust.getItem(), 2
         ));
-        addrecipe("forge:crushed/Gold", "forge:purifiedcrushed/Gold",
+        addrecipe("c:crushed/Gold", "c:purifiedcrushed/Gold",
                 new ItemStack(IUItem.smallGoldDust.getItem(), 2)
         );
-        addrecipe("forge:crushed/Uranium", "forge:purifiedcrushed/Uranium",
+        addrecipe("c:crushed/Uranium", "c:purifiedcrushed/Uranium",
                 new ItemStack(IUItem.smallLeadDust.getItem(), 2)
         );
-        addrecipe("forge:crushed/Copper", "forge:purifiedcrushed/Copper",
+        addrecipe("c:crushed/Copper", "c:purifiedcrushed/Copper",
                 new ItemStack(IUItem.smallLeadDust.getItem(), 2)
         );
-        addrecipe("forge:crushed/Lead", "forge:purifiedcrushed/Lead",
+        addrecipe("c:crushed/Lead", "c:purifiedcrushed/Lead",
                 new ItemStack(IUItem.smalldust.getStack(14), 2)
         );
-        addrecipe("forge:crushed/Osmium", "forge:purifiedcrushed/Osmium",
+        addrecipe("c:crushed/Osmium", "c:purifiedcrushed/Osmium",
                 new ItemStack(IUItem.smalldust.getStack(17), 1)
         );
-        addrecipe("forge:crushed/Tantalum", "forge:purifiedcrushed/Tantalum",
+        addrecipe("c:crushed/Tantalum", "c:purifiedcrushed/Tantalum",
                 new ItemStack(IUItem.smalldust.getStack(11), 1)
         );
-        addrecipe("forge:crushed/Cadmium", "forge:purifiedcrushed/Cadmium",
+        addrecipe("c:crushed/Cadmium", "c:purifiedcrushed/Cadmium",
                 new ItemStack(IUItem.smalldust.getStack(18), 1)
         );
 

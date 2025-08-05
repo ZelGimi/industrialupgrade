@@ -5,6 +5,7 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.inv.ITileInventory;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
@@ -55,15 +56,25 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
         this.typeItemSlot = typeItemSlot;
     }
 
-    public void readFromNbt(CompoundTag nbt) {
+    public void readFromNbt(HolderLookup.Provider p_332027_, CompoundTag nbt) {
+        readFromNbt(nbt, p_332027_);
+    }
+
+    public void readFromNbt(CompoundTag nbt, HolderLookup.Provider p_332027_) {
         this.clear();
-        ContainerHelper.loadAllItems(nbt,this.contents);
+        ContainerHelper.loadAllItems(nbt, this.contents, p_332027_);
         this.onChanged();
     }
-    public CompoundTag writeToNbt(CompoundTag nbt) {
-        ContainerHelper.saveAllItems(nbt, this.contents);
+
+    public CompoundTag writeToNbt(HolderLookup.Provider p_332027_, CompoundTag nbt) {
+        return writeToNbt(nbt, p_332027_);
+    }
+
+    public CompoundTag writeToNbt(CompoundTag nbt, HolderLookup.Provider p_332027_) {
+        ContainerHelper.saveAllItems(nbt, this.contents, p_332027_);
         return nbt;
     }
+
     public boolean add(List<ItemStack> stacks) {
         boolean added = false;
         for (ItemStack stack : stacks) {
@@ -104,13 +115,13 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
                 } else {
                     if (stack1.getItem() == stack.getItem()) {
                         if (stack1.getCount() + count <= stack.getMaxStackSize()) {
-                            if (stack.getTag() == null && stack1.getTag() == null) {
+                            if (stack.getComponents().isEmpty() && stack1.getComponents().isEmpty()) {
                                 if (!simulate) {
                                     stack1.grow(stack.getCount());
                                 }
                                 return 0;
                             } else {
-                                if (ModUtils.checkNbtEquality(stack.getTag(), this.get(i).getTag())) {
+                                if (ModUtils.checkNbtEquality(stack.getComponents(), this.get(i).getComponents())) {
                                     if (!simulate) {
                                         stack1.grow(count);
 
@@ -133,7 +144,7 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
             if (count != 0) {
                 if (minSlot != this.size()) {
                     if (!simulate) {
-                        this.set(minSlot, ModUtils.setSize(stack,count));
+                        this.set(minSlot, ModUtils.setSize(stack, count));
                     }
                     return 0;
                 }
@@ -175,13 +186,13 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
                     } else {
                         if (this.get(i).getItem() == stack.getItem()) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTag() == null && this.get(i).getTag() == null) {
+                                if (stack.getComponents().isEmpty() && this.get(i).getComponents().isEmpty()) {
                                     if (!simulate) {
                                         this.get(i).grow(stack.getCount());
                                     }
                                     return true;
                                 } else {
-                                    if (ModUtils.checkNbtEquality(stack.getTag(), this.get(i).getTag())) {
+                                    if (ModUtils.checkNbtEquality(stack.getComponents(), this.get(i).getComponents())) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
 
@@ -207,7 +218,6 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
     }
 
 
-
     public int size() {
         return this.contents.size();
     }
@@ -222,7 +232,6 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
 
         return true;
     }
-
 
 
     public ItemStack get(int index) {
@@ -264,6 +273,12 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
     }
 
     public void update() {
+    }
+
+    public void read(InvSlot invSlot) {
+        for (int i = 0; i < this.size(); i++) {
+            this.set(i, invSlot.get(i));
+        }
     }
 
     public boolean hasItemList() {

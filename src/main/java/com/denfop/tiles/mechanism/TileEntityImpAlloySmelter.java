@@ -22,7 +22,6 @@ import com.denfop.gui.GuiImpAlloySmelter;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
@@ -39,10 +38,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +60,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     public MachineRecipe output;
 
     public TileEntityImpAlloySmelter(BlockPos pos, BlockState state) {
-        super(300, 1, 1,BlockBaseMachine3.imp_alloy_smelter,pos,state);
+        super(300, 1, 1, BlockBaseMachine3.imp_alloy_smelter, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.inputSlotA = new InvSlotRecipes(this, "impalloysmelter", this);
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, 1, false);
@@ -104,13 +102,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.125));
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
-        }
-    }
+
     public static void addAlloysmelter(
             Object container, Object fill, Object fill1, Object fill2, ItemStack output,
             int temperature
@@ -123,6 +115,14 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
                 new RecipeOutput(nbt, output)
         ));
 
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnAlloySmelterParticles(level, pos, level.random);
+        }
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
@@ -203,33 +203,33 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
 
     public void init() {
 
-        addAlloysmelter(Recipes.inputFactory.getInput("forge:dusts/coal",4), new ItemStack(IUItem.plastic_plate.getItem()),
+        addAlloysmelter(Recipes.inputFactory.getInput("c:dusts/coal", 4), new ItemStack(IUItem.plastic_plate.getItem()),
                 new ItemStack(IUItem.alloysingot.getStack(20)),
                 new ItemStack(IUItem.alloysingot.getStack(10)),
                 new ItemStack(IUItem.crafting_elements.getStack(479), 1)
                 , 6000
         );
 
-        addAlloysmelter("forge:ingots/Iron", "forge:ingots/Chromium", "forge:ingots/Nickel", "forge:ingots/Manganese", new ItemStack(IUItem.alloysingot.getStack(13), 1)
+        addAlloysmelter("c:ingots/Iron", "c:ingots/Chromium", "c:ingots/Nickel", "c:ingots/Manganese", new ItemStack(IUItem.alloysingot.getStack(13), 1)
                 , 7000);
 
-        addAlloysmelter("forge:ingots/Iron", "forge:ingots/Chromium", "forge:ingots/Nickel", "forge:ingots/Molybdenum", new ItemStack(IUItem.alloysingot.getStack(14), 1)
+        addAlloysmelter("c:ingots/Iron", "c:ingots/Chromium", "c:ingots/Nickel", "c:ingots/Molybdenum", new ItemStack(IUItem.alloysingot.getStack(14), 1)
                 , 7500);
 
-        addAlloysmelter("forge:ingots/Cobalt", "forge:ingots/Chromium", "forge:ingots/Iron", "forge:ingots/Tungsten", new ItemStack(IUItem.alloysingot.getStack(16), 1
+        addAlloysmelter("c:ingots/Cobalt", "c:ingots/Chromium", "c:ingots/Iron", "c:ingots/Tungsten", new ItemStack(IUItem.alloysingot.getStack(16), 1
                 )
                 , 6500);
 
-        addAlloysmelter("forge:ingots/Tin", "forge:ingots/Lead", "forge:ingots/Bismuth", "forge:ingots/Cadmium", new ItemStack(IUItem.alloysingot.getStack(18), 1
+        addAlloysmelter("c:ingots/Tin", "c:ingots/Lead", "c:ingots/Bismuth", "c:ingots/Cadmium", new ItemStack(IUItem.alloysingot.getStack(18), 1
                 )
                 , 5000);
 
-        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.COAL, 3), "forge:ingots/Nickel", "forge:ingots/Manganese",
+        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.COAL, 3), "c:ingots/Nickel", "c:ingots/Manganese",
                 IUItem.advIronIngot
                 , 5000
         );
 
-        addAlloysmelter("forge:ingots/Iron", Recipes.inputFactory.getInput("forge:dusts/coal", 2), "forge:ingots/Nickel", "forge:ingots/Molybdenum",
+        addAlloysmelter("c:ingots/Iron", Recipes.inputFactory.getInput("c:dusts/coal", 2), "c:ingots/Nickel", "c:ingots/Molybdenum",
                 new ItemStack(IUItem.alloysingot.getStack(21), 1)
                 , 8000
         );
@@ -245,7 +245,6 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
         return new GuiImpAlloySmelter((ContainerImpAlloySmelter) menu);
     }
-
 
 
     @Override
@@ -278,7 +277,27 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         return EnumSound.alloysmelter.getSoundEvent();
     }
 
+    public void initiate(int soundEvent) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
+            return;
+        }
 
+        setType(valuesAudio[soundEvent % valuesAudio.length]);
+        if (!getEnable()) {
+            return;
+        }
+        if (getSound() == null) {
+            return;
+        }
+        if (soundEvent == 0) {
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
+        } else if (soundEvent == 1) {
+            new PacketStopSound(getWorld(), this.pos);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
+        } else {
+            new PacketStopSound(getWorld(), this.pos);
+        }
+    }
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/titanium"
+    },
+    "B": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "industrialupgrade:solderingiron"
+    },
+    "D": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    " B ",
+    "ADA",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:primal_soldering_mechanism/primal_soldering_mechanism"
+  },
+  "show_notification": false
+}

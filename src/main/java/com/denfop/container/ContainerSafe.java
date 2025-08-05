@@ -13,7 +13,6 @@ public class ContainerSafe extends ContainerFullInv<TileEntitySafe> {
     }
 
 
-
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();

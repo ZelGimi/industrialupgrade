@@ -38,11 +38,11 @@ public class GuiCapacitor<T extends ContainerCapacitor> extends GuiIU<ContainerC
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
-       poseStack.drawString(Minecraft.getInstance().font, String.valueOf(this.container.base.getX()), 52, 57 + 4,
+        super.drawForegroundLayer(poseStack, par1, par2);
+        poseStack.drawString(Minecraft.getInstance().font, String.valueOf(this.container.base.getX()), 52, 57 + 4,
                 ModUtils.convertRGBcolorToInt(15,
                         125, 205
-                ),false
+                ), false
         );
     }
 
@@ -50,18 +50,18 @@ public class GuiCapacitor<T extends ContainerCapacitor> extends GuiIU<ContainerC
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 81, this.guiTop + 55, 188, 3, 23, 23);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 81, this.guiTop + 55, 188, 3, 23, 23);
 
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 81, this.guiTop + 57 - 26, 188, 43, 22, 22);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 40, this.guiTop + 57, 197, 26, 30, 15);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + 81, this.guiTop + 57 + 22, 211, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 81, this.guiTop + 57 - 26, 188, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 40, this.guiTop + 57, 197, 26, 30, 15);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 81, this.guiTop + 57 + 22, 211, 43, 22, 22);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigraphite4.png");
     }
 
 }

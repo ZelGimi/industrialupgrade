@@ -4,8 +4,8 @@ import com.denfop.mixin.access.DeferredRegisterAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
@@ -14,17 +14,19 @@ import static com.denfop.register.Register.ITEMS;
 
 public class DataSimpleItem<E extends Item, T extends ResourceLocation> {
 
-    RegistryObject<E> registryObject;
+    DeferredHolder<Item, E> registryObject;
 
-    public DataSimpleItem(T typeClass, Supplier<E> supplier){
-        this(typeClass,supplier,Constants.MOD_ID,ITEMS);
+    public DataSimpleItem(T resource, Supplier<E> supplier) {
+        this(resource, supplier, Constants.MOD_ID, ITEMS);
     }
-    public DataSimpleItem(T resource, Supplier<E> supplier, String constants, DeferredRegister<Item> ITEMS ) {
+
+    public DataSimpleItem(T resource, Supplier<E> supplier, String id, DeferredRegister<Item> ITEMS) {
         String namespace = resource.getNamespace().isEmpty() ? "" : resource.getNamespace() + "/";
-        final ResourceLocation key = new ResourceLocation(constants, namespace + resource.getPath());
-        RegistryObject<E> ret = RegistryObject.create(key, ITEMS.getRegistryKey(), constants);
+        final ResourceLocation key = ResourceLocation.tryBuild(id, namespace + resource.getPath());
+        DeferredHolder<Item, E> ret = DeferredHolder.create(ITEMS.getRegistryKey(), key);
+
+        objects.add((DeferredHolder<Item, Item>) ret);
         var entries = ((DeferredRegisterAccessor) ITEMS).getEntries();
-        objects.add((RegistryObject<Item>) ret);
         if (entries.putIfAbsent(ret, supplier) != null) {
             throw new IllegalArgumentException("Duplicate registration " + resource);
         }
@@ -33,7 +35,7 @@ public class DataSimpleItem<E extends Item, T extends ResourceLocation> {
 
     }
 
-    public RegistryObject<E> getRegistryObject() {
+    public DeferredHolder<Item, E> getRegistryObject() {
         return registryObject;
     }
 

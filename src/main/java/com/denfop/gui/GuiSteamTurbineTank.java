@@ -2,7 +2,6 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTurbineTank;
@@ -13,8 +12,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,9 +82,9 @@ public class GuiSteamTurbineTank<T extends ContainerSteamTurbineTank> extends Gu
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(poseStack,mouseX+
+                    this.gui.drawSprite(poseStack, mouseX +
                                     fluidX,
-                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -108,12 +107,12 @@ public class GuiSteamTurbineTank<T extends ContainerSteamTurbineTank> extends Gu
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteamturbine_tank.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteamturbine_tank.png");
     }
 
 }

@@ -42,17 +42,16 @@ public class GuiSingleFluidAdapter<T extends ContainerSingleFluidAdapter> extend
     }
 
 
-
-protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         if (this.container.base instanceof IUpgradableBlock) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         bindTexture(getTexture());
 
@@ -62,13 +61,13 @@ protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks,
 
 
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, name, 4210752, false);
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

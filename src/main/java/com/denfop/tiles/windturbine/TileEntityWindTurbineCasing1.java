@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityWindTurbineCasing1 extends TileEntityMultiBlockElement implements ICasing1 {
 
     public TileEntityWindTurbineCasing1(BlockPos pos, BlockState state) {
-        super( BlockWindTurbine.wind_turbine_casing_2, pos, state);
+        super(BlockWindTurbine.wind_turbine_casing_2, pos, state);
     }
 
     @Override
@@ -23,7 +23,6 @@ public class TileEntityWindTurbineCasing1 extends TileEntityMultiBlockElement im
     public BlockTileEntity getBlock() {
         return IUItem.windTurbine.getBlock(getTeBlock());
     }
-
 
 
 }

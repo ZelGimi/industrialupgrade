@@ -37,9 +37,9 @@ public class CropCategory extends GuiIU implements IRecipeCategory<CropHandler> 
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -57,7 +57,6 @@ public class CropCategory extends GuiIU implements IRecipeCategory<CropHandler> 
     }
 
 
-
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -67,7 +66,7 @@ public class CropCategory extends GuiIU implements IRecipeCategory<CropHandler> 
 
     @Override
     public void draw(CropHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-       draw(stack, "->", 65, 48, 4210752);
+        draw(stack, "->", 65, 48, 4210752);
     }
 
     @Override
@@ -77,16 +76,15 @@ public class CropCategory extends GuiIU implements IRecipeCategory<CropHandler> 
         );
         for (int i = 0; i < list.size(); i++) {
             int yDisplayPosition1 = 75 + (20 - list.size()) * i - list.size() * 16;
-            builder.addSlot(RecipeIngredientRole.INPUT,60 - 21, yDisplayPosition1).addItemStack(list.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, 60 - 21, yDisplayPosition1).addItemStack(list.get(i));
 
         }
         builder.addSlot(RecipeIngredientRole.INPUT, 85, 44).addItemStack(recipes.getOutputs());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

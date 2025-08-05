@@ -125,7 +125,7 @@ public class GuiCable<T extends ContainerCable> extends GuiIU<ContainerCable> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_progressbars1.png");
     }
 
 }

@@ -10,8 +10,8 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerObsidianGenerator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiObsidianGenerator<T extends ContainerObsidianGenerator> extends GuiIU<ContainerObsidianGenerator> {
@@ -50,7 +50,7 @@ public class GuiObsidianGenerator<T extends ContainerObsidianGenerator> extends 
             drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack,  this.imageWidth / 2 + 15, 5, net.minecraft.network.chat.Component.literal(name), 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15, 5, net.minecraft.network.chat.Component.literal(name), 4210752, false);
 
     }
 
@@ -59,7 +59,7 @@ public class GuiObsidianGenerator<T extends ContainerObsidianGenerator> extends 
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiObsidianGenerator.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GuiObsidianGenerator.png".toLowerCase());
     }
 
 }

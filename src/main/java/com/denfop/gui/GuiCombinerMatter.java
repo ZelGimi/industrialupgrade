@@ -6,8 +6,8 @@ import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerCombinerMatter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,7 +58,7 @@ public class GuiCombinerMatter<T extends ContainerCombinerMatter> extends GuiIU<
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
 
     }
 

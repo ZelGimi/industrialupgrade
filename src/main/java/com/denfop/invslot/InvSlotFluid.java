@@ -6,11 +6,11 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 public class InvSlotFluid extends InvSlot {
@@ -39,7 +39,7 @@ public class InvSlotFluid extends InvSlot {
         ItemStack singleStack = ModUtils.setSize(stack, 1);
         IFluidHandlerItem handler = null;
         try {
-            handler = singleStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) singleStack.getItem().initCapabilities(singleStack, singleStack.getTag()));
+            handler = singleStack.getCapability(Capabilities.FluidHandler.ITEM, null);
         } catch (Exception e) {
 
         }
@@ -74,7 +74,7 @@ public class InvSlotFluid extends InvSlot {
             if (ModUtils.isEmpty(stack)) {
                 return null;
             } else {
-                IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) stack.getItem().initCapabilities(stack, stack.getTag()));
+                IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM, null);
                 FluidStack fs;
                 if (fluid == Fluids.EMPTY) {
                     fs = handler.drain(maxAmount, IFluidHandler.FluidAction.EXECUTE);
@@ -117,7 +117,7 @@ public class InvSlotFluid extends InvSlot {
                 if (ModUtils.isEmpty(stack)) {
                     return 0;
                 } else {
-                    IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) stack.getItem().initCapabilities(stack, stack.getTag()));
+                    IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM, null);
                     FluidStack fsChange = fs.copy();
                     int amount = handler.fill(fsChange, IFluidHandler.FluidAction.EXECUTE);
                     if (amount <= 0) {

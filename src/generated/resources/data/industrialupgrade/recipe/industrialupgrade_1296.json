@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:reactors/proton"
+    },
+    "B": {
+      "item": "industrialupgrade:radiationresources/curium_gem"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/proton_energy_coupler"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:reactors/adv_proton_energy_coupler"
+  },
+  "show_notification": false
+}

@@ -13,11 +13,13 @@ import java.util.List;
 
 public class PacketRadiation implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketRadiation() {
     }
 
     public PacketRadiation(List<Radiation> radiation, Player player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeInt(radiation.size());
         radiation.forEach(radiation1 -> {
@@ -28,9 +30,19 @@ public class PacketRadiation implements IPacket {
             }
         });
 
-
         buffer.flip();
-        IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer, (ServerPlayer) player);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

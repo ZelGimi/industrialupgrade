@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:gears/invar"
+    },
+    "C": {
+      "tag": "c:gems/sapphire"
+    },
+    "D": {
+      "tag": "c:gears/ferromanganese"
+    },
+    "E": {
+      "tag": "c:plates/ferromanganese"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "EDE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_32_element"
+  },
+  "show_notification": false
+}

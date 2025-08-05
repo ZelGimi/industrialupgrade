@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "tag": "c:plates/cobaltchrome"
+    },
+    "C": {
+      "tag": "c:plates/niobiumtitanium"
+    },
+    "D": {
+      "item": "industrialupgrade:synthetic_plate"
+    }
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:chemical_plant/chemical_plant_casing"
+  },
+  "show_notification": false
+}

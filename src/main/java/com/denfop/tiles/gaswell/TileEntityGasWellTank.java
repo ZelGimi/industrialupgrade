@@ -14,8 +14,8 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityGasWellTank extends TileEntityMultiBlockElement implements ITank {
 
@@ -23,7 +23,7 @@ public class TileEntityGasWellTank extends TileEntityMultiBlockElement implement
     private final Fluids.InternalFluidTank fluidTank;
 
     public TileEntityGasWellTank(BlockPos pos, BlockState state) {
-        super( BlockGasWell.gas_well_tank, pos, state);
+        super(BlockGasWell.gas_well_tank, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTankExtract("fluids", 10000);
     }

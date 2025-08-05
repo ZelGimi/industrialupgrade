@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/tin1"
+    },
+    "C": {
+      "tag": "c:casings/aluminiumlithium"
+    },
+    "D": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "E": {
+      "item": "industrialupgrade:charged_quartz"
+    }
+  },
+  "pattern": [
+    "AEA",
+    "CDC",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:battery/re_battery"
+  },
+  "show_notification": false
+}

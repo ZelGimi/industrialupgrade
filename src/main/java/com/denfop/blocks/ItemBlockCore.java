@@ -24,24 +24,26 @@ public class ItemBlockCore<T extends Enum<T> & ISubEnum> extends BlockItem imple
     private final CreativeModeTab modeTab;
     protected String nameItem;
 
-    public ItemBlockCore(Block p_40565_, T element, Properties property,CreativeModeTab modeTab) {
+    public ItemBlockCore(Block p_40565_, T element, Properties property, CreativeModeTab modeTab) {
         super(p_40565_, property);
         this.element = element;
-        this.modeTab=modeTab;
-        this.registryName = new ResourceLocation(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
+        this.modeTab = modeTab;
+        this.registryName = ResourceLocation.tryBuild(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
         if (this instanceof IItemTag)
             ItemTagProvider.list.add((IItemTag) this);
         ;
     }
+
     public ItemBlockCore(Block p_40565_, T element, Properties property) {
         super(p_40565_, property);
         this.element = element;
-        this.modeTab=null;
-        this.registryName = new ResourceLocation(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
+        this.modeTab = null;
+        this.registryName = ResourceLocation.tryBuild(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
         if (this instanceof IItemTag)
             ItemTagProvider.list.add((IItemTag) this);
         ;
     }
+
     public ResourceLocation getRegistryName() {
         return registryName;
     }
@@ -69,7 +71,7 @@ public class ItemBlockCore<T extends Enum<T> & ISubEnum> extends BlockItem imple
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
-            String targetString = "industrialupgrade."+getElement().getMainPath()+".";
+            String targetString = "industrialupgrade." + getElement().getMainPath() + ".";
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);

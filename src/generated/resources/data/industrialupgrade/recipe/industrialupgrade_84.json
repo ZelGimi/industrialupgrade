@@ -1,0 +1,16 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:energy/wrench"
+    },
+    {
+      "item": "industrialupgrade:wiring_storage/adv_mfsu"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:upgradekitstorage/upgradekit2"
+  }
+}

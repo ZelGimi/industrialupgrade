@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/cobalt"
+    },
+    "B": {
+      "tag": "c:plates/nickel"
+    },
+    "C": {
+      "tag": "c:plates/iron"
+    },
+    "D": {
+      "tag": "c:plates/titanium"
+    }
+  },
+  "pattern": [
+    "ABB",
+    "C D",
+    " AA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_141_element"
+  },
+  "show_notification": false
+}

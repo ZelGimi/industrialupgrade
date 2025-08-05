@@ -8,7 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
@@ -89,12 +89,12 @@ public class BlockNuclearBomb<T extends Enum<T> & ISubEnum> extends BlockCore<T>
 
     }
 
-    public void playerWillDestroy(Level p_57445_, BlockPos p_57446_, BlockState p_57447_, Player p_57448_) {
+    public BlockState playerWillDestroy(Level p_57445_, BlockPos p_57446_, BlockState p_57447_, Player p_57448_) {
         if (!p_57445_.isClientSide() && !p_57448_.isCreative() && p_57447_.getValue(UNSTABLE)) {
             onCaughtFire(p_57447_, p_57445_, p_57446_, null, null);
         }
 
-        super.playerWillDestroy(p_57445_, p_57446_, p_57447_, p_57448_);
+        return super.playerWillDestroy(p_57445_, p_57446_, p_57447_, p_57448_);
     }
 
     public void wasExploded(Level p_57441_, BlockPos p_57442_, Explosion p_57443_) {
@@ -106,28 +106,28 @@ public class BlockNuclearBomb<T extends Enum<T> & ISubEnum> extends BlockCore<T>
         }
     }
 
-    public InteractionResult use(BlockState p_57450_, Level p_57451_, BlockPos p_57452_, Player p_57453_, InteractionHand p_57454_, BlockHitResult p_57455_) {
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack p_316304_, BlockState p_57450_, Level p_57451_, BlockPos p_57452_, Player p_57453_, InteractionHand p_57454_, BlockHitResult p_57455_) {
         ItemStack itemstack = p_57453_.getItemInHand(p_57454_);
         if (!itemstack.is(Items.FLINT_AND_STEEL) && !itemstack.is(Items.FIRE_CHARGE)) {
-            return super.use(p_57450_, p_57451_, p_57452_, p_57453_, p_57454_, p_57455_);
+            return super.useItemOn(p_316304_, p_57450_, p_57451_, p_57452_, p_57453_, p_57454_, p_57455_);
         } else {
             onCaughtFire(p_57450_, p_57451_, p_57452_, p_57455_.getDirection(), p_57453_);
             p_57451_.setBlock(p_57452_, Blocks.AIR.defaultBlockState(), 11);
             Item item = itemstack.getItem();
             if (!p_57453_.isCreative()) {
                 if (itemstack.is(Items.FLINT_AND_STEEL)) {
-                    itemstack.hurtAndBreak(1, p_57453_, (p_57425_) -> {
-                        p_57425_.broadcastBreakEvent(p_57454_);
-                    });
+                    itemstack.hurtAndBreak(1, p_57453_, LivingEntity.getSlotForHand(p_57454_));
                 } else {
                     itemstack.shrink(1);
                 }
             }
 
             p_57453_.awardStat(Stats.ITEM_USED.get(item));
-            return InteractionResult.sidedSuccess(p_57451_.isClientSide);
+            return ItemInteractionResult.sidedSuccess(p_57451_.isClientSide);
         }
     }
+
 
     public void onProjectileHit(Level p_57429_, BlockState p_57430_, BlockHitResult p_57431_, Projectile p_57432_) {
         if (!p_57429_.isClientSide) {

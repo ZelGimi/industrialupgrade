@@ -107,10 +107,6 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
 
-
-
-
-
     @Override
     public NodeStats getNodeStats(final IEnergyTile te, Level level) {
         final EnergyNetLocal local = getForWorld(level);
@@ -172,7 +168,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
     @Override
-    public BlockEntity getBlockPosFromEnergyTile(final IEnergyTile tile,Level level) {
+    public BlockEntity getBlockPosFromEnergyTile(final IEnergyTile tile, Level level) {
         final EnergyNetLocal local = getForWorld(level);
         if (local != EnergyNetLocal.EMPTY) {
             return local.getTileFromIEnergy(tile);

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_imp_chamber"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_392_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:heat_reactors/heat_per_chamber"
+  },
+  "show_notification": false
+}

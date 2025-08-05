@@ -4,22 +4,22 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.container.ContainerUpgrade;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.network.packet.PacketItemStackEvent;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GUIUpgrade<T extends ContainerUpgrade> extends GuiIU<ContainerUpgrade> {
 
-    private static final ResourceLocation background = new ResourceLocation(
+    private static final ResourceLocation background = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/gui/guiupgrade1.png"
     );
-    private static final ResourceLocation background1 = new ResourceLocation(
+    private static final ResourceLocation background1 = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/gui/guiupgrade2.png"
     );
@@ -76,7 +76,7 @@ public class GUIUpgrade<T extends ContainerUpgrade> extends GuiIU<ContainerUpgra
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        final byte dir = ModUtils.nbt(this.itemStack).getByte("dir");
+        final byte dir = itemStack.getOrDefault(DataComponentsInit.DIRECTION, (byte) 0);
         if (dir == 0) {
             this.drawTexturedModalRect(poseStack, this.guiLeft + 75 + 4, this.guiTop + 61 + 4, 209, 49, 14, 14);
         }
@@ -119,36 +119,36 @@ public class GUIUpgrade<T extends ContainerUpgrade> extends GuiIU<ContainerUpgra
 
         if (x >= 76 + 4 && y >= 62 + 4 && x <= 87 + 3 && y <= 73 + 4) {
             new PacketItemStackEvent(0, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 0); //any
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 0);
         }
 
         if (x >= 76 + 4 && y >= 42 + 4 && x <= 87 + 4 && y <= 57 + 4) {
             new PacketItemStackEvent(3, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 3); //north
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 3);
         }
         if (x >= 76 + 4 && y >= 78 + 4 && x <= 87 + 4 && y <= 93 + 4) {
             new PacketItemStackEvent(4, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 4); // south
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 4);
         }
 
         if (x >= 76 + 4 && y >= 26 + 4 && x <= 87 + 4 && y <= 37 + 4) {
             new PacketItemStackEvent(2, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 2); //top
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 2);
         }
 
         if (x >= 76 + 4 && y >= 98 + 4 && x <= 87 + 4 && y <= 109 + 4) {
             new PacketItemStackEvent(1, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 1); // bottom
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 1);
         }
 
         if (x >= 56 + 4 && y >= 62 + 4 && x <= 71 + 4 && y <= 73 + 4) {
             new PacketItemStackEvent(5, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 5); //west
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 5);
         }
 
         if (x >= 92 + 4 && y >= 62 + 4 && x <= 107 + 4 && y <= 73 + 4) {
             new PacketItemStackEvent(6, container.base.player);
-            ModUtils.nbt(this.itemStack).putByte("dir", (byte) 6); // east
+            itemStack.set(DataComponentsInit.DIRECTION, (byte) 6);
         }
 
 

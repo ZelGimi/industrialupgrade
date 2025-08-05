@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:plates/vanady"
+    },
+    "C": {
+      "tag": "c:casings/nickel"
+    },
+    "D": {
+      "tag": "c:gears/manganese"
+    },
+    "E": {
+      "tag": "c:casings/mikhail"
+    },
+    "F": {
+      "tag": "c:doubleplate/titanium"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "EFE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_33_element"
+  },
+  "show_notification": false
+}

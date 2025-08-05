@@ -22,15 +22,15 @@ import java.util.List;
 
 public class GuiComponent extends GuiElement<GuiComponent> {
 
-    public static final ResourceLocation commonTexture1 = new ResourceLocation(
+    public static final ResourceLocation commonTexture1 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/gui_progressbars.png"
     );
-    public static final ResourceLocation commonTexture2 = new ResourceLocation(
+    public static final ResourceLocation commonTexture2 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/gui_progressbars.png"
     );
-    public static final ResourceLocation commonTexture5 = new ResourceLocation(
+    public static final ResourceLocation commonTexture5 = ResourceLocation.tryBuild(
             Constants.MOD_ID,
             "textures/gui/slot_render.png"
     );

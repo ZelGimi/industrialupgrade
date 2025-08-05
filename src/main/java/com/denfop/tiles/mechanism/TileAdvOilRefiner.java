@@ -48,11 +48,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -105,6 +105,19 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
 
+    @Override
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
+        CompoundTag compoundTag = super.writeToNBT(nbttagcompound);
+        compoundTag.putInt("levelMech", levelMech);
+        return compoundTag;
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        levelMech = nbttagcompound.getInt("levelMech");
+    }
+
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         if (this.levelMech != 0) {
@@ -132,26 +145,13 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
     }
 
     @Override
-    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
-        CompoundTag compoundTag =  super.writeToNBT(nbttagcompound);
-        compoundTag.putInt("levelMech",levelMech);
-        return compoundTag;
-    }
-
-    @Override
-    public void readFromNBT(CompoundTag nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        levelMech = nbttagcompound.getInt("levelMech");
-    }
-
-    @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
         if (name.equals("fluidtank1")) {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -161,7 +161,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank2.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -171,7 +171,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank3.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank3.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/barium"
+    },
+    "B": {
+      "item": "industrialupgrade:bee_frame_template"
+    },
+    "C": {
+      "tag": "c:plates/gadolinium"
+    },
+    "D": {
+      "tag": "c:casings/vanady"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:frame/chance_crossing_1"
+  },
+  "show_notification": false
+}

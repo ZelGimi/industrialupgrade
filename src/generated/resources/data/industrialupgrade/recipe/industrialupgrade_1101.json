@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemiucrafring/itemmtcore"
+    },
+    "B": {
+      "item": "industrialupgrade:neutroniumingot"
+    },
+    "C": {
+      "tag": "c:plates/germanium"
+    },
+    "D": {
+      "tag": "c:plates/osmium"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_362_element"
+  },
+  "show_notification": false
+}

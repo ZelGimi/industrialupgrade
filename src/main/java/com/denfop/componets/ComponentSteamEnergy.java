@@ -5,16 +5,14 @@ import com.denfop.blocks.FluidName;
 import com.denfop.effects.EffectsRegister;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,10 +24,6 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
 
     public ComponentSteamEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
-    }
-
-    public FluidTank getFluidTank() {
-        return fluidTank;
     }
 
     public ComponentSteamEnergy(
@@ -85,11 +79,23 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     @Override
     public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
         super.onPlaced(stack, placer, facing);
-        CompoundTag nbt = ModUtils.nbt(stack);
     }
 
-    public void setFluidTank(final FluidTank fluidTank) {
-        this.fluidTank = fluidTank;
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (this.parent.getActive() && this.parent.getWorld().getGameTime() % 4 == 0) {
+            double x = this.parent.getBlockPos().getX();
+            double y = this.parent.getBlockPos().getY() + 1.0;
+            double z = this.parent.getBlockPos().getZ();
+
+            this.parent.getLevel().addParticle(
+                    EffectsRegister.STEAM_ASH.get(),
+                    x, y, z,
+                    0.0, 0.1, 0.0
+            );
+        }
     }
 
     @Override
@@ -108,7 +114,6 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         return true;
     }
 
-
     @Override
     public boolean useEnergy(final double amount) {
         super.useEnergy(amount);
@@ -120,20 +125,12 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         }
         return true;
     }
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void updateEntityClient() {
-        super.updateEntityClient();
-        if (this.parent.getActive() && this.parent.getWorld().getGameTime() % 4 == 0) {
-            double x = this.parent.getBlockPos().getX();
-            double y = this.parent.getBlockPos().getY() + 1.0;
-            double z = this.parent.getBlockPos().getZ();
 
-            this.parent.getLevel().addParticle(
-                    EffectsRegister.STEAM_ASH.get(),
-                    x, y, z,
-                    0.0, 0.1, 0.0
-            );
-        }
+    public FluidTank getFluidTank() {
+        return fluidTank;
+    }
+
+    public void setFluidTank(final FluidTank fluidTank) {
+        this.fluidTank = fluidTank;
     }
 }

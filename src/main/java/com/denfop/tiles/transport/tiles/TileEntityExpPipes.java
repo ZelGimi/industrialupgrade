@@ -13,7 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -89,7 +89,7 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
     @Override
     public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
-        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
+        NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
         this.needUpdate = true;
     }
 
@@ -99,7 +99,7 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
         if (this.needUpdate) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
             this.needUpdate = false;
             this.updateConnectivity();
         }
@@ -151,7 +151,7 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
         if (!this.getWorld().isClientSide && !addedToEnergyNet) {
             this.energyConductorMap.clear();
             this.validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
 
@@ -161,7 +161,7 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
 
     public void onUnloaded() {
         if (!this.getWorld().isClientSide && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
+            NeoForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
             this.addedToEnergyNet = false;
         }
 

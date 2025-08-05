@@ -15,7 +15,7 @@ public class GuiCyclotronCoolant<T extends ContainerCyclotronCoolant> extends Gu
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicyclotron2.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guicyclotron2.png");
     }
 
 }

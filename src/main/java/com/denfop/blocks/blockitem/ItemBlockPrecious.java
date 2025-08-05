@@ -21,6 +21,6 @@ public class ItemBlockPrecious extends ItemBlockCore<BlockPrecious.Type> impleme
     @Override
     public String[] getTags() {
         String name = getElement().getName();
-        return new String[]{"forge:storage_blocks/" + name.replace("_block", ""), "forge:storage_blocks"};
+        return new String[]{"c:storage_blocks/" + name.replace("_block", ""), "c:storage_blocks"};
     }
 }

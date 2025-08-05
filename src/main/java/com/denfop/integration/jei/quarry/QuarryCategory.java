@@ -27,14 +27,14 @@ import javax.annotation.Nonnull;
 public class QuarryCategory extends GuiIU implements IRecipeCategory<QuarryHandler> {
 
     private final IDrawableStatic bg;
-    private int energy = 0;
     private final JeiInform jeiInform;
+    private int energy = 0;
 
     public QuarryCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png"), 3, 3, 160,
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquantumquerry.png"), 3, 3, 160,
                 80
         );
         this.jeiInform = jeiInform;
@@ -66,13 +66,13 @@ public class QuarryCategory extends GuiIU implements IRecipeCategory<QuarryHandl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, QuarryHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,8,21).addItemStack(new ItemStack(IUItem.analyzermodule.getItem()));
-        builder.addSlot(RecipeIngredientRole.INPUT,32,12).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 8, 21).addItemStack(new ItemStack(IUItem.analyzermodule.getItem()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 32, 12).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
     }
 
 

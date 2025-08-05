@@ -28,8 +28,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -48,7 +48,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
     public MachineRecipe output;
 
     public TileEntityRadioactiveOreHandler(BlockPos pos, BlockState state) {
-        super(200, 1, 1,BlockBaseMachine3.radioactive_handler_ore,pos,state);
+        super(200, 1, 1, BlockBaseMachine3.radioactive_handler_ore, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.outputSlot1 = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -112,7 +112,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
                 size = Math.min(size, count);
                 size = Math.min(
                         size,
-                        this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getItem().getMaxStackSize()
+                        this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getMaxStackSize()
                 );
                 if (this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null) {
                     final int size1 = this.invSlotRecipes.getTank().getFluidAmount() / this.updateTick

@@ -35,7 +35,7 @@ public class GuiRodFactory<T extends ContainerRodFactory> extends GuiIU<Containe
                     public void ClickEvent() {
 
                         super.ClickEvent();
-                       
+
                     }
                 })
         ));
@@ -43,15 +43,14 @@ public class GuiRodFactory<T extends ContainerRodFactory> extends GuiIU<Containe
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
-        draw(poseStack,String.valueOf(this.container.base.type), 92, 65, 4210752);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        draw(poseStack, String.valueOf(this.container.base.type), 92, 65, 4210752);
     }
-
 
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

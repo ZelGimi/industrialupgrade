@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/electrum"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_567_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_579_element"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BDB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_600_element"
+  },
+  "show_notification": false
+}

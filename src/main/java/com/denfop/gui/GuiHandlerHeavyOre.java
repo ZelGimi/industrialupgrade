@@ -9,8 +9,8 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerHandlerHeavyOre;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiHandlerHeavyOre<T extends ContainerHandlerHeavyOre> extends GuiIU<ContainerHandlerHeavyOre> {
@@ -52,7 +52,7 @@ public class GuiHandlerHeavyOre<T extends ContainerHandlerHeavyOre> extends GuiI
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIHandlerHO.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIHandlerHO.png".toLowerCase());
     }
 
 }

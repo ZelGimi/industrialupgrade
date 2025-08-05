@@ -40,14 +40,15 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
     private final ContainerTripleSolidMixer container1;
     private final GuiComponent progress_bar;
     private final GuiComponent slots1;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public TripleSolidMixerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityTripleSolidMixer) BlockBaseMachine3.triple_solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -81,7 +82,6 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -98,11 +98,11 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,-8, -10);
-        this.slots1.drawBackground( stack,-8, -10);
+        this.slots.drawBackground(stack, -8, -10);
+        this.slots1.drawBackground(stack, -8, -10);
 
-        progress_bar.renderBar( stack,4, 0, xScale);
-       bindTexture(getTexture());
+        progress_bar.renderBar(stack, 4, 0, xScale);
+        bindTexture(getTexture());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
         final List<ItemStack> outputs = recipe.getOutputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX() - 8, slots1.get(i).getJeiY() - 10).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX() - 8, slots1.get(i).getJeiY() - 10).addItemStack(inputs.get(i));
 
 
         }
@@ -128,9 +128,8 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

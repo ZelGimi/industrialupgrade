@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/nichrome"
+    },
+    "B": {
+      "tag": "c:plates/cobalt"
+    }
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "id": "industrialupgrade:wiring/itemcable22"
+  },
+  "show_notification": false
+}

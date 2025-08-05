@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:alloydust/red_brass"
+  },
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:alloyingot/red_brass"
+  }
+}

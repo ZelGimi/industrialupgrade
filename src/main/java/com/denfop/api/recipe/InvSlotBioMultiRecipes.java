@@ -9,7 +9,7 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemRecipeSchedule;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +69,7 @@ public class InvSlotBioMultiRecipes extends InvSlot {
             this.accepts = this.default_accepts;
         } else {
             ItemRecipeSchedule itemRecipeSchedule = (ItemRecipeSchedule) stack.getItem();
-            this.accepts = itemRecipeSchedule.getInputs(this.recipe, stack);
+            this.accepts = itemRecipeSchedule.getInputs(base.getParent().getParent().getLevel().registryAccess(), this.recipe, stack);
         }
     }
 

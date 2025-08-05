@@ -8,6 +8,7 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumProtectionLevel;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 public class ProtectionBuilding extends Building implements IProtectionBuilding {
@@ -53,8 +54,8 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
 
 
     @Override
-    public CompoundTag writeTag(final CompoundTag tag) {
-        super.writeTag(tag);
+    public CompoundTag writeTag(final CompoundTag tag, HolderLookup.Provider p_323640_) {
+        super.writeTag(tag, p_323640_);
         tag.putByte("id", (byte) protection.ordinal());
         tag.putByte("people", people);
         return tag;

@@ -11,17 +11,14 @@ import com.denfop.gui.GuiResearchTableSpace;
 import com.denfop.network.packet.PacketUpdateCompleteQuest;
 import com.denfop.toast.GuideToast;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import org.lwjgl.opengl.GL11;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,7 @@ public class GuideQuest {
     private final int width;
     private final int height;
     private final Player player;
+    List<ItemStack> stacks = new ArrayList<>();
     private boolean isUnlocked = false;
     private int offsetX1 = 0, offsetY1 = 0;
     private int maxPage = 1;
@@ -46,7 +44,6 @@ public class GuideQuest {
     private int lastMouseX1, lastMouseY1;
     private boolean hover = false;
     private boolean hoverButton = false;
-    List<ItemStack> stacks = new ArrayList<>();
 
     public GuideQuest(Quest quest) {
         this.quest = quest;
@@ -58,30 +55,56 @@ public class GuideQuest {
         this.player = null;
     }
 
+    public GuideQuest(Quest quest, Player player, final boolean isUnlocked) {
+        this.quest = quest;
+        this.x = 25;
+        this.y = 25;
+        this.width = 208;
+        this.height = 176;
+        this.isUnlocked = isUnlocked;
+        for (ItemStack stack : quest.itemStacks) {
+            boolean merged = false;
+
+            for (ItemStack existing : stacks) {
+                if (ItemStack.isSameItem(existing, stack)) {
+
+
+                    existing.grow(stack.getCount());
+                    merged = true;
+                    break;
+                }
+            }
+            if (!merged) {
+                stacks.add(stack.copy());
+            }
+        }
+        this.player = player;
+    }
+
     public boolean isUnlocked() {
         return isUnlocked;
     }
 
     public boolean hasAllItems(Player player, List<ItemStack> requiredItems) {
         for (FluidStack fluidStack : getQuest().fluidStacks) {
-           int amount  = fluidStack.getAmount();
+            int amount = fluidStack.getAmount();
             for (int i = 0; i < player.getInventory().items.size(); i++) {
                 ItemStack inInventory = player.getInventory().items.get(i);
                 if (FluidUtil.getFluidHandler(inInventory).orElse(null) != null) {
                     final IFluidHandlerItem handler = FluidUtil.getFluidHandler(inInventory).orElse(null);
-                    if (!handler.getFluidInTank(0).isEmpty() &&handler.getFluidInTank(0)
-                            .isFluidEqual(fluidStack)) {
+                    if (!handler.getFluidInTank(0).isEmpty() && FluidStack
+                            .isSameFluid(handler.getFluidInTank(0), fluidStack)) {
                         if (handler.getFluidInTank(0).getAmount() < fluidStack.getAmount()) {
-                            amount-=handler.getFluidInTank(0).getAmount();
-                        }else{
+                            amount -= handler.getFluidInTank(0).getAmount();
+                        } else {
                             amount = 0;
                             break;
                         }
                     }
                 }
             }
-            if (amount != 0){
-                return  false;
+            if (amount != 0) {
+                return false;
             }
         }
         for (ItemStack required : requiredItems) {
@@ -107,32 +130,6 @@ public class GuideQuest {
         }
 
         return true;
-    }
-
-    public GuideQuest(Quest quest, Player player, final boolean isUnlocked) {
-        this.quest = quest;
-        this.x = 25;
-        this.y = 25;
-        this.width = 208;
-        this.height = 176;
-        this.isUnlocked=isUnlocked;
-        for (ItemStack stack : quest.itemStacks) {
-            boolean merged = false;
-
-            for (ItemStack existing : stacks) {
-                if (ItemStack.isSameItem(existing, stack)) {
-
-
-                    existing.grow(stack.getCount());
-                    merged = true;
-                    break;
-                }
-            }
-            if (!merged) {
-                stacks.add(stack.copy());
-            }
-        }
-        this.player = player;
     }
 
     public void drawForegroundLayer(GUIBook guiIU, GuiGraphics poseStack, int x, int y) {
@@ -188,36 +185,36 @@ public class GuideQuest {
         return startX >= this.x + offsetX1 + 191 && startX <= this.x + offsetX1 + 191 + 13 && startY >= this.y + offsetY1 + 4 && startY <= this.y + offsetY1 + 15;
     }
 
-    public void setLastMouseX1(final int lastMouseX1) {
-        this.lastMouseX1 = lastMouseX1;
-    }
-
-    public void setLastMouseY1(final int lastMouseY1) {
-        this.lastMouseY1 = lastMouseY1;
-    }
-
-    public void setOffsetX1(final int offsetX1) {
-        this.offsetX1 = offsetX1;
-    }
-
-    public void setOffsetY1(final int offsetY1) {
-        this.offsetY1 = offsetY1;
-    }
-
     public int getLastMouseX1() {
         return lastMouseX1;
+    }
+
+    public void setLastMouseX1(final int lastMouseX1) {
+        this.lastMouseX1 = lastMouseX1;
     }
 
     public int getLastMouseY1() {
         return lastMouseY1;
     }
 
+    public void setLastMouseY1(final int lastMouseY1) {
+        this.lastMouseY1 = lastMouseY1;
+    }
+
     public int getOffsetX1() {
         return offsetX1;
     }
 
+    public void setOffsetX1(final int offsetX1) {
+        this.offsetX1 = offsetX1;
+    }
+
     public int getOffsetY1() {
         return offsetY1;
+    }
+
+    public void setOffsetY1(final int offsetY1) {
+        this.offsetY1 = offsetY1;
     }
 
     public boolean is(int x, int y) {
@@ -226,42 +223,42 @@ public class GuideQuest {
         return tempX <= x && tempy <= y && y <= tempy + height && x <= tempX + width;
     }
 
-    public void drawBackgroundLayer(GUIBook guiIU,GuiGraphics poseStack, int mouseX, int mouseY, boolean isComplete) {
+    public void drawBackgroundLayer(GUIBook guiIU, GuiGraphics poseStack, int mouseX, int mouseY, boolean isComplete) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         guiIU.bindTexture(background1);
-        guiIU.drawTexturedModalRect( poseStack,mouseX + x + offsetX1, mouseY + y + offsetY1, 0, 0, width, height);
+        guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1, mouseY + y + offsetY1, 0, 0, width, height);
         if (hover) {
-            guiIU.drawTexturedModalRect( poseStack,mouseX + x + offsetX1 + 191, mouseY + y + offsetY1 + 4, 243, 12, 13, 12);
+            guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 191, mouseY + y + offsetY1 + 4, 243, 12, 13, 12);
         } else {
-            guiIU.drawTexturedModalRect(poseStack,mouseX + x + offsetX1 + 191, mouseY + y + offsetY1 + 4, 243, 0, 13, 12);
+            guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 191, mouseY + y + offsetY1 + 4, 243, 0, 13, 12);
 
         }
         if (isComplete) {
-            guiIU.drawTexturedModalRect( poseStack,mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 85, 20, 19);
+            guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 85, 20, 19);
         } else {
-            if (hasAllItems(player, stacks)  && !this.isUnlocked()) {
+            if (hasAllItems(player, stacks) && !this.isUnlocked()) {
                 if (!hoverButton) {
-                    guiIU.drawTexturedModalRect( poseStack,mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 25, 20, 19);
+                    guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 25, 20, 19);
                 } else {
-                    guiIU.drawTexturedModalRect( poseStack,mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 45, 20, 19);
+                    guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 45, 20, 19);
                 }
             } else {
-                guiIU.drawTexturedModalRect( poseStack,mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 65, 20, 19);
+                guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 15, mouseY + y + offsetY1 + 37, 236, 65, 20, 19);
 
             }
         }
 
-        guiIU.drawString( poseStack, quest.getLocalizedName(),
+        guiIU.drawString(poseStack, quest.getLocalizedName(),
                 mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth(quest.getLocalizedName()) / 2,
                 mouseY + y + offsetY1 + 5, 0
         );
-        guiIU.drawString(poseStack,ChatFormatting.GREEN +
+        guiIU.drawString(poseStack, ChatFormatting.GREEN +
                         Localization.translate("iu.quest.task." + quest.typeQuest.name().toLowerCase()),
-                mouseX + x + offsetX1 + 5 + width / 2 -    guiIU.getStringWidth("iu.quest.task." + quest.typeQuest.name().toLowerCase()) / 2,
+                mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth("iu.quest.task." + quest.typeQuest.name().toLowerCase()) / 2,
                 mouseY + y + offsetY1 + 25, 0
         );
 
-        new ItemImage(guiIU, x + offsetX1 + 17, y + offsetY1 + 16, () -> quest.icon).drawBackground( poseStack,mouseX, mouseY);
+        new ItemImage(guiIU, x + offsetX1 + 17, y + offsetY1 + 16, () -> quest.icon).drawBackground(poseStack, mouseX, mouseY);
         List<String> lines = guiIU.splitTextToLines(quest.getLocalizedDescription(), width - 15, 1
         );
         maxPage = Math.max(1, lines.size() - 6);
@@ -271,20 +268,20 @@ public class GuideQuest {
         guiIU.drawTextInCanvasWithScissor(poseStack,
                 quest.getLocalizedDescription(),
                 mouseX + x + offsetX1 + 6,
-                mouseY +y + offsetY1 + 90,
+                mouseY + y + offsetY1 + 90,
                 width - 15,
                 70,
                 page
         );
         disableScissor(guiIU);
-        guiIU.drawString(poseStack,page + "/" + maxPage,
+        guiIU.drawString(poseStack, page + "/" + maxPage,
                 mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth(page + "/" + maxPage) / 2,
                 mouseY + y + offsetY1 + 162, 0
         );
         RenderSystem.setShaderColor(1, 1, 1, 1);
         guiIU.bindTexture(background1);
         int scroll = (int) Math.ceil(71D / (maxPage));
-        guiIU.drawTexturedModalRect(poseStack,mouseX + x + offsetX1 + 200,
+        guiIU.drawTexturedModalRect(poseStack, mouseX + x + offsetX1 + 200,
                 mouseY + y + offsetY1 + 94 + (page - 1) * 71 / (maxPage),
                 232,
                 1,
@@ -310,11 +307,11 @@ public class GuideQuest {
                         x + offsetX1 + 6 + j * 18,
                         y + offsetY1 + 64,
                         () -> quest.itemStacks.get(finalI)
-                ).drawBackground(poseStack,mouseX, mouseY);
+                ).drawBackground(poseStack, mouseX, mouseY);
             } else {
                 final int finalI = i - quest.itemStacks.size();
                 new FluidItem(guiIU, x + offsetX1 + 6 + j * 18, y + offsetY1 + 64, quest.fluidStacks.get(finalI)).drawBackground(
-                        poseStack,  mouseX,
+                        poseStack, mouseX,
                         mouseY
                 );
 
@@ -323,7 +320,7 @@ public class GuideQuest {
     }
 
     private void enableScissor(GUIBook book, int x, int y, int width, int height) {
-      GuiResearchTableSpace.enableScissor(x,y,x+width,y+height);
+        GuiResearchTableSpace.enableScissor(x, y, x + width, y + height);
     }
 
     private void disableScissor(GUIBook book) {
@@ -418,15 +415,15 @@ public class GuideQuest {
     }
 
     public boolean isComplete(Player player, int tab) {
-        if (hasAllItems(player,stacks) && hoverButton && !isUnlocked){
+        if (hasAllItems(player, stacks) && hoverButton && !isUnlocked) {
             return GuideBookCore.uuidGuideMap.get(player.getUUID()).get(GuideBookCore.instance.getGuideTabs().get(tab).unLocalized).contains(quest.unLocalizedName);
         }
         return false;
     }
 
     public void complete(Player player, int tab) {
-        Minecraft.getInstance().getToasts().addToast(new GuideToast(this.quest));
-        new PacketUpdateCompleteQuest(player,GuideBookCore.instance.getGuideTabs().get(tab).unLocalized,quest.unLocalizedName);
+        Minecraft.getInstance().getToasts().addToast(new GuideToast(quest));
+        new PacketUpdateCompleteQuest(player, GuideBookCore.instance.getGuideTabs().get(tab).unLocalized, quest.unLocalizedName);
     }
 
 }

@@ -33,10 +33,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -90,20 +90,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
 
     }
 
-    public static void addRecipe(IInputItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        Recipes.recipes.addRecipe(
-                "primal_fluid_integrator",
-                new BaseMachineRecipe(
-                        new Input(fluidStack, input.getInput(container)),
-                        new RecipeOutput(null, output)
-                )
-        );
-        Recipes.recipes.getRecipeFluid().addRecipe("primal_fluid_integrator", new BaseFluidMachineRecipe(new InputFluid(
-                container, fluidStack), Collections.singletonList(
-                outputfluidStack)));
 
-    }
     public static void addRecipe(ItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -119,6 +106,20 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
 
     }
 
+    public static void addRecipe(IInputItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        Recipes.recipes.addRecipe(
+                "primal_fluid_integrator",
+                new BaseMachineRecipe(
+                        new Input(fluidStack, input.getInput(container)),
+                        new RecipeOutput(null, output)
+                )
+        );
+        Recipes.recipes.getRecipeFluid().addRecipe("primal_fluid_integrator", new BaseFluidMachineRecipe(new InputFluid(
+                container, fluidStack), Collections.singletonList(
+                outputfluidStack)));
+
+    }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
         for (int i = 1; i < 6; i++) {
@@ -139,19 +140,19 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank1.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                this.fluidTank2.readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+                inputSlotA.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -168,7 +169,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -186,7 +187,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
             try {
                 FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank2 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                    this.fluidTank2.readFromNBT(is.registryAccess(), fluidTank2.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -200,14 +201,14 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         }
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                inputSlotA.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                outputSlot.readFromNbt(is.registryAccess(), ((InvSlot) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -226,7 +227,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
                 .getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             ItemStack stack = player.getItemInHand(hand);
@@ -320,7 +321,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
                         , 50)
         );
 
-        addRecipe(Recipes.inputFactory.getInput("forge:dusts/coal"), new ItemStack(IUItem.crafting_elements.getStack(498), 1),
+        addRecipe(Recipes.inputFactory.getInput("c:dusts/coal"), new ItemStack(IUItem.crafting_elements.getStack(498), 1),
                 new FluidStack(FluidName.fluidhyd.getInstance().get(), 200),
                 new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 100)

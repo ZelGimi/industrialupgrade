@@ -37,9 +37,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -171,6 +171,9 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnHydrogenGeneratorParticles(level, pos, level.random);
+        }
         if (this.needsFluid()) {
             MutableObject<ItemStack> output = new MutableObject<>();
             if (this.fluidSlot.transferToTank(
@@ -192,9 +195,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
             this.energy.useEnergy(used);
         }
 
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnHydrogenGeneratorParticles(level,pos,level.random);
-        }
+
         if (this.getActive() != newActive) {
             this.setActive(newActive);
         }

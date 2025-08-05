@@ -32,7 +32,7 @@ public class RotorUpgradeCategory extends GuiIU implements IRecipeCategory<Rotor
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityRodManufacturer) BlockBaseMachine3.rods_manufacturer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei" +
                         ".png"), 5, 5, 140,
                 80
         );
@@ -48,7 +48,7 @@ public class RotorUpgradeCategory extends GuiIU implements IRecipeCategory<Rotor
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 18).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 18).getDescriptionId());
     }
 
 
@@ -62,17 +62,17 @@ public class RotorUpgradeCategory extends GuiIU implements IRecipeCategory<Rotor
     @Override
     public void draw(RotorUpgradeHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
-         }
+    }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RotorUpgradeHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,51+23,37).addItemStack(recipe.getInputs()[1]);
-        builder.addSlot(RecipeIngredientRole.INPUT,29+23,37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 51 + 23, 37).addItemStack(recipe.getInputs()[1]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 29 + 23, 37).addItemStack(recipe.getInputs()[0]);
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei.png");
     }
 
 

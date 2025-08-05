@@ -1,0 +1,13 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:itemingots/zirconium"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "industrialupgrade:nugget/zirconium"
+  }
+}

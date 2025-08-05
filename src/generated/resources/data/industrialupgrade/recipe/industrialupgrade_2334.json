@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:lightning_rod/lightning_rod_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:charged_redstone"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "ACA",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:lightning_rod/lightning_rod_grounding"
+  },
+  "show_notification": false
+}

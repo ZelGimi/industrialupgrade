@@ -14,12 +14,13 @@ import com.denfop.api.space.colonies.enums.EnumTypeFactory;
 import com.denfop.api.space.colonies.enums.EnumTypeSolarPanel;
 import com.denfop.api.space.fakebody.Data;
 import com.denfop.network.packet.PacketSuccessUpdateColony;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -246,16 +247,16 @@ public class ColonyNet implements IColonyNet {
     }
 
     @Override
-    public CompoundTag writeNBT(final CompoundTag tag, UUID player) {
+    public CompoundTag writeNBT(final CompoundTag tag, UUID player, HolderLookup.Provider p_323640_) {
         final List<IColony> list = fakePlayerListMap.getOrDefault(player, Collections.emptyList());
         ListTag nbt = new ListTag();
         tag.putUUID("player", player);
         for (IColony colonies : list) {
-            nbt.add(colonies.writeNBT(new CompoundTag()));
+            nbt.add(colonies.writeNBT(new CompoundTag(), p_323640_));
         }
         ListTag nbt1 = new ListTag();
         for (Sends sends1 : sends.getOrDefault(player, Collections.emptyList())) {
-            nbt1.add(sends1.writeToNbt());
+            nbt1.add(sends1.writeToNbt(p_323640_));
         }
         tag.put("sends", nbt1);
         tag.put("colonial", nbt);
@@ -263,7 +264,7 @@ public class ColonyNet implements IColonyNet {
     }
 
     @Override
-    public void addColony(final CompoundTag tag) {
+    public void addColony(final CompoundTag tag, HolderLookup.Provider p_323640_) {
         ListTag nbt = tag.getList("colonial", 10);
         ListTag nbt1 = tag.getList("sends", 10);
         List<IColony> list;
@@ -277,13 +278,13 @@ public class ColonyNet implements IColonyNet {
         List<Sends> list1 = new LinkedList<>();
         for (int i = 0; i < nbt1.size(); i++) {
             CompoundTag nbt2 = nbt1.getCompound(i);
-            Sends sends1 = new Sends(nbt2);
+            Sends sends1 = new Sends(nbt2, p_323640_);
             list1.add(sends1);
         }
 
         for (int i = 0; i < nbt.size(); i++) {
             CompoundTag nbt2 = nbt.getCompound(i);
-            IColony colonies = new Colony(nbt2, player);
+            IColony colonies = new Colony(nbt2, player, p_323640_);
             list.add(colonies);
             colonyList.add(colonies);
 
@@ -318,13 +319,13 @@ public class ColonyNet implements IColonyNet {
                             if (sends1.stacks.size() == 27)
                                 break;
                             if (stack != null && !stack.isEmpty())
-                            sends1.addStack(stack.copy());
+                                sends1.addStack(stack.copy());
                         }
                         for (FluidStack fluidStack : storage.getFluidStacks()) {
                             if (sends1.fluidStacks.size() == 9)
                                 break;
                             if (fluidStack != null && !fluidStack.isEmpty())
-                            sends1.addStack(fluidStack.copy());
+                                sends1.addStack(fluidStack.copy());
                         }
                         storage.getStacks().clear();
                         storage.getFluidStacks().clear();

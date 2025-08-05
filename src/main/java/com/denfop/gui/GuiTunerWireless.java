@@ -19,7 +19,7 @@ public class GuiTunerWireless<T extends ContainerTunerWireless> extends GuiIU<Co
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

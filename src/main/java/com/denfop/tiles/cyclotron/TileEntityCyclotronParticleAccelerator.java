@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityCyclotronParticleAccelerator extends TileEntityMultiBlockElement implements IParticleAccelerator {
 
     public TileEntityCyclotronParticleAccelerator(BlockPos pos, BlockState state) {
-        super( BlockCyclotron.cyclotron_particle_accelerator, pos, state);
+        super(BlockCyclotron.cyclotron_particle_accelerator, pos, state);
     }
 
     @Override

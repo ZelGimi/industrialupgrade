@@ -33,11 +33,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.*;
@@ -225,7 +225,7 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
                             for (int i = 0; i < size - 1; i++) {
                                 this.outputSlot.add(this.pattern.getStack());
                             }
-                        else{
+                        else {
                             this.outputSlot.add(this.pattern.getStack());
                         }
                     }
@@ -362,7 +362,7 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         boolean isPattern = nbt.getBoolean("isPattern");
         if (isPattern) {
             CompoundTag contentTag = nbt.getCompound("pattern");
-            final ItemStack stack = ItemStack.of(contentTag);
+            final ItemStack stack = ItemStack.parseOptional(provider, contentTag);
             this.pattern = new RecipeInfo(stack, Recipes.recipes
                     .getRecipeOutput("replicator", false, stack)
                     .getOutput().metadata.getDouble(
@@ -379,7 +379,7 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         if (this.pattern != null) {
             nbt.putBoolean("isPattern", true);
             CompoundTag contentTag = new CompoundTag();
-            this.pattern.getStack().save(contentTag);
+            this.pattern.getStack().save(this.provider, contentTag);
             nbt.put("pattern", contentTag);
         } else {
             nbt.putBoolean("isPattern", false);

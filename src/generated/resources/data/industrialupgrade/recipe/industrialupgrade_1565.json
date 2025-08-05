@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_147_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_10_element"
+    },
+    "D": {
+      "item": "industrialupgrade:molecular/molecular"
+    }
+  },
+  "pattern": [
+    " C ",
+    " D ",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/aer_assembler"
+  },
+  "show_notification": false
+}

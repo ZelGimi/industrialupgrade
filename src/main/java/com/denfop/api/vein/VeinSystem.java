@@ -8,8 +8,7 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.*;
 
@@ -28,7 +27,6 @@ public class VeinSystem implements IVeinSystem {
         this.chunkPos = new ArrayList<>();
         this.chunkPosVeinMap = new HashMap<>();
         this.rand = new Random();
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public Vein getEMPTY() {
@@ -50,9 +48,9 @@ public class VeinSystem implements IVeinSystem {
         int chance = rand.nextInt(100);
         Vein vein = new Vein(Type.EMPTY, 0, chunk.getPos());
         Holder<Biome> holder = chunk.getLevel().getBiome(new BlockPos(chunk.getPos().x * 16, 0, chunk.getPos().z * 16));
-        int col = holder.containsTag(BiomeTags.IS_HILL) ? 25 : 0;
+        int col = holder.is(BiomeTags.IS_HILL) ? 25 : 0;
         if (chance >= 15 + col) {
-            col = (holder.containsTag(BiomeTags.IS_TAIGA) || holder.containsTag(Tags.Biomes.IS_SNOWY)) ? 15 : 0;
+            col = (holder.is(BiomeTags.IS_TAIGA) || holder.is(Tags.Biomes.IS_SNOWY)) ? 15 : 0;
             if (rand.nextInt(100) < 85 - col) {
                 getnumber(vein, holder);
             } else {

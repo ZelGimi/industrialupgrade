@@ -20,8 +20,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityCapacitor extends TileEntityMultiBlockElement implements ICapacitor, IUpdatableTileEvent {
 
@@ -32,7 +32,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     private ICapacitorItem item;
 
     public TileEntityCapacitor(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
 
@@ -104,7 +104,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
                 if (item == null) {
                     this.item = (ICapacitorItem) this.slot.get(0).getItem();
                 }
-                this.item.damageItem(this.slot.get(0), 1);
+                this.item.damageItem(this.slot.get(0), -1);
             }
         }
     }

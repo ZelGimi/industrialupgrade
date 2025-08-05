@@ -14,8 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbility;
 
 
 public class ItemEnergyToolHoe extends ItemEnergyTool {
@@ -26,8 +25,10 @@ public class ItemEnergyToolHoe extends ItemEnergyTool {
         this.tier = 1;
     }
 
-    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-        return ToolActions.DEFAULT_HOE_ACTIONS.contains(toolAction);
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return net.neoforged.neoforge.common.ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
     }
 
     @Override
@@ -50,11 +51,12 @@ public class ItemEnergyToolHoe extends ItemEnergyTool {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-        if (context.getClickedFace() == Direction.DOWN ||(
+        if (context.getClickedFace() == Direction.DOWN || (
                 !world.getBlockState(pos.below()).isAir() &&
-                (block != Blocks.MYCELIUM && block != Blocks.GRASS_BLOCK && block != Blocks.DIRT))) {
+                        (block != Blocks.MYCELIUM && block != Blocks.GRASS_BLOCK && block != Blocks.DIRT))) {
             return super.useOn(context);
         }
+
 
         Block farmland = Blocks.FARMLAND;
         SoundType stepSound = farmland.getSoundType(state, world, pos, player);

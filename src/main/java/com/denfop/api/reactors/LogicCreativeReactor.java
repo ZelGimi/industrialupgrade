@@ -156,10 +156,6 @@ public class LogicCreativeReactor {
         calculateFirstLogic(this.listComponent);
     }
 
-    public List<LogicCreativeComponent> getListComponent() {
-        return listComponent;
-    }
-
     public List<Integer> getListIndexRod() {
         return listIndexRod;
     }
@@ -192,19 +188,19 @@ public class LogicCreativeReactor {
                     for (LogicCreativeComponent component1 : component.getLogicComponents()) {
                         if (component1.getItem().getType() == EnumTypeComponent.ROD) {
                             count++;
-                            temp_generation +=((component1
+                            temp_generation += ((component1
                                     .getItem()
                                     .getEnergyProduction(this.reactor) * reactor.getMulOutput(component1.getX(),
                                     component1.getY(), component1.getStack()
-                            )) * (0.45+component.getItem().getEnergyProduction(this.reactor)));
-                            temp_rad_generation +=  (component1.getItem().getRadiation() * component
+                            )) * (0.45 + component.getItem().getEnergyProduction(this.reactor)));
+                            temp_rad_generation += (component1.getItem().getRadiation() * component
                                     .getItem()
                                     .getEnergyProduction(this.reactor));
                         }
                     }
                     if (count > 1) {
-                        this.generation += (int) temp_generation;
-                        this.rad_generation += (int) temp_rad_generation;
+                        this.generation += temp_generation;
+                        this.rad_generation += temp_rad_generation;
                     }
                 }
                 if (component.getItem().updatableItem() && !list1.contains(component)) {

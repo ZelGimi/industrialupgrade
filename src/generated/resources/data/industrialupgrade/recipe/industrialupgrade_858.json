@@ -1,0 +1,43 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:plates/alcled"
+    },
+    "C": {
+      "tag": "c:plates/alumel"
+    },
+    "D": {
+      "tag": "c:plates/vitalium"
+    },
+    "E": {
+      "tag": "c:plates/redbrass"
+    },
+    "F": {
+      "tag": "c:plates/muntsa"
+    },
+    "G": {
+      "tag": "c:plates/nichrome"
+    },
+    "H": {
+      "tag": "c:plates/vanadoalumite"
+    },
+    "J": {
+      "tag": "c:plates/duralumin"
+    }
+  },
+  "pattern": [
+    "FBG",
+    "CAD",
+    "HEJ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_56_element"
+  },
+  "show_notification": false
+}

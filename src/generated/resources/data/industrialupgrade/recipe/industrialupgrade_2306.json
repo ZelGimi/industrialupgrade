@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "AA ",
+    "AAB",
+    "AA "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:booze_mug"
+  },
+  "show_notification": false
+}

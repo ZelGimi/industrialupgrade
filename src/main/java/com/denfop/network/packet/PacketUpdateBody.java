@@ -16,16 +16,18 @@ import java.io.IOException;
 
 public class PacketUpdateBody implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateBody() {
 
     }
 
     public PacketUpdateBody(TileEntityResearchTableSpace tile, IBody body) {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(tile.getLevel().registryAccess());
         customPacketBuffer.writeByte(getId());
         try {
-            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock)tile).getWorld());
-            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock)tile).getPos());
+            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) tile).getWorld());
+            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) tile).getPos());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -34,7 +36,18 @@ public class PacketUpdateBody implements IPacket {
             customPacketBuffer.writeString(body.getName());
         }
         tile.body = body;
-        IUCore.network.getClient().sendPacket(customPacketBuffer);
+        this.buffer = customPacketBuffer;
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

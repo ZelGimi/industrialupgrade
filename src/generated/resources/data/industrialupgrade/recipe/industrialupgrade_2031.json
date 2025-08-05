@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/osmium"
+    },
+    "B": {
+      "tag": "c:plates/steel"
+    },
+    "C": {
+      "tag": "c:plates/lead"
+    }
+  },
+  "pattern": [
+    "AAB",
+    "ABC",
+    "BCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_742_element"
+  },
+  "show_notification": false
+}

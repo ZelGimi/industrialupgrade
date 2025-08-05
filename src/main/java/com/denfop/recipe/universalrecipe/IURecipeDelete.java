@@ -2,45 +2,41 @@ package com.denfop.recipe.universalrecipe;
 
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
-import java.util.Map;
 
-public class IURecipeDelete implements Recipe<Container> {
-    private final ResourceLocation id;
+public class IURecipeDelete implements Recipe<CraftingInput> {
     private final String recipeType;
+
     private final boolean isFluid;
-    private final  List<IInputItemStack> inputItemStackList;
+    private final List<IInputItemStack> inputItemStackList;
     private final boolean removeAll;
 
 
-
-    public IURecipeDelete(ResourceLocation id, String recipeType,Boolean isFluidRecipe, List<IInputItemStack> inputItemStackList,  boolean removeAll) {
-        this.id = id;
+    public IURecipeDelete(String recipeType, Boolean isFluidRecipe, List<IInputItemStack> inputItemStackList, boolean removeAll) {
         this.recipeType = recipeType;
         this.inputItemStackList = inputItemStackList;
         this.removeAll = removeAll;
-        this.isFluid=isFluidRecipe;
+        this.isFluid = isFluidRecipe;
     }
 
+
     @Override
-    public boolean matches(Container inv, Level world) {
+    public boolean matches(CraftingInput inv, Level world) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
-        return  ItemStack.EMPTY;
+    public ItemStack assemble(CraftingInput container, HolderLookup.Provider provider) {
+        return ItemStack.EMPTY;
     }
-
 
 
     @Override
@@ -49,25 +45,10 @@ public class IURecipeDelete implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
-        return  ItemStack.EMPTY;
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
+        return ItemStack.EMPTY;
     }
 
-    public boolean isFluid() {
-        return isFluid;
-    }
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    public boolean isRemoveAll() {
-        return removeAll;
-    }
-
-    public List<IInputItemStack> getInputsAll() {
-        return  inputItemStackList;
-    }
 
     public String getRecipeType() {
         return recipeType;
@@ -82,5 +63,18 @@ public class IURecipeDelete implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return Register.UNIVERSAL_RECIPE_TYPE_DELETE.get();
+    }
+
+
+    public boolean isFluid() {
+        return isFluid;
+    }
+
+    public boolean isRemoveAll() {
+        return removeAll;
+    }
+
+    public List<IInputItemStack> getInputsAll() {
+        return inputItemStackList;
     }
 }

@@ -1,6 +1,7 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.state.DefaultDrop;
@@ -14,12 +15,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+
+;
 
 public enum BlockUniversalCable implements IMultiTileBlock, IMultiBlockItem {
 
@@ -38,49 +40,6 @@ public enum BlockUniversalCable implements IMultiTileBlock, IMultiBlockItem {
     ;
 
 
-    private final Class<? extends TileEntityBlock> teClass;
-    private final int itemMeta;
-    int idBlock;
-    private TileEntityBlock dummyTe;
-    private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
-
-    ;
-
-    BlockUniversalCable(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this.teClass = teClass;
-        this.itemMeta = itemMeta;
-
-
-    }
-
-    ;
-
-    public int getIDBlock() {
-        return idBlock;
-    }
-
-    public void setIdBlock(int id) {
-        idBlock = id;
-    }
-
-    public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
-        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
-            throw new IllegalAccessError("Don't mess with this please.");
-        }
-        if (this.teClass != null) {
-            try {
-                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
-            } catch (Exception e) {
-
-            }
-        }
-    }
-    @Override
-    public boolean hasUniqueName() {
-        return true;
-    }
     private static final String[] name = {
             "itemuniversalcable",
             "itemuniversalccableo",
@@ -93,14 +52,56 @@ public enum BlockUniversalCable implements IMultiTileBlock, IMultiBlockItem {
             "itemuniversalcironcableiiii"
             , "itemuniversalcglasscable"
             , "itemuniversalcglasscablei"};
+    private final Class<? extends TileEntityBlock> teClass;
+    private final int itemMeta;
+    int idBlock;
+    private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+
+    ;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
+
+    BlockUniversalCable(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
+        this.teClass = teClass;
+        this.itemMeta = itemMeta;
 
 
+    }
 
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    public void buildDummies() {
+        final ModContainer mc = IUCore.instance.modContainer;
+        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
+            throw new IllegalAccessError("Don't mess with this please.");
+        }
+        if (this.teClass != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    @Override
+    public boolean hasUniqueName() {
+        return true;
+    }
 
     @Override
     public String getUniqueName() {
-        return"iu.universal_cable." +  name[this.itemMeta];
+        return "iu.universal_cable." + name[this.itemMeta];
     }
+
     @Override
     public BlockEntityType<? extends TileEntityBlock> getBlockType() {
         return this.blockType.get();
@@ -112,7 +113,7 @@ public enum BlockUniversalCable implements IMultiTileBlock, IMultiBlockItem {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 

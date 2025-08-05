@@ -14,7 +14,6 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -22,14 +21,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.*;
 
@@ -41,22 +39,22 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
 
     protected boolean canGrowInto(Block blockType) {
         BlockState material = blockType.defaultBlockState();
-        return material.isAir() || material.is(BlockTags.LEAVES) || blockType == Blocks.GRASS_BLOCK || blockType == Blocks.DIRT || blockType.defaultBlockState().is(BlockTags.LOGS) || blockType.defaultBlockState().is(BlockTags.LEAVES) || blockType.defaultBlockState().is(BlockTags.SAPLINGS) || blockType == Blocks.VINE || blockType == IUItem.rubWood.getBlock().get() || blockType == IUItem.leaves.getBlock().get();
+        return material.isAir() || material.is(BlockTags.LEAVES) || blockType == Blocks.GRASS_BLOCK || blockType == Blocks.DIRT || blockType.defaultBlockState().is(BlockTags.LOGS) || blockType.defaultBlockState().is(BlockTags.LEAVES) || blockType.defaultBlockState().is(BlockTags.SAPLINGS) || blockType == Blocks.VINE || blockType == IUItem.rubWood.getBlock().get() || blockType == IUItem.leaves.getBlock().get() || blockType == IUItem.rubberSapling.getBlock().get();
     }
 
 
     public boolean placeInstantly(ServerLevel pLevel, ChunkGenerator generator, BlockState pState, RandomSource pRandom, BlockPos pPos) {
-        int i =pRandom.nextInt(5) + pRandom.nextInt(4) + pRandom.nextInt(2);
-        WorldGenLevel worldIn =pLevel;
+        int i = pRandom.nextInt(5) + pRandom.nextInt(4) + pRandom.nextInt(2);
+        WorldGenLevel worldIn = pLevel;
         BlockPos position = pPos;
-        RandomSource rand =pRandom;
+        RandomSource rand = pRandom;
         if (i <= 3) {
             i = 4;
         }
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
                 BlockState state = worldIn.getBlockState(position.offset(x, 0, z));
-                if (state.getMapColor(pLevel,position.offset(x, 0, z)) == MapColor.WOOD || state.getBlock() == IUItem.rubWood.getBlock().get()) {
+                if (state.getMapColor(pLevel, position.offset(x, 0, z)) == MapColor.WOOD || state.getBlock() == IUItem.rubWood.getBlock().get()) {
                     return false;
                 }
             }
@@ -97,13 +95,7 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
             } else {
                 BlockPos down = position.below();
                 BlockState state = worldIn.getBlockState(down);
-                boolean isSoil = state.getBlock().canSustainPlant(
-                        state,
-                        worldIn,
-                        down,
-                        Direction.UP,
-                        IUItem.rubberSapling.getBlock().get()
-                );
+                boolean isSoil = state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.DIRT;
 
                 if (isSoil && position.getY() < worldIn.getHeight() - i - 1) {
                     this.onPlantGrow(state, worldIn, down, position);
@@ -302,7 +294,6 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
     }
 
-
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
 
@@ -326,19 +317,19 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
         rubberTrees = 0;
 
 
-            for (Holder<Biome> biome : biomes) {
-                if (biome != null) {
-                    if (biome.is(Tags.Biomes.IS_SWAMP)) {
-                        rubberTrees += WorldBaseGen.random.nextInt(10) + 2;
-                    }
-                    if (biome.is(BiomeTags.IS_JUNGLE)) {
-                        rubberTrees += WorldBaseGen.random.nextInt(15) + 5;
-                    }
-                    if (biome.is(BiomeTags.IS_FOREST)) {
-                        rubberTrees += WorldBaseGen.random.nextInt(5) + 1;
-                    }
+        for (Holder<Biome> biome : biomes) {
+            if (biome != null) {
+                if (biome.is(Tags.Biomes.IS_SWAMP)) {
+                    rubberTrees += WorldBaseGen.random.nextInt(10) + 2;
+                }
+                if (biome.is(BiomeTags.IS_JUNGLE)) {
+                    rubberTrees += WorldBaseGen.random.nextInt(15) + 5;
+                }
+                if (biome.is(BiomeTags.IS_FOREST)) {
+                    rubberTrees += WorldBaseGen.random.nextInt(5) + 1;
                 }
             }
+        }
 
 
         rubberTrees = Math.round((float) rubberTrees * 2);
@@ -355,7 +346,7 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
                 BlockState state = worldIn.getBlockState(position.offset(x, 0, z));
-                if (state.getMapColor(worldIn,position.offset(x, 0, z)) == MapColor.WOOD || state.getBlock() == IUItem.rubWood.getBlock().get()) {
+                if (state.getMapColor(worldIn, position.offset(x, 0, z)) == MapColor.WOOD || state.getBlock() == IUItem.rubWood.getBlock().get()) {
                     return false;
                 }
             }
@@ -396,13 +387,7 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
             } else {
                 BlockPos down = position.below();
                 BlockState state = worldIn.getBlockState(down);
-                boolean isSoil = state.getBlock().canSustainPlant(
-                        state,
-                        worldIn,
-                        down,
-                        Direction.UP,
-                        IUItem.rubberSapling.getBlock().get()
-                );
+                boolean isSoil = state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.DIRT;
 
                 if (isSoil && position.getY() < worldIn.getHeight() - i - 1) {
                     this.onPlantGrow(state, worldIn, down, position);

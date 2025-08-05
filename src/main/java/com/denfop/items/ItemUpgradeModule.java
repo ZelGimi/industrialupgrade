@@ -6,17 +6,16 @@ import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.container.ContainerUpgrade;
+import com.denfop.datacomponent.ContainerAdditionalItem;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.bags.BagsDescription;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,12 +43,9 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
         }
         return Type.Values[meta];
     }
-    @Override
-    public CreativeModeTab getItemCategory() {
-        return IUCore.UpgradeTab;
-    }
+
     private static Direction getDirection(final ItemStack stack) {
-        final int rawDir = ModUtils.nbt(stack).getByte("dir");
+        final int rawDir = stack.getOrDefault(DataComponentsInit.DIRECTION, (byte) 0);
         if (rawDir < 1 || rawDir > 6) {
             return null;
         }
@@ -88,6 +83,11 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     }
 
     @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.UpgradeTab;
+    }
+
+    @Override
     public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
         if (this.getElement().getId() < 11) {
             return null;
@@ -99,9 +99,9 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     }
 
     public void save(ItemStack stack, Player player) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("open", true);
-        nbt.putInt("slot_inventory", player.getInventory().selected);
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+        containerItem = containerItem.updateOpen(stack, true);
+        containerItem.updateSlot(stack, player.getInventory().selected);
     }
 
     @Override
@@ -123,16 +123,16 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
             return;
         }
         Player player = (Player) entity;
-        CompoundTag nbt = stack.getOrCreateTag();
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
 
-        if (nbt.getBoolean("open")) {
-            int slotId = nbt.getInt("slot_inventory");
+        if (containerItem.open()) {
+            int slotId = containerItem.slot_inventory();
             if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
                 ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
-                    nbt.putBoolean("open", false);
+                    containerItem.updateOpen(stack, false);
                 }
             }
         }
@@ -142,9 +142,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
     @Override
     public void updateEvent(int event, ItemStack stack) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
         byte event1 = (byte) event;
-        nbt.putByte("dir", event1);
+        stack.set(DataComponentsInit.DIRECTION, event1);
     }
 
     @Override
@@ -244,12 +243,12 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
         if (!player.level().isClientSide) {
             save(stack, player);
 
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
             growingBuffer.writeByte(1);
 
             growingBuffer.flip();
-            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+            player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
         }
 
         return InteractionResultHolder.success(player.getItemInHand(hand));
@@ -283,19 +282,13 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
                 String side = getSideName(stack);
                 tooltip.add(Component.translatable("iu.tooltip.upgrade.ejector", Component.translatable(side)));
                 if (type == Type.ejector) {
-                    CompoundTag nbt = stack.getOrCreateTag();
                     List<BagsDescription> bags = new ArrayList<>();
-                    ListTag contentList = nbt.getList("Items", Tag.TAG_COMPOUND);
-
-                    for (int i = 0; i < contentList.size(); ++i) {
-                        CompoundTag slotNbt = contentList.getCompound(i);
-                        int slot = slotNbt.getByte("Slot");
-                        if (slot >= 0 && slot < 6) {
-                            ItemStack stack1 = ItemStack.of(slotNbt);
-                            if (!stack1.isEmpty()) {
-                                bags.add(new BagsDescription(stack1));
-                            }
+                    List<ItemStack> stacks = stack.getOrDefault(DataComponentsInit.CONTAINER_ADDITIONAL, ContainerAdditionalItem.EMPTY).listItem();
+                    for (ItemStack stack1 : stacks) {
+                        if (!stack1.isEmpty()) {
+                            bags.add(new BagsDescription(stack1));
                         }
+
                     }
 
                     for (BagsDescription description : bags) {
@@ -304,26 +297,20 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
                 }
                 break;
             }
-
             case pulling:
             case fluid_pulling: {
                 String side = getSideName(stack);
                 tooltip.add(Component.translatable("iu.tooltip.upgrade.pulling", Component.translatable(side)));
                 if (type == Type.pulling) {
-                    CompoundTag nbt = stack.getOrCreateTag();
                     List<BagsDescription> bags = new ArrayList<>();
-                    ListTag contentList = nbt.getList("Items", Tag.TAG_COMPOUND);
 
-                    for (int i = 0; i < contentList.size(); ++i) {
-                        CompoundTag slotNbt = contentList.getCompound(i);
-                        int slot = slotNbt.getByte("Slot");
-                        if (slot >= 0 && slot < 6) {
-                            ItemStack stack1 = ItemStack.of(slotNbt);
-                            if (!stack1.isEmpty()) {
-                                bags.add(new BagsDescription(stack1));
-                            }
+                    List<ItemStack> stacks = stack.getOrDefault(DataComponentsInit.CONTAINER_ADDITIONAL, ContainerAdditionalItem.EMPTY).listItem();
+                    for (ItemStack stack1 : stacks) {
+                        if (!stack1.isEmpty()) {
+                            bags.add(new BagsDescription(stack1));
                         }
                     }
+
 
                     for (BagsDescription description : bags) {
                         tooltip.add(Component.literal(description.getStack().getHoverName().getString()).withStyle(ChatFormatting.GREEN));

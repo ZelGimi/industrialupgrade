@@ -61,14 +61,6 @@ public class LogicCreativeComponent {
         return item;
     }
 
-    public int getMaxDamage() {
-        return maxDamage;
-    }
-
-    public int getDamageItem() {
-        return damageItem;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

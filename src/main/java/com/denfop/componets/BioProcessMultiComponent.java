@@ -6,7 +6,6 @@ import com.denfop.api.recipe.IMultiUpdateTick;
 import com.denfop.api.recipe.InvSlotBioMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.effects.EffectsRegister;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.IBioMachine;
@@ -14,15 +13,13 @@ import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.joml.Vector3f;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -119,7 +116,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
 
     @Override
     public void onContainerUpdate(final ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             buffer.writeInt(this.progress[i]);
@@ -133,7 +130,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
 
     @Override
     public CustomPacketBuffer updateComponent() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, parent.getLevel().registryAccess());
         buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             buffer.writeInt(this.progress[i]);

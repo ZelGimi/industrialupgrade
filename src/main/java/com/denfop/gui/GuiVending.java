@@ -26,7 +26,7 @@ public class GuiVending<T extends ContainerVending> extends GuiIU<ContainerVendi
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         int sizeWorkingSlot = container.base.getStyle().ordinal() + 1;
         int startPosX = -sizeWorkingSlot * 10;
         int dop = 5 - startPosX;
@@ -44,14 +44,14 @@ public class GuiVending<T extends ContainerVending> extends GuiIU<ContainerVendi
                     final int finalI = i;
                     new Area(this, xDisplayPosition2, 16, 18, 18).withTooltip(() -> this.container.base.invSlotBuyPrivate
                             .get(finalI)
-                            .getDisplayName().getString()).drawForeground(poseStack,par1, par2);
+                            .getDisplayName().getString()).drawForeground(poseStack, par1, par2);
                 }
                 if (!this.container.base.invSlotSellPrivate
                         .get(i).isEmpty()) {
                     final int finalI = i;
                     new Area(this, xDisplayPosition2, 60, 18, 18).withTooltip(() -> this.container.base.invSlotSellPrivate
                             .get(finalI)
-                            .getDisplayName().getString()).drawForeground(poseStack,par1, par2);
+                            .getDisplayName().getString()).drawForeground(poseStack, par1, par2);
 
                 }
             }
@@ -60,7 +60,7 @@ public class GuiVending<T extends ContainerVending> extends GuiIU<ContainerVendi
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
 
         int sizeWorkingSlot = container.base.getStyle().ordinal() + 1;
@@ -113,7 +113,7 @@ public class GuiVending<T extends ContainerVending> extends GuiIU<ContainerVendi
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

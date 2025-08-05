@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CompressorRecipe {
-    public static final String[] recipe = {"forge:plates/", "forge:smalldust/", "forge:verysmalldust/"};
-    public static final String[] recipe1 = {"forge:doubleplate/", "forge:dusts/", "forge:smalldust/"};
+    public static final String[] recipe = {"c:plates/", "c:smalldust/", "c:verysmalldust/"};
+    public static final String[] recipe1 = {"c:doubleplate/", "c:dusts/", "c:smalldust/"};
     public static final String[] recipe2 = {"Osmium", "Tantalum", "Cadmium"};
 
     public static List<String> itemNames7() {
@@ -128,9 +128,9 @@ public class CompressorRecipe {
         for (int i = 0; i < itemNames().size(); i++) {
 
             addcompressor(
-                    "forge:storage_blocks/" + itemNames().get(i),
+                    "c:storage_blocks/" + itemNames().get(i),
                     1,
-                    "forge:doubleplate/" + itemNames().get(i)
+                    "c:doubleplate/" + itemNames().get(i)
             );
 
 
@@ -138,9 +138,9 @@ public class CompressorRecipe {
         for (int i = 0; i < itemNames7().size(); i++) {
 
             addcompressor(
-                    "forge:smalldust/" + itemNames7().get(i),
+                    "c:smalldust/" + itemNames7().get(i),
                     9,
-                    "forge:dusts/" + itemNames7().get(i)
+                    "c:dusts/" + itemNames7().get(i)
             );
 
 
@@ -148,80 +148,80 @@ public class CompressorRecipe {
         for (int i = 0; i < itemNames7().size(); i++) {
 
             addcompressor(
-                    "forge:storage_blocks/" + itemNames7().get(i),
+                    "c:storage_blocks/" + itemNames7().get(i),
                     1,
-                    "forge:doubleplate/" + itemNames7().get(i)
+                    "c:doubleplate/" + itemNames7().get(i)
             );
 
 
         }
         addcompressor(
-                "forge:storage_blocks/Iron",
+                "c:storage_blocks/Iron",
                 1,
-                "forge:plateDense/Iron"
+                "c:plateDense/Iron"
         );
         addcompressor(
-                "forge:storage_blocks/Gold",
+                "c:storage_blocks/Gold",
                 1,
-                "forge:plateDense/Gold"
+                "c:plateDense/Gold"
         );
         addcompressor(
-                "forge:storage_blocks/Lapis",
+                "c:storage_blocks/Lapis",
                 1,
-                "forge:plateDense/Lapis"
+                "c:plateDense/Lapis"
         );
         addcompressor(
-                "forge:storage_blocks/Bronze",
+                "c:storage_blocks/Bronze",
                 1,
-                "forge:plateDense/Bronze"
+                "c:plateDense/Bronze"
         );
         addcompressor(
-                "forge:storage_blocks/Steel",
+                "c:storage_blocks/Steel",
                 1,
-                "forge:plateDense/Steel"
-        );
-
-        addcompressor(
-                "forge:storage_blocks/Copper",
-                1,
-                "forge:plateDense/Copper"
+                "c:plateDense/Steel"
         );
 
         addcompressor(
-                "forge:storage_blocks/Tin",
+                "c:storage_blocks/Copper",
                 1,
-                "forge:plateDense/Tin"
+                "c:plateDense/Copper"
+        );
+
+        addcompressor(
+                "c:storage_blocks/Tin",
+                1,
+                "c:plateDense/Tin"
         );
         addcompressor(
-                "forge:storage_blocks/Lead",
+                "c:storage_blocks/Lead",
                 1,
-                "forge:plateDense/Lead"
+                "c:plateDense/Lead"
         );
         for (int i = 0; i < itemNames1().size(); i++) {
 
             addcompressor(
-                    "forge:storage_blocks/" + itemNames1().get(i),
+                    "c:storage_blocks/" + itemNames1().get(i),
                     1,
-                    "forge:doubleplate/" + itemNames1().get(i)
+                    "c:doubleplate/" + itemNames1().get(i)
             );
 
 
         }
 
         addcompressor(
-                "forge:storage_blocks/Osmium",
+                "c:storage_blocks/Osmium",
                 1,
-                "forge:doubleplate/Osmium"
+                "c:doubleplate/Osmium"
         );
         addcompressor(
-                "forge:storage_blocks/Tantalum",
+                "c:storage_blocks/Tantalum",
                 1,
-                "forge:doubleplate/Tantalum"
+                "c:doubleplate/Tantalum"
         );
         addcompressor(
-                "forge:storage_blocks/Cadmium",
+                "c:storage_blocks/Cadmium",
                 1,
-                "forge:doubleplate/Cadmium"
+                "c:doubleplate/Cadmium"
         );
 
         for (String s : recipe2) {
@@ -272,9 +272,9 @@ public class CompressorRecipe {
         addcompressor(new ItemStack(IUItem.iudust.getStack(78), 1), 1, new ItemStack(IUItem.itemiu.getStack(2), 2));
         addcompressor(IUItem.crushedUraniumOre, 1, new ItemStack(IUItem.itemiu.getStack(2), 1));
         addcompressor(
-                "forge:plates/Copper",
+                "c:plates/Copper",
                 9,
-                "forge:plateDense/Copper"
+                "c:plateDense/Copper"
         );
         addcompressor(
                 new ItemStack(Items.SNOWBALL, 4),
@@ -285,14 +285,14 @@ public class CompressorRecipe {
                 new ItemStack(Blocks.NETHER_BRICKS)
         );
         addcompressor(
-                "forge:smalldust/Sulfur",
+                "c:smalldust/Sulfur",
                 9,
-                "forge:dusts/Sulfur"
+                "c:dusts/Sulfur"
         );
         addcompressor(
-                "forge:smalldust/Iron",
+                "c:smalldust/Iron",
                 9,
-                "forge:dusts/Iron"
+                "c:dusts/Iron"
         );
         addcompressor(
                 new ItemStack(Items.REDSTONE, 9),
@@ -312,25 +312,25 @@ public class CompressorRecipe {
         );
 
         addcompressor(
-                "forge:smalldust/Gold",
+                "c:smalldust/Gold",
                 9,
-                "forge:dusts/Gold"
+                "c:dusts/Gold"
         );
         addcompressor(
-                "forge:plates/Bronze",
+                "c:plates/Bronze",
                 9,
-                "forge:plateDense/Bronze"
+                "c:plateDense/Bronze"
         );
 
         addcompressor(
-                "forge:plates/Steel",
+                "c:plates/Steel",
                 9,
-                "forge:plateDense/Steel"
+                "c:plateDense/Steel"
         );
         addcompressor(
-                "forge:plates/Lead",
+                "c:plates/Lead",
                 9,
-                "forge:plateDense/Lead"
+                "c:plateDense/Lead"
         );
 
         addcompressor(
@@ -342,9 +342,9 @@ public class CompressorRecipe {
                 new ItemStack(Blocks.PACKED_ICE)
         );
         addcompressor(
-                "forge:plates/Iron",
+                "c:plates/Iron",
                 9,
-                "forge:plateDense/Iron"
+                "c:plateDense/Iron"
         );
 
         addcompressor(
@@ -352,34 +352,34 @@ public class CompressorRecipe {
                 IUItem.advancedAlloy
         );
         addcompressor(
-                "forge:smalldust/Tin",
+                "c:smalldust/Tin",
                 9,
-                "forge:dusts/Tin"
+                "c:dusts/Tin"
         );
         addcompressor(
-                "forge:smalldust/Copper",
+                "c:smalldust/Copper",
                 9,
-                "forge:dusts/Copper"
+                "c:dusts/Copper"
         );
         addcompressor(
-                "forge:plates/Obsidian",
+                "c:plates/Obsidian",
                 9,
-                "forge:plateDense/Obsidian"
+                "c:plateDense/Obsidian"
         );
         addcompressor(
-                "forge:dusts/Lapis",
+                "c:dusts/Lapis",
                 9,
-                "forge:plateDense/Lapis"
+                "c:plateDense/Lapis"
         );
         addcompressor(
-                "forge:ingots/Steel",
+                "c:ingots/Steel",
                 9,
-                "forge:storage_blocks/Steel"
+                "c:storage_blocks/Steel"
         );
         addcompressor(
-                "forge:ingots/Tin",
+                "c:ingots/Tin",
                 9,
-                "forge:storage_blocks/Tin"
+                "c:storage_blocks/Tin"
         );
         addcompressor(
                 IUItem.smallPlutonium,
@@ -387,25 +387,25 @@ public class CompressorRecipe {
                 IUItem.Plutonium
         );
         addcompressor(
-                "forge:ingots/Lead",
+                "c:ingots/Lead",
                 9,
-                "forge:storage_blocks/Lead"
+                "c:storage_blocks/Lead"
         );
         addcompressor(
-                "forge:ingots/Gold",
+                "c:ingots/Gold",
                 9,
-                "forge:storage_blocks/Gold"
+                "c:storage_blocks/Gold"
         );
 
         addcompressor(
-                "forge:dusts/Obsidian",
+                "c:dusts/Obsidian",
                 1,
-                "forge:plates/Obsidian"
+                "c:plates/Obsidian"
         );
         addcompressor(
-                "forge:ingots/Copper",
+                "c:ingots/Copper",
                 9,
-                "forge:storage_blocks/Copper"
+                "c:storage_blocks/Copper"
         );
         addcompressor(
                 new ItemStack(Items.CLAY_BALL),
@@ -413,19 +413,19 @@ public class CompressorRecipe {
                 new ItemStack(Blocks.CLAY)
         );
         addcompressor(
-                "forge:plates/Lapis",
+                "c:plates/Lapis",
                 9,
-                "forge:plateDense/Lapis"
+                "c:plateDense/Lapis"
         );
         addcompressor(
-                "forge:plates/Tin",
+                "c:plates/Tin",
                 9,
-                "forge:plateDense/Tin"
+                "c:plateDense/Tin"
         );
         addcompressor(
-                "forge:plates/Gold",
+                "c:plates/Gold",
                 9,
-                "forge:plateDense/Gold"
+                "c:plateDense/Gold"
         );
         addcompressor(
                 IUItem.energiumDust,
@@ -438,9 +438,9 @@ public class CompressorRecipe {
                 new ItemStack(Blocks.GLOWSTONE)
         );
         addcompressor(
-                "forge:ingots/Bronze",
+                "c:ingots/Bronze",
                 9,
-                "forge:storage_blocks/Bronze"
+                "c:storage_blocks/Bronze"
         );
         addcompressor(
                 new ItemStack(Blocks.SNOW),
@@ -550,6 +550,7 @@ public class CompressorRecipe {
 
 
     }
+
     public static void addcompressor1(ItemStack output, ItemStack input) {
         final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
@@ -564,6 +565,7 @@ public class CompressorRecipe {
 
 
     }
+
     public static void addcompressor(ItemStack input, int n, ItemStack output) {
         input = input.copy();
         input.setCount(n);

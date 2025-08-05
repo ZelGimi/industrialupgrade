@@ -3,6 +3,7 @@ package com.denfop.datagen.itemtag;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.register.Register;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -14,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,66 +25,65 @@ import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends ItemTagsProvider {
     public static List<IItemTag> list = new ArrayList<>();
-    public static Map<ResourceLocation,List<ItemStack>> mapItems = new HashMap<>();
+    public static Map<ResourceLocation, List<ItemStack>> mapItems = new HashMap<>();
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagsProvider.TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, blockTagProvider, Constants.MOD_ID, existingFileHelper);
     }
 
 
-
     public void addCustom(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:" + tag};
+        String[] stringTags = new String[]{"c:" + tag};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
 
     public void addPlate(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:plates/" + tag, "forge:plates"};
+        String[] stringTags = new String[]{"c:plates/" + tag, "c:plates"};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
 
     public void addPlateDense(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:platedense/" + tag, "forge:platedense"};
+        String[] stringTags = new String[]{"c:platedense/" + tag, "c:platedense"};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
 
     public void addIngot(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:ingots/" + tag, "forge:ingots"};
+        String[] stringTags = new String[]{"c:ingots/" + tag, "c:ingots"};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
 
     public void addDust(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:dusts/" + tag, "forge:dusts"};
+        String[] stringTags = new String[]{"c:dusts/" + tag, "c:dusts"};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
 
     public void addCasing(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:casings/" + tag, "forge:casings"};
+        String[] stringTags = new String[]{"c:casings/" + tag, "c:casings"};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
 
     public void addGem(String tag, Item item) {
-        String[] stringTags = new String[]{"forge:gems/" + tag, "forge:gems"};
+        String[] stringTags = new String[]{"c:gems/" + tag, "c:gems"};
         for (String stringTag : stringTags) {
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag.toLowerCase()));
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag.toLowerCase()));
             this.tag(tagKey).add(item);
         }
     }
@@ -94,7 +94,7 @@ public class ItemTagProvider extends ItemTagsProvider {
             Item item = iItemTag.getItem();
             String[] stringTags = iItemTag.getTags();
             for (String stringTag : stringTags) {
-                TagKey<Item> tagKey = TagKey.create(Registries.ITEM, new ResourceLocation(stringTag));
+                TagKey<Item> tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(stringTag));
                 this.tag(tagKey).add(item);
             }
         }
@@ -106,6 +106,8 @@ public class ItemTagProvider extends ItemTagsProvider {
         addPlate("Bor", IUItem.crafting_elements.getStack(451));
         addPlate("Beryllium", IUItem.crafting_elements.getStack(452));
         addPlateDense("Beryllium", IUItem.crafting_elements.getStack(452));
+        if (IUItem.machine == null)
+            Register.writeItems();
         addCustom("machineBlock", IUItem.machine.getItem());
         addCustom("machineBlockCasing", IUItem.machine.getItem());
         addCustom("machineBlockAdvanced", IUItem.advancedMachine.getItem());
@@ -129,10 +131,10 @@ public class ItemTagProvider extends ItemTagsProvider {
         addGem("Curium", IUItem.radiationresources.getStack(2));
         addGem("Thorium", IUItem.toriy.getItem());
         addIngot("Uranium", IUItem.itemiu.getStack(2));
-        this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:crystal/proton"))).add(IUItem.proton.getItem());
-        this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:crystal/photon"))).add(IUItem.photoniy.getItem());
-        this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:crystalingot/photon"))).add(IUItem.photoniy_ingot.getItem());
-        this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:nuggets/neutron"))).add(IUItem.neutronium.getItem());
+        this.tag(TagKey.create(Registries.ITEM, ResourceLocation.parse("c:crystal/proton"))).add(IUItem.proton.getItem());
+        this.tag(TagKey.create(Registries.ITEM, ResourceLocation.parse("c:crystal/photon"))).add(IUItem.photoniy.getItem());
+        this.tag(TagKey.create(Registries.ITEM, ResourceLocation.parse("c:crystalingot/photon"))).add(IUItem.photoniy_ingot.getItem());
+        this.tag(TagKey.create(Registries.ITEM, ResourceLocation.parse("c:nuggets/neutron"))).add(IUItem.neutronium.getItem());
 
     }
 }

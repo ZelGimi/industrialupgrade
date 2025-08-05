@@ -1,25 +1,27 @@
 package com.denfop.container;
 
 import com.denfop.api.inv.VirtualSlot;
+import com.denfop.items.energy.ItemStackMagnet;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Collections;
 import java.util.List;
 
 public class VirtualSlotItem implements VirtualSlot {
 
-    private final ItemStack[] itemStacks;
+    private final ItemStackMagnet itemStacks;
     private final int length;
 
-    public VirtualSlotItem(ItemStack[] itemStacks, int length) {
+
+    public VirtualSlotItem(ItemStackMagnet itemStacks, int length) {
         this.itemStacks = itemStacks;
         this.length = length;
     }
 
     @Override
     public ItemStack get(final int index) {
-        return itemStacks[index - length];
+        return itemStacks.list.get(index - length);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class VirtualSlotItem implements VirtualSlot {
 
     @Override
     public int size() {
-        return itemStacks.length;
+        return itemStacks.containerAdditionItem.listItem().size();
     }
 
     @Override

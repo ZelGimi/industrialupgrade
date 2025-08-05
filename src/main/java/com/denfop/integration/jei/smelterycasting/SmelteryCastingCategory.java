@@ -38,15 +38,15 @@ public class SmelteryCastingCategory extends GuiIU implements IRecipeCategory<Sm
     private final ContainerFluidIntegrator container1;
     private final GuiComponent slots1;
     private final GuiComponent progress_bar;
-    private int progress;
     JeiInform jeiInform;
+    private int progress;
 
     public SmelteryCastingCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
         );
@@ -102,14 +102,14 @@ public class SmelteryCastingCategory extends GuiIU implements IRecipeCategory<Sm
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SmelteryCastingHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 40, 44).setFluidRenderer(recipe.getInputFluid().getAmount(),true,16, 16).addFluidStack(recipe.getInputFluid().getFluid(),recipe.getInputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT,  60 - 30, 64 - 0).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,   95, 44 - 0).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 40, 44).setFluidRenderer(recipe.getInputFluid().getAmount(), true, 16, 16).addFluidStack(recipe.getInputFluid().getFluid(), recipe.getInputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 30, 64 - 0).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 44 - 0).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

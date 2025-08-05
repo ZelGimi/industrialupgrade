@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvCoolant extends TileEntityCoolant {
 
     public TileEntityAdvCoolant(BlockPos pos, BlockState state) {
-        super(1,BlockGasReactor.adv_gas_coolant,pos,state);
+        super(1, BlockGasReactor.adv_gas_coolant, pos, state);
     }
 
     @Override

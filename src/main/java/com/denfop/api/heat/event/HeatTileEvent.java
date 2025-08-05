@@ -2,7 +2,7 @@ package com.denfop.api.heat.event;
 
 import com.denfop.api.heat.IHeatTile;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class HeatTileEvent extends LevelEvent {
 

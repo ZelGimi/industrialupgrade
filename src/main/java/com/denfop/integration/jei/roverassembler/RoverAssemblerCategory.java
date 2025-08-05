@@ -41,14 +41,15 @@ public class RoverAssemblerCategory extends GuiIU implements IRecipeCategory<Rov
     private final ContainerRoverAssembler container1;
     private final GuiComponent progress_bar;
     private final GuiComponent slots1;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public RoverAssemblerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityRoverAssembler) BlockBaseMachine3.rover_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 240,
                 170
         );
@@ -82,7 +83,6 @@ public class RoverAssemblerCategory extends GuiIU implements IRecipeCategory<Rov
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -100,10 +100,10 @@ public class RoverAssemblerCategory extends GuiIU implements IRecipeCategory<Rov
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
-        this.slots1.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
+        this.slots1.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,110, 30, xScale);
+        progress_bar.renderBar(stack, 110, 30, xScale);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class RoverAssemblerCategory extends GuiIU implements IRecipeCategory<Rov
         final List<ItemStack> inputs = recipe.getInput();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack( inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
@@ -130,9 +130,8 @@ public class RoverAssemblerCategory extends GuiIU implements IRecipeCategory<Rov
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png");
     }
 
 

@@ -40,20 +40,24 @@ public class TileTripleFermer extends TileMultiMachine implements IFarmer {
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));
     }
+
     @Override
     public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         this.col = customPacketBuffer.readInt();
     }
-    public int getFertilizer(){
-        return  col;
+
+    public int getFertilizer() {
+        return col;
     }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer packetBuffer = super.writeContainerPacket();
         packetBuffer.writeInt(col);
         return packetBuffer;
     }
+
     @Override
     public InvSlot getFertilizerSlot() {
         return fertilizerSlot;

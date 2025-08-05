@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/iron"
+    },
+    "B": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "A A",
+    " A ",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:cutter"
+  },
+  "show_notification": false
+}

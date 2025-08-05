@@ -25,12 +25,13 @@ public class WaterRotorUpgradeCategory extends GuiIU implements IRecipeCategory<
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public WaterRotorUpgradeCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei" +
                         ".png"), 5, 5, 140,
                 80
         );
@@ -59,12 +60,12 @@ public class WaterRotorUpgradeCategory extends GuiIU implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, WaterRotorUpgradeHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,52+22,37).addItemStack(recipe.getInputs()[1]);
-        builder.addSlot(RecipeIngredientRole.INPUT,30+22,37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 52 + 22, 37).addItemStack(recipe.getInputs()[1]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 30 + 22, 37).addItemStack(recipe.getInputs()[0]);
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei.png");
     }
 
 

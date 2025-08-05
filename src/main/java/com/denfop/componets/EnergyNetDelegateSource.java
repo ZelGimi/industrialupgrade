@@ -16,17 +16,19 @@ import java.util.Set;
 public class EnergyNetDelegateSource extends EnergyNetDelegate implements IEnergySource {
 
 
+    public double maxOutput = -1;
     int hashCodeSource;
-    public   double maxOutput = -1;
 
     public EnergyNetDelegateSource(Energy block) {
         super(block);
 
     }
+
     public EnergyNetDelegateSource(TileEntityBlock block, Set<Direction> sourceDirection, BufferEnergy bufferEnergy) {
-        super(block,sourceDirection,bufferEnergy);
+        super(block, sourceDirection, bufferEnergy);
 
     }
+
     @Override
     public int getHashCodeSource() {
         return hashCodeSource;

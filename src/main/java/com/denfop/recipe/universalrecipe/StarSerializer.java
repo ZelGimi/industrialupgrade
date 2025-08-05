@@ -1,49 +1,59 @@
 package com.denfop.recipe.universalrecipe;
 
-import com.denfop.IUCore;
-import com.denfop.api.space.*;
-import com.denfop.recipe.InputOreDict;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
+import com.denfop.api.space.ISystem;
+import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.Star;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.denfop.api.space.SpaceInit.*;
+import static com.denfop.api.space.SpaceInit.regStar;
 
 public class StarSerializer implements RecipeSerializer<StarRecipe> {
-    public static final StarSerializer INSTANCE = new StarSerializer();
 
-    @Override
-    public StarRecipe fromJson(ResourceLocation id, JsonObject json) {
-        String name = json.get("name").getAsString();
+    public static final MapCodec<StarRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.fieldOf("name").forGetter(recipe -> recipe.name),
+            Codec.STRING.fieldOf("system").forGetter(recipe -> recipe.systemName),
+            Codec.STRING.fieldOf("texture").forGetter(recipe -> recipe.texturePath),
+            Codec.INT.fieldOf("angle").forGetter(recipe -> recipe.angle),
+            Codec.DOUBLE.fieldOf("size").forGetter(recipe -> recipe.size)
+    ).apply(instance, (name, systemStr, textureStr, angle, size) -> {
+        ISystem system = SpaceNet.instance.getSystem().stream()
+                .filter(s -> s.getName().equals(systemStr.toLowerCase()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr));
 
-        ISystem system  = SpaceNet.instance.getSystem().stream().filter(systems -> systems.getName().equals(json.get("system").getAsString().toLowerCase())).toList().get(0);
-        ResourceLocation texture = new ResourceLocation(json.get("texture").getAsString()+ ".png");
-        int angle = json.get("angle").getAsInt();
-        double size = json.get("size").getAsDouble();
-        regStar.add(() ->  new Star(name, system, texture, angle,  size));
-        return new StarRecipe(id, "", Collections.emptyList(), "");
+        ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
+
+        regStar.add(() -> new Star(name, system, texture, angle, size));
+
+        return new StarRecipe("", Collections.emptyList(), "");
+    }));
+    public static final StreamCodec<RegistryFriendlyByteBuf, StarRecipe> STREAM_CODEC = StreamCodec.of(StarSerializer::toNetwork, StarSerializer::fromNetwork);
+
+    private static StarRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
+
+        return new StarRecipe("", new ArrayList<>(), "");
+    }
+
+    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, StarRecipe p_320586_) {
+
     }
 
     @Override
-    public StarRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new StarRecipe(id, "", new ArrayList<>(), "");
+    public MapCodec<StarRecipe> codec() {
+        return MAP_CODEC;
     }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, StarRecipe recipe) {
-
-
+    public StreamCodec<RegistryFriendlyByteBuf, StarRecipe> streamCodec() {
+        return STREAM_CODEC;
     }
+
 }

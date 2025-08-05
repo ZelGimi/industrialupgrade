@@ -1,0 +1,37 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:motors_with_improved_bearings_"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_659_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_682_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_676_element"
+    }
+  },
+  "pattern": [
+    "HFD",
+    "CAE",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/genetic_transposer"
+  },
+  "show_notification": false
+}

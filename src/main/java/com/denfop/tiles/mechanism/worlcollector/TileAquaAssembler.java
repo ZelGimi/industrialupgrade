@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileAquaAssembler extends TileBaseWorldCollector {
 
     public TileAquaAssembler(BlockPos pos, BlockState state) {
-        super(EnumTypeCollector.AQUA,BlockBaseMachine3.aqua_assembler,pos,state);
+        super(EnumTypeCollector.AQUA, BlockBaseMachine3.aqua_assembler, pos, state);
     }
 
     public void init() {
@@ -38,7 +38,6 @@ public class TileAquaAssembler extends TileBaseWorldCollector {
 
 
     }
-
 
 
     public IMultiTileBlock getTeBlock() {

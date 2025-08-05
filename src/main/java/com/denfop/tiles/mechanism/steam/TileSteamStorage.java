@@ -14,6 +14,7 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamTank;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamTank;
 import com.denfop.invslot.InvSlot;
@@ -30,11 +31,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class TileSteamStorage extends TileEntityInventory {
     public int amount;
 
     public TileSteamStorage(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.steam_storage,pos,state);
+        super(BlockBaseMachine3.steam_storage, pos, state);
 
         this.steam = this.addComponent((new ComponentSteamEnergy(
                 EnergyType.STEAM, this, 64000,
@@ -73,7 +74,7 @@ public class TileSteamStorage extends TileEntityInventory {
     }
 
     public TileSteamStorage(IMultiTileBlock block, BlockPos pos, BlockState state, int capacity) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.steam = this.addComponent((new ComponentSteamEnergy(
                 EnergyType.STEAM, this, capacity * 1000,
 
@@ -91,6 +92,7 @@ public class TileSteamStorage extends TileEntityInventory {
         this.steam.setFluidTank(fluidTank);
     }
 
+
     @Override
     public int getLightValue() {
         if (this.fluidTank.getFluid().isEmpty() || this.fluidTank.getFluid().getFluid().getFluidType() == null) {
@@ -99,7 +101,6 @@ public class TileSteamStorage extends TileEntityInventory {
             return this.fluidTank.getFluid().getFluid().getFluidType().getLightLevel();
         }
     }
-
 
 
     @Override
@@ -135,14 +136,14 @@ public class TileSteamStorage extends TileEntityInventory {
     }
 
 
-
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        tooltip.add(Localization.translate("iu.steam_storage.info"));
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+        tooltip.add(Localization.translate("iu.steam_storage.info"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
+
+            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getHoverName().getString());
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
@@ -152,8 +153,8 @@ public class TileSteamStorage extends TileEntityInventory {
     @Override
     public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (stack.hasTag() && stack.getTag().contains("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
+        if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
+            FluidStack fluidStack = FluidStack.parseOptional(placer.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
             if (fluidStack != null) {
                 this.fluidTank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
             }
@@ -167,7 +168,7 @@ public class TileSteamStorage extends TileEntityInventory {
 
         if (this.fluidTank.getFluidAmount() > 0) {
             CompoundTag nbt = ModUtils.nbt(itemStackList.get(0));
-            nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
+            nbt.put("fluid", this.fluidTank.getFluid().save(player.registryAccess(), new CompoundTag()));
         }
 
         return itemStackList;
@@ -181,7 +182,7 @@ public class TileSteamStorage extends TileEntityInventory {
         ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
             if (this.fluidTank.getFluidAmount() > 0) {
                 CompoundTag nbt = ModUtils.nbt(drop);
-                nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
+                nbt.put("fluid", this.fluidTank.getFluid().save(level.registryAccess(), new CompoundTag()));
             }
         }
         return drop;
@@ -254,7 +255,6 @@ public class TileSteamStorage extends TileEntityInventory {
     public ContainerSteamTank getGuiContainer(Player entityPlayer) {
         return new ContainerSteamTank(entityPlayer, this);
     }
-
 
 
     @Override

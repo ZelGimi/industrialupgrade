@@ -28,11 +28,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,10 +88,10 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
+    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ItemHandler.BLOCK)
+            return null;
+        return super.getCapability(cap, side);
     }
 
 
@@ -351,10 +350,11 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            InvSlot invSlot = ((InvSlot) (DecoderHandler.decode(customPacketBuffer)));
+            inputSlotA.read(invSlot);
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank1.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -366,7 +366,8 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
+                InvSlot invSlot = ((InvSlot) (DecoderHandler.decode(is)));
+                inputSlotA.read(invSlot);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -375,7 +376,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -421,7 +422,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
             if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player
                     .getItemInHand(hand)) != null && this.fluidTank1.getFluidAmount() >= 1000) {
                 ModUtils.interactWithFluidHandler(player, hand,
-                        this.getComp(Fluids.class).getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                        this.getComp(Fluids.class).getCapability(Capabilities.FluidHandler.BLOCK, side)
                 );
                 if (!level.isClientSide) {
                     new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);

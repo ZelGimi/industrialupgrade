@@ -3,8 +3,8 @@ package com.denfop.api.recipe;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 import java.util.Map;
@@ -93,7 +93,7 @@ public interface IRecipes {
     );
 
     List<Fluid> getInputFluidsFromRecipe(String name);
-    List<String> getMap_recipe_managers();
+
     IBaseRecipe getRecipe(String name);
 
     void addRemoveRecipe(String name, ItemStack stack, boolean allRemove);
@@ -101,7 +101,9 @@ public interface IRecipes {
     void addRemoveRecipe(String name, ItemStack stack);
 
     void addFluidRemoveRecipe(String name, FluidStack stack);
+
     void addFluidRemoveRecipe(String name, FluidStack stack, boolean allRemove);
+
     void removeAllRecipesFromList();
 
     void addAdderRecipe(String name, BaseMachineRecipe stack);
@@ -112,7 +114,7 @@ public interface IRecipes {
 
     void removeRecipe(String name, RecipeOutput output);
 
-    void removeAllRecipe(String name, RecipeOutput output);
+    void removeAllRecipe(String name, boolean removeAll, RecipeOutput output);
 
     void removeRecipe(String name, ItemStack output);
 

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:geothermalpump/geothermal_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/itemcable1"
+    },
+    "C": {
+      "item": "industrialupgrade:wiring/itemcable"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:geothermalpump/geothermal_transport"
+  },
+  "show_notification": false
+}

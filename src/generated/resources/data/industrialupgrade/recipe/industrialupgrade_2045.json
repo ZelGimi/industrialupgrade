@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/redbrass"
+    },
+    "B": {
+      "tag": "c:plates/hafniumcarbide"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_749_element"
+  },
+  "show_notification": false
+}

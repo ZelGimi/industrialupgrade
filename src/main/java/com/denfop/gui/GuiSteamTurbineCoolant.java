@@ -2,8 +2,8 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.componets.ComponentButton;
+import com.denfop.api.gui.Area;
+import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTurbineCoolant;
 import com.denfop.network.packet.PacketUpdateServerTile;
@@ -14,8 +14,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,7 @@ import java.util.List;
 public class GuiSteamTurbineCoolant<T extends ContainerSteamTurbineCoolant> extends GuiIU<ContainerSteamTurbineCoolant> {
     boolean hoverPlus = false;
     boolean hoverMinus = false;
+
     public GuiSteamTurbineCoolant(ContainerSteamTurbineCoolant guiContainer) {
         super(guiContainer);
         this.addElement(new TankGauge(
@@ -84,9 +85,9 @@ public class GuiSteamTurbineCoolant<T extends ContainerSteamTurbineCoolant> exte
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(poseStack,mouseX+
+                    this.gui.drawSprite(poseStack, mouseX +
                                     fluidX,
-                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -107,53 +108,54 @@ public class GuiSteamTurbineCoolant<T extends ContainerSteamTurbineCoolant> exte
         this.componentList.clear();
 
     }
+
     @Override
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        if (hoverPlus){
+        if (hoverPlus) {
             new PacketUpdateServerTile(this.container.base, 0);
         }
-        if (hoverMinus){
+        if (hoverMinus) {
             new PacketUpdateServerTile(this.container.base, 1);
         }
     }
+
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         hoverMinus = false;
         hoverPlus = false;
-        if (par1 >= 62 && par2 >= 67 && par1 <=73 && par2 <= 78) {
+        if (par1 >= 62 && par2 >= 67 && par1 <= 73 && par2 <= 78) {
             hoverPlus = true;
-            new Area(this,62,67,12,12).withTooltip("+1").drawForeground(poseStack,par1,par2);
+            new Area(this, 62, 67, 12, 12).withTooltip("+1").drawForeground(poseStack, par1, par2);
         }
-        if (par1 >= 103 && par2 >= 67 && par1 <=103+11 && par2 <= 78) {
+        if (par1 >= 103 && par2 >= 67 && par1 <= 103 + 11 && par2 <= 78) {
             hoverMinus = true;
-            new Area(this,103,67,12,12).withTooltip("-1").drawForeground(poseStack,par1,par2);
+            new Area(this, 103, 67, 12, 12).withTooltip("-1").drawForeground(poseStack, par1, par2);
         }
-        draw( poseStack, String.valueOf(this.container.base.getPressure()), 92 - getStringWidth(String.valueOf(this.container.base.getPressure())), 69, ModUtils.convertRGBcolorToInt(15,
+        draw(poseStack, String.valueOf(this.container.base.getPressure()), 92 - getStringWidth(String.valueOf(this.container.base.getPressure())), 69, ModUtils.convertRGBcolorToInt(15,
                 125, 205
         ));
     }
 
 
-
     @Override
-    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        if (hoverPlus){
-            this.drawTexturedModalRect( poseStack,this.guiLeft+62, this.guiTop+67, 244, 13,12, 12);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        if (hoverPlus) {
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 62, this.guiTop + 67, 244, 13, 12, 12);
 
         }
-        if (hoverMinus){
-            this.drawTexturedModalRect( poseStack,this.guiLeft+103, this.guiTop+67, 244, 0,12, 12);
+        if (hoverMinus) {
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 103, this.guiTop + 67, 244, 0, 12, 12);
 
         }
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteamturbine_coolant.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisteamturbine_coolant.png");
     }
 
 }

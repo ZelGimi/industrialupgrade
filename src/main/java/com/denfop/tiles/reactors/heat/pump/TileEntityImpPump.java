@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpPump extends TileEntityBasePump {
 
     public TileEntityImpPump(BlockPos pos, BlockState state) {
-        super(2,BlockHeatReactor.heat_imp_pump,pos,state);
+        super(2, BlockHeatReactor.heat_imp_pump, pos, state);
     }
 
     @Override

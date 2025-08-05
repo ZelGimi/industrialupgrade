@@ -24,8 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +40,17 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
     public boolean full = false;
 
     public TileEntityReactorSafetyDoom(BlockPos pos, BlockState state) {
-        super(50000, 14, 1,BlockBaseMachine3.reactor_safety_doom,pos,state);
+        super(50000, 14, 1, BlockBaseMachine3.reactor_safety_doom, pos, state);
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.RADIATION, this, 5000000000D));
 
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.reactor_safety_doom.info1"));
     }
+
     @Override
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();

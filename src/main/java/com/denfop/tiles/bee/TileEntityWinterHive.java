@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityWinterHive extends TileEntityHive {
 
     public TileEntityWinterHive(BlockPos pos, BlockState state) {
-        super(BeeInit.WINTER_BEE,BlockHive.winter_hive, pos ,state);
+        super(BeeInit.WINTER_BEE, BlockHive.winter_hive, pos, state);
     }
 
     @Override

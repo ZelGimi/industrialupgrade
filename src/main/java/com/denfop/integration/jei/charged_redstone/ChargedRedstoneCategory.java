@@ -28,15 +28,16 @@ public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<Ch
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public ChargedRedstoneCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileCentrifuge) BlockMoreMachine3.centrifuge_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -54,6 +55,7 @@ public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<Ch
     public RecipeType<ChargedRedstoneHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -63,7 +65,7 @@ public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<Ch
 
     @Override
     public void draw(ChargedRedstoneHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        drawSplitString(stack,Localization.translate(recipe.output), 5, 3,
+        drawSplitString(stack, Localization.translate(recipe.output), 5, 3,
                 140 - 5, 4210752
         );
     }
@@ -75,7 +77,7 @@ public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<Ch
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

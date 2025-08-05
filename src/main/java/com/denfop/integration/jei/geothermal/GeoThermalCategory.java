@@ -44,9 +44,9 @@ public class GeoThermalCategory extends GuiIU implements IRecipeCategory<GeoTher
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -96,8 +96,8 @@ public class GeoThermalCategory extends GuiIU implements IRecipeCategory<GeoTher
         if (xScale >= 1) {
             progress = 0;
         }
-       drawSplitString(stack,
-               Localization.translate("cost.name") + " " + ModUtils.getString((double) 10) + " QE",
+        drawSplitString(stack,
+                Localization.translate("cost.name") + " " + ModUtils.getString((double) 10) + " QE",
                 10,
                 65,
                 140 - 10,
@@ -115,18 +115,18 @@ public class GeoThermalCategory extends GuiIU implements IRecipeCategory<GeoTher
         }
         bindTexture(getTexture());
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
 
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack,this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
 
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GeoThermalHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getInput().getFluid(),recipe.getInput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput().getFluid(), recipe.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 15, 75).addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 457));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 15, 93).addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 461));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 15, 108).addItemStack(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 462));
@@ -134,9 +134,8 @@ public class GeoThermalCategory extends GuiIU implements IRecipeCategory<GeoTher
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

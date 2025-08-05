@@ -88,11 +88,10 @@ public class GuiCoolMachine<T extends ContainerCoolMachine> extends GuiIU<Contai
     }
 
 
-
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
-       draw(poseStack,this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 4210752);
+        draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 4210752);
 
 
     }
@@ -100,19 +99,19 @@ public class GuiCoolMachine<T extends ContainerCoolMachine> extends GuiIU<Contai
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-       bindTexture(getTexture());
+        bindTexture(getTexture());
         int xOffset = (this.width - this.imageWidth) / 2;
         int yOffset = (this.height - this.imageHeight) / 2;
-       bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xOffset + 3, yOffset + 3, 0, 0, 10, 10);
-       bindTexture(getTexture());
+        bindTexture(getTexture());
 
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

@@ -28,9 +28,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -123,7 +123,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 new Input(
                         new FluidStack(Fluids.WATER, 1000),
                         input.getInput(new ItemStack(IUItem.iudust.getStack(38), 1)),
-                        input.getInput("forge:dusts/Coal", 4)
+                        input.getInput("c:dusts/Coal", 4)
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.iudust.getStack(39), 1))
         ));
@@ -150,7 +150,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidazot.getInstance().get(), 12000),
-                        input.getInput("forge:storage_blocks/Vitalium"),
+                        input.getInput("c:storage_blocks/Vitalium"),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(269), 1))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(270), 1))
@@ -160,7 +160,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 new Input(
                         new FluidStack(FluidName.fluidpolyeth.getInstance().get(), 500),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(344), 1)),
-                        input.getInput("forge:doubleplate/Titanium")
+                        input.getInput("c:doubleplate/Titanium")
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(340), 1))
         ));
@@ -169,11 +169,10 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 new Input(
                         new FluidStack(FluidName.fluidneft.getInstance().get(), 5000),
                         input.getInput(new ItemStack(IUItem.crafting_elements.getStack(283), 8)),
-                        input.getInput("forge:ingots/Germanium", 4)
+                        input.getInput("c:ingots/Germanium", 4)
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(386), 1))
         ));
-
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(

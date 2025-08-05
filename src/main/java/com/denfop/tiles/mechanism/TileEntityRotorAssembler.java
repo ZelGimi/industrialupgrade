@@ -27,8 +27,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,7 +52,7 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
     public int operationsPerTick = 1;
 
     public TileEntityRotorAssembler(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.rotor_assembler,pos,state);
+        super(BlockBaseMachine3.rotor_assembler, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "rotor_assembler", this);
         inputSlotA.setStackSizeLimit(1);
         this.defaultEnergyConsume = this.energyConsume = 2;
@@ -84,12 +84,11 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
     }
 
 
-
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(getNBTFromSlot(customPacketBuffer));
+            inputSlotA.readFromNbt(customPacketBuffer.registryAccess(), getNBTFromSlot(customPacketBuffer));
             progress = (short) DecoderHandler.decode(customPacketBuffer);
             guiProgress = (double) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {

@@ -11,8 +11,9 @@ import com.denfop.api.space.colonies.enums.EnumMiningFactory;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,8 +101,8 @@ public class FluidFactory extends Building implements IColonyMiningFactory {
     }
 
     @Override
-    public CompoundTag writeTag(final CompoundTag tag) {
-        super.writeTag(tag);
+    public CompoundTag writeTag(final CompoundTag tag, HolderLookup.Provider p_323640_) {
+        super.writeTag(tag, p_323640_);
         tag.putByte("id", (byte) this.type.ordinal());
         tag.putByte("people", people);
         return tag;

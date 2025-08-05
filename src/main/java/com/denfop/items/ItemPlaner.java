@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -37,15 +36,16 @@ public class ItemPlaner extends Item implements IItemTab {
     public ItemPlaner() {
         super(new Properties().stacksTo(1).setNoRepair());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.planner.info")));
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_339594_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.planner.info")));
 
     }
 
@@ -61,7 +61,7 @@ public class ItemPlaner extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -126,7 +126,7 @@ public class ItemPlaner extends Item implements IItemTab {
                         BlockPos pos2 = pos.offset(pos1);
                         ItemBlockTileEntity item1 = (ItemBlockTileEntity) item.getItem();
                         BlockEntity tileEntity = world.getBlockEntity(pos2);
-                        if (tileEntity == null  && canPlace(world.getBlockState(pos2))) {
+                        if (tileEntity == null && canPlace(world.getBlockState(pos2))) {
                             BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), context.getItemInHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
                             if (item1.place(placeContext) == InteractionResult.SUCCESS) {
                                 TileEntityMultiBlockElement tileEntity2 = (TileEntityMultiBlockElement) world.getBlockEntity(pos2);
@@ -188,7 +188,7 @@ public class ItemPlaner extends Item implements IItemTab {
     }
 
     private boolean canPlace(BlockState state) {
-        return state.isAir()|| state.getBlock() == Blocks.TALL_GRASS || state.liquid() || state.canBeReplaced();
+        return state.isAir() || state.getBlock() == Blocks.TALL_GRASS || state.liquid();
     }
 
 }

@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "tag": "c:nuggets/spinel"
+    },
+    {
+      "tag": "c:nuggets/spinel"
+    },
+    {
+      "tag": "c:nuggets/yttrium"
+    },
+    {
+      "tag": "c:nuggets/yttrium"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "minecraft:gravel"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "industrialupgrade:crafting_elements/crafting_773_element"
+  }
+}

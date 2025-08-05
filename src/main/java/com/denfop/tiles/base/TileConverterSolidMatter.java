@@ -29,8 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -140,7 +140,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
         addrecipe(new ItemStack(Blocks.COBBLESTONE), 0.1, 0, 0, 0, 0, 0.05, 0, 0);
         addrecipe(new ItemStack(Blocks.NETHERRACK), 0.1, 0, 0, 0.05, 0, 0, 0, 0);
 
-        addrecipe(new ItemStack(Blocks.GRASS), 0.5, 0, 0, 0, 0, 4, 0, 1);
+        addrecipe(new ItemStack(Blocks.GRASS_BLOCK), 0.5, 0, 0, 0, 0, 4, 0, 1);
         addrecipe(new ItemStack(Blocks.GRAVEL), 0.5, 0, 0, 0, 0, 0.5, 0, 0);
         addrecipe(new ItemStack(Blocks.GOLD_ORE), 1, 0, 0, 0, 0, 4, 0, 0);
         addrecipe(new ItemStack(Blocks.COAL_ORE), 1, 0, 0, 0, 0, 2, 0, 0);
@@ -343,7 +343,9 @@ public class TileConverterSolidMatter extends TileElectricMachine
                 setActive(false);
             }
         }
-        setOverclockRates();
+        if (this.upgradeSlot.tickNoMark()) {
+            setOverclockRates();
+        }
 
     }
 

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/osmiridium"
+    },
+    "B": {
+      "item": "industrialupgrade:chemistry/anode"
+    },
+    "C": {
+      "item": "industrialupgrade:itemdust/silver_chloride_dust"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:chemistry/adv_anode"
+  },
+  "show_notification": false
+}

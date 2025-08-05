@@ -13,13 +13,13 @@ import com.denfop.tiles.base.TileEntityLiquedTank;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntitySteelTank extends TileEntityLiquedTank {
 
     public TileEntitySteelTank(BlockPos pos, BlockState state) {
-        super(10,BlockBaseMachine3.steel_tank,pos,state);
+        super(10, BlockBaseMachine3.steel_tank, pos, state);
         this.containerslot1.setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
     }
 

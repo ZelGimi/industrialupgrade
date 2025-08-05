@@ -35,8 +35,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 
 import java.io.IOException;
@@ -50,13 +50,18 @@ public class TileEntityTeleporter extends TileElectricMachine {
     private int cooldown;
 
     public TileEntityTeleporter(BlockPos pos, BlockState state) {
-        super(500000, 14, 0,BlockBaseMachine3.teleporter_iu,pos,state);
+        super(500000, 14, 0, BlockBaseMachine3.teleporter_iu, pos, state);
         this.targetCheckTicker = IUCore.random.nextInt(1024);
         this.cooldown = 0;
     }
 
     private static int getStackCost(ItemStack stack) {
         return ModUtils.isEmpty(stack) ? 0 : 100 * ModUtils.getSize(stack) / stack.getMaxStackSize();
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return EnumSound.teleporter.getSoundEvent();
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -143,11 +148,6 @@ public class TileEntityTeleporter extends TileElectricMachine {
         }
 
 
-    }
-
-    @Override
-    public SoundEvent getSound() {
-        return EnumSound.teleporter.getSoundEvent();
     }
 
     private boolean verifyTarget() {

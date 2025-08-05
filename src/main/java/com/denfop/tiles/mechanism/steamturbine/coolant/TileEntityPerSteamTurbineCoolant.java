@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerSteamTurbineCoolant extends TileEntityBaseSteamTurbineCoolant {
 
     public TileEntityPerSteamTurbineCoolant(BlockPos pos, BlockState state) {
-        super(3,BlockSteamTurbine.steam_turbine_per_coolant,pos,state);
+        super(3, BlockSteamTurbine.steam_turbine_per_coolant, pos, state);
     }
 
     @Override

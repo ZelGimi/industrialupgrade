@@ -17,7 +17,7 @@ public class GuiGeothermalWaste<T extends ContainerGeothermalWaste> extends GuiI
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         bindTexture();
-      RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         for (int i = 0; i < 4; i++) {
             drawTexturedModalRect(poseStack, this.guiLeft + 176 / 2 - 37 + i * 18, guiTop + 29, 237,
                     76, 18, 18
@@ -27,7 +27,7 @@ public class GuiGeothermalWaste<T extends ContainerGeothermalWaste> extends GuiI
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigeothermalpump.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigeothermalpump.png");
     }
 
 }

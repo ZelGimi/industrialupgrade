@@ -29,12 +29,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityCactusFarm extends TileEntityInventory implements IUpgradableBlock {
 
@@ -46,13 +48,13 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
     private ComponentVisibleArea visible;
 
     public TileEntityCactusFarm(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.cactus_farm,pos,state);
+        super(BlockBaseMachine3.cactus_farm, pos, state);
         this.slot = new InvSlotOutput(this, 9);
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 5));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -66,6 +68,12 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract
         );
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        visible.aabb = searchArea;
     }
 
     @Override
@@ -127,11 +135,7 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
             currentPos = currentPos.above();
         }
     }
-    @Override
-    public void onLoaded() {
-        super.onLoaded();
-        visible.aabb = searchArea;
-    }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -145,8 +149,6 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
             }
         }
     }
-
-
 
 
     @Override

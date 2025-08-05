@@ -5,18 +5,14 @@ import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.item.IDamageItem;
 import com.denfop.items.reactors.ItemDamage;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -26,14 +22,23 @@ public class ItemChemistry extends ItemDamage implements IDamageItem, IItemTab {
     private String nameItem;
 
     public ItemChemistry(int durability) {
-        super(new Properties().setNoRepair().stacksTo(1),durability);
+        super(new Properties().stacksTo(1).setNoRepair(), durability);
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
 
+
+    @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
+                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
+
+    }
 
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
@@ -73,13 +78,6 @@ public class ItemChemistry extends ItemDamage implements IDamageItem, IItemTab {
         return Mth.hsvToRgb((float) (Math.max(0.0F, 1.0F - (this.getCustomDamage(stack) / (double) this.getMaxCustomDamage(stack))) / 3.0F), 1.0F, 1.0F);
     }
 
-    @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
-        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
-        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
-                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
-
-    }
 
     public boolean isDamaged(@Nonnull ItemStack stack) {
         return (getDamage(stack) > 1);

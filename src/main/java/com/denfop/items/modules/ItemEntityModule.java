@@ -2,15 +2,15 @@ package com.denfop.items.modules;
 
 import com.denfop.IUCore;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemMain;
 import com.denfop.utils.CapturedMobUtils;
+import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,28 +35,28 @@ public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
 
         if (this.getElement().getId() == 1) {
             if (player.isShiftKeyDown()) {
-                stack.setTag(new CompoundTag());
+                stack.set(DataComponentsInit.MOB, CapturedMobUtils.EMPTY);
                 return InteractionResultHolder.success(stack);
             }
         }
 
         return super.use(level, player, hand);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
 
         if (this.getElement().getId() != 1) {
-            CompoundTag nbt = stack.getTag();
-            if (nbt != null && !nbt.getString("name").isEmpty()) {
-                tooltip.add(Component.literal(nbt.getString("name")));
+            @Nullable String nbt = stack.get(DataComponentsInit.NAME);
+            if (nbt != null && !nbt.isEmpty()) {
+                tooltip.add(Component.literal(nbt));
             }
-        } else {
-
         }
     }
 
@@ -69,49 +68,20 @@ public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
             LivingEntity entity,
             InteractionHand hand
     ) {
-        if (player.level().isClientSide()) {
-            return InteractionResult.PASS;
-        }
+
 
         if (this.getElement().getId() == 1) {
             if (entity instanceof Player) return InteractionResult.FAIL;
 
-            ResourceLocation entityId = EntityType.getKey(entity.getType());
-            CompoundTag tag = new CompoundTag();
-            entity.save(tag);
-
 
             CapturedMobUtils captured = CapturedMobUtils.create(entity);
-            if (captured == null) return InteractionResult.FAIL;
-
+            if (captured == CapturedMobUtils.EMPTY) return InteractionResult.FAIL;
+            ItemStack resultStack = ModUtils.setSize(stack, 1);
             entity.discard();
             stack.shrink(1);
-            ItemStack resultStack = captured.toStack(this, 1);
-            tag = resultStack.getOrCreateTag();
-            tag.putString("id", entityId.toString());
-            tag.putString("nameEntity", entity.getName().getString());
-            tag.putInt("id_mob", entity.getId());
-            double dx = (player.level().random.nextDouble() * 0.7D) + 0.15D;
-            double dy = (player.level().random.nextDouble() * 0.7D) + 0.15D;
-            double dz = (player.level().random.nextDouble() * 0.7D) + 0.15D;
+            resultStack.set(DataComponentsInit.MOB, captured);
+            if (!player.level().isClientSide()) {
 
-            ItemEntity itemEntity = new ItemEntity(
-                    player.level(),
-                    player.getX() + dx,
-                    player.getY() + dy,
-                    player.getZ() + dz,
-                    resultStack
-            );
-            itemEntity.setPickUpDelay(10);
-            player.level().addFreshEntity(itemEntity);
-
-            return InteractionResult.SUCCESS;
-        } else if (this.getElement().getId() == 0) {
-            if (entity instanceof Player) {
-                ItemStack stackCopy = stack.copy();
-                CompoundTag tag = new CompoundTag();
-                tag.putString("name", entity.getDisplayName().getString());
-                stack.shrink(1);
 
                 double dx = (player.level().random.nextDouble() * 0.7D) + 0.15D;
                 double dy = (player.level().random.nextDouble() * 0.7D) + 0.15D;
@@ -122,11 +92,34 @@ public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
                         player.getX() + dx,
                         player.getY() + dy,
                         player.getZ() + dz,
-                        stackCopy
+                        resultStack
                 );
                 itemEntity.setPickUpDelay(10);
                 player.level().addFreshEntity(itemEntity);
+            }
+            return InteractionResult.SUCCESS;
+        } else if (this.getElement().getId() == 0) {
+            if (entity instanceof Player) {
+                ItemStack stackCopy = stack.copy();
+                CompoundTag tag = new CompoundTag();
+                tag.putString("name", entity.getDisplayName().getString());
+                if (!player.level().isClientSide()) {
+                    stack.shrink(1);
 
+                    double dx = (player.level().random.nextDouble() * 0.7D) + 0.15D;
+                    double dy = (player.level().random.nextDouble() * 0.7D) + 0.15D;
+                    double dz = (player.level().random.nextDouble() * 0.7D) + 0.15D;
+
+                    ItemEntity itemEntity = new ItemEntity(
+                            player.level(),
+                            player.getX() + dx,
+                            player.getY() + dy,
+                            player.getZ() + dz,
+                            stackCopy
+                    );
+                    itemEntity.setPickUpDelay(10);
+                    player.level().addFreshEntity(itemEntity);
+                }
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.FAIL;

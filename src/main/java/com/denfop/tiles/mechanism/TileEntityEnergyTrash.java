@@ -19,7 +19,7 @@ public class TileEntityEnergyTrash extends TileEntityInventory {
     private final ComponentBaseEnergy solariumEnergy;
 
     public TileEntityEnergyTrash(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.energy_trash,pos,state);
+        super(BlockBaseMachine3.energy_trash, pos, state);
         energy = this.addComponent(Energy.asBasicSink(this, 100000000000000000D, 14));
         expEnergy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 100000000000000000D));
         quantumEnergy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 100000000000000000D));
@@ -44,7 +44,6 @@ public class TileEntityEnergyTrash extends TileEntityInventory {
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.energy_trash;
     }
-
 
 
 }

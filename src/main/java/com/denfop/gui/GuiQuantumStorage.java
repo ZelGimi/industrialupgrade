@@ -44,7 +44,7 @@ public class GuiQuantumStorage<T extends ContainerQuantumStorage> extends GuiIU<
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumstorage.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiquantumstorage.png");
     }
 
 

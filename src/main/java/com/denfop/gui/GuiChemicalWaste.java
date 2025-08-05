@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -41,8 +41,8 @@ public class GuiChemicalWaste<T extends ContainerDefaultMultiElement> extends Gu
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,
-                            mouseX+  fluidX,
-                            mouseY+   fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
+                            mouseX + fluidX,
+                            mouseY + fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
                             fluidHeight * (fs.getAmount() / 10000D),
                             sprite,
@@ -52,11 +52,11 @@ public class GuiChemicalWaste<T extends ContainerDefaultMultiElement> extends Gu
                             false
                     );
                 }
-               bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
-            public void drawForeground(GuiGraphics poseStack,final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 if (mouseX >= this.x - 4 && mouseX <= this.x + 15 && mouseY >= this.y - 4 && mouseY <= this.y + 51) {
                     List<String> lines = this.getToolTip();
                     if (this.getTooltipProvider() != null) {
@@ -75,7 +75,7 @@ public class GuiChemicalWaste<T extends ContainerDefaultMultiElement> extends Gu
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         bindTexture();
         RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -83,13 +83,13 @@ public class GuiChemicalWaste<T extends ContainerDefaultMultiElement> extends Gu
                 76, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(poseStack,guiLeft,guiTop);
+            element.drawBackground(poseStack, guiLeft, guiTop);
         }
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guichemicalplant.png");
     }
 
 }

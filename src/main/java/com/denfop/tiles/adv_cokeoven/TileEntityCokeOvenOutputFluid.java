@@ -10,7 +10,7 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class TileEntityCokeOvenOutputFluid extends TileEntityMultiBlockElement implements IOutputFluid {
 
@@ -19,7 +19,7 @@ public class TileEntityCokeOvenOutputFluid extends TileEntityMultiBlockElement i
     FluidTank tank;
 
     public TileEntityCokeOvenOutputFluid(BlockPos pos, BlockState state) {
-        super(BlockAdvCokeOven.adv_coke_oven_output_fluid,pos,state);
+        super(BlockAdvCokeOven.adv_coke_oven_output_fluid, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.OUTPUT,
                 Fluids.fluidPredicate(FluidName.fluidcreosote.getInstance().get())

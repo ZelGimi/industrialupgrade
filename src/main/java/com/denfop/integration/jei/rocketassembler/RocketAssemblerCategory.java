@@ -41,16 +41,17 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
     private final ContainerRocketAssembler container1;
     private final GuiComponent progress_bar;
     private final GuiComponent slots1;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public RocketAssemblerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityRocketAssembler) BlockBaseMachine3.rocket_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 240,
                 180
         );
@@ -78,7 +79,6 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -96,10 +96,10 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
-        this.slots1.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
+        this.slots1.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,40, 55, xScale);
+        progress_bar.renderBar(stack, 40, 55, xScale);
     }
 
     @Override
@@ -115,13 +115,13 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         final List<ItemStack> inputs = recipe.getInput();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
 
     }
 
@@ -131,7 +131,7 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png");
     }
 
 

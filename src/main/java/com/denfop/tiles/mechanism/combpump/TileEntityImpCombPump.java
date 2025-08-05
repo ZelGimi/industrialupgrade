@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpCombPump extends TileEntityCombinedPump {
 
     public TileEntityImpCombPump(BlockPos pos, BlockState state) {
-        super(160, 20, EnumTypePump.I,BlockBaseMachine3.imp_comb_pump,pos,state);
+        super(160, 20, EnumTypePump.I, BlockBaseMachine3.imp_comb_pump, pos, state);
     }
 
     @Override

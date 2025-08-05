@@ -92,6 +92,7 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         }
 
     }
+
     public void balanceSlots(List<ItemStack> slots, Item targetItem) {
         int total = 0;
         for (ItemStack stack : slots) {

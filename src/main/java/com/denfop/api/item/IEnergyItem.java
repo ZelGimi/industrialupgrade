@@ -1,10 +1,12 @@
 package com.denfop.api.item;
 
 import com.denfop.ElectricItem;
+import com.denfop.api.component.IDataComponent;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.ItemStack;
 
-public interface IEnergyItem {
+public interface IEnergyItem extends IDataComponent {
+
 
     boolean canProvideEnergy(ItemStack var1);
 

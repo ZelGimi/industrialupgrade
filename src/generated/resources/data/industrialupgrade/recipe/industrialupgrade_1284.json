@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_32_element"
+    },
+    "B": {
+      "item": "industrialupgrade:primal_laser_polisher/primal_laser_polisher"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/steam_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_123_element"
+    }
+  },
+  "pattern": [
+    "D A",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/steam_sharpener"
+  },
+  "show_notification": false
+}

@@ -1,6 +1,8 @@
 package com.denfop.container;
 
 import com.denfop.IUItem;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
@@ -84,15 +86,15 @@ public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
         }
 
         if (item == IUItem.bags.getItem()) {
-            for (int i = 0; i < Toolbox1.list.length; i++) {
+            for (int i = 0; i < Toolbox1.list.size(); i++) {
                 addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 180, 9 + (i) * 18,
-                        new VirtualSlotItem(Toolbox1.list, inventorySize)
+                        new VirtualSlotItemBags(Toolbox1, inventorySize)
                 ));
             }
         } else {
-            for (int i = 0; i < Toolbox1.list.length; i++) {
+            for (int i = 0; i < Toolbox1.list.size(); i++) {
                 addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 180, 25 + (i) * 18,
-                        new VirtualSlotItem(Toolbox1.list, inventorySize)
+                        new VirtualSlotItemBags(Toolbox1, inventorySize)
                 ));
             }
         }
@@ -187,7 +189,7 @@ public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 

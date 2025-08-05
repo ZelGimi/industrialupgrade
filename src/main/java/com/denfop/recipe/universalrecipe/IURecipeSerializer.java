@@ -6,168 +6,142 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputFluidStack;
 import com.denfop.recipe.InputItemStack;
 import com.denfop.recipe.InputOreDict;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class IURecipeSerializer implements RecipeSerializer<IURecipe> {
-    public static final IURecipeSerializer INSTANCE = new IURecipeSerializer();
+    public static final MapCodec<IURecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder -> {
 
-    @Override
-    public IURecipe fromJson(ResourceLocation id, JsonObject json) {
-        String recipeType = GsonHelper.getAsString(json, "recipe_type");
-        boolean isFluidRecipe = GsonHelper.getAsBoolean(json, "isFluidRecipe", false);
+        Codec<IInputItemStack> singleInputCodec = RecordCodecBuilder.create(inst -> inst.group(
+                Codec.STRING.fieldOf("type").forGetter(i -> i instanceof InputFluidStack ? "fluid" : "item"),
+                ResourceLocation.CODEC.fieldOf("id").forGetter(i -> BuiltInRegistries.ITEM.getKey(i.getInputs().get(0).getItem())),
+                Codec.INT.fieldOf("amount").orElse(1).forGetter(i -> i.getInputs().get(0).getCount())
+        ).apply(inst, (type, id, amt) -> {
+            if ("fluid".equals(type))
+                return new InputFluidStack(new FluidStack(BuiltInRegistries.FLUID.get(id), amt));
+            else if ("tag".equals(type))
+                return new InputOreDict(id.getNamespace() + ":" + id.getPath(), amt);
+            else return new InputItemStack(new ItemStack(BuiltInRegistries.ITEM.get(id), amt));
+        }));
 
-        List<IInputItemStack> inputs = new ArrayList<>();
-        List<FluidStack> fluidStacks = new ArrayList<>();
-        if (GsonHelper.isValidNode(json, "inputs")) {
-            JsonArray inArray = GsonHelper.getAsJsonArray(json, "inputs");
-            for (JsonElement el : inArray) {
-                JsonObject obj = el.getAsJsonObject();
-                String type = GsonHelper.getAsString(obj, "type");
-                String itemId = GsonHelper.getAsString(obj, "id");
-                int amount = GsonHelper.getAsInt(obj, "amount", 1);
+        Codec<Object> singleOutputCodec = RecordCodecBuilder.<Object>create(inst -> inst.group(
+                Codec.STRING.fieldOf("type").forGetter(o -> o instanceof FluidStack ? "fluid" : "item"),
+                ResourceLocation.CODEC.fieldOf("id").forGetter(o -> o instanceof FluidStack ? BuiltInRegistries.FLUID.getKey(((FluidStack) o).getFluid()) : BuiltInRegistries.ITEM.getKey(((ItemStack) o).getItem())),
+                Codec.INT.fieldOf("amount").orElse(1).forGetter(o -> o instanceof FluidStack ? ((FluidStack) o).getAmount() : ((ItemStack) o).getCount())
+        ).apply(inst, (type, id, amt) -> {
+            if ("fluid".equals(type))
+                return new FluidStack(BuiltInRegistries.FLUID.get(id), amt);
+            else return new ItemStack(BuiltInRegistries.ITEM.get(id), amt);
+        }));
 
-                switch (type) {
-                    case "item":
-                        ItemStack stack = new ItemStack(
-                                ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)),
-                                amount
-                        );
-                        inputs.add(new InputItemStack(stack));
-                        break;
+        return builder.group(
+                Codec.STRING.fieldOf("recipe_type").forGetter(IURecipe::getRecipeType),
+                Codec.BOOL.fieldOf("isFluidRecipe").forGetter(IURecipe::isFluid),
+                Codec.list(singleInputCodec).fieldOf("inputs").forGetter(IURecipe::getInputs),
+                Codec.list(singleOutputCodec).fieldOf("outputs").forGetter(r -> Collections.singletonList(r.getOutputs())),
+                Codec.unboundedMap(Codec.STRING, Codec.either(Codec.STRING, Codec.DOUBLE))
+                        .xmap(
+                                m -> {
+                                    Map<String, Object> res = new java.util.HashMap<>();
+                                    m.forEach((k, v) -> res.put(k, v.map(left -> left, right -> right)));
+                                    return res;
+                                },
+                                m -> {
+                                    Map<String, com.mojang.datafixers.util.Either<String, Double>> enc = new java.util.HashMap<>();
+                                    m.forEach((k, v) -> {
+                                        if (v instanceof String)
+                                            enc.put(k, com.mojang.datafixers.util.Either.left((String) v));
+                                        else if (v instanceof Number)
+                                            enc.put(k, com.mojang.datafixers.util.Either.right(((Number) v).doubleValue()));
+                                    });
+                                    return enc;
+                                }
+                        ).fieldOf("params").forGetter(IURecipe::getParams)
+        ).apply(builder, (recipeType, isFluidRecipe, inputs1, outputs, params) -> {
 
-                    case "fluid":
-                        FluidStack fluidStack = new FluidStack(
-                                ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemId)),
-                                amount
-                        );
-                        fluidStacks.add(fluidStack);
-                        break;
-
-                    case "tag":
-                        inputs.add(new InputOreDict(itemId, amount));
-                        break;
-
-                    default:
-                        throw new IllegalArgumentException("Unknown input type: " + type);
+            List<ItemStack> outputs1 = new ArrayList<>();
+            List<FluidStack> outputsFluid = new ArrayList<>();
+            for (Object o : outputs) {
+                if (o instanceof FluidStack) outputsFluid.add((FluidStack) o);
+                else outputs1.add((ItemStack) o);
+            }
+            CompoundTag compoundTag = new CompoundTag();
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (entry.getValue() instanceof Boolean) {
+                    compoundTag.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+                }
+                if (entry.getValue() instanceof Number) {
+                    compoundTag.putDouble(entry.getKey(), ((Number) entry.getValue()).doubleValue());
                 }
             }
-        }
-
-        List<IInputItemStack> outputs = new ArrayList<>();
-        List<FluidStack> outputsFluid = new ArrayList<>();
-        JsonArray outArr = GsonHelper.getAsJsonArray(json, "outputs");
-        for (JsonElement el : outArr) {
-            JsonObject obj = el.getAsJsonObject();
-            String itemId = GsonHelper.getAsString(obj, "id");
-            String type = GsonHelper.getAsString(obj, "type");
-            int amount = GsonHelper.getAsInt(obj, "amount", 1);
-            switch (type) {
-                case "item":
-                    ItemStack stack = new ItemStack(
-                            ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)),
-                            amount
-                    );
-                    outputs.add(new InputItemStack(stack));
-                    break;
-
-                case "fluid":
-                    FluidStack fluidStack = new FluidStack(
-                            ForgeRegistries.FLUIDS.getValue(new ResourceLocation(itemId)),
-                            amount
-                    );
-                    outputsFluid.add(fluidStack);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown input type: " + type);
+            List<FluidStack> fluidStacks = new ArrayList<>();
+            List<IInputItemStack> inputs = new ArrayList<>();
+            for (IInputItemStack o : inputs1) {
+                if (o instanceof InputFluidStack)
+                    fluidStacks.add(((InputFluidStack) o).getFluid());
+                else
+                    inputs.add(o);
             }
-        }
+            if (!inputs.isEmpty() && fluidStacks.isEmpty()) {
 
-        Map<String, Object> params = new HashMap<>();
-        if (json.has("params")) {
-            JsonObject pJson = json.getAsJsonObject("params");
-            for (String key : pJson.keySet()) {
-                JsonElement val = pJson.get(key);
-                if (val.isJsonPrimitive()) {
-                    if (val.getAsJsonPrimitive().isBoolean()) {
-                        params.put(key, val.getAsBoolean());
-                    } else if (val.getAsJsonPrimitive().isNumber()) {
-                        params.put(key, val.getAsNumber());
-                    } else {
-                        params.put(key, val.getAsString());
-                    }
+                Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(inputs), new RecipeOutput(compoundTag, outputs1)));
+            } else if (!inputs.isEmpty() && !isFluidRecipe) {
+                Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(fluidStacks.get(0), inputs), new RecipeOutput(compoundTag, outputs1)));
+
+            } else if (inputs.isEmpty() && isFluidRecipe) {
+                if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
+                } else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
+
+                } else if (outputs1.isEmpty() && !outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), outputsFluid));
+
+                }
+            } else if (!inputs.isEmpty() && isFluidRecipe) {
+                Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(fluidStacks.get(0), inputs), new RecipeOutput(compoundTag, outputs1)));
+                if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0), fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
+                } else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0), fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
+
+                } else if (outputs1.isEmpty() && !outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0), fluidStacks.toArray(new FluidStack[0])), outputsFluid));
+
                 }
             }
-        }
-        CompoundTag compoundTag = new CompoundTag();
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if (entry.getValue() instanceof Boolean) {
-                compoundTag.putBoolean(entry.getKey(), (Boolean) entry.getValue());
-            }
-            if (entry.getValue() instanceof Number) {
-                compoundTag.putDouble(entry.getKey(), ((Number) entry.getValue()).doubleValue());
-            }
-        }
-        List<ItemStack> outputs1 = new ArrayList<>();
-        outputs.forEach(outputs2 -> {
-            if (!(outputs2 instanceof InputFluidStack)) {
-                outputs1.add(outputs2.getInputs().get(0));
-            }
+            return new IURecipe(recipeType, isFluidRecipe, inputs, fluidStacks, outputs1, outputsFluid, params);
         });
-        if (!inputs.isEmpty() && fluidStacks.isEmpty()) {
+    });
+    public static final StreamCodec<RegistryFriendlyByteBuf, IURecipe> STREAM_CODEC = StreamCodec.of(IURecipeSerializer::toNetwork, IURecipeSerializer::fromNetwork);
 
-            Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(inputs), new RecipeOutput(compoundTag, outputs1)));
-        } else if (!inputs.isEmpty() && !isFluidRecipe) {
-            Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(fluidStacks.get(0), inputs), new RecipeOutput(compoundTag, outputs1)));
+    private static IURecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
 
-        } else if (inputs.isEmpty() && isFluidRecipe) {
-             if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
-            }else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()){
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
+        return new IURecipe("", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new HashMap<>());
+    }
 
-            }else if (outputs1.isEmpty() && !outputsFluid.isEmpty()){
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), outputsFluid));
+    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, IURecipe p_320586_) {
 
-            }
-        }else if (!inputs.isEmpty() && isFluidRecipe) {
-            Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(fluidStacks.get(0), inputs), new RecipeOutput(compoundTag, outputs1)));
-            if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0),fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
-            }else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()){
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0),fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
-
-            }else if (outputs1.isEmpty() && !outputsFluid.isEmpty()){
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0),fluidStacks.toArray(new FluidStack[0])), outputsFluid));
-
-            }
-        }
-        return new IURecipe(id, recipeType, inputs, outputs1, params);
     }
 
     @Override
-    public IURecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new IURecipe(id, "", new ArrayList<>(), new ArrayList<>(), new HashMap<>());
+    public MapCodec<IURecipe> codec() {
+        return MAP_CODEC;
     }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, IURecipe recipe) {
-
-
+    public StreamCodec<RegistryFriendlyByteBuf, IURecipe> streamCodec() {
+        return STREAM_CODEC;
     }
+
 }

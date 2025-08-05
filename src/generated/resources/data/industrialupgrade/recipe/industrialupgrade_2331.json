@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "AAA",
+    " A ",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:lightning_rod/lightning_rod_antenna_mast"
+  },
+  "show_notification": false
+}

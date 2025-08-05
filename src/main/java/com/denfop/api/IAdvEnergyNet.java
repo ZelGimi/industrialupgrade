@@ -30,15 +30,13 @@ public interface IAdvEnergyNet {
 
     boolean hasRestrictions();
 
-    BlockEntity getBlockPosFromEnergyTile(IEnergyTile tile,Level level);
+    BlockEntity getBlockPosFromEnergyTile(IEnergyTile tile, Level level);
 
     List<Path> getEnergyPaths(Level world, BlockPos pos);
 
     void update();
 
     IEnergyTile getTile(Level var1, BlockPos var2);
-
-
 
 
     NodeStats getNodeStats(IEnergyTile var1, Level level);

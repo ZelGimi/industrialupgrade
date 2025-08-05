@@ -25,8 +25,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -55,7 +55,7 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
 
 
     public TileBaseWorldCollector(EnumTypeCollector enumTypeCollector1, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(0, 1, 1,block,pos,state);
+        super(0, 1, 1, block, pos, state);
         enumTypeCollector = enumTypeCollector1;
         this.MatterSlot = new InvSlotWorldCollector(this);
         this.inputSlot = new InvSlotRecipes(this, enumTypeCollector1.name().toLowerCase() + "collector", this);
@@ -72,7 +72,7 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.need_info") + new ItemStack(
-                IUItem.matter.getStack( enumTypeCollector.getMeta()),
+                IUItem.matter.getStack(enumTypeCollector.getMeta()),
                 1
         ).getDisplayName().getString());
         super.addInformation(stack, tooltip);

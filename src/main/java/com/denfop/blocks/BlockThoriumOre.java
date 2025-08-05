@@ -71,7 +71,7 @@ public class BlockThoriumOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
 
 
         ChunkPos chunkPos = new ChunkPos(pos);
-        PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1);
+        PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1, world);
         AABB axisAlignedBB = new AABB(
                 pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2,
                 pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3
@@ -82,7 +82,7 @@ public class BlockThoriumOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         for (Player player : players) {
             boolean canAffect = !IHazmatLike.hasCompleteHazmat(player);
             if (canAffect) {
-                player.addEffect(new MobEffectInstance(IUPotion.radiation, 400, 0));
+                player.addEffect(new MobEffectInstance(IUPotion.rad, 400, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 0));
             }
         }

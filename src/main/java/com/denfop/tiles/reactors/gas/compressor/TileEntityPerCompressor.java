@@ -10,13 +10,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityPerCompressor extends TileEntityBaseCompressor {
 
     public TileEntityPerCompressor(BlockPos pos, BlockState state) {
-        super(3,BlockGasReactor.per_gas_compressor,pos,state);
+        super(3, BlockGasReactor.per_gas_compressor, pos, state);
     }
 
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockGasReactor.per_gas_compressor;
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.gas_reactor.getBlock(getTeBlock());

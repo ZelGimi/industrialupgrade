@@ -41,9 +41,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -77,13 +77,13 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public IFakeBody fakeBody;
     public IColony colony;
     boolean added = false;
-    private UUID player = new UUID(WorldBaseGen.random.nextLong(),WorldBaseGen.random.nextLong());
+    private UUID player = new UUID(WorldBaseGen.random.nextLong(), WorldBaseGen.random.nextLong());
     private InfoSends sends;
 
     public TileEntityResearchTableSpace(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.research_table_space,pos,state);
+        super(BlockBaseMachine3.research_table_space, pos, state);
         this.map = new HashMap<>();
-        this.player = new UUID(WorldBaseGen.random.nextLong(),WorldBaseGen.random.nextLong());
+        this.player = new UUID(WorldBaseGen.random.nextLong(), WorldBaseGen.random.nextLong());
         this.fakeBodySpaceOperationMap = new LinkedList<>();
         this.slotLens = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
@@ -97,7 +97,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
                 if (this.get(0).isEmpty()) {
                     level = EnumLevels.NONE;
                 } else {
-                    level = EnumLevels.values()[((ItemResearchLens<?>)this.get(0).getItem()).getElement().getId()];
+                    level = EnumLevels.values()[((ItemResearchLens<?>) this.get(0).getItem()).getElement().getId()];
                 }
             }
 
@@ -126,7 +126,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public void onLoaded() {
         super.onLoaded();
         if (!added) {
-            MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
             added = true;
         }
         if (!this.getWorld().isClientSide) {
@@ -147,7 +147,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public void onUnloaded() {
         super.onUnloaded();
         if (added) {
-            MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
             added = false;
         }
     }
@@ -179,11 +179,11 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
         int sizeSpaceBodyInformation = customPacketBuffer.readInt();
         Map<IBody, SpaceOperation> information = getSpaceBody();
         information.clear();
-        for (int i = 0; i < sizeSpaceBodyInformation; i++){
+        for (int i = 0; i < sizeSpaceBodyInformation; i++) {
             IBody body1 = SpaceNet.instance.getBodyFromName(customPacketBuffer.readString());
             boolean auto = customPacketBuffer.readBoolean();
             EnumOperation operation = EnumOperation.getID(customPacketBuffer.readInt());
-            information.put(body1 ,new SpaceOperation(body1,operation,auto));
+            information.put(body1, new SpaceOperation(body1, operation, auto));
         }
     }
 
@@ -204,7 +204,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
         }
         customPacketBuffer.writeBoolean(colony != null);
         if (colony != null) {
-            customPacketBuffer.writeBytes(colony.writePacket());
+            customPacketBuffer.writeBytes(colony.writePacket(customPacketBuffer.registryAccess()));
             List<Sends> sends =
                     SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter(sends1 -> sends1.getBody() == colony.getBody()).collect(
                             Collectors.toList());
@@ -212,11 +212,14 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             for (Sends send : sends) {
                 infoSends.addTimer(send.getTimerToPlanet());
             }
-            customPacketBuffer.writeBytes(infoSends.writeBuffer());
+            customPacketBuffer.writeBytes(infoSends.writeBuffer(customPacketBuffer.registryAccess()));
         }
-
-
-
+        customPacketBuffer.writeInt(getSpaceBody().keySet().size());
+        for (Map.Entry<IBody, SpaceOperation> entry : getSpaceBody().entrySet()) {
+            customPacketBuffer.writeString(entry.getKey().getName());
+            customPacketBuffer.writeBoolean(entry.getValue().getAuto());
+            customPacketBuffer.writeInt(entry.getValue().getOperation().ordinal());
+        }
         return customPacketBuffer;
     }
 
@@ -237,7 +240,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.getWorld().getGameTime() % 80 == 0)
-            MinecraftForge.EVENT_BUS.post(new ResearchTableReLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new ResearchTableReLoadEvent(this.getWorld(), this));
         if (timer > 0) {
             timer--;
         }
@@ -268,11 +271,11 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
 
                             }
                         }
-                    }else{
+                    } else {
                         List<Sends> sends =
                                 SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter(sends1 -> sends1.getBody() == colony.getBody()).collect(
                                         Collectors.toList());
-                        this.sends= new InfoSends();
+                        this.sends = new InfoSends();
                         for (Sends send : sends) {
                             this.sends.addTimer(send.getTimerToPlanet());
                         }
@@ -333,7 +336,6 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
         }
 
     }
-
 
 
     @Override

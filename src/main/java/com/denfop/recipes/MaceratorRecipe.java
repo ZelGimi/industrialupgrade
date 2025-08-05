@@ -18,8 +18,8 @@ import java.util.List;
 
 public class MaceratorRecipe {
 
-    public static final String[] recipe = {"forge:raw_materials/", "forge:ingots/"};
-    public static final String[] recipe1 = {"forge:crushed/", "forge:dusts/"};
+    public static final String[] recipe = {"c:raw_materials/", "c:ingots/"};
+    public static final String[] recipe1 = {"c:crushed/", "c:dusts/"};
     public static final int[] number = {2, 1};
 
     public static List<String> itemNames7() {
@@ -144,86 +144,80 @@ public class MaceratorRecipe {
         addmacerator(IUItem.plateobsidian, IUItem.obsidianDust);
 
 
-        addmacerator("wool", "forge:string", 4);
-        addmacerator("forge:raw_materials/Osmium", "forge:crushed/Osmium", 2);
-        addmacerator("forge:dusts/Osmium", "forge:smalldust/Osmium", 9);
-        addmacerator("forge:dusts/Platinum", "forge:smalldust/Platinum", 9);
-        addmacerator("forge:raw_materials/Tantalum", "forge:crushed/Tantalum", 2);
-        addmacerator("forge:raw_materials/Cadmium", "forge:crushed/Cadmium", 2);
-        addmacerator("forge:raw_materials/Tin", "forge:crushed/Tin", 2);
-        addmacerator("forge:raw_materials/Iron", "forge:crushed/Iron", 2);
-        addmacerator("forge:raw_materials/Gold", "forge:crushed/Gold", 2);
-        addmacerator("forge:raw_materials/Copper", "forge:crushed/Copper", 2);
-        addmacerator("forge:raw_materials/Lead", "forge:crushed/Lead", 2);
-        addmacerator("forge:ingots/Osmium", "forge:dusts/Osmium");
-        addmacerator("forge:ingots/Tantalum", "forge:dusts/Tantalum");
-        addmacerator("forge:ingots/Cadmium", "forge:dusts/Cadmium");
-        addmacerator("forge:ingots/Electrum", "forge:dusts/Electrum");
-        addmacerator("forge:ingots/Invar", "forge:dusts/Invar");
-        addmacerator("forge:gems/Quartz", "forge:dusts/Quartz");
-        for (int i = 0; i < BlockRaws.Type.values().length; i++) {
-            addmacerator("forge:storage_blocks/"+BlockRaws.Type.values()[i].getName(), "forge:crushed/"+BlockRaws.Type.values()[i].name(),18);
-        }
-        addmacerator("forge:storage_blocks/raw_iron", "forge:crushed/iron",18);
-        addmacerator("forge:storage_blocks/raw_copper", "forge:crushed/copper",18);
-        addmacerator("forge:storage_blocks/raw_gold", "forge:crushed/gold",18);
+        addmacerator("wool", "c:strings", 4);
+        addmacerator("c:raw_materials/Osmium", "c:crushed/Osmium", 2);
+        addmacerator("c:dusts/Osmium", "c:smalldust/Osmium", 9);
+        addmacerator("c:dusts/Platinum", "c:smalldust/Platinum", 9);
+        addmacerator("c:raw_materials/Tantalum", "c:crushed/Tantalum", 2);
+        addmacerator("c:raw_materials/Cadmium", "c:crushed/Cadmium", 2);
+        addmacerator("c:raw_materials/Tin", "c:crushed/Tin", 2);
+        addmacerator("c:raw_materials/Iron", "c:crushed/Iron", 2);
+        addmacerator("c:raw_materials/Gold", "c:crushed/Gold", 2);
+        addmacerator("c:raw_materials/Copper", "c:crushed/Copper", 2);
+        addmacerator("c:raw_materials/Lead", "c:crushed/Lead", 2);
+        addmacerator("c:ingots/Osmium", "c:dusts/Osmium");
+        addmacerator("c:ingots/Tantalum", "c:dusts/Tantalum");
+        addmacerator("c:ingots/Cadmium", "c:dusts/Cadmium");
+        addmacerator("c:ingots/Electrum", "c:dusts/Electrum");
+        addmacerator("c:ingots/Invar", "c:dusts/Invar");
+        addmacerator("c:gems/Quartz", "c:dusts/Quartz");
 
-        addmacerator("forge:ingots/Bronze", "forge:dusts/Bronze");
-        addmacerator("forge:ingots/Lead", "forge:dusts/Lead");
-        addmacerator("forge:plateDense/Lead", "forge:dusts/Lead", 9);
+        addmacerator("c:ingots/Bronze", "c:dusts/Bronze");
+        addmacerator("c:ingots/Lead", "c:dusts/Lead");
+        addmacerator("c:plateDense/Lead", "c:dusts/Lead", 9);
         addmacerator(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ, 4));
         addmacerator(new ItemStack(Items.FLINT, 2), new ItemStack(IUItem.iudust.getStack(60), 1));
         addmacerator(new ItemStack(Items.WHEAT_SEEDS, 16), IUItem.biochaff);
         addmacerator(new ItemStack(IUItem.crops.getStack(0), 16), IUItem.biochaff);
-        addmacerator(new ItemStack(Blocks.CLAY), "forge:dusts/Clay");
-        addmacerator("forge:crushed/Copper", "forge:dusts/Copper");
-        addmacerator("forge:plateDense/Obsidian", "forge:dusts/Obsidian", 9);
-        addmacerator("forge:plateDense/Lapis", "forge:dusts/Lapis", 9);
+        addmacerator(new ItemStack(Blocks.CLAY), "c:dusts/Clay");
+        addmacerator("c:crushed/Copper", "c:dusts/Copper");
+        addmacerator("c:plateDense/Obsidian", "c:dusts/Obsidian", 9);
+        addmacerator("c:plateDense/Lapis", "c:dusts/Lapis", 9);
         addmacerator(new ItemStack(Blocks.TALL_GRASS, 8), IUItem.biochaff);
-        addmacerator("forge:ingots/Copper", "forge:dusts/Copper");
+        addmacerator("c:ingots/Copper", "c:dusts/Copper");
         addmacerator(new ItemStack(Items.BONE, 1), new ItemStack(Items.WHITE_DYE, 4));
         addmacerator(new ItemStack(Items.MELON, 8), IUItem.biochaff);
         addmacerator("saplings", 4, IUItem.biochaff);
-        addmacerator("forge:plateDense/Iron", "forge:dusts/Iron", 9);
-        addmacerator("forge:crushed/Iron", "forge:dusts/Iron");
-        addmacerator("forge:gems/Emerald", new ItemStack(IUItem.iudust.getStack(74), 1));
+        addmacerator("c:plateDense/Iron", "c:dusts/Iron", 9);
+        addmacerator("c:crushed/Iron", "c:dusts/Iron");
+        addmacerator("c:gems/Emerald", new ItemStack(IUItem.iudust.getStack(74), 1));
 
         addmacerator(new ItemStack(IUItem.apatite.getItem(2), 1), new ItemStack(IUItem.iudust.getStack(66), 1));
         addmacerator(new ItemStack(IUItem.apatite.getItem(3), 1), new ItemStack(IUItem.iudust.getStack(69), 1));
         addmacerator(new ItemStack(IUItem.apatite.getItem(4), 1), new ItemStack(IUItem.iudust.getStack(70), 1));
 
 
-        addmacerator(new ItemStack(Items.COAL), "forge:dusts/Coal");
-        addmacerator("forge:crushed/Lead", "forge:dusts/Lead");
-        addmacerator("forge:crushed/Tin", "forge:dusts/Tin");
-        addmacerator("forge:crushed/Gold", "forge:dusts/Gold");
-        addmacerator("forge:plateDense/Copper", "forge:dusts/Copper", 9);
-        addmacerator("forge:plateDense/Tin", "forge:dusts/Tin", 9);
-        addmacerator("forge:plateDense/Gold", "forge:dusts/Gold", 9);
+        addmacerator(new ItemStack(Items.COAL), "c:dusts/Coal");
+        addmacerator("c:crushed/Lead", "c:dusts/Lead");
+        addmacerator("c:crushed/Tin", "c:dusts/Tin");
+        addmacerator("c:crushed/Gold", "c:dusts/Gold");
+        addmacerator("c:plateDense/Copper", "c:dusts/Copper", 9);
+        addmacerator("c:plateDense/Tin", "c:dusts/Tin", 9);
+        addmacerator("c:plateDense/Gold", "c:dusts/Gold", 9);
         addmacerator(new ItemStack(Blocks.ICE), new ItemStack(Items.SNOWBALL));
         addmacerator(new ItemStack(Items.PUMPKIN_SEEDS, 16), IUItem.biochaff);
-        addmacerator("forge:plates/Lapis", "forge:dusts/Lapis");
-        addmacerator("forge:plateDense/Bronze", "forge:dusts/Bronze", 9);
+        addmacerator("c:plates/Lapis", "c:dusts/Lapis");
+        addmacerator("c:plateDense/Bronze", "c:dusts/Bronze", 9);
 
         addmacerator(IUItem.biochaff, new ItemStack(Blocks.DIRT));
         addmacerator(new ItemStack(Blocks.PUMPKIN, 8), IUItem.biochaff);
-        addmacerator("forge:gems/Diamond", "forge:dusts/Diamond");
+        addmacerator("c:gems/Diamond", "c:dusts/Diamond");
         addmacerator(new ItemStack(Items.RABBIT, 8), IUItem.biochaff);
-        addmacerator("forge:storage_blocks/Coal", "forge:dusts/Coal", 9);
+        addmacerator("c:storage_blocks/Coal", "c:dusts/Coal", 9);
         addmacerator(new ItemStack(Blocks.OBSIDIAN), IUItem.obsidianDust);
         addmacerator(new ItemStack(Items.SUGAR_CANE, 8), IUItem.biochaff);
-        addmacerator("forge:ingots/Gold", "forge:dusts/Gold");
-        addmacerator("forge:ingots/Iron", "forge:dusts/Iron");
-        addmacerator("forge:ingots/Tin", "forge:dusts/Tin");
+        addmacerator("c:ingots/Gold", "c:dusts/Gold");
+        addmacerator("c:ingots/Iron", "c:dusts/Iron");
+        addmacerator("c:ingots/Tin", "c:dusts/Tin");
         addmacerator(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND));
         addmacerator("leaves", 8, IUItem.biochaff);
         addmacerator(new ItemStack(Items.MELON_SEEDS, 16), IUItem.biochaff);
         addmacerator(new ItemStack(Items.POTATO, 8), IUItem.biochaff);
-        addmacerator("forge:purifiedcrushed/Gold", "forge:dusts/Gold", 1);
-        addmacerator("forge:purifiedcrushed/Iron", "forge:dusts/Iron", 1);
-        addmacerator("forge:purifiedcrushed/Tin", "forge:dusts/Tin", 1);
-        addmacerator("forge:purifiedcrushed/Copper", "forge:dusts/Copper", 1);
-        addmacerator("forge:purifiedcrushed/Lead", "forge:dusts/Lead", 1);
+        addmacerator("c:purifiedcrushed/Gold", "c:dusts/Gold", 1);
+        addmacerator("c:purifiedcrushed/Iron", "c:dusts/Iron", 1);
+        addmacerator("c:purifiedcrushed/Tin", "c:dusts/Tin", 1);
+        addmacerator("c:purifiedcrushed/Copper", "c:dusts/Copper", 1);
+        addmacerator("c:purifiedcrushed/Lead", "c:dusts/Lead", 1);
         addmacerator(new ItemStack(Blocks.GRAVEL), new ItemStack(Items.FLINT));
         addmacerator(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST, 4));
         addmacerator(new ItemStack(Blocks.REDSTONE_BLOCK), new ItemStack(Items.REDSTONE, 9));
@@ -234,10 +228,17 @@ public class MaceratorRecipe {
         );
         addmacerator(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5));
         addmacerator(new ItemStack(Items.WHEAT, 8), IUItem.biochaff);
-        addmacerator(new ItemStack(Blocks.LAPIS_BLOCK), "forge:dusts/Lapis", 9);
-        addmacerator(new ItemStack(Items.LAPIS_LAZULI), "forge:dusts/Lapis", 1);
+        addmacerator(new ItemStack(Blocks.LAPIS_BLOCK), "c:dusts/Lapis", 9);
+        addmacerator(new ItemStack(Items.LAPIS_LAZULI), "c:dusts/Lapis", 1);
         addmacerator(new ItemStack(Blocks.STONE), new ItemStack(Blocks.COBBLESTONE));
 
+
+        for (int i = 0; i < BlockRaws.Type.values().length; i++) {
+            addmacerator("c:storage_blocks/" + BlockRaws.Type.values()[i].getName(), "c:crushed/" + BlockRaws.Type.values()[i].name(), 18);
+        }
+        addmacerator("c:storage_blocks/raw_iron", "c:crushed/iron", 18);
+        addmacerator("c:storage_blocks/raw_copper", "c:crushed/copper", 18);
+        addmacerator("c:storage_blocks/raw_gold", "c:crushed/gold", 18);
     }
 
     private static void addmacerator(ItemStack input, String output, int i) {
@@ -346,6 +347,7 @@ public class MaceratorRecipe {
 
 
     }
+
     public static void addmacerator1(ItemStack input, ItemStack output) {
         final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
@@ -360,6 +362,7 @@ public class MaceratorRecipe {
 
 
     }
+
     public static void addmacerator(ItemStack input, int i, ItemStack output) {
         final IInputHandler input1 = Recipes.inputFactory;
         input = input.copy();

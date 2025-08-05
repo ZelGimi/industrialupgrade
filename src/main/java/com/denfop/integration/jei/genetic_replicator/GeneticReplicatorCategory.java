@@ -35,9 +35,9 @@ public class GeneticReplicatorCategory extends GuiIU implements IRecipeCategory<
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -71,27 +71,26 @@ public class GeneticReplicatorCategory extends GuiIU implements IRecipeCategory<
     public void draw(GeneticReplicatorHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         new GuiComponent(this, 88, 40, EnumTypeComponent.FLUID_PART1,
                 new Component<>(new ComponentEmpty())
-        ).drawBackground( stack, this.guiLeft, this.guiTop);
+        ).drawBackground(stack, this.guiLeft, this.guiTop);
         new GuiComponent(this, 35, 38, EnumTypeComponent.PLUS_BUTTON,
                 new Component<>(new ComponentEmpty())
-        ).drawBackground( stack, this.guiLeft, this.guiTop);
+        ).drawBackground(stack, this.guiLeft, this.guiTop);
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack, this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GeneticReplicatorHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,   16, 24).setFluidRenderer(12000,true,12,47).addFluidStack(recipes.getInput().getFluid(),recipes.getInput().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT,    16 + 48,24).setFluidRenderer(12000,true,12,47).addFluidStack(recipes.getOutput().getFluid(),recipes.getOutput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,    16 + 96,24).setFluidRenderer(12000,true,12,47).addFluidStack(recipes.getOutput1().getFluid(),recipes.getOutput1().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 16, 24).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getInput().getFluid(), recipes.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 16 + 48, 24).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getOutput().getFluid(), recipes.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 16 + 96, 24).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getOutput1().getFluid(), recipes.getOutput1().getAmount());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guioilrefiner.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guioilrefiner.png");
     }
 
 

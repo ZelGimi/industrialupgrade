@@ -29,12 +29,13 @@ public class BeeCategory extends GuiIU implements IRecipeCategory<BeeHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public BeeCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityBatteryFactory) BlockBaseMachine3.battery_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        this.jeiInform = jeiInform;
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -53,6 +54,7 @@ public class BeeCategory extends GuiIU implements IRecipeCategory<BeeHandler> {
     public RecipeType<BeeHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -62,25 +64,24 @@ public class BeeCategory extends GuiIU implements IRecipeCategory<BeeHandler> {
 
     @Override
     public void draw(BeeHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-       this.drawSplitString(stack,"+", 27, 28,
+        this.drawSplitString(stack, "+", 27, 28,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack,"->", 51, 28,
+        this.drawSplitString(stack, "->", 51, 28,
                 140 - 5, 4210752
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BeeHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,5, 25).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipes.getInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.net.getItem()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipes.getOutput());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

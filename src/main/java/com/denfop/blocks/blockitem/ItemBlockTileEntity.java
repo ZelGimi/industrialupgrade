@@ -18,8 +18,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +26,7 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
     public final ResourceLocation identifier;
 
     public ItemBlockTileEntity(BlockTileEntity<T> p_40565_, T element, ResourceLocation identifier) {
-        super(p_40565_, element, new Properties(),element.getCreativeTab());
+        super(p_40565_, element, new Properties(), element.getCreativeTab());
         p_40565_.setItem(this);
         this.identifier = identifier;
     }
@@ -44,17 +42,17 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack p_40572_,Level p_40573_, List<Component> p_40574_, TooltipFlag p_40575_) {
+    public void appendHoverText(ItemStack p_40572_, TooltipContext p_339655_, List<Component> p_40574_, TooltipFlag p_40575_) {
         IMultiTileBlock block = this.getTeBlock(p_40572_);
         if (block != null && block.getDummyTe() != null) {
             List<String> stringList = new LinkedList<>();
+            block.getDummyTe().setLevel(p_339655_.level());
             block.getDummyTe().addInformation(p_40572_, stringList);
             for (String s : stringList)
                 p_40574_.add(Component.literal(s));
         }
-
     }
+
 
     public IMultiTileBlock getTeBlock(ItemStack stack) {
         return stack == null ? null : (!((BlockTileEntity) this.getBlock()).teInfo.getIdMap().isEmpty()) ?
@@ -69,8 +67,9 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
         BlockState blockstate = level.getBlockState(blockpos);
         Block block = this.getBlock();
         Direction direction = pContext.getClickedFace();
-        IMultiTileBlock iMultiTileBlock =  getTeBlock(pContext.getItemInHand());
-        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(),blockpos,level,direction ,pContext.getPlayer() ))
+
+        IMultiTileBlock iMultiTileBlock = getTeBlock(pContext.getItemInHand());
+        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(), blockpos, level, direction, pContext.getPlayer()))
             return null;
         return super.updatePlacementContext(pContext);
     }
@@ -95,8 +94,8 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem =  "industrialupgrade." +pathBuilder.toString();
-            if (this.getElement().hasUniqueName()){
+            this.nameItem = "industrialupgrade." + pathBuilder.toString();
+            if (this.getElement().hasUniqueName()) {
                 this.nameItem = this.getElement().getUniqueName();
             }
         }

@@ -20,6 +20,6 @@ public class ItemBlockApatite extends ItemBlockCore<BlockApatite.Type> implement
 
     @Override
     public String[] getTags() {
-        return new String[]{"forge:ores/" + getElement().getName().replace("_", "").replace("_", ""), "forge:ores"};
+        return new String[]{"c:ores/" + getElement().getName().replace("_", "").replace("_", ""), "c:ores"};
     }
 }

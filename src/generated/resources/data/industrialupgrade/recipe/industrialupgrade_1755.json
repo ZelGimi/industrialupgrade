@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:water_reactors/water_adv_output"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_378_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_373_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_371_element"
+    }
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:water_reactors/water_imp_output"
+  },
+  "show_notification": false
+}

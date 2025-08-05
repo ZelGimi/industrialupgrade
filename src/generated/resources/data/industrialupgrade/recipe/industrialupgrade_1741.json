@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_furnace"
+    },
+    "C": {
+      "tag": "c:plates/thallium"
+    }
+  },
+  "pattern": [
+    " C ",
+    "CBC",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:smeltery/smeltery_casting"
+  },
+  "show_notification": false
+}

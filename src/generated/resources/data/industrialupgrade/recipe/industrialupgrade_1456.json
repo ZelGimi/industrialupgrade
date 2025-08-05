@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_11_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_70_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    }
+  },
+  "pattern": [
+    "D D",
+    "BAE",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/fluid_heat"
+  },
+  "show_notification": false
+}

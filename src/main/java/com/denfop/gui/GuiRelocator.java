@@ -3,8 +3,8 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.ElectricItem;
 import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.componets.ComponentButton;
+import com.denfop.api.gui.Area;
+import com.denfop.api.gui.ScrollDirection;
 import com.denfop.container.ContainerBase;
 import com.denfop.items.relocator.ItemStackRelocator;
 import com.denfop.items.relocator.Point;
@@ -16,9 +16,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -42,7 +40,7 @@ public class GuiRelocator<T extends ContainerBase<ItemStackRelocator>> extends G
     }
 
     @Override
-    public boolean mouseScrolled(double d, double d2, double d3) {
+    public boolean mouseScrolled(double d, double d2, double d4, double d3) {
         ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
         int mouseX = (int) (d - this.guiLeft);
         int mouseY = (int) (d2 - this.guiTop);
@@ -55,7 +53,7 @@ public class GuiRelocator<T extends ContainerBase<ItemStackRelocator>> extends G
                 value = Math.min(value, container.base.points.size() / 4);
             }
         }
-        return super.mouseScrolled(d, d2, d3);
+        return super.mouseScrolled(d, d2, d4, d3);
     }
 
     @Override
@@ -71,14 +69,14 @@ public class GuiRelocator<T extends ContainerBase<ItemStackRelocator>> extends G
             int y1 = 20 + 15 * (index % 4);
             int x2 = 153;
             int y2 = 20 + 15 * (index % 4);
-            if (x >= x2 && x <= x2+12 && y >= y2 && y <= y2+11) {
+            if (x >= x2 && x <= x2 + 12 && y >= y2 && y <= y2 + 11) {
                 new PacketRelocatorTeleportPlayer(minecraft.player, pointList.get(index));
                 ItemStack stack = this.container.base.itemStack1;
                 if (ElectricItem.manager.canUse(stack, 1000000)) {
                     minecraft.player.closeContainer();
                 }
             }
-            if (x >= x1 && x <= x1+12 && y >= y1 && y <= y1+11) {
+            if (x >= x1 && x <= x1 + 12 && y >= y1 && y <= y1 + 11) {
                 new PacketRemoveRelocatorPoint(minecraft.player, pointList.get(index));
                 minecraft.player.closeContainer();
             }
@@ -128,8 +126,8 @@ public class GuiRelocator<T extends ContainerBase<ItemStackRelocator>> extends G
         int textY = (int) ((this.guiTop + 8) / scale);
 
 
-        poseStack.drawString(Minecraft.getInstance().font,name, textX, textY, ModUtils.convertRGBcolorToInt(255,255,255),false);
-        pose.scale(1/scale,1/scale,1);
+        poseStack.drawString(Minecraft.getInstance().font, name, textX, textY, ModUtils.convertRGBcolorToInt(255, 255, 255), false);
+        pose.scale(1 / scale, 1 / scale, 1);
 
         pose.popPose();
         bindTexture();
@@ -141,7 +139,7 @@ public class GuiRelocator<T extends ContainerBase<ItemStackRelocator>> extends G
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirelocator.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirelocator.png");
     }
 
 }

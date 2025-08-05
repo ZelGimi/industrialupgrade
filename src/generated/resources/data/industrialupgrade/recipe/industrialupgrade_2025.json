@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/alcled"
+    },
+    "B": {
+      "tag": "c:rods/thallium"
+    }
+  },
+  "pattern": [
+    "A A",
+    "AB ",
+    " AA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_728_element"
+  },
+  "show_notification": false
+}

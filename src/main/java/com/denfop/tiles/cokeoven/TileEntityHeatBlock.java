@@ -16,7 +16,7 @@ public class TileEntityHeatBlock extends TileEntityMultiBlockElement implements 
 
 
     public TileEntityHeatBlock(BlockPos pos, BlockState state) {
-        super(BlockCokeOven.coke_oven_heat,pos,state);
+        super(BlockCokeOven.coke_oven_heat, pos, state);
 
     }
 

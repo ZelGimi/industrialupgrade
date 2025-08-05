@@ -104,7 +104,7 @@ public class GuiBlockLimiter<T extends ContainerBlockLimiter> extends GuiIU<Cont
         handleUpgradeTooltip(par1, par2);
         poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + ModUtils.getString(this.container.base.getEnergy().limit_amount),
                 (64 - getStringWidth(ModUtils.getString(this.container.base.getEnergy().limit_amount))), 31,
-                ModUtils.convertRGBcolorToInt(217, 217, 217),false
+                ModUtils.convertRGBcolorToInt(217, 217, 217), false
         );
 
 
@@ -114,7 +114,7 @@ public class GuiBlockLimiter<T extends ContainerBlockLimiter> extends GuiIU<Cont
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         int xoffset = guiLeft;
         int yoffset = guiTop;
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
         bindTexture(getTexture());
@@ -122,7 +122,7 @@ public class GuiBlockLimiter<T extends ContainerBlockLimiter> extends GuiIU<Cont
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

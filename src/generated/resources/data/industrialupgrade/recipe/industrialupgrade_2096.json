@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/adamantite"
+    },
+    "C": {
+      "tag": "c:plates/redbrass"
+    },
+    "E": {
+      "tag": "c:plates/palladium"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:spaceupgrademodules/space_upgrademodule1"
+  },
+  "show_notification": false
+}

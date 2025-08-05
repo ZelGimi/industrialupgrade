@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "B": {
+      "item": "minecraft:chest"
+    },
+    "D": {
+      "tag": "c:plates/germanium"
+    }
+  },
+  "pattern": [
+    " D ",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/analyzer_chest"
+  },
+  "show_notification": false
+}

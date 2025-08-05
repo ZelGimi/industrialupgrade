@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "B": {
+      "item": "industrialupgrade:rotorupgrade_schemes"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems2"
+    },
+    "D": {
+      "tag": "c:doubleplate/invar"
+    }
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:rotors_upgrade/rotorupgrade10"
+  },
+  "show_notification": false
+}

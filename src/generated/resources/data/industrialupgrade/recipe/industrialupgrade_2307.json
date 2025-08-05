@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/solarium"
+    },
+    "B": {
+      "tag": "c:plates/mithril"
+    },
+    "C": {
+      "item": "industrialupgrade:synthetic_rubber"
+    }
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/night"
+  },
+  "show_notification": false
+}

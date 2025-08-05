@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileAerAssembler extends TileBaseWorldCollector {
 
     public TileAerAssembler(BlockPos pos, BlockState state) {
-        super(EnumTypeCollector.AER,BlockBaseMachine3.aer_assembler,pos,state);
+        super(EnumTypeCollector.AER, BlockBaseMachine3.aer_assembler, pos, state);
     }
 
     public void init() {

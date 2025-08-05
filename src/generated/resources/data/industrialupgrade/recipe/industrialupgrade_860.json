@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring_storage/mfe_iu"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/teleporter_iu"
+    },
+    "C": {
+      "item": "industrialupgrade:transformer_iu/hv"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "E": {
+      "item": "industrialupgrade:blockresource/reinforced_stone"
+    }
+  },
+  "pattern": [
+    "EDE",
+    "BBB",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_58_element"
+  },
+  "show_notification": false
+}

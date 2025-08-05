@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:ingots/duralumin"
+    },
+    "C": {
+      "tag": "c:doubleplate/invar"
+    },
+    "D": {
+      "item": "industrialupgrade:energy/magnet"
+    }
+  },
+  "pattern": [
+    "B B",
+    "CDC",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:energy/impmagnet"
+  },
+  "show_notification": false
+}

@@ -1,7 +1,6 @@
 package com.denfop.render.anvil;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.base.IIsMolecular;
 import com.denfop.tiles.base.TileEntityAnvil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -12,10 +11,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.client.ClientHooks;
 
 import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
@@ -31,6 +29,7 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
     public RenderItemAnvil(BlockEntityRendererProvider.Context p_173636_) {
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
+
     private int transformModelCount(PoseStack poseStack, float partialTicks
     ) {
 
@@ -46,27 +45,28 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
         rotation = (prevRotation + (rotation - prevRotation) * (partialTicks)) % 360;
 
         prevRotation = rotation;
-        rotation +=2F;
+        rotation += 2F;
 
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
 
 
         return modelCount;
     }
-    public void renderItem(ItemStack itemStack, Level level, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
+
+    public void renderItem(ItemStack itemStack, Level level, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, float partialTicks) {
         if (itemStack.isEmpty()) {
             return;
         }
 
-        BakedModel bakedModel = this.itemRenderer.getModel(itemStack,level,null,0);
+        BakedModel bakedModel = itemRenderer.getModel(itemStack, level, null, 0);
         RandomSource random = level.random;
         if (bakedModel != null) {
             boolean isGui3d = bakedModel.isGui3d();
 
             poseStack.pushPose();
-            poseStack.translate(0,2,0);
+            poseStack.translate(0, 2, 0);
 
-            int count =transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
+            int count = transformModelCount(poseStack, partialTicks);
 
             for (int i = 0; i < 1; ++i) {
                 poseStack.pushPose();
@@ -86,21 +86,30 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
                     }
                 }
 
-                BakedModel transformedModel =net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                BakedModel transformedModel = ClientHooks.handleCameraTransforms(new PoseStack(),
                         bakedModel,
                         GROUND,
                         false
                 );
-                this.itemRenderer .render(itemStack,FIXED, false, poseStack, buffer, light, overlay, transformedModel);
+                itemRenderer.render(itemStack, FIXED, false, poseStack, buffer, light, overlay, transformedModel);
                 poseStack.popPose();
             }
 
             poseStack.popPose();
         }
     }
+
     @Override
     public void render(TileEntityAnvil tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        poseStack.pushPose();
+        if (!tile.active.isEmpty()) {
+            if (this.stack == null) {
+                this.stack = new ItemStack(IUItem.iuingot.getStack(10));
+            }
+            renderItem(stack, tile.getLevel(), poseStack, buffer, combinedLight, combinedOverlay, partialTicks);
+        }
+        poseStack.popPose();
         ItemStack itemStack = tile.inputSlotA.get(0);
         if (!itemStack.isEmpty()) {
             poseStack.pushPose();
@@ -108,7 +117,7 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
 
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             itemRenderer.renderStatic(itemStack, GROUND,
-                    combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                    combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
             if (tile.facing == 5 || tile.facing == 4) {
                 poseStack.translate(0, -1, -0.05);
 
@@ -118,19 +127,12 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
             for (int i = 0; i < itemStack.getCount() - 1; i++) {
                 poseStack.translate(0, 0, -0.0075);
                 itemRenderer.renderStatic(itemStack, GROUND,
-                        combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                        combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
             }
             poseStack.popPose();
         }
-        poseStack.pushPose();
-        if (!tile.active.isEmpty()){
-            if (this.stack == null){
-                this.stack = new ItemStack(IUItem.iuingot.getStack(10));
-            }
-            renderItem(stack,tile.getLevel(),poseStack,buffer,combinedLight,combinedOverlay);
-        }
-        poseStack.popPose();
-         ItemStack outputStack = tile.outputSlot.get(0);
+
+        ItemStack outputStack = tile.outputSlot.get(0);
         if (!outputStack.isEmpty()) {
             poseStack.pushPose();
 
@@ -146,7 +148,7 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
             for (int i = 0; i < outputStack.getCount(); i++) {
                 poseStack.translate(0, 0, -0.0075);
                 itemRenderer.renderStatic(outputStack, GROUND,
-                        combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                        combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
 
             }
 

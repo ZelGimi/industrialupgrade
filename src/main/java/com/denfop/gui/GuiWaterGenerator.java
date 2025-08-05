@@ -27,9 +27,9 @@ public class GuiWaterGenerator<T extends ContainerWaterGenerator> extends GuiIU<
 
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
-    draw( poseStack,this.progressLabel, 8, 22, 4210752);
-        draw( poseStack,this.container.base.getProgressAsString(), 18, 31, 4210752);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        draw(poseStack, this.progressLabel, 8, 22, 4210752);
+        draw(poseStack, this.container.base.getProgressAsString(), 18, 31, 4210752);
 
 
     }
@@ -41,7 +41,7 @@ public class GuiWaterGenerator<T extends ContainerWaterGenerator> extends GuiIU<
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

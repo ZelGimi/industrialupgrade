@@ -19,10 +19,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +48,7 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
     private int[] col;
     private Timer timer1 = new Timer(0, 0, 0);
     private Timer timer = null;
+
     public SteamProcessMultiComponent(final ISteamMechanism parent, final EnumMultiMachine enumMultiMachine) {
         super((TileEntityBlock) parent);
         this.multimachine = parent;
@@ -84,11 +85,12 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
             this.getsOutputs();
         }
     }
+
     @Override
     public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem().equals(IUItem.canister.getItem())) {
-            IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) stack.getItem().initCapabilities(stack, stack.getTag()));
+            IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM, null);
             FluidStack fluid = handler.getFluidInTank(0);
             if (fluid != FluidStack.EMPTY && fluid.getFluid() == FluidName.fluidsteam_oil.getInstance().get() && fluid.getAmount() >= 250 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
                 this.timer = new Timer(0, 0, 40);
@@ -105,7 +107,7 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
 
     @Override
     public void onContainerUpdate(final ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             buffer.writeInt(this.progress[i]);
@@ -119,7 +121,7 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
 
     @Override
     public CustomPacketBuffer updateComponent() {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, parent.registryAccess());
         buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             buffer.writeInt(this.progress[i]);

@@ -22,8 +22,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
     private final EnumTypeStyle enumTypeStyle;
 
     public TileEntityRadiationStorage(double maxStorage1, EnumTypeStyle enumTypeStyle, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.radiation = this.addComponent((new ComponentBaseEnergy(EnergyType.RADIATION, this, maxStorage1,
 
                 Arrays.asList(Direction.values()),
@@ -81,7 +81,6 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
 
         return drop;
     }
-
 
 
     @Override

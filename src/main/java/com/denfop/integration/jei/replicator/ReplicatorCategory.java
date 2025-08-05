@@ -35,7 +35,7 @@ public class ReplicatorCategory extends GuiIU implements IRecipeCategory<Replica
         super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -72,13 +72,13 @@ public class ReplicatorCategory extends GuiIU implements IRecipeCategory<Replica
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ReplicatorHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,  95, 21).setFluidRenderer(10000, true,12, 47).addFluidStack(FluidName.fluiduu_matter.getInstance().get(), (int) recipe.getMatter());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,31,11).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(FluidName.fluiduu_matter.getInstance().get(), (int) recipe.getMatter());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 31, 11).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

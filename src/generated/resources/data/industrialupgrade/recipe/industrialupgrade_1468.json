@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_28_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    }
+  },
+  "pattern": [
+    " B ",
+    "DAE",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine1/gen_wither"
+  },
+  "show_notification": false
+}

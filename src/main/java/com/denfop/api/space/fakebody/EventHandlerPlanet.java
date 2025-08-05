@@ -11,9 +11,9 @@ import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.events.WorldSavedDataIU;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.Map;
 import java.util.UUID;
@@ -29,13 +29,12 @@ public class EventHandlerPlanet {
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            tick++;
-            if (tick % 20 == 0) {
-                SpaceNet.instance.getFakeSpaceSystem().working();
-                SpaceNet.instance.getColonieNet().working();
-            }
+    public void tick(final ServerTickEvent.Post event) {
+
+        tick++;
+        if (tick % 20 == 0) {
+            SpaceNet.instance.getFakeSpaceSystem().working();
+            SpaceNet.instance.getColonieNet().working();
         }
 
 

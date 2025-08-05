@@ -6,16 +6,29 @@ import net.minecraft.world.entity.player.Player;
 
 public class PacketRadiationUpdateValue implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketRadiationUpdateValue() {
 
     }
 
     public PacketRadiationUpdateValue(Player player, double value) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(64);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(64, player.registryAccess());
         buffer.writeByte(this.getId());
         buffer.writeDouble(value);
         buffer.flip();
-        IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer, (ServerPlayer) player);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

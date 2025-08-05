@@ -2,12 +2,13 @@ package com.denfop.api.gui;
 
 
 import com.denfop.Localization;
+import com.denfop.componets.Fluids;
 import com.denfop.gui.GuiCore;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -57,8 +58,8 @@ public class FluidItem extends GuiElement<FluidItem> {
             int color = extensions.getTintColor();
             bindBlockTexture();
             this.gui.drawSprite(poseStack,
-                   mouseX+ fluidX,
-                    mouseY+     fluidY,
+                    mouseX + fluidX,
+                    mouseY + fluidY,
                     fluidWidth,
                     fluidHeight,
                     sprite,
@@ -74,10 +75,10 @@ public class FluidItem extends GuiElement<FluidItem> {
     protected List<String> getToolTip() {
         List<String> ret = super.getToolTip();
         FluidStack fs = this.fluid;
-        if (fs != null && fs.getAmount() > 0) {
+        if (!fs.isEmpty() && fs.getAmount() > 0) {
             Fluid fluid = fs.getFluid();
-            if (fluid != null) {
-                ret.add(Localization.translate(fs.getTranslationKey()));
+            if (fluid != Fluids.EMPTY) {
+                ret.add(Localization.translate(fs.getDescriptionId()));
                 ret.add("Amount: " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                 ret.add("Type: " + "Liquid");
             } else {

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/steel"
+    },
+    "B": {
+      "tag": "c:storage_blocks/iridium"
+    },
+    "C": {
+      "tag": "c:casings/aluminumbronze"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:steam_boiler/steam_boiler_casing"
+  },
+  "show_notification": false
+}

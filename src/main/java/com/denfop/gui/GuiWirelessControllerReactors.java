@@ -5,15 +5,16 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.api.gui.ItemStackImage;
 import com.denfop.container.ContainerWirelessControllerReactors;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.ReactorData;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +32,7 @@ public class GuiWirelessControllerReactors<T extends ContainerWirelessController
     protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
         int xMin = guiLeft;
-        int yMin =guiTop;
+        int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
         for (int index = 0; index < 12; index++) {
@@ -70,42 +71,42 @@ public class GuiWirelessControllerReactors<T extends ContainerWirelessController
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, final int par2) {
-        super.drawForegroundLayer(poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         for (int i = 0; i < 12; i++) {
             if (!this.container.base.invslot.get(i).isEmpty()) {
                 ItemStack stack = this.container.base.itemStacks.get(i);
                 if (!stack.isEmpty()) {
-                    final CompoundTag nbt = ModUtils.nbt(this.container.base.invslot.get(i));
-                    BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+                    @Nullable ReactorData reactorData = container.base.invslot.get(i).get(DataComponentsInit.REACTOR_DATA);
+                    BlockPos pos = reactorData.pos();
                     new Area(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
-                            ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack,par1, par2);
+                            ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
                 }
             }
         }
     }
 
     @Override
-protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
         for (int i = 0; i < 12; i++) {
             if (!this.container.base.invslot.get(i).isEmpty()) {
                 ItemStack stack = this.container.base.itemStacks.get(i);
                 if (!stack.isEmpty()) {
                     new ItemStackImage(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, () -> stack).drawBackground(
-                            poseStack,this.guiLeft,
+                            poseStack, this.guiLeft,
                             this.guiTop
                     );
                 }
             }
         }
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack,this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

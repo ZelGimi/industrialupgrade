@@ -47,9 +47,9 @@ public class GenRadCategory extends GuiIU implements IRecipeCategory<GenRadHandl
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -91,17 +91,17 @@ public class GenRadCategory extends GuiIU implements IRecipeCategory<GenRadHandl
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, 0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack, 0, 0, xScale);
-      drawSplitString( stack,
-              ModUtils.getString(recipe.getEnergy()) + "☢",
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        drawSplitString(stack,
+                ModUtils.getString(recipe.getEnergy()) + "☢",
                 70,
                 60,
                 140 - 10,
                 4210752
         );
-      bindTexture(getTexture());
+        bindTexture(getTexture());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class GenRadCategory extends GuiIU implements IRecipeCategory<GenRadHandl
         final List<ItemStack> inputs = Collections.singletonList(recipes.getOutput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.OUTPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
@@ -118,7 +118,7 @@ public class GenRadCategory extends GuiIU implements IRecipeCategory<GenRadHandl
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

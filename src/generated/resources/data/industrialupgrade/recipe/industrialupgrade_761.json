@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/draconid"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    },
+    "C": {
+      "tag": "c:plates/woods"
+    }
+  },
+  "pattern": [
+    "BC ",
+    "AA ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_140_element"
+  },
+  "show_notification": false
+}

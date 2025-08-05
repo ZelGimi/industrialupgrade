@@ -20,11 +20,7 @@ public class OreWashingHandler {
         this.input = input;
         this.output = output;
         this.temperature = temperature;
-        this.container  =container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<OreWashingHandler> getRecipes() {
@@ -35,7 +31,7 @@ public class OreWashingHandler {
     }
 
     public static OreWashingHandler addRecipe(ItemStack input, List<ItemStack> output, short temperature, BaseMachineRecipe container) {
-        OreWashingHandler recipe = new OreWashingHandler(input, output, temperature,container);
+        OreWashingHandler recipe = new OreWashingHandler(input, output, temperature, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -61,13 +57,16 @@ public class OreWashingHandler {
 
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items, (short) 1000,container
+                    container.getOutput().items, (short) 1000, container
             );
 
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

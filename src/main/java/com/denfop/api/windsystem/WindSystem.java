@@ -9,11 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.*;
 
@@ -31,7 +30,7 @@ public class WindSystem implements IWindSystem {
 
     public WindSystem() {
         windSystem = this;
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
         this.rand = new Random();
         this.windSide = EnumWindSide.getValue(this.rand.nextInt(8));
         facingMap.put(Direction.EAST, Direction.NORTH);
@@ -59,7 +58,7 @@ public class WindSystem implements IWindSystem {
         }
         facing = facingMap.get(facing);
 
-     if (windMechanism instanceof TileWindGenerator) {
+        if (windMechanism instanceof TileWindGenerator) {
             ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
             new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", (byte) windMechanism.getFacing().ordinal());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
@@ -112,7 +111,7 @@ public class WindSystem implements IWindSystem {
 
     public void getNewPositionOfMechanism(IWindMechanism windMechanism) {
         final Direction newFacing = getNewFacing();
-      if (windMechanism instanceof TileWindGenerator) {
+        if (windMechanism instanceof TileWindGenerator) {
             if (windMechanism.getFacing() != newFacing) {
                 ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
                 new PacketUpdateFieldTile(
@@ -207,14 +206,11 @@ public class WindSystem implements IWindSystem {
     }
 
     @SubscribeEvent
-    public void windTick(TickEvent.LevelTickEvent event) {
-        if (event.side == LogicalSide.CLIENT) {
+    public void windTick(LevelTickEvent.Post event) {
+        if (event.getLevel().isClientSide) {
             return;
         }
-        if (event.phase == TickEvent.Phase.START) {
-            return;
-        }
-        if (event.level.dimension() == Level.OVERWORLD) {
+        if (event.getLevel().dimension() == Level.OVERWORLD) {
             this.tick--;
         }
 
@@ -335,7 +331,7 @@ public class WindSystem implements IWindSystem {
             }
         }
 
-        Level world = event.level;
+        Level world = event.getLevel();
         if (world.getGameTime() % 20 == 0) {
             double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
             coef *= 10;

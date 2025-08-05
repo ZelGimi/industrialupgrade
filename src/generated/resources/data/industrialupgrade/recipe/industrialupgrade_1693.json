@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:armour/nano_chestplate"
+    },
+    "B": {
+      "tag": "c:doubleplate/ferromanganese"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "D": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "F": {
+      "item": "industrialupgrade:armour/jetpack"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "EFE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:armour/adv_nano_chestplate"
+  },
+  "show_notification": false
+}

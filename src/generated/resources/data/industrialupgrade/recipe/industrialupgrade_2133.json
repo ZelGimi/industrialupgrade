@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "c:plates/advancedalloy"
+    },
+    "C": {
+      "tag": "c:plates/carbon"
+    },
+    "D": {
+      "tag": "c:plates/bor"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_687_element"
+  },
+  "show_notification": false
+}

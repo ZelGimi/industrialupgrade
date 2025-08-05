@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,10 +27,12 @@ public class ItemSteamRod extends ItemDamage implements ISteamBlade, IItemTab {
         this.level = level;
         this.resourceLocation = resourceLocation;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public int getLevel() {
         return level;
     }
@@ -43,7 +44,7 @@ public class ItemSteamRod extends ItemDamage implements ISteamBlade, IItemTab {
 
     @Override
     public boolean damageBlade(final ItemStack stack) {
-        return applyCustomDamage(stack, 1, null);
+        return applyCustomDamage(stack, -1, null);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class ItemSteamRod extends ItemDamage implements ISteamBlade, IItemTab {
     @Override
     public void appendHoverText(
             @Nonnull final ItemStack stack,
-            @Nullable final Level world,
+            @Nullable final TooltipContext world,
             @Nonnull final List<Component> tooltip,
             @Nonnull final TooltipFlag flag
     ) {

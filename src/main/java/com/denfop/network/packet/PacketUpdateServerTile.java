@@ -11,12 +11,14 @@ import java.io.IOException;
 
 public class PacketUpdateServerTile implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
     public PacketUpdateServerTile() {
 
     }
 
     public PacketUpdateServerTile(BlockEntity te, double event) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(32);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(32, te.getLevel().registryAccess());
         buffer.writeByte(this.getId());
         try {
             EncoderHandler.encode(buffer, te, false);
@@ -25,7 +27,18 @@ public class PacketUpdateServerTile implements IPacket {
         }
         buffer.writeDouble(event);
         buffer.flip();
-        IUCore.network.getClient().sendPacket(buffer);
+        this.buffer = buffer;
+        IUCore.network.getClient().sendPacket(this, buffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override

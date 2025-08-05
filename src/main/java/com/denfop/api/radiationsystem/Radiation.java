@@ -7,10 +7,12 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
 import com.denfop.network.packet.PacketUpdateRadiation;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
@@ -44,8 +46,8 @@ public class Radiation {
         this.pos = new ChunkPos(packetBuffer.readShort(), packetBuffer.readShort());
     }
 
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+    public CustomPacketBuffer writePacket(CustomPacketBuffer os) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(os.registryAccess());
         customPacketBuffer.writeShort((short) (this.radiation * 32.5));
         byte levelAndCoef = (byte) ((this.level.ordinal() & 0x07) | ((this.coef.ordinal() & 0x07) << 3));
         customPacketBuffer.writeByte(levelAndCoef);
@@ -82,13 +84,13 @@ public class Radiation {
         this.radiation = radiation;
     }
 
-    public boolean removeRadiationWithType(double radiation) {
+    public boolean removeRadiationWithType(double radiation, Level level) {
         boolean removed;
 
         if (this.level == EnumLevelRadiation.LOW) {
             if (this.radiation == 999 && radiation == 1000) {
                 this.radiation = 0;
-                new PacketUpdateRadiation(this);
+                new PacketUpdateRadiation(this, (ServerLevel) level);
                 return true;
             }
             if (this.radiation < radiation) {
@@ -132,7 +134,7 @@ public class Radiation {
             radiation = 0;
             removed = true;
         }
-        new PacketUpdateRadiation(this);
+        new PacketUpdateRadiation(this, (ServerLevel) level);
         return removed;
 
     }
@@ -242,7 +244,7 @@ public class Radiation {
                             player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                             break;
                     }
-                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.rad, 200, 0));
                     break;
                 case VERY_HIGH:
                     num = rand.nextInt(4);
@@ -262,7 +264,7 @@ public class Radiation {
                             player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                             break;
                     }
-                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 43200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.rad, 43200, 0));
                     player.addEffect(new MobEffectInstance(MobEffects.WITHER, 400, 0));
                     break;
                 default:

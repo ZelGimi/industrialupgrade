@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:alloyingot/gallium_arsenic"
+    },
+    "B": {
+      "tag": "c:rods/silver"
+    },
+    "C": {
+      "tag": "c:rods/zinc"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "CCC",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_565_element"
+  },
+  "show_notification": false
+}

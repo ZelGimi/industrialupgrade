@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -47,6 +47,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         this.connectivity = 0;
         this.addedToEnergyNet = false;
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> info) {
         CoolType type = this.cableType;
@@ -136,7 +137,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         if (!this.getWorld().isClientSide && !addedToEnergyNet) {
             this.energyCoolConductorMap.clear();
             this.validColdReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
 
@@ -147,7 +148,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
     @Override
     public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
-        MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+        NeoForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
         this.needUpdate = true;
     }
 
@@ -157,7 +158,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         if (this.needUpdate) {
             this.energyCoolConductorMap.clear();
             this.validColdReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
             this.needUpdate = false;
             this.updateConnectivity();
         }
@@ -169,7 +170,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
 
     public void onUnloaded() {
         if (!this.getLevel().isClientSide && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+            NeoForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
             this.addedToEnergyNet = false;
         }
 

@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:gears/invar"
+    },
+    "B": {
+      "tag": "c:storage_blocks/tungsten"
+    },
+    "C": {
+      "item": "minecraft:furnace"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine3/steel_tank"
+    },
+    "E": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "EDE",
+    "EBE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:refractory_furnace/refractory_furnace"
+  },
+  "show_notification": false
+}

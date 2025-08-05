@@ -31,9 +31,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -75,6 +75,14 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
         };
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnPlasticParticles(level, pos, level.random);
+        }
     }
 
     @Override
@@ -185,13 +193,6 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
 
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnPlasticParticles(level,pos,level.random);
-        }
-    }
 
     @Override
     public ContainerPlasticPlateCreator getGuiContainer(final Player entityPlayer) {

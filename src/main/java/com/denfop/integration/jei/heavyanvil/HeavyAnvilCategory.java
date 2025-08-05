@@ -34,9 +34,9 @@ public class HeavyAnvilCategory extends GuiIU implements IRecipeCategory<HeavyAn
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileBaseHandlerHeavyOre) BlockBaseMachine1.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
         );
@@ -63,26 +63,26 @@ public class HeavyAnvilCategory extends GuiIU implements IRecipeCategory<HeavyAn
 
     @Override
     public void draw(HeavyAnvilHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        drawSplitString(stack,Localization.translate("iu.anvil.jei"), 5, 3,
+        drawSplitString(stack, Localization.translate("iu.anvil.jei"), 5, 3,
                 140 - 5, 4210752
         );
-        drawSplitString(stack,"+", 26, 31,
+        drawSplitString(stack, "+", 26, 31,
                 140 - 5, 4210752
         );
-       drawSplitString(stack,"->", 47, 31,
-               140 - 5, 4210752
+        drawSplitString(stack, "->", 47, 31,
+                140 - 5, 4210752
         );
-       drawSplitString(stack,Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
+        drawSplitString(stack, Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
                         "iu.anvil.jei2"), 5, 50,
-               140 - 5, 4210752
+                140 - 5, 4210752
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HeavyAnvilHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,5,25).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,30,25).addItemStack(new ItemStack(IUItem.ObsidianForgeHammer.getItem()));
-        builder.addSlot(RecipeIngredientRole.OUTPUT,60,25).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.ObsidianForgeHammer.getItem()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipes.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
 
@@ -90,7 +90,7 @@ public class HeavyAnvilCategory extends GuiIU implements IRecipeCategory<HeavyAn
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

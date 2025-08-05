@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:circuit/spectralcircuit"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/glass9"
+    },
+    "C": {
+      "tag": "c:doubleplate/vanadoalumite"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "ACA",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:wiring/glass10"
+  },
+  "show_notification": false
+}

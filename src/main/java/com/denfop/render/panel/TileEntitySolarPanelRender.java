@@ -18,18 +18,18 @@ import java.util.Map;
 
 public class TileEntitySolarPanelRender implements BlockEntityRenderer<TileSolarPanel> {
 
-    private final BlockEntityRendererProvider.Context contex;
-    private float rotation = 0;
-    private float prevRotation = 0;
-
-    public TileEntitySolarPanelRender(BlockEntityRendererProvider.Context context) {
-        this.contex = context;
-    }
-    public static final ResourceLocation texture = new ResourceLocation(
+    public static final ResourceLocation texture = ResourceLocation.tryBuild(
             Constants.TEXTURES,
             "textures/models/pollution.png"
     );
+    private final BlockEntityRendererProvider.Context contex;
+    private float rotation = 0;
+    private float prevRotation = 0;
     private Map<BlockPos, DataPollution> entries = new HashMap<>();
+    public TileEntitySolarPanelRender(BlockEntityRendererProvider.Context context) {
+        this.contex = context;
+    }
+
     @Override
     public void render(TileSolarPanel te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
@@ -58,8 +58,8 @@ public class TileEntitySolarPanelRender implements BlockEntityRenderer<TileSolar
             ));
         }
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
-        RenderSystem.setShaderColor(1,1,1,1);
-        dataPollution.getModel().renderToBuffer(poseStack,consumer,packedLight,packedOverlay,1,1,1,1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        dataPollution.getModel().renderToBuffer(poseStack, consumer, packedLight, packedOverlay, 0xFFFFFFFF);
         poseStack.popPose();
     }
 }

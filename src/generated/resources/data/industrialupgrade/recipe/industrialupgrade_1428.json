@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:basemachine3/adv_replicator"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_93_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_83_element"
+    }
+  },
+  "pattern": [
+    "DED",
+    "CAB",
+    "D D"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/imp_replicator"
+  },
+  "show_notification": false
+}

@@ -25,11 +25,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +41,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
 
     public TileEntityPrimalPump(BlockPos pos, BlockState state) {
         super(0, 1, 4, BlockPrimalPump.primal_pump, pos, state);
-        componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) 25));
+        componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) 16));
         this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
     }
 
@@ -70,7 +69,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -84,7 +83,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -115,7 +114,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
         if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
 
@@ -203,33 +202,16 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
             if (block.liquid()) {
 
 
-                if (block.getBlock() instanceof IFluidBlock) {
-                    IFluidBlock liquid = (IFluidBlock) block.getBlock();
-                    if ((this.fluidTank.getFluid().isEmpty() || this.fluidTank
-                            .getFluid()
-                            .getFluid() == liquid.getFluid()) && liquid.canDrain(
-                            this.getWorld(),
-                            pos
-                    )) {
-                        if (!sim) {
-                            ret = liquid.drain(this.getWorld(), pos, IFluidHandler.FluidAction.EXECUTE);
-                            this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                        } else {
-                            ret = new FluidStack(liquid.getFluid(), 1000);
-                        }
-                    }
-                } else {
-                    if (!block.getBlock().getFluidState(block).isSource()) {
-                        return FluidStack.EMPTY;
-                    }
+                if (!block.getFluidState().isSource()) {
+                    return FluidStack.EMPTY;
+                }
 
-                    ret = new FluidStack(block.getBlock().getFluidState(block).getType(), 1000);
-                    if (this.fluidTank.getFluid().isEmpty() || this.fluidTank
-                            .getFluid()
-                            .getFluid() == ret.getFluid()) {
-                        if (!sim) {
-                            this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                        }
+                ret = new FluidStack(block.getFluidState().getType(), 1000);
+                if (this.fluidTank.getFluid().isEmpty() || this.fluidTank
+                        .getFluid()
+                        .getFluid() == ret.getFluid()) {
+                    if (!sim) {
+                        this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                     }
                 }
             }

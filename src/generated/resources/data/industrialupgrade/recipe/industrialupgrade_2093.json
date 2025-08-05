@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:gas_well/gas_well_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "C": {
+      "tag": "c:plates/gold"
+    },
+    "D": {
+      "tag": "c:plates/tin"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    }
+  },
+  "pattern": [
+    " E ",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:gas_well/gas_well_tank"
+  },
+  "show_notification": false
+}

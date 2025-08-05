@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:rods/arsenic"
+    },
+    "B": {
+      "item": "industrialupgrade:circuit/photon_part1"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:circuit/photon_part2"
+  },
+  "show_notification": false
+}

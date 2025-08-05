@@ -2,19 +2,27 @@ package com.denfop.items.energy;
 
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.datagen.itemtag.ItemTagProvider;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PickaxeItem;
 
-public class ItemPickaxe extends PickaxeItem implements IItemTab {
+import static net.minecraft.tags.ItemTags.PICKAXES;
+
+public class ItemPickaxe extends PickaxeItem implements IItemTab, IItemTag {
     private final String name;
     private String nameItem;
 
     public ItemPickaxe(String name) {
-        super(IUTiers.RUBY, 1, -2.8F,new Properties().stacksTo(1));
-        this.name=name;
+        super(IUTiers.RUBY, new Properties().stacksTo(1).attributes(DiggerItem.createAttributes(IUTiers.RUBY, IUTiers.RUBY.getAttackDamageBonus(), IUTiers.RUBY.getSpeed())));
+        this.name = name;
+        ItemTagProvider.list.add(this);
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -27,7 +35,7 @@ public class ItemPickaxe extends PickaxeItem implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+name;
+            this.nameItem = "item." + name;
         }
 
         return this.nameItem;
@@ -37,4 +45,15 @@ public class ItemPickaxe extends PickaxeItem implements IItemTab {
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
+    @Override
+    public Item getItem() {
+        return this;
+    }
+
+    @Override
+    public String[] getTags() {
+        return new String[]{PICKAXES.location().toString()};
+    }
+
 }

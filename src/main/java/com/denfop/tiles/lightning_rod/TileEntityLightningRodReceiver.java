@@ -26,5 +26,4 @@ public class TileEntityLightningRodReceiver extends TileEntityMultiBlockElement 
     }
 
 
-
 }

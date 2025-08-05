@@ -37,17 +37,6 @@ public class CropHandler {
         recipes.add(recipe);
         return recipe;
     }
-    public ItemStack getInputs() {
-
-        return output.getStack();
-    }
-    public ICrop getOutput() {
-        return output;
-    }
-
-    public ItemStack getOutputs() {
-        return output.getDrop().isEmpty() ? ItemStack.EMPTY : output.getDrop().get(0);
-    }
 
     public static CropHandler getRecipe(ItemStack is) {
         if (is == null || is.isEmpty()) {
@@ -65,6 +54,19 @@ public class CropHandler {
         });
 
 
+    }
+
+    public ItemStack getInputs() {
+
+        return output.getStack();
+    }
+
+    public ICrop getOutput() {
+        return output;
+    }
+
+    public ItemStack getOutputs() {
+        return output.getDrop().isEmpty() ? ItemStack.EMPTY : output.getDrop().get(0);
     }
 
 

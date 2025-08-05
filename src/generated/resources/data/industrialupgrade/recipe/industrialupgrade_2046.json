@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/berylliumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/orichalcum"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_755_element"
+  },
+  "show_notification": false
+}

@@ -17,11 +17,7 @@ public class CompressorHandler {
     public CompressorHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
-        this.container=container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<CompressorHandler> getRecipes() {
@@ -32,7 +28,7 @@ public class CompressorHandler {
     }
 
     public static CompressorHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
-        CompressorHandler recipe = new CompressorHandler(input, output,container);
+        CompressorHandler recipe = new CompressorHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -57,7 +53,7 @@ public class CompressorHandler {
             try {
                 addRecipe(
                         container.input.getInputs().get(0).getInputs().get(0),
-                        container.getOutput().items.get(0),container
+                        container.getOutput().items.get(0), container
                 );
             } catch (Exception e) {
                 throw new RuntimeException();
@@ -66,6 +62,9 @@ public class CompressorHandler {
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

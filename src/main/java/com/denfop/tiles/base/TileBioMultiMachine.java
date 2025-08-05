@@ -40,9 +40,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -66,7 +66,7 @@ public abstract class TileBioMultiMachine extends TileEntityInventory implements
     private Fluids fluid = null;
 
     public TileBioMultiMachine(int energyconsume, int OperationsPerTick, int type, IMultiTileBlock block, BlockPos pos, BlockState state) {
-        this(1, energyconsume, OperationsPerTick, type,block,pos,state);
+        this(1, energyconsume, OperationsPerTick, type, block, pos, state);
     }
 
     public TileBioMultiMachine(
@@ -75,7 +75,7 @@ public abstract class TileBioMultiMachine extends TileEntityInventory implements
             int OperationsPerTick,
             int type,
             IMultiTileBlock block, BlockPos pos, BlockState state) {
-        super(block,pos,state);
+        super(block, pos, state);
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
         this.bioFuel = this.addComponent(ComponentBioFuelEnergy.asBasicSink(this, 1000));
         fluid = this.addComponent(new Fluids(this));
@@ -237,7 +237,7 @@ public abstract class TileBioMultiMachine extends TileEntityInventory implements
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand)) && fluid != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluid.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluid.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
             return super.onActivated(player, hand, side, vec3);
@@ -320,6 +320,7 @@ public abstract class TileBioMultiMachine extends TileEntityInventory implements
     public ContainerBioMultiMachine getGuiContainer(Player player) {
         return new ContainerBioMultiMachine(player, this, this.sizeWorkingSlot);
     }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {

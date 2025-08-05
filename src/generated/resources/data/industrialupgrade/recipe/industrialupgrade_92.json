@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/cobalt"
+    },
+    "B": {
+      "tag": "c:casings/magnesium"
+    },
+    "C": {
+      "tag": "c:plates/platinum"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/per_matter"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:solid/aqua_solidmatter"
+  },
+  "show_notification": false
+}

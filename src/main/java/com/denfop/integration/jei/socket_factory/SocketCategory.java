@@ -38,14 +38,15 @@ public class SocketCategory extends GuiIU implements IRecipeCategory<SocketHandl
     private final IDrawableStatic bg;
     private final ContainerSocket container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public SocketCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntitySocketFactory) BlockBaseMachine3.socket_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
@@ -75,7 +76,6 @@ public class SocketCategory extends GuiIU implements IRecipeCategory<SocketHandl
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -93,9 +93,9 @@ public class SocketCategory extends GuiIU implements IRecipeCategory<SocketHandl
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
     }
 
     @Override
@@ -104,20 +104,19 @@ public class SocketCategory extends GuiIU implements IRecipeCategory<SocketHandl
         final List<ItemStack> inputs = recipe.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack( inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack( recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -31,7 +31,7 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
     public int levelBlock;
 
     public TileEntityPurifierSoil(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.purifier_soil,pos,state);
+        super(BlockBaseMachine3.purifier_soil, pos, state);
         energy = this.addComponent(Energy.asBasicSink(this, 10000));
         this.chunkLevel = null;
     }
@@ -47,7 +47,7 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side,vec3);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
@@ -57,7 +57,6 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
@@ -97,7 +96,6 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
     }
 
 
-
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -109,7 +107,7 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeBoolean(this.chunkLevel != null);
         if (this.chunkLevel != null) {
-            customPacketBuffer.writeBytes(this.chunkLevel.writePacket());
+            customPacketBuffer.writeBytes(this.chunkLevel.writePacket(customPacketBuffer));
         }
         return customPacketBuffer;
     }

@@ -1,6 +1,7 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.blocks.state.HarvestTool;
@@ -13,12 +14,13 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+
+;
 
 public enum BlockSolderingMechanism implements IMultiTileBlock {
 
@@ -32,7 +34,7 @@ public enum BlockSolderingMechanism implements IMultiTileBlock {
     int idBlock;
     private TileEntityBlock dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
 
     BlockSolderingMechanism(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, Rarity.UNCOMMON);
@@ -60,7 +62,7 @@ public enum BlockSolderingMechanism implements IMultiTileBlock {
     }
 
     public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
+        final ModContainer mc = IUCore.instance.modContainer;
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
@@ -79,7 +81,7 @@ public enum BlockSolderingMechanism implements IMultiTileBlock {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 

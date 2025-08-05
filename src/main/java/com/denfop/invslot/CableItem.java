@@ -1,6 +1,5 @@
 package com.denfop.invslot;
 
-import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
@@ -48,7 +47,7 @@ public class CableItem {
             return false;
         }
         CableItem cableItem = (CableItem) o;
-        return cableItem.getStack().is(this.stack.getItem()) && (ModUtils.nbt(cableItem.stack).equals(ModUtils.nbt(this.stack)));
+        return cableItem.getStack().is(this.stack.getItem());
     }
 
     public int getCount() {

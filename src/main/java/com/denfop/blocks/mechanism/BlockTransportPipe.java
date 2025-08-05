@@ -1,6 +1,7 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.state.DefaultDrop;
@@ -14,12 +15,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+
+;
 
 public enum BlockTransportPipe implements IMultiTileBlock, IMultiBlockItem {
 
@@ -56,12 +58,21 @@ public enum BlockTransportPipe implements IMultiTileBlock, IMultiBlockItem {
     ;
 
 
+    static String[] name = {
+            "itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4", "itempipes5",
+            "itempipes6", "itempipes7", "itempipes8", "itempipes9", "itempipes10", "itempipes11",
+            "itempipes12", "itempipes13", "itempipes14", "itempipes15", "itempipes16", "itempipes17",
+            "itempipes18", "itempipes19", "itempipes20", "itempipes21", "itempipes22", "itempipes23",
+            "itempipes24", "itempipes25", "itempipes26", "itempipes27", "itempipes28", "itempipes29"
+    };
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     int idBlock;
     private TileEntityBlock dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockType;
 
     ;
 
@@ -72,8 +83,6 @@ public enum BlockTransportPipe implements IMultiTileBlock, IMultiBlockItem {
 
     }
 
-    ;
-
     public int getIDBlock() {
         return idBlock;
     }
@@ -83,7 +92,7 @@ public enum BlockTransportPipe implements IMultiTileBlock, IMultiBlockItem {
     }
 
     public void buildDummies() {
-        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
+        final ModContainer mc = IUCore.instance.modContainer;
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
@@ -95,23 +104,17 @@ public enum BlockTransportPipe implements IMultiTileBlock, IMultiBlockItem {
             }
         }
     }
+
     @Override
     public boolean hasUniqueName() {
         return true;
     }
-    static       String[] name = {
-            "itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4", "itempipes5",
-            "itempipes6", "itempipes7", "itempipes8", "itempipes9", "itempipes10", "itempipes11",
-            "itempipes12", "itempipes13", "itempipes14", "itempipes15", "itempipes16", "itempipes17",
-            "itempipes18", "itempipes19", "itempipes20", "itempipes21", "itempipes22", "itempipes23",
-            "itempipes24", "itempipes25", "itempipes26", "itempipes27", "itempipes28", "itempipes29"
-    };
-
 
     @Override
     public String getUniqueName() {
-        return "iu." + name[this.itemMeta]+ "_transport";
+        return "iu." + name[this.itemMeta] + "_transport";
     }
+
     @Override
     public BlockEntityType<? extends TileEntityBlock> getBlockType() {
         return this.blockType.get();
@@ -123,7 +126,7 @@ public enum BlockTransportPipe implements IMultiTileBlock, IMultiBlockItem {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 

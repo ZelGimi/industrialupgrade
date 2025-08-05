@@ -11,7 +11,7 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,46 +54,6 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         this.tile = tile;
         this.tank = null;
     }
-
-    public InvSlotRecipes(final TileEntityInventory base, String baseRecipe, IUpdateTick tile) {
-        this(base, Recipes.recipes.getRecipe(baseRecipe), tile);
-
-    }
-
-    public InvSlotRecipes(final TileEntityInventory base, String baseRecipe, IUpdateTick tile, Fluids.InternalFluidTank tank) {
-        this(base, Recipes.recipes.getRecipe(baseRecipe), tile);
-        this.tank = tank;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(final int index) {
-        this.index = index;
-    }
-
-    public void changeAccepts(ItemStack stack) {
-        if (stack.isEmpty()) {
-            this.accepts = this.default_accepts;
-        } else {
-            ItemRecipeSchedule itemRecipeSchedule = (ItemRecipeSchedule) stack.getItem();
-            this.accepts = itemRecipeSchedule.getInputs(this.recipe, stack);
-        }
-    }
-
-    public IUpdateTick getTile() {
-        return tile;
-    }
-
-    public void setInvSlotConsumableLiquidByList(final InvSlotFluidByList invSlotConsumableLiquidByList) {
-        this.invSlotConsumableLiquidByList = invSlotConsumableLiquidByList;
-    }
-
-    public Fluids.InternalFluidTank getTank() {
-        return tank;
-    }
-
     @Override
     public boolean hasItemList() {
         return true;
@@ -122,6 +82,44 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
             list.forEach(accept -> stacks.add(accept.getInput()));
             return stacks;
         }
+    }
+    public InvSlotRecipes(final TileEntityInventory base, String baseRecipe, IUpdateTick tile) {
+        this(base, Recipes.recipes.getRecipe(baseRecipe), tile);
+
+    }
+
+    public InvSlotRecipes(final TileEntityInventory base, String baseRecipe, IUpdateTick tile, Fluids.InternalFluidTank tank) {
+        this(base, Recipes.recipes.getRecipe(baseRecipe), tile);
+        this.tank = tank;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(final int index) {
+        this.index = index;
+    }
+
+    public void changeAccepts(ItemStack stack) {
+        if (stack.isEmpty()) {
+            this.accepts = this.default_accepts;
+        } else {
+            ItemRecipeSchedule itemRecipeSchedule = (ItemRecipeSchedule) stack.getItem();
+            this.accepts = itemRecipeSchedule.getInputs(base.getParent().getParent().getLevel().registryAccess(), this.recipe, stack);
+        }
+    }
+
+    public IUpdateTick getTile() {
+        return tile;
+    }
+
+    public void setInvSlotConsumableLiquidByList(final InvSlotFluidByList invSlotConsumableLiquidByList) {
+        this.invSlotConsumableLiquidByList = invSlotConsumableLiquidByList;
+    }
+
+    public Fluids.InternalFluidTank getTank() {
+        return tank;
     }
 
     public void load() {
@@ -176,6 +174,8 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     .getName()
                     .equals("upgradeblock") || recipe
                     .getName()
+                    .equals("roverupgradeblock") || recipe
+                    .getName()
                     .equals("recycler") || accepts.contains(
                     itemStack));
         } else {
@@ -229,7 +229,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
             }
             MachineRecipe output;
             output = this.getOutputFor();
-           if (this.tile instanceof TileConverterSolidMatter) {
+            if (this.tile instanceof TileConverterSolidMatter) {
                 TileConverterSolidMatter mechanism = (TileConverterSolidMatter) this.tile;
                 if (output != null) {
                     mechanism.getrequiredmatter(output.getRecipe().getOutput());

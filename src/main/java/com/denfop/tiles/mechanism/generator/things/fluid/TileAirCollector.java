@@ -41,11 +41,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -63,7 +63,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     private ChunkPos chunkpos;
 
     public TileAirCollector(BlockPos pos, BlockState state) {
-        super(5000, 1, 3,BlockBaseMachine3.aircollector,pos,state);
+        super(5000, 1, 3, BlockBaseMachine3.aircollector, pos, state);
         this.fluidTank = new FluidTank[3];
         this.fluids = this.addComponent(new Fluids(this));
         Fluid[] name1 = new Fluid[]{FluidName.fluidazot.getInstance().get(), FluidName.fluidoxy.getInstance().get(),
@@ -188,6 +188,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
 
 
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
+
         tooltip.add(Localization.translate("iu.air_purifier.info"));
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -260,7 +261,6 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     @Override

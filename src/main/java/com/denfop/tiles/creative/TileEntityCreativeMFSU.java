@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityCreativeMFSU extends TileElectricBlock {
     public TileEntityCreativeMFSU(BlockPos pos, BlockState state) {
-        super(14, Math.pow(10,24), Math.pow(10,24), false, "", BlockCreativeBlocks.creative_mfsu, pos, state);
+        super(14, Math.pow(10, 24), Math.pow(10, 24), false, "", BlockCreativeBlocks.creative_mfsu, pos, state);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class TileEntityCreativeMFSU extends TileElectricBlock {
 
     @Override
     public IMultiTileBlock getTeBlock() {
-        return  BlockCreativeBlocks.creative_mfsu;
+        return BlockCreativeBlocks.creative_mfsu;
     }
 }

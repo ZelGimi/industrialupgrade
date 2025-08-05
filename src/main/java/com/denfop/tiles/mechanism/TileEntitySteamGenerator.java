@@ -30,8 +30,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -53,7 +53,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     private boolean sound = true;
 
     public TileEntitySteamGenerator(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.steam_generator,pos,state);
+        super(BlockBaseMachine3.steam_generator, pos, state);
         this.coef = 1;
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(

@@ -1,14 +1,14 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.WirelessConnection;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class InvSlotElectricBlock extends InvSlot {
                 } else {
                     list.add(false);
                 }
-            }else {
+            } else {
                 list.add(false);
                 list.add(false);
             }
@@ -104,16 +104,17 @@ public class InvSlotElectricBlock extends InvSlot {
         tile.wirelessComponent.removeAll();
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem()) == 10) {
-
+                WirelessConnection wirelessConnection = this.get(i).getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
+                if (wirelessConnection == WirelessConnection.EMPTY)
+                    continue;
                 int x;
                 int y;
                 int z;
-                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
 
-                x = nbttagcompound.getInt("Xcoord");
-                y = nbttagcompound.getInt("Ycoord");
-                z = nbttagcompound.getInt("Zcoord");
-                if (nbttagcompound.getBoolean("change")) {
+                x = wirelessConnection.x();
+                y = wirelessConnection.y();
+                z = wirelessConnection.z();
+                if (wirelessConnection.change()) {
                     BlockPos pos = new BlockPos(x, y, z);
                     tile.wirelessComponent.setUpdate(true);
                     tile.wirelessComponent.addConnect(pos);

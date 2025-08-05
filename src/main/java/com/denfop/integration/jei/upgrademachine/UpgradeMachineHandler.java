@@ -133,6 +133,7 @@ public class UpgradeMachineHandler {
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3, input4, input5, input6, input7, input8);
     }

@@ -26,9 +26,9 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int mouseX, int mouseY) {
-        super.drawForegroundLayer(poseStack,mouseX, mouseY);
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         int nmPos = (this.imageWidth - this.getStringWidth(Localization.translate(this.tileentity.getName()))) / 2;
-     draw(poseStack,Localization.translate(this.tileentity.getName()), nmPos, 6, 7718655);
+        draw(poseStack, Localization.translate(this.tileentity.getName()), nmPos, 6, 7718655);
         String storageString = Localization.translate("gui.SuperSolarPanel.storage") + ": ";
         String maxOutputString = Localization.translate("gui.SuperSolarPanel.maxOutput") + ": ";
         String generatingString = Localization.translate("gui.SuperSolarPanel.generating") + ": ";
@@ -43,7 +43,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
         String generation = ModUtils.getString(this.tileentity.generating);
         String tooltip2 = generatingString + generation + " " + energyPerTickString;
         String tooltip = storageString + maxstorage_2 + "/" + maxstorage_1;
-       draw(poseStack,
+        draw(poseStack,
 
                 maxOutputString,
                 5,
@@ -57,14 +57,14 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 129,
                 13487565
         );
-       draw(poseStack,
+        draw(poseStack,
 
                 Localization.translate("iu.wind_tier"),
                 167,
                 120,
                 13487565
         );
-       draw(poseStack,
+        draw(poseStack,
 
                 ModUtils.getString(this.tileentity.getCoreLevel()),
                 180,
@@ -86,20 +86,20 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 temptime = Time7;
                 break;
         }
-        new AdvArea(this, 168, 19, 183, 111).withTooltip(temptime).drawForeground(poseStack,mouseX, mouseY);
-        new AdvArea(this, 96, 135, 105, 143).withTooltip(tooltip2).drawForeground(poseStack,mouseX, mouseY);
-        new AdvArea(this, 80, 111, 122, 132).withTooltip(tooltip).drawForeground(poseStack,mouseX, mouseY);
+        new AdvArea(this, 168, 19, 183, 111).withTooltip(temptime).drawForeground(poseStack, mouseX, mouseY);
+        new AdvArea(this, 96, 135, 105, 143).withTooltip(tooltip2).drawForeground(poseStack, mouseX, mouseY);
+        new AdvArea(this, 80, 111, 122, 132).withTooltip(tooltip).drawForeground(poseStack, mouseX, mouseY);
         if (!this.tileentity.invSlotGlass.isEmpty()) {
             new AdvArea(this, 18, 19, 32, 111).withTooltip(Localization.translate("iu.minipanel.stable_place") + Math.max(
                     0,
                     100 - (int) this.tileentity.load
-            ) + " %").drawForeground(poseStack,mouseX, mouseY);
+            ) + " %").drawForeground(poseStack, mouseX, mouseY);
         }
         if (this.tileentity.component.getBonusCapacity() != 0) {
             new Area(this, 184, 20, 16, 16)
                     .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.component.getBonusCapacity() * 100) + " %")
                     .drawForeground(
-                            poseStack,  mouseX,
+                            poseStack, mouseX,
                             mouseY
                     );
         }
@@ -107,7 +107,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
             new Area(this, 184, 40, 16, 16)
                     .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.component.getBonusProdution() * 100) + " %")
                     .drawForeground(
-                            poseStack,  mouseX,
+                            poseStack, mouseX,
                             mouseY
                     );
         }
@@ -115,12 +115,12 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
             new Area(this, 184, 60, 16, 16)
                     .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.bonusGeneration * 100) + " %")
                     .drawForeground(
-                            poseStack,  mouseX,
+                            poseStack, mouseX,
                             mouseY
                     );
         }
         if (this.tileentity.pollution.isActive()) {
-            new ItemStackImage(this, 184, 93, this.tileentity.pollution::getStack).drawForeground(poseStack,mouseX, mouseY);
+            new ItemStackImage(this, 184, 93, this.tileentity.pollution::getStack).drawForeground(poseStack, mouseX, mouseY);
         }
 
         for (int i = 0; i < this.tileentity.invSlotGlass.size(); i++) {
@@ -133,14 +133,14 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 new Area(this, 87, 34, 8, 8)
                         .withTooltip(Localization.translate("iu.minipanel." + first.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
                 final TileEntityMiniPanels.EnumState second = list.get(1);
                 new Area(this, 74, 51, 9, 6)
                         .withTooltip(Localization.translate("iu.minipanel." + second.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
 
@@ -168,7 +168,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 new Area(this, 120, 51, 9, 6)
                         .withTooltip(Localization.translate("iu.minipanel." + first.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
 
@@ -186,7 +186,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 new Area(this, 74, 74, 9, 6)
                         .withTooltip(Localization.translate("iu.minipanel." + second.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,  mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
 
@@ -204,7 +204,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 new Area(this, 97, 74, 9, 6)
                         .withTooltip(Localization.translate("iu.minipanel." + second.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
 
@@ -215,7 +215,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 new Area(this, 120, 74, 9, 6)
                         .withTooltip(Localization.translate("iu.minipanel." + first.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
 
@@ -226,7 +226,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 new Area(this, 87, 84, 6, 9)
                         .withTooltip(Localization.translate("iu.minipanel." + first.name().toLowerCase()))
                         .drawForeground(
-                                poseStack,mouseX,
+                                poseStack, mouseX,
                                 mouseY
                         );
 
@@ -250,16 +250,16 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
     private void DrawModel(GuiGraphics poseStack, int h, int k) {
         if (!this.tileentity.rain) {
             if (this.tileentity.sunIsUp) {
-                drawTexturedModalRect(poseStack,h + 96, k + 134, 213, 97, 10, 10);
+                drawTexturedModalRect(poseStack, h + 96, k + 134, 213, 97, 10, 10);
 
             } else {
-                drawTexturedModalRect(poseStack,h + 96, k + 134, 223, 97, 10, 10);
+                drawTexturedModalRect(poseStack, h + 96, k + 134, 223, 97, 10, 10);
             }
         } else {
             if (this.tileentity.sunIsUp) {
-                drawTexturedModalRect(poseStack,h + 96, k + 134, 234, 97, 10, 10);
+                drawTexturedModalRect(poseStack, h + 96, k + 134, 234, 97, 10, 10);
             } else {
-                drawTexturedModalRect(poseStack,h + 96, k + 134, 244, 97, 10, 10);
+                drawTexturedModalRect(poseStack, h + 96, k + 134, 244, 97, 10, 10);
             }
         }
 
@@ -273,26 +273,26 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
         int h = guiLeft;
         int k = guiTop;
         drawTexturedModalRect(poseStack, h, k, 0, 0, this.imageWidth, 147);
-        drawTexturedModalRect(poseStack,h, k + 147, 0, 147, 190, this.imageHeight - 146);
+        drawTexturedModalRect(poseStack, h, k + 147, 0, 147, 190, this.imageHeight - 146);
         if (this.tileentity.skyIsVisible) {
-            DrawModel(poseStack,h, k);
+            DrawModel(poseStack, h, k);
         }
         if (this.tileentity.component.getEnergy() > 0) {
             double l = Math.min(1, this.tileentity.component.getFillRatio()) * 37;
-            drawTexturedModalRect(poseStack,h + 83, k + 114, 214, 112, (int) (l), 15);
+            drawTexturedModalRect(poseStack, h + 83, k + 114, 214, 112, (int) (l), 15);
         }
 
         int stable_level = (int) Math.min(85 * this.container.base.load
                 / 100D, 85);
         if (stable_level > 0) {
-            drawTexturedModalRect(poseStack,h + 22, k + 23 + 85 - stable_level, 217,
+            drawTexturedModalRect(poseStack, h + 22, k + 23 + 85 - stable_level, 217,
                     6 + 85 - stable_level, 7, stable_level
             );
         }
         int pollution = (int) Math.min(85 * (this.container.base.pollution.getAllTime() - this.container.base.pollution.getTime())
                 / (this.container.base.pollution.getAllTime() * 1D), 85);
         if (pollution > 0) {
-            drawTexturedModalRect(poseStack,h + 173, k + 23 + 85 - pollution, 234,
+            drawTexturedModalRect(poseStack, h + 173, k + 23 + 85 - pollution, 234,
                     6 + 85 - pollution, 7, pollution
             );
         }
@@ -307,24 +307,24 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(1);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 74), (k + 51), 220, 135, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 74), (k + 51), 220, 135, 9, 6);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 74), (k + 51), 220, 144, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 74), (k + 51), 220, 144, 9, 6);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 74), (k + 51), 220, 153, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 74), (k + 51), 220, 153, 9, 6);
                 }
                 final TileEntityMiniPanels.EnumState second = list.get(0);
                 if (second == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 38), 213, 135, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 38), 213, 135, 6, 9);
                 } else if (second == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 38), 213, 144, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 38), 213, 144, 6, 9);
                 } else if (second == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 38), 213, 153, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 38), 213, 153, 6, 9);
                 }
             }
 
@@ -332,37 +332,37 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 38), 213, 135, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 38), 213, 135, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 38), 213, 144, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 38), 213, 144, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 38), 213, 153, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 38), 213, 153, 6, 9);
                 }
                 final TileEntityMiniPanels.EnumState second = list.get(1);
                 if (second == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 97), (k + 51), 220, 135, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 97), (k + 51), 220, 135, 9, 6);
                 } else if (second == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 97), (k + 51), 220, 144, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 97), (k + 51), 220, 144, 9, 6);
                 } else if (second == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 97), (k + 51), 220, 153, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 97), (k + 51), 220, 153, 9, 6);
                 }
             }
             if (i == 2) {
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 120), (k + 51), 220, 135, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 120), (k + 51), 220, 135, 9, 6);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 120), (k + 51), 220, 144, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 120), (k + 51), 220, 144, 9, 6);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 120), (k + 51), 220, 153, 9, 6);
+                    drawTexturedModalRect(poseStack, (h + 120), (k + 51), 220, 153, 9, 6);
                 }
 
             }
@@ -370,24 +370,24 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 61), 213, 135, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 61), 213, 135, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 61), 213, 144, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 61), 213, 144, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 61), 213, 153, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 61), 213, 153, 6, 9);
                 }
                 final TileEntityMiniPanels.EnumState second = list.get(1);
                 if (second == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,h + 74, k + 74, 220, 135, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 74, k + 74, 220, 135, 9, 6);
                 } else if (second == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,h + 74, k + 74, 220, 144, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 74, k + 74, 220, 144, 9, 6);
                 } else if (second == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,h + 74, k + 74, 220, 153, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 74, k + 74, 220, 153, 9, 6);
                 }
 
             }
@@ -395,24 +395,24 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 61), 213, 135, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 61), 213, 135, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 61), 213, 144, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 61), 213, 144, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 61), 213, 153, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 61), 213, 153, 6, 9);
                 }
                 final TileEntityMiniPanels.EnumState second = list.get(1);
                 if (second == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,h + 97, k + 74, 220, 135, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 97, k + 74, 220, 135, 9, 6);
                 } else if (second == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,h + 97, k + 74, 220, 144, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 97, k + 74, 220, 144, 9, 6);
                 } else if (second == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,h + 97, k + 74, 220, 153, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 97, k + 74, 220, 153, 9, 6);
                 }
 
             }
@@ -420,13 +420,13 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,h + 120, k + 74, 220, 135, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 120, k + 74, 220, 135, 9, 6);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,h + 120, k + 74, 220, 144, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 120, k + 74, 220, 144, 9, 6);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,h + 120, k + 74, 220, 153, 9, 6);
+                    drawTexturedModalRect(poseStack, h + 120, k + 74, 220, 153, 9, 6);
                 }
 
             }
@@ -434,13 +434,13 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 84), 213, 135, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 84), 213, 135, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 84), 213, 144, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 84), 213, 144, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 87), (k + 84), 213, 153, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 87), (k + 84), 213, 153, 6, 9);
                 }
 
             }
@@ -448,19 +448,19 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                 final TileEntityMiniPanels.EnumState first = list.get(0);
                 if (first == TileEntityMiniPanels.EnumState.STABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 84), 213, 135, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 84), 213, 135, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.NORMAL) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 84), 213, 144, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 84), 213, 144, 6, 9);
                 } else if (first == TileEntityMiniPanels.EnumState.UNSTABLE) {
 
-                    drawTexturedModalRect(poseStack,(h + 110), (k + 84), 213, 153, 6, 9);
+                    drawTexturedModalRect(poseStack, (h + 110), (k + 84), 213, 153, 6, 9);
                 }
 
             }
         }
         if (this.tileentity.pollution.isActive()) {
-            new ItemStackImage(this, 184, 93, this.tileentity.pollution::getStack).drawBackground(poseStack,h, k);
+            new ItemStackImage(this, 184, 93, this.tileentity.pollution::getStack).drawBackground(poseStack, h, k);
         }
 
         this.bindTexture();
@@ -472,7 +472,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
 
         pose.popPose();
         if (tileentity.component.getBonusCapacity() > 0) {
-            new ItemStackImage(this, 184, 20,() -> this.tileentity.invSlotStorage.get(0)).drawBackground(poseStack,h, k);
+            new ItemStackImage(this, 184, 20, () -> this.tileentity.invSlotStorage.get(0)).drawBackground(poseStack, h, k);
             pose.pushPose();
             pose.scale(0.15F, 0.15F, 1F);
             bindTexture(getTexture());
@@ -482,7 +482,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
             pose.popPose();
         }
         if (tileentity.component.getBonusProdution() > 0) {
-            new ItemStackImage(this, 184, 40,() -> this.tileentity.invSlotOutput.get(0)).drawBackground(poseStack,h, k);
+            new ItemStackImage(this, 184, 40, () -> this.tileentity.invSlotOutput.get(0)).drawBackground(poseStack, h, k);
             pose.pushPose();
             pose.scale(0.15F, 0.15F, 1F);
             bindTexture(getTexture());
@@ -492,7 +492,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
             pose.popPose();
         }
         if (tileentity.bonusGeneration > 0) {
-            new ItemStackImage(this, 184, 60,() -> this.tileentity.invSlotGlass.get(0)).drawBackground(poseStack,h, k);
+            new ItemStackImage(this, 184, 60, () -> this.tileentity.invSlotGlass.get(0)).drawBackground(poseStack, h, k);
             pose.pushPose();
             pose.scale(0.15F, 0.15F, 1F);
             bindTexture(getTexture());
@@ -505,7 +505,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_mini_panels.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_mini_panels.png");
 
     }
 

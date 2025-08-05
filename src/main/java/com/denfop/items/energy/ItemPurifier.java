@@ -15,12 +15,10 @@ import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileMultiMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -34,9 +32,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +48,9 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.purifier.info")));
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_339594_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.purifier.info")));
     }
 
     protected String getOrCreateDescriptionId() {
@@ -68,11 +65,12 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public List<EnumInfoUpgradeModules> getUpgradeModules() {
         return EnumUpgrades.PURIFIER.list;
     }
@@ -80,11 +78,9 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
     @Override
     public void inventoryTick(ItemStack itemStack, Level p_77663_2_, Entity p_41406_, int p_41407_, boolean p_41408_) {
         super.inventoryTick(itemStack, p_77663_2_, p_41406_, p_41407_, p_41408_);
-        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.putBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
+            NeoForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
         }
     }
 
@@ -131,7 +127,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
             }
 
             if (!player.isCrouching()) {
-                 ItemStack stack_quickly = ItemStack.EMPTY;
+                ItemStack stack_quickly = ItemStack.EMPTY;
                 ItemStack stack_modulesize = ItemStack.EMPTY;
                 ItemStack stack_modulestorage = ItemStack.EMPTY;
                 ItemStack panel = ItemStack.EMPTY;
@@ -153,7 +149,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                     module_separate = new ItemStack(IUItem.module_separate.getItem());
                 }
                 if (base.solartype != null) {
-                    panel = new ItemStack(IUItem.module6.getStack( base.solartype.meta), 1);
+                    panel = new ItemStack(IUItem.module6.getStack(base.solartype.meta), 1);
                 }
                 if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), ItemStack.EMPTY);
@@ -183,7 +179,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                         base.multi_process.shrinkModule(1);
                     }
                     if (!player.getInventory().isEmpty()) {
-                       item.setPickUpDelay(0);
+                        item.setPickUpDelay(0);
                         world.addFreshEntity(item);
                         ElectricItem.manager.use(itemstack, 500 * coef, player);
                         if (player.level().isClientSide) {
@@ -206,7 +202,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                     base.multi_process.shrinkModule(1);
                 }
                 if (base.solartype != null) {
-                    stack_list.add(new ItemStack(IUItem.module6.getStack( base.solartype.meta), 1));
+                    stack_list.add(new ItemStack(IUItem.module6.getStack(base.solartype.meta), 1));
                     base.solartype = null;
                 }
                 if (base.multi_process.modulestorage) {
@@ -228,7 +224,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
 
                 }
                 for (ItemStack stack : stack_list) {
-                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(),stack);
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
                     if (!player.level().isClientSide) {
                         item.setPickUpDelay(0);
                         world.addFreshEntity(item);
@@ -245,6 +241,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
             }
             ElectricItem.manager.use(itemstack, 500 * coef, player);
             return InteractionResult.SUCCESS;
+
         }
 
         if (tile instanceof IManufacturerBlock base) {
@@ -258,7 +255,6 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
 
         return InteractionResult.PASS;
     }
-
 
 
     private void dropUpgrade(Level world, Player player, IManufacturerBlock base) {

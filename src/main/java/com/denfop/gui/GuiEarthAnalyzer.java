@@ -36,7 +36,6 @@ public class GuiEarthAnalyzer<T extends ContainerEarthAnalyzer> extends GuiIU<Co
     }
 
 
-
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
@@ -45,7 +44,7 @@ public class GuiEarthAnalyzer<T extends ContainerEarthAnalyzer> extends GuiIU<Co
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         } else if (this.container.base.fullAnalyzed() && this.container.base.isAnalyzed()) {
-            draw (poseStack, Localization.translate("earth_quarry.analyze1"), 60, 34,
+            draw(poseStack, Localization.translate("earth_quarry.analyze1"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         } else if (this.container.base.fullAnalyzed() && !this.container.base.isAnalyzed()) {
@@ -55,15 +54,15 @@ public class GuiEarthAnalyzer<T extends ContainerEarthAnalyzer> extends GuiIU<Co
         }
         PoseStack pose = poseStack.pose();
         pose.pushPose();
-        pose.translate(10, 60,10);
-        pose.scale(0.75f,0.75f,1);
+        pose.translate(10, 60, 10);
+        pose.scale(0.75f, 0.75f, 1);
         draw(poseStack, Localization.translate("earth_quarry.block_col") + container.base.blockCol, 0, 0,
                 ModUtils.convertRGBcolorToInt(56, 56, 56)
         );
         pose.popPose();
         pose.pushPose();
-        pose.translate(10, 70,10);
-        pose.scale(0.75f,0.75f,1);
+        pose.translate(10, 70, 10);
+        pose.scale(0.75f, 0.75f, 1);
         draw(poseStack, Localization.translate("earth_quarry.block_ores") + container.base.blockOres, 0, 0,
                 ModUtils.convertRGBcolorToInt(56, 56, 56)
         );
@@ -71,21 +70,21 @@ public class GuiEarthAnalyzer<T extends ContainerEarthAnalyzer> extends GuiIU<Co
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
     }
 
     @Override
-    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(poseStack,partialTicks, mouseX, mouseY);
-     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawBackgroundAndTitle(poseStack, partialTicks, mouseX, mouseY);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

@@ -27,9 +27,9 @@ import javax.annotation.Nonnull;
 public class SynthesisCategory extends GuiIU implements IRecipeCategory<SynthesisHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
 
     public SynthesisCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
@@ -37,7 +37,7 @@ public class SynthesisCategory extends GuiIU implements IRecipeCategory<Synthesi
         super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guisynthesis" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisynthesis" +
                         ".png"), 3, 3, 148,
                 80
         );
@@ -91,17 +91,16 @@ public class SynthesisCategory extends GuiIU implements IRecipeCategory<Synthesi
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SynthesisHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,20,31).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,56,31).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,108,31).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 20, 31).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 56, 31).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 108, 31).addItemStack(recipe.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisynthesis.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisynthesis.png");
     }
 
 

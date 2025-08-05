@@ -14,8 +14,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,7 +38,7 @@ public class GuiSolarPanels<T extends ContainerSolarPanels> extends GuiIU<Contai
                 new Component<>(new ComponentButton(tileentity, 1000, "") {
                     @Override
                     public void ClickEvent() {
-                        TileSolarPanel tileSolarPanel =    ((TileSolarPanel)Minecraft.getInstance().player.level().getBlockEntity(tileentity.pos));
+                        TileSolarPanel tileSolarPanel = ((TileSolarPanel) Minecraft.getInstance().player.level().getBlockEntity(tileentity.pos));
                         tileSolarPanel.twoContainer = true;
                         super.ClickEvent();
 
@@ -59,7 +59,7 @@ public class GuiSolarPanels<T extends ContainerSolarPanels> extends GuiIU<Contai
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         final String formatPanelName = Localization.translate(container.base.getName());
         int nmPos = (this.imageWidth - this.getStringWidth(formatPanelName)) / 2 + 10;
-       draw(poseStack, formatPanelName, nmPos, 15, 7718655);
+        draw(poseStack, formatPanelName, nmPos, 15, 7718655);
 
         String storageString = Localization.translate("gui.SuperSolarPanel.storage") + ": ";
 
@@ -171,14 +171,14 @@ public class GuiSolarPanels<T extends ContainerSolarPanels> extends GuiIU<Contai
         }
     }
 
-        protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture();
         int h = guiLeft;
         int k = guiTop;
         drawTexturedModalRect(poseStack, h, k, 0, 0, this.imageWidth, this.imageHeight);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, h, k, 0, 0, 10, 10);
         this.bindTexture();
 
@@ -245,7 +245,7 @@ public class GuiSolarPanels<T extends ContainerSolarPanels> extends GuiIU<Contai
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolarpanel.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guisolarpanel.png");
     }
 
 

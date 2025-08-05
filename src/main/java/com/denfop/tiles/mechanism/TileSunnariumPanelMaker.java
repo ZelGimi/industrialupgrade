@@ -28,8 +28,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -75,7 +75,7 @@ public class TileSunnariumPanelMaker extends TileDoubleElectricMachine implement
         List<TagKey<Item>> tags = fill.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList();
         TagKey<Item> tag = null;
         if (!tags.isEmpty())
-            tag =  tags.get(0);
+            tag = tags.get(0);
         List<ItemStack> list = input.getInput(tag == null ? "" : tag).getInputs();
         if (list != null && list.isEmpty() && tag == null) {
             Recipes.recipes.addRecipe(

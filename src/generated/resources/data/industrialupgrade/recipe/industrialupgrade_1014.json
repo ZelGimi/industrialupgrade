@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_469_element"
+    },
+    "G": {
+      "item": "industrialupgrade:bags/iu_bags"
+    }
+  },
+  "pattern": [
+    "   ",
+    "CBG",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/itemmanipulator"
+  },
+  "show_notification": false
+}

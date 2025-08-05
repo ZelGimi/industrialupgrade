@@ -27,9 +27,10 @@ import javax.annotation.Nonnull;
 public class EarthCategory extends GuiIU implements IRecipeCategory<EarthHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public EarthCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
@@ -37,7 +38,7 @@ public class EarthCategory extends GuiIU implements IRecipeCategory<EarthHandler
 
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiearthassembler" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiearthassembler" +
                         ".png"), 5, 5, 140,
                 75
         );
@@ -51,7 +52,7 @@ public class EarthCategory extends GuiIU implements IRecipeCategory<EarthHandler
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 36).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 36).getDescriptionId());
     }
 
     @Nonnull
@@ -74,13 +75,13 @@ public class EarthCategory extends GuiIU implements IRecipeCategory<EarthHandler
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,
+        drawTexturedModalRect(stack,
                 25 + 1, 12 + 51 - energylevel, 179, 2 + 51 - energylevel,
                 5, energylevel
         );
 
 
-        drawTexturedModalRect( stack,+66 - 5, +34 - 5, 177, 60, xScale, 18);
+        drawTexturedModalRect(stack, +66 - 5, +34 - 5, 177, 60, xScale, 18);
         drawSplitString(stack,
                 Localization.translate("iu.need_info") + recipe.getNeed() + Localization.translate("iu.need_info_matter"),
                 79,
@@ -92,12 +93,12 @@ public class EarthCategory extends GuiIU implements IRecipeCategory<EarthHandler
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EarthHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,39,19).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,105,30).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 39, 19).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 30).addItemStack(recipe.getOutput());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiearthassembler.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiearthassembler.png");
     }
 
 

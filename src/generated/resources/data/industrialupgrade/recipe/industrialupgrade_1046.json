@@ -1,0 +1,34 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_154_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_47_element"
+    }
+  },
+  "pattern": [
+    "AFA",
+    "CBE",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/item_divider"
+  },
+  "show_notification": false
+}

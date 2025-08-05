@@ -1,0 +1,43 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "minecraft:oak_sapling"
+    },
+    "C": {
+      "item": "minecraft:dandelion"
+    },
+    "D": {
+      "item": "minecraft:poppy"
+    },
+    "E": {
+      "item": "minecraft:nether_wart"
+    },
+    "F": {
+      "item": "minecraft:vine"
+    },
+    "G": {
+      "item": "minecraft:lily_pad"
+    },
+    "H": {
+      "item": "minecraft:brown_mushroom"
+    },
+    "J": {
+      "item": "minecraft:red_mushroom"
+    }
+  },
+  "pattern": [
+    "BCD",
+    "EAF",
+    "GHJ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_64_element"
+  },
+  "show_notification": false
+}

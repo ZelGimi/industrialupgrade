@@ -38,8 +38,8 @@ public class SmelteryControllerCategory extends GuiIU implements IRecipeCategory
     private final ContainerFluidIntegrator container1;
     private final GuiComponent slots1;
     private final GuiComponent progress_bar;
-    private int progress;
     JeiInform jeiInform;
+    private int progress;
 
     public SmelteryControllerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
@@ -47,7 +47,7 @@ public class SmelteryControllerCategory extends GuiIU implements IRecipeCategory
         super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
         );
@@ -91,9 +91,9 @@ public class SmelteryControllerCategory extends GuiIU implements IRecipeCategory
             progress = 0;
         }
 
-        progress_bar.renderBar(stack,-10, 10, xScale);
+        progress_bar.renderBar(stack, -10, 10, xScale);
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground(stack,this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
@@ -101,15 +101,15 @@ public class SmelteryControllerCategory extends GuiIU implements IRecipeCategory
     public void setRecipe(IRecipeLayoutBuilder builder, SmelteryControllerHandler recipe, IFocusGroup focuses) {
         for (int i = 0; i < recipe.getInput().size(); i++) {
             int yDisplayPosition1 = 60 + (30 - recipe.getInput().size()) * i - recipe.getInput().size() * 16;
-            builder.addSlot(RecipeIngredientRole.INPUT,  60 - 21, yDisplayPosition1).setFluidRenderer( recipe.getInput().get(i).getAmount(),true,16, 16).addFluidStack(recipe.getInput().get(i).getFluid(),recipe.getInput().get(i).getAmount());
+            builder.addSlot(RecipeIngredientRole.INPUT, 60 - 21, yDisplayPosition1).setFluidRenderer(recipe.getInput().get(i).getAmount(), true, 16, 16).addFluidStack(recipe.getInput().get(i).getFluid(), recipe.getInput().get(i).getAmount());
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).setFluidRenderer(recipe.getOutputFluid().getAmount(),true,16, 16).addFluidStack(recipe.getOutputFluid().getFluid(),recipe.getOutputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).setFluidRenderer(recipe.getOutputFluid().getAmount(), true, 16, 16).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
 
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

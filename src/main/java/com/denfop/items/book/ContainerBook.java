@@ -7,7 +7,7 @@ public class ContainerBook extends ContainerHandHeldInventory<ItemStackBook> {
 
 
     public ContainerBook(ItemStackBook Toolbox1) {
-        super(Toolbox1,Toolbox1.player);
+        super(Toolbox1, Toolbox1.player);
 
 
     }

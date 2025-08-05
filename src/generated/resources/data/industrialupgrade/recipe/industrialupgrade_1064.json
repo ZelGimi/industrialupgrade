@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:earth_quarry/earth_casing"
+    },
+    "B": {
+      "item": "minecraft:chest"
+    },
+    "C": {
+      "tag": "c:plates/gold"
+    },
+    "D": {
+      "tag": "c:plates/tin"
+    }
+  },
+  "pattern": [
+    "   ",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:earth_quarry/earth_chest"
+  },
+  "show_notification": false
+}

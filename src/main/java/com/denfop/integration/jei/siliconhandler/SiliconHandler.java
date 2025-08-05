@@ -82,6 +82,7 @@ public class SiliconHandler {
     public boolean matchesInput(ItemStack is) {
         return true;
     }
+
     public List<ItemStack> getInputs1() {
         return Arrays.asList(input, input1);
     }

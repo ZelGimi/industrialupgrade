@@ -4,6 +4,7 @@ import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
@@ -12,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -21,6 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
@@ -33,11 +34,10 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -51,10 +51,12 @@ public class ItemSmallFluidCell extends ItemFluidContainer implements IItemTab {
     public boolean canfill(Fluid fluid) {
         return true;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.fluidCellTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -64,26 +66,24 @@ public class ItemSmallFluidCell extends ItemFluidContainer implements IItemTab {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Item.TooltipContext level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
-
-
 
     }
 
-    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
-        return new CapabilityFluidHandlerItem(stack, 500) {
+    public IFluidHandlerItem initCapabilities(ItemStack stack) {
+        return new CapabilityFluidHandlerItem(() -> DataComponentsInit.FLUID.get(), stack, 500) {
             public boolean canFillFluidType(FluidStack fluid) {
-                return fluid != null && ItemSmallFluidCell.this.canfill(fluid.getFluid());
+                return !fluid.isEmpty() && ItemSmallFluidCell.this.canfill(fluid.getFluid());
             }
 
             public boolean canDrainFluidType(FluidStack fluid) {
-                return fluid != null && ItemSmallFluidCell.this.canfill(fluid.getFluid());
+                return !fluid.isEmpty() && ItemSmallFluidCell.this.canfill(fluid.getFluid()) ;
             }
 
             @Override
             public int fill(FluidStack resource, FluidAction doFill) {
-                if (resource == null) {
+                if (resource.isEmpty()) {
                     return 0;
                 }
                 return super.fill(resource, doFill);
@@ -97,7 +97,7 @@ public class ItemSmallFluidCell extends ItemFluidContainer implements IItemTab {
 
             @Override
             public @NotNull FluidStack drain(FluidStack resource, FluidAction doDrain) {
-                if (resource == FluidStack.EMPTY) {
+                if (resource.isEmpty()) {
                     return FluidStack.EMPTY;
                 }
                 return super.drain(resource, doDrain);
@@ -106,7 +106,7 @@ public class ItemSmallFluidCell extends ItemFluidContainer implements IItemTab {
             @NotNull
             @Override
             public ItemStack getContainer() {
-                return getFluid() == FluidStack.EMPTY ? new ItemStack(this.container.getItem()) : container;
+                return getFluid() == FluidStack.EMPTY ? new ItemStack(container.getItem()) : container;
             }
         };
     }
@@ -114,7 +114,8 @@ public class ItemSmallFluidCell extends ItemFluidContainer implements IItemTab {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+
+        return InteractionResultHolder.fail(player.getItemInHand(hand));
     }
 
 

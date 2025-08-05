@@ -9,6 +9,7 @@ import com.denfop.datagen.blocktags.IBlockTag;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -49,14 +50,13 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    public List<ItemStack> getDrops(      @Nonnull final Level world,
-                                          @Nonnull final BlockPos pos,
-                                          @Nonnull final BlockState state,
-                                          final int fortune) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         Random rand = WorldBaseGen.random;
         List<ItemStack> drops = new ArrayList<>();
 
         int meta = this.getElement().getId();
+        ItemStack tool = builder.getParameter(LootContextParams.TOOL);
+        int fortune = EnchantmentHelper.getItemEnchantmentLevel(builder.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), tool);
         if (meta == 6) {
             drops.add(new ItemStack(IUItem.iudust.getItemFromMeta(31), rand.nextInt(2) + 1 + rand.nextInt(fortune + 1)));
         } else if (meta == 7) {
@@ -84,7 +84,7 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
 
         for (Player player : players) {
             if (!IVolcanoArmor.hasCompleteHazmat(player)) {
-                player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
+                player.addEffect(new MobEffectInstance(IUPotion.poison, 200, 0));
             }
         }
     }

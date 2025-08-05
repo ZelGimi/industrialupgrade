@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:energy/impmagnet"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine1/magnet"
+    },
+    "C": {
+      "tag": "c:plates/electrum"
+    },
+    "D": {
+      "tag": "c:plates/nickel"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "ABA",
+    "DCD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/antimagnet"
+  },
+  "show_notification": false
+}

@@ -34,8 +34,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TileEntityGraphiteHandler extends TileElectricMachine implements
     private int levelBlock;
 
     public TileEntityGraphiteHandler(BlockPos pos, BlockState state) {
-        super(1000, 1, 1,BlockBaseMachine3.graphite_handler,pos,state);
+        super(1000, 1, 1, BlockBaseMachine3.graphite_handler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "graphite_recipe", this);
 
@@ -255,7 +255,6 @@ public class TileEntityGraphiteHandler extends TileElectricMachine implements
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {

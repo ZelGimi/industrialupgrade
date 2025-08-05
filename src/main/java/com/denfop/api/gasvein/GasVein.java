@@ -1,6 +1,7 @@
 package com.denfop.api.gasvein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 
@@ -49,8 +50,8 @@ public class GasVein implements IGasVein {
         }
     }
 
-    public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(32);
+    public CustomPacketBuffer writePacket(RegistryAccess provider) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(32, provider);
         customPacketBuffer.writeBoolean(find);
         customPacketBuffer.writeShort(chunk.x);
         customPacketBuffer.writeShort(chunk.z);

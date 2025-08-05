@@ -36,9 +36,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class TileBioFuelGenerator extends TileEntityLiquidTankInventory implemen
     private boolean sound = true;
 
     public TileBioFuelGenerator(BlockPos pos, BlockState state) {
-        super(12,BlockBaseMachine3.gen_bio,pos,state);
+        super(12, BlockBaseMachine3.gen_bio, pos, state);
         this.coef = 1;
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidbiomass.getInstance().get());
         this.outputSlot = new InvSlotOutput(this, 1);

@@ -26,5 +26,4 @@ public class TileEntityLightningRodPoles extends TileEntityMultiBlockElement imp
     }
 
 
-
 }

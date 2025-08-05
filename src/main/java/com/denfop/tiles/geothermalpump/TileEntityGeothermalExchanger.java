@@ -15,8 +15,8 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityGeothermalExchanger extends TileEntityMultiBlockElement implements IExchanger {
 
@@ -24,7 +24,7 @@ public class TileEntityGeothermalExchanger extends TileEntityMultiBlockElement i
     private final Fluids.InternalFluidTank fluidTank;
 
     public TileEntityGeothermalExchanger(BlockPos pos, BlockState state) {
-        super(BlockGeothermalPump.geothermal_exchanger,pos,state);
+        super(BlockGeothermalPump.geothermal_exchanger, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluids", 10000);
         this.fluidTank.setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidhot_coolant.getInstance().get()));

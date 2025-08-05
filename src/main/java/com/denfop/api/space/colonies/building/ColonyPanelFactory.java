@@ -7,6 +7,7 @@ import com.denfop.api.space.colonies.api.building.IColonyPanelFactory;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.api.space.colonies.enums.EnumTypeSolarPanel;
 import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 public class ColonyPanelFactory extends Building implements IColonyPanelFactory {
@@ -103,8 +104,8 @@ public class ColonyPanelFactory extends Building implements IColonyPanelFactory 
     }
 
     @Override
-    public CompoundTag writeTag(final CompoundTag tag) {
-        super.writeTag(tag);
+    public CompoundTag writeTag(final CompoundTag tag, HolderLookup.Provider p_323640_) {
+        super.writeTag(tag, p_323640_);
         tag.putByte("people", people);
         tag.putByte("id", (byte) this.getType().ordinal());
         return tag;

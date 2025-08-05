@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:string"
+    },
+    "B": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    " BB",
+    " AA",
+    " BB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:mesh/ironmesh"
+  },
+  "show_notification": false
+}

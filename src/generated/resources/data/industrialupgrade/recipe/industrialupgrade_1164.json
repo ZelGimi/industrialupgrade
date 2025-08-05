@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:cokeoven/coke_oven_part"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/steel_tank"
+    },
+    "C": {
+      "tag": "c:gears/electrum"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:cokeoven/coke_oven_output_fluid"
+  },
+  "show_notification": false
+}

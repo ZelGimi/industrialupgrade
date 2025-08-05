@@ -6,12 +6,13 @@ import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.network.packet.PacketRadiation;
 import com.denfop.network.packet.PacketUpdateRadiation;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class RadiationSystem {
 
     public RadiationSystem() {
         rad_system = this;
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
+        NeoForge.EVENT_BUS.register(new EventHandler());
     }
 
     public Map<ChunkPos, List<IAdvReactor>> getAdvReactorMap() {
@@ -51,13 +52,13 @@ public class RadiationSystem {
             } else {
                 double radiation = player.getPersistentData().getDouble("radiation");
                 if (radiation >= 50) {
-                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 43200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.rad, 43200, 0));
                     player.addEffect(new MobEffectInstance(MobEffects.WITHER, 400, 0));
                 } else if (radiation >= 10) {
-                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 1000, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.rad, 1000, 0));
                     player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                 } else if (radiation >= 1) {
-                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.rad, 200, 0));
                     player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
                 }
             }
@@ -111,7 +112,7 @@ public class RadiationSystem {
                                 } else {
                                     radiation.removeRadiation(radiation.getRadiation());
                                 }
-                                new PacketUpdateRadiation(radiation);
+                                new PacketUpdateRadiation(radiation, (ServerLevel) world);
                             }
                             break;
                         case DEFAULT:
@@ -121,7 +122,7 @@ public class RadiationSystem {
                                 } else {
                                     radiation.removeRadiation(radiation.getRadiation());
                                 }
-                                new PacketUpdateRadiation(radiation);
+                                new PacketUpdateRadiation(radiation, (ServerLevel) world);
                             }
                             break;
                         case MEDIUM:
@@ -131,7 +132,7 @@ public class RadiationSystem {
                                 } else {
                                     radiation.removeRadiation(radiation.getRadiation());
                                 }
-                                new PacketUpdateRadiation(radiation);
+                                new PacketUpdateRadiation(radiation, (ServerLevel) world);
                             }
                             break;
                         case HIGH:
@@ -141,7 +142,7 @@ public class RadiationSystem {
                                 } else {
                                     radiation.removeRadiation(radiation.getRadiation());
                                 }
-                                new PacketUpdateRadiation(radiation);
+                                new PacketUpdateRadiation(radiation, (ServerLevel) world);
                             }
                             break;
                         case VERY_HIGH:
@@ -151,7 +152,7 @@ public class RadiationSystem {
                                 } else {
                                     radiation.removeRadiation(radiation.getRadiation());
                                 }
-                                new PacketUpdateRadiation(radiation);
+                                new PacketUpdateRadiation(radiation, (ServerLevel) world);
                             }
                             break;
                     }

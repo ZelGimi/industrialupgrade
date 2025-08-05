@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:earth_quarry/earth_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:quarry_vein/quarry_vein"
+    },
+    "C": {
+      "tag": "c:plates/titanium"
+    },
+    "D": {
+      "tag": "c:plates/steel"
+    },
+    "E": {
+      "tag": "c:plates/iridium"
+    }
+  },
+  "pattern": [
+    " E ",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:earth_quarry/earth_rig"
+  },
+  "show_notification": false
+}

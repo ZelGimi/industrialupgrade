@@ -16,7 +16,7 @@ public class TileSimplePump extends TilePump {
     private final AirPollutionComponent pollutionAir;
 
     public TileSimplePump(BlockPos pos, BlockState state) {
-        super(10, 20,BlockBaseMachine3.pump_iu,pos,state);
+        super(10, 20, BlockBaseMachine3.pump_iu, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
     }

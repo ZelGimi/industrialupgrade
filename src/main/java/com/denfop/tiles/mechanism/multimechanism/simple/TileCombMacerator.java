@@ -47,7 +47,7 @@ public class TileCombMacerator extends TileMultiMachine {
     }
 
     public static void addRecipe(String input, String output) {
-        ResourceLocation input1 = new ResourceLocation("forge:" + output);
+        ResourceLocation input1 = ResourceLocation.parse("c:" + output);
         TagKey<Item> tag = ItemTags.create(input1);
         Iterable<Holder<Item>> holder = BuiltInRegistries.ITEM.getTagOrEmpty(tag);
         ItemStack stack = new ItemStack(holder.iterator().next());
@@ -60,7 +60,7 @@ public class TileCombMacerator extends TileMultiMachine {
             Recipes.recipes.addRecipe(
                     "comb_macerator",
                     new BaseMachineRecipe(
-                            new Input(input2.getInput("forge:" + input)),
+                            new Input(input2.getInput("c:" + input)),
                             new RecipeOutput(null, stack)
                     )
             );

@@ -18,8 +18,8 @@ import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class TileEntityImpSecurity extends TileEntityMultiBlockElement implement
     private Timer yellow_timer = new Timer(0, 5, 0);
 
     public TileEntityImpSecurity(BlockPos pos, BlockState state) {
-        super( BlockWaterReactors.water_imp_security, pos, state);
+        super(BlockWaterReactors.water_imp_security, pos, state);
     }
 
     @Override

@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/steel"
+    },
+    "B": {
+      "tag": "c:plates/titanium"
+    },
+    "C": {
+      "item": "industrialupgrade:capacitor/adv_capacitor"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:capacitor/imp_capacitor"
+  },
+  "show_notification": false
+}

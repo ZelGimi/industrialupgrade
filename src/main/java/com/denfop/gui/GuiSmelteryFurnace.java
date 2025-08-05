@@ -30,11 +30,11 @@ public class GuiSmelteryFurnace<T extends ContainerSmelteryFurnace> extends GuiI
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.bindTexture();
-       RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawTexturedModalRect(poseStack,this.guiLeft + 45, guiTop + 63, 176, 0, (int) (this.getContainer().base.progress.getBar() * 80),
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        drawTexturedModalRect(poseStack, this.guiLeft + 45, guiTop + 63, 176, 0, (int) (this.getContainer().base.progress.getBar() * 80),
                 20
         );
 
@@ -42,7 +42,7 @@ public class GuiSmelteryFurnace<T extends ContainerSmelteryFurnace> extends GuiI
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guismeltery_furnace.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guismeltery_furnace.png");
     }
 
 }

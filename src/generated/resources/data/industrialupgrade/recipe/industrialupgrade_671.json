@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/invar"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "c:plates/nickel"
+    },
+    "D": {
+      "tag": "c:plates/manganese"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "CBC",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:module_storage"
+  },
+  "show_notification": false
+}

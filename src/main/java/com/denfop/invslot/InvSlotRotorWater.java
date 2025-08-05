@@ -31,6 +31,7 @@ public class InvSlotRotorWater extends InvSlot implements ITypeSlot {
         if (content.isEmpty()) {
             if (!this.contents.get(index).isEmpty()) {
                 ((TileEntityWaterRotorModifier) this.slotUpgrade.base).updateTileServer(null, 0);
+                this.slotUpgrade.update(((TileEntityWaterRotorModifier) this.slotUpgrade.base).rotor_slot.get(0));
             }
         }
         super.set(index, content);

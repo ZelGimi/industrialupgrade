@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileNetherAssembler extends TileBaseWorldCollector {
 
     public TileNetherAssembler(BlockPos pos, BlockState state) {
-        super(EnumTypeCollector.NETHER,BlockBaseMachine3.nether_assembler,pos,state);
+        super(EnumTypeCollector.NETHER, BlockBaseMachine3.nether_assembler, pos, state);
     }
 
     public void init() {
@@ -37,7 +37,6 @@ public class TileNetherAssembler extends TileBaseWorldCollector {
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
-
 
 
 }

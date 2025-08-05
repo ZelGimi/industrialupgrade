@@ -13,7 +13,7 @@ public class TileEntitySolarGenerator extends TileSolarPanel {
 
 
     public TileEntitySolarGenerator(BlockPos pos, BlockState state) {
-        super(EnumSolarPanels.SOLAR_PANEL_DEFAULT,BlockBaseMachine3.solar_iu,pos,state);
+        super(EnumSolarPanels.SOLAR_PANEL_DEFAULT, BlockBaseMachine3.solar_iu, pos, state);
     }
 
 

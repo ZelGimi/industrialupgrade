@@ -22,8 +22,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ public abstract class TileTransformer extends TileEntityInventory implements
     private Mode transformMode;
 
     public TileTransformer(int tier, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
-        super(tileBlock,pos,state);
+        super(tileBlock, pos, state);
         this.configuredMode = defaultMode;
         this.transformMode = null;
         this.defaultTier = tier;
@@ -71,7 +71,6 @@ public abstract class TileTransformer extends TileEntityInventory implements
             }
         });
     }
-
 
 
     @Override
@@ -229,7 +228,6 @@ public abstract class TileTransformer extends TileEntityInventory implements
     }
 
 
-
     public double getinputflow() {
         return !this.isStepUp() ? this.inputFlow : this.inputFlow;
     }
@@ -238,11 +236,9 @@ public abstract class TileTransformer extends TileEntityInventory implements
         return this.isStepUp() ? this.outputFlow : this.outputFlow;
     }
 
-
     public boolean isStepUp() {
         return this.transformMode == Mode.stepup;
     }
-
 
 
 }

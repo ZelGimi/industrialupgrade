@@ -39,18 +39,19 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
     private final IDrawableStatic bg;
     private final ContainerLaserPolisher container1;
     private final GuiComponent progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public CentrifugeCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
@@ -76,6 +77,7 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
     public RecipeType<CentrifugeHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -97,7 +99,7 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
         this.slots.drawBackground(stack, 0, 0);
 
         progress_bar.renderBar(stack, 0, 0, xScale);
-       bindTexture(getTexture());
+        bindTexture(getTexture());
     }
 
     @Override
@@ -110,14 +112,13 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(),outputSlot.getJeiY()).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
 
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

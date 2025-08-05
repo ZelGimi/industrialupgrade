@@ -7,20 +7,18 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.upgrade.UpgradeModificator;
+import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.modules.ItemUpgradeModule;
-import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -61,7 +59,6 @@ public class GuiUpgradeBlock<T extends ContainerDoubleElectricMachine> extends G
                 : this.container.base.inputSlotA.get(1);
 
         boolean allow = true;
-        CompoundTag nbt1 = ModUtils.nbt(stack1);
         BaseMachineRecipe output = Recipes.recipes.getRecipeOutput("upgradeblock",
                 false, this.container.base.inputSlotA.get(0),
                 this.container.base.inputSlotA.get(1)
@@ -76,10 +73,10 @@ public class GuiUpgradeBlock<T extends ContainerDoubleElectricMachine> extends G
             if (module.getItem() instanceof ItemUpgradeModule) {
                 EnumInfoUpgradeModules type = ItemUpgradeModule.getType(IUItem.upgrademodule.getMeta((ItemUpgradeModule) module.getItem()));
                 int min = 0;
-                final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack1);
-                for (int i = 0; i < 4 + list.size(); i++) {
-                    if (nbt1.getString("mode_module" + i).equals(type.name)) {
-                        min++;
+                List<UpgradeItemInform> listInfo = UpgradeSystem.system.getInformation(stack1);
+                for (UpgradeItemInform upgradeItemInform : listInfo) {
+                    if (upgradeItemInform.upgrade.equals(type)) {
+                        min = upgradeItemInform.number;
                     }
                 }
                 if (min >= type.max) {
@@ -111,7 +108,7 @@ public class GuiUpgradeBlock<T extends ContainerDoubleElectricMachine> extends G
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
     }
 
 }

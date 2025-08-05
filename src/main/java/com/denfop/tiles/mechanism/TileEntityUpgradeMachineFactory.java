@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
@@ -14,6 +15,8 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.*;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerUpgradeMachineFactory;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.UpgradeKit;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiUpgradeMachineFactory;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -23,15 +26,13 @@ import com.denfop.recipe.InputItemStack;
 import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -73,44 +74,36 @@ public class TileEntityUpgradeMachineFactory extends TileElectricMachine impleme
     }
 
     public static void addRecipe(BaseRecipe baseRecipe, int upgrade) {
-        try {
-
-
-            final NonNullList<IInputItemStack> ingredients = baseRecipe.getListInput();
-            final ItemStack outputStack = baseRecipe.getOutput();
-            ItemStack input_mechanism = ingredients.get(4).getInputs().get(0);
-            List<IInputItemStack> inputs = new ArrayList<>();
-            ItemStack upgradeStack = new ItemStack(IUItem.machinekit.getStack(upgrade), 1);
-            for (IInputItemStack ingredient : ingredients) {
-                if (ingredient == InputItemStack.EMPTY) {
-                    inputs.add(InputItemStack.EMPTY);
-                    continue;
+        if (IUCore.registryAccess != null)
+            try {
+                final NonNullList<IInputItemStack> ingredients = baseRecipe.getListInput();
+                final ItemStack outputStack = baseRecipe.getOutput();
+                ItemStack input_mechanism = ingredients.get(4).getInputs().get(0);
+                List<IInputItemStack> inputs = new ArrayList<>();
+                ItemStack upgradeStack = new ItemStack(IUItem.machinekit.getStack(upgrade), 1);
+                for (IInputItemStack ingredient : ingredients) {
+                    if (ingredient == InputItemStack.EMPTY) {
+                        inputs.add(InputItemStack.EMPTY);
+                        continue;
+                    }
+                    final ItemStack input = ingredient.getInputs().get(0);
+                    if (input.is(input_mechanism.getItem())) {
+                        inputs.add(new InputItemStack(upgradeStack.copy()));
+                        continue;
+                    }
+                    inputs.add(ingredient);
                 }
-                final ItemStack input = ingredient.getInputs().get(0);
-                if (input.is(input_mechanism.getItem())) {
-                    inputs.add(new InputItemStack(upgradeStack.copy()));
-                    continue;
-                }
-                inputs.add(ingredient);
+                upgradeStack.set(DataComponentsInit.UPGRADE_KIT, new UpgradeKit(input_mechanism, outputStack));
+                Recipes.recipes.addRecipe(
+                        "upgrade_machine",
+                        new BaseMachineRecipe(
+                                new Input(inputs),
+                                new RecipeOutput(null, upgradeStack)
+                        )
+                );
+            } catch (Exception e) {
+
             }
-
-            CompoundTag tagCompound = new CompoundTag();
-            outputStack.save(tagCompound);
-            CompoundTag tagCompound2 = new CompoundTag();
-            input_mechanism.save(tagCompound2);
-            CompoundTag tagCompound1 = ModUtils.nbt(upgradeStack);
-            tagCompound1.put("output", tagCompound);
-            tagCompound1.put("input", tagCompound2);
-            Recipes.recipes.addRecipe(
-                    "upgrade_machine",
-                    new BaseMachineRecipe(
-                            new Input(inputs),
-                            new RecipeOutput(null, upgradeStack)
-                    )
-            );
-        } catch (Exception e) {
-
-        }
     }
 
     @Override
@@ -125,7 +118,7 @@ public class TileEntityUpgradeMachineFactory extends TileElectricMachine impleme
                 ItemStackHelper.fromData(IUItem.core, 1, 5),
 
                 ('D'),
-                ("forge:doubleplate/Alumel"),
+                ("c:doubleplate/Alumel"),
                 ('B'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -145,7 +138,7 @@ public class TileEntityUpgradeMachineFactory extends TileElectricMachine impleme
                 ItemStackHelper.fromData(IUItem.core, 1, 7),
 
                 ('D'),
-                ("forge:doubleplate/Vitalium"),
+                ("c:doubleplate/Vitalium"),
                 ('B'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -168,7 +161,7 @@ public class TileEntityUpgradeMachineFactory extends TileElectricMachine impleme
                 ItemStackHelper.fromData(IUItem.core, 1, 8),
 
                 ('D'),
-                ("forge:doubleplate/Duralumin"),
+                ("c:doubleplate/Duralumin"),
                 ('B'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 

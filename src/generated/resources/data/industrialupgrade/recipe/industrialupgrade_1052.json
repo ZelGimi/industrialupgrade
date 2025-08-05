@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_47_element"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine2/electrolyzer_iu"
+    },
+    "D": {
+      "item": "industrialupgrade:motors_with_improved_bearings_"
+    }
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/solid_state_electrolyzer"
+  },
+  "show_notification": false
+}

@@ -16,7 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -44,6 +44,8 @@ public class PressureComponent extends AbstractComponent {
     public boolean auto;
     public boolean allow;
     Random rand = new Random();
+    Map<Direction, IPressureTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IPressureTile>> validReceivers = new LinkedList<>();
     private long id;
 
     public PressureComponent(TileEntityInventory parent, double capacity) {
@@ -147,7 +149,7 @@ public class PressureComponent extends AbstractComponent {
 
 
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.parent.getLevel()));
+                NeoForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.parent.getLevel()));
             }
 
             this.loaded = true;
@@ -163,7 +165,6 @@ public class PressureComponent extends AbstractComponent {
     public boolean canUsePurifier(Player player) {
         return false;
     }
-
 
     public void createDelegate() {
         if (this.delegate != null) {
@@ -182,7 +183,6 @@ public class PressureComponent extends AbstractComponent {
         }
     }
 
-
     @Override
     public boolean onBlockActivated(Player player, InteractionHand hand) {
         super.onBlockActivated(player, hand);
@@ -193,7 +193,7 @@ public class PressureComponent extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.parent.getLevel()));
+            NeoForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.parent.getLevel()));
             this.delegate = null;
         }
 
@@ -201,7 +201,7 @@ public class PressureComponent extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeBoolean(this.need);
@@ -219,7 +219,6 @@ public class PressureComponent extends AbstractComponent {
         this.auto = is.readBoolean();
     }
 
-
     public double getCapacity() {
         return this.capacity;
     }
@@ -235,11 +234,9 @@ public class PressureComponent extends AbstractComponent {
         return this.storage;
     }
 
-
     public double getFillRatio() {
         return this.storage / this.capacity;
     }
-
 
     public double addEnergy(double amount) {
 
@@ -250,7 +247,6 @@ public class PressureComponent extends AbstractComponent {
 
         return amount;
     }
-
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -315,7 +311,6 @@ public class PressureComponent extends AbstractComponent {
         this.sendingSidabled = !enabled;
     }
 
-
     public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
 
         if (this.delegate != null) {
@@ -323,7 +318,7 @@ public class PressureComponent extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.world));
+            NeoForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.world));
         }
 
         this.sinkDirections = sinkDirections;
@@ -339,11 +334,12 @@ public class PressureComponent extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.world));
+            NeoForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.world));
         }
 
 
     }
+
     public long getIdNetwork() {
         return this.id;
     }
@@ -351,13 +347,12 @@ public class PressureComponent extends AbstractComponent {
     public void setId(final long id) {
         this.id = id;
     }
-    Map<Direction, IPressureTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IPressureTile>> validReceivers = new LinkedList<>();
+
     public Map<Direction, IPressureTile> getConductors() {
         return energyConductorMap;
     }
 
-    public void RemoveTile( IPressureTile tile, final Direction facing1) {
+    public void RemoveTile(IPressureTile tile, final Direction facing1) {
         if (!this.parent.getLevel().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IPressureTile>> iter = validReceivers.iterator();
@@ -404,6 +399,7 @@ public class PressureComponent extends AbstractComponent {
             super(PressureComponent.this.parent.getType(), PressureComponent.this.parent.getBlockPos(), PressureComponent.this.parent.getBlockState());
 
         }
+
         public long getIdNetwork() {
             return PressureComponent.this.getIdNetwork();
         }
@@ -445,6 +441,8 @@ public class PressureComponent extends AbstractComponent {
 
     private class EnergyNetDelegateSink extends PressureComponent.EnergyNetDelegate implements IPressureSink {
 
+        List<IPressureSource> systemTicks = new LinkedList<>();
+
         private EnergyNetDelegateSink() {
             super();
         }
@@ -471,16 +469,17 @@ public class PressureComponent extends AbstractComponent {
             this.setPressureStored(amount);
 
         }
-        List<IPressureSource> systemTicks = new LinkedList<>();
 
         @Override
         public boolean needTemperature() {
             return PressureComponent.this.need;
         }
+
         @Override
         public List<IPressureSource> getEnergyTickList() {
             return systemTicks;
         }
+
         public void setPressureStored(double amount) {
             if (PressureComponent.this.storage < amount) {
                 PressureComponent.this.storage = amount;

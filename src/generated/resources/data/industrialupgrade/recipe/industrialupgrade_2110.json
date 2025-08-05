@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "minecraft:egg"
+    },
+    "C": {
+      "tag": "c:gears/zirconium"
+    },
+    "D": {
+      "item": "minecraft:chicken"
+    }
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_665_element"
+  },
+  "show_notification": false
+}

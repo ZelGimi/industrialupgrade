@@ -15,14 +15,14 @@ public class GuiCyclotronElectrostaticDeflector<T extends ContainerCyclotronElec
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicyclotron2.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guicyclotron2.png");
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
-       RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft + 80, this.guiTop + 44, 237, 1, 18, 18);
     }

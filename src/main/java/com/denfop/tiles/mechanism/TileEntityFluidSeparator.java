@@ -37,9 +37,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class TileEntityFluidSeparator extends TileElectricMachine implements IUp
     protected double guiProgress;
 
     public TileEntityFluidSeparator(BlockPos pos, BlockState state) {
-        super(100, 1, 3,BlockBaseMachine3.fluid_separator,pos,state);
+        super(100, 1, 3, BlockBaseMachine3.fluid_separator, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;

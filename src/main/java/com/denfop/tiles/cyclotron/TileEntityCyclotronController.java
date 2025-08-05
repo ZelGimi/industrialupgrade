@@ -29,11 +29,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,7 +50,7 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
     public int progress;
 
     public TileEntityCyclotronController(BlockPos pos, BlockState state) {
-        super(InitMultiBlockSystem.CyclotronMultiBlock,BlockCyclotron.cyclotron_controller,pos,state);
+        super(InitMultiBlockSystem.CyclotronMultiBlock, BlockCyclotron.cyclotron_controller, pos, state);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -93,22 +93,22 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
         try {
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.coolant.getCoolantTank().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                this.coolant.getCoolantTank().readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.cryogen.getCryogenTank().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                this.cryogen.getCryogenTank().readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             positrons.getPositrons().onNetworkUpdate(customPacketBuffer);
             quantum.getQuantum().onNetworkUpdate(customPacketBuffer);
             bombardmentChamber
                     .getInputSlot()
-                    .readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+                    .readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(), new CompoundTag()));
             boolean empty = customPacketBuffer.readBoolean();
             if (empty && !bombardmentChamber.getInputSlot().isEmpty()) {
                 bombardmentChamber.getInputSlot().set(0, ItemStack.EMPTY);
             }
-            electrostaticDeflector.getOutputSlot().readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(
+            electrostaticDeflector.getOutputSlot().readFromNbt(customPacketBuffer.registryAccess(), ((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(customPacketBuffer.registryAccess(),
                     new CompoundTag()));
             empty = customPacketBuffer.readBoolean();
             if (empty && !electrostaticDeflector.getOutputSlot().isEmpty()) {
@@ -267,7 +267,7 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
         nbt.putInt("chance", 100);
         Recipes.recipes.addRecipe(
                 "cyclotron",
-                new BaseMachineRecipe(new Input(input_recipe.getInput("forge:storage_blocks/Palladium")), new RecipeOutput(
+                new BaseMachineRecipe(new Input(input_recipe.getInput("c:storage_blocks/Palladium")), new RecipeOutput(
                         nbt,
                         new ItemStack(IUItem.toriy.getItem())
                 ))
@@ -276,7 +276,7 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
         nbt.putInt("chance", 100);
         Recipes.recipes.addRecipe(
                 "cyclotron",
-                new BaseMachineRecipe(new Input(input_recipe.getInput("forge:storage_blocks/uranium")), new RecipeOutput(
+                new BaseMachineRecipe(new Input(input_recipe.getInput("c:storage_blocks/uranium")), new RecipeOutput(
                         nbt,
                         new ItemStack(IUItem.radiationresources.getStack(1), 1)
                 ))

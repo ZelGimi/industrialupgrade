@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
+    "C": {
+      "item": "industrialupgrade:photoniy"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_246_element"
+  },
+  "show_notification": false
+}

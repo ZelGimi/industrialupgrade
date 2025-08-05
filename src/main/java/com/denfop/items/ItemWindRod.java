@@ -24,10 +24,12 @@ public class ItemWindRod<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         p_41423_.add(Component.literal(Localization.translate("wind.need_level3")));
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public boolean getLevel(int level, int damage) {
         if (level == 9 && damage == 10) {
             return true;

@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityImpSolariumStorage extends TileEntitySolariumStorage {
 
     public TileEntityImpSolariumStorage(BlockPos pos, BlockState state) {
-        super(1600000, EnumTypeStyle.IMPROVED,BlockBaseMachine3.imp_solarium_storage,pos,state);
+        super(1600000, EnumTypeStyle.IMPROVED, BlockBaseMachine3.imp_solarium_storage, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

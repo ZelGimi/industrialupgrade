@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntitySwampHive extends TileEntityHive {
 
     public TileEntitySwampHive(BlockPos pos, BlockState state) {
-        super(BeeInit.SWAMP_BEE,BlockHive.swamp_hive, pos ,state);
+        super(BeeInit.SWAMP_BEE, BlockHive.swamp_hive, pos, state);
     }
 
     @Override

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "C": {
+      "tag": "c:plates/carbon"
+    },
+    "D": {
+      "item": "industrialupgrade:blockresource/machine"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:blockresource/advanced_machine"
+  },
+  "show_notification": false
+}

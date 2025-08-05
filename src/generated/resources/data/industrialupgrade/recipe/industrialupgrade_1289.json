@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_32_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/steam_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_123_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_267_element"
+    }
+  },
+  "pattern": [
+    "DAE",
+    "BBB",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine3/steam_solid_fluid_mixer"
+  },
+  "show_notification": false
+}

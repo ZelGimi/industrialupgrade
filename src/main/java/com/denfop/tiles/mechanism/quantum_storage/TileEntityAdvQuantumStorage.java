@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityAdvQuantumStorage extends TileEntityQuantumStorage {
 
     public TileEntityAdvQuantumStorage(BlockPos pos, BlockState state) {
-        super(1600000, EnumTypeStyle.ADVANCED,BlockBaseMachine3.adv_quantum_storage,pos,state);
+        super(1600000, EnumTypeStyle.ADVANCED, BlockBaseMachine3.adv_quantum_storage, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

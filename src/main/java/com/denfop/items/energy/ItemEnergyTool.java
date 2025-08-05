@@ -9,13 +9,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     public final int operationEnergyCost;
@@ -27,10 +28,19 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     public ItemEnergyTool(
             int operationEnergyCost
     ) {
-        this(2.0F, -3.0F, operationEnergyCost,  Tags.Blocks.GLASS);
+        this(2.0F, -3.0F, operationEnergyCost, Tags.Blocks.GLASS_BLOCKS);
     }
 
 
+    public ItemEnergyTool(
+            float damage,
+            float speed,
+            int operationEnergyCost,
+            TagKey<Block> mineableBlocks
+    ) {
+        super(mineableBlocks, new Properties().stacksTo(1).setNoRepair());
+        this.operationEnergyCost = operationEnergyCost;
+    }
 
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
@@ -39,14 +49,9 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
         }
     }
 
-    public ItemEnergyTool(
-            float damage,
-            float speed,
-            int operationEnergyCost,
-            TagKey<Block> mineableBlocks
-    ) {
-        super(damage, speed, mineableBlocks);
-        this.operationEnergyCost = operationEnergyCost;
+    @Override
+    public void inventoryTick(ItemStack p_41404_, Level p_41405_, Entity p_41406_, int p_41407_, boolean p_41408_) {
+        super.inventoryTick(p_41404_, p_41405_, p_41406_, p_41407_, p_41408_);
     }
 
     protected String getOrCreateDescriptionId() {
@@ -61,7 +66,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

@@ -1,10 +1,7 @@
 package com.denfop.api;
 
 
-import com.denfop.mixin.access.IngredientAccessor;
-import com.denfop.mixin.access.TagValueAccessor;
 import com.denfop.recipe.*;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,16 +13,6 @@ import java.util.List;
 public class InputHandler implements IInputHandler {
 
     public InputHandler() {
-    }
-
-    public static IInputItemStack fromNetwork(FriendlyByteBuf buffer) {
-        int type = buffer.readInt();
-        return switch (type) {
-            case 0 -> new InputItemStack(buffer.readItem());
-            case 1 -> new InputOreDict(buffer);
-            case 2 -> new InputFluidStack(buffer);
-            default -> null;
-        };
     }
 
     public IInputItemStack getInput(ItemStack stack) {
@@ -56,12 +43,13 @@ public class InputHandler implements IInputHandler {
             return this.getInput(new ItemStack((Item) var1));
         if (var1 instanceof TagKey)
             return this.getInput((TagKey<Item>) var1);
-        if (var1 instanceof Ingredient){
+        if (var1 instanceof Ingredient) {
             Ingredient ingredient = (Ingredient) var1;
-            if (((IngredientAccessor)ingredient).getValues()[0] instanceof Ingredient.TagValue){
-                Ingredient.TagValue tagValue = (Ingredient.TagValue) ((IngredientAccessor)ingredient).getValues()[0];
-                return this.getInput(((TagValueAccessor) tagValue).getTag());
-            }else {
+
+            if (!ingredient.isCustom() && ingredient.getValues()[0] instanceof Ingredient.TagValue) {
+                Ingredient.TagValue tagValue = (Ingredient.TagValue) ingredient.getValues()[0];
+                return this.getInput(tagValue.tag());
+            } else {
                 return this.getInput(ingredient.getItems());
             }
         }

@@ -1,16 +1,13 @@
 package com.denfop.invslot;
 
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.ReactorSchedule;
 import com.denfop.items.ItemCraftingElements;
-import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InvSlotScheduleReactor extends InvSlot {
@@ -42,9 +39,9 @@ public class InvSlotScheduleReactor extends InvSlot {
     public boolean accepts(final ItemStack stack, final int index) {
         Item item = stack.getItem();
         if (item instanceof ItemCraftingElements) {
-            if (((ItemCraftingElements<?>) item).getElement().getId() == 143) {
-                final CompoundTag nbt = ModUtils.nbt(stack);
-                return type == nbt.getInt("type") && level == nbt.getInt("level");
+            if (((ItemCraftingElements<?>) item).getElement().getId() == 143 && stack.has(DataComponentsInit.REACTOR_SCHEDULE)) {
+                ReactorSchedule reactorSchedule = stack.get(DataComponentsInit.REACTOR_SCHEDULE);
+                return type == reactorSchedule.type() && level == reactorSchedule.level();
             }
             return false;
         } else {
@@ -55,22 +52,14 @@ public class InvSlotScheduleReactor extends InvSlot {
     public void update() {
         this.accepts.clear();
         if (!this.get(0).isEmpty()) {
-            final CompoundTag nbt = ModUtils.nbt(this.get(0));
-            ListTag nbtTagList = nbt.getList("Items", 10);
-            List<ItemStack> stackList = new ArrayList<>();
-            for (int i = 0; i < nbtTagList.size(); ++i) {
-                CompoundTag contentTag = nbtTagList.getCompound(i);
-                ItemStack stack =  ItemStack.of(contentTag);
-                stackList.add(stack);
-            }
+            ReactorSchedule reactorSchedule = this.get(0).get(DataComponentsInit.REACTOR_SCHEDULE);
             for (int y = 0; y < this.y; y++) {
                 for (int x = 0; x < this.x; x++) {
-                    CompoundTag tag = nbt.getCompound(String.valueOf(y * this.x + x));
-                    if (tag.getBoolean("empty")) {
+                    ItemStack itemStack = reactorSchedule.items().get(y * this.x + x);
+                    if (itemStack.isEmpty()) {
                         accepts.put(y * this.x + x, ItemStack.EMPTY);
                     } else {
-                        final int indexItem = tag.getInt("index");
-                        accepts.put(y * this.x + x, stackList.get(indexItem));
+                        accepts.put(y * this.x + x, itemStack);
                     }
                 }
             }
@@ -82,22 +71,14 @@ public class InvSlotScheduleReactor extends InvSlot {
         super.set(index, content);
         this.accepts = new HashMap<>();
         if (!content.isEmpty()) {
-            final CompoundTag nbt = ModUtils.nbt(content);
-            ListTag nbtTagList = nbt.getList("Items", 10);
-            List<ItemStack> stackList = new ArrayList<>();
-            for (int i = 0; i < nbtTagList.size(); ++i) {
-                CompoundTag contentTag = nbtTagList.getCompound(i);
-                ItemStack stack =  ItemStack.of(contentTag);
-                stackList.add(stack);
-            }
+            ReactorSchedule reactorSchedule = content.get(DataComponentsInit.REACTOR_SCHEDULE);
             for (int y = 0; y < this.y; y++) {
                 for (int x = 0; x < this.x; x++) {
-                    CompoundTag tag = nbt.getCompound(String.valueOf(y * this.x + x));
-                    if (tag.getBoolean("empty")) {
+                    ItemStack itemStack = reactorSchedule.items().get(y * this.x + x);
+                    if (itemStack.isEmpty()) {
                         accepts.put(y * this.x + x, ItemStack.EMPTY);
                     } else {
-                        final int indexItem = tag.getInt("index");
-                        accepts.put(y * this.x + x, stackList.get(indexItem));
+                        accepts.put(y * this.x + x, itemStack);
                     }
                 }
             }

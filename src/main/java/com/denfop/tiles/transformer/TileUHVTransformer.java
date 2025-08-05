@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileUHVTransformer extends TileTransformer {
 
     public TileUHVTransformer(BlockPos pos, BlockState state) {
-        super(6, BlockTransformer.uhv,pos,state);
+        super(6, BlockTransformer.uhv, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

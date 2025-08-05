@@ -37,9 +37,9 @@ public class GenStoneCategory extends GuiIU implements IRecipeCategory<GenStoneH
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiGenStone".toLowerCase() +
                         ".png"), 3, 3, 140,
                 75
         );
@@ -74,20 +74,19 @@ public class GenStoneCategory extends GuiIU implements IRecipeCategory<GenStoneH
                 54 - 48, 33 + 14 - energylevel, 176,
                 14 - energylevel, 14, energylevel
         );
-        new ItemStackImage(this,61,25,() -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack, 0,0);
+        new ItemStackImage(this, 61, 25, () -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack, 0, 0);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenStoneHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,35, 19).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,35, 47).addItemStack(recipes.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 35, 19).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 35, 47).addItemStack(recipes.getInput1());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 87, 6).addItemStack(recipes.getOutput());
     }
 
 
-
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
     }
 
 

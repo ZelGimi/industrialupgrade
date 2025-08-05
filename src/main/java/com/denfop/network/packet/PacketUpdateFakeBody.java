@@ -9,6 +9,8 @@ import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,37 +19,56 @@ import java.io.IOException;
 
 public class PacketUpdateFakeBody implements IPacket {
 
+    private CustomPacketBuffer buffer;
+
+    ;
+
     public PacketUpdateFakeBody() {
 
     }
 
-    ;
-
     public PacketUpdateFakeBody(IResearchTable tileEntityResearchTableSpace, IFakeBody fakeBody) {
-        CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
-        packetBuffer.writeByte(getId());
-        try {
-            EncoderHandler.encode(packetBuffer, ((TileEntityBlock)tileEntityResearchTableSpace).getWorld());
-            EncoderHandler.encode(packetBuffer, ((TileEntityBlock)tileEntityResearchTableSpace).getPos());
-            if (fakeBody instanceof IFakePlanet) {
-                packetBuffer.writeByte(0);
+        ServerLevel serverLevel = (ServerLevel) ((TileEntityBlock) tileEntityResearchTableSpace).getWorld();
+
+        for (ServerPlayer player : serverLevel.players()) {
+            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(((TileEntityBlock) tileEntityResearchTableSpace).getWorld().registryAccess());
+            packetBuffer.writeByte(getId());
+            try {
+                EncoderHandler.encode(packetBuffer, ((TileEntityBlock) tileEntityResearchTableSpace).getWorld());
+                EncoderHandler.encode(packetBuffer, ((TileEntityBlock) tileEntityResearchTableSpace).getPos());
+                if (fakeBody instanceof IFakePlanet) {
+                    packetBuffer.writeByte(0);
+                }
+                if (fakeBody instanceof IFakeSatellite) {
+                    packetBuffer.writeByte(1);
+                }
+                if (fakeBody instanceof IFakeAsteroid) {
+                    packetBuffer.writeByte(2);
+                }
+                if (fakeBody == null) {
+                    packetBuffer.writeByte(3);
+                }
+                if (fakeBody != null) {
+                    EncoderHandler.encode(packetBuffer, fakeBody.writeNBTTagCompound(new CompoundTag(), packetBuffer.registryAccess()));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            if (fakeBody instanceof IFakeSatellite) {
-                packetBuffer.writeByte(1);
-            }
-            if (fakeBody instanceof IFakeAsteroid) {
-                packetBuffer.writeByte(2);
-            }
-            if (fakeBody == null) {
-                packetBuffer.writeByte(3);
-            }
-            if (fakeBody != null) {
-                EncoderHandler.encode(packetBuffer, fakeBody.writeNBTTagCompound(new CompoundTag()));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+            this.buffer = packetBuffer;
+
+            IUCore.network.getServer().sendPacket(this, player, packetBuffer);
         }
-        IUCore.network.getServer().sendPacket(packetBuffer);
+    }
+
+    @Override
+    public CustomPacketBuffer getPacketBuffer() {
+        return buffer;
+    }
+
+    @Override
+    public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
+        buffer = customPacketBuffer;
     }
 
     @Override
@@ -62,23 +83,23 @@ public class PacketUpdateFakeBody implements IPacket {
             BlockPos pos = (BlockPos) DecoderHandler.decode(customPacketBuffer);
             byte id = customPacketBuffer.readByte();
             assert world != null;
-           if (entityPlayer.level().dimension() == world.dimension()) {
+            if (entityPlayer.level().dimension() == world.dimension()) {
                 BlockEntity tile = world.getBlockEntity(pos);
                 if (tile instanceof TileEntityResearchTableSpace) {
 
                     if (id == 0) {
                         CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
-                        FakePlanet fakePlanet = new FakePlanet(nbt);
+                        FakePlanet fakePlanet = new FakePlanet(nbt, customPacketBuffer.registryAccess());
                         ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
                     if (id == 1) {
                         CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
-                        FakeSatellite fakePlanet = new FakeSatellite(nbt);
+                        FakeSatellite fakePlanet = new FakeSatellite(nbt, customPacketBuffer.registryAccess());
                         ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
                     if (id == 2) {
                         CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
-                        FakeAsteroid fakePlanet = new FakeAsteroid(nbt);
+                        FakeAsteroid fakePlanet = new FakeAsteroid(nbt, customPacketBuffer.registryAccess());
                         ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
                     if (id == 3) {

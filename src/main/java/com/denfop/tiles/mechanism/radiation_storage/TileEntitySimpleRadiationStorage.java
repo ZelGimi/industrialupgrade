@@ -7,10 +7,11 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 public class TileEntitySimpleRadiationStorage extends TileEntityRadiationStorage {
 
     public TileEntitySimpleRadiationStorage(BlockPos pos, BlockState state) {
-        super(4000000, EnumTypeStyle.DEFAULT,BlockBaseMachine3.radiation_storage,pos,state);
+        super(4000000, EnumTypeStyle.DEFAULT, BlockBaseMachine3.radiation_storage, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {

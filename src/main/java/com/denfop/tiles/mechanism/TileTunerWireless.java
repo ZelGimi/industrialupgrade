@@ -9,20 +9,20 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTunerWireless;
+import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datacomponent.WirelessConnection;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTunerWireless;
 import com.denfop.invslot.InvSlotTuner;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -34,16 +34,18 @@ public class TileTunerWireless extends TileElectricMachine
 
 
     public TileTunerWireless(BlockPos pos, BlockState state) {
-        super(0, 10, 1,BlockBaseMachine3.tuner,pos,state);
+        super(0, 10, 1, BlockBaseMachine3.tuner, pos, state);
 
 
         this.inputslot = new InvSlotTuner(this);
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.wireless_mechanism.info"));
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.tuner;
     }
@@ -84,10 +86,11 @@ public class TileTunerWireless extends TileElectricMachine
     public void updateTileServer(Player player, double event) {
         if (!this.inputslot.isEmpty()) {
             initiate(1);
-            CompoundTag nbt = ModUtils.nbt(this.inputslot.get(0));
-            boolean change = nbt.getBoolean("change");
+            WirelessConnection wirelessConnection = this.inputslot.get(0).getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
+
+            boolean change = wirelessConnection.change();
             change = !change;
-            nbt.putBoolean("change", change);
+            wirelessConnection.updateChange(this.inputslot.get(0), change);
             setActive(true);
         }
 

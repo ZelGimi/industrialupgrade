@@ -25,11 +25,13 @@ public class TileCentrifuge extends TileMultiMachine {
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.cold.storage=0;
+        this.cold.storage = 0;
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockMoreMachine3.centrifuge_iu;
     }
@@ -43,6 +45,22 @@ public class TileCentrifuge extends TileMultiMachine {
         return EnumMultiMachine.Centrifuge;
     }
 
+    public String getStartSoundFile() {
+        return "Machines/centrifuge.ogg";
+    }
 
+    public String getInterruptSoundFile() {
+        return "Machines/InterruptOne.ogg";
+    }
+
+
+ /*   public String getStartSoundFile() {
+        return "Machines/MaceratorOp.ogg";
+    }
+
+    public String getInterruptSoundFile() {
+        return "Machines/InterruptOne.ogg";
+    }
+*/
 
 }

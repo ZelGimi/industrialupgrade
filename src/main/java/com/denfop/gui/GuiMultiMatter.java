@@ -16,8 +16,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,11 +100,11 @@ public class GuiMultiMatter<T extends ContainerMultiMatter> extends GuiIU<Contai
         super.drawForegroundLayer(poseStack, par1, par2);
         this.handleUpgradeTooltip(par1, par2);
         TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(poseStack, par1, par2);
-       draw(poseStack, this.progressLabel, 8, 29, 4210752);
+        draw(poseStack, this.progressLabel, 8, 29, 4210752);
         draw(poseStack, this.container.base.getProgressAsString(), 18, 39, 4210752);
         if ((this.container.base).scrap > 0) {
-           draw(poseStack, this.amplifierLabel, 8, 49, 4210752);
-           draw(poseStack, "" + (this.container.base).scrap, 8, 59, 4210752);
+            draw(poseStack, this.amplifierLabel, 8, 49, 4210752);
+            draw(poseStack, "" + (this.container.base).scrap, 8, 59, 4210752);
         }
         this.drawForeground(poseStack, par1, par2);
 
@@ -146,7 +146,7 @@ public class GuiMultiMatter<T extends ContainerMultiMatter> extends GuiIU<Contai
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

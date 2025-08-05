@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 public class ContainerSimulationReactors extends ContainerFullInv<TileEntitySimulatorReactor> {
 
     public ContainerSimulationReactors(TileEntitySimulatorReactor tileEntitySimulatorReactor, Player var1) {
-        super(var1, tileEntitySimulatorReactor, 235,228);
+        super(var1, tileEntitySimulatorReactor, 235, 228);
         addSlotToContainer(new SlotInvSlot(
                 tileEntitySimulatorReactor.scheduleSlot,
                 0,

@@ -3,6 +3,8 @@ package com.denfop.container;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.crop.ItemStackAgriculturalAnalyzer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
@@ -22,7 +24,7 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
     private final int current;
 
     public ContainerAgriculturalAnalyzer(Player player, ItemStackAgriculturalAnalyzer Toolbox1) {
-        super(Toolbox1,player);
+        super(Toolbox1, player);
         this.player = player;
         this.inventory = player.getInventory();
         inventorySize = Toolbox1.inventorySize;
@@ -45,7 +47,6 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
                     Toolbox1.crop = null;
                     Toolbox1.genome = null;
                 } else {
-                    ModUtils.nbt(stack).putBoolean("analyzed", true);
                     Toolbox1.genome = new Genome(stack);
                     Toolbox1.crop = CropNetwork.instance.getCropFromStack(stack).copy();
                     Toolbox1.genome.loadCrop(Toolbox1.crop);
@@ -130,7 +131,7 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
         } else if (type == ClickType.CLONE) {
             ItemStack held = player.getInventory().getSelected();
             if (this.base.isThisContainer(held)) {
-                held.getTag().remove("uid");
+                held.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateUUID(held, 0);
             }
         }
 

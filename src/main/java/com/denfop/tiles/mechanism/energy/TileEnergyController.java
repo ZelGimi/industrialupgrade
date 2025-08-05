@@ -30,9 +30,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
 import java.util.*;
@@ -50,7 +50,7 @@ public class TileEnergyController extends TileEntityInventory implements
     private long id;
 
     public TileEnergyController(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.energy_controller,pos,state);
+        super(BlockBaseMachine3.energy_controller, pos, state);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
@@ -116,7 +116,6 @@ public class TileEnergyController extends TileEntityInventory implements
     }
 
 
-
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
@@ -145,7 +144,7 @@ public class TileEnergyController extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
+            NeoForge.EVENT_BUS.post(new EventLoadController(this, level));
 
         }
 
@@ -154,7 +153,7 @@ public class TileEnergyController extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
+            NeoForge.EVENT_BUS.post(new EventUnloadController(this, level));
         }
         super.onUnloaded();
     }

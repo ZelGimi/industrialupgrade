@@ -17,8 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
@@ -29,6 +29,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
     private float prevRotation = 0;
+
     public PrimalFluidIntegratorRenderer(BlockEntityRendererProvider.Context p_173636_) {
         this.contex = p_173636_;
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
@@ -59,7 +60,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
             poseStack.scale(0.9f, 0.9f, 0.9f);
 
             itemRenderer.renderStatic(itemStack, GROUND,
-                    packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
+                    packedLight, packedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
 
             poseStack.popPose();
         }
@@ -91,7 +92,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
 
             Minecraft.getInstance().getItemRenderer().renderStatic(
                     outputStack,
-                  GROUND,
+                    GROUND,
                     packedLight,
                     packedOverlay,
                     poseStack,
@@ -126,7 +127,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
                     poseStack.translate(0.19 + 0.19, 0.3, +0.44 + 0.19);
                     break;
             }
-            RenderFluidBlock.renderFluid(tile.fluidTank1.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.62f,0);
+            RenderFluidBlock.renderFluid(tile.fluidTank1.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.62f);
             poseStack.popPose();
         }
         if (!tile.fluidTank2.getFluid().isEmpty()) {
@@ -146,24 +147,30 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
                     poseStack.translate(+0.26 + 0.25, +0.15, -0.24 + 0.25);
                     break;
             }
-            RenderFluidBlock.renderFluid(tile.fluidTank2.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.49f,1);
+            RenderFluidBlock.renderFluid(tile.fluidTank2.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.49f, 1);
             poseStack.popPose();
         }
     }
 
     private void renderFloatingText(Component text, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        boolean flag = true;
+        int i = 0;
         poseStack.pushPose();
-        poseStack.mulPose(contex.getEntityRenderer().cameraOrientation());
-        poseStack.scale(-0.025F, -0.025F, 0.025F);
+        poseStack.translate(0, 0, 0);
+        poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+        poseStack.scale(0.025F, -0.025F, 0.025F);
         Matrix4f matrix4f = poseStack.last().pose();
-        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-        int j = (int) (f1 * 255.0F) << 24;
-        Font font = contex.getFont();
-        float f2 = (float) (-font.width(text) / 2);
-        font.drawInBatch(text, f2, (float) 0, 553648127, false, matrix4f, buffer,  Font.DisplayMode.NORMAL, j, packedLight);
-        if (true) {
-            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer,  Font.DisplayMode.NORMAL, 0, packedLight);
+        float f = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+        int j = (int) (f * 255.0F) << 24;
+        Font font = Minecraft.getInstance().font;
+        float f1 = (float) (-font.width(text) / 2);
+        font.drawInBatch(
+                text, f1, (float) i, 553648127, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, j, packedLight
+        );
+        if (flag) {
+            font.drawInBatch(text, f1, (float) i, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
         }
+
         poseStack.popPose();
     }
 

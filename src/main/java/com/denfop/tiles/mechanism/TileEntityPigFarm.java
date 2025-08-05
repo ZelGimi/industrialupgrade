@@ -29,12 +29,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denfop.utils.ModUtils.getVecFromVec3i;
 
 public class TileEntityPigFarm extends TileEntityInventory implements IUpgradableBlock {
 
@@ -49,12 +51,12 @@ public class TileEntityPigFarm extends TileEntityInventory implements IUpgradabl
     private final ComponentUpgradeSlots componentUpgrade;
     private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
-            pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+            getVecFromVec3i(pos.offset(-RADIUS, -RADIUS, -RADIUS)),
+            getVecFromVec3i(pos.offset(RADIUS + 1, RADIUS + 1, RADIUS + 1))
     );
 
     public TileEntityPigFarm(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.pig_farm,pos,state);
+        super(BlockBaseMachine3.pig_farm, pos, state);
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -68,7 +70,6 @@ public class TileEntityPigFarm extends TileEntityInventory implements IUpgradabl
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
-
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
@@ -103,7 +104,6 @@ public class TileEntityPigFarm extends TileEntityInventory implements IUpgradabl
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.pig_farm;
     }
-
 
 
     @Override

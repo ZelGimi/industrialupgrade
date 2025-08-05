@@ -31,12 +31,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -198,15 +197,15 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                this.fluidTank1.readFromNBT(customPacketBuffer.registryAccess(), fluidTank1.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                this.fluidTank2.readFromNBT(customPacketBuffer.registryAccess(), fluidTank2.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
             FluidTank fluidTank3 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank3 != null) {
-                this.fluidTank3.readFromNBT(fluidTank3.writeToNBT(new CompoundTag()));
+                this.fluidTank3.readFromNBT(customPacketBuffer.registryAccess(), fluidTank3.writeToNBT(customPacketBuffer.registryAccess(), new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -220,7 +219,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
+                    this.fluidTank1.readFromNBT(is.registryAccess(), fluidTank1.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -238,7 +237,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
             try {
                 FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank2 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
+                    this.fluidTank2.readFromNBT(is.registryAccess(), fluidTank2.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -248,7 +247,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
             try {
                 FluidTank fluidTank3 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank3 != null) {
-                    this.fluidTank3.readFromNBT(fluidTank3.writeToNBT(new CompoundTag()));
+                    this.fluidTank3.readFromNBT(is.registryAccess(), fluidTank3.writeToNBT(is.registryAccess(), new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -261,16 +260,13 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
         if (!this.getWorld().isClientSide && player
                 .getItemInHand(hand)
                 .getCapability(
-                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        Capabilities.FluidHandler.ITEM,
                         null
-                ).orElse((IFluidHandlerItem) player
-                        .getItemInHand(hand).getItem().initCapabilities(player
-                                .getItemInHand(hand), player
-                                .getItemInHand(hand).getTag())) != null) {
+                ) != null) {
 
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
             );
         } else {
 

@@ -4,6 +4,7 @@ package com.denfop.tiles.quarry_earth;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -16,6 +17,32 @@ public class DataPos {
     public DataPos(BlockPos pos, BlockState state) {
         this.pos = pos;
         this.state = state;
+    }
+
+    public static DataPos load(CompoundTag tag) {
+        BlockPos pos = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
+        var block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(tag.getString("block")))
+                .orElse(Blocks.AIR);
+        BlockState state = block.defaultBlockState();
+
+        CompoundTag props = tag.getCompound("properties");
+        for (String key : props.getAllKeys()) {
+            Property<?> property = state.getBlock().getStateDefinition().getProperty(key);
+            if (property != null) {
+                state = setValue(state, property, props.getString(key));
+            }
+        }
+        return new DataPos(pos, state);
+    }
+
+    private static <T extends Comparable<T>> String getName(BlockState state, Property<T> property) {
+        T value = state.getValue(property);
+        return property.getName(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Comparable<T>> BlockState setValue(BlockState state, Property<T> property, String name) {
+        return property.getValue(name).map(v -> state.setValue(property, v)).orElse(state);
     }
 
     public BlockPos getPos() {
@@ -40,32 +67,5 @@ public class DataPos {
         }
         tag.put("properties", props);
         return tag;
-    }
-
-    public static DataPos load(CompoundTag tag) {
-        BlockPos pos = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
-        var block = BuiltInRegistries.BLOCK.getOptional(new net.minecraft.resources.ResourceLocation(tag.getString("block")))
-                .orElse(Blocks.AIR);
-        BlockState state = block.defaultBlockState();
-
-        CompoundTag props = tag.getCompound("properties");
-        for (String key : props.getAllKeys()) {
-            Property<?> property = state.getBlock().getStateDefinition().getProperty(key);
-            if (property != null) {
-                state = setValue(state, property, props.getString(key));
-            }
-        }
-        return new DataPos(pos, state);
-    }
-
-
-    private static <T extends Comparable<T>> String getName(BlockState state, Property<T> property) {
-        T value = state.getValue(property);
-        return property.getName(value);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Comparable<T>> BlockState setValue(BlockState state, Property<T> property, String name) {
-        return property.getValue(name).map(v -> state.setValue(property, v)).orElse(state);
     }
 }

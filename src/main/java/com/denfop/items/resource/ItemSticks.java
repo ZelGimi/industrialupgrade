@@ -18,10 +18,12 @@ public class ItemSticks<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -37,7 +39,7 @@ public class ItemSticks<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
                 break;
 
         }
-        return new String[]{"forge:rods/" + name, "forge:rods"};
+        return new String[]{"c:rods/" + name, "c:rods"};
     }
 
 

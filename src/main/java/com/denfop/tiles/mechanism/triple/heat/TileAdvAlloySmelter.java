@@ -39,8 +39,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -81,13 +81,7 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
-        }
-    }
+
     public static void addAlloysmelter(Object container, Object fill, Object fill1, ItemStack output, int temperature) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         final CompoundTag nbt = ModUtils.nbt();
@@ -97,6 +91,14 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
                 new RecipeOutput(nbt, output)
         ));
 
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnAlloySmelterParticles(level, pos, level.random);
+        }
     }
 
     @Override
@@ -122,24 +124,24 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
     @Override
 
     public void init() {
-        addAlloysmelter("forge:ingots/Copper", "forge:ingots/Zinc", "forge:ingots/Lead", new ItemStack(IUItem.alloysingot.getStack(3), 1), 4500);
-        addAlloysmelter("forge:ingots/Aluminium", "forge:ingots/Magnesium", "forge:ingots/Manganese", new ItemStack(IUItem.alloysingot.getStack(5), 1), 4000);
+        addAlloysmelter("c:ingots/Copper", "c:ingots/Zinc", "c:ingots/Lead", new ItemStack(IUItem.alloysingot.getStack(3), 1), 4500);
+        addAlloysmelter("c:ingots/Aluminium", "c:ingots/Magnesium", "c:ingots/Manganese", new ItemStack(IUItem.alloysingot.getStack(5), 1), 4000);
 
-        addAlloysmelter("forge:ingots/Aluminium",
-                "forge:ingots/Copper", "forge:ingots/Tin",
+        addAlloysmelter("c:ingots/Aluminium",
+                "c:ingots/Copper", "c:ingots/Tin",
                 new ItemStack(IUItem.alloysingot.getStack(0), 1), 3000
         );
 
-        addAlloysmelter("forge:ingots/Aluminium",
-                "forge:ingots/vanady", "forge:ingots/Cobalt",
+        addAlloysmelter("c:ingots/Aluminium",
+                "c:ingots/vanady", "c:ingots/Cobalt",
                 new ItemStack(IUItem.alloysingot.getStack(6), 1), 4500
         );
-        addAlloysmelter("forge:ingots/Aluminium",
-                "forge:ingots/vanady", "forge:ingots/Cobalt",
+        addAlloysmelter("c:ingots/Aluminium",
+                "c:ingots/vanady", "c:ingots/Cobalt",
                 new ItemStack(IUItem.alloysingot.getStack(6), 1), 4500
         );
-        addAlloysmelter("forge:ingots/Chromium",
-                "forge:ingots/Tungsten", "forge:ingots/Nickel",
+        addAlloysmelter("c:ingots/Chromium",
+                "c:ingots/Tungsten", "c:ingots/Nickel",
                 new ItemStack(IUItem.alloysingot.getStack(7), 1), 5000
         );
 
@@ -154,37 +156,37 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
                 3000
         );
 
-        addAlloysmelter("forge:ingots/Aluminium", "forge:ingots/Magnesium", Items.FLINT, new ItemStack(IUItem.alloysingot.getStack(10), 1), 3000);
+        addAlloysmelter("c:ingots/Aluminium", "c:ingots/Magnesium", Items.FLINT, new ItemStack(IUItem.alloysingot.getStack(10), 1), 3000);
 
         addAlloysmelter(
-                "forge:gems/Beryllium",
+                "c:gems/Beryllium",
                 new ItemStack(Items.COPPER_INGOT, 3),
-                "forge:ingots/Tin",
+                "c:ingots/Tin",
                 new ItemStack(IUItem.alloysingot.getStack(11), 1),
                 4000
         );
-        addAlloysmelter("forge:ingots/Copper", "forge:ingots/Nickel", "forge:ingots/Zinc", new ItemStack(IUItem.alloysingot.getStack(12), 1), 4500);
+        addAlloysmelter("c:ingots/Copper", "c:ingots/Nickel", "c:ingots/Zinc", new ItemStack(IUItem.alloysingot.getStack(12), 1), 4500);
 
 
-        addAlloysmelter("forge:ingots/Hafnium",
-                "forge:gems/Bor", "forge:ingots/Tantalum",
+        addAlloysmelter("c:ingots/Hafnium",
+                "c:gems/Bor", "c:ingots/Tantalum",
                 new ItemStack(IUItem.alloysingot.getStack(17), 1), 5000
         );
-        addAlloysmelter("forge:ingots/Hafnium",
-                "forge:ingots/Tantalum", "forge:ingots/Tungsten",
+        addAlloysmelter("c:ingots/Hafnium",
+                "c:ingots/Tantalum", "c:ingots/Tungsten",
                 new ItemStack(IUItem.alloysingot.getStack(20), 1), 5000
         );
-        addAlloysmelter("forge:ingots/Hafnium",
-                "forge:ingots/Tantalum", new ItemStack(Items.COPPER_INGOT, 4),
+        addAlloysmelter("c:ingots/Hafnium",
+                "c:ingots/Tantalum", new ItemStack(Items.COPPER_INGOT, 4),
                 new ItemStack(IUItem.alloysingot.getStack(24), 1), 5000
         );
 
-        addAlloysmelter("forge:ingots/Molybdenum",
-                "forge:ingots/Steel", "forge:ingots/Thallium",
+        addAlloysmelter("c:ingots/Molybdenum",
+                "c:ingots/Steel", "c:ingots/Thallium",
                 new ItemStack(IUItem.alloysingot.getStack(25), 1), 5000
         );
 
-        addAlloysmelter("forge:ingots/Neodymium", "forge:ingots/Yttrium", "forge:ingots/Aluminium", new ItemStack(IUItem.alloysingot.getStack(30)
+        addAlloysmelter("c:ingots/Neodymium", "c:ingots/Yttrium", "c:ingots/Aluminium", new ItemStack(IUItem.alloysingot.getStack(30)
                 )
                 , 5000);
 

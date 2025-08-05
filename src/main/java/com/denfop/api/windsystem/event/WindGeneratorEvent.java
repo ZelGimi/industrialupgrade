@@ -2,7 +2,7 @@ package com.denfop.api.windsystem.event;
 
 import com.denfop.api.windsystem.IWindMechanism;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class WindGeneratorEvent extends LevelEvent {
 

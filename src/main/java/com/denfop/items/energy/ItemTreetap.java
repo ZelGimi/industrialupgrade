@@ -24,7 +24,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,13 +31,7 @@ public class ItemTreetap extends Item implements IItemTab {
     private String nameItem;
 
     public ItemTreetap() {
-        super(new Properties().durability(16).defaultDurability(0).setNoRepair());
-    }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.treetap.info")));
+        super(new Properties().durability(16).setNoRepair());
     }
 
     public static boolean attemptExtract(
@@ -174,6 +167,12 @@ public class ItemTreetap extends Item implements IItemTab {
                 new ItemStack(IUItem.rawLatex.getItem(), quantity)
         );
         world.addFreshEntity(itemEntity);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_339594_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.treetap.info")));
     }
 
     protected String getOrCreateDescriptionId() {

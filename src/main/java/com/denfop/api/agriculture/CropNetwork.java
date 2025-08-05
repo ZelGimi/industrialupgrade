@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +37,7 @@ public class CropNetwork {
 
     public List<TileEntityCrop> getCropsFromChunk(Level world, ChunkPos chunkPos) {
         Map<ChunkPos, List<TileEntityCrop>> map = mapWorldCrop.computeIfAbsent(world.dimension(), k -> new HashMap<>());
-        return map.computeIfAbsent(chunkPos,k -> new ArrayList<>());
+        return map.computeIfAbsent(chunkPos, k -> new ArrayList<>());
     }
 
     public void addNewCropToWorld(TileEntityCrop crop) {
@@ -123,8 +122,8 @@ public class CropNetwork {
         }
         if (crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
                 .getSoil()
-                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore()) )|| (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))|| (crop.getSoil() == EnumSoil.REDSTONE && downBlock.getBlock() == Blocks.REDSTONE_ORE)) {
-            return crop.canGrowInBiome(biome,world);
+                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore())) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))) {
+            return crop.canGrowInBiome(biome, world);
         }
         return false;
     }
@@ -138,7 +137,7 @@ public class CropNetwork {
             final ChunkAccess chunk, Biome biome, final ChunkLevel chunkLevel
     ) {
         if ((radLevel == null || radLevel.getLevel().ordinal() <= crop.getRadiationRequirements().ordinal()) && isWaterNearby(world
-            , pos,
+                , pos,
                 crop)) {
             int light = (int) (world.getRawBrightness(pos, 0));
             if (light >= crop.getLightLevel()) {
@@ -153,7 +152,7 @@ public class CropNetwork {
                         boolean rain = world.isRaining();
                         boolean thundering = world.isThundering();
                         if ((rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering)) {
-                            return crop.canGrowInBiome(biome,world);
+                            return crop.canGrowInBiome(biome, world);
                         }
                     }
                 }
@@ -161,6 +160,7 @@ public class CropNetwork {
         }
         return false;
     }
+
     public boolean canMultiGrow(
             Level world, BlockPos pos, ChunkPos chunkPos, ICrop crop, final Radiation radLevel,
             final ChunkAccess chunk, Biome biome, final ChunkLevel chunkLevel
@@ -179,7 +179,7 @@ public class CropNetwork {
                         boolean rain = world.isRaining();
                         boolean thundering = world.isThundering();
                         if ((rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering)) {
-                            return crop.canGrowInBiome(biome,world);
+                            return crop.canGrowInBiome(biome, world);
                         }
                     }
                 }
@@ -187,17 +187,18 @@ public class CropNetwork {
         }
         return false;
     }
+
     public boolean isWaterNearby(Level world, BlockPos pos, ICrop crop) {
         if (crop.getWaterRequirement() == 0)
             return true;
-        int radius = crop.getWaterRequirement()+1;
+        int radius = crop.getWaterRequirement() + 1;
 
 
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
                 BlockPos checkPos = pos.offset(x, -1, z);
                 BlockState state = world.getBlockState(checkPos);
-                if (state.getBlock() == Blocks.WATER ) {
+                if (state.getBlock() == Blocks.WATER) {
                     return true;
                 }
             }

@@ -29,7 +29,7 @@ public class InvSlotUpgradeModule extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             this.tile.lootContext[i] = null;
             if (!this.get(i).isEmpty()) {
-                EnumSpawnerModules module =EnumSpawnerModules.getFromID(((ItemSpawnerModules<?>)this.get(i).getItem()).getElement().getId());
+                EnumSpawnerModules module = EnumSpawnerModules.getFromID(((ItemSpawnerModules<?>) this.get(i).getItem()).getElement().getId());
                 EnumSpawnerType type = module.type;
                 switch (type) {
                     case SPAWN:
@@ -83,7 +83,7 @@ public class InvSlotUpgradeModule extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             this.tile.lootContext[i] = null;
             if (!this.get(i).isEmpty()) {
-                EnumSpawnerModules module = EnumSpawnerModules.getFromID(((ItemSpawnerModules<?>)this.get(i).getItem()).getElement().getId());
+                EnumSpawnerModules module = EnumSpawnerModules.getFromID(((ItemSpawnerModules<?>) this.get(i).getItem()).getElement().getId());
                 EnumSpawnerType type = module.type;
                 switch (type) {
                     case SPAWN:

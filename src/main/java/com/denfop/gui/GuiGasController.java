@@ -66,6 +66,7 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
                 })
         ));
     }
+
     public void renderSlot(GuiGraphics p_97800_, Slot p_97801_) {
         if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
             if (p_97801_ instanceof SlotInvSlot) {
@@ -75,8 +76,9 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
                 }
             }
         }
-        super.renderSlot(p_97800_,p_97801_);
+        super.renderSlot(p_97800_, p_97801_);
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 160 && mouseX <= 189 && mouseY >= 135 && mouseY <= 148) {
             List<String> text = new ArrayList<>();
@@ -143,8 +145,8 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
                                             if (this.container.base.heat_sensor) {
                                                 PoseStack pose = poseStack.pose();
                                                 pose.pushPose();
-                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(    String.valueOf((int) component.getHeat())) / 2,slotInvSlot.y + 5,0);
-                                                pose.scale(0.75f,0.75f,1f);
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf((int) component.getHeat())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
                                                 draw(poseStack,
                                                         String.valueOf((int) component.getHeat()),
                                                         0,
@@ -160,8 +162,8 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
                                                     .getType() != EnumTypeComponent.ROD) {
                                                 PoseStack pose = poseStack.pose();
                                                 pose.pushPose();
-                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(     String.valueOf(-1 * component.getDamage())) / 2,slotInvSlot.y + 5,0);
-                                                pose.scale(0.75f,0.75f,1f);
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf(-1 * component.getDamage())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
                                                 draw(poseStack,
                                                         String.valueOf(-1 * component.getDamage()),
                                                         0,
@@ -227,7 +229,6 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
                     .drawForeground(poseStack, par1, par2);
         }
     }
-
 
 
     @Override
@@ -320,7 +321,7 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
                         , 238, 86, 17, 17);
                 break;
         }
-       bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common1.png"));
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common1.png"));
 
         double bar = this.container.base.heat / this.container.base.getMaxHeat();
         bar = Math.min(bar, 1);
@@ -333,16 +334,16 @@ public class GuiGasController<T extends ContainerGasMainController> extends GuiI
     protected ResourceLocation getTexture() {
         switch (this.container.base.getMaxLevelReactor()) {
             case 1:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor4.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor4.png");
             case 2:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor1.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor1.png");
             case 3:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor2.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor2.png");
             case 4:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor3.png");
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor3.png");
 
         }
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor4.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor4.png");
     }
 
 }

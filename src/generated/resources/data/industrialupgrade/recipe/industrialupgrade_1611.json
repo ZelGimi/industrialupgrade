@@ -1,0 +1,48 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/carbon"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 1,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:crafting_elements/crafting_272_element"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    },
+    "E": {
+      "item": "industrialupgrade:upgrade_casing"
+    },
+    "F": {
+      "tag": "c:plates/obsidian"
+    }
+  },
+  "pattern": [
+    "FEF",
+    "BDB",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:upgrades/energy_storage"
+  },
+  "show_notification": false
+}

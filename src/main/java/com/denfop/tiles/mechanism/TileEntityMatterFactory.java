@@ -21,8 +21,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileEntityMatterFactory extends TileElectricMachine implements IUpdateTick, IHasRecipe {
 
@@ -33,7 +33,7 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
     public MachineRecipe output;
 
     public TileEntityMatterFactory(BlockPos pos, BlockState state) {
-        super(2000, 14, 1,BlockBaseMachine3.matter_factory,pos,state);
+        super(2000, 14, 1, BlockBaseMachine3.matter_factory, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "active_matter_factory", this);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 30, 0)));
         Recipes.recipes.addInitRecipes(this);

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:basemachine3/generator_iu"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_228_element"
+    }
+  },
+  "pattern": [
+    "   ",
+    "CAD",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:basemachine2/lava_gen"
+  },
+  "show_notification": false
+}

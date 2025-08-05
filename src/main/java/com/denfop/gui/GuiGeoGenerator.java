@@ -5,8 +5,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.*;
 import com.denfop.container.ContainerGeoGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiGeoGenerator<T extends ContainerGeoGenerator> extends GuiIU<ContainerGeoGenerator> {
@@ -33,7 +33,7 @@ public class GuiGeoGenerator<T extends ContainerGeoGenerator> extends GuiIU<Cont
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

@@ -3,10 +3,10 @@ package com.denfop.invslot;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,12 +22,29 @@ public class SlotArmor extends Slot {
         this.armorType = armorType;
     }
 
+    public EquipmentSlot getEquipmentSlotForItem(ItemStack p_147234_) {
+        EquipmentSlot slot = p_147234_.getEquipmentSlot();
+        if (slot != null) {
+            return slot;
+        } else {
+            Equipable equipable = Equipable.get(p_147234_);
+            if (equipable != null) {
+                EquipmentSlot equipmentslot = equipable.getEquipmentSlot();
+                if (equipmentslot != EquipmentSlot.BODY) {
+                    return equipmentslot;
+                }
+            }
+
+            return EquipmentSlot.MAINHAND;
+        }
+    }
+
     public boolean mayPlace(ItemStack stack) {
         Item item = stack.getItem();
         if (item == null) {
             return false;
         } else {
-            return Mob.getEquipmentSlotForItem(stack) == this.armorType;
+            return getEquipmentSlotForItem(stack) == this.armorType;
         }
     }
 

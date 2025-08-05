@@ -25,13 +25,14 @@ public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBod
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public SpaceBodyCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileEntitySolidMixer) BlockBaseMachine3.solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 170
         );
@@ -49,7 +50,6 @@ public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBod
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -59,19 +59,19 @@ public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBod
 
     @Override
     public void draw(SpaceBodyHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("iu.space_recipe.jei") + Localization.translate("iu.body." + recipe.body.getName().toLowerCase()),
                 5,
                 3,
                 150 - 5,
                 4210752
         );
-       drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("iu.space_recipe.jei1"), 5, 20,
-               150 - 5, 4210752
+                150 - 5, 4210752
         );
 
-        drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("iu.start_space.info"), 5, 110,
                 150 - 5, 4210752
         );
@@ -84,10 +84,10 @@ public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBod
             int x = 5 + (i % 6) * 20;
             int y = 65 + (i / 6) * 19;
             if (i < recipe.getInput().size()) {
-                builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).addItemStack(recipe.getInput().get(i));
+                builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).addItemStack(recipe.getInput().get(i));
 
             } else {
-                builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).setFluidRenderer(recipe.getOutput().get(i-recipe.getInput().size()).getAmount(),true,16,16).addFluidStack(recipe.getOutput().get(i-recipe.getInput().size()).getFluid(),recipe.getOutput().get(i-recipe.getInput().size()).getAmount());
+                builder.addSlot(RecipeIngredientRole.OUTPUT, x, y).setFluidRenderer(recipe.getOutput().get(i - recipe.getInput().size()).getAmount(), true, 16, 16).addFluidStack(recipe.getOutput().get(i - recipe.getInput().size()).getFluid(), recipe.getOutput().get(i - recipe.getInput().size()).getAmount());
             }
 
         }
@@ -95,7 +95,7 @@ public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBod
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guivein.png");
     }
 
 

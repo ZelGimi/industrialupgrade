@@ -2,6 +2,7 @@ package com.denfop.api.space.colonies;
 
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.Timer;
+import net.minecraft.core.RegistryAccess;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +24,8 @@ public class InfoSends {
         timers.add(timer);
     }
 
-    public CustomPacketBuffer writeBuffer() {
-        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+    public CustomPacketBuffer writeBuffer(RegistryAccess registryAccess) {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(registryAccess);
         customPacketBuffer.writeInt(timers.size());
         for (Timer timer : timers)
             timer.writeBuffer(customPacketBuffer);

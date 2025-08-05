@@ -17,7 +17,7 @@ public class TileAdvScanner extends TileScanner {
     private final AirPollutionComponent pollutionAir;
 
     public TileAdvScanner(BlockPos pos, BlockState state) {
-        super(2500,BlockBaseMachine3.adv_scanner,pos,state);
+        super(2500, BlockBaseMachine3.adv_scanner, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }

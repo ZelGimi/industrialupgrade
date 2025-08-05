@@ -26,15 +26,16 @@ import javax.annotation.Nonnull;
 public class UpgradeBlockCategory extends GuiIU implements IRecipeCategory<UpgradeBlockHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public UpgradeBlockCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(((TileTunerWireless) BlockBaseMachine3.tuner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock".toLowerCase() +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock".toLowerCase() +
                         ".png"), 3, 3, 148,
                 80
         );
@@ -68,31 +69,31 @@ public class UpgradeBlockCategory extends GuiIU implements IRecipeCategory<Upgra
         if (xScale > 27) {
             progress = 0;
         }
-       draw( stack,
+        draw(stack,
                 recipe.metadata.getString("type").isEmpty() ?
                         Localization.translate("upgradeblock_upgrade") : Localization.translate("upgradeblock_modification"),
                 64,
                 58,
                 4210752
         );
-     bindTexture(getTexture());
+        bindTexture(getTexture());
 
-        drawTexturedModalRect( stack,+33, +35, 180, 7, xScale + 1, 16);
+        drawTexturedModalRect(stack, +33, +35, 180, 7, xScale + 1, 16);
 
 
-        drawTexturedModalRect( stack,+78, +35, 225, 7, xScale1 + 1, 16);
+        drawTexturedModalRect(stack, +78, +35, 225, 7, xScale1 + 1, 16);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, UpgradeBlockHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,16,35).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,61,35).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,110,35).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 16, 35).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 61, 35).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 110, 35).addItemStack(recipe.getOutput());
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
     }
 
 

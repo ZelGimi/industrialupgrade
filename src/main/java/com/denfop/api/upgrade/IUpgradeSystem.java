@@ -1,6 +1,7 @@
 package com.denfop.api.upgrade;
 
 import com.denfop.items.EnumInfoUpgradeModules;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -40,13 +41,13 @@ public interface IUpgradeSystem {
 
     boolean hasModules(EnumInfoUpgradeModules module, ItemStack item);
 
-    void updateListFromNBT(IUpgradeItem item, ItemStack stack);
+    void updateListFromNBT(IUpgradeItem item, ItemStack stack, RegistryAccess registryAccess);
 
-    void setInformation(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack);
+    void setInformation(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack, RegistryAccess registryAccess);
 
-    void write(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack);
+    void write(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack, RegistryAccess registryAccess);
 
-    void updateBlackListFromNBT(IUpgradeWithBlackList item, ItemStack stack, CompoundTag nbt);
+    void updateBlackListFromNBT(IUpgradeWithBlackList item, ItemStack stack, CompoundTag nbt, RegistryAccess registryAccess);
 
     void removeUpdate(ItemStack stack, Level world, int index);
 

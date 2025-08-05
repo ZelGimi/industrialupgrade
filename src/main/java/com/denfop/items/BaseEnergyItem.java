@@ -4,6 +4,7 @@ import com.denfop.ElectricItem;
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.item.IEnergyItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
@@ -12,23 +13,31 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public  class BaseEnergyItem extends Item implements IEnergyItem, IItemTab {
+public class BaseEnergyItem extends Item implements IEnergyItem, IItemTab {
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;
     protected String nameItem;
 
     public BaseEnergyItem(double maxCharge, double transferLimit, int tier) {
-        super(new Properties().setNoRepair().stacksTo(1));
+        super(new Properties().setNoRepair().stacksTo(1).component(DataComponentsInit.ENERGY, 0D));
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
         this.tier = tier;
     }
+
+    public BaseEnergyItem(Properties properties, double maxCharge, double transferLimit, int tier) {
+        super(properties.setNoRepair().stacksTo(1).component(DataComponentsInit.ENERGY, 0D));
+        this.maxCharge = maxCharge;
+        this.transferLimit = transferLimit;
+        this.tier = tier;
+    }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
             final ItemStack var4 = new ItemStack(this, 1);
-            ElectricItem.manager.charge(var4, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
+            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             p_41392_.add(var4);
             p_41392_.add(new ItemStack(this, 1));
         }
@@ -38,6 +47,7 @@ public  class BaseEnergyItem extends Item implements IEnergyItem, IItemTab {
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -50,7 +60,7 @@ public  class BaseEnergyItem extends Item implements IEnergyItem, IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

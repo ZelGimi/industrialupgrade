@@ -19,10 +19,12 @@ public class ItemCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -36,7 +38,7 @@ public class ItemCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
 
 
         }
-        return new String[]{"forge:crushed/" + name, "forge:crushed"};
+        return new String[]{"c:crushed/" + name, "c:crushed"};
     }
 
 

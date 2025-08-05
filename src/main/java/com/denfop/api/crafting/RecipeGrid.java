@@ -22,7 +22,7 @@ public class RecipeGrid {
     private boolean hasTwoX;
 
     public RecipeGrid(List<String> args) {
-        this.args = args;
+
         while (3 - args.size() > 0) {
             args.add("   ");
         }
@@ -35,7 +35,7 @@ public class RecipeGrid {
                 }
             }
         }
-
+        this.args = args;
         this.charactersList = new ArrayList<>(characters);
 
         for (int i = 0; i < 3; i++) {
@@ -195,6 +195,18 @@ public class RecipeGrid {
         grids = list;
     }
 
+    public List<String> getArgs() {
+        List<String> arg = args;
+        for (int i = 0; i < 3; i++) {
+            final StringBuilder stringBuilder = new StringBuilder(arg.get(i));
+            while (stringBuilder.length() < 3) {
+                stringBuilder.append(" ");
+            }
+            arg.set(i, stringBuilder.toString());
+        }
+        return arg;
+    }
+
     public List<Character> getCharactersList() {
         return charactersList;
     }
@@ -240,7 +252,7 @@ public class RecipeGrid {
 
     public void encode(CustomPacketBuffer customPacketBuffer) {
         try {
-            EncoderHandler.encode(customPacketBuffer,args);
+            EncoderHandler.encode(customPacketBuffer, args);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

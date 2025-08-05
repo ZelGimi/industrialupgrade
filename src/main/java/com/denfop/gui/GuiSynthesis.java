@@ -15,8 +15,8 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
@@ -76,7 +76,7 @@ public class GuiSynthesis<T extends ContainerDoubleElectricMachine> extends GuiI
 
         final MachineRecipe output = this.container.base.output;
         if (output != null) {
-           draw(stack,
+            draw(stack,
                     ChatFormatting.GREEN + Localization.translate("chance") + output.getRecipe().output.metadata.getInt(
                             "percent") + "%", xoffset + 66,
                     yoffset + 66, ModUtils.convertRGBcolorToInt(217, 217, 217)
@@ -86,7 +86,7 @@ public class GuiSynthesis<T extends ContainerDoubleElectricMachine> extends GuiI
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSynthesis.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiSynthesis.png".toLowerCase());
     }
 
 }

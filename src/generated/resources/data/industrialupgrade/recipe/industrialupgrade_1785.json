@@ -1,0 +1,37 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_324_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "tag": "c:plates/beryllium"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_342_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_321_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_365_element"
+    }
+  },
+  "pattern": [
+    "EGF",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:heat_reactors/heat_controller"
+  },
+  "show_notification": false
+}

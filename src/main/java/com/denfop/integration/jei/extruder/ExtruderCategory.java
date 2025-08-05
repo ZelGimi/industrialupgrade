@@ -52,11 +52,11 @@ public class ExtruderCategory extends GuiIU implements IRecipeCategory<ExtruderH
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileExtruding) BlockMoreMachine2.extruder.getDummyTe()), 1, true
         ));
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+        bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
@@ -87,7 +87,7 @@ public class ExtruderCategory extends GuiIU implements IRecipeCategory<ExtruderH
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.machines_base2, 1, 4).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.machines_base2, 1, 4).getDescriptionId());
     }
 
 
@@ -108,10 +108,10 @@ public class ExtruderCategory extends GuiIU implements IRecipeCategory<ExtruderH
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, 0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack, 0, 0, xScale);
-      bindTexture(getTexture());
+        progress_bar.renderBar(stack, 0, 0, xScale);
+        bindTexture(getTexture());
     }
 
 
@@ -138,7 +138,7 @@ public class ExtruderCategory extends GuiIU implements IRecipeCategory<ExtruderH
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine2.png".toLowerCase());
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUIMachine2.png".toLowerCase());
     }
 
 

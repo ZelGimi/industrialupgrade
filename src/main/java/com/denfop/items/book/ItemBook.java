@@ -1,21 +1,18 @@
 package com.denfop.items.book;
 
-import com.denfop.Constants;
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerBeeAnalyzer;
+import com.denfop.datacomponent.ContainerItem;
+import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.bee.ItemStackBeeAnalyzer;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -26,8 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
-
 
 import javax.annotation.Nonnull;
 
@@ -40,7 +35,7 @@ public class ItemBook extends Item implements IItemStackInventory, IItemTab, IUp
     public ItemBook(String internalName) {
         super(new Properties().stacksTo(1));
         this.internalName = internalName;
-     }
+    }
 
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
@@ -59,19 +54,19 @@ public class ItemBook extends Item implements IItemStackInventory, IItemTab, IUp
 
         return this.nameItem;
     }
+
     @Nonnull
     public String getUnlocalizedName() {
         return "item." + this.internalName + ".name";
     }
 
 
-
-
     public void save(ItemStack stack, Player player) {
-        final CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putBoolean("open", true);
-        nbt.putInt("slot_inventory", player.getInventory().selected);
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
+        containerItem = containerItem.updateOpen(stack, true);
+        containerItem.updateSlot(stack, player.getInventory().selected);
     }
+
     @Override
     public void inventoryTick(
             ItemStack stack,
@@ -86,16 +81,16 @@ public class ItemBook extends Item implements IItemStackInventory, IItemTab, IUp
             return;
         }
         Player player = (Player) entity;
-        CompoundTag nbt = stack.getOrCreateTag();
+        ContainerItem containerItem = ContainerItem.getContainer(stack);
 
-        if (nbt.getBoolean("open")) {
-            int slotId = nbt.getInt("slot_inventory");
+        if (containerItem.open()) {
+            int slotId = containerItem.slot_inventory();
             if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerBeeAnalyzer) {
                 ItemStackBeeAnalyzer toolbox = ((ContainerBeeAnalyzer) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
-                    nbt.putBoolean("open", false);
+                    containerItem.updateOpen(stack, false);
                 }
             }
         }
@@ -123,21 +118,17 @@ public class ItemBook extends Item implements IItemStackInventory, IItemTab, IUp
         if (!player.level().isClientSide && world.getBlockEntity(blockhitresult.getBlockPos()) == null) {
             save(stack, player);
 
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
 
             growingBuffer.writeByte(1);
 
             growingBuffer.flip();
-            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+            player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
         }
 
         return InteractionResultHolder.success(player.getItemInHand(hand));
 
     }
-
-
-
-
 
 
     @Override
@@ -157,6 +148,6 @@ public class ItemBook extends Item implements IItemStackInventory, IItemTab, IUp
 
     @Override
     public void updateEvent(int event, ItemStack stack) {
-        ModUtils.nbt(stack).putInt("book_info",event);
+        stack.set(DataComponentsInit.MODE, event);
     }
 }

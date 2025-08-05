@@ -32,8 +32,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasRecipe {
 
@@ -81,6 +81,14 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
     }
 
     @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive() && this.level.getGameTime() % 5 == 0) {
+            ParticleUtils.spawnAlloySmelterParticles(level, pos, level.random);
+        }
+    }
+
+    @Override
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isClientSide) {
@@ -99,13 +107,7 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
     public BlockTileEntity getBlock() {
         return IUItem.machines.getBlock(getTeBlock().getId());
     }
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
-            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
-        }
-    }
+
     public void init() {
 
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
@@ -115,13 +117,13 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
                 new ItemStack(IUItem.crafting_elements.getItemFromMeta(502), 1), 4000
         );
         addAlloysmelter(
-                input.getInput("forge:gems/bor", 1),
+                input.getInput("c:gems/bor", 1),
                 input.getInput(new ItemStack(Items.NETHER_STAR), 1),
                 new ItemStack(IUItem.nether_star_ingot.getItem()), 2000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/tungsten", 2),
-                input.getInput("forge:ingots/nickel", 1),
+                input.getInput("c:ingots/tungsten", 2),
+                input.getInput("c:ingots/nickel", 1),
                 new ItemStack(IUItem.wolframite.getItem()), 3000
         );
 
@@ -147,23 +149,23 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
         );
         addAlloysmelter(
                 input.getInput(new ItemStack(Items.GOLD_INGOT), 1),
-                input.getInput("forge:ingots/silver", 1),
+                input.getInput("c:ingots/silver", 1),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(13), 1), 3500
         );
         addAlloysmelter(
                 input.getInput(new ItemStack(IUItem.crafting_elements.getItemFromMeta(481), 1)),
-                input.getInput("forge:dusts/coal", 2),
+                input.getInput("c:dusts/coal", 2),
                 new ItemStack(IUItem.crafting_elements.getItemFromMeta(482), 1), 1000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/nickel", 1),
+                input.getInput("c:ingots/nickel", 1),
                 input.getInput(new ItemStack(Items.IRON_INGOT), 2),
-                input.getInput("forge:ingots/invar",4).getInputs().get(0), 5000
+                input.getInput("c:ingots/Invar", 4).getInputs().get(0), 5000
         );
 
         addAlloysmelter(
                 input.getInput(new ItemStack(IUItem.iudust.getItemFromMeta(37), 1)),
-                input.getInput("forge:dusts/iron", 2),
+                input.getInput("c:dusts/iron", 2),
                 new ItemStack(IUItem.iudust.getItemFromMeta(38), 1), 2000
         );
         addAlloysmelter(
@@ -178,65 +180,65 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
                 new ItemStack(IUItem.crafting_elements.getItemFromMeta(319), 1), 2000
         );
         addAlloysmelter(
-                input.getInput("forge:storage_blocks/silver", 1),
+                input.getInput("c:storage_blocks/silver", 1),
                 input.getInput(new ItemStack(IUItem.crafting_elements.getItemFromMeta(484), 1), 1),
                 new ItemStack(IUItem.crafting_elements.getItemFromMeta(434), 1), 2000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/copper", 1),
-                input.getInput("forge:ingots/zinc", 1),
+                input.getInput("c:ingots/copper", 1),
+                input.getInput("c:ingots/zinc", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(2), 1), 3000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/nickel", 1),
-                input.getInput("forge:ingots/chromium", 1),
+                input.getInput("c:ingots/nickel", 1),
+                input.getInput("c:ingots/chromium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(4), 1), 4000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/nickel", 1),
-                input.getInput("forge:ingots/titanium", 1),
+                input.getInput("c:ingots/nickel", 1),
+                input.getInput("c:ingots/titanium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(15), 1), 4000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/tin", 1),
-                input.getInput("forge:ingots/copper", 3),
+                input.getInput("c:ingots/tin", 1),
+                input.getInput("c:ingots/copper", 3),
                 ModUtils.setSize(IUItem.bronzeIngot, 4), 1000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/aluminium", 1),
-                input.getInput("forge:ingots/magnesium", 1),
+                input.getInput("c:ingots/aluminium", 1),
+                input.getInput("c:ingots/magnesium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(8), 1), 2000
         );
 
         addAlloysmelter(
-                input.getInput("forge:ingots/aluminium", 1),
-                input.getInput("forge:ingots/titanium", 1),
+                input.getInput("c:ingots/aluminium", 1),
+                input.getInput("c:ingots/titanium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(1), 1), 5000
         );
 
         addAlloysmelter(
-                input.getInput("forge:ingots/aluminium", 1),
-                input.getInput("forge:ingots/lithium", 1),
+                input.getInput("c:ingots/aluminium", 1),
+                input.getInput("c:ingots/lithium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(22), 1), 2000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/chromium", 1),
-                input.getInput("forge:ingots/cobalt", 1),
+                input.getInput("c:ingots/chromium", 1),
+                input.getInput("c:ingots/cobalt", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(23), 1), 2000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/niobium", 2),
-                input.getInput("forge:ingots/titanium", 1),
+                input.getInput("c:ingots/niobium", 2),
+                input.getInput("c:ingots/titanium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(26), 1), 3000
         );
         addAlloysmelter(
-                input.getInput("forge:ingots/osmium", 2),
-                input.getInput("forge:ingots/iridium", 1),
+                input.getInput("c:ingots/osmium", 2),
+                input.getInput("c:ingots/iridium", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(27), 1), 3000
         );
         addAlloysmelter(
                 input.getInput(new ItemStack(Items.IRON_INGOT), 1),
-                input.getInput("forge:ingots/manganese", 1),
+                input.getInput("c:ingots/manganese", 1),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(9), 1), 4500
         );
 

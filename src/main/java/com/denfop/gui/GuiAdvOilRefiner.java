@@ -10,8 +10,8 @@ import com.denfop.container.ContainerAdvOilRefiner;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiAdvOilRefiner<T extends ContainerAdvOilRefiner> extends GuiIU<ContainerAdvOilRefiner> {
@@ -19,7 +19,7 @@ public class GuiAdvOilRefiner<T extends ContainerAdvOilRefiner> extends GuiIU<Co
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        background = ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     public ContainerAdvOilRefiner container;
@@ -74,7 +74,7 @@ public class GuiAdvOilRefiner<T extends ContainerAdvOilRefiner> extends GuiIU<Co
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
     protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
@@ -82,7 +82,7 @@ public class GuiAdvOilRefiner<T extends ContainerAdvOilRefiner> extends GuiIU<Co
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.container.base != null) {
-            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 
