@@ -50,6 +50,7 @@ import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
 import com.denfop.network.packet.PacketFixerRecipe;
 import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
+import com.denfop.network.packet.PacketUpdateRecipe;
 import com.denfop.network.packet.PacketUpdateRelocator;
 import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.ClientProxy;
@@ -71,7 +72,11 @@ import com.denfop.utils.*;
 import com.denfop.villager.TradingSystem;
 import com.denfop.world.WorldBaseGen;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -135,8 +140,7 @@ import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 
 @Mod(IUCore.MODID)
-public class IUCore
-{
+public class IUCore {
     public static IUCore instance;
     public static FMLJavaModLoadingContext context;
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -175,20 +179,21 @@ public class IUCore
     public static List<Runnable> runnableListAfterRegisterItem = new ArrayList<>();
 
     public static boolean update = false;
-    static List<String> stringList = new ArrayList<>();
+    public static List<String> stringList = new ArrayList<>();
     static boolean change = false;
-    static boolean register = false;
+    public static boolean register = false;
     public static boolean register1 = false;
+
     static {
-        proxy= DistExecutor.unsafeRunForDist(()-> ClientProxy::new,()->CommonProxy::new);
+        proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
         IUCore.network = new Sides<>("com.denfop.network.NetworkManager", "com.denfop.network.NetworkManagerClient");
         keyboard = DistExecutor.unsafeRunForDist(() -> KeyboardClient::new, () -> KeyboardIU::new);
         Keys.instance = IUCore.keyboard;
     }
 
     public static final String MODID = "industrialupgrade";
-    public IUCore()
-    {
+
+    public IUCore() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
         context = FMLJavaModLoadingContext.get();
@@ -218,11 +223,14 @@ public class IUCore
 
         MinecraftForge.EVENT_BUS.register(this);
     }
+
     private static final RegistrySetBuilder BUILDER = (new RegistrySetBuilder()).add(Registries.CONFIGURED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ConfiguredFeaturesGen::bootstrap).add(Registries.PLACED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ModPlacedFeatures::bootstrap).add(Registries.DAMAGE_TYPE, DamageTypes::bootstrap);
+
     @SubscribeEvent
     public void onAttributeCreate(EntityAttributeCreationEvent event) {
         event.put(IUItem.entity_bee.get(), SmallBee.createAttributes().build());
     }
+
     @SubscribeEvent
     public void gatherData(GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
@@ -247,9 +255,10 @@ public class IUCore
         gen.addProvider(event.includeServer(), blockTags);
         gen.addProvider(event.includeServer(), new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
         gen.addProvider(event.includeServer(), new RecipeProvider(packOutput));
-        gen.addProvider(event.includeClient(), new ModItemModelProvider(packOutput,existingFileHelper));
+        gen.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
 
     }
+
     @SubscribeEvent
     public void blindness(LivingHurtEvent event) {
         Level world = event.getEntity().level();
@@ -275,6 +284,7 @@ public class IUCore
             tippedArrow.discard();
         }
     }
+
     public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
 
     public static void addrecipe(
@@ -361,6 +371,7 @@ public class IUCore
         }
 
     }
+
     public static final CreativeModeTab IUTab = new TabCore(0, "IUTab");
     public static final CreativeModeTab ModuleTab = new TabCore(1, "ModuleTab");
     public static final CreativeModeTab ItemTab = new TabCore(2, "ItemTab");
@@ -376,6 +387,7 @@ public class IUCore
     public static final CreativeModeTab GenomeTab = new TabCore(13, "GenomeTab");
     public static final CreativeModeTab SpaceTab = new TabCore(14, "SpaceTab");
     public static final CreativeModeTab fluidCellTab = new TabCore(15, "fluidCellTab");
+
     private void registerContent(RegisterEvent event) {
         if (Objects.equals(event.getForgeRegistry(), ForgeRegistries.ITEMS)) {
             Register.writeItems();
@@ -401,7 +413,7 @@ public class IUCore
             Item item = iItemTag.getItem();
             String[] stringTags = iItemTag.getTags();
             for (String stringTag : stringTags) {
-                ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag),k -> new ArrayList<>()).add(new ItemStack(item));
+                ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag), k -> new ArrayList<>()).add(new ItemStack(item));
             }
         }
         new GuideBookCore();
@@ -414,7 +426,7 @@ public class IUCore
         addPlate("Bor", IUItem.crafting_elements.getStack(451));
         addPlate("Beryllium", IUItem.crafting_elements.getStack(452));
         addPlateDense("Beryllium", IUItem.crafting_elements.getStack(452));
-        if ( IUItem.machine == null)
+        if (IUItem.machine == null)
             Register.writeItems();
         addCustom("machineBlock", IUItem.machine.getItem());
         addCustom("machineBlockCasing", IUItem.machine.getItem());
@@ -446,9 +458,9 @@ public class IUCore
         addGem("emerald", Items.EMERALD);
         addGem("coal", Items.COAL);
         addGem("quarts", Items.QUARTZ);
-        addCustomMinecraft("wool",Blocks.WHITE_WOOL.asItem());
-        addCustom("string",Items.STRING);
-        addCustomMinecraft("saplings",Blocks.OAK_SAPLING.asItem());
+        addCustomMinecraft("wool", Blocks.WHITE_WOOL.asItem());
+        addCustom("string", Items.STRING);
+        addCustomMinecraft("saplings", Blocks.OAK_SAPLING.asItem());
         addRawMaterials("gold", Items.GOLD_INGOT);
         addRawMaterials("iron", Items.IRON_INGOT);
         addRawMaterials("copper", Items.COPPER_INGOT);
@@ -456,7 +468,7 @@ public class IUCore
         addStorageBlocks("iron", Blocks.IRON_BLOCK.asItem());
         addStorageBlocks("copper", Blocks.COPPER_BLOCK.asItem());
         addStorageBlocks("coal", Blocks.COAL_BLOCK.asItem());
-        addCustomMinecraft("leaves",Blocks.OAK_LEAVES.asItem());
+        addCustomMinecraft("leaves", Blocks.OAK_LEAVES.asItem());
 
 
         addStorageBlocks("lapis", Blocks.LAPIS_BLOCK.asItem());
@@ -465,39 +477,44 @@ public class IUCore
         fluidToLevel.put(FluidName.fluiddecane.getInstance().get(), 3);
         fluidToLevel.put(FluidName.fluidxenon.getInstance().get(), 4);
     }
+
     public void addCustom(String tag, Item item) {
         String[] stringTags = new String[]{"forge:" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
+
     public void addRawMaterials(String tag, Item item) {
         String[] stringTags = new String[]{"forge:raw_materials/" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
+
     public void addStorageBlocks(String tag, Item item) {
         String[] stringTags = new String[]{"forge:storage_blocks/" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
 
     }
+
     public void addCustomMinecraft(String tag, Item item) {
         String[] stringTags = new String[]{"minecraft:" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
+
     public void addPlate(String tag, Item item) {
         String[] stringTags = new String[]{"forge:plates/" + tag, "forge:plates"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -505,7 +522,7 @@ public class IUCore
     public void addPlateDense(String tag, Item item) {
         String[] stringTags = new String[]{"forge:platedense/" + tag, "forge:platedense"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -513,7 +530,7 @@ public class IUCore
     public void addIngot(String tag, Item item) {
         String[] stringTags = new String[]{"forge:ingots/" + tag, "forge:ingots"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -521,7 +538,7 @@ public class IUCore
     public void addDust(String tag, Item item) {
         String[] stringTags = new String[]{"forge:dusts/" + tag, "forge:dusts"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -529,7 +546,7 @@ public class IUCore
     public void addCasing(String tag, Item item) {
         String[] stringTags = new String[]{"forge:casings/" + tag, "forge:casings"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent( new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -537,7 +554,7 @@ public class IUCore
     public void addGem(String tag, Item item) {
         String[] stringTags = new String[]{"forge:gems/" + tag, "forge:gems"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent( new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -834,6 +851,7 @@ public class IUCore
 
         }
     }
+
     public void registerData(Level level) {
         if (!register1) {
             register1 = true;
@@ -1005,76 +1023,86 @@ public class IUCore
             }
 
 
-                PotionRecipes.init();
-                List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
-                for (PotionRecipes.Mix<Potion> mix : potionMixes) {
-                    Holder<Potion> from = mix.from();
-                    Ingredient ingredient = mix.ingredient();
-                    Holder<Potion> to = mix.to();
+            PotionRecipes.init();
+            List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
+            for (PotionRecipes.Mix<Potion> mix : potionMixes) {
+                Holder<Potion> from = mix.from();
+                Ingredient ingredient = mix.ingredient();
+                Holder<Potion> to = mix.to();
 
-                    ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
-                    ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
+                ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
+                ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
 
 
-                    Recipes.recipes.addRecipe(
-                            "brewing",
-                            new BaseMachineRecipe(
-                                    new Input(
-                                            inputFactory.getInput(inputPotion),
-                                            inputFactory.getInput(ingredient.getItems()[0])
-                                    ),
-                                    new RecipeOutput(null, outputPotion)
-                            )
-                    );
-                }
+                Recipes.recipes.addRecipe(
+                        "brewing",
+                        new BaseMachineRecipe(
+                                new Input(
+                                        inputFactory.getInput(inputPotion),
+                                        inputFactory.getInput(ingredient.getItems()[0])
+                                ),
+                                new RecipeOutput(null, outputPotion)
+                        )
+                );
+            }
         }
     }
+
     boolean reg = false;
     List<RegistryObject<?>> objects = new ArrayList<>();
 
     @SubscribeEvent
     public void registerItemTab(BuildCreativeModeTabContentsEvent event) {
-        if (!reg){
+        if (!reg) {
             objects.addAll(DataItem.objects);
             objects.addAll(DataBlockEntity.objects);
             objects.addAll(DataBlock.objects);
             reg = true;
         }
 
-        for (RegistryObject<?> object : objects){
-            if (object != null && object.get() instanceof IItemTab){
-                NonNullList<ItemStack> stackNonNullList =  NonNullList.create();
+        for (RegistryObject<?> object : objects) {
+            if (object != null && object.get() instanceof IItemTab) {
+                NonNullList<ItemStack> stackNonNullList = NonNullList.create();
                 IItemTab iItemTab = (IItemTab) object.get();
-                iItemTab.fillItemCategory(event.getTab(),stackNonNullList);
+                iItemTab.fillItemCategory(event.getTab(), stackNonNullList);
                 stackNonNullList.forEach(event::accept);
             }
         }
 
     }
+
+    public static List<String> players = new LinkedList<>();
+
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) {
             return;
         }
-
-        new PacketFixerRecipe(event.getEntity().level(), (ServerPlayer) event.getEntity(),2);
-        if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())){
-            GuideBookCore.instance.load(event.getEntity().getUUID(),event.getEntity());
+        if (!players.contains(event.getEntity().getName().getString())) {
+            players.add(event.getEntity().getName().getString());
+            for (String baseRecipe : Recipes.recipes.getMap_recipe_managers())
+                new PacketUpdateRecipe(baseRecipe, false, (ServerPlayer) event.getEntity());
+            for (String baseRecipe : Recipes.recipes.getRecipeFluid().getRecipes())
+                new PacketUpdateRecipe(baseRecipe, true, (ServerPlayer) event.getEntity());
+            new PacketFixerRecipe( (ServerPlayer) event.getEntity());
+        }
+        if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())) {
+            GuideBookCore.instance.load(event.getEntity().getUUID(), event.getEntity());
             event.getEntity().addItem(new ItemStack(IUItem.book.getItem()));
             event.getEntity().addItem(new ItemStack(IUItem.veinsencor.getStack(0)));
-        }else{
+        } else {
             GuideBookCore.instance.loadOrThrow(event.getEntity().getUUID());
-            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()),event.getEntity());
+            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()), event.getEntity());
         }
         new PacketUpdateRelocator(event.getEntity());
 
     }
+
     @SubscribeEvent
     public void onServerStarting(ServerStartedEvent event) {
         registerData(event.getServer().overworld());
 
     }
-
 
 
     @SubscribeEvent
@@ -1134,7 +1162,7 @@ public class IUCore
                             continue;
                         TagKey<Item> tag = ItemTags.create(new ResourceLocation("forge", "gems/" + name));
                         List<Holder<Item>> gemList = new ArrayList<>();
-                      BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(gemList::add);
+                        BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(gemList::add);
                         TagKey<Item> tag1 = ItemTags.create(new ResourceLocation("forge", "raw_materials/" + name));
                         List<Holder<Item>> rawList = new ArrayList<>();
                         BuiltInRegistries.ITEM.getTagOrEmpty(tag1).forEach(rawList::add);
@@ -1161,8 +1189,6 @@ public class IUCore
                     }
                 }
             }
-
-
 
 
         }

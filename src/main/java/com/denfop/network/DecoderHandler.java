@@ -2,7 +2,7 @@ package com.denfop.network;
 
 import com.denfop.IUCore;
 import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.recipe.*;
 import com.denfop.api.vein.Vein;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -231,6 +231,25 @@ public class DecoderHandler {
                 }
 
                 return ret_array;
+            case recipeOutput:
+
+              List<ItemStack> itemStackList = (List<ItemStack>) decode(is);
+              CompoundTag compoundTag = null;
+             boolean hasTag = (boolean) decode(is);
+                if (hasTag)
+                    compoundTag = (CompoundTag) decode(is);
+                return new RecipeOutput(compoundTag, itemStackList);
+            case inputStack:
+
+                compoundTag = (CompoundTag) decode(is);
+                return Input.readNBT(compoundTag);
+            case inputFluidStack:
+                compoundTag = (CompoundTag) decode(is);
+                return InputFluid.readNBT(compoundTag);
+            case BaseRecipe:
+                return   BaseMachineRecipe.readNBT((CompoundTag) decode(is));
+            case BaseFluidRecipe:
+                return   BaseFluidMachineRecipe.readNBT((CompoundTag) decode(is));
             case Block:
                 return getBlock((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case network_object:

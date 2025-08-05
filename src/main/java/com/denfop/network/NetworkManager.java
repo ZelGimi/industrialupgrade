@@ -80,6 +80,7 @@ public class NetworkManager {
         this.registerPacket(new PacketUpdateRelocator());
         this.registerPacket(new PacketFixerRecipe());
         this.registerPacket(new PacketDrainFluidPipette());
+        this.registerPacket(new PacketUpdateRecipe());
 
         channel.registerMessage(0, CustomPacketBuffer.class,
                 (customPacketBuffer, buf) -> {

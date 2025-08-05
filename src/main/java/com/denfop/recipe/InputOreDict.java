@@ -67,6 +67,17 @@ public class InputOreDict implements IInputItemStack {
         for (int i = 0; i < list.size(); i++) {
             ores.add(ItemStack.of(list.getCompound(i)));
         }
+        if (ores.isEmpty()){
+            BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
+            if (ores.isEmpty()){
+                if (mapItems.containsKey(tag.location())){
+                    mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
+                }
+            }
+            for (ItemStack stack : ores) {
+                stack.setCount(this.getAmount());
+            }
+        }
     }
     public InputOreDict(TagKey<Item> tag, int amount) {
         this.amount = amount;

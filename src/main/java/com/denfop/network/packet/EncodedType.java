@@ -1,7 +1,7 @@
 package com.denfop.network.packet;
 
 
-import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.*;
 import com.denfop.componets.AbstractComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -55,6 +55,11 @@ public enum EncodedType {
     //   BaseResearch(com.denfop.api.research.main.BaseResearch.class),
     RecipeInfo(com.denfop.api.recipe.RecipeInfo.class),
     DataOre(com.denfop.tiles.base.DataOre.class),
+    BaseRecipe(BaseMachineRecipe.class),
+    BaseFluidRecipe(BaseFluidMachineRecipe.class),
+    recipeOutput(RecipeOutput.class),
+    inputStack(IInput.class),
+    inputFluidStack(IInputFluid.class),
     Object(Object.class);
 
     public static final EncodedType[] types = values();

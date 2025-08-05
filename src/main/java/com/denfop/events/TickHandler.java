@@ -89,9 +89,7 @@ public class TickHandler {
     }
     @SubscribeEvent
     public void initData(TickEvent.LevelTickEvent event){
-        if (event.level.isClientSide && event.phase == TickEvent.Phase.END){
-            IUCore.instance.registerData(event.level);
-        }
+
     }
 
     protected static BlockHitResult getPlayerPOVHitResult(Level p_41436_, Player p_41437_, ClipContext.Fluid p_41438_) {

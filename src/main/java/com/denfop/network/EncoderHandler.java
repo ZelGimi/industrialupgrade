@@ -2,7 +2,7 @@ package com.denfop.network;
 
 
 import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.recipe.*;
 import com.denfop.api.vein.Vein;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
@@ -257,7 +257,7 @@ public class EncoderHandler {
                     encode(os, Fluids.EMPTY, false);
                 os.writeInt(fs.getAmount());
                 if (!fs.isEmpty())
-                encode(os, fs.getTag(), true);
+                    encode(os, fs.getTag(), true);
                 break;
             case FluidTank:
                 FluidTank tank = (FluidTank) o;
@@ -323,6 +323,29 @@ public class EncoderHandler {
             case String:
                 os.writeString((String) o);
                 break;
+            case recipeOutput:
+                RecipeOutput recipeOutput = (RecipeOutput) o;
+                encode(os, recipeOutput.items);
+                encode(os, recipeOutput.metadata != null);
+                if (recipeOutput.metadata != null)
+                    encode(os, recipeOutput.metadata);
+                break;
+            case inputStack:
+                IInput input = (IInput) o;
+                encode(os,  input.writeNBT());
+               break;
+            case inputFluidStack:
+                IInputFluid inputFluid = (IInputFluid) o;
+                encode(os,  inputFluid.writeNBT());
+                break;
+            case BaseRecipe:
+                BaseMachineRecipe baseMachineRecipe = (BaseMachineRecipe) o;
+                encode(os, baseMachineRecipe.writeNBT());
+                break;
+            case BaseFluidRecipe:
+                BaseFluidMachineRecipe baseFluidMachineRecipe = (BaseFluidMachineRecipe) o;
+                encode(os,  baseFluidMachineRecipe.writeNBT());
+                break;
             case TileEntity:
                 BlockEntity te = (BlockEntity) o;
                 encode(os, te.getLevel(), false);
@@ -359,6 +382,7 @@ public class EncoderHandler {
                 Radiation radiation = (Radiation) o;
                 os.writeBytes(radiation.writePacket());
                 break;
+
             /* case FAKE_PLANET:
                 break;
 */
