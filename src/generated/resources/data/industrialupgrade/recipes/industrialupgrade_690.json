@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blastfurnace/blast_furnace_part"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/electrum"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blastfurnace/blast_furnace_part"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "C": {
+      "tag": "forge:gears/electrum"
+    }
   },
   "pattern": [
     "CAC",

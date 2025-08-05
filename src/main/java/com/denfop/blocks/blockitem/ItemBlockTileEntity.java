@@ -6,6 +6,7 @@ import com.denfop.blocks.ItemBlockCore;
 import com.denfop.tiles.base.FakePlayerSpawner;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -67,8 +68,9 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
         Level level = pContext.getLevel();
         BlockState blockstate = level.getBlockState(blockpos);
         Block block = this.getBlock();
+        Direction direction = pContext.getClickedFace();
         IMultiTileBlock iMultiTileBlock =  getTeBlock(pContext.getItemInHand());
-        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(),blockpos,level))
+        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(),blockpos,level,direction ,pContext.getPlayer() ))
             return null;
         return super.updatePlacementContext(pContext);
     }

@@ -2,19 +2,24 @@ package com.denfop.items.crop;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.items.IProperties;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,9 +30,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICropItem {
+public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICropItem, IProperties {
     public ItemCrops(T element) {
         super(new Item.Properties(), element);
+        IUCore.proxy.addProperties(this);
     }
 
 
@@ -56,7 +62,7 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
             List<Component> tooltip,
             TooltipFlag flag
     ) {
-       tooltip.add(Component.translatable("iu.use_agriculture_analyzer").append(Component.translatable(IUItem.agricultural_analyzer.getItem().getDescriptionId())));
+        tooltip.add(Component.translatable("iu.use_agriculture_analyzer").append(Component.translatable(IUItem.agricultural_analyzer.getItem().getDescriptionId())));
 
         super.appendHoverText(stack, level, tooltip, flag);
 
@@ -87,22 +93,35 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
                 }
             }
         }
+        Genome genome = new Genome(stack);
+        if (!genome.getGeneticTraitsMap().isEmpty()){
+            tooltip.add(Component.literal(Localization.translate("iu.genomes.info")));
+            genome.getGeneticTraitsMap().values().forEach(value ->      tooltip.add(Component.literal(Localization.translate("iu.info.crop_genome_"+ value.name().toLowerCase()))));
+
+
+        }
     }
+
     @Override
     public Component getName(ItemStack stack) {
         CompoundTag tag = ModUtils.nbt(stack);
         ICrop crop = CropNetwork.instance.getCrop(tag.getInt("crop_id"));
-        return  Component.translatable(super.getDescriptionId(stack)).append(Component.literal(": "))
+        return Component.translatable(super.getDescriptionId(stack)).append(Component.literal(": "))
                 .append(Component.translatable("crop." + crop.getName()));
     }
-
 
 
     public ICrop getCrop(int meta, ItemStack stack) {
         CompoundTag tag = ModUtils.nbt(stack);
         return CropNetwork.instance.getCrop(tag.getInt("crop_id"));
     }
-
+    public ItemStack getCrop(int meta) {
+        ItemStack stack = new ItemStack(this);
+        CompoundTag tag = ModUtils.nbt(stack);
+        tag.putInt("crop_id", meta);
+        new Genome(stack);
+       return stack;
+    }
     @Override
     public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
         if (allowedIn(tab)) {
@@ -121,6 +140,19 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.CropsTab;
+    }
+
+    @Override
+    public String[] properties() {
+        return new String[]{"id"};
+    }
+
+    @Override
+    public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
+        ICrop crop = getCrop(0, itemStack);
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+            return crop.getId() == 3 ? -1 : crop.getId();
+        return -1;
     }
 
     public enum Types implements ISubEnum {

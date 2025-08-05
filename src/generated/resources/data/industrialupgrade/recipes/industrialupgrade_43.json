@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/polonium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/palladium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_274_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/polonium"
+    },
+    "B": {
+      "tag": "forge:plates/palladium"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    }
   },
   "pattern": [
     "AAA",

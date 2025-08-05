@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/electrium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/electrium"
+    }
   ],
   "result": {
     "count": 9,

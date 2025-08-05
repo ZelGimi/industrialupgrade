@@ -1,28 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:rotor/spectral"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "B": {
+      "item": "industrialupgrade:rotor/spectral"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:excitednucleus/procore"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:excitednucleus/procore"
+    }
   },
   "pattern": [
     "DCD",

@@ -110,7 +110,11 @@ public class ModUtils {
             if (isLava && !allowLava) {
                 return 0;
             } else {
-                int ret = AbstractFurnaceBlockEntity.getFuel().get(stack.getItem());
+                Integer ret = AbstractFurnaceBlockEntity.getFuel().get(stack.getItem());
+                if (ret == null) {
+                    return 0;
+                }
+
                 return isLava ? ret / 10 : ret;
             }
         }
@@ -513,36 +517,42 @@ public class ModUtils {
     }
 
     public static String getString(float number) {
-        float gg;
-        int i;
-
-        i = (int) Math.log10(number);
         String maxstorage_2 = "0";
+        double i = Math.log10(number);
         if (i > -3 && i < 0) {
-            gg = number * 1000;
-            maxstorage_2 = String.format("%.0fm", gg);
+            maxstorage_2 = String.format("%.0fm", number * 10E2D);
         } else if (i <= -3 && i > -6) {
-            gg = number * 1000000;
-            maxstorage_2 = String.format("%.2fµ", gg);
+            maxstorage_2 = String.format("%.0fµ", number * 10E5D);
         } else if (i <= -6 && i > -9) {
-            gg = number * 1000000000;
-            maxstorage_2 = String.format("%.2fn", gg);
+            maxstorage_2 = String.format("%.0fn", number * 10E8D);
         } else if (i <= -9 && i > -12) {
-            gg = number * 1000000000000F;
-            maxstorage_2 = String.format("%.2fp", gg);
-        } else if (i >= 0 && i < 3 && number <= 1000) {
+            maxstorage_2 = String.format("%.0fp", number * 10E11D);
+        } else if (i < 3) {
+            maxstorage_2 = String.format("%.0f", number);
+        } else if (i < 6) {
 
-            gg = number;
-            maxstorage_2 = String.format("%.0f", gg);
-        } else if (i >= 3 && i < 6) {
-            gg = number / (1000);
-            maxstorage_2 = String.format("%.2fK", gg);
-        } else if (i >= 6 && i < 9) {
-            gg = number / (1000000);
-            maxstorage_2 = String.format("%.2fM", gg);
-        } else if (i >= 9 && i < 12) {
-            gg = number / (1000000000);
-            maxstorage_2 = String.format("%.2fG", gg);
+            maxstorage_2 = String.format("%.2fK", number / 10E2D);
+        } else if (i < 9) {
+
+            maxstorage_2 = String.format("%.2fM", number / 10E5D);
+        } else if (i < 12) {
+
+            maxstorage_2 = String.format("%.2fG", number / 10E8D);
+        } else if (i < 15) {
+
+            maxstorage_2 = String.format("%.2fT", number / 10E11D);
+        } else if (i < 18) {
+
+            maxstorage_2 = String.format("%.2fP", number / 10E14D);
+        } else if (i < 21) {
+
+            maxstorage_2 = String.format("%.2fE", number / 10E17D);
+        } else if (i < 24) {
+
+            maxstorage_2 = String.format("%.2fZ", number / 10E20D);
+        } else if (i < 27) {
+
+            maxstorage_2 = String.format("%.2fY", number / 10E23D);
         }
         return maxstorage_2;
 
@@ -564,36 +574,42 @@ public class ModUtils {
     }
 
     public static String getString1(double number) {
-        double gg;
-        int i;
-
-        i = (int) Math.log10(number);
         String maxstorage_2 = "0";
+        double i = Math.log10(number);
         if (i > -3 && i < 0) {
-            gg = number * 1000;
-            maxstorage_2 = String.format("%.0fm", gg);
+            maxstorage_2 = String.format("%.0fm", number * 10E2D);
         } else if (i <= -3 && i > -6) {
-            gg = number * 1000000;
-            maxstorage_2 = String.format("%.0fµ", gg);
+            maxstorage_2 = String.format("%.0fµ", number * 10E5D);
         } else if (i <= -6 && i > -9) {
-            gg = number * 1000000000;
-            maxstorage_2 = String.format("%.0fn", gg);
+            maxstorage_2 = String.format("%.0fn", number * 10E8D);
         } else if (i <= -9 && i > -12) {
-            gg = number * 1000000000000D;
-            maxstorage_2 = String.format("%.0fp", gg);
-        } else if (i >= 0 && i < 3 && number <= 1000) {
+            maxstorage_2 = String.format("%.0fp", number * 10E11D);
+        } else if (i < 3) {
+            maxstorage_2 = String.format("%.0f", number);
+        } else if (i < 6) {
 
-            gg = number;
-            maxstorage_2 = String.format("%.0f", gg);
-        } else if (i >= 3 && i < 6 && number >= 1000 && number < 1000000) {
-            gg = number / (1000);
-            maxstorage_2 = String.format("%.2fK", gg);
-        } else if (i >= 6 && i < 9 && number >= 1000000 && number < 1000000000) {
-            gg = number / (1000000);
-            maxstorage_2 = String.format("%.2fM", gg);
-        } else if (i >= 9 && i < 12 && number >= 1000000000 && number < 2100000000) {
-            gg = number / (1000000000);
-            maxstorage_2 = String.format("%.2fG", gg);
+            maxstorage_2 = String.format("%.2fK", number / 10E2D);
+        } else if (i < 9) {
+
+            maxstorage_2 = String.format("%.2fM", number / 10E5D);
+        } else if (i < 12) {
+
+            maxstorage_2 = String.format("%.2fG", number / 10E8D);
+        } else if (i < 15) {
+
+            maxstorage_2 = String.format("%.2fT", number / 10E11D);
+        } else if (i < 18) {
+
+            maxstorage_2 = String.format("%.2fP", number / 10E14D);
+        } else if (i < 21) {
+
+            maxstorage_2 = String.format("%.2fE", number / 10E17D);
+        } else if (i < 24) {
+
+            maxstorage_2 = String.format("%.2fZ", number / 10E20D);
+        } else if (i < 27) {
+
+            maxstorage_2 = String.format("%.2fY", number / 10E23D);
         }
         return maxstorage_2;
     }

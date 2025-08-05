@@ -7,14 +7,13 @@ import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.items.ItemRecipeSchedule;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -93,6 +92,36 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
 
     public Fluids.InternalFluidTank getTank() {
         return tank;
+    }
+
+    @Override
+    public boolean hasItemList() {
+        return true;
+    }
+
+    @Override
+    public List<IInputItemStack> getStacks(int index) {
+        if (!this.recipe.require()) {
+            List<IInputItemStack> uniqueStacks = new ArrayList<>();
+            Set<IInputItemStack> seenStacks = new HashSet<>();
+
+            for (IInputItemStack input : accepts.stream().map(IRecipeInputStack::getInput).toList()) {
+                boolean isNew = seenStacks.stream().noneMatch(existing ->
+                        existing.equals(input)
+                );
+                if (isNew) {
+                    seenStacks.add(input);
+                    uniqueStacks.add(input);
+                }
+            }
+            return uniqueStacks;
+
+        }else{
+            RecipeArrayList<IRecipeInputStack> list = map.get(index);
+            List<IInputItemStack> stacks = new LinkedList<>();
+            list.forEach(accept -> stacks.add(accept.getInput()));
+            return stacks;
+        }
     }
 
     public void load() {

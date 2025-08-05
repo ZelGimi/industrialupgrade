@@ -9,8 +9,7 @@ public class GuiBaseSteamTurbineExchanger<T extends ContainerBaseSteamTurbineExc
 
     public GuiBaseSteamTurbineExchanger(ContainerBaseSteamTurbineExchanger guiContainer) {
         super(guiContainer);
-        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
-
+        this.componentList.clear();
     }
 
 
@@ -18,7 +17,7 @@ public class GuiBaseSteamTurbineExchanger<T extends ContainerBaseSteamTurbineExc
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteamturbine_exchanger.png");
     }
 
 }

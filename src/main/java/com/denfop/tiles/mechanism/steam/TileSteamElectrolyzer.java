@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.steam;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
@@ -131,7 +132,7 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
     public void addInformation(ItemStack stack, List<String> tooltip) {
 
         super.addInformation(stack, tooltip);
-
+        tooltip.add(Localization.translate( "iu.steam_electrolyzer.info"));
     }
 
     public void updateEntityServer() {

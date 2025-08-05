@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/vitalium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:ingots/ferromanganese"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/mikhail"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:battery/advanced_re_battery"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/vitalium"
+    },
+    "B": {
+      "tag": "forge:ingots/ferromanganese"
+    },
+    "C": {
+      "tag": "forge:doubleplate/mikhail"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    }
   },
   "pattern": [
     "A B",

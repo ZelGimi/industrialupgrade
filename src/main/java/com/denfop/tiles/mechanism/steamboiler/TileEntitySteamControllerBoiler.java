@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.steamboiler;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -11,6 +12,7 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -28,16 +30,20 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
     public TileEntitySteamControllerBoiler(BlockPos pos, BlockState state) {
         super(InitMultiBlockSystem.SteamBoilerMultiBlock,BlockSteamBoiler.steam_boiler_controller,pos,state);
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.steam_boiler.info"));
+    }
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.isFull()) {
-            if (this.exchanger.isWork() && this.heater.isWork() && this.waterTank.getTank().getFluidAmount() > 0 && this.steamTank
+            if (this.exchanger.isWork() && this.heater.isWork() && this.waterTank.getTank().getFluidAmount() >= 4 && this.steamTank
                     .getTank()
-                    .getFluidAmount() + 2 < this.steamTank.getTank().getCapacity()) {
-                this.steamTank.getSteam().addEnergy(2);
-                this.waterTank.getTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
+                    .getFluidAmount() + 8 <= this.steamTank.getTank().getCapacity()) {
+                this.steamTank.getSteam().addEnergy(8);
+                this.waterTank.getTank().drain(4, IFluidHandler.FluidAction.EXECUTE);
                 this.setActive(true);
             } else {
                 this.setActive(false);

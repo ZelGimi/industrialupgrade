@@ -1,52 +1,34 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/bronze"
-      }
-    ]
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    },
+    {
+      "tag": "forge:ingots/bronze"
+    }
   ],
   "result": {
     "item": "industrialupgrade:blockresource/bronze_block"

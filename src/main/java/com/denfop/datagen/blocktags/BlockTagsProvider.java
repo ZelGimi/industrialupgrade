@@ -1,8 +1,10 @@
 package com.denfop.datagen.blocktags;
 
+import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -18,16 +20,23 @@ import java.util.concurrent.CompletableFuture;
 
 public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsProvider {
     public static List<IBlockTag> list = new LinkedList<>();
+    private final String key;
 
     public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        super(packOutput,lookupProvider, IUCore.MODID,existingFileHelper);
+        this(packOutput,lookupProvider, IUCore.MODID,existingFileHelper);
 
+    }
+    public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider,String modid, ExistingFileHelper existingFileHelper) {
+        super(packOutput,lookupProvider, modid,existingFileHelper);
+        this.key = modid;
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         for (IBlockTag tag : list) {
             Block block = tag.getBlock();
+            if (!BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(key))
+                continue;
             Pair<String, Integer> pair = tag.getHarvestLevel();
             if (pair.getA() != null) {
                 TagKey<Block> blockTagKey = getToolFromString(pair.getA());
@@ -36,12 +45,13 @@ public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsP
                 this.tag(level).add(block);
             }
         }
-
-        this.tag(BlockTags.LOGS).add(IUItem.swampRubWood.getBlock().get());
-        this.tag(BlockTags.LOGS).add(IUItem.rubWood.getBlock().get());
-        this.tag(BlockTags.LOGS).add(IUItem.tropicalRubWood.getBlock().get());
-        this.tag(BlockTags.LEAVES).add(IUItem.leaves.getBlock().get());
-        this.tag(BlockTags.SAPLINGS).add(IUItem.rubberSapling.getBlock().get());
+        if (key.equals(Constants.MOD_ID)) {
+            this.tag(BlockTags.LOGS).add(IUItem.swampRubWood.getBlock().get());
+            this.tag(BlockTags.LOGS).add(IUItem.rubWood.getBlock().get());
+            this.tag(BlockTags.LOGS).add(IUItem.tropicalRubWood.getBlock().get());
+            this.tag(BlockTags.LEAVES).add(IUItem.leaves.getBlock().get());
+            this.tag(BlockTags.SAPLINGS).add(IUItem.rubberSapling.getBlock().get());
+        }
     }
     private TagKey<Block> getLevelFromInteger(Integer b) {
         return switch (b) {

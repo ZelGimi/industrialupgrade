@@ -29,7 +29,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -50,7 +49,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
     private long id;
 
     public TileEnergyRemover(BlockPos pos, BlockState state) {
-        super(BlockBaseMachine3.energy_remover, pos,state);
+        super(BlockBaseMachine3.energy_remover, pos, state);
         slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 16);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
@@ -88,12 +87,6 @@ public class TileEnergyRemover extends TileEntityInventory implements
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
-
-
 
     public long getIdNetwork() {
         return this.id;
@@ -123,7 +116,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
 
         }
@@ -148,7 +141,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
         }
         super.onUnloaded();
     }
@@ -207,15 +200,16 @@ public class TileEnergyRemover extends TileEntityInventory implements
         if (this.work) {
             for (IEnergyConductor conductor : this.conductorList) {
                 TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
-                        conductor);
-                tile.onUnloaded();
+                        conductor,level);
                 final List<ItemStack> drops = tile.getBlock().getDrops(
                         level,
                         tile.getPos(),
-                        tile.getBlockState(),null
+                        tile.getBlockState(), null
                 );
                 if (this.slot.add(drops.get(0))) {
-                   this.getWorld().removeBlock( tile.getPos(),false);
+                    tile.onUnloaded();
+
+                    this.getWorld().removeBlock(tile.getPos(), false);
                 }
 
             }

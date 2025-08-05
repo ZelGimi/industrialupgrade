@@ -181,7 +181,7 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
             }
             Level world = level;
             if (te instanceof IEnergyConductor) {
-                final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) te);
+                final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) te,te.getWorld());
                 encode(new Progress((int) node.getEnergyOut(), (int) ((IEnergyConductor) te).getConductorBreakdownEnergy(),("EF"),33, 91, 199),listTag);
             }
             if (te instanceof IConductor) {

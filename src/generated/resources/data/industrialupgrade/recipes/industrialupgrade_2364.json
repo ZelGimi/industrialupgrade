@@ -1,25 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
-  "key": {
-    "A": [
-      {
-        "item": "quantumgenerators:qg/nsp_gen"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/barcore"
-      }
-    ]
-  },
-  "pattern": [
-    " B ",
-    "BAB",
-    " B "
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_magnesium"
+    }
   ],
   "result": {
-    "item": "quantumgenerators:qg/bsp_gen"
-  },
-  "show_notification": true
+    "count": 9,
+    "item": "industrialupgrade:raw_metals/raw_magnesium"
+  }
 }

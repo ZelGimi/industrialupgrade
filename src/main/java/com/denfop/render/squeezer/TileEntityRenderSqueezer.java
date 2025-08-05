@@ -65,7 +65,7 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
             if (tile.facing == 3) {
                 poseStack.translate(0.6 + 0.08, 0.18, 0.07 + 0.12);
             }
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.82f);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.82f,0);
             poseStack.popPose();
         }
     }

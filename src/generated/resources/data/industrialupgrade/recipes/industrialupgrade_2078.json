@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:windrod/iron_rotor_model"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:windrod/iron_rotor_model"
+    }
   },
   "pattern": [
     " B ",

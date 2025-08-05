@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemsunnariumpanel/usp"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniumglass/photoniyglass2"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:stick/platium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemsunnariumpanel/usp"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniumglass/photoniyglass2"
+    },
+    "C": {
+      "item": "industrialupgrade:stick/platium"
+    }
   },
   "pattern": [
     "CCC",

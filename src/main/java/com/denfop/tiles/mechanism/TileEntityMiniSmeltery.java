@@ -373,7 +373,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
                 .getOutput().items) && this.fluid_handler.canOperate()) {
 
 
-            this.progress = (short) (this.progress + 1);
+            this.progress = (short) (this.progress + 2);
             double k = this.progress;
 
             if (this.progress >= 100) {

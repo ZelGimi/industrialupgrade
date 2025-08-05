@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/chromium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/chromium"
+    }
   ],
   "result": {
     "count": 9,

@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:experience_bottle"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "item": "minecraft:experience_bottle"
+    }
   },
   "pattern": [
     "   ",

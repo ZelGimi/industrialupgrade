@@ -8,15 +8,20 @@
     "MixinInventory",
     "MixinServerGamePacketListenerImpl",
     "access.AbstractContainerMenuAccessor",
+    "access.BeeAccessor",
     "access.DeferredRegisterAccessor",
     "access.ExplosionAccessor",
-    "access.LootTableAccessor"
+    "access.IngredientAccessor",
+    "access.LootTableAccessor",
+    "access.TagValueAccessor"
   ],
   "client": [
     "access.AbstractContainerScreenAccessor",
     "access.AbstractContainerScreenInvoker",
     "access.LevelRendererAccessor",
+    "access.RenderChunkRegionAccessor",
     "access.SoundEngineAccess",
+    "access.SoundEngineAccessor",
     "access.SoundManagerAccess",
     "invoker.ParticleInvoker"
   ],

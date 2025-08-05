@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/aluminumbronze"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring_storage/cesu_iu"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/energy_crystal"
-      }
-    ]
+    "A": {
+      "tag": "forge:doubleplate/aluminumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring_storage/cesu_iu"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    }
   },
   "pattern": [
     "ACA",

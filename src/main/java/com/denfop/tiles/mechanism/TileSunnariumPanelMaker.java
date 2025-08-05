@@ -72,9 +72,12 @@ public class TileSunnariumPanelMaker extends TileDoubleElectricMachine implement
 
     public static void addsunnuriumpanel(ItemStack container, ItemStack fill, ItemStack output) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        TagKey<Item> tag = fill.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList().get(0);
-        List<ItemStack> list = input.getInput(tag).getInputs();
-        if (list != null && !list.isEmpty()) {
+        List<TagKey<Item>> tags = fill.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList();
+        TagKey<Item> tag = null;
+        if (!tags.isEmpty())
+            tag =  tags.get(0);
+        List<ItemStack> list = input.getInput(tag == null ? "" : tag).getInputs();
+        if (list != null && list.isEmpty() && tag == null) {
             Recipes.recipes.addRecipe(
                     "sunnuriumpanel",
                     new BaseMachineRecipe(

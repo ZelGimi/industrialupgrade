@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:block/blockbeehive_top_winter",
     "up" : "industrialupgrade:block/blockbeehive_top_winter",
     "north" : "industrialupgrade:block/blockbeehive_winter",
-    "east" : "industrialupgrade:block/blockbeehive_winter",
-    "south" : "industrialupgrade:block/blockbeehive_winter",
-    "west" : "industrialupgrade:block/blockbeehive_winter"
+    "east" : "industrialupgrade:block/blockbeehive_winter_side",
+    "south" : "industrialupgrade:block/blockbeehive_winter_side",
+    "west" : "industrialupgrade:block/blockbeehive_winter_side"
   }
 }

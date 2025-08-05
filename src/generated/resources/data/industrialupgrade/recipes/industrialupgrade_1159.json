@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/universal6"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniy"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/universal6"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniy"
+    },
+    "C": {
+      "item": "industrialupgrade:photoniy_ingot"
+    }
   },
   "pattern": [
     "A A",

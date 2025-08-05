@@ -1,7 +1,9 @@
 package com.denfop.items.energy;
 
+import com.denfop.IUItem;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -9,7 +11,8 @@ import java.util.function.Supplier;
 
 public enum IUTiers implements Tier {
 
-    RUBY(3, (int) (250* 2.5), 8.0F, 3.0F, 10, () -> Ingredient.of());
+    RUBY(3, (int) (250* 2.5), 8.0F, 3.0F, 10, () -> Ingredient.of()),
+    IRON(3, (int) (250*3), 6.0F, 2.0F, 14, () -> Ingredient.of(new ItemStack(IUItem.advIronIngot.getItem())));
 
 
     private final int level;

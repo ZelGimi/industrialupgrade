@@ -7,7 +7,7 @@ public class ContainerBaseSteamTurbineExchanger extends ContainerFullInv<TileEnt
 
     public ContainerBaseSteamTurbineExchanger(TileEntityBaseSteamTurbineExchanger tileEntityExchanger, Player var1) {
         super(var1, tileEntityExchanger);
-        this.addSlotToContainer(new SlotInvSlot(tileEntityExchanger.getSlot(), 0, 80, 38));
+        this.addSlotToContainer(new SlotInvSlot(tileEntityExchanger.getSlot(), 0, 80, 35));
     }
 
 }

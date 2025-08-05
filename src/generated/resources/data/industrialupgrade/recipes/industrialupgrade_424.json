@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/chromium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/chromium"
+    },
+    "B": {
+      "tag": "forge:plates/titanium"
+    }
   },
   "pattern": [
     "BBA",

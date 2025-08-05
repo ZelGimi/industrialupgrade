@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:upgrades/overclocker"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/stainlesssteel"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/tantalum"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/thallium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:upgrades/overclocker"
+    },
+    "B": {
+      "tag": "forge:plates/stainlesssteel"
+    },
+    "C": {
+      "tag": "forge:plates/tantalum"
+    },
+    "D": {
+      "tag": "forge:plates/thallium"
+    }
   },
   "pattern": [
     "D D",

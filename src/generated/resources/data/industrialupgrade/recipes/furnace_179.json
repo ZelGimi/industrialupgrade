@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/molybdenum_steel"
+    "item": "industrialupgrade:alloydust/cobalt_chrome"
   },
-  "result": "industrialupgrade:alloyingot/molybdenum_steel"
+  "result": "industrialupgrade:alloyingot/cobalt_chrome"
 }

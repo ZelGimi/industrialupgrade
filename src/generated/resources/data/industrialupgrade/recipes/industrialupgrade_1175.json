@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:adv_refiner/adv_refiner"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_86_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_96_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:adv_refiner/adv_refiner"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_86_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    }
   },
   "pattern": [
     " B ",

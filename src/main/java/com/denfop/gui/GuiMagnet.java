@@ -112,13 +112,13 @@ public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet>
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
-        draw(poseStack, String.valueOf(this.container.base.x), 26, 87,
+        draw(poseStack, String.valueOf(this.container.base.x), 29 - getStringWidth( String.valueOf(this.container.base.x)) / 2, 87,
                 4210752
         );
-      draw(poseStack, String.valueOf(this.container.base.y), 76, 87,
+      draw(poseStack, String.valueOf(this.container.base.y), 79- getStringWidth( String.valueOf(this.container.base.y)) / 2, 87,
                 4210752
         );
-        draw(poseStack, String.valueOf(this.container.base.z), 126, 87,
+        draw(poseStack, String.valueOf(this.container.base.z), 129- getStringWidth( String.valueOf(this.container.base.z)) / 2, 87,
                 4210752
         );
     }

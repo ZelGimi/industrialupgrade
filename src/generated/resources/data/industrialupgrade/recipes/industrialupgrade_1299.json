@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:reactors/proton_energy_coupler"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:neutroniumingot"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:reactors/proton_energy_coupler"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "C": {
+      "item": "industrialupgrade:neutroniumingot"
+    }
   },
   "pattern": [
     "ABA",

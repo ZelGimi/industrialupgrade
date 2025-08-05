@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "B": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/tin"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    }
   },
   "pattern": [
     " B ",

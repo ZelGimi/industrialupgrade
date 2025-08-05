@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/venus_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/venus_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/venus_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/venus_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/venus_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/venus_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/venus_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/venus_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone1/venus_cobblestone"

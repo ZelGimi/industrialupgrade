@@ -13,6 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCactusFarm;
 import com.denfop.gui.GuiCactusFarm;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -43,6 +45,11 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+    );
+    private ComponentVisibleArea visible;
 
     public TileEntityCactusFarm(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.cactus_farm,pos,state);
@@ -53,6 +60,7 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
@@ -119,7 +127,11 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
             currentPos = currentPos.above();
         }
     }
-
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        visible.aabb = searchArea;
+    }
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);

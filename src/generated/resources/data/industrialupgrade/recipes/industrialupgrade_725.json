@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:adv_spectral_box"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/sincore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:rotors_upgrade/rotorupgrade18"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/sincore"
+    },
+    "C": {
+      "item": "industrialupgrade:rotors_upgrade/rotorupgrade18"
+    },
+    "D": {
+      "item": "industrialupgrade:quantumitems4"
+    }
   },
   "pattern": [
     "ADA",

@@ -1,0 +1,21 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "quantumgenerators:qg/phsp_gen"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/neucore"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "quantumgenerators:qg/nsp_gen"
+  },
+  "show_notification": true
+}

@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/steam_ampere_generator"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:mini_smeltery/mini_smeltery"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:motors_with_improved_bearings_"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:refractory_furnace/refractory_furnace"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/steam_ampere_generator"
+    },
+    "B": {
+      "item": "industrialupgrade:mini_smeltery/mini_smeltery"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "D": {
+      "item": "industrialupgrade:motors_with_improved_bearings_"
+    },
+    "E": {
+      "item": "industrialupgrade:refractory_furnace/refractory_furnace"
+    }
   },
   "pattern": [
     " A ",

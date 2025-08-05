@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/neodymium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/platinum"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/neodymium"
+    },
+    "B": {
+      "tag": "forge:plates/platinum"
+    }
   },
   "pattern": [
     "A  ",

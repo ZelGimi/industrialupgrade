@@ -123,7 +123,7 @@ public class CropNetwork {
         }
         if (crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
                 .getSoil()
-                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore()) )|| (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))) {
+                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore()) )|| (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))|| (crop.getSoil() == EnumSoil.REDSTONE && downBlock.getBlock() == Blocks.REDSTONE_ORE)) {
             return crop.canGrowInBiome(biome,world);
         }
         return false;

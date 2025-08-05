@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:graphene_plate"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_479_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:graphene_plate"
+    },
+    "B": {
+      "tag": "forge:plates/steel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_479_element"
+    }
   },
   "pattern": [
     "ABA",

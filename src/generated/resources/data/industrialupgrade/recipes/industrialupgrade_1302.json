@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:adv_spectral_box"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/superalloyrene"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:reactors/imp_neutron_protector"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "B": {
+      "tag": "forge:doubleplate/superalloyrene"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/imp_neutron_protector"
+    }
   },
   "pattern": [
     "ABA",

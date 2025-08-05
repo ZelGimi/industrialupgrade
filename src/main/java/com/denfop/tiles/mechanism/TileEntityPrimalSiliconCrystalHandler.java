@@ -63,7 +63,7 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
         };
 
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 12, 30)));
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 5, 0)));
     }
 
     @Override

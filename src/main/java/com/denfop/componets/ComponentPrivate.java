@@ -43,7 +43,18 @@ public class ComponentPrivate extends AbstractComponent {
 
         return null;
     }
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.playersUUID.isEmpty()){
+            playersUUID.add( UUID.randomUUID());
+        }
+    }
 
+    @Override
+    public boolean isServer() {
+        return true;
+    }
     @Override
     public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         super.onBlockActivated(player, hand);
@@ -138,7 +149,7 @@ public class ComponentPrivate extends AbstractComponent {
         }
         nbt.putInt("size1", this.playersUUID.size());
         for (int i = 0; i < this.playersUUID.size(); i++) {
-            nbt.putUUID("player_" + i, this.playersUUID.get(i));
+            nbt.putUUID("player_uuid_" + i, this.playersUUID.get(i));
         }
         nbt.putBoolean("activate", activate);
         return nbt;
@@ -153,7 +164,7 @@ public class ComponentPrivate extends AbstractComponent {
         }
         final int size1 = nbt.getInt("size1");
         for (int i = 0; i < size1; i++) {
-            this.playersUUID.add(nbt.getUUID("player_" + i));
+            this.playersUUID.add(nbt.getUUID("player_uuid_" + i));
         }
         this.activate = nbt.getBoolean("activate");
     }

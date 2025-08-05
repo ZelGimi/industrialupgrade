@@ -1,52 +1,34 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ]
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    },
+    {
+      "tag": "forge:ingots/uranium"
+    }
   ],
   "result": {
     "item": "industrialupgrade:blockresource/uranium_block"

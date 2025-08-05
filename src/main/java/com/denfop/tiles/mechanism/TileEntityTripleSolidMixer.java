@@ -23,6 +23,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
 import net.minecraft.core.BlockPos;
@@ -86,6 +87,21 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
 
 
     }
+    public static void addRecipe(
+            ItemStack container, ItemStack container1, IInputItemStack container2, ItemStack output,
+            ItemStack output1
+    ) {
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        Recipes.recipes.addRecipe(
+                "triple_solid_mixer",
+                new BaseMachineRecipe(
+                        new Input(input.getInput(container), input.getInput(container1), container2),
+                        new RecipeOutput(null, output, output1)
+                )
+        );
+
+
+    }
 
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
@@ -120,7 +136,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.iudust.getStack(66), 2), new ItemStack(IUItem.iudust.getStack(60), 6), new ItemStack(IUItem.iudust.getStack(21), 10),
+        addRecipe(new ItemStack(IUItem.iudust.getStack(66), 2), new ItemStack(IUItem.iudust.getStack(60), 6), Recipes.inputFactory.getInput("forge:dusts/coal", 10),
                 new ItemStack(IUItem.iudust.getStack(71), 6),
                 new ItemStack(IUItem.white_phosphorus.getItem())
         );

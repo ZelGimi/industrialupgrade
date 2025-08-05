@@ -13,4 +13,5 @@ public interface IEnergyConductor extends IEnergyAcceptor, IEnergyEmitter {
 
     void setCable(InfoCable cable);
 
+    ConductorInfo getInfo();
 }

@@ -1,25 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "quantumgenerators:qg/bsp_gen"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/adrcore"
-      }
-    ]
+    "A": {
+      "tag": "forge:raw_materials/nickel"
+    }
   },
   "pattern": [
-    " B ",
-    "BAB",
-    " B "
+    "AAA",
+    "AAA",
+    "AAA"
   ],
   "result": {
-    "item": "quantumgenerators:qg/adsp_gen"
+    "item": "industrialupgrade:raw_block/raw_nickel"
   },
   "show_notification": true
 }

@@ -93,7 +93,7 @@ public interface IRecipes {
     );
 
     List<Fluid> getInputFluidsFromRecipe(String name);
-
+    List<String> getMap_recipe_managers();
     IBaseRecipe getRecipe(String name);
 
     void addRemoveRecipe(String name, ItemStack stack, boolean allRemove);
@@ -101,7 +101,7 @@ public interface IRecipes {
     void addRemoveRecipe(String name, ItemStack stack);
 
     void addFluidRemoveRecipe(String name, FluidStack stack);
-
+    void addFluidRemoveRecipe(String name, FluidStack stack, boolean allRemove);
     void removeAllRecipesFromList();
 
     void addAdderRecipe(String name, BaseMachineRecipe stack);

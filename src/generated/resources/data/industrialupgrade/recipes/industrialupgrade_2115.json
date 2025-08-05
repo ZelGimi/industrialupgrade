@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/magnesium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/nichrome"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/zirconium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/magnesium"
+    },
+    "C": {
+      "tag": "forge:gears/nichrome"
+    },
+    "D": {
+      "tag": "forge:gears/zirconium"
+    }
   },
   "pattern": [
     "DBD",

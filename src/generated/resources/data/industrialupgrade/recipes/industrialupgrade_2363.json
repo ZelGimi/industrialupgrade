@@ -1,25 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "quantumgenerators:qg/phsp_gen"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/neucore"
-      }
-    ]
+    "A": {
+      "tag": "forge:raw_materials/magnesium"
+    }
   },
   "pattern": [
-    " B ",
-    "BAB",
-    " B "
+    "AAA",
+    "AAA",
+    "AAA"
   ],
   "result": {
-    "item": "quantumgenerators:qg/nsp_gen"
+    "item": "industrialupgrade:raw_block/raw_magnesium"
   },
   "show_notification": true
 }

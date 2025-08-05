@@ -3,6 +3,7 @@ package com.denfop.recipes;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockRaws;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
@@ -2522,6 +2523,7 @@ public class BaseRecipes {
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
+
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectraldrill), "THT", "CDC", "BFB",
 
                 ('T'), IUItem.iridiumPlate,
@@ -2794,12 +2796,12 @@ public class BaseRecipes {
 
                 ('B'), ItemStackHelper.fromData(IUItem.module_schedule)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blastfurnace, 1, 5), " A ", "ABA", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blastfurnace, 1, 5), "AA ", "AA ", "   ",
 
-                ('B'), Blocks.BRICKS,
+
 
                 ('A'),
-                ("forge:ingots/Magnesium")
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 771)
         );
 
 
@@ -3862,7 +3864,7 @@ public class BaseRecipes {
                 ('C'), IUItem.photoniy_ingot
         );
         Recipes.recipe.addRecipe(
-                ModUtils.setSize(IUItem.overclockerUpgrade, 1),
+                ModUtils.setSize(IUItem.overclockerUpgrade, 2),
                 "CCC",
                 "ABA",
                 " D ",
@@ -3910,10 +3912,10 @@ public class BaseRecipes {
         );
 
         Recipes.recipe.addRecipe(
-                ModUtils.setSize(IUItem.overclockerUpgrade_1, 1),
+                ModUtils.setSize(IUItem.overclockerUpgrade_1, 2),
                 "CCC",
                 "ABA",
-                "EDE",
+                "DED",
                 'C',
                 IUItem.reactorCoolantTriple,
                 'A',
@@ -3924,10 +3926,10 @@ public class BaseRecipes {
 
         );
         Recipes.recipe.addRecipe(
-                ModUtils.setSize(IUItem.overclockerUpgrade1, 1),
+                ModUtils.setSize(IUItem.overclockerUpgrade1, 2),
                 "CCC",
                 "ABA",
-                "EDE",
+                "DED",
                 'C',
                 IUItem.reactorCoolantSix,
                 'A',
@@ -6744,15 +6746,15 @@ public class BaseRecipes {
                 'B', "forge:plates/SuperalloyHaynes", 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 509), 'A', IUItem.spectral_box
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 518), "  A", " AB", "ABB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 518), " AA", " AB", "ABB",
 
                 'B', "forge:plates/Carbon", 'A', "forge:plates/Redbrass"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 510), "  A", " AB", "ABB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 510), " AA", " AB", "ABB",
 
                 'B', "forge:plates/StainlessSteel", 'A', "forge:plates/NiobiumTitanium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 526), "  A", " AB", "ABB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 526), " AA", " AB", "ABB",
 
                 'B', "forge:plates/AluminiumLithium", 'A', "forge:plates/Alcled"
         );
@@ -6783,28 +6785,28 @@ public class BaseRecipes {
                 'B', "forge:plates/AluminiumLithium", 'A', "forge:plates/Alcled"
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 519), " AB", "AB ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 519), "AAB", "AB ", "   ",
 
                 'B', "forge:plates/Carbon", 'A', "forge:plates/Redbrass"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 511), " AB", "AB ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 511), "AAB", "AB ", "   ",
 
                 'B', "forge:plates/StainlessSteel", 'A', "forge:plates/NiobiumTitanium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 527), " AB", "AB ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 527), "AAB", "AB ", "   ",
 
                 'B', "forge:plates/AluminiumLithium", 'A', "forge:plates/Alcled"
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 520), " AB", "ABB", "AB ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 520), "AAB", "ABB", "AB ",
 
                 'B', "forge:plates/Carbon", 'A', "forge:plates/Redbrass"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 512), " AB", "ABB", "AB ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 512), "AAB", "ABB", "AB ",
 
                 'B', "forge:plates/StainlessSteel", 'A', "forge:plates/NiobiumTitanium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 528), " AB", "ABB", "AB ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 528), "AAB", "ABB", "AB ",
 
                 'B', "forge:plates/AluminiumLithium", 'A', "forge:plates/Alcled"
         );

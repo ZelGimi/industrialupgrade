@@ -1,28 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:glass"
-      }
-    ],
+    "A": {
+      "tag": "forge:plates/titanium"
+    },
+    "B": {
+      "item": "minecraft:glass"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:solderingiron",
       "nbt": "{Damage:0}"
     },
-    "D": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ]
+    "D": {
+      "tag": "forge:plates/iron"
+    }
   },
   "pattern": [
     " B ",

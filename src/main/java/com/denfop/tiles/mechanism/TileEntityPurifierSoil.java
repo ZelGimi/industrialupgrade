@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.PollutionManager;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -33,6 +34,12 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
         super(BlockBaseMachine3.purifier_soil,pos,state);
         energy = this.addComponent(Energy.asBasicSink(this, 10000));
         this.chunkLevel = null;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.soil_purifier.info"));
     }
 
     @Override

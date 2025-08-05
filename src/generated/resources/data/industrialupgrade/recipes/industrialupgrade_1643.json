@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/iron"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:battery/energy_crystal"
-      }
-    ],
+    "A": {
+      "tag": "forge:casings/iron"
+    },
+    "B": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,

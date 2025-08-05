@@ -7,6 +7,7 @@ import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
 import com.denfop.recipes.ItemStackHelper;
+import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +31,9 @@ public class CraftingManager {
     }
     public BaseRecipe addRecipe(String output, Object... input) {
         return addRecipe(Recipes.inputFactory.getInput(output).getInputs().get(0), input);
+    }
+    public BaseRecipe addRecipe(String output,int amount, Object... input) {
+        return addRecipe(ModUtils.setSize(Recipes.inputFactory.getInput(output).getInputs().get(0),amount), input);
     }
     public BaseRecipe addRecipe(ItemStack output, Object... input) {
         List<Object> objects = Arrays.asList(input);
@@ -63,7 +67,9 @@ public class CraftingManager {
         }
         return new BaseShapelessRecipe(output, recipeInputList);
     }
-
+    public BaseRecipe addShapelessRecipe(String output,int amount, Object... input) {
+        return addRecipe(ModUtils.setSize(Recipes.inputFactory.getInput(output).getInputs().get(0),amount), input);
+    }
     public BaseShapelessRecipe addShapelessRecipe(Item output, Object... input) {
         return addShapelessRecipe(new ItemStack(output), input);
     }

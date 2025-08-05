@@ -47,7 +47,7 @@ public class TileSteamStorage extends TileEntityInventory {
 
 
     public final Fluids fluids;
-    private final ComponentSteamEnergy steam;
+    protected final ComponentSteamEnergy steam;
     public FluidTank fluidTank;
     public int prev = -10;
     public int amount;
@@ -72,7 +72,24 @@ public class TileSteamStorage extends TileEntityInventory {
         this.steam.setFluidTank(fluidTank);
     }
 
+    public TileSteamStorage(IMultiTileBlock block, BlockPos pos, BlockState state, int capacity) {
+        super(block,pos,state);
+        this.steam = this.addComponent((new ComponentSteamEnergy(
+                EnergyType.STEAM, this, capacity * 1000,
 
+                Arrays.stream(Direction.values()).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
+                Collections.singletonList(this.getFacing()),
+                EnergyNetGlobal.instance.getTierFromPower(14),
+                EnergyNetGlobal.instance.getTierFromPower(14), false
+        )));
+
+
+        this.fluids = this.addComponent(new Fluids(this));
+        this.fluidTank = this.fluids.addTank("fluidTank", capacity * 1000, InvSlot.TypeItemSlot.NONE,
+                Fluids.fluidPredicate(FluidName.fluidsteam.getInstance().get())
+        );
+        this.steam.setFluidTank(fluidTank);
+    }
 
     @Override
     public int getLightValue() {
@@ -121,6 +138,7 @@ public class TileSteamStorage extends TileEntityInventory {
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        tooltip.add(Localization.translate("iu.steam_storage.info"));
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
@@ -252,7 +270,7 @@ public class TileSteamStorage extends TileEntityInventory {
             setUpgradestat();
             this.steam.setDirections(
                     new HashSet<>(Arrays.stream(Direction.values())
-                            .filter(facing1 -> facing1 != Direction.UP && facing1 != getFacing())
+                            .filter(facing1 -> facing1 != getFacing())
                             .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
         }
     }

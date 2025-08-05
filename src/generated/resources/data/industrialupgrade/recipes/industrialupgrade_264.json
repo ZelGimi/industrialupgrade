@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/vitalium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/vitalium"
+    }
   ],
   "result": {
     "count": 9,

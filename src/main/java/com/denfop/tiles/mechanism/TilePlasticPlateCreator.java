@@ -22,6 +22,7 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticPlateCreator;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
@@ -90,6 +91,11 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
 
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000),
+                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(295)))
+        ), new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(769)))));
+
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidoxy.getInstance().get(), 1000),
                 input.getInput(new ItemStack(IUItem.plast.getItem()))
@@ -179,6 +185,13 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnPlasticParticles(level,pos,level.random);
+        }
+    }
 
     @Override
     public ContainerPlasticPlateCreator getGuiContainer(final Player entityPlayer) {

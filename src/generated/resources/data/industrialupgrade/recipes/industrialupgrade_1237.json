@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:dirt"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:apatite_cube"
-      }
-    ]
+    "A": {
+      "item": "minecraft:dirt"
+    },
+    "B": {
+      "item": "industrialupgrade:apatite_cube"
+    }
   },
   "pattern": [
     "AAA",

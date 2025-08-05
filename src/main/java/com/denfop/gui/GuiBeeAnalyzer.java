@@ -14,6 +14,7 @@ import com.denfop.container.ContainerBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -24,11 +25,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiBeeAnalyzer<T extends ContainerBeeAnalyzer> extends GuiIU<ContainerBeeAnalyzer> {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guibeeanalyzer.png");
     private final String name;
     private int prevText;
     private float scaled;
@@ -38,15 +40,9 @@ public class GuiBeeAnalyzer<T extends ContainerBeeAnalyzer> extends GuiIU<Contai
         super(container);
 
         this.name = Localization.translate(itemStack1.getDescriptionId());
-        this.imageHeight = 232;
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
-        );
+        this.imageWidth=203;
 
-        componentList.add(slots);
-        this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
-        this.addElement(new ImageScreen(this, 30, 20, imageWidth - 36, 124));
     }
 
 
@@ -71,7 +67,7 @@ public class GuiBeeAnalyzer<T extends ContainerBeeAnalyzer> extends GuiIU<Contai
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack,par1, par2);
-        poseStack.drawString(Minecraft.getInstance().font, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 11, 0,false);
+        poseStack.drawString(Minecraft.getInstance().font, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 4, 0,false);
         handleUpgradeTooltip(par1, par2);
         if (!this.container.base.get(0).isEmpty() && this.container.base.genome == null){
             ModUtils.nbt(this.container.base.get(0)).putBoolean("analyzed", true);
@@ -87,36 +83,38 @@ public class GuiBeeAnalyzer<T extends ContainerBeeAnalyzer> extends GuiIU<Contai
         }
         if (this.container.base.genome != null) {
             String text = getInformationFromCrop();
-            int canvasX = 34;
-            int canvasY = 24;
-            int canvasWidth = imageWidth - 40;
-            int canvasHeight = 124 - 8;
-            float scale = (float) (2D / minecraft.getWindow().getGuiScale());
-            if (prevText != text.length()) {
-                scaled = -1;
-                prevText = text.length();
+            int canvasX = 13;
+            int canvasY = 19;
+            int canvasWidth = 150;
+            int canvasHeight = 112;
+
+            float scale = 0.5f;
+            int maxWidth = (int) (canvasWidth / scale);
+            double lineHeight = (font.lineHeight * 0.5);
+            int x = canvasX;
+            double y = canvasY;
+         PoseStack   pose = poseStack.pose();
+            List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+            for (String line : lines) {
+                if (y + lineHeight > canvasY + canvasHeight) break;
+
+                pose.pushPose();
+                pose.translate(x,y,0);
+                pose.scale(scale, scale, scale);
+                poseStack.drawString(font, line,0,0, 0xFFFFFF, false);
+                pose.popPose();
+
+                y += lineHeight;
             }
-            if (scaled == -1) {
-                scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                scaled = scale;
-            } else {
-                scale = scaled;
-            }
-            if (this.container.base.player.level().getGameTime() % 2 == 0) {
-                if (textIndex < text.length()) {
-                    textIndex++;
-                }
-            }
-            if (textIndex > text.length()) {
-                textIndex = text.length();
-            }
-            String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale * 1f);
         }
     }
 
     private String getInformationFromCrop() {
         IBee queen = container.base.crop;
+        List<String> namesBiomes = new ArrayList<>();
+        queen.getBiomes().forEach(biomeKey -> namesBiomes.add( Localization.translate("biome." + biomeKey.location().getNamespace() + "." + biomeKey.location().getPath())));
+
         Genome genome = container.base.genome;
         return
                 Localization.translate("iu.bee_analyzer.name") + " " + Localization.translate("bee_" + queen.getName()) + "\n"
@@ -152,7 +150,9 @@ public class GuiBeeAnalyzer<T extends ContainerBeeAnalyzer> extends GuiIU<Contai
                         container.base.genomeAdaptive
                 ) + "%" + "\n"
                         + Localization.translate("iu.bee_analyzer.percent_genome_resistance") + " " + Math.max(5,
-                        container.base.genomeResistance) + "%";
+                        container.base.genomeResistance) + "%"+ "\n"
+                        + Localization.translate("iu.crop_analyzer.biomes") + namesBiomes.stream()
+                        .collect(Collectors.joining(", "));
 
 
     }

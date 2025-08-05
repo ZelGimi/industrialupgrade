@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/nimonic"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:alloygear/woods"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/nimonic"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "C": {
+      "item": "industrialupgrade:alloygear/woods"
+    }
   },
   "pattern": [
     "AAA",

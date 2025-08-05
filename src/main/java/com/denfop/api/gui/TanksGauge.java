@@ -107,8 +107,6 @@ public class TanksGauge extends GuiElement<TankGauge> {
             }
 
             Fluid fluid = fs.getFluid();
-            if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                fluid = FluidName.fluidwater.getInstance().get();
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
             TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
             int color = extensions.getTintColor();

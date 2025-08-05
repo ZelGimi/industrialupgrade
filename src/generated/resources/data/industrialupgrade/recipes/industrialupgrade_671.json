@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/invar"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/nickel"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/manganese"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/invar"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "forge:plates/nickel"
+    },
+    "D": {
+      "tag": "forge:plates/manganese"
+    }
   },
   "pattern": [
     "AAA",

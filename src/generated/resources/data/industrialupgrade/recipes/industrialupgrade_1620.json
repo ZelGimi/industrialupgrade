@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_263_element"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ]
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_263_element"
+    },
+    {
+      "item": "industrialupgrade:blockresource/machine"
+    }
   ],
   "result": {
     "item": "industrialupgrade:basemachine3/gas_generator"

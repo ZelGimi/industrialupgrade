@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:reactors/reactorcaliforniaquad"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/lead"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:wiring/radiation"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:reactors/reactorcaliforniaquad"
+    },
+    "B": {
+      "tag": "forge:plates/lead"
+    },
+    "C": {
+      "item": "industrialupgrade:wiring/radiation"
+    }
   },
   "pattern": [
     "ABA",

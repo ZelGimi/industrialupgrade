@@ -299,6 +299,10 @@ public class Fluids extends AbstractComponent {
 
         }
 
+        public String getIdentifier() {
+            return identifier;
+        }
+
         public CustomPacketBuffer writePacket() {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
             fluid.writeToPacket(packetBuffer);

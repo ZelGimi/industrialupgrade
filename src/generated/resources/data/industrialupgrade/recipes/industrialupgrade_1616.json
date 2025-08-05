@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,26 +8,18 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:3}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:wiring/glass_1"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_270_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:tools/frequency_transmitter"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "C": {
+      "item": "industrialupgrade:wiring/glass_1"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_270_element"
+    },
+    "E": {
+      "item": "industrialupgrade:tools/frequency_transmitter"
+    }
   },
   "pattern": [
     "AEA",

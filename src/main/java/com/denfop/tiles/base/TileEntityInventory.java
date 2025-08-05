@@ -121,6 +121,15 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
     }
 
     @Override
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        for (AbstractComponent component : componentList) {
+            if (component.onSneakingActivated(player, hand))
+                return true;
+        }
+        return super.onSneakingActivated(player, hand, side, vec3);
+    }
+
+    @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (level.isClientSide) {
             return true;

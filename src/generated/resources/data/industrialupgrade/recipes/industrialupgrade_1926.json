@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gems/quartz"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/gold"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/iron"
-      }
-    ]
+    "A": {
+      "tag": "forge:gems/quartz"
+    },
+    "B": {
+      "tag": "forge:plates/gold"
+    },
+    "C": {
+      "tag": "forge:ingots/iron"
+    }
   },
   "pattern": [
     " A ",

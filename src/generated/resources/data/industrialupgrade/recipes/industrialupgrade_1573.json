@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/advanced_re_battery"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:redstone_block"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    },
+    "D": {
+      "item": "minecraft:redstone_block"
+    }
   },
   "pattern": [
     " C ",

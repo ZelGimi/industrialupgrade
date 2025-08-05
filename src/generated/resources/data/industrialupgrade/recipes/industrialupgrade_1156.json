@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/universal3"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:ingots/spinel"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_282_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:ingots/redbrass"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/universal3"
+    },
+    "B": {
+      "tag": "forge:ingots/spinel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_282_element"
+    },
+    "D": {
+      "tag": "forge:ingots/redbrass"
+    }
   },
   "pattern": [
     "DAD",

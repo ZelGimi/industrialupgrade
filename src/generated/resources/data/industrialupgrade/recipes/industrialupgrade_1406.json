@@ -1,37 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_139_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:moremachine3/doubleorewashing"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_96_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_49_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_87_element"
-      }
-    ],
-    "G": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_83_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine3/doubleorewashing"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_49_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_87_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_83_element"
+    }
   },
   "pattern": [
     "AGA",

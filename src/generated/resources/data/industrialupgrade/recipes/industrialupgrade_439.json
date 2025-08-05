@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:chest"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/germanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "B": {
+      "item": "minecraft:chest"
+    },
+    "D": {
+      "tag": "forge:plates/germanium"
+    }
   },
   "pattern": [
     " D ",

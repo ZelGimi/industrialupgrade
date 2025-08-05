@@ -5,33 +5,24 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.api.gui.ItemImage;
 import com.denfop.api.gui.ScrollDirection;
-import com.denfop.api.guidebook.GuideBookCore;
-import com.denfop.api.guidebook.GuideTab;
-import com.denfop.api.guidebook.Lines;
-import com.denfop.api.guidebook.Quest;
-import com.denfop.api.guidebook.Shape;
+import com.denfop.api.guidebook.*;
 import com.denfop.gui.GuiIU;
+import com.denfop.network.packet.PacketItemStackEvent;
+import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denfop.gui.GuiResearchTableSpace.enableScissor;
 import static com.mojang.blaze3d.systems.RenderSystem.disableScissor;
@@ -51,7 +42,7 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
     );
     private final Player player;
 
-    int tab = 0;
+    public int tab = 0;
     List<Quest> questList = new ArrayList<>();
     LinkedList<GuideQuest> guideQuests = new LinkedList<>();
     private Map<String, List<String>> map;
@@ -68,11 +59,64 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         this.imageHeight = 195;
         this.elements.clear();
         this.componentList.clear();
+        CompoundTag nbt = ModUtils.nbt(container.base.itemStack1);
+        if (nbt.contains("book_info")) {
+            int[] decode = decode(nbt.getInt("book_info"));
+            this.tab = decode[0];
+            this.offsetX = decode[1];
+            this.offsetY = decode[2];
+        }
         questList = GuideBookCore.instance.getQuests(0);
     }
 
     @Override
+    public void changeParams() {
+        super.changeParams();
+        imageHeight = 4000;
+        imageWidth = 9000;
+    }
+
+    public void renderBackground(GuiGraphics pGuiGraphics) {
+        if (this.minecraft.level != null) {
+            pGuiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
+        } else {
+            this.renderDirtBackground(pGuiGraphics);
+        }
+
+    }
+
+    public static int encode(int tab, int offsetX, int offsetY) {
+        if (tab < 0 || tab > 7)
+            throw new IllegalArgumentException("tab out of range: " + tab);
+        if (offsetX < -8192 || offsetX > 8191)
+            throw new IllegalArgumentException("offsetX out of range: " + offsetX);
+        if (offsetY < -8192 || offsetY > 8191)
+            throw new IllegalArgumentException("offsetY out of range: " + offsetY);
+
+        int x = offsetX & 0x3FFF;
+        int y = offsetY & 0x3FFF;
+
+        return (y << 17) | (x << 3) | (tab & 0b111);
+    }
+
+    public static int[] decode(int value) {
+        int tab = value & 0b111;
+        int x = (value >>> 3) & 0x3FFF;
+        int y = (value >>> 17) & 0x3FFF;
+
+
+        if ((x & 0x2000) != 0) x |= ~0x3FFF;
+        if ((y & 0x2000) != 0) y |= ~0x3FFF;
+
+        return new int[]{tab, x, y};
+    }
+
+    @Override
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        this.imageWidth = 255;
+        this.imageHeight = 195;
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.topPos = (this.height - this.imageHeight) / 2;
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.map = GuideBookCore.uuidGuideMap.get(player.getUUID());
         if (reset) {
@@ -83,18 +127,25 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             lastMouseY = 0;
             reset = false;
             guideQuests.clear();
+            new PacketItemStackEvent(encode(tab, offsetX, offsetY), minecraft.player);
+            ModUtils.nbt(container.base.itemStack1).putInt("book_info", encode(tab, offsetX, offsetY));
         }
     }
+
 
     boolean reset = false;
 
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
+        this.imageWidth = 255;
+        this.imageHeight = 195;
         int xMin = (this.width - this.imageWidth) / 2;
         int yMin = (this.height - this.imageHeight) / 2;
-        int x = i - xMin + 90 / 2;
+        int x = i - xMin;
         int y = j - yMin;
-        int y1 = 15;
+        int y1 = 5;
+        if (map == null)
+            return;
         for (GuideQuest guideQuest : new ArrayList<>(guideQuests)) {
             if (guideQuest.is(x, y)) {
                 if (guideQuest.isRemove(x, y)) {
@@ -119,45 +170,45 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                     return;
                 }
             }
-            y1 += 30;
+            y1 += 27;
         }
 
-            if (hoverDiscord) {
-                try {
-                    Util.getPlatform().openUri(new URI("https://discord.com/invite/fqQPH6HKJV"));
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+        if (hoverDiscord) {
+            try {
+                Util.getPlatform().openUri(new URI("https://discord.com/invite/fqQPH6HKJV"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
-            if (hoverGithub) {
-                try {
-                    Util.getPlatform().openUri(new URI("https://github.com/ZelGimi/industrialupgrade"));
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+        }
+        if (hoverGithub) {
+            try {
+                Util.getPlatform().openUri(new URI("https://github.com/ZelGimi/industrialupgrade"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
-            if (hoverPU) {
-                try {
-                    Util.getPlatform().openUri(new URI("https://www.curseforge.com/minecraft/mc-mods/power-utilities-iu"));
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+        }
+        if (hoverPU) {
+            try {
+                Util.getPlatform().openUri(new URI("https://www.curseforge.com/minecraft/mc-mods/power-utilities-iu"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
-            if (hoverSQ) {
-                try {
-                    Util.getPlatform().openUri(new URI("https://www.curseforge.com/minecraft/mc-mods/simply-quarries"));
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+        }
+        if (hoverSQ) {
+            try {
+                Util.getPlatform().openUri(new URI("https://www.curseforge.com/minecraft/mc-mods/simply-quarries"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
-            if (hoverQG) {
-                try {
-                    Util.getPlatform().openUri(new URI("https://www.curseforge.com/minecraft/mc-mods//quantum-generators"));
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+        }
+        if (hoverQG) {
+            try {
+                Util.getPlatform().openUri(new URI("https://www.curseforge.com/minecraft/mc-mods//quantum-generators"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
             }
-        
+        }
+
         GuideTab guideTab = guideTabs.get(tab);
         List<String> quests = map.get(guideTab.unLocalized);
         for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
@@ -172,28 +223,29 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
 
             boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : false;
 
-                if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
-                    if (this.guideQuests.contains(new GuideQuest(quest))) {
-                        this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
-                    } else if (guideQuests.size() <= 1) {
-                        this.guideQuests.add(new GuideQuest(quest, container.base.player,isUnlocked));
-                    }
+            if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
+                if (this.guideQuests.contains(new GuideQuest(quest))) {
+                    this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
+                } else if (guideQuests.size() <= 1) {
+                    this.guideQuests.add(new GuideQuest(quest, container.base.player, isUnlocked));
                 }
+            }
 
 
         }
     }
 
     public void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer( poseStack, par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
+
         for (GuideQuest guideQuest : guideQuests) {
             if (guideQuest.is(par1, par2)) {
-                guideQuest.drawForegroundLayer(this, poseStack,  par1, par2);
+                guideQuest.drawForegroundLayer(this, poseStack, par1, par2);
                 return;
             }
         }
         List<GuideTab> guideTabs = GuideBookCore.instance.getGuideTabs();
-        int y = 15;
+        int y = 5;
         for (int index = 0; index < guideTabs.size(); index++) {
 
             GuideTab guideTab = guideTabs.get(index);
@@ -202,13 +254,13 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             boolean isSelectedTab = (index == tab);
             if (isSelectedTab) {
                 new Area(this, -33, y, 33, 27).withTooltip(guideTab.name)
-                        .drawForeground( poseStack, par1, par2);
+                        .drawForeground(poseStack, par1, par2);
             } else {
                 new Area(this, dx, y, w, 27).withTooltip(guideTab.name)
-                        .drawForeground( poseStack, par1, par2);
+                        .drawForeground(poseStack, par1, par2);
             }
 
-            y += 30;
+            y += 27;
         }
         hoverDiscord = false;
         hoverGithub = false;
@@ -242,8 +294,8 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                     bindTexture(sprites);
                     int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
                     RenderSystem.setShaderColor(1, 1, 1, 1);
-                    new Area(this, centerX + quest.x, centerY + quest.y, texW, texW).withTooltip(quest.localizedName)
-                            .drawForeground( poseStack, par1, par2);
+                    new Area(this, centerX + quest.x, centerY + quest.y, texW, texW).withTooltip(quest.getLocalizedName())
+                            .drawForeground(poseStack, par1, par2);
                 }
             }
         }
@@ -287,7 +339,7 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
 
         int dx = Math.abs(prevX - x);
         int dy = Math.abs(prevY - y);
-        if (prevY < 0 && y < 0){
+        if (prevY < 0 && y < 0) {
             dy = Math.abs(-prevY + y);
         }
         boolean firstHorizontal;
@@ -297,37 +349,120 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         } else {
             firstHorizontal = false;
         }
+
         if (firstHorizontal) {
-            drawHorizontalLine(poseStack,prevX + startPosRender, prevY + startPosRender / 2 - 1, x + startPosRender / 2 + 1, prevY, lines);
-            if (y - 1 > 0) {
-                drawVerticalLine(poseStack,x + startPosRender / 2 - 1, prevY + startPosRender / 2, x, y, lines);
-            }else {
+            if (prevX < x) {
+                if (y > prevY) {
+                    drawHorizontalLine(poseStack,
+                            prevX + startPosRender,
+                            prevY + startPosRender / 2 - 1,
+                            x + startPosRender / 2 + 1,
+                            prevY,
+                            lines
+                    );
+                } else {
+                    drawHorizontalLine(poseStack,
+                            prevX + startPosRender,
+                            prevY + startPosRender / 2 - 1,
+                            x + startPosRender / 2 + 1,
+                            prevY,
+                            lines
+                    );
+                }
+                if (y - 1 > 0) {
+                    drawVerticalLine(poseStack, x + startPosRender / 2 - 1, prevY + startPosRender / 2, x, y, lines);
+                } else {
 
-                drawVerticalLine(poseStack,x + startPosRender / 2 - 1, y + startPosRender, x, prevY + startPosRender / 2 ,
-                        lines);
+                    drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY + startPosRender / 2,
+                            lines
+                    );
 
+                }
+            } else {
+                drawHorizontalLine(
+                        poseStack, x + startPosRender,
+                        prevY + startPosRender / 2 - 1,
+                        prevX + startPosRender / 2 + 1,
+                        prevY,
+                        lines
+                );
+                if (y > prevY) {
+                    if (y - 1 > 0) {
+                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, prevY + startPosRender, x, y, lines);
+                    } else {
+
+                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY + startPosRender / 2,
+                                lines
+                        );
+
+                    }
+                }else {
+                    if (y - 1 > 0) {
+                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY, lines);
+                    } else {
+
+                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY ,
+                                lines
+                        );
+
+                    }
+                }
             }
         } else {
             if (y - 1 > 0) {
-                if (y > prevY){
-                    drawVerticalLine(poseStack,prevX + startPosRender / 2 - 1 , prevY  + startPosRender, prevX + startPosRender  ,
-                            y + startPosRender / 2 + 1, lines);
-                    drawHorizontalLine(poseStack,prevX + startPosRender / 2, y + startPosRender / 2 - 1, x, y, lines);
-                }else {
-                    drawVerticalLine(poseStack,prevX + startPosRender / 2 - 1, prevY + startPosRender, prevX + startPosRender, y, lines);
-                    drawHorizontalLine(poseStack,prevX + startPosRender, y + startPosRender / 2 - 1, x, y, lines);
+                if (y > prevY) {
+                    drawVerticalLine(poseStack, prevX + startPosRender / 2 - 1, prevY + startPosRender, prevX + startPosRender,
+                            y + startPosRender / 2 + 1, lines
+                    );
+                    if (prevX < x) {
+                        drawHorizontalLine(poseStack, prevX + startPosRender / 2, y + startPosRender / 2 - 1, x, y, lines);
+                    } else {
+                        drawHorizontalLine(poseStack, x + startPosRender, y + startPosRender / 2 - 1, prevX + startPosRender / 2, y,
+                                lines
+                        );
+
+                    }
+                } else {
+                    drawVerticalLine(
+                            poseStack, prevX + startPosRender / 2 - 1,
+                            y + startPosRender / 2 - 1,
+                            prevX + startPosRender,
+                            prevY,
+                            lines
+                    );
+                    if (prevX < x) {
+                        drawHorizontalLine(poseStack, prevX + startPosRender, y + startPosRender / 2 - 1, x, y, lines);
+                    } else {
+                        if (y == prevY) {
+                            drawHorizontalLine(poseStack, x + startPosRender, y + startPosRender / 2 - 1, prevX, y, lines);
+                        } else {
+                            drawHorizontalLine(poseStack, x + startPosRender, y + startPosRender / 2 - 1, prevX + startPosRender / 2, y,
+                                    lines
+                            );
+                        }
+
+                    }
                 }
-            }else {
-                if ((prevY > 0 && y < 0) || (prevY < 0 && y > 0)){
-                    drawVerticalLine(poseStack,prevX + startPosRender / 2 - 1, y+ startPosRender / 2 - 1 , prevX + startPosRender,
+            } else {
+                if ((prevY > 0 && y < 0) || (prevY < 0 && y > 0)) {
+                    drawVerticalLine(poseStack, prevX + startPosRender / 2 - 1, y + startPosRender / 2 - 1, prevX + startPosRender,
                             prevY, lines
                     );
-                    drawHorizontalLine(poseStack,prevX + startPosRender / 2, y + startPosRender / 2 - 1, x, y, lines);
-                }else {
-                    drawVerticalLine(poseStack,prevX + startPosRender / 2 - 1, prevY + startPosRender, prevX + startPosRender,
+                    if (prevX < x) {
+                        drawHorizontalLine(poseStack, prevX + startPosRender / 2, y + startPosRender / 2 - 1, x, y, lines);
+                    } else {
+                        drawHorizontalLine(poseStack, x + startPosRender / 2, y + startPosRender / 2 - 1, prevX, y, lines);
+
+                    }
+                } else {
+                    drawVerticalLine(poseStack, prevX + startPosRender / 2 - 1, prevY + startPosRender, prevX + startPosRender,
                             y + startPosRender, lines
                     );
-                    drawHorizontalLine(poseStack,prevX + startPosRender, y + startPosRender / 2 - 1, x, y, lines);
+                    if (prevX < x) {
+                        drawHorizontalLine(poseStack, prevX + startPosRender, y + startPosRender / 2 - 1, x, y, lines);
+                    } else {
+                        drawHorizontalLine(poseStack, x + startPosRender, y + startPosRender / 2 - 1, prevX, y, lines);
+                    }
                 }
 
             }
@@ -340,7 +475,7 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         int centerX = 116 + offsetX;
         int centerY = 73 + offsetY;
         bindTexture(sprites_lines);
-        this.drawTexturedModalRect(poseStack,this.guiLeft + centerX + startX, this.guiTop + centerY + startY, line.getHX(), line.getHY(),
+        this.drawTexturedModalRect(poseStack, this.guiLeft + centerX + startX, this.guiTop + centerY + startY, line.getHX(), line.getHY(),
                 endX - startX,
                 2
         );
@@ -349,8 +484,8 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
     public void drawVerticalLine(GuiGraphics poseStack, int startX, int startY, int endX, int endY, Lines line) {
         int centerX = 116 + offsetX;
         int centerY = 73 + offsetY;
-       bindTexture(sprites_lines);
-        this.drawTexturedModalRect( poseStack,this.guiLeft + centerX + startX, this.guiTop + centerY + startY, line.getVX(), line.getVY(), 2,
+        bindTexture(sprites_lines);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + centerX + startX, this.guiTop + centerY + startY, line.getVX(), line.getVY(), 2,
                 endY - startY
         );
     }
@@ -383,6 +518,7 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         }
         return super.mouseScrolled(d, d2, d3);
     }
+
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         mouseX -= (double) this.leftPos;
@@ -416,9 +552,10 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 } else {
                     int dx = (int) dragX;
                     int dy = (int) dragY;
-                    offsetX += dx ;
+                    offsetX += dx;
                     offsetY += dy;
-
+                    new PacketItemStackEvent(encode(tab, offsetX, offsetY), minecraft.player);
+                    ModUtils.nbt(container.base.itemStack1).putInt("book_info", encode(tab, offsetX, offsetY));
                 }
                 return true;
             } else {
@@ -430,49 +567,49 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
     }
 
     public void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
-       super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         this.imageWidth = 255;
         this.imageHeight = 195;
         if (map == null) {
             return;
         }
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture();
-        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-       bindTexture(sprites);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        bindTexture(sprites);
         if (!hoverDiscord) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 10, this.guiTop - 15, 202, 7, 27, 17);
+            drawTexturedModalRect(poseStack, this.guiLeft + 10, this.guiTop - 15, 202, 7, 27, 17);
         } else {
-            drawTexturedModalRect(poseStack,this.guiLeft + 10, this.guiTop - 15 - 6, 229, 1, 27, 22);
+            drawTexturedModalRect(poseStack, this.guiLeft + 10, this.guiTop - 15 - 6, 229, 1, 27, 22);
         }
         if (!hoverGithub) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 50, this.guiTop - 15, 202, 29, 27, 17);
+            drawTexturedModalRect(poseStack, this.guiLeft + 50, this.guiTop - 15, 202, 29, 27, 17);
         } else {
-            drawTexturedModalRect(poseStack,this.guiLeft + 50, this.guiTop - 15 - 6, 229, 23, 27, 22);
+            drawTexturedModalRect(poseStack, this.guiLeft + 50, this.guiTop - 15 - 6, 229, 23, 27, 22);
 
         }
         if (!hoverPU) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 150, this.guiTop - 15, 202, 51, 27, 17);
+            drawTexturedModalRect(poseStack, this.guiLeft + 150, this.guiTop - 15, 202, 51, 27, 17);
         } else {
-            drawTexturedModalRect(poseStack,this.guiLeft + 150, this.guiTop - 15 - 6, 229, 45, 27, 22);
+            drawTexturedModalRect(poseStack, this.guiLeft + 150, this.guiTop - 15 - 6, 229, 45, 27, 22);
 
         }
         if (!hoverQG) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 180, this.guiTop - 15, 202, 73, 27, 17);
+            drawTexturedModalRect(poseStack, this.guiLeft + 180, this.guiTop - 15, 202, 73, 27, 17);
         } else {
-            drawTexturedModalRect(poseStack,this.guiLeft + 180, this.guiTop - 15 - 6, 229, 67, 27, 22);
+            drawTexturedModalRect(poseStack, this.guiLeft + 180, this.guiTop - 15 - 6, 229, 67, 27, 22);
 
         }
         if (!hoverSQ) {
-            drawTexturedModalRect(poseStack,this.guiLeft + 210, this.guiTop - 15, 202, 95, 27, 17);
+            drawTexturedModalRect(poseStack, this.guiLeft + 210, this.guiTop - 15, 202, 95, 27, 17);
         } else {
-            drawTexturedModalRect(poseStack,this.guiLeft + 210, this.guiTop - 15 - 6, 229, 89, 27, 22);
+            drawTexturedModalRect(poseStack, this.guiLeft + 210, this.guiTop - 15 - 6, 229, 89, 27, 22);
 
         }
 
         int x1 = mouseX - this.guiLeft;
         int y1 = mouseY - this.guiTop;
-        int y = 15;
+        int y = 5;
         int centerX = 116 + offsetX;
         int centerY = 73 + offsetY;
 
@@ -485,16 +622,16 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             boolean isSelectedTab = (i == tab);
             boolean hasQuests = !quests.isEmpty();
 
-           bindTexture(sprites);
+            bindTexture(sprites);
 
             if (isSelectedTab) {
-                this.drawTexturedModalRect(poseStack,guiLeft - 33, guiTop + y, 0, hasQuests ? 0 : 56, 33, 27);
+                this.drawTexturedModalRect(poseStack, guiLeft - 33, guiTop + y, 0, hasQuests ? 0 : 56, 33, 27);
                 new ItemImage(this, -33 + 9, y + 6, () -> guideTab.icon)
-                        .drawBackground(poseStack,guiLeft, guiTop);
-                enableScissor(guiLeft + 8, guiTop + 9, guiLeft + 8+238, guiTop + 9+176);
+                        .drawBackground(poseStack, guiLeft, guiTop);
+                enableScissor(guiLeft + 8, guiTop + 9, guiLeft + 8 + 238, guiTop + 9 + 176);
 
                 for (Quest quest : GuideBookCore.instance.getQuests(i)) {
-                   bindTexture(sprites);
+                    bindTexture(sprites);
 
                     boolean hasPrev = quest.hasPrev;
                     boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : quests.contains(quest.unLocalizedName);
@@ -528,15 +665,15 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                             break;
                     }
 
-                    drawTexturedModalRect(poseStack,xOffset, yOffset, texX, texY, texW, texH);
+                    drawTexturedModalRect(poseStack, xOffset, yOffset, texX, texY, texW, texH);
 
                     if (hasPrev) {
-                       bindTexture(sprites_lines);
-                        renderLines(poseStack,quest, getLine(quest, quests, guideTab));
+                        bindTexture(sprites_lines);
+                        renderLines(poseStack, quest, getLine(quest, quests, guideTab));
                     }
 
                     new ItemImage(this, centerX + quest.x + 7, centerY + quest.y + 7, () -> quest.icon)
-                            .drawBackground(poseStack,guiLeft, guiTop);
+                            .drawBackground(poseStack, guiLeft, guiTop);
                 }
 
                 disableScissor();
@@ -546,14 +683,13 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 int u = hasQuests ? 5 : 0;
                 int v = hasQuests ? 28 : 56;
                 int w = hasQuests ? 28 : 33;
-                drawTexturedModalRect(poseStack,guiLeft + dx, guiTop + y, u, v, w, 27);
+                drawTexturedModalRect(poseStack, guiLeft + dx, guiTop + y, u, v, w, 27);
                 new ItemImage(this, dx + 8, y + 6, () -> guideTab.icon)
-                        .drawBackground(poseStack,guiLeft, guiTop);
+                        .drawBackground(poseStack, guiLeft, guiTop);
             }
 
-            y += 30;
+            y += 27;
         }
-
 
 
         PoseStack posestack = RenderSystem.getModelViewStack();
@@ -563,10 +699,10 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             List<String> quests = map.get(tabKey);
             for (GuideQuest guideQuest : guideQuests) {
                 poseStack.pose().pushPose();
-                poseStack.pose().translate(0,0,300);
+                poseStack.pose().translate(0, 0, 300);
 
-                posestack.translate(0,0,300);
-                guideQuest.drawBackgroundLayer(this,poseStack, guiLeft, guiTop,
+                posestack.translate(0, 0, 300);
+                guideQuest.drawBackgroundLayer(this, poseStack, guiLeft, guiTop,
                         !quests.contains(guideQuest.getQuest().unLocalizedName)
                 );
                 poseStack.pose().popPose();
@@ -591,7 +727,6 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             }
         }
     }
-
 
 
     protected ResourceLocation getTexture() {

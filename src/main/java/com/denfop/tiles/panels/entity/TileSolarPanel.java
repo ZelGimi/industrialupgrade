@@ -790,10 +790,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         return true;
     }
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
 
     public boolean canRender() {
         return true;

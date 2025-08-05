@@ -7,13 +7,12 @@ import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemRecipeSchedule;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class InvSlotMultiRecipes extends InvSlot {
 
@@ -44,7 +43,27 @@ public class InvSlotMultiRecipes extends InvSlot {
         )), Collections.singletonList(1));
         this.processMultiComponent = processMultiComponent;
     }
+    @Override
+    public boolean hasItemList() {
+        return true;
+    }
 
+    @Override
+    public List<IInputItemStack> getStacks(int index) {
+        List<IInputItemStack> uniqueStacks = new ArrayList<>();
+        Set<IInputItemStack> seenStacks = new HashSet<>();
+
+        for (IInputItemStack input : accepts.stream().map(IRecipeInputStack::getInput).toList()) {
+            boolean isNew = seenStacks.stream().noneMatch(existing ->
+                    existing.equals(input)
+            );
+            if (isNew) {
+                seenStacks.add(input);
+                uniqueStacks.add(input);
+            }
+        }
+        return uniqueStacks;
+    }
     public InvSlotMultiRecipes(
             final TileEntityInventory base, String baseRecipe, IMultiUpdateTick tile, int size,
             ProcessMultiComponent processMultiComponent

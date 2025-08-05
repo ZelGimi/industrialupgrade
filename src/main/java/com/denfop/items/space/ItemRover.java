@@ -4,6 +4,7 @@ import com.denfop.ElectricItem;
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.space.BaseSpaceSystem;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
 import com.denfop.api.space.rovers.enums.EnumRoversLevelFluid;
@@ -30,6 +31,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnergyItem, IItemTab {
 
@@ -39,7 +41,6 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
     private final double maxEnergy;
     private final double transferEnergy;
     private final int tier;
-    private final EnumRoversLevelFluid fluids;
     private final double progress;
     public List<EnumTypeUpgrade> upgrades = Arrays.asList(EnumTypeUpgrade.values());
 
@@ -50,7 +51,6 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
         super(new Properties().setNoRepair().stacksTo(1), capacity);
         this.name = name;
         this.maxEnergy = maxEnergy;
-        this.fluids = fluids;
         this.transferEnergy = transferEnergy;
         this.tier = tier;
         this.progress = progress;
@@ -72,10 +72,12 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
             ElectricItem.manager.charge(stack1, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
             subItems.add(stack1);
 
-            for (FluidName fluidName : fluids.getLevelsList()) {
+            for (Map.Entry<Fluid, Integer> entry: BaseSpaceSystem.fluidToLevel.entrySet()) {
+                if (entry.getValue() > this.enumRoversLevel.ordinal() + 1)
+                    continue;
                 ItemStack stack = new ItemStack(this);
                 ElectricItem.manager.charge(stack, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
-                subItems.add(this.getItemStack(stack, fluidName.getInstance().get()));
+                subItems.add(this.getItemStack(stack,entry.getKey()));
             }
         }
     }
@@ -115,12 +117,8 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
 
     @Override
     public boolean canfill(final Fluid var1) {
-        for (FluidName fluidName : fluids.getLevelsList()) {
-            if (fluidName.getInstance().get() == var1) {
-                return true;
-            }
-        }
-        return false;
+        Integer level = BaseSpaceSystem.fluidToLevel.get(var1);
+        return level != null && level <= this.enumRoversLevel.ordinal() + 1;
     }
 
     @Override

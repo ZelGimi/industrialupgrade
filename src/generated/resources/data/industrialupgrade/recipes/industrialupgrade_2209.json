@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:research_lens/lens_6"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/nimonic"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:research_lens/lens_6"
+    },
+    "B": {
+      "tag": "forge:plates/nimonic"
+    }
   },
   "pattern": [
     " B ",

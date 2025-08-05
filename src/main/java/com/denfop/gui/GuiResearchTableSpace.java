@@ -10,11 +10,11 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.fakebody.Data;
 import com.denfop.api.space.fakebody.IFakeBody;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
-import com.denfop.blocks.FluidName;
-import com.denfop.componets.ComponentButton;
+import com.denfop.audio.EnumSound;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerResearchTableSpace;
-import com.denfop.network.packet.*;
+import com.denfop.network.packet.PacketAddBuildingToColony;
+import com.denfop.network.packet.PacketUpdateBody;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -23,504 +23,76 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import org.joml.Matrix4f;
 
+import java.lang.System;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.denfop.api.gui.GuiElement.bindBlockTexture;
-import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
-import static com.denfop.events.client.SolarSystemRenderer.ASTEROID_TEXTURE;
+
+import static com.denfop.api.space.BaseSpaceSystem.rocketFuel;
+import static com.denfop.api.space.BaseSpaceSystem.rocketFuelCoef;
 import static com.mojang.blaze3d.systems.RenderSystem.disableScissor;
 import static net.minecraft.world.item.ItemDisplayContext.GUI;
 
-public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extends GuiIU<ContainerResearchTableSpace> implements GuiPageButtonList.GuiResponder,
-        GuiVerticalSliderList.FormatHelper {
+public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extends GuiIU<ContainerResearchTableSpace> {
 
-    private final List<float[]> cachedStars = new ArrayList<>();
-    private final List<float[]> cachedStars1 = new ArrayList<>();
-    IAsteroid asteroid;
-    int mode = 0;
-    int value1 = 0;
-    int value2 = 0;
-    int value3 = 0;
-    int value4 = 0;
-    IStar star;
-    IPlanet planet;
-    ISatellite satellite;
-    IBody focusedPlanet = null;
-    boolean starsGenerated1 = false;
-    float scaled = -1;
-    int prevText;
-    int textIndex = 0;
-    private GuiVerticalSliderList slider;
-    private GuiVerticalSliderList slider1;
-    private boolean starsGenerated = false;
-    private GuiVerticalSliderList slider2;
-    private GuiVerticalSliderList slider3;
-    private List<ItemStack> itemList;
-    private List<FluidStack> fluidList;
-    private float scale = 1.0F;
-    private int offsetX = 0, offsetY = 0;
-    private boolean isDragging = false;
-    private int lastMouseX, lastMouseY;
+    public final List<float[]> cachedStars = new ArrayList<>();
+
+    public int mode = 0;
+
+    public IStar star;
+    public IBody focusedPlanet = null;
+    public boolean starsGenerated1 = false;
+    public boolean hoverColonies = false;
+    public boolean hoverResource = false;
+    public boolean hoverExpedition = false;
+
+    public int textIndex = 0;
+    public boolean starsGenerated = false;
+
+    public float scale = 1.0F;
+    public int offsetX = 0, offsetY = 0;
+    public boolean isDragging = false;
+    public int lastMouseX, lastMouseY;
+
+    boolean hoverUp = false;
+    boolean hoverOpen = false;
+    boolean hoverDown = false;
+    private int addPoint;
+    private int valueBody = 0;
+    public Result minimumLimit;
+    public List<GuiDefaultResearchTable> defaultResearchGuis = new ArrayList<>();
 
     public GuiResearchTableSpace(ContainerResearchTableSpace guiContainer) {
         super(guiContainer, EnumTypeStyle.PERFECT);
-        imageHeight = 250;
-        imageWidth = 240;
-        this.inventory.addY(84);
-        this.elements.add(new ImageResearchTableInterface(this, 0, 0, imageWidth, imageHeight));
-        this.elements.add(new CustomButton(this, 167, 20 + 10 + 10, 68, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                IFakeBody fakeBody = guiContainer.base.fakeBody;
-                boolean can = true;
-                if (planet != null) {
-                    can = planet.getLevels() != EnumLevels.NONE;
-                }
-                if (satellite != null) {
-                    can = satellite.getLevels() != EnumLevels.NONE;
-                }
-                if (asteroid != null) {
-                    can = asteroid.getLevels() != EnumLevels.NONE;
-                }
-                return (mode == 2 || mode == 3 || mode == 4) && fakeBody == null && can;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space_send");
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    new PacketSendRoversToPlanet(
-                            guiContainer.base,
-                            container.player,
-                            satellite != null ? satellite : planet != null ?
-                                    planet :
-                                    asteroid != null ? asteroid : null
-                    );
-                }
-                return true;
-            }
-        });
-
-        this.elements.add(new CustomButton(this, 167, 20 + 10 - 20 + 10, 68, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                IFakeBody fakeBody = guiContainer.base.fakeBody;
-                return (mode == 2 || mode == 3 || mode == 4) && fakeBody != null;
-            }
-
-            @Override
-            public String getText() {
-                if (planet != null) {
-                    return Localization.translate("iu.space.auto_" + guiContainer.base.fakeBody.getSpaceOperation().getAuto());
-                }
-                if (satellite != null) {
-                    return Localization.translate("iu.space.auto_" + guiContainer.base.fakeBody
-                            .getSpaceOperation()
-                            .getAuto());
-
-                }
-                if (asteroid != null) {
-                    return Localization.translate("iu.space.auto_" + guiContainer.base.fakeBody
-                            .getSpaceOperation()
-                            .getAuto());
-                }
-                return Localization.translate("iu.space.auto_" + false);
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    new PacketChangeSpaceOperation(
-                            container.player,
-                            satellite != null ? satellite : planet != null ?
-                                    planet :
-                                    asteroid != null ? asteroid : null
-                    );
-                }
-                return true;
-            }
-        });
-        this.elements.add(new CustomButton(this, 167, 20 + 30 + 10, 68, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                boolean can = true;
-                if (planet != null) {
-
-                    can = planet.getLevels() != EnumLevels.NONE && planet.canHaveColonies();
-                }
-                if (satellite != null) {
-
-                    can = satellite.getLevels() != EnumLevels.NONE && satellite.canHaveColonies();
-                }
-                if (asteroid != null) {
-
-                    can = asteroid.getLevels() != EnumLevels.NONE && asteroid.canHaveColonies();
-                }
-                Data data = container.base.dataMap.get(container.base.body);
-                return (mode == 2 || mode == 3 || mode == 4) && can && container.base.colony == null && data.getPercent() >= 100;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space.createcolony");
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    if (container.player.getUUID().equals(container.base.getPlayer())) {
-                        new PacketCreateColony(
-                                container.player,
-                                container.base.body
-                        );
-                    }
-                }
-                return true;
-            }
-        });
-        this.elements.add(new CustomButton(this, 167, 20 + 30 + 10, 68, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                boolean can = true;
-                if (planet != null) {
-
-                    can = planet.getLevels() != EnumLevels.NONE && planet.canHaveColonies();
-                }
-                if (satellite != null) {
-
-                    can = satellite.getLevels() != EnumLevels.NONE && satellite.canHaveColonies();
-                }
-                if (asteroid != null) {
-
-                    can = asteroid.getLevels() != EnumLevels.NONE && asteroid.canHaveColonies();
-                }
-                return (mode == 2 || mode == 3 || mode == 4) && can && container.base.colony != null;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space.open_colony");
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    mode = 5;
-                }
-                return true;
-            }
-        });
-        this.elements.add(new CustomButton(this, 167, 20 + 10 + 10, 68, 18, guiContainer.base, 0, "") {
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    new PacketReturnRoversToPlanet(guiContainer.base, container.player, satellite != null ? satellite :
-                            planet != null ?
-                                    planet :
-                                    asteroid != null ? asteroid : null);
-                }
-                return true;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space.return");
-            }
-
-            @Override
-            public boolean visible() {
-                IFakeBody fakeBody = guiContainer.base.fakeBody;
-                return (mode == 2 || mode == 3 || mode == 4) && fakeBody != null;
-            }
-        });
-        this.elements.add(new CustomButton(this, 172, 20 + 30 + 115, 65, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                return (mode == 5) && container.base.colony != null;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space.send_item");
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    if (container.player.getUUID().equals(container.base.getPlayer())) {
-                        new PacketSendResourceToEarth(
-                                container.player,
-                                container.base.body
-                        );
-                    }
-                }
-                return true;
-            }
-        });
-        this.elements.add(new CustomButton(this, 172, 20 + 30 + 20 + 115, 65, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                return (mode == 5) && container.base.colony != null;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space.auto_" + container.base.colony.isAuto());
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    if (container.player.getUUID().equals(container.base.getPlayer())) {
-                        new PacketCreateAutoSends(
-                                container.player,
-                                container.base.body
-                        );
-                    }
-                }
-                return true;
-            }
-        });
-        this.elements.add(new CustomButton(this, 172, 20 + 30 + 20 + 20 + 115, 65, 18, guiContainer.base, 0, "") {
-            @Override
-            public boolean visible() {
-                return (mode == 5) && container.base.colony != null;
-            }
-
-            @Override
-            public String getText() {
-                return Localization.translate("iu.space.deletecolony");
-            }
-
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    if (container.player.getUUID().equals(container.base.getPlayer())) {
-                        new PacketDeleteColony(
-                                container.player,
-                                container.base.body
-                        );
-                        if (satellite != null) {
-                            mode = 3;
-                            prevText = 0;
-                            textIndex = 0;
-                            focusedPlanet = null;
-                            new PacketUpdateBody(container.base, satellite);
-                        } else if (planet != null) {
-                            mode = 2;
-                            prevText = 0;
-                            textIndex = 0;
-                            focusedPlanet = null;
-                            new PacketUpdateBody(container.base, planet);
-                        } else if (asteroid != null) {
-                            mode = 4;
-                            prevText = 0;
-                            textIndex = 0;
-                            focusedPlanet = null;
-                            new PacketUpdateBody(container.base, asteroid);
-                        }
-                    }
-                }
-                return true;
-            }
-        });
-        this.componentList.add(new GuiComponent(this, 3, 3, EnumTypeComponent.PREV,
-                new Component<>(new ComponentButton(this.container.base, 0) {
-                    @Override
-                    public void ClickEvent() {
-                        if (mode == 1) {
-                            mode = 0;
-                            star = null;
-                            focusedPlanet = null;
-                            prevText = 0;
-                            textIndex = 0;
-                        } else if (mode == 2) {
-                            mode = 1;
-                            focusedPlanet = planet;
-                            planet = null;
-                            prevText = 0;
-                            textIndex = 0;
-                            new PacketUpdateBody(container.base, null);
-                        } else if (mode == 3) {
-                            mode = 2;
-                            satellite = null;
-                            prevText = 0;
-                            textIndex = 0;
-                            new PacketUpdateBody(container.base, planet);
-                        } else if (mode == 4) {
-                            mode = 1;
-                            focusedPlanet = null;
-                            planet = null;
-                            asteroid = null;
-                            prevText = 0;
-                            textIndex = 0;
-                            new PacketUpdateBody(container.base, null);
-                        } else if (mode == 5) {
-                            if (satellite != null) {
-                                mode = 3;
-                                prevText = 0;
-                                textIndex = 0;
-                                focusedPlanet = null;
-                                new PacketUpdateBody(container.base, satellite);
-                            } else if (planet != null) {
-                                mode = 2;
-                                prevText = 0;
-                                textIndex = 0;
-                                focusedPlanet = null;
-                                new PacketUpdateBody(container.base, planet);
-                            } else if (asteroid != null) {
-                                mode = 4;
-                                prevText = 0;
-                                textIndex = 0;
-                                focusedPlanet = null;
-                                new PacketUpdateBody(container.base, asteroid);
-                            }
-
-
-                        }
-                    }
-
-                    @Override
-                    public String getText() {
-                        return Localization.translate("iu.prev");
-                    }
-                })
-        ) {
-            @Override
-            public boolean visible() {
-                return mode >= 1;
-            }
-        });
-    }
-
-
-    public void init() {
-        super.init();
-
-
-        slider = new GuiVerticalSliderList(this, 2, (this.width - this.imageWidth) / 2 + 227,
-                (this.height - this.imageHeight) / 2 + 12,
-                "",
-                0, 0, 0,
-                this, 210
-        );
-        slider1 = new GuiVerticalSliderList(this, 3, (this.width - this.imageWidth) / 2 + 227,
-                (this.height - this.imageHeight) / 2 + 12 + 155,
-                "",
-                0, 9, 0,
-                this, 70
-        );
-        slider2 = new GuiVerticalSliderList(this, 4, (this.width - this.imageWidth) / 2 + 150 + 18 * 4 + 4 + 4,
-                (this.height - this.imageHeight) / 2 + 16 + 2,
-                "",
-                0, 9, 0,
-                this, 18 * 4 + 4 + 2
-        );
-        slider3 = new GuiVerticalSliderList(this, 5, (this.width - this.imageWidth) / 2 + 150 + 18 * 4 + 4 + 4,
-                (this.height - this.imageHeight) / 2 + 22 + 18 * 4 + 4 + 2,
-                "",
-                0, 9, 0,
-                this, 18 * 3 + 4 + 2
-        );
-        this.slider.visible = false;
-        this.slider1.visible = false;
-        this.slider2.visible = false;
-        this.slider3.visible = false;
-        this.addRenderableWidget(slider);
-        this.addRenderableWidget(slider1);
-        this.addRenderableWidget(slider2);
-        this.addRenderableWidget(slider3);
-    }
-
-    @Override
-    public String getText(final int var1, final String var2, final float var3) {
-        return "";
-    }
-
-    @Override
-    public void setEntryValue(final int i, final boolean b) {
+        imageHeight = 255;
+        imageWidth = 255;
+        this.componentList.clear();
 
     }
 
-    @Override
-    public void setEntryValue(final int i, final float v) {
-        if (i == 2) {
-            value1 = (int) v;
-        }
-        if (i == 3) {
-            value2 = (int) v;
-        }
-        if (i == 4) {
-            value3 = (int) v;
-        }
-        if (i == 5) {
-            value4 = (int) v;
-        }
-    }
 
-    @Override
-    public void setEntryValue(final int i, final String s) {
 
-    }
 
     @Override
     public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        if (mode == 5 && container.base.colony != null) {
-            this.itemList = container.base.colony.getStacksFromStorage();
-            this.fluidList = container.base.colony.getFluidsFromStorage();
-        } else {
-            itemList = Collections.emptyList();
-            fluidList = Collections.emptyList();
-        }
-
+        imageHeight = 255;
+        imageWidth = 255;
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.topPos = (this.height - this.imageHeight) / 2;
         super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        slider.visible =
-                star != null && this.star.getPlanetList().size() + this.star
-                        .getAsteroidList()
-                        .size() > 7 && planet == null && asteroid == null;
-        if (star != null) {
-            slider.setMax(this.star.getPlanetList().size() + this.star.getAsteroidList().size() - 7);
-        }
-        slider1.visible = planet != null && this.planet.getSatelliteList().size() > 2 && satellite == null;
-        if (planet != null) {
-            slider1.setMax(this.planet.getSatelliteList().size() - 2);
-            if (value2 > this.planet.getSatelliteList().size() - 2) {
-                value2 = 0;
-            }
-        }
-        if (this.container.base.colony != null && mode == 5) {
-            slider2.visible = itemList.size() / 16 > 0;
-            slider3.visible = fluidList.size() / 12 > 0;
-            slider2.setMax(itemList.size() / 16);
-            slider3.setMax(fluidList.size() / 12);
-        } else {
-            slider2.visible = false;
-            slider3.visible = false;
-            value3 = 0;
-            value4 = 0;
-        }
 
     }
 
@@ -528,12 +100,18 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         Window window = Minecraft.getInstance().getWindow();
         int i = window.getHeight();
         double d0 = window.getGuiScale();
-        double d1 = (double)p_239261_ * d0;
-        double d2 = (double)i - (double)p_239264_ * d0;
-        double d3 = (double)(p_239263_ - p_239261_) * d0;
-        double d4 = (double)(p_239264_ - p_239262_) * d0;
-        RenderSystem.enableScissor((int)d1, (int)d2, Math.max(0, (int)d3), Math.max(0, (int)d4));
+        double d1 = (double) p_239261_ * d0;
+        double d2 = (double) i - (double) p_239264_ * d0;
+        double d3 = (double) (p_239263_ - p_239261_) * d0;
+        double d4 = (double) (p_239264_ - p_239262_) * d0;
+        RenderSystem.enableScissor((int) d1, (int) d2, Math.max(0, (int) d3), Math.max(0, (int) d4));
     }
+
+    @Override
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+
+    }
+
     private void renderRings(GuiGraphics poseStack, IPlanet planet) {
         if (planet.getRing() == null) {
             return;
@@ -546,12 +124,13 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         float planetX = (float) (planet.getDistance() * Math.cos(angle));
         float planetY = (float) (planet.getDistance() * Math.sin(angle));
         final double size = planet.getSize() * 2;
+        pose.translate(3 - 1.2, -0.2125, 0);
         pose.translate(planetX, planetY, 0);
 
         if (!isSaturn) {
             pose.mulPose(Axis.ZP.rotationDegrees(270));
         }
-        pose.scale((float) ((0.25 / 128D) * size), (float) ((0.25 / 128D) * size / 32), 1);
+        pose.scale((float) ((0.5 / 128D) * size), (float) ((0.5 / 128D) * size / 32), 1);
 
         RenderSystem.setShaderColor(0, 0, 1, 1);
         bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
@@ -578,8 +157,8 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         for (float[] star : cachedStars) {
             buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION);
 
-            buffer.vertex(matrix, star[0]+ guiLeft - width, star[1]+ guiTop, 0).endVertex();
-            buffer.vertex(matrix, star[0]*1.001f+ guiLeft - width, star[1]*1.001f+ guiTop, 0).endVertex();
+            buffer.vertex(matrix, star[0], star[1], 0).endVertex();
+            buffer.vertex(matrix, star[0] * 1.001f, star[1] * 1.001f, 0).endVertex();
             tessellator.end();
         }
 
@@ -587,35 +166,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         RenderSystem.disableBlend();
     }
 
-    public void renderStars1(PoseStack poseStack, int x, int y, int width, int height, int starCount) {
-        if (!starsGenerated1) {
-            generateStars1(poseStack, x, y, width, height, starCount);
-            starsGenerated1 = true;
-        }
-
-
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-
-        Matrix4f matrix = poseStack.last().pose();
-
-
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-        for (float[] star : cachedStars1) {
-            buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION);
-
-            buffer.vertex(matrix, star[0] + leftPos - width, star[1]  + topPos, 0).endVertex();
-            buffer.vertex(matrix, star[0]*1.001f + leftPos - width, star[1]*1.001f+ topPos, 0).endVertex();
-            tessellator.end();
-        }
-
-        RenderSystem.disableBlend();
-    }
 
 
     private void generateStars(PoseStack poseStack, int x, int y, int width, int height, int starCount) {
@@ -629,585 +179,825 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         }
     }
 
-    private void generateStars1(PoseStack poseStack, int x, int y, int width, int height, int starCount) {
-        Random random = new Random();
-        cachedStars1.clear();
 
-        for (int i = 0; i < starCount; i++) {
-            float starX = x + random.nextFloat() * width;
-            float starY = y + random.nextFloat() * height;
-            cachedStars1.add(new float[]{starX, starY});
-        }
-    }
 
     private void drawLine(PoseStack poseStack, BufferBuilder buffer, double x1, double y1, double x2, double y2) {
         buffer.vertex(poseStack.last().pose(), (float) x1, (float) y1, 0).color(0, 255, 1, 255).endVertex();
         buffer.vertex(poseStack.last().pose(), (float) x2, (float) y2, 0).color(0, 255, 1, 255).endVertex();
     }
-    private void renderPlanetOrbits(PoseStack poseStack, float centerX, float centerY, float radius) {
 
+
+
+    int systemId = 0;
+    List<ISystem> systems;
+
+    protected void drawBackground(GuiGraphics poseStack) {
+        componentList.forEach(guiComponent -> guiComponent.drawBackground(poseStack, guiLeft(), guiTop()));
+
+    }
+
+    @Override
+    public void changeParams() {
+        super.changeParams();
+        imageHeight = 4000;
+        imageWidth = 9000;
+    }
+
+    private float scaleBackStar = 1.0f;
+    private float scaleNextStar = 1.0f;
+    private boolean growingBack = true;
+    private boolean growingNext = true;
+
+    private void drawScaledTexture(GuiGraphics graphics, float x, float y, int u, int v, int w, int h, float scale) {
+        PoseStack poseStack = graphics.pose();
+        poseStack.pushPose();
+        poseStack.translate(x + w / 2f, y + h / 2f, 0);
+        poseStack.scale(scale, scale, 1.0f);
+        poseStack.translate(-w / 2f, -h / 2f, 0);
+        drawTexturedModalRect(graphics, 0, 0, u, v, w, h);
+        poseStack.popPose();
+    }
+
+    double scaleWindow = -1f;
+
+    public boolean needRenderForeground() {
+        return false;
+    }
+
+    boolean hoverBack = false;
+
+    public void drawRect(GuiGraphics poseStack, ResourceLocation texture, float x, float y, float z, float scaleX, float scaleY, int u, int v, int w, int h) {
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        RenderSystem.enableBlend();
+        bindTexture(texture);
+        pose.translate(x, y, z);
+        pose.scale(scaleX, scaleY, 1);
+        drawTexturedModalRect(poseStack, 0, 0, u, v, w, h);
+        RenderSystem.disableBlend();
+        pose.popPose();
+    }
+
+    public void drawCenteredText(GuiGraphics poseStack, String text, float x, float y, float z, float scale, int color) {
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        pose.translate(x - (getStringWidth(text) / 2f) * scale, y, z);
+        pose.scale(scale, scale, 1);
+        poseStack.drawString(font, text, 0, 0, color, false);
+        pose.popPose();
+    }
+
+    public void drawAvailability(GuiGraphics poseStack, boolean available, String label, float x, float y, float z) {
+        drawRect(poseStack,
+                new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"),
+                x, y, z, 0.7f, 0.7f,
+                0, available ? 125 : 145, 103, 20
+        );
+        drawCenteredText(poseStack, available ? Localization.translate("iu.space.planet.available")+" " + label :Localization.translate("iu.space.planet.unavailable")+" " + label,
+                x + (102 / 2f) * 0.7f, y + 5, z + 5, 0.6f,
+                ModUtils.convertRGBAcolorToInt(255, 255, 255)
+        );
+    }
+
+    public void drawLevelIcon(GuiGraphics poseStack, int level, float x, float y, float z, float scale) {
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        RenderSystem.enableBlend();
+        pose.translate(x, y, z);
+        pose.scale(scale, scale, 1);
+        switch (level) {
+            case 1 -> drawTexturedModalRect(poseStack, 0, 0, 90, 0, 7, 12);
+            case 2 -> drawTexturedModalRect(poseStack, 0, 0, 98, 0, 14, 12);
+            case 3 -> drawTexturedModalRect(poseStack, 0, 0, 113, 0, 18, 12);
+            case 4 -> drawTexturedModalRect(poseStack, 0, 0, 131, 0, 19, 12);
+            case 5 -> drawTexturedModalRect(poseStack, 0, 0, 149, 0, 12, 12);
+            case 6 -> drawTexturedModalRect(poseStack, 0, 0, 162, 0, 18, 12);
+        }
+        RenderSystem.disableBlend();
+        pose.popPose();
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         PoseStack pose = poseStack.pose();
+        this.addPoint = 0;
+        valueBody = 0;
+        for (int i = 0; i < 9; i++)
+            drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 6 + 18 + i * 18, guiTop + 231, 0, 1f, 1f, 222, 1, 20, 20);
+        for (int i = 10; i < 11; i++) {
+            RenderSystem.enableBlend();
+            drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 6 + 18 + i * 18, guiTop + 231, 0, 1f, 1f, 201, 1, 20, 20);
+            RenderSystem.disableBlend();
+        }
         if (mode == 0) {
-            List<ISystem> systems = SpaceNet.instance.getSystem();
-            systems = systems.stream().filter(iSystem -> !iSystem.getStarList().isEmpty()).collect(Collectors.toList());
-            for (int i = 0; i < systems.size(); i++) {
-                new ImageResearchTableInterface(this, 10, 6 + 32 * i, 30, 30).drawBackground(poseStack, this.guiLeft, guiTop);
-            }
-
-            for (int i = 0; i < systems.size(); i++) {
-                IStar star = systems.get(i).getStarList().get(0);
-                renderPlanet(poseStack.pose(), 16f, star.getLocation(), (float) this.guiLeft + 25, (float) this.guiTop + 20 + i * 32, 0,
-                        (float) star.getRotation(this.container.base.getWorld().getGameTime()),
-                        star.getRotationAngle()
-                );
-            }
-
-
-        } else if (mode == 5) {
-            if (container.base.colony != null) {
-                new ImageScreen(this, 6, 16, 120, 145).drawBackground(poseStack, this.guiLeft, this.guiTop);
-                new ImageScreen(this, 130, 16, 16, 16).drawBackground(poseStack, this.guiLeft, this.guiTop);
-                new ImageScreen(this, 150, 16, 18 * 4 + 5, 18 * 4 + 4).drawBackground(poseStack, this.guiLeft, this.guiTop);
-                new ImageScreen(this, 150, 22 + 18 * 4 + 4, 18 * 4 + 5, 18 * 3 + 4).drawBackground(poseStack, this.guiLeft, this.guiTop);
-                for (int i = value3 * 4, j = 0; i < Math.min(this.itemList.size(), 16 + value3 * 4); j++, i++) {
-                    final int finalI = i;
-                    new ItemStackImage(
-                            this,
-                            150 + 4 + (j % 4) * 18,
-                            20 + (j / 4) * 18,
-                            () -> this.itemList.get(finalI)
-                    ).drawBackground(poseStack, this.guiLeft, guiTop);
-                }
-                for (int i = value4 * 4, j = 0; i < Math.min(this.fluidList.size(), 12 + value4 * 4); j++, i++) {
-                    new FluidItem(this, 150 + 3 + (j % 4) * 18, 25 + 18 * 4 + 4 + (j / 4) * 18, this.fluidList.get(i)).drawBackground(
-                            poseStack, this.guiLeft,
-                            guiTop
-                    );
-                }
-                renderIconWithProgressBar(poseStack.pose(), this.guiLeft + 129, this.guiTop + 34, 20, 124,
-                        0f
-                );
-                RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
-                bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-                this.drawTexturedModalRect(poseStack, guiLeft + 129, guiTop + 35, 2, 2, 19, 122);
-                RenderSystem.setShaderColor(1.0F, 1F, 1.0F, 1.0F);
-                this.renderStars1(poseStack.pose(), this.guiLeft + 130, this.guiTop + 44 + 9, 17, 85, 400);
-
-                renderPlanet(poseStack.pose(), 15f, SpaceInit.earth.getLocation(), (float) this.guiLeft + 139,
-                        (float) this.guiTop + 44
-                        , 0,
-                        (float) 0,
-                        0
-                );
-                renderPlanet(poseStack.pose(), 15f, container.base.colony.getBody().getLocation(), (float) this.guiLeft + 139,
-                        (float) this.guiTop + 147
-                        , 0,
-                        (float) 0,
-                        0
-                );
-                if ( this.container.base.getSends() != null) {
-                    List<Timer> timers = this.container.base.getSends().getTimers();
-                    if (timers != null && !timers.isEmpty()) {
-                        renderProgressBarSends(poseStack.pose(), this.guiLeft + 126, this.guiTop + 44 + 9, 0, 85, (float) timers.get(0).getProgressBar());
-                    }
-                }
-            }
-        } else if (mode == 3) {
-            drawInfoBody(poseStack, satellite);
-
-            if (this.container.base.fakeBody != null && container.base.fakeBody.matched(satellite)) {
-                renderFakeBody(poseStack.pose(), this.container.base.fakeBody);
-            }
-            renderDistance(pose, satellite);
-        } else if (mode == 4) {
-            drawInfoBody(poseStack, asteroid);
-            renderPlanet(pose, 4f, asteroid.getLocation(), (float) this.guiLeft + 20,
-                    (float) this.guiTop + 28, 0,
-                    (float) asteroid.getRotation(this.container.base.getWorld().getGameTime() / 4D),
-                    0
-            );
-            renderPlanet(pose, 4f, asteroid.getLocation(), (float) this.guiLeft + 35,
-                    (float) this.guiTop + 35, 0,
-                    (float) asteroid.getRotation(this.container.base.getWorld().getGameTime() / 4D),
-                    0
-            );
-            renderPlanet(pose, 4f, asteroid.getLocation(), (float) this.guiLeft + 50,
-                    (float) this.guiTop + 25, 0,
-                    (float) asteroid.getRotation(this.container.base.getWorld().getGameTime() / 4D),
-                    0
-            );
-            renderPlanet(pose, 4f, asteroid.getLocation(), (float) this.guiLeft + 31,
-                    (float) this.guiTop + 45, 0,
-                    (float) asteroid.getRotation(this.container.base.getWorld().getGameTime() / 4D),
-                    0
-            );
-            renderPlanet(pose, 4f, asteroid.getLocation(), (float) this.guiLeft + 43,
-                    (float) this.guiTop + 61, 0,
-                    (float) asteroid.getRotation(this.container.base.getWorld().getGameTime() / 4D),
-                    0
-            );
-            if (this.container.base.fakeBody != null && container.base.fakeBody.matched(asteroid)) {
-                renderFakeBody(pose, this.container.base.fakeBody);
-            }
-            renderDistance(pose, asteroid);
-        } else if (mode == 2) {
-            drawInfoBody(poseStack, planet);
-
-
-            for (int i = value2; i < Math.min(planet.getSatelliteList().size(), value2 + 2); i++) {
-                new ImageResearchTableInterface(this, 190, 6 + 32 * (i % 2) + 5 * 31, 30, 30).drawBackground(
-                        poseStack, this.guiLeft,
-                        guiTop
-                );
-                RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
-                bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-                this.drawTexturedModalRect(poseStack, guiLeft + 192, guiTop + 8 + 32 * (i % 2) + 5 * 31, 2, 2, 26, 26);
-                RenderSystem.setShaderColor(1.0F, 1, 1.0F, 1.0F);
-            }
-            if (this.container.base.fakeBody != null && container.base.fakeBody.matched(planet)) {
-                renderFakeBody(pose, this.container.base.fakeBody);
-            }
-
-            for (int i = value2, j = 0; i < Math.min(planet.getSatelliteList().size(), value2 + 2); i++, j++) {
-                ISatellite planet1 = planet.getSatelliteList().get(i);
-                renderPlanet(pose, 16f, planet1.getLocation(), (float) this.guiLeft + 205,
-                        (float) this.guiTop + 20 + (j % 2) * 32 + 5 * 31
-                        , 0,
-                        (float) planet1.getRotation(this.container.base.getWorld().getGameTime() / 8D),
-                        0
-                );
-                final int progressWidth = 20;
-                final int progressHeight = 2;
-                final Data data = container.base.dataMap.get(planet1);
-                float progress = (float) (data.getPercent() / 100D);
-                renderIconWithProgressBar(pose,
-                        this.guiLeft + 195,
-                        this.guiTop + 32 + (j % 2) * 32 + 5 * 31,
-                        progressWidth,
-                        progressHeight,
-                        progress
-                );
-            }
-
-            renderDistance(pose, planet);
+            renderMainMenu(poseStack, pose, partialTicks, mouseX, mouseY);
         } else if (mode == 1) {
+            renderStarSystem(poseStack, pose, partialTicks, mouseX, mouseY);
+        } else if (mode == 2) {
+            boolean isScissor = !defaultResearchGuis.isEmpty();
+            if (!isScissor) {
 
-            new ImageResearchTableInterface(this, 10, 20, 50, 50).drawBackground(poseStack, this.guiLeft, guiTop);
-            new ImageResearchTableInterface(this, 65, 10, 120, 60).drawBackground(poseStack, this.guiLeft, guiTop);
-            RenderSystem.setShaderColor(1.0F, 0.5F, 1.0F, 1.0F);
-            bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-            this.drawTexturedModalRect(poseStack, guiLeft + 67, guiTop + 12, 2, 2, 116, 56);
-            RenderSystem.setShaderColor(1, 1, 1.0F, 1.0F);
-            new ImageResearchTableInterface(this, 7, 76, 162, 90).drawBackground(poseStack, this.guiLeft, guiTop);
-            RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
-            bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-            this.drawTexturedModalRect(poseStack, guiLeft + 9, guiTop + 78, 2, 2, 158, 86);
-            RenderSystem.setShaderColor(1, 1, 1.0F, 1.0F);
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 9, guiTop + 28, 20, 0.5f, 0.5f, !hoverBack ? 139 : 170, 1, 30, 30);
+                RenderSystem.enableBlend();
+                new ImageSpaceInterface1(this, 25, 25, 200, 200).drawBackground(poseStack, guiLeft, guiTop);
+                RenderSystem.disableBlend();
+                drawRect(poseStack, focusedPlanet.getLocation(), guiLeft + 47, guiTop + 35, 20, 1 / (256 / 32f), 1 / (256 / 32f), 0, 0, 256, 256);
+                RenderSystem.enableBlend();
+                new ImageSpaceInterface3(this, 45, 33, 37, 36).drawBackground(poseStack, guiLeft, guiTop);
+                RenderSystem.disableBlend();
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70, 0, 0.63f, 0.63f, 0, 105, 103, 20);
 
-            enableScissor(this.guiLeft + 11, this.guiTop + 80, this.guiLeft + 11 + 155, this.guiTop + 80 + 84);
-            bindTexture(star.getLocation());
+                drawCenteredText(poseStack, Localization.translate("iu.body." + focusedPlanet.getName()), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 70 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
 
-            pose.pushPose();
-            float planetX = 0;
-            float planetY = 0;
-            if (focusedPlanet != null) {
-                offsetX = 0;
-                offsetY = 0;
-                if (focusedPlanet instanceof IPlanet) {
-                    double time = container.base.getWorld().getGameTime();
-                    double angle = 2 * Math.PI * (time * focusedPlanet.getOrbitPeriod()) / 400D;
-                    planetX = (float) (focusedPlanet.getDistance() * Math.cos(angle)) * scale * 16;
-                    planetY = (float) (focusedPlanet.getDistance() * Math.sin(angle)) * scale * 16;
-                } else if (focusedPlanet instanceof ISatellite) {
-                    ISatellite satellite1 = (ISatellite) focusedPlanet;
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70 + 17, 20, 0.5f, 0.5f, 0, 182, 127, 49);
 
-                    double time = container.base.getWorld().getGameTime();
-                    double angle = 2 * Math.PI * (time * satellite1.getPlanet().getOrbitPeriod()) / 400D;
-                    double angle1 = 2 * Math.PI * (time * satellite1.getOrbitPeriod()) / 400D;
-                    planetX =
-                            (float) ((float) (satellite1
-                                    .getPlanet()
-                                    .getDistance() * Math.cos(angle)) + (satellite1.getDistance() * 0.8 * Math.cos(angle1))) * scale * 16;
-                    planetY =
-                            (float) ((float) (satellite1
-                                    .getPlanet()
-                                    .getDistance() * Math.sin(angle)) + (satellite1.getDistance() * 0.8 * Math.sin(angle1))) * scale * 16;
+                Data data = this.container.base.dataMap.get(focusedPlanet);
+                int percent = (int) (data.getPercent() * 122 / 100D);
+
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 33, guiTop + 70 + 17, 20, 0.5f, 0.5f, 5, 165, percent, 17);
+
+                if (data.getPercent() >= 0)
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 70 + 26 - 0.5f, 20, 0.5f, 0.5f, 142, 63, 26, 46);
+                if (data.getPercent() >= 20)
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 45, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 169, 63, 21, 46);
+                if (data.getPercent() >= 50)
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 57.5f, guiTop + 70 + 26, 20, 0.5f, 0.5f, 190, 64, 26, 42);
+                if (data.getPercent() >= 80)
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 71.5f, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 216, 63, 20, 42);
+                if (data.getPercent() >= 100)
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 83, guiTop + 70 + 25.5f, 20, 0.5f, 0.5f, 236, 63, 20, 42);
+
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 115, 0, 0.63f, 0.63f, 0, 105, 103, 20);
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 135, 0, 0.63f, 0.63f, 0, 105, 103, 20);
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"), guiLeft + 30, guiTop + 155, 0, 0.63f, 0.63f, 0, data.getPercent() >= 100 ? 105 : 145, 103, 20);
+
+                drawCenteredText(poseStack, Localization.translate("iu.space.planet.resource"), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 115 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
+                drawCenteredText(poseStack, Localization.translate("iu.space.planet.expedition"), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 135 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
+                drawCenteredText(poseStack, Localization.translate("iu.space.planet.colony"), guiLeft + 30 + (102 / 2f) * 0.63f, guiTop + 155 + 3, 20, 0.63f, ModUtils.convertRGBAcolorToInt(255, 255, 255));
+                RenderSystem.enableBlend();
+
+                new ImageSpaceInterface1(this, 30, 170, 66, 40).drawBackground(poseStack, guiLeft, guiTop);
+                RenderSystem.disableBlend();
+
+                bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"));
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 175, 0, 0.63f, 0.63f, 0, 0, 21, 21);
+
+                Result result = minimumLimit;
+                drawLevelIcon(poseStack, result.allocations.fuelLevel, guiLeft + 43, guiTop + 182, 0, 0.63f);
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 58, guiTop + 175, 0, 0.63f, 0.63f, 168, 21, 24, 23);
+                drawLevelIcon(poseStack, result.allocations.rocketLevel, guiLeft + 66, guiTop + 182, 0, 0.63f);
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 80, guiTop + 175, 0, 0.63f, 0.63f, 22, 23, 13, 20);
+
+                drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 78, guiTop + 192, 0, 0.63f, 0.63f, 192, 22, 21, 21);
+
+
+                int temperature = focusedPlanet.getTemperature();
+                if (temperature > 150) {
+                    int count = (int) Math.ceil((temperature - 150) / 350D);
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 192, 0, 0.63f, 0.63f, 44, 0, 21, 21);
+                    drawLevelIcon(poseStack, count, guiLeft + 45, guiTop + 200, 0, 0.63f);
+                } else if (temperature < -125) {
+                    int count = (int) Math.ceil((Math.abs(temperature) - 125) / 37D);
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 35, guiTop + 192, 0, 0.63f, 0.63f, 22, 0, 21, 21);
+                    drawLevelIcon(poseStack, count, guiLeft + 45, guiTop + 200, 0, 0.63f);
                 }
-                double centerX = this.guiLeft + 7 + 162 / 2D;
-                double centerY = this.guiTop + 80 + 82 / 2D;
-                RenderSystem.lineWidth(2.0F);
-                double planetSize = focusedPlanet.getSize() * 2 * scale * 16;
 
-                if (scale > 2D / (focusedPlanet.getSize() * scale)) {
-                    pose.popPose();
+                if ((focusedPlanet instanceof IPlanet p && p.getPressure()) || (focusedPlanet instanceof ISatellite s && s.getPressure())) {
+                    drawRect(poseStack, new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"), guiLeft + 58, guiTop + 192, 0, 0.63f, 0.63f, 66, 0, 21, 21);
                 }
+                RenderSystem.enableBlend();
+                new ImageSpaceInterface1(this, 110, 33, 100, 100).drawBackground(poseStack, guiLeft, guiTop);
+                RenderSystem.disableBlend();
 
-                pose.pushPose();
-                pose.translate(centerX - planetX + offsetX, centerY - planetY + offsetY, 0);
-                int squareSize = (int) (planetSize * 1.2);
-                pose.translate( planetX, planetY, 0);
-                pose.scale((float) scale, (float) scale, (float) scale);
+                String text = getInformationFromBody(focusedPlanet, data.getPercent());
+                drawTextInCanvas(poseStack, text, 115, 40, 100, 100, 0.5f);
 
-                Tesselator tessellator = Tesselator.getInstance();
-                BufferBuilder buffer = tessellator.getBuilder();
-
-                buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
-                drawLine(pose, buffer, (-squareSize / 2), -squareSize / 2, -squareSize / 4D, -squareSize / 2);
-                drawLine(pose, buffer, (squareSize / 2), -squareSize / 2, squareSize / 4D, -squareSize / 2);
-
-                drawLine(pose, buffer, squareSize / 2, -squareSize / 2, squareSize / 2, -squareSize / 4);
-                drawLine(pose, buffer, squareSize / 2, squareSize / 2, squareSize / 2, squareSize / 4);
-
-                drawLine(pose, buffer, (-squareSize / 2), squareSize / 2, -squareSize / 4D, squareSize / 2);
-                drawLine(pose, buffer, (squareSize / 2), squareSize / 2, squareSize / 4D, squareSize / 2);
-
-                drawLine(pose, buffer, -squareSize / 2, -squareSize / 2, -squareSize / 2, -squareSize / 4);
-                drawLine(pose, buffer, -squareSize / 2, squareSize / 2, -squareSize / 2, squareSize / 4);
-                tessellator.end();
-
-                pose.popPose();
-
-                pose.translate(centerX - planetX + offsetX, centerY - planetY + offsetY, 0);
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-                RenderSystem.lineWidth(2);
-
-            } else {
-                pose.translate(this.guiLeft + 7 + 162 / 2D + offsetX - planetX,
-                        this.guiTop + 80 + 82 / 2D + offsetY - planetY, 0
-                );
+                drawAvailability(poseStack, true, Localization.translate("iu.rover").toLowerCase(), guiLeft + 123, guiTop + 142, 0);
+                drawAvailability(poseStack, data.getPercent() >= 20, Localization.translate("iu.probe").toLowerCase(), guiLeft + 123, guiTop + 162, 0);
+                drawAvailability(poseStack, data.getPercent() >= 50, Localization.translate("iu.satellite").toLowerCase(), guiLeft + 123, guiTop + 182, 0);
+                drawAvailability(poseStack, data.getPercent() >= 80, Localization.translate("iu.rocket").toLowerCase(), guiLeft + 123, guiTop + 202, 0);
             }
-
-            pose.scale(scale * 16, scale * 16, 1.0F);
-
-            bindTexture(star.getLocation());
-            final double size = star.getSize();
             pose.pushPose();
-            pose.translate(0, 0, 0);
-            pose.scale((float) ((0.25 / 128D) * size), (float) ((0.25 / 128D) * size), 1);
-            drawTexturedModalRect(poseStack, -128, -128, 0, 0, 256, 256);
-            pose.popPose();
-            pose.pushPose();
-
-            for (IPlanet planet : star.getPlanetList()) {
-                if (planet != SpaceInit.ceres) {
-                    renderOrbit(pose, planet.getDistance());
-                }
+            RenderSystem.defaultBlendFunc();
+            for (int i = 0; i < defaultResearchGuis.size(); i++) {
+                GuiDefaultResearchTable defaultResearchTable = defaultResearchGuis.get(i);
+                pose.translate(0, 0, 200);
+                defaultResearchTable.drawGuiContainerBackgroundLayer(poseStack, partialTicks, guiLeft, guiTop);
             }
             pose.popPose();
-            for (IPlanet planet : star.getPlanetList()) {
-                renderPlanet(poseStack, planet);
-                renderRings(poseStack, planet);
-                planet.getSatelliteList().forEach(satellite -> renderSatellite(poseStack, planet, satellite));
-            }
-            star.getAsteroidList().forEach(iAsteroid -> iAsteroid
-                    .getMiniAsteroid()
-                    .forEach(asteroid -> this.renderAsteroid(poseStack, asteroid)));
-            pose.popPose();
-            disableScissor();
 
-
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            for (int i = value1; i < Math.min(
-                    star.getPlanetList().size() + this.star.getAsteroidList().size(),
-                    value1 + 7
-            ); i++) {
-                new ImageResearchTableInterface(this, 190, 6 + 32 * (i % 7), 30, 30).drawBackground(poseStack, this.guiLeft, guiTop);
-                RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
-                bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-                this.drawTexturedModalRect(poseStack, guiLeft + 192, guiTop + 8 + 32 * (i % 7), 2, 2, 26, 26);
-                RenderSystem.setShaderColor(1.0F, 1, 1.0F, 1.0F);
-            }
-            renderPlanet(pose, 32f, star.getLocation(), (float) this.guiLeft + 36, (float) this.guiTop + 45, 0,
-                    (float) star.getRotation(this.container.base.getWorld().getGameTime() / 8D),
-                    0
-            );
-
-            for (int i = value1, j = 0; i < Math.min(
-                    star.getPlanetList().size() + this.star.getAsteroidList().size(),
-                    value1 + 7
-            ); i++, j++) {
-                if (i < star.getPlanetList().size()) {
-                    IPlanet planet1 = star.getPlanetList().get(i);
-                    renderPlanet(pose, 16f, planet1.getLocation(), (float) this.guiLeft + 205,
-                            (float) this.guiTop + 20 + (j % 7) * 32
-                            , 0,
-                            (float) planet1.getRotation(this.container.base.getWorld().getGameTime() / 8D),
-                            0
-                    );
-                    int progressWidth = 20;
-                    int progressHeight = 2;
-                    float progress;
-                    Data data = container.base.dataMap.get(planet1);
-                    progress = (float) (data.getPercent() / 100D);
-                    if (planet1 == SpaceInit.earth) {
-                        progress = 1F;
-                    }
-                    renderIconWithProgressBar(pose, this.guiLeft + 195, this.guiTop + 32 + (j % 7) * 32, progressWidth, progressHeight,
-                            progress
-                    );
-                } else {
-                    IAsteroid asteroid1 = star.getAsteroidList().get(i - star.getPlanetList().size());
-                    renderPlanet(pose, 4f, asteroid1.getLocation(), (float) this.guiLeft + 205,
-                            (float) this.guiTop + 20 + (j % 7) * 32
-                            , 0,
-                            (float) asteroid1.getRotation(this.container.base.getWorld().getGameTime() / 8D),
-                            0
-                    );
-                    int progressWidth = 20;
-                    int progressHeight = 2;
-                    float progress;
-                    Data data = container.base.dataMap.get(asteroid1);
-                    progress = (float) (data.getPercent() / 100D);
-                    renderIconWithProgressBar(pose, this.guiLeft + 195, this.guiTop + 32 + (j % 7) * 32, progressWidth, progressHeight,
-                            progress
-                    );
-                }
-            }
         }
 
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(poseStack, this.guiLeft + imageWidth - 10, this.guiTop, 0, 0, 10, 10);
+
     }
 
-    private void renderFakeBody(PoseStack poseStack, IFakeBody fakeBody) {
-        if (fakeBody.getTimerTo().canWork()) {
-            renderProgressBar(poseStack, this.guiLeft + 30, this.guiTop + 140, 120, 10,
-                    (float) fakeBody.getTimerTo().getProgressBar(),
-                    fakeBody.getRover().getItem().getLevel()
-            );
-        }
-        if (fakeBody.getTimerFrom().canWork()) {
-            renderProgressBackBar(poseStack, this.guiLeft + 30, this.guiTop + 140, 120, 10,
-                    (float) fakeBody.getTimerFrom().getProgressBar(),
-                    fakeBody.getRover().getItem().getLevel()
-            );
+    public void drawTextInCanvas(GuiGraphics graphics, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
+        int maxWidth = (int) (canvasWidth / scale);
+        int x = canvasX;
+        int y = canvasY;
+        PoseStack poseStack = graphics.pose();
+        List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+        for (String line : lines) {
+            poseStack.pushPose();
+            poseStack.translate(guiLeft + x, guiTop + y, 0);
+            poseStack.scale(scale, scale, scale);
+            graphics.drawString(font, line, 0, 0, 0xFFFFFF, false);
+            poseStack.popPose();
+
+            y += 11;
         }
     }
 
-    private void renderDistance(PoseStack poseStack, IBody body) {
-        if (body != SpaceInit.earth) {
-            renderPlanet(poseStack, 20f, body.getLocation(), (float) this.guiLeft + 159,
-                    (float) this.guiTop + 150
-                    , 0,
-                    (float) 0,
-                    0
-            );
-            renderPlanet(poseStack, 20f, SpaceInit.earth.getLocation(), (float) this.guiLeft + 21,
-                    (float) this.guiTop + 150
-                    , 0,
-                    (float) 0,
-                    0
-            );
-        }
-    }
-
-    private void drawInfoBody(GuiGraphics poseStack, IBody planet) {
-
-        new ImageResearchTableInterface(this, 10, 20, 50, 50).drawBackground(poseStack, this.guiLeft, guiTop);
+    private void renderStarSystem(GuiGraphics poseStack, PoseStack pose, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
         bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-        this.drawTexturedModalRect(poseStack, guiLeft + 12, guiTop + 22, 2, 2, 46, 46);
-        RenderSystem.setShaderColor(1.0F, 1, 1.0F, 1.0F);
-        if (!(planet instanceof IAsteroid)) {
-            renderPlanet(poseStack.pose(), 32f, planet.getLocation(), (float) this.guiLeft + 36,
-                    (float) this.guiTop + 45, 0,
-                    (float) planet.getRotation(this.container.base.getWorld().getGameTime() / 4D),
-                    0
-            );
-        }
-
-        int progressWidth = 50;
-        int progressHeight = 8;
-        float progress;
-        Data data = container.base.dataMap.get(planet);
-        progress = (float) (data.getPercent() / 100D);
-        if (planet == SpaceInit.earth) {
-            progress = 1F;
-        }
-        PoseStack pose = poseStack.pose();
-        renderIconWithProgressBar(pose, this.guiLeft + 10, this.guiTop + 20 + 55, progressWidth, progressHeight,
-                progress
-        );
-        new ImageResearchTableInterface(this, 65, 20, 100, 65).drawBackground(poseStack, this.guiLeft, guiTop);
-        RenderSystem.setShaderColor(1.0F, 0.5F, 1.0F, 1.0F);
-        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-        this.drawTexturedModalRect(poseStack, guiLeft + 67, guiTop + 22, 2, 2, 96, 61);
+        this.drawTexturedModalRect(poseStack, guiLeft + 30, guiTop + 30, 2, 2, 175, 175);
         RenderSystem.setShaderColor(1, 1, 1.0F, 1.0F);
-        new ImageScreen(this, 10, 22 + 65, 116 + 37, 36).drawBackground(poseStack, this.guiLeft, this.guiTop);
-        if (planet != SpaceInit.earth) {
-            renderIconWithProgressBar(pose, this.guiLeft + 8, this.guiTop + 135, 165, 29,
-                    0f
-            );
-            RenderSystem.setShaderColor(1.0F, 0.2F, 1.0F, 1.0F);
-            bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common2.png"));
-            this.drawTexturedModalRect(poseStack, guiLeft + 8, guiTop + 136, 2, 2, 164, 28);
-            this.renderStars(poseStack, this.guiLeft + 32, this.guiTop + 140, 114, 20, 400);
-            RenderSystem.setShaderColor(1, 1, 1.0F, 1.0F);
+        pose.pushPose();
+        pose.translate(guiLeft + 9, guiTop + 28, 20);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png"));
+        pose.scale(0.5f, 0.5f, 1);
+        if (!hoverBack)
+            drawTexturedModalRect(poseStack, 0, 0, 139, 1, 30, 30);
+        else
+            drawTexturedModalRect(poseStack, 0, 0, 170, 1, 30, 30);
+        pose.popPose();
+        enableScissor(this.guiLeft + 30, this.guiTop + 30, this.guiLeft + 30 + 175, this.guiTop + 30 + +175);
+        bindTexture(star.getLocation());
+        if (scaleWindow != Minecraft.getInstance().getWindow().getGuiScale()) {
+            starsGenerated = false;
+            scaleWindow = (double) Minecraft.getInstance().getWindow().getGuiScale();
         }
-        for (int i = 0; i < planet.getResources().size(); i++) {
-            pose.pushPose();
-            pose.translate(guiLeft + (int) ((15 + (i % 11) * 13)), guiTop + (int) ((27 + 66 + 13 * (i / 11))), (100.0F + 150));
-            pose.scale(0.75f, 0.75f, 1);
-            IBaseResource baseResource = planet.getResources().get(i);
-            if (baseResource.getPercentPanel() > data.getPercent()) {
+        renderStars(poseStack, this.guiLeft + 30, this.guiTop + 30, 175, 175, 800);
 
+        pose.pushPose();
+        float planetX = 0;
+        float planetY = 0;
+        if (focusedPlanet != null) {
+            offsetX = 0;
+            offsetY = 0;
+            if (focusedPlanet instanceof IPlanet) {
+                double time = container.base.getWorld().getGameTime();
+                double angle = 2 * Math.PI * (time * focusedPlanet.getOrbitPeriod()) / 400D;
+                planetX = (float) (focusedPlanet.getDistance() * Math.cos(angle)) * scale * 16;
+                planetY = (float) (focusedPlanet.getDistance() * Math.sin(angle)) * scale * 16;
+            } else if (focusedPlanet instanceof ISatellite) {
+                ISatellite satellite1 = (ISatellite) focusedPlanet;
+
+                double time = container.base.getWorld().getGameTime();
+                double angle = 2 * Math.PI * (time * satellite1.getPlanet().getOrbitPeriod()) / 400D;
+                double angle1 = 2 * Math.PI * (time * satellite1.getOrbitPeriod()) / 400D;
+                planetX =
+                        (float) ((float) (satellite1
+                                .getPlanet()
+                                .getDistance() * Math.cos(angle)) + (satellite1.getDistance() * 0.8 * Math.cos(angle1))) * scale * 16;
+                planetY =
+                        (float) ((float) (satellite1
+                                .getPlanet()
+                                .getDistance() * Math.sin(angle)) + (satellite1.getDistance() * 0.8 * Math.sin(angle1))) * scale * 16;
+            } else if (focusedPlanet instanceof IAsteroid) {
+
+                double time = container.base.getWorld().getGameTime();
+                double angle = 2 * Math.PI * (time * focusedPlanet.getOrbitPeriod()) / 400D;
+                planetX = (float) (focusedPlanet.getDistance() * Math.cos(angle)) * scale * 16;
+                planetY = (float) (focusedPlanet.getDistance() * Math.sin(angle)) * scale * 16;
             }
-            if (baseResource.getItemStack() != null || baseResource.getFluidStack() != null) {
-                if (baseResource.getPercentPanel() <= data.getPercent() && baseResource.getItemStack() != null) {
-                    String s = String.valueOf(baseResource.getItemStack().getCount());
-                    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                    ItemStack stack = baseResource.getItemStack();
-                    BakedModel model = itemRenderer.getModel(stack, null, null, 0);
+            double centerX = this.guiLeft + 7 + 162 / 2D;
+            double centerY = this.guiTop + 80 + 82 / 2D;
+            double planetSize = focusedPlanet.getSize() * 2 * scale * 16;
 
+            if (scale > 2D / (focusedPlanet.getSize() * scale)) {
+                pose.popPose();
+            }
 
-                    MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-                    pose.pushPose();
+            pose.pushPose();
+            pose.translate(centerX - planetX + offsetX, centerY - planetY + offsetY - 3.5 * scale, 0);
+            int squareSize = (int) (planetSize * 1.2);
+            pose.translate(planetX, planetY, 0);
+            pose.scale((float) scale, (float) scale, (float) scale);
 
-                    pose.translate(8.0D, 8.0D, 0.0D);
-                    pose.scale(1.0F, -1.0F, 1.0F);
-                    pose.scale(16.0F, 16.0F, 16.0F);
-                    RenderSystem.enableBlend();
-                    RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                    Lighting.setupForFlatItems();
+            Tesselator tessellator = Tesselator.getInstance();
+            BufferBuilder buffer = tessellator.getBuilder();
 
-                    itemRenderer.render(
-                            stack,
-                            GUI,
-                            false,
-                            pose,
-                            bufferSource,
-                            15728880,
-                            OverlayTexture.NO_OVERLAY,
-                            model
-                    );
+            buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+            drawLine(pose, buffer, (-squareSize / 2), -squareSize / 2, -squareSize / 4D, -squareSize / 2);
+            drawLine(pose, buffer, (squareSize / 2), -squareSize / 2, squareSize / 4D, -squareSize / 2);
 
+            drawLine(pose, buffer, squareSize / 2, -squareSize / 2, squareSize / 2, -squareSize / 4);
+            drawLine(pose, buffer, squareSize / 2, squareSize / 2, squareSize / 2, squareSize / 4);
 
-                    bufferSource.endBatch();
-                    RenderSystem.enableDepthTest();
-                    Lighting.setupFor3DItems();
-                    pose.popPose();
-                    RenderSystem.disableDepthTest();
-                    pose.translate(0.0D, 0.0D, (double)(150 + 200.0F));
-                    poseStack.drawString(Minecraft.getInstance().font, s, 10f, 6f / 0.75f,
-                            16777215,false
-                    );
+            drawLine(pose, buffer, (-squareSize / 2), squareSize / 2, -squareSize / 4D, squareSize / 2);
+            drawLine(pose, buffer, (squareSize / 2), squareSize / 2, squareSize / 4D, squareSize / 2);
 
-                    RenderSystem.enableDepthTest();
-                    RenderSystem.enableBlend();
-                } else if (baseResource.getPercentPanel() <= data.getPercent() && baseResource.getFluidStack() != null) {
-                    FluidStack fs = baseResource.getFluidStack();
-                    int fluidX = 0;
-                    int fluidY = 0;
-                    int fluidWidth = 16;
-                    int fluidHeight = 16;
-                    Fluid fluid = fs.getFluid();
-                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                        fluid = FluidName.fluidwater.getInstance().get();
-                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
-                    int color = extensions.getTintColor();
-                    bindBlockTexture();
-                    this.drawSprite(poseStack,
-                            fluidX ,
-                            fluidY ,
-                            fluidWidth,
-                            fluidHeight,
-                            sprite,
-                            color,
-                            1.0,
-                            false,
-                            false
-                    );
-                } else {
-                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-                    ItemStack stack = new ItemStack(IUItem.crafting_elements.getStack(506));
+            drawLine(pose, buffer, -squareSize / 2, -squareSize / 2, -squareSize / 2, -squareSize / 4);
+            drawLine(pose, buffer, -squareSize / 2, squareSize / 2, -squareSize / 2, squareSize / 4);
+            tessellator.end();
 
-                    BakedModel model = itemRenderer.getModel(stack, null, null, 0);
+            pose.popPose();
 
-                    MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-                    pose.pushPose();
+            pose.translate(this.guiLeft + 7 + 162 / 2D + offsetX - planetX - 28.75 * scale,
+                    this.guiTop + 80 + 82 / 2D + offsetY - planetY, 0
+            );
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderSystem.lineWidth(2);
 
-                    pose.translate(8.0D, 8.0D, 0.0D);
-                    pose.scale(1.0F, -1.0F, 1.0F);
-                    pose.scale(16.0F, 16.0F, 16.0F);
-                    RenderSystem.enableBlend();
-                    RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                    Lighting.setupForFlatItems();
+        } else {
+            pose.translate(this.guiLeft + 7 + 162 / 2D + offsetX - planetX,
+                    this.guiTop + 80 + 82 / 2D + offsetY - planetY, 0
+            );
+        }
+        pose.scale(scale * 16, scale * 16, 1.0F);
 
-                    itemRenderer.render(
-                            stack,
-                            GUI,
-                            false,
-                            pose,
-                            bufferSource,
-                            15728880,
-                            OverlayTexture.NO_OVERLAY,
-                            model
-                    );
-
-
-                    bufferSource.endBatch();
-                    RenderSystem.enableDepthTest();
-                    Lighting.setupFor3DItems();
-                    pose.popPose();
-                    RenderSystem.disableDepthTest();
-                    pose.translate(0.0D, 0.0D, (double)(150 + 200.0F));
-                    RenderSystem.enableDepthTest();
-                    RenderSystem.enableBlend();
+        bindTexture(star.getLocation());
+        final double size = star.getSize();
+        pose.pushPose();
+        pose.translate(3 - 1.2, -0.2125, 0);
+        pose.scale((float) ((0.25 / 128D) * size), (float) ((0.25 / 128D) * size), 1);
+        drawTexturedModalRect(poseStack, -128, -128, 0, 0, 256, 256);
+        pose.popPose();
+        pose.pushPose();
+        pose.translate(3 - 1.2, -0.2125, 0);
+        for (IPlanet planet : star.getPlanetList()) {
+            if (planet != SpaceInit.ceres) {
+                renderOrbit(pose, planet.getDistance(), planet.getPressure(), planet.hasOxygen());
+            }
+        }
+        pose.popPose();
+        for (IPlanet planet : star.getPlanetList()) {
+            renderPlanet(poseStack, planet);
+            renderRings(poseStack, planet);
+            planet.getSatelliteList().forEach(satellite -> renderSatellite(poseStack, planet, satellite));
+        }
+        star.getAsteroidList().forEach(iAsteroid -> iAsteroid
+                .getMiniAsteroid()
+                .forEach(asteroid -> this.renderAsteroid(poseStack, asteroid,iAsteroid)));
+        pose.popPose();
+        disableScissor();
+        new ImageSpaceInterface(this, 30 - 2, 30 - 2, 175 + 4, 175 + 4).drawBackground(poseStack, this.guiLeft, guiTop);
+        List<IBody> list = new ArrayList<>(star.getPlanetList());
+        list.addAll(star.getAsteroidList());
+        list = list.stream()
+                .sorted(Comparator.comparingDouble(IBody::getDistance))
+                .collect(Collectors.toList());
+        maxValuePage = list.size();
+        int tempMaxValuePage = Math.min(9, maxValuePage - valuePage);
+        int j = 0;
+        ResourceLocation back1 = new ResourceLocation("industrialupgrade", "textures/gui/gui_space_other.png");
+        bindTexture(back1);
+        float scaleSpeed = 0.02f;
+        float maxScale = 1.2f;
+        float minScale = 1.0f;
+        if (hoverUp) {
+            if (growingBack) {
+                scaleBackStar += scaleSpeed;
+                if (scaleBackStar >= maxScale) {
+                    scaleBackStar = maxScale;
+                    growingBack = false;
+                }
+            } else {
+                scaleBackStar -= scaleSpeed;
+                if (scaleBackStar <= minScale) {
+                    scaleBackStar = minScale;
+                    growingBack = true;
                 }
             }
+        } else {
+            scaleBackStar = 1.0f;
+        }
 
 
+        if (hoverDown) {
+            if (growingNext) {
+                scaleNextStar += scaleSpeed;
+                if (scaleNextStar >= maxScale) {
+                    scaleNextStar = maxScale;
+                    growingNext = false;
+                }
+            } else {
+                scaleNextStar -= scaleSpeed;
+                if (scaleNextStar <= minScale) {
+                    scaleNextStar = minScale;
+                    growingNext = true;
+                }
+            }
+        } else {
+            scaleNextStar = 1.0f;
+        }
+        if (valuePage > 0) {
+            pose.pushPose();
+            pose.translate(guiLeft + 229, guiTop + 30, 20);
+            pose.scale(scaleBackStar * 0.5f, scaleBackStar * 0.5f, 1);
+            if (!hoverUp)
+                drawTexturedModalRect(poseStack, 0, 0, 74, 0, 32, 18);
+            else
+                drawTexturedModalRect(poseStack, 0, 0, 107, 0, 32, 18);
+            pose.popPose();
+        }
+        if (focusedPlanet != null) {
+            EnumLevels level1 = EnumLevels.NONE;
+
+            if (focusedPlanet instanceof IPlanet) {
+                level1 = ((IPlanet) focusedPlanet).getLevels();
+            }
+            if (focusedPlanet instanceof ISatellite) {
+                level1 = ((ISatellite) focusedPlanet).getLevels();
+            }
+            if (focusedPlanet instanceof IAsteroid) {
+                level1 = ((IAsteroid) focusedPlanet).getLevels();
+            }
+            pose.pushPose();
+            RenderSystem.enableBlend();
+            pose.translate(guiLeft + 255 / 4 + 10, guiTop + 3, 20);
+            pose.scale(0.75f, 0.75f, 1);
+            if (this.container.base.level != null && this.container.base.level != EnumLevels.NONE && this.container.base.level.ordinal() >= level1.ordinal())
+                drawTexturedModalRect(poseStack, 0, 0, 0, 37, 103, 70 - 36);
+            else
+                drawTexturedModalRect(poseStack, 0, 0, 0, 71, 103, 70 - 36);
+            RenderSystem.disableBlend();
+            pose.popPose();
+            pose.pushPose();
+            String name = Localization.translate("iu.body." + focusedPlanet.getName());
+            pose.translate(this.guiLeft + 255 / 4 + 10 + (103 / 2) * 0.75 - (getStringWidth(name) / 2) * 0.75, guiTop + 7, 20);
+            pose.scale(0.75f, 0.75f, 1);
+            poseStack.drawString(font, name, 0, 0, ModUtils.convertRGBAcolorToInt(255, 255, 255), false);
+            pose.popPose();
+            pose.pushPose();
+
+
+            name = level1.name();
+
+            pose.translate(this.guiLeft + 255 / 4 + 10 + (103 / 2) * 0.75 - (getStringWidth(name) / 2) * 0.75, guiTop + 19, 20);
+            pose.scale(0.75f, 0.75f, 1);
+            poseStack.drawString(font, name, 0, 0, ModUtils.convertRGBAcolorToInt(255, 255, 255), false);
             pose.popPose();
         }
 
+        int addedPoint = 0;
+        for (int i = valuePage; i < tempMaxValuePage + valuePage; i++) {
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderSystem.enableBlend();
+            bindTexture(back1);
+            pose.pushPose();
+            IBody body = list.get(i);
+
+            int dop = 0;
+            if (focusedPlanet == body)
+                dop = 15;
+            if (focusedPlanet instanceof ISatellite)
+                if (((ISatellite) focusedPlanet).getPlanet() == body)
+                    dop = 15;
+            if (dop != 0)
+                valueBody = i;
+            pose.translate(guiLeft + 207 + dop, guiTop + 28 + 12 + j * 19 * 0.65 + addedPoint, 20);
+            pose.scale(0.65f, 0.65f, 1);
+            EnumLevels level = EnumLevels.NONE;
+
+            if (body instanceof IPlanet) {
+                level = ((IPlanet) body).getLevels();
+            }
+            if (body instanceof ISatellite) {
+                level = ((ISatellite) body).getLevels();
+            }
+            if (body instanceof IAsteroid) {
+                level = ((IAsteroid) body).getLevels();
+            }
+            if (focusedPlanet != body) {
+                if (container.base.level != null && container.base.level.ordinal() >= level.ordinal() && level != EnumLevels.NONE && container.base.level != EnumLevels.NONE)
+                    drawTexturedModalRect(poseStack, 0, 0, 152, 160, 103, 19);
+                else
+                    drawTexturedModalRect(poseStack, 0, 0, 152, 180, 103, 19);
+            } else {
+                drawTexturedModalRect(poseStack, 0, 0, 152, 200, 103, 19);
+            }
+            pose.scale(1 / 0.65f, 1 / 0.65f, 1);
+            bindTexture(body.getLocation());
+            pose.translate(4, 2.5, 20);
+
+            pose.scale(1 / (256 / 8f), 1 / (256 / 8f), 1);
+            drawTexturedModalRect(poseStack, 0, 0, 0, 0, 256, 256);
+            pose.popPose();
+            RenderSystem.disableBlend();
+            pose.pushPose();
+            pose.translate(guiLeft + 207 + 7 + dop + 8, guiTop + 28 + 16 + j * 19 * 0.65 + addedPoint, 20);
+            pose.scale(0.65f, 0.65f, 1);
+            String name = Localization.translate("iu.body." + list.get(i).getName());
+            poseStack.drawString(font, name, 0, 0, ModUtils.convertRGBAcolorToInt(255, 255, 255), false);
+            pose.popPose();
+            j++;
+            if (dop != 0) {
+                int size1 = 0;
+                List<ISatellite> satelliteList = Collections.emptyList();
+                if (focusedPlanet instanceof Planet)
+                    satelliteList = ((Planet) focusedPlanet).getSatelliteList();
+                if (focusedPlanet instanceof ISatellite)
+                    if (((ISatellite) focusedPlanet).getPlanet() == body)
+                        satelliteList = ((ISatellite) focusedPlanet).getPlanet().getSatelliteList();
+                size1 = satelliteList.size();
+
+                for (int ii = 0; ii < size1; ii++) {
+                    bindTexture(back1);
+                    ISatellite satellite1 = satelliteList.get(ii);
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                    RenderSystem.enableBlend();
+                    pose.pushPose();
+                    pose.translate(guiLeft + 207 + dop * 2, guiTop + 28 + 12 + j * 19 * 0.65 + addedPoint + ii * 19 * 0.65, 20);
+                    pose.scale(0.65f, 0.65f, 1);
+                    level = EnumLevels.NONE;
+                    level = satellite1.getLevels();
+
+
+                    if (focusedPlanet != satellite1) {
+                        if (container.base.level != null && container.base.level.ordinal() >= level.ordinal() && level != EnumLevels.NONE && container.base.level != EnumLevels.NONE)
+                            drawTexturedModalRect(poseStack, 0, 0, 152, 161, 103, 19);
+                        else
+                            drawTexturedModalRect(poseStack, 0, 0, 152, 180, 103, 19);
+                    } else {
+                        drawTexturedModalRect(poseStack, 0, 0, 152, 200, 103, 19);
+                    }
+                    pose.scale(1 / 0.65f, 1 / 0.65f, 1);
+                    bindTexture(satellite1.getLocation());
+                    pose.translate(4, 1.75, 20);
+
+                    pose.scale(1 / (256 / 8f), 1 / (256 / 8f), 1);
+                    drawTexturedModalRect(poseStack, 0, 0, 0, 0, 256, 256);
+                    pose.popPose();
+
+
+                    pose.pushPose();
+                    pose.translate(guiLeft + 207 + 7 + dop * 2 + 8, guiTop + 28 + 16 + j * 19 * 0.65 + addedPoint + ii * 19 * 0.65, 20);
+                    pose.scale(0.65f, 0.65f, 1);
+                    name = Localization.translate("iu.body." + satellite1.getName());
+                    poseStack.drawString(font, name, 0, 0, ModUtils.convertRGBAcolorToInt(255, 255, 255), false);
+                    pose.popPose();
+                }
+                addedPoint += size1 * 19 * 0.65;
+            }
+
+        }
+        this.addPoint = addedPoint;
+        bindTexture(back1);
+        if (tempMaxValuePage > 0  && (maxValuePage - valuePage) > 9) {
+            pose.pushPose();
+            pose.translate(guiLeft + 230, guiTop + (tempMaxValuePage - 1) * 19 + addedPoint, 20);
+            pose.scale(scaleNextStar * 0.5f, scaleNextStar * 0.5f, 1);
+            if (!hoverDown)
+                drawTexturedModalRect(poseStack, 0, 0, 74, 18, 32, 18);
+            else
+                drawTexturedModalRect(poseStack, 0, 0, 107, 18, 32, 18);
+            pose.popPose();
+
+        }
+        if (focusedPlanet != null) {
+            EnumLevels level = EnumLevels.NONE;
+
+            if (focusedPlanet instanceof IPlanet) {
+                level = ((IPlanet) focusedPlanet).getLevels();
+            }
+            if (focusedPlanet instanceof ISatellite) {
+                level = ((ISatellite) focusedPlanet).getLevels();
+            }
+            if (focusedPlanet instanceof IAsteroid) {
+                level = ((IAsteroid) focusedPlanet).getLevels();
+            }
+            if (container.base.level != null && container.base.level.ordinal() >= level.ordinal() && level != EnumLevels.NONE && container.base.level != EnumLevels.NONE) {
+                RenderSystem.enableBlend();
+                bindTexture(back1);
+                drawTexturedModalRect(poseStack, guiLeft + 30 + 175 / 2 - 102 / 2, guiTop + 210, 0, 105, 102, 20);
+                RenderSystem.disableBlend();
+                drawString(poseStack, guiLeft + 30 + 175 / 2 - 102 / 2 + 102 / 2 - getStringWidth(Localization.translate("iu.space.open")) / 2, 210 + 3, Localization.translate("iu.space.open"), 0xFFFFFFFF);
+            }
+        }
     }
 
-    private void renderAsteroid(GuiGraphics poseStack, MiniAsteroid miniAsteroid) {
+    int valuePage = 0;
+    int maxValuePage = 9;
+
+    private void startAnimation(boolean forward) {
+        if (animating) return;
+        this.animating = true;
+        this.animatingForward = forward;
+        this.animationStartTime = System.currentTimeMillis();
+        this.animationProgress = 0f;
+    }
+
+    private float animationProgress = 1.0f;
+    private boolean animating = false;
+    private boolean animatingForward = true;
+    private long animationStartTime;
+    private final float ANIMATION_DURATION = 900f;
+
+
+    private void renderMainMenu(GuiGraphics poseStack, PoseStack pose, float partialTicks, int mouseX, int mouseY) {
+        List<ISystem> systems1 = SpaceNet.instance.getSystem();
+        this.systems = systems1.stream().filter(iSystem -> !iSystem.getStarList().isEmpty()).collect(Collectors.toList());
+        new ImageSpaceInterface(this, imageWidth / 2 - 80 + 30, 30 + 30, 90, 90).drawBackground(poseStack, this.guiLeft, guiTop);
+        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/gui_space_main.png"));
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        pose.pushPose();
+        int width1 = 90;
+        int height1 = 90;
+        float centerX = guiLeft + this.imageWidth / 2 - 80 + 94 + 30;
+        float centerY = guiTop + 30 + 30;
+        pose.translate(centerX, centerY, 30);
+        pose.mulPose(Axis.ZP.rotationDegrees(0));
+        pose.mulPose(Axis.XP.rotationDegrees(25));
+        pose.mulPose(Axis.YP.rotationDegrees(-45));
+        drawTexturedModalRect(poseStack, -2, 0, 0, 0, width1 - 3, height1 + 2);
+        drawTexturedModalRect(poseStack, width1 - 6, 0, 251, 0, 5, height1 + 2);
+        drawTexturedModalRect(poseStack, -2, height1 + 2, 0, 250, width1 - 1, 6);
+        drawTexturedModalRect(poseStack, width1 - 7, height1 + 2, 250, 250, 6, 5);
+
+        pose.popPose();
+
+
+        GuiCore.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/gui_space_main.png"));
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        pose.pushPose();
+        width1 = 90;
+        height1 = 90;
+        centerX = guiLeft + this.imageWidth / 2 - 80 - 94 + 27 + 30;
+        centerY = guiTop + 30 - 25 + 30;
+        pose.translate(centerX, centerY, 80);
+        pose.mulPose(Axis.ZP.rotationDegrees(-0));
+        pose.mulPose(Axis.XP.rotationDegrees(-25));
+        pose.mulPose(Axis.YP.rotationDegrees(-45));
+        drawTexturedModalRect(poseStack, -2, 0, 0, 0, width1 - 3, height1 + 2);
+        drawTexturedModalRect(poseStack, width1 - 6, 0, 251, 0, 5, height1 + 2);
+        drawTexturedModalRect(poseStack, -2, height1 + 2, 0, 250, width1 - 1, 6);
+        drawTexturedModalRect(poseStack, width1 - 7, height1 + 2, 250, 250, 6, 5);
+        pose.popPose();
+        bindTexture();
+        if (animating) {
+            long elapsed = System.currentTimeMillis() - animationStartTime;
+            animationProgress = Math.min(elapsed / ANIMATION_DURATION, 1.0f);
+
+            if (animationProgress >= 1.0f) {
+                animating = false;
+            }
+        }
+
+        float offset = 50f * (1.0f - animationProgress);
+        if (!animatingForward) offset *= -1;
+
+        // Индексы
+        int nextIndex = (systemId + 1) % systems.size();
+        int prevIndex = (systemId - 1);
+        if (prevIndex < 0)
+            prevIndex = systems.size() - 1;
+        IStar centerStar = systems.get(systemId).getStarList().get(0);
+        IStar nextStar = systems.get(nextIndex).getStarList().get(0);
+        IStar prevStar = systems.get(prevIndex).getStarList().get(0);
+
+
+        enableScissor(guiLeft + imageWidth / 2 - 80 + 4 + 30, guiTop + 30 + 4 + 30,
+                guiLeft + imageWidth / 2 - 80 + 90 - 4 + 30, guiTop + 30 + 90 - 4 + 30);
+        centerX = guiLeft + this.imageWidth / 2 - 80 + 94 + 30;
+        centerY = guiTop + 30 + 30;
+        renderPlanet1(poseStack.pose(), 52f, centerStar.getLocation(), (float) this.guiLeft + imageWidth / 2 - 35 + offset + 30, (float) this.guiTop + 75 + 30, 0,
+                (float) centerStar.getRotation(this.container.base.getWorld().getGameTime()),
+                centerStar.getRotationAngle(), 0
+        );
+
+        disableScissor();
+
+
+        pose.pushPose();
+        pose.translate(0, 0, 40);
+
+        enableScissor(guiLeft + imageWidth / 2 - 80 + 94 + 1 + 30, guiTop + 10 + 4 + 30,
+                guiLeft + imageWidth / 2 - 80 + 94 + 60 + 1 + 30, guiTop + 30 + 70 + 30);
+        renderPlanet1(poseStack.pose(), 34f, nextStar.getLocation(), (float) centerX + 30 + offset, (float) centerY + 32, 0,
+                (float) -45,
+                -10, -10
+        );
+
+        disableScissor();
+        pose.popPose();
+
+        pose.pushPose();
+        pose.translate(0, 0, 40);
+        centerX = guiLeft + this.imageWidth / 2 - 80 - 94 + 27 + 30;
+        centerY = guiTop + 30 - 25 + 30;
+        enableScissor((int) (centerX + 1), guiTop + 10 + 4 + 30,
+                (int) (centerX + 60), guiTop + 30 + 70 + 30);
+
+        renderPlanet1(poseStack.pose(), 34f, prevStar.getLocation(), (float) centerX + 30 + offset, (float) centerY + 32 + 25, 0,
+                (float) -45,
+                10, -10
+        );
+
+        disableScissor();
+        pose.popPose();
+        ResourceLocation background1 = new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_other.png");
+        bindTexture(background1);
+        float scaleSpeed = 0.02f;
+        float maxScale = 1.2f;
+        float minScale = 1.0f;
+        if (hoverBackStar) {
+            if (growingBack) {
+                scaleBackStar += scaleSpeed;
+                if (scaleBackStar >= maxScale) {
+                    scaleBackStar = maxScale;
+                    growingBack = false;
+                }
+            } else {
+                scaleBackStar -= scaleSpeed;
+                if (scaleBackStar <= minScale) {
+                    scaleBackStar = minScale;
+                    growingBack = true;
+                }
+            }
+        } else {
+            scaleBackStar = 1.0f;
+        }
+
+
+        if (hoverNextStar) {
+            if (growingNext) {
+                scaleNextStar += scaleSpeed;
+                if (scaleNextStar >= maxScale) {
+                    scaleNextStar = maxScale;
+                    growingNext = false;
+                }
+            } else {
+                scaleNextStar -= scaleSpeed;
+                if (scaleNextStar <= minScale) {
+                    scaleNextStar = minScale;
+                    growingNext = true;
+                }
+            }
+        } else {
+            scaleNextStar = 1.0f;
+        }
+
+
+        if (hoverBackStar) {
+            float x = this.guiLeft + imageWidth / 2 - 110 + 30;
+            float y = this.guiTop + 75 - 20 + 75 + 30;
+            drawScaledTexture(poseStack, x, y, 37, 0, 17, 32, scaleBackStar);
+        } else {
+            drawTexturedModalRect(poseStack, this.guiLeft + imageWidth / 2 - 110 + 30, (int) this.guiTop + 75 - 20 + 75 + 30, 0, 0, 17, 32);
+        }
+        if (hoverNextStar) {
+            float x = this.guiLeft + imageWidth / 2 + 20 + 30;
+            float y = this.guiTop + 75 - 20 + 75 + 30;
+            drawScaledTexture(poseStack, x, y, 56, 0, 17, 32, scaleNextStar);
+        } else {
+            drawTexturedModalRect(poseStack, this.guiLeft + imageWidth / 2 + 20 + 30, (int) this.guiTop + 75 - 20 + 75 + 30, 19, 0, 17, 32);
+
+        }
+    }
+
+
+
+    private void renderAsteroid(GuiGraphics poseStack, MiniAsteroid miniAsteroid, IAsteroid asteroid) {
         double time = container.base.getWorld().getGameTime();
         double angle = 2 * Math.PI * (time * miniAsteroid.getRotationSpeed()) / 800D;
         float planetX = (float) (miniAsteroid.getX() * Math.cos(angle));
         float planetY = (float) (miniAsteroid.getX() * Math.sin(angle));
         final double size = miniAsteroid.getSize() * 2;
-        bindTexture(ASTEROID_TEXTURE);
+        bindTexture(asteroid.getLocation());
         PoseStack pose = poseStack.pose();
         pose.pushPose();
+        pose.translate(3 - 1.2, -0.2125, 0);
         pose.translate(planetX, planetY, 0);
         pose.scale((float) ((0.25 / 128D) * size), (float) ((0.25 / 128D) * size), 1);
         drawTexturedModalRect(poseStack, -128, -128, 0, 0, 256, 256);
         pose.popPose();
     }
 
-    private void renderOrbit(PoseStack poseStack, double radius) {
+    private void renderOrbit(PoseStack poseStack, double radius, boolean hasPressure, boolean hasOxygen) {
         Matrix4f matrix = poseStack.last().pose();
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
 
         buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
-
-        int segments = (int) (32 * Math.max(1,radius/2));
+        int segments = (int) (32 * Math.max(1, radius / 2));
         for (int i = 0; i <= segments; i++) {
             float angle = (float) (2 * Math.PI * i / segments);
             float x = (float) (radius * Math.cos(angle));
             float y = (float) (radius * Math.sin(angle));
-            buffer.vertex(matrix, x, y, 0.0F).color(0, 0, 255, 102).endVertex(); // синий с прозрачностью
+            if (hasPressure) {
+                buffer.vertex(matrix, x, y, 0.0F).color(255, 0, 0, 255).endVertex();
+
+            } else if (hasOxygen) {
+                buffer.vertex(matrix, x, y, 0.0F).color(0, 255, 0, 255).endVertex();
+
+            } else {
+                buffer.vertex(matrix, x, y, 0.0F).color(0, 0, 255, 255).endVertex();
+
+            }
         }
 
 
         tessellator.end();
-
         RenderSystem.disableBlend();
     }
 
@@ -1215,26 +1005,31 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         mouseX -= (double) this.leftPos;
         mouseY -= (double) this.topPos;
-        if (mode == 1 && mouseX >= 7 && mouseY >= 76 && mouseX <= 7 + 162 && mouseY <= 76 + 90) {
+        if (mode == 1 && mouseX >= 30 && mouseY >= 30 && mouseX <= 30 + 175 && mouseY <= 30 + 175) {
             if (button == 0) {
-                int  dx = (int) dragX;
+                int dx = (int) dragX;
                 int dy = (int) dragY;
-                offsetX += dx ;
+                offsetX += dx;
                 offsetY += dy;
                 isDragging = true;
             } else {
                 isDragging = false;
             }
+        } else if (mode == 2) {
+            for (int ii = 0; ii < defaultResearchGuis.size(); ii++) {
+                GuiDefaultResearchTable defaultResearchTable = defaultResearchGuis.get(ii);
+                if (defaultResearchTable.mouseDragged(mouseX, mouseY, dragX, dragY))
+                    return true;
+            }
         }
-        return  isDragging;
+        return isDragging;
     }
 
     @Override
     public boolean mouseScrolled(double d, double d2, double d3) {
-        super.mouseScrolled(d, d2, d3);
         int mouseX = (int) (d - this.guiLeft);
         int mouseY = (int) (d2 - this.guiTop);
-        if (mode == 1 && mouseX >= 7 && mouseY >= 76 && mouseX <= 7 + 162 && mouseY <= 76 + 90) {
+        if (mode == 1 && mouseX >= 30 && mouseY >= 30 && mouseX <= 30 + 175 && mouseY <= 30 + 175) {
             ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
             int dWheel = (int) (d3 * 10);
             if (dWheel != 0) {
@@ -1258,6 +1053,27 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                 isDragging = false;
             }
             return true;
+        } else if (mode == 1 && mouseX >= 207 && mouseX <= 207 + 60 && mouseY >= 28 + 12 && mouseY <= 28 + 12 + 9 * 19 * 0.65) {
+            ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
+            if (scrollDirection != ScrollDirection.stopped) {
+                int prevValue = valuePage;
+                valuePage += scrollDirection == ScrollDirection.down ? 1 : -1;
+                if (valuePage < 0)
+                    valuePage = 0;
+                if (maxValuePage - valuePage < 9) {
+                    valuePage = maxValuePage - 9;
+                }
+                if (prevValue != valuePage)
+                    container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
+                return  true;
+            }
+        } else if (mode == 2) {
+            for (int ii = 0; ii < defaultResearchGuis.size(); ii++) {
+                ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
+                GuiDefaultResearchTable defaultResearchTable = defaultResearchGuis.get(ii);
+                if (defaultResearchTable.mouseScrolled(mouseX, mouseY, scrollDirection))
+                    return true;
+            }
         }
         return super.mouseScrolled(d, d2, d3);
     }
@@ -1271,6 +1087,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         bindTexture(planet.getLocation());
         PoseStack pose = poseStack.pose();
         pose.pushPose();
+        pose.translate(3 - 1.2, -0.2125, 0);
         pose.translate(planetX, planetY, 0);
         pose.scale((float) ((0.25 / 128D) * size), (float) ((0.25 / 128D) * size), 1);
         drawTexturedModalRect(poseStack, -128, -128, 0, 0, 256, 256);
@@ -1289,6 +1106,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         bindTexture(satellite.getLocation());
         PoseStack pose = poseStack.pose();
         pose.pushPose();
+        pose.translate(3 - 1.2, -0.2125, 0);
         pose.translate(planetX, planetY, 0); // Без лишнего смещения на size1
         pose.scale((float) ((0.25 / 128D) * size), (float) ((0.25 / 128D) * size), 1);
         drawTexturedModalRect(poseStack, -128, -128, 0, 0, 256, 256); // Центр текстуры в точке (0,0)
@@ -1296,309 +1114,215 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
     }
 
 
-    public void renderIconWithProgressBar(PoseStack poseStack, int x, int y, int width, int height, float progress) {
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-        // Подготовка OpenGL-состояний
-        poseStack.pushPose();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableDepthTest();
-        RenderSystem.setShader(GameRenderer::getPositionShader);
 
 
-        RenderSystem.setShaderColor(0.5F, 0.5F, 0.5F, 1.0F);
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        buffer.vertex(poseStack.last().pose(), x, y + height, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), x + width, y + height, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), x + width, y, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), x, y, 0).endVertex();
-        tessellator.end();
 
-        float filledWidth = width * Mth.clamp(progress, 0.0F, 1.0F);
-        if (progress != 0) {
-            RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-            buffer.vertex(poseStack.last().pose(), x, y + height, 0).endVertex();
-            buffer.vertex(poseStack.last().pose(), x + filledWidth, y + height, 0).endVertex();
-            buffer.vertex(poseStack.last().pose(), x + filledWidth, y, 0).endVertex();
-            buffer.vertex(poseStack.last().pose(), x, y, 0).endVertex();
-            tessellator.end();
-        }else{
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION);
-            buffer.vertex(poseStack.last().pose(), x, y + height, 0).endVertex();
-            buffer.vertex(poseStack.last().pose(), x, y + height, 0).endVertex();
-            buffer.vertex(poseStack.last().pose(), x, y, 0).endVertex();
-            buffer.vertex(poseStack.last().pose(), x, y, 0).endVertex();
-            tessellator.end();
+
+
+
+
+
+    public void renderBackground(GuiGraphics pGuiGraphics) {
+        if (this.minecraft.level != null) {
+            pGuiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
+        } else {
+            this.renderDirtBackground(pGuiGraphics);
         }
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION);
-        buffer.vertex(poseStack.last().pose(), x, y + height, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), x + width, y + height, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), x + width, y, 0).endVertex();
-        buffer.vertex(poseStack.last().pose(), x, y, 0).endVertex();
-        tessellator.end();
 
-        // Восстановление состояний
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
-        poseStack.popPose();
     }
 
-
-    public void renderProgressBar(PoseStack poseStack, int x, int y, int width, int height, float progress, final EnumRoversLevel level) {
-        ItemStack stack = switch (level) {
-            case ONE -> new ItemStack(IUItem.rocket.getItem());
-            case TWO -> new ItemStack(IUItem.adv_rocket.getItem());
-            case THREE -> new ItemStack(IUItem.imp_rocket.getItem());
-            case FOUR -> new ItemStack(IUItem.per_rocket.getItem());
-        };
-
-        if (stack == null || stack.isEmpty()) return;
-
-        Minecraft mc = Minecraft.getInstance();
-        ItemRenderer itemRenderer = mc.getItemRenderer();
-
-        float filledWidth = width * Mth.clamp(progress, 0.0F, 1.0F);
-
-        poseStack.pushPose();
-        poseStack.translate(x + 10 + filledWidth, y + 2, 0);
-        poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-        poseStack.scale(1.0F, 1.0F, 1.0F);
-        BakedModel model = itemRenderer.getModel(stack, null, null, 0);
-
-
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        poseStack.pushPose();
-
-        poseStack.translate(8.0D, 8.0D, 0.0D);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(16.0F, 16.0F, 16.0F);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        Lighting.setupForFlatItems();
-
-        itemRenderer.render(
-                stack,
-                GUI,
-                false,
-                poseStack,
-                bufferSource,
-                15728880,
-                OverlayTexture.NO_OVERLAY,
-                model
-        );
-
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-        Lighting.setupFor3DItems();
-        poseStack.popPose();
-
-
-
-        poseStack.popPose();
-    }
-
-
-    public void renderProgressBarSends(PoseStack poseStack, int x, int y, int width, int height, float progress) {
-        ItemStack stack;
-        stack = new ItemStack(IUItem.rocket.getItem());
-        poseStack.pushPose();
-        float filledWidth = height * Mth.clamp(progress, 0.0F, 1.0F);
-        poseStack.translate(x + 5, y + height - filledWidth, 0);
-        poseStack.scale(1.0F, 1.0F, 1.0F);
-        Minecraft mc = Minecraft.getInstance();
-        ItemRenderer itemRenderer = mc.getItemRenderer();
-        BakedModel model = itemRenderer.getModel(stack, null, null, 0);
-
-
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        poseStack.pushPose();
-
-        poseStack.translate(8.0D, 8.0D, 0.0D);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(16.0F, 16.0F, 16.0F);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        Lighting.setupForFlatItems();
-
-        itemRenderer.render(
-                stack,
-                GUI,
-                false,
-                poseStack,
-                bufferSource,
-                15728880,
-                OverlayTexture.NO_OVERLAY,
-                model
-        );
-
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-        Lighting.setupFor3DItems();
-        poseStack.popPose();
-        poseStack.popPose();
-    }
-
-    public void renderProgressBackBar(PoseStack poseStack, int x, int y, int width, int height, float progress, final EnumRoversLevel level) {
-        ItemStack stack = switch (level) {
-            case ONE -> new ItemStack(IUItem.rocket.getItem());
-            case TWO -> new ItemStack(IUItem.adv_rocket.getItem());
-            case THREE -> new ItemStack(IUItem.imp_rocket.getItem());
-            case FOUR -> new ItemStack(IUItem.per_rocket.getItem());
-        };
-
-        if (stack == null || stack.isEmpty()) return;
-
-        Minecraft mc = Minecraft.getInstance();
-        ItemRenderer itemRenderer = mc.getItemRenderer();
-
-        float filledWidth = width * Mth.clamp(progress, 0.0F, 1.0F);
-
-        poseStack.pushPose();
-
-
-        poseStack.translate(x - 10 + width - filledWidth, y + 20, 0);
-        poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
-        poseStack.scale(1.0F, 1.0F, 1.0F);
-
-
-        BakedModel model = itemRenderer.getModel(stack, null, null, 0);
-
-
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        poseStack.pushPose();
-
-        poseStack.translate(8.0D, 8.0D, 0.0D);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(16.0F, 16.0F, 16.0F);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        Lighting.setupForFlatItems();
-
-        itemRenderer.render(
-                stack,
-                GUI,
-                false,
-                poseStack,
-                bufferSource,
-                15728880,
-                OverlayTexture.NO_OVERLAY,
-                model
-        );
-
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-        Lighting.setupFor3DItems();
-        poseStack.popPose();
-
-        poseStack.popPose();
-    }
-
-
-
-        @Override
+    @Override
     protected void mouseClicked(final int i, final int j, final int k) {
+        imageHeight = 255;
+        imageWidth = 255;
+        boolean isClickedButton = false;
         super.mouseClicked(i, j, k);
         int xMin = guiLeft;
         int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
         if (mode == 0) {
-            List<ISystem> systems = SpaceNet.instance.getSystem();
-            systems = systems.stream().filter(iSystem -> !iSystem.getStarList().isEmpty()).collect(Collectors.toList());
-            for (int index = 0; index < systems.size(); index++) {
-                if (x >= 10 && x <= 40 && y >= 6 + 32 * index && y <= 36 + 32 * index) {
-                    this.star = systems.get(index).getStarList().get(0);
-                    this.mode = 1;
+            if (x >= 255 / 2 - 80 && x <= 255 / 2 - 80 + 90 && y >= 30+ 30 && y <= 120+ 30) {
+                this.mode = 1;
+                this.star = this.systems.get(systemId).getStarList().get(0);
+                valuePage = 0;
+                maxValuePage = 0;
+                container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
+                return;
+            }
+            if (!animating) {
+                if (hoverNextStar) {
+                    isClickedButton = true;
+                    startAnimation(true);
+                    systemId++;
+                    if (systemId >= systems.size()) {
+                        systemId = 0;
+                    }
+                }
+                if (hoverBackStar) {
+
+                    isClickedButton = true;
+                    startAnimation(false);
+                    systemId--;
+                    if (systemId < 0) {
+                        systemId = systems.size() - 1;
+                    }
                 }
             }
-        } else if (mode == 5) {
-            if (x > 130 && x <= 130 + 16 && y > 16 && y < 16 + 16) {
-                new PacketAddBuildingToColony(this.container.base.colony);
-            }
+
         } else if (mode == 1) {
 
+            if (hoverBack) {
+                this.mode = 0;
+                this.star = null;
+                this.systems = Collections.emptyList();
+                this.focusedPlanet = null;
+                container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
+                defaultResearchGuis.clear();
+                return;
+            }
+            if (hoverOpen && focusedPlanet != null) {
+                mode = 2;
+                int seconds = 0;
+                EnumLevels levels = EnumLevels.FIRST;
+                if (focusedPlanet instanceof IPlanet) {
+                    seconds = (int) ((Math.abs(focusedPlanet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+                    levels = ((IPlanet) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof ISatellite) {
+                    ISatellite planet = (ISatellite) focusedPlanet;
+                    levels = planet.getLevels();
+                    double distancePlanetToPlanet = (planet
+                            .getPlanet()
+                            .getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance());
+                    double distanceSatellite = Math.abs(SpaceInit.moon.getDistanceFromPlanet() - planet.getDistanceFromPlanet()) / SpaceInit.moon.getDistanceFromPlanet();
+                    if (planet.getPlanet() == SpaceInit.earth) {
+                        distanceSatellite = 1;
+                    }
+                    seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.8 + distancePlanetToPlanet * (12 * 60 * 0.8)));
+                }
+                if (focusedPlanet instanceof IAsteroid) {
+                    IAsteroid planet = (IAsteroid) focusedPlanet;
+                    seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+                    levels = planet.getLevels();
+                }
+                this.minimumLimit = findOptimalUpgradeDistribution(seconds * 2, levels.ordinal() + 1);
+
+                new PacketUpdateBody(this.container.base, focusedPlanet);
+                container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
+                return;
+            }
             int dopX = 0;
             int dopY = 0;
-            if (focusedPlanet != null) {
-                if (focusedPlanet instanceof IPlanet) {
-                    double time = container.base.getWorld().getGameTime();
-                    double angle = 2 * Math.PI * (time * focusedPlanet.getOrbitPeriod()) / 400D;
-                    dopX = (int) ((focusedPlanet.getDistance() * Math.cos(angle)) * scale * 16);
-                    dopY = (int) ((focusedPlanet.getDistance() * Math.sin(angle)) * scale * 16);
-                    focusedPlanet = null;
-                } else {
-                    ISatellite satellite1 = (ISatellite) focusedPlanet;
-                    double time = container.base.getWorld().getGameTime();
-                    double angle = 2 * Math.PI * (time * satellite1.getPlanet().getOrbitPeriod()) / 400D;
-                    double angle1 = 2 * Math.PI * (time * satellite1.getOrbitPeriod()) / 400D;
-                    dopX =
-                            (int) ((float) ((float) (satellite1
-                                    .getPlanet()
-                                    .getDistance() * Math.cos(angle)) + (satellite1.getDistance() * 0.8 * Math.cos(
-                                    angle1))) * scale * 16);
-                    dopY =
-                            (int) (((float) (satellite1
-                                    .getPlanet()
-                                    .getDistance() * Math.sin(angle)) + (satellite1.getDistance() * 0.8 * Math.sin(
-                                    angle1))) * scale * 16);
+            int jj = 0;
+            List<IBody> list = new ArrayList<>(star.getPlanetList());
+            list.addAll(star.getAsteroidList());
+            list = list.stream()
+                    .sorted(Comparator.comparingDouble(IBody::getDistance))
+                    .collect(Collectors.toList());
+            if (hoverUp || hoverDown) {
+                isClickedButton = true;
+                valuePage += hoverDown ? 1 : -1;
+                if (valuePage < 0)
+                    valuePage = 0;
+                if (maxValuePage - valuePage < 9) {
+                    valuePage = maxValuePage - 9;
+                }
+            }
 
-                    focusedPlanet = null;
+
+            int tempMaxValuePage = Math.min(9, maxValuePage - valuePage);
+            for (int ii = valuePage; ii < tempMaxValuePage + valuePage; ii++) {
+                IBody body = list.get(ii);
+                int dop = 0;
+                if (focusedPlanet == body)
+                    dop = 15;
+                if (focusedPlanet instanceof ISatellite)
+                    if (((ISatellite) focusedPlanet).getPlanet() == body)
+                        dop = 15;
+                int temp = this.addPoint;
+                if (ii <= valueBody)
+                    temp = 0;
+                if (x > 207 + dop && x <= 103 * 0.65 + 207 + dop && y > 28 + (jj + 1) * 19 * 0.65 + temp && y < temp + 28 + (jj + 1) * 19 * 0.65 + 19 * 0.65) {
+                    if (focusedPlanet != body)
+                        this.focusedPlanet = body;
+                    else
+                        this.focusedPlanet = null;
+                    isClickedButton = true;
+                    break;
+
                 }
+                if (dop != 0) {
+                    List<ISatellite> satelliteList = new ArrayList<>();
+                    if (focusedPlanet instanceof IPlanet)
+                        satelliteList = ((IPlanet) focusedPlanet).getSatelliteList();
+                    if (focusedPlanet instanceof ISatellite)
+                        satelliteList = ((ISatellite) focusedPlanet).getPlanet().getSatelliteList();
+                    for (int iii = 0; iii < satelliteList.size(); iii++) {
+                        if (x > 207 + dop * 2 && x <= 103 * 0.65 + 207 + dop * 2 && y > 28 + 12 + jj * 19 * 0.65 + temp + (iii + 1) * 19 * 0.65 && y < 28 + 12 + jj * 19 * 0.65 + temp + (iii + 2) * 19 * 0.65) {
+                            if (focusedPlanet != satelliteList.get(iii))
+                                this.focusedPlanet = satelliteList.get(iii);
+                            else
+                                this.focusedPlanet = null;
+                            isClickedButton = true;
+                            break;
+
+                        }
+                    }
+                }
+                jj++;
+
             }
-            for (int index = 0; index < Math.min(star.getPlanetList().size() + star.getAsteroidList().size(), 7); index++) {
-                if (x >= 190 && x <= 190 + 30 && y >= 6 + 32 * (index % 7) && y <= 31 + 6 + 32 * (index % 7)) {
-                    if (index + value1 < star.getPlanetList().size()) {
-                        IPlanet planet1 = star.getPlanetList().get(index + value1);
-                        if (container.base.level == EnumLevels.NONE) {
-                            continue;
-                        }
-                        if (planet1.getLevels() != EnumLevels.NONE && planet1
-                                .getLevels()
-                                .ordinal() > container.base.level.ordinal()) {
-                            continue;
-                        }
-                        planet = planet1;
-                        new PacketUpdateBody(container.base, planet);
-                        mode = 2;
+
+            if (x >= 30 && x <= 30 + 175 && y >= 30 && y <= 30 + 175) {
+                if (focusedPlanet != null) {
+                    if (focusedPlanet instanceof IPlanet) {
+                        double time = container.base.getWorld().getGameTime();
+                        double angle = 2 * Math.PI * (time * focusedPlanet.getOrbitPeriod()) / 400D;
+                        dopX = (int) ((focusedPlanet.getDistance() * Math.cos(angle)) * scale * 16);
+                        dopY = (int) ((focusedPlanet.getDistance() * Math.sin(angle)) * scale * 16);
+                        focusedPlanet = null;
+                        isClickedButton = true;
+                    } else if (focusedPlanet instanceof IAsteroid) {
+                        double time = container.base.getWorld().getGameTime();
+                        double angle = 2 * Math.PI * (time * focusedPlanet.getOrbitPeriod()) / 400D;
+                        dopX = (int) ((focusedPlanet.getDistance() * Math.cos(angle)) * scale * 16);
+                        dopY = (int) ((focusedPlanet.getDistance() * Math.sin(angle)) * scale * 16);
+                        focusedPlanet = null;
+                        isClickedButton = true;
                     } else {
-                        IAsteroid asteroid1 = star.getAsteroidList().get(index + value1 - star.getPlanetList().size());
-                        if (container.base.level == EnumLevels.NONE) {
-                            continue;
-                        }
-                        if (asteroid1.getLevels() != EnumLevels.NONE && asteroid1
-                                .getLevels()
-                                .ordinal() > container.base.level.ordinal()) {
-                            continue;
-                        }
-                        asteroid = asteroid1;
-                        new PacketUpdateBody(container.base, asteroid);
-                        mode = 4;
+                        ISatellite satellite1 = (ISatellite) focusedPlanet;
+                        double time = container.base.getWorld().getGameTime();
+                        double angle = 2 * Math.PI * (time * satellite1.getPlanet().getOrbitPeriod()) / 400D;
+                        double angle1 = 2 * Math.PI * (time * satellite1.getOrbitPeriod()) / 400D;
+                        dopX =
+                                (int) ((float) ((float) (satellite1
+                                        .getPlanet()
+                                        .getDistance() * Math.cos(angle)) + (satellite1.getDistance() * 0.8 * Math.cos(
+                                        angle1))) * scale * 16);
+                        dopY =
+                                (int) (((float) (satellite1
+                                        .getPlanet()
+                                        .getDistance() * Math.sin(angle)) + (satellite1.getDistance() * 0.8 * Math.sin(
+                                        angle1))) * scale * 16);
+
+                        focusedPlanet = null;
+                        isClickedButton = true;
                     }
                 }
-            }
-            if (x >= 7 && x <= 169 && y >= 76 && y <= 90 + 76) {
                 for (IPlanet planet : star.getPlanetList()) {
-                    if (container.base.level == EnumLevels.NONE) {
-                        continue;
-                    }
-                    if (planet.getLevels() != EnumLevels.NONE && planet.getLevels().ordinal() > container.base.level.ordinal()) {
-                        continue;
-                    }
+
+
                     double time = container.base.getWorld().getGameTime();
                     double angle = 2 * Math.PI * (time * planet.getOrbitPeriod()) / 400D;
                     float planetX = (float) (planet.getDistance() * Math.cos(angle)) * scale * 16;
                     float planetY = (float) (planet.getDistance() * Math.sin(angle)) * scale * 16;
                     double size = planet.getSize() * 2 * scale * 16;
-                    if (x >= planetX - size / 4 + 7 + 162 / 2D + offsetX - dopX && x <= planetX + size / 4 + 7 + 162 / 2D + offsetX - dopX &&
-                            y >= planetY - size / 4 + 80 + 82 / 2D + offsetY - dopY && y <= planetY + size / 4 + 80 + 82 / 2D + offsetY - dopY) {
+
+                    if (x >= planetX - size / 4 + 7 + 162 / 2D + offsetX - dopX + 29 * scale && x <= planetX + size / 4 + 7 + 162 / 2D + offsetX - dopX + 29 * scale &&
+                            y >= planetY - size / 4 + 80 + 82 / 2D + offsetY - dopY - 4 * scale && y <= planetY + size / 4 + 80 + 82 / 2D + offsetY - dopY - 4 * scale) {
                         focusedPlanet = planet;
+                        isClickedButton = true;
                         textIndex = 0;
                         break;
                     }
@@ -1619,10 +1343,11 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                                     (float) ((float) (planet.getDistance() * Math.sin(angle)) + (satellite1.getDistance() * 0.8 * Math.sin(
                                             angle1))) * scale * 16;
                             size = satellite1.getSize() * 2 * scale * 16;
-                            if (x >= planetX - size / 4 + 7 + 162 / 2D + offsetX - dopX && x <= planetX + size / 4 + 7 + 162 / 2D + offsetX - dopX &&
-                                    y >= planetY - size / 4 + 80 + 82 / 2D + offsetY - dopY && y <= planetY + size / 4 + 80 + 82 / 2D + offsetY - dopY) {
+                            if (x >= planetX - size / 4 + 7 + 162 / 2D + offsetX - dopX + 29 * scale && x <= planetX + size / 4 + 7 + 162 / 2D + offsetX - dopX + 29 * scale &&
+                                    y >= planetY - size / 4 + 80 + 82 / 2D + offsetY - dopY - 4 * scale && y <= planetY + size / 4 + 80 + 82 / 2D + offsetY - dopY - 4 * scale) {
                                 focusedPlanet = satellite1;
                                 textIndex = 0;
+                                isClickedButton = true;
                                 break;
                             }
                         }
@@ -1630,45 +1355,84 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                 }
             }
         } else if (mode == 2) {
-            for (int index = 0; index < Math.min(planet.getSatelliteList().size(), 2); index++) {
-                if (x >= 190 && x <= 190 + 30 && y >= 6 + 32 * (index % 2) + 5 * 31 && y < 6 + 32 * (index % 2) + 5 * 31 + 30) {
-                    ISatellite satellite1 = planet.getSatelliteList().get(index + value2);
-                    if (container.base.level == EnumLevels.NONE) {
-                        continue;
+            for (int ii = 0; ii < defaultResearchGuis.size(); ii++) {
+                GuiDefaultResearchTable defaultResearchTable = defaultResearchGuis.get(ii);
+                if (defaultResearchTable.mouseClicked(x, y))
+                    return;
+            }
+            for (int ii = 0; ii < defaultResearchGuis.size(); ii++) {
+                GuiDefaultResearchTable defaultResearchTable = defaultResearchGuis.get(ii);
+                if (defaultResearchTable.is(x, y))
+                    return;
+            }
+            if (hoverResource && defaultResearchGuis.isEmpty()) {
+                boolean find = false;
+                for (GuiDefaultResearchTable defaultResearchTable : defaultResearchGuis) {
+                    if (defaultResearchTable instanceof GuiResourceBody) {
+                        find = true;
+                        break;
                     }
-                    if (planet.getLevels() != EnumLevels.NONE && planet
-                            .getLevels()
-                            .ordinal() > container.base.level.ordinal()) {
-                        continue;
-                    }
-                    Data data = container.base.dataMap.get(planet);
-                    if (planet.getLevels() != EnumLevels.NONE && data.getPercent() < 2) {
-                        continue;
-                    }
-                    satellite = satellite1;
-                    new PacketUpdateBody(container.base, satellite);
-                    mode = 3;
+                }
+                if (!find) {
+                    defaultResearchGuis.add(new GuiResourceBody(this));
                 }
             }
+            if (hoverColonies && defaultResearchGuis.isEmpty() && ((focusedPlanet instanceof  IPlanet && ((IPlanet) focusedPlanet).canHaveColonies())||(focusedPlanet instanceof  ISatellite && ((ISatellite) focusedPlanet).canHaveColonies())||!(focusedPlanet instanceof IAsteroid))) {
+                boolean find = false;
+                for (GuiDefaultResearchTable defaultResearchTable : defaultResearchGuis) {
+                    if (defaultResearchTable instanceof GuiColony) {
+                        find = true;
+                        break;
+                    }
+                }
+                if (!find) {
+                    defaultResearchGuis.add(new GuiColony(this));
+                }
+            }
+            if (hoverExpedition && defaultResearchGuis.isEmpty()) {
+                boolean find = false;
+                for (GuiDefaultResearchTable defaultResearchTable : defaultResearchGuis) {
+                    if (defaultResearchTable instanceof GuiExpeditionTableSpace) {
+                        find = true;
+                        break;
+                    }
+                }
+                if (!find) {
+                    defaultResearchGuis.add(new GuiExpeditionTableSpace(this));
+                }
+            }
+            if (hoverBack) {
+                this.mode = 1;
+                defaultResearchGuis.clear();
+                new PacketUpdateBody(this.container.base, null);
+                container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
+                return;
+            }
+        } else if (mode == 5) {
+            if (x > 130 && x <= 130 + 16 && y > 16 && y < 16 + 16) {
+                new PacketAddBuildingToColony(this.container.base.colony);
+            }
         }
-
+        if (isClickedButton)
+            container.player.playSound(EnumSound.button.getSoundEvent(), 0.5F, 1);
     }
 
-    private void renderPlanet(PoseStack poseStack,
-                              float radius,
-                              ResourceLocation texture,
-                              float x,
-                              float y,
-                              float z,
-                              float rotation,
-                              float rotationAngle) {
+    private void renderPlanet1(PoseStack poseStack,
+                               float radius,
+                               ResourceLocation texture,
+                               float x,
+                               float y,
+                               float z,
+                               float rotation,
+                               float rotationAngle, float rotationAngleX) {
         Minecraft mc = Minecraft.getInstance();
 
         poseStack.pushPose();
 
         poseStack.translate(x, y, z);
-        poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
         poseStack.mulPose(Axis.ZP.rotationDegrees(rotationAngle));
+        poseStack.mulPose(Axis.XP.rotationDegrees(rotationAngleX));
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
@@ -1680,6 +1444,7 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
         poseStack.popPose();
     }
+
 
 
     private void renderCube(PoseStack poseStack, float radius) {
@@ -1739,82 +1504,11 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
 
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
-        if (mode == 0) {
-            if (mouseX >= imageWidth - 12 && mouseX <= imageWidth && mouseY >= 0 && mouseY <= 12) {
-                List<String> text = new ArrayList<>();
-                text.add(Localization.translate("iu.research1.info"));
-                List<String> compatibleUpgrades = new ArrayList<>();
-                for (int i = 1; i < 17; i++) {
-                    compatibleUpgrades.add(Localization.translate("iu.research1.info" + i));
-                }
-                Iterator<String> var5 = compatibleUpgrades.iterator();
-                String itemstack;
-                while (var5.hasNext()) {
-                    itemstack = var5.next();
-                    text.add(itemstack);
-                }
 
-                this.drawTooltip(mouseX - 360, mouseY, text);
-            }
-        }
-        if (mode == 1) {
-            if (mouseX >= imageWidth - 12 && mouseX <= imageWidth && mouseY >= 0 && mouseY <= 12) {
-                List<String> text = new ArrayList<>();
-                text.add(Localization.translate("iu.research2.info"));
-                List<String> compatibleUpgrades = new ArrayList<>();
-                for (int i = 1; i < 14; i++) {
-                    if (i == 12) {
-                        continue;
-                    }
-                    compatibleUpgrades.add(Localization.translate("iu.research2.info" + i));
-                }
-                Iterator<String> var5 = compatibleUpgrades.iterator();
-                String itemstack;
-                while (var5.hasNext()) {
-                    itemstack = var5.next();
-                    text.add(itemstack);
-                }
-
-                this.drawTooltip(mouseX - 360, mouseY, text);
-            }
-        }
-        if (mode == 2 || mode == 3 || mode == 4) {
-            if (mouseX >= imageWidth - 12 && mouseX <= imageWidth && mouseY >= 0 && mouseY <= 12) {
-                List<String> text = new ArrayList<>();
-                text.add(Localization.translate("iu.research3.info"));
-                List<String> compatibleUpgrades = new ArrayList<>();
-                for (int i = 1; i < 17; i++) {
-                    compatibleUpgrades.add(Localization.translate("iu.research3.info" + i));
-                }
-                Iterator<String> var5 = compatibleUpgrades.iterator();
-                String itemstack;
-                while (var5.hasNext()) {
-                    itemstack = var5.next();
-                    text.add(itemstack);
-                }
-
-                this.drawTooltip(mouseX - 360, mouseY, text);
-            }
-        }
-        if (mode == 5) {
-            if (mouseX >= imageWidth - 12 && mouseX <= imageWidth && mouseY >= 0 && mouseY <= 12) {
-                List<String> text = new ArrayList<>();
-                text.add(Localization.translate("iu.research4.info"));
-                List<String> compatibleUpgrades = new ArrayList<>();
-                for (int i = 1; i < 20; i++) {
-                    compatibleUpgrades.add(Localization.translate("iu.research4.info" + i));
-                }
-                Iterator<String> var5 = compatibleUpgrades.iterator();
-                String itemstack;
-                while (var5.hasNext()) {
-                    itemstack = var5.next();
-                    text.add(itemstack);
-                }
-
-                this.drawTooltip(mouseX - 360, mouseY, text);
-            }
-        }
     }
+
+    boolean hoverNextStar = false;
+    boolean hoverBackStar = false;
 
     @Override
     protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
@@ -1822,500 +1516,202 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         handleUpgradeTooltip(par1, par2);
         if (mode == 0) {
             if (star == null) {
-                List<ISystem> systems = SpaceNet.instance.getSystem();
-                systems = systems.stream().filter(iSystem -> !iSystem.getStarList().isEmpty()).collect(Collectors.toList());
-
-
-                for (int i = 0; i < systems.size(); i++) {
-                    IStar star = systems.get(i).getStarList().get(0);
-                    String systemName = systems.get(i).getName();
-                    String starName = star.getName();
-                    systemName = systemName.substring(0, 1).toUpperCase() + systemName
-                            .substring(1)
-                            .toLowerCase()
-                            .replace("system", "");
-                    starName = Localization.translate("iu.body." + starName);
-
-                    String result = Localization.translate("iu.space_solar_system") +
-                            " " + systemName + "\n" + Localization.translate("iu.space_solar") + " " + starName + "\n" + Localization.translate(
-                            "iu.space_solar_planets") + " " + star
-                            .getPlanetList()
-                            .size() + "\n" + Localization.translate("iu.space_solar_asteroid") + " " + (star
-                            .getAsteroidList()
-                            .isEmpty() ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"));
-                    new Area(this, 10, 6 + i * 32, 30, 30).withTooltip(
-                            result
-                    ).drawForeground(poseStack, par1, par2);
-                }
-            }
-        } else if (mode == 5) {
-            IColony colony = this.container.base.colony;
-            if (colony != null) {
-                String text =
-                        "Level: " + colony.getLevel()
-                                + "\n" + Localization.translate("iu.space_colony_experience") + colony.getExperience() + "/" + colony.getMaxExperience()
-                                + "\n" + Localization.translate("iu.space_colony_people") + (colony.getFreeWorkers() + colony.getWorkers())
-                                + "\n" + Localization.translate("iu.space_colony_workers") + colony.getWorkers()
-                                + "\n" + Localization.translate("iu.space_colony_need") + colony.getNeedWorkers()
-                                + "\n" + Localization.translate("iu.space_colony_free") + colony.getFreeWorkers()
-                                + "\n" + Localization.translate("iu.space_colony_energy") + ModUtils.getString(colony.getEnergy()) + "/" + ModUtils.getString(
-                                colony.getMaxEnergy()) + " EF"
-                                + "\n" + Localization.translate("iu.space_colony_oxygen") + ModUtils.getString(colony.getOxygen()) + "/" + ModUtils.getString(
-                                colony.getMaxOxygen())
-                                + "\n" + Localization.translate("iu.space_colony_food") + ModUtils.getString(colony.getFood()) +
-                                "/" + ModUtils.getString((colony.getFreeWorkers() + colony.getWorkers()) * 15)
-                                + "\n" + Localization.translate("iu.space_colony_using_energy") + ModUtils.getString(colony.getUsingEnergy()) + " EF/t"
-                                + "\n" + Localization.translate("iu.space_colony_generation_energy") + ModUtils.getString(colony.getGenerationEnergy()) + " EF/t"
-                                + "\n" + Localization.translate("iu.space_colony_using_oxygen") + ModUtils.getString(colony.getUsingOxygen()) + "t"
-                                + "\n" + Localization.translate("iu.space_colony_generation_oxygen") + ModUtils.getString(colony.getGenerationOxygen()) + "t"
-                                + "\n" + Localization.translate("iu.space_colony_using_food") + ModUtils.getString(colony.getUsingFood()) + "t"
-                                + "\n" + Localization.translate("iu.space_colony_generation_food") + ModUtils.getString(colony.getGenerationFood()) + "t"
-                                + "\n" + Localization.translate("iu.space_colony_protection") + colony.getProtection()
-                                + "\n" + Localization.translate("iu.space_colony_need_protection") + colony
-                                .getBuildingList()
-                                .size() * 2
-                                + "\n" + Localization.translate("iu.space_colony_entertainment") + ModUtils.getString(colony.getPercentEntertainment() * 100) + "%"
-                                + "\n" + Localization.translate("iu.space_colony_available_building") + colony.getAvailableBuilding()
-                                + "\n" + Localization.translate("iu.space_colony_houses") + colony.getBuildingHouseList().size()
-                                + "\n" + Localization.translate("iu.space_colony_factories") + colony.getFactories().size()
-                                + "\n" + Localization.translate("iu.space_colony_generators") + colony.getGenerators().size()
-                                + "\n" + Localization.translate("iu.space_colony_oxygen_stations") + colony
-                                .getOxygenFactoriesList()
-                                .size()
-                                + "\n" + Localization.translate("iu.space_colony_mining_factory") + colony
-                                .getBuildingMiningList()
-                                .size()
-                                + "\n" + Localization.translate("iu.space_colony_storages") + colony.getStorageList().size()
-                                + "\n" + Localization.translate("iu.space_colony_to_auto_delete") + (colony.getToDelete() != 30 ?
-                                colony.getToDelete() + "s" : Localization.translate("iu.space_no"))
-                                + "\n" + Localization.translate("iu.space_colony_has_problem") + (colony.getProblems().isEmpty()
-                                ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"))
-                                + "\n" + Localization.translate("iu.space_colony_problem") + getProblem(colony);
-
-
-                ;
-                int canvasX = 10;
-                int canvasY = 20;
-                int canvasWidth = 114;
-                int canvasHeight = 140;
-                float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
-                if (prevText != text.length()) {
-                    scaled = -1;
-                    prevText = text.length();
-                }
-                if (scaled == -1) {
-                    scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                    scaled = scale;
-                } else {
-                    scale = scaled;
-                }
-                if (this.container.base.getWorld().getGameTime() % 2 == 0) {
-                    if (textIndex < text.length()) {
-                        textIndex++;
-                    }
-                }
-                if (textIndex > text.length()) {
-                    textIndex = text.length();
-                }
-                String visibleText = text.substring(0, textIndex);
-                drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale * 1f);
-                for (int i = value3 * 4, j = 0; i < Math.min(this.itemList.size(), 16 + value3 * 4); j++, i++) {
-                    final int finalI = i;
-                    new ItemStackImage(
-                            this,
-                            150 + 4 + (j % 4) * 18,
-                            20 + (j / 4) * 18,
-                            () -> this.itemList.get(finalI)
-                    ).drawForeground(poseStack,
-                            par1,
-                            par2
-                    );
-                }
-                for (int i = value4 * 4, j = 0; i < Math.min(this.fluidList.size(), 12 + value4 * 4); j++, i++) {
-                    new FluidItem(
-                            this,
-                            150 + 3 + (j % 4) * 18,
-                            25 + 18 * 4 + 4 + (j / 4) * 18,
-                            this.fluidList.get(i)
-                    ).drawForeground(poseStack,
-                            par1,
-                            par2
-                    );
-                }
-                if (this.container.base.getSends() != null) {
-                    List<Timer> timers = this.container.base.getSends().getTimers();
-                    if (timers != null && !timers.isEmpty()) {
-                        new Area(this, 129, 35, 19, 122).withTooltip(timers.get(0).getDisplay()).drawForeground(poseStack, par1, par2);
-                    }
-                }
-            }
-        } else if (mode == 4) {
-            Data data = container.base.dataMap.get(asteroid);
-            String text = getInformationFromBody(asteroid, data);
-            int canvasX = 69;
-            int canvasY = 26;
-            int canvasWidth = 94;
-            int canvasHeight = 55;
-            float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
-            if (prevText != text.length()) {
-                scaled = -1;
-                prevText = text.length();
-            }
-            if (scaled == -1) {
-                scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                scaled = scale;
-            } else {
-                scale = scaled;
-            }
-            if (this.container.base.getWorld().getGameTime() % 2 == 0) {
-                if (textIndex < text.length()) {
-                    textIndex++;
-                }
-            }
-            if (textIndex > text.length()) {
-                textIndex = text.length();
-            }
-            String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale);
-            renderTooltipResource(poseStack, asteroid, data, par1, par2);
-            if (this.container.base.fakeBody != null && container.base.fakeBody.matched(asteroid)) {
-                renderTooltipFakeBody(poseStack, container.base.fakeBody, par1, par2);
-            }
-        } else if (mode == 3) {
-            Data data = container.base.dataMap.get(satellite);
-            String text = getInformationFromBody(satellite, data);
-            int canvasX = 69;
-            int canvasY = 26;
-            int canvasWidth = 94;
-            int canvasHeight = 55;
-            float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
-            if (prevText != text.length()) {
-                scaled = -1;
-                prevText = text.length();
-            }
-            if (scaled == -1) {
-                scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                scaled = scale;
-            } else {
-                scale = scaled;
-            }
-            if (this.container.base.getWorld().getGameTime() % 2 == 0) {
-                if (textIndex < text.length()) {
-                    textIndex++;
-                }
-            }
-            if (textIndex > text.length()) {
-                textIndex = text.length();
-            }
-            String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale);
-
-            renderTooltipResource(poseStack, satellite, data, par1, par2);
-
-            if (this.container.base.fakeBody != null && container.base.fakeBody.matched(satellite)) {
-                renderTooltipFakeBody(poseStack, container.base.fakeBody, par1, par2);
-            }
-        } else if (mode == 2) {
-            Data data = container.base.dataMap.get(planet);
-            IPlanet focusedPlanet = planet;
-            for (int i = value2, j = 0; i < Math.min(
-                    planet.getSatelliteList().size(),
-                    value2 + 2
-            ); i++, j++) {
-                if (i < planet.getSatelliteList().size()) {
-                    ISatellite planet1 = planet.getSatelliteList().get(i);
-                    double progress;
-                    Data data1 = container.base.dataMap.get(planet1);
-                    progress = data1.getPercent() / 100D;
-                    new Area(this, 192, 8 + 32 * (i % 2) + 5 * 31, 30, 30)
-                            .withTooltip(Localization.translate("iu.space_research") + " " + (int) (progress * 100) + "%")
-                            .drawForeground(poseStack, par1, par2);
-                }
-
-
-            }
-            String text = getInformationFromBody(focusedPlanet, data);
-            int canvasX = 69;
-            int canvasY = 26;
-            int canvasWidth = 94;
-            int canvasHeight = 55;
-            float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
-            if (prevText != text.length()) {
-                scaled = -1;
-                prevText = text.length();
-            }
-            if (scaled == -1) {
-                scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                scaled = scale;
-            } else {
-                scale = scaled;
-            }
-            if (this.container.base.getWorld().getGameTime() % 2 == 0) {
-                if (textIndex < text.length()) {
-                    textIndex++;
-                }
-            }
-            if (textIndex > text.length()) {
-                textIndex = text.length();
-            }
-            String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale);
-            renderTooltipResource(poseStack, planet, data, par1, par2);
-            if (this.container.base.fakeBody != null && container.base.fakeBody.matched(planet)) {
-                renderTooltipFakeBody(poseStack, container.base.fakeBody, par1, par2);
+                foregroundMainMenu(poseStack, par1, par2);
             }
         } else if (mode == 1) {
-            if (focusedPlanet == null) {
-                String text = "The Sun is approximately 4.6 billion years old and is at the midpoint of its life cycle, which will " +
-                        "last about 10 billion years. The temperature on its surface is around 5,500°C, while at its core, it reaches approximately 15 million degrees Celsius.";
-                int canvasX = 69;
-                int canvasY = 14;
-                int canvasWidth = 114;
-                int canvasHeight = 55;
-                float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
-                if (prevText != text.length()) {
-                    prevText = text.length();
-                    scaled = -1;
-                }
-                if (scaled == -1) {
-                    scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                    scaled = scale;
-                } else {
-                    scale = scaled;
-                }
-                if (this.container.base.getWorld().getGameTime() % 2 == 0) {
-                    if (textIndex < text.length()) {
-                        textIndex++;
-                    }
-                }
-                if (textIndex > text.length()) {
-                    textIndex = text.length();
-                }
-                String visibleText = text.substring(0, textIndex);
-                drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale);
-            } else {
-                Data data = container.base.dataMap.get(focusedPlanet);
-                String text = "";
-                if (focusedPlanet instanceof IPlanet) {
-                    text = getInformationFromBody(focusedPlanet, data);
-                } else if (focusedPlanet instanceof ISatellite) {
-                    text = getInformationFromBody(focusedPlanet, data);
-                }
-                int canvasX = 69;
-                int canvasY = 14;
-                int canvasWidth = 114;
-                int canvasHeight = 55;
-                float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
-                if (prevText != text.length()) {
-                    scaled = -1;
-                    prevText = text.length();
-                }
-                if (scaled == -1) {
-                    scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                    scaled = scale;
-                } else {
-                    scale = scaled;
-                }
-                if (this.container.base.getWorld().getGameTime() % 2 == 0) {
-                    if (textIndex < text.length()) {
-                        textIndex++;
-                    }
-                }
-                if (textIndex > text.length()) {
-                    textIndex = text.length();
-                }
-                String visibleText = text.substring(0, textIndex);
-                drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale);
+            hoverUp = false;
+            hoverDown = false;
+            hoverBack = false;
+            hoverOpen = false;
+            int tempMaxValuePage = Math.min(9, maxValuePage - valuePage);
+            if (valuePage > 0)
+            if (par1 >= 230 && par1 <= 230 + 16 && par2 >= 30 && par2 <= 30 + 19 * 0.65) {
+                hoverUp = true;
             }
-            for (int i = value1, j = 0; i < Math.min(
-                    star.getPlanetList().size() + this.star.getAsteroidList().size(),
-                    value1 + 7
-            ); i++, j++) {
-                if (i < star.getPlanetList().size()) {
-                    IPlanet planet1 = star.getPlanetList().get(i);
-                    double progress;
-                    Data data = container.base.dataMap.get(planet1);
-                    progress = data.getPercent() / 100D;
-                    if (planet1 == SpaceInit.earth) {
-                        progress = 1F;
-                    }
-                    new Area(this, 190, 6 + 32 * (i % 7), 30, 30)
-                            .withTooltip(Localization.translate("iu.space_research") + " " + (int) (progress * 100) + "%")
-                            .drawForeground(poseStack, par1, par2);
-                } else {
-                    IAsteroid planet1 = star.getAsteroidList().get(i - star.getPlanetList().size());
-                    double progress;
-                    Data data = container.base.dataMap.get(planet1);
-                    progress = data.getPercent() / 100D;
-                    new Area(this, 190, 6 + 32 * (i % 7), 30, 30)
-                            .withTooltip(Localization.translate("iu.space_research") + " " + (int) (progress * 100) + "%")
-                            .drawForeground(poseStack, par1, par2);
+
+            if (tempMaxValuePage > 0 && (maxValuePage - valuePage) > 9)
+            if (par1 >= 230 && par1 <= 230 + 16 && par2 >= (tempMaxValuePage-1)  * 19 + this.addPoint && par2 <(tempMaxValuePage-1)  * 19 + 19 * 0.65 + this.addPoint) {
+                hoverDown = true;
+            }
+            if (par1 >= 9 && par1 <= 9 + 15 && par2 >= 28 && par2 <= 30 + 15) {
+                hoverBack = true;
+            }
+            if (focusedPlanet != null && par1 >= 30 + 175 / 2 - 102 / 2 && par1 <= 30 + 175 / 2 - 102 / 2 + 102 && par2 >= 210 && par2 <= 210 + 22) {
+                hoverOpen = true;
+            }
+
+        } else if (mode == 2) {
+            if (defaultResearchGuis.isEmpty()) {
+                hoverBack = false;
+                hoverResource = false;
+                hoverColonies = false;
+                hoverExpedition = false;
+
+                if (par1 >= 9 && par1 <= 9 + 15 && par2 >= 28 && par2 <= 30 + 15) {
+                    hoverBack = true;
+                }
+                if (par1 >= 30 && par1 <= 30 + 103 * 0.63f && par2 >= 115 && par2 <= 115 + 20 * 0.63f) {
+                    hoverResource = true;
+                }
+                Data data = this.container.base.dataMap.get(focusedPlanet);
+                if (data.getPercent() >= 100 && par1 >= 30 && par1 <= 30 + 103 * 0.63f && par2 >= 155 && par2 <= 155 + 20 * 0.63f) {
+                    hoverColonies = true;
+                }
+                if (par1 >= 30 && par1 <= 30 + 103 * 0.63f && par2 >= 135 && par2 <= 135 + 20 * 0.63f) {
+                    hoverExpedition = true;
+                }
+            }
+            for (int i = 0; i < defaultResearchGuis.size(); i++) {
+                GuiDefaultResearchTable defaultResearchTable = defaultResearchGuis.get(i);
+                defaultResearchTable.drawForegroundLayer(poseStack, par1, par2);
+            }
+            if (defaultResearchGuis.isEmpty()) {
+                Result result = minimumLimit;
+                new Area(this, 34, 173, 16, 16).withTooltip(Localization.translate("iu.space.fuel_level") + " " + result.allocations.fuelLevel).drawForeground(poseStack, par1, par2);
+
+                new Area(this, 34 + 20, 175, 16, 16).withTooltip(Localization.translate("iu.space.rocket_level") + " " + result.allocations.rocketLevel).drawForeground(poseStack, par1, par2);
+                new Area(this, 34 + 40, 175, 16, 16).withTooltip(Localization.translate("iu.space.fuel_used") + " " + result.allocations.fuelUsed + " mb").drawForeground(poseStack, par1, par2);
+                new Area(this, 34 + 40, 175 + 16, 16, 16).withTooltip(Localization.translate("iu.space.time_remaining") + " " + (new Timer(result.allocations.remaining).getDisplay())).drawForeground(poseStack, par1, par2);
+
+
+                int temperature = focusedPlanet.getTemperature();
+                if (temperature > 150) {
+                    int count = (int) Math.ceil((temperature - 150) / 350D);
+                    new Area(this, 34, 175 + 16, 16, 16).withTooltip(Localization.translate("iu.space.heat_module") + " " + (count)).drawForeground(poseStack, par1, par2);
+
+                } else if (temperature < -125) {
+                    int count = (int) Math.ceil((Math.abs(temperature) - 125) / 37D);
+                    new Area(this, 34, 175 + 16, 16, 16).withTooltip(Localization.translate("iu.space.cold_module") + " " + (count)).drawForeground(poseStack, par1, par2);
                 }
 
+                if ((focusedPlanet instanceof IPlanet p && p.getPressure()) || (focusedPlanet instanceof ISatellite s && s.getPressure())) {
+                    new Area(this, 34 + 20, 175 + 16, 16, 16).withTooltip(Localization.translate("iu.space.pressure_module") + " ").drawForeground(poseStack, par1, par2);
+
+                }
             }
+
         }
     }
 
-    private String getProblem(IColony colony) {
-        if (!colony.getProblems().isEmpty()) {
-            StringBuilder problem = new StringBuilder();
-            for (EnumProblems problems : colony.getProblems()) {
-                problem.append(problems.name()).append("\n");
-            }
-            return problem.toString();
+    private void foregroundMainMenu(GuiGraphics poseStack, int par1, int par2) {
+        if (systems != null) {
+            IStar star = systems.get(systemId).getStarList().get(0);
+            String systemName = systems.get(systemId).getName();
+            String starName = star.getName();
+            systemName = systemName.substring(0, 1).toUpperCase() + systemName
+                    .substring(1)
+                    .toLowerCase()
+                    .replace("system", "");
+            starName = Localization.translate("iu.body." + starName);
+
+            String result = Localization.translate("iu.space_solar_system") +
+                    " " + systemName + "\n" + Localization.translate("iu.space_solar") + " " + starName + "\n" + Localization.translate(
+                    "iu.space_solar_planets") + " " + star
+                    .getPlanetList()
+                    .size() + "\n" + Localization.translate("iu.space_solar_asteroid") + " " + (star
+                    .getAsteroidList()
+                    .isEmpty() ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"));
+            new Area(this, imageWidth / 2 - 80 + 30, 30 + 30, 90, 90).withTooltip(
+                    result
+            ).drawForeground(poseStack, par1, par2);
         }
-        return "";
+        hoverNextStar = false;
+        hoverBackStar = false;
+        if (par1 >= imageWidth / 2 - 110 + 30 && par1 <= imageWidth / 2 - 110 + 32 + 30 && par2 >= 75 - 20 + 75 + 30 && par2 <= 75 - 20 + 32 + 75 + 30) {
+            int tempid = systemId - 1;
+            if (tempid < 0)
+                tempid = systems.size() - 1;
+            IStar star = systems.get(tempid).getStarList().get(0);
+            String systemName = systems.get(tempid).getName();
+            String starName = star.getName();
+            systemName = systemName.substring(0, 1).toUpperCase() + systemName
+                    .substring(1)
+                    .toLowerCase()
+                    .replace("system", "");
+            starName = Localization.translate("iu.body." + starName);
+
+            String result = Localization.translate("iu.space_solar_system") +
+                    " " + systemName + "\n" + Localization.translate("iu.space_solar") + " " + starName + "\n" + Localization.translate(
+                    "iu.space_solar_planets") + " " + star
+                    .getPlanetList()
+                    .size() + "\n" + Localization.translate("iu.space_solar_asteroid") + " " + (star
+                    .getAsteroidList()
+                    .isEmpty() ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"));
+            new Area(this, imageWidth / 2 - 110 + 30, 75 - 20 + 75 + 30, 32, 32).withTooltip(
+                    result
+            ).drawForeground(poseStack, par1, par2);
+            hoverBackStar = true;
+        }
+        if (par1 >= imageWidth / 2 + 20 + 30 && par1 <= imageWidth / 2 + 20 + 32 + 30 && par2 >= 75 + 30 - 20 + 75 && par2 <= 75 + 30 - 20 + 32 + 75) {
+            IStar star = systems.get((systemId + 1) % systems.size()).getStarList().get(0);
+            String systemName = systems.get((systemId + 1) % systems.size()).getName();
+            String starName = star.getName();
+            systemName = systemName.substring(0, 1).toUpperCase() + systemName
+                    .substring(1)
+                    .toLowerCase()
+                    .replace("system", "");
+            starName = Localization.translate("iu.body." + starName);
+
+            String result = Localization.translate("iu.space_solar_system") +
+                    " " + systemName + "\n" + Localization.translate("iu.space_solar") + " " + starName + "\n" + Localization.translate(
+                    "iu.space_solar_planets") + " " + star
+                    .getPlanetList()
+                    .size() + "\n" + Localization.translate("iu.space_solar_asteroid") + " " + (star
+                    .getAsteroidList()
+                    .isEmpty() ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"));
+            new Area(this, imageWidth / 2 + 20 + 30, 75 - 20 + 75 + 30, 32, 32).withTooltip(
+                    result
+            ).drawForeground(poseStack, par1, par2);
+            hoverNextStar = true;
+        }
     }
 
-    private void renderTooltipResource(GuiGraphics poseStack, IBody asteroid, Data data, int par1, int par2) {
-        for (int i = 0; i < asteroid.getResources().size(); i++) {
-            IBaseResource resource = asteroid.getResources().get(i);
-            if (resource.getItemStack() != null && !(resource.getPercentPanel() > data.getPercent())) {
-                new Area(this, ((15 + (i % 11) * 13)), (int) ((27 + 66 + 13 * (i / 11))), 13, 13).withTooltip(
-                        resource
-                                .getItemStack()
-                                .getDisplayName().getString() + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(
-                                resource.getChance() * 100D / resource.getMaxChance()) + "%" +
-                                "\n" + Localization.translate("iu.space_rover") + " " + Localization.translate("iu" +
-                                ".space_rover_" + resource.getTypeRovers().name().toLowerCase())
-                ).drawForeground(poseStack, par1, par2);
-            }
-            if (resource.getFluidStack() != null && !(resource.getPercentPanel() > data.getPercent())) {
-                new Area(this, ((15 + (i % 11) * 13)), (int) ((27 + 66 + 13 * (i / 11))), 13, 13).withTooltip(
-                        resource
-                                .getFluidStack()
-                                .getDisplayName().getString() + "\n" + Localization.translate("iu.space_amount") + " " + resource.getFluidStack().getAmount() + "mb" + "\n" +
-                                Localization.translate("iu.space_chance") + " " + ModUtils.getString(resource.getChance() * 100D / resource.getMaxChance()) + "%" +
-                                "\n" + Localization.translate("iu.space_rover") + " " + Localization.translate("iu.space_rover_" + resource
-                                .getTypeRovers()
-                                .name()
-                                .toLowerCase())
-                ).drawForeground(poseStack, par1, par2);
-            }
-        }
-    }
 
-    private void renderTooltipFakeBody(GuiGraphics poseStack, IFakeBody fakePlanet, int par1, int par2) {
-        if (fakePlanet.getTimerTo().canWork()) {
-            new Area(this, 8, 136, 164, 28)
-                    .withTooltip(fakePlanet.getTimerTo().getDisplay())
-                    .drawForeground(poseStack, par1, par2);
-        }
-        if (fakePlanet.getTimerFrom().canWork()) {
-            new Area(this, 8, 136, 164, 28)
-                    .withTooltip(fakePlanet.getTimerFrom().getDisplay())
-                    .drawForeground(poseStack, par1, par2);
-        }
-    }
 
-    public String getInformationFromBody(IBody body, Data data) {
+
+
+    public String getInformationFromBody(IBody body, double data) {
         if (body instanceof IPlanet) {
-            if (body == SpaceInit.earth) {
-                data.setInformation(100);
-            }
             IPlanet focusedPlanet = (IPlanet) body;
 
-            return Localization.translate("iu.space_level") + " " + focusedPlanet.getLevels().name() + "\n" +
-                    Localization.translate("iu.space_planet") + " " + (data.getPercent() > 0
-                    ?
-                    Localization.translate("iu.body." + body.getName().toLowerCase())
-                    : ChatFormatting.OBFUSCATED + Localization.translate("iu.body." + body.getName().toLowerCase())) + "\n" +
-                    Localization.translate("iu.space_amount_satellites") + " " + (data.getPercent() >= 2 ?
-                    focusedPlanet.getSatelliteList().size() :
-                    ChatFormatting.OBFUSCATED + "" + focusedPlanet.getSatelliteList().size()) + "\n" +
-                    Localization.translate("iu.space_size") + " " + (data.getPercent() >= 1 ?
-                    ModUtils.getString(focusedPlanet.getSize() * 12756D / SpaceInit.earth.getSize()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_has_pressure") + " " + (data.getPercent() >= 4 ?
-                    (!focusedPlanet.getPressure() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_distance") + " " + (data.getPercent() >= 0.5 ?
-                    ModUtils.getString(focusedPlanet.getDistance() * 149200000D / SpaceInit.earth.getDistance()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_orbit_time") + " " + (data.getPercent() >= 6 ?
-                    ModUtils.getString(focusedPlanet.getOrbitPeriod() * 365 / SpaceInit.earth.getOrbitPeriod()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_temperature") + " " + (data.getPercent() >= 9 ?
-                    focusedPlanet.getTemperature() + "C°" :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_has_oxygen") + " " + (data.getPercent() >= 11 ?
-                    (!focusedPlanet.hasOxygen() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_colonies") + " " + (data.getPercent() >= 15 ?
-                    (!focusedPlanet.canHaveColonies() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_research") + " " + ModUtils.getString(data.getPercent()) + "%";
+            return
+                    Localization.translate("iu.space_size") + " " + (ModUtils.getString(focusedPlanet.getSize() * 12756D / SpaceInit.earth.getSize())) + "\n" +
+                            Localization.translate("iu.space_has_pressure") + " " + ((!focusedPlanet.getPressure() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                            ".space_yes"))) + "\n" +
+                            Localization.translate("iu.space_distance") + " " + (ModUtils.getString(focusedPlanet.getDistance() * 149200000D / SpaceInit.earth.getDistance())) + "\n" +
+                            Localization.translate("iu.space_orbit_time") + " " + (ModUtils.getString(focusedPlanet.getOrbitPeriod() * 365 / SpaceInit.earth.getOrbitPeriod())) + "\n" +
+                            Localization.translate("iu.space_temperature") + " " + (focusedPlanet.getTemperature() + "C°") + "\n" +
+                            Localization.translate("iu.space_has_oxygen") + " " + ((!focusedPlanet.hasOxygen() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                            ".space_yes"))) + "\n" +
+                            Localization.translate("iu.space_colonies") + " " + ((!focusedPlanet.canHaveColonies() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                            ".space_yes"))) + "\n" +
+                            Localization.translate("iu.space_research") + " " + ModUtils.getString(data) + "%";
         } else if (body instanceof ISatellite) {
             ISatellite focusedPlanet = (ISatellite) body;
 
 
-            return Localization.translate("iu.space_level") + " " + focusedPlanet.getLevels().name() + "\n" +
-                    Localization.translate("iu.space_satellite") + " " + (data.getPercent() > 0
-                    ?
-                    Localization.translate("iu.body." + body.getName().toLowerCase())
-                    : ChatFormatting.OBFUSCATED + Localization.translate("iu.body." + body.getName().toLowerCase())) + "\n" +
-                    Localization.translate("iu.space_planet") + " " + Localization.translate("iu.body." + focusedPlanet
-                    .getPlanet()
-                    .getName()
-                    .toLowerCase()) + "\n" +
-                    Localization.translate("iu.space_size") + " " + (data.getPercent() >= 1 ?
-                    ModUtils.getString(focusedPlanet.getSize() * 3474D / SpaceInit.moon.getSize()) :
-                    ChatFormatting.OBFUSCATED + ModUtils.getString(focusedPlanet.getSize() * 12756D / SpaceInit.earth.getSize())) + "\n" +
-                    Localization.translate("iu.space_has_pressure") + " " + (data.getPercent() >= 4 ?
-                    (!focusedPlanet.getPressure() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_distance_from_planet") + " " + (data.getPercent() >= 0.5 ?
-                    ModUtils.getString(focusedPlanet.getDistance() * 384400 / SpaceInit.moon.getDistance()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_orbit_time") + " " + (data.getPercent() >= 6 ?
-                    ModUtils.getString(focusedPlanet.getOrbitPeriod() * 27 / SpaceInit.moon.getOrbitPeriod()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_temperature") + " " + (data.getPercent() >= 9 ?
-                    focusedPlanet.getTemperature() + "C°" :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_has_oxygen") + " " + (data.getPercent() >= 11 ?
-                    (!focusedPlanet.hasOxygen() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_colonies") + " " + (data.getPercent() >= 15 ?
-                    (!focusedPlanet.canHaveColonies() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_research") + " " + ModUtils.getString(data.getPercent()) + "%";
+            return
+                    Localization.translate("iu.space_size") + " " + (ModUtils.getString(focusedPlanet.getSize() * 3474D / SpaceInit.moon.getSize())) + "\n" +
+                            Localization.translate("iu.space_has_pressure") + " " + ((!focusedPlanet.getPressure() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                            ".space_yes"))) + "\n" +
+                            Localization.translate("iu.space_distance_from_planet") + " " + (ModUtils.getString(focusedPlanet.getDistance() * 384400 / SpaceInit.moon.getDistance())) + "\n" +
+                            Localization.translate("iu.space_orbit_time") + " " + (ModUtils.getString(focusedPlanet.getOrbitPeriod() * 27 / SpaceInit.moon.getOrbitPeriod())) + "\n" +
+                            Localization.translate("iu.space_temperature") + " " + (focusedPlanet.getTemperature() + "C°") + "\n" +
+                            Localization.translate("iu.space_has_oxygen") + " " + ((!focusedPlanet.hasOxygen() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                            ".space_yes"))) + "\n" +
+                            Localization.translate("iu.space_colonies") + " " + ((!focusedPlanet.canHaveColonies() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                            ".space_yes"))) + "\n" +
+                            Localization.translate("iu.space_research") + " " + ModUtils.getString(data) + "%";
         } else if (body instanceof IAsteroid) {
             IAsteroid focusedPlanet = (IAsteroid) body;
-            return Localization.translate("iu.space_level") + " " + focusedPlanet.getLevels().name() + "\n" +
-                    Localization.translate("iu.space_asteroid") + " " + (data.getPercent() > 0
-                    ?
-                    Localization.translate("iu.body." + body.getName().toLowerCase())
-                    : ChatFormatting.OBFUSCATED + Localization.translate("iu.body." + body.getName().toLowerCase())) + "\n" +
-                    Localization.translate("iu.space_amount_asteroids") + " " + (data.getPercent() >= 1 ?
-                    focusedPlanet.getMiniAsteroid().size() :
-                    ChatFormatting.OBFUSCATED + "" + focusedPlanet.getMiniAsteroid().size()) + "\n" +
-                    Localization.translate("iu.space_size") + " " + (data.getPercent() >= 1 ?
-                    ModUtils.getString(focusedPlanet.getSize() * 3474D / SpaceInit.moon.getSize()) :
-                    ChatFormatting.OBFUSCATED + ModUtils.getString(focusedPlanet.getSize() * 12756D / SpaceInit.earth.getSize())) + "\n" +
-                    Localization.translate("iu.space_minimum_distance") + " " + (data.getPercent() >= 4 ?
-                    ModUtils.getString(focusedPlanet.getMinDistance() * 149200000D / SpaceInit.earth.getDistance()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_maximum_distance") + " " + (data.getPercent() >= 4 ?
-                    ModUtils.getString(focusedPlanet.getMinDistance() * 149200000D / SpaceInit.earth.getDistance()) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_temperature") + " " + (data.getPercent() >= 9 ?
-                    focusedPlanet.getTemperature() + "C°" :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_has_oxygen") + " " + (data.getPercent() >= 11 ?
-                    (Localization.translate("iu.space_no")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_colonies") + " " + (data.getPercent() >= 15 ?
-                    (!focusedPlanet.canHaveColonies() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
-                            ".space_yes")) :
-                    ChatFormatting.OBFUSCATED + "???") + "\n" +
-                    Localization.translate("iu.space_research") + " " + ModUtils.getString(data.getPercent()) + "%";
+            return Localization.translate("iu.space_size") + " " + (ModUtils.getString(focusedPlanet.getSize() * 3474D / SpaceInit.moon.getSize())) + "\n" +
+                    Localization.translate("iu.space_minimum_distance") + " " + (ModUtils.getString(focusedPlanet.getMinDistance() * 149200000D / SpaceInit.earth.getDistance())) + "\n" +
+                    Localization.translate("iu.space_maximum_distance") + " " + (ModUtils.getString(focusedPlanet.getMinDistance() * 149200000D / SpaceInit.earth.getDistance())) + "\n" +
+                    Localization.translate("iu.space_temperature") + " " + (focusedPlanet.getTemperature() + "C°") + "\n" +
+                    Localization.translate("iu.space_has_oxygen") + " " + ((Localization.translate("iu.space_no"))) + "\n" +
+                    Localization.translate("iu.space_colonies") + " " + ((!focusedPlanet.canHaveColonies() ? Localization.translate("iu.space_no") : Localization.translate("iu" +
+                    ".space_yes"))) + "\n" +
+                    Localization.translate("iu.space_research") + " " + ModUtils.getString(data) + "%";
 
         }
         return "";
@@ -2326,4 +1722,182 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiresearch_table.png");
     }
 
+
+    private Result computeUncoveredSeconds(List<FuelAllocation> allocations,
+                                           Map<Integer, Double> fuelEfficiency,
+                                           int fuelPerSecond,
+                                           int totalSeconds) {
+
+        for (FuelAllocation fa : allocations) {
+            double seconds = 0;
+            double fuelCoef = fuelEfficiency.get(fa.fuelLevel);
+            double rocketCoef = 1.0 + fa.upgrades * 0.125;
+            seconds += (fa.fuelUsed / (double) fuelPerSecond) * fuelCoef * rocketCoef;
+            if (totalSeconds - seconds <= 0) {
+                fa.remaining =   (fa.fuelUsed / fuelPerSecond);
+                return new Result(fa, fa.upgrades);
+            }
+        }
+        return new Result(null, -1);
+    }
+
+    private List<FuelAllocation> allocateFuel(
+            int totalSeconds,
+            Map<Integer, Double> fuelEfficiency,
+            Map<Integer, Integer> tankCapacities,
+            Map<Integer, Integer> rocketUpgrades,
+            int fuelPerSecond, int planetTier
+    ) {
+        List<FuelAllocation> result = new ArrayList<>();
+
+
+        List<Integer> rocketLevels = new ArrayList<>(tankCapacities.keySet());
+        rocketLevels.sort(Comparator.reverseOrder());
+
+        List<Map.Entry<Integer, Double>> sortedFuel = new ArrayList<>(fuelEfficiency.entrySet());
+        sortedFuel.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
+
+        for (int rocketLevel = 1; rocketLevel < 7; rocketLevel++) {
+
+            int capacity = tankCapacities.getOrDefault(rocketLevel, 0);
+            int upgrades = rocketUpgrades.getOrDefault(rocketLevel, 0);
+            double rocketMultiplier = 1.0 + upgrades * 0.125;
+
+            for (Map.Entry<Integer, Double> entry : sortedFuel) {
+                double remaining = totalSeconds;
+                int fuelLevel = entry.getKey();
+                int requiredLevel = fuelPlanetRequirements.getOrDefault(fuelLevel, Integer.MAX_VALUE);
+                if (planetTier < requiredLevel)
+                    continue;
+                double fuelMultiplier = entry.getValue();
+
+                if (fuelLevel > rocketLevel) continue;
+
+                double totalMultiplier = fuelMultiplier * rocketMultiplier;
+                double maxSeconds = (capacity / (double) fuelPerSecond) * totalMultiplier;
+
+                if (maxSeconds <= 0) continue;
+                if (remaining > maxSeconds) continue;
+                double secondsToCover = remaining;
+                int fuelNeeded = (int) Math.ceil((secondsToCover / totalMultiplier) * fuelPerSecond);
+                fuelNeeded = Math.min(fuelNeeded, capacity);
+                if (fuelNeeded * 2 <= capacity) {
+                    result.add(new FuelAllocation(rocketLevel, fuelLevel, fuelNeeded, upgrades, remaining));
+                    remaining -= (fuelNeeded / (double) fuelPerSecond) * totalMultiplier;
+                    if (remaining <= 0)
+                        break;
+                }
+
+            }
+
+
+        }
+
+        return result;
+    }
+
+    Map<Integer, Integer> rocketPlanetRequirements = Map.of(
+            1, 1,
+            2, 1,
+            3, 3,
+            4, 5
+    );
+
+    public Result findOptimalUpgradeDistribution(
+            int totalSeconds,
+            int planetLevel
+    ) {
+
+        Map<Integer, Integer> usableTanks = new HashMap<>();
+        for (var entry : rocketFuel.entrySet()) {
+            int rocketLevel = entry.getKey();
+            int requiredPlanet = rocketPlanetRequirements.getOrDefault(rocketLevel, Integer.MAX_VALUE);
+            if (planetLevel >= requiredPlanet) {
+                usableTanks.put(rocketLevel, entry.getValue());
+            }
+        }
+
+        List<Result> results = new ArrayList<>();
+        for (int upgrades = 0; upgrades <= 4; upgrades++) {
+            Map<Integer, Integer> upgradeMap = new HashMap<>();
+            if (upgrades > 0 && planetLevel < 4)
+                continue;
+            for (int level : usableTanks.keySet()) {
+                upgradeMap.put(level, upgrades);
+            }
+
+            Map<Integer, Integer> capacityCopy = new HashMap<>(usableTanks);
+
+            List<FuelAllocation> allocations = allocateFuel(
+                    totalSeconds, rocketFuelCoef, capacityCopy, upgradeMap, 2, planetLevel
+            );
+            Result result = computeUncoveredSeconds(allocations, rocketFuelCoef, 2, totalSeconds);
+            if (result.allocations != null)
+                results.add(result);
+        }
+
+        return results.isEmpty() ? new Result(null, -1) : results.get(0);
+    }
+
+    Map<Integer, Integer> fuelPlanetRequirements = Map.of(
+            1, 1,
+            2, 1,
+            3, 5,
+            4, 6
+    );
+}
+
+class Result {
+    FuelAllocation allocations;
+    int totalUpgrades;
+
+    Result(FuelAllocation allocations, int totalUpgrades) {
+        this.allocations = allocations;
+        this.totalUpgrades = totalUpgrades;
+    }
+
+
+
+}
+
+class FuelAllocation {
+    int remaining;
+    int rocketLevel;
+    int fuelLevel;
+    int fuelUsed;
+    int upgrades;
+
+    FuelAllocation(int rocketLevel, int fuelLevel, int fuelUsed, int upgrades, double remaining) {
+        this.rocketLevel = rocketLevel;
+        this.fuelLevel = fuelLevel;
+        this.fuelUsed = fuelUsed;
+        this.upgrades = upgrades;
+        this.remaining = (int) remaining;
+    }
+
+    @Override
+    public String toString() {
+        return "RocketLevel " + rocketLevel + " (+" + upgrades + " upgrades)"
+                + " -> FuelLevel " + fuelLevel + ": " + fuelUsed + " units" + " seconds: " + remaining;
+    }
+
+    public int getFuelLevel() {
+        return fuelLevel;
+    }
+
+    public int getFuelUsed() {
+        return fuelUsed;
+    }
+
+    public int getRemaining() {
+        return remaining;
+    }
+
+    public int getRocketLevel() {
+        return rocketLevel;
+    }
+
+    public int getUpgrades() {
+        return upgrades;
+    }
 }

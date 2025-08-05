@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.Tags;
 
 public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     public final int operationEnergyCost;
@@ -26,7 +27,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     public ItemEnergyTool(
             int operationEnergyCost
     ) {
-        this(2.0F, -3.0F, operationEnergyCost, null);
+        this(2.0F, -3.0F, operationEnergyCost,  Tags.Blocks.GLASS);
     }
 
 

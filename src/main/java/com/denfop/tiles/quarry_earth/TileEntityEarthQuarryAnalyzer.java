@@ -14,6 +14,8 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
@@ -95,6 +97,25 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         nbt.putBoolean("fullAnalyzer", this.fullAnalyzer);
         nbt.putInt("blockCol", this.blockCol);
         nbt.putInt("blockOres", this.blockOres);
+        ListTag mapList = new ListTag();
+
+        for (Map.Entry<ChunkPos, List<DataPos>> entry : chunkPosListHashMap.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+            ChunkPos pos = entry.getKey();
+            entryTag.putInt("x", pos.x);
+            entryTag.putInt("z", pos.z);
+
+            ListTag dataList = new ListTag();
+            for (DataPos dp : entry.getValue()) {
+                dataList.add(dp.save());
+            }
+            entryTag.put("data", dataList);
+
+            mapList.add(entryTag);
+        }
+
+        nbt.put("ChunkPosListHashMap", mapList);
+
         return super.writeToNBT(nbt);
     }
 
@@ -105,6 +126,24 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         this.fullAnalyzer = nbtTagCompound.getBoolean("fullAnalyzer");
         this.blockCol = nbtTagCompound.getInt("blockCol");
         this.blockOres = nbtTagCompound.getInt("blockOres");
+        chunkPosListHashMap = new HashMap<>();
+
+        ListTag mapList = nbtTagCompound.getList("ChunkPosListHashMap", CompoundTag.TAG_COMPOUND);
+        for (Tag tagElement : mapList) {
+            CompoundTag entryTag = (CompoundTag) tagElement;
+            int x = entryTag.getInt("x");
+            int z = entryTag.getInt("z");
+            ChunkPos pos = new ChunkPos(x, z);
+
+            ListTag dataList = entryTag.getList("data", CompoundTag.TAG_COMPOUND);
+            List<DataPos> dataPosList = new ArrayList<>();
+            for (Tag dpTag : dataList) {
+                dataPosList.add(DataPos.load((CompoundTag) dpTag));
+            }
+
+            chunkPosListHashMap.put(pos, dataPosList);
+        }
+
     }
 
     @Override

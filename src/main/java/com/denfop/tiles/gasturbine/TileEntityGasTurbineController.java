@@ -21,10 +21,14 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -46,6 +50,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
     Fluid momentGas;
     List<IRecuperator> recuperators = new ArrayList<>();
     int generate = 0;
+    private List<BlockPos> posesBearings;
 
     public TileEntityGasTurbineController(BlockPos pos, BlockState state) {
         super(InitMultiBlockSystem.GasTurbineMultiBlock,BlockGasTurbine.gas_turbine_controller,pos,state);
@@ -75,6 +80,9 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                 coef = coef / 4;
                 if (canWork && energy.getEnergy().getFreeEnergy() >= generate * coef) {
                     tank.getTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
+                    if (this.getWorld().getGameTime() % 4 == 0){
+                        spawnExhaustParticles(level);
+                    }
                     energy.getEnergy().addEnergy(generate * coef);
                     if (this.getWorld().getGameTime() % 20 == 0) {
                         for (IRecuperator recuperator : recuperators) {
@@ -183,6 +191,26 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                         ITank.class
                 );
         this.tank = (ITank) this.getWorld().getBlockEntity(pos1.get(0));
+        this.posesBearings = this
+                .getMultiBlockStucture()
+                .getPosFromClass(this.getFacing(), this.getBlockPos(),
+                        IAirBearings.class
+                );
+    }
+    public void spawnExhaustParticles(Level level) {
+        if (!(level instanceof ServerLevel server)) return;
+        List<BlockPos> exhausts =posesBearings;
+
+        for (BlockPos pos : exhausts) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY() + 0.5;
+            double z = pos.getZ() + 0.5;
+
+
+            Vec3 motion = Vec3.atLowerCornerOf(getFacing().getOpposite().getNormal());
+
+            server.sendParticles(ParticleTypes.CLOUD, x, y, z,0, motion.x, motion.y, motion.z,0.2);
+        }
     }
 
     @Override

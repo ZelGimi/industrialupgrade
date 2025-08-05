@@ -3,6 +3,7 @@ package com.denfop.invslot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.inv.ITileInventory;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -132,7 +133,7 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
             if (count != 0) {
                 if (minSlot != this.size()) {
                     if (!simulate) {
-                        this.set(minSlot, new ItemStack(stack.getItem(), count, stack.getTag()));
+                        this.set(minSlot, ModUtils.setSize(stack,count));
                     }
                     return 0;
                 }
@@ -263,6 +264,14 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
     }
 
     public void update() {
+    }
+
+    public boolean hasItemList() {
+        return false;
+    }
+
+    public List<IInputItemStack> getStacks(int index) {
+        return Collections.emptyList();
     }
 
 

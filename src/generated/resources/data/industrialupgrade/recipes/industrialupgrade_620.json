@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/miranda_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/miranda_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/miranda_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/miranda_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone1/miranda_cobblestone"

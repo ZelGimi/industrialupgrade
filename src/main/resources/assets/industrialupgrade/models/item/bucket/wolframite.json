@@ -1,0 +1,12 @@
+{
+    "parent": "forge:item/default",
+    "loader": "industrialupgrade:fluid_container",
+    "textures": {
+        "base": "industrialupgrade:item/bucket",
+        "fluid": "industrialupgrade:item/bucket_background",
+        "particle": "industrialupgrade:item/bucket_background"
+    },
+    "flip_gas": false,
+    "apply_tint": true,
+    "fluid": "industrialupgrade:wolframite"
+}

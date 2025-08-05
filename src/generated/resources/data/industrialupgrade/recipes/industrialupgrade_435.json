@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:gold_ingot"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:flint"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/iron"
+    },
+    "B": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "item": "minecraft:flint"
+    }
   },
   "pattern": [
     "BAB",

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/muntsa"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:moremachine/quad_macerator"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "forge:doubleplate/muntsa"
+    },
+    "D": {
+      "item": "industrialupgrade:moremachine/quad_macerator"
+    }
   },
   "pattern": [
     " D ",

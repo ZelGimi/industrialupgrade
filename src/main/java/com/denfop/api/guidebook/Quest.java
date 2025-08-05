@@ -20,10 +20,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Quest {
 
+    private final boolean itemInform;
     public Shape prevShape;
     public ItemStack icon;
     public boolean hasPrev = false;
-    public String localizedName;
+    private String localizedName;
     public String unLocalizedName;
     public Shape shape;
     public TypeQuest typeQuest;
@@ -31,7 +32,7 @@ public class Quest {
     public List<ItemStack> itemStacks;
     public List<FluidStack> fluidStacks;
     public String prevName;
-    public String localizedDescription;
+    private String localizedDescription;
     public int prevX;
     public int prevY;
     public int x;
@@ -48,12 +49,13 @@ public class Quest {
         this.x = x;
         this.y = y;
         this.unLocalizedName = unLocalizedName;
-        this.localizedName = Localization.translate(unLocalizedName);
-        this.localizedDescription = Localization.translate(unLocalizedDescription);
+        this.localizedName = unLocalizedName;
+        this.localizedDescription =unLocalizedDescription;
         if (noDescription)
             this.localizedDescription = "";
         this.shape = shape;
         this.typeQuest = typeQuest;
+        this.itemInform=itemInform;
         this.fluidStacks = Collections.unmodifiableList(fluidStacks);
         this.itemStacks = Collections.unmodifiableList(itemStacks);
         this.typeObject = typeObject;
@@ -77,14 +79,23 @@ public class Quest {
             }
         }
         if (localizationItem) {
-            this.localizedName = this.icon.getDisplayName().getString().replace("[","").replace("]","");
+            this.localizedName = this.icon.getDescriptionId();
             if (itemStacks.isEmpty() && !fluidStacks.isEmpty()) {
-                this.localizedName = fluidStacks.get(0).getDisplayName().getString().replace("[","").replace("]","");
+                this.localizedName = fluidStacks.get(0).getTranslationKey();
             }
         }
+
+    }
+
+    public String getLocalizedName() {
+        return Localization.translate(localizedName);
+    }
+
+    public String getLocalizedDescription() {
         if (itemInform && IUCore.network.getClient() != null) {
-            this.localizedDescription = getLocalization(this.icon);
+            return  getLocalization(this.icon);
         }
+        return Localization.translate(localizedDescription);
     }
 
     @OnlyIn(Dist.CLIENT)

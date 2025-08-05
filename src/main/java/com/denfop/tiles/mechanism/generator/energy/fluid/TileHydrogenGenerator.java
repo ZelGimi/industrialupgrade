@@ -29,6 +29,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityLiquidTankInventory;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -191,7 +192,9 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
             this.energy.useEnergy(used);
         }
 
-
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnHydrogenGeneratorParticles(level,pos,level.random);
+        }
         if (this.getActive() != newActive) {
             this.setActive(newActive);
         }

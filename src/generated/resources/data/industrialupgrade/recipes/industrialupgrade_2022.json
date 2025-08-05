@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/tempered_glass"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/arsenic"
-      }
-    ]
+    "A": {
+      "item": "minecraft:redstone"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "C": {
+      "tag": "forge:plates/arsenic"
+    }
   },
   "pattern": [
     "ACC",

@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:geothermalpump/geothermal_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_509_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:geothermalpump/geothermal_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_509_element"
+    }
   },
   "pattern": [
     " B ",

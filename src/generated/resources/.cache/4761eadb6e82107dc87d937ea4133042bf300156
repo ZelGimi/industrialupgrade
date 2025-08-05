@@ -1,11 +1,11 @@
-// 1.20.1	2025-06-08T16:18:54.896047	Tags for minecraft:block mod id industrialupgrade
+// 1.20.1	2025-08-04T16:28:55.0697309	Tags for minecraft:block mod id industrialupgrade
 96fd12e961bf7ff91171fb82b7b17db4bb1cd658 data/forge/tags/blocks/needs_wood_tool.json
 b229d6a576e35b6d4980624c31fefcae59c1a8fc data/minecraft/tags/blocks/leaves.json
 a93bea601367478d3c3facfdba1b082f6bdc1530 data/minecraft/tags/blocks/logs.json
-6731b6e3c801ad068e2c2671654ffb05ee5ca57d data/minecraft/tags/blocks/mineable/axe.json
-8d62f7adf0be1e53d2d2821edac1d88ecb9dffd7 data/minecraft/tags/blocks/mineable/pickaxe.json
+f8e09c9dd50a4e5e0ae827af57d106ef4779e04b data/minecraft/tags/blocks/mineable/axe.json
+cb57c8be9f256b49e490908d01e480519f78e0a0 data/minecraft/tags/blocks/mineable/pickaxe.json
 7d3763966f01722171e0cf7899f5b854001cc709 data/minecraft/tags/blocks/mineable/shovel.json
-9bd1ce97cc65ba2c12f5b346341d989516cee925 data/minecraft/tags/blocks/mineable/wrench.json
+31ac4b1a9e5b7c9742d41a46d06ad216c3e308f4 data/minecraft/tags/blocks/mineable/wrench.json
 b13c0dd6fa39b2df6a8715cbdf25fc2cfc2e6161 data/minecraft/tags/blocks/needs_iron_tool.json
-ad46b3b07aeaf36574d2bf861e84d836264a2b63 data/minecraft/tags/blocks/needs_stone_tool.json
+bfb85b38afe1bb0b5b5b1c3d7576222e9f6c01e1 data/minecraft/tags/blocks/needs_stone_tool.json
 a6d83cd31fcb47cc3ea38155fa4a855a7c23b27c data/minecraft/tags/blocks/saplings.json

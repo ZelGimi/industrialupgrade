@@ -5,6 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.tiles.mechanism.TileMagnet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,11 +25,26 @@ import java.util.List;
 public class TileEntityAntiMagnet extends TileEntityInventory {
 
     private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, 0, 1, 1.4D, 1));
+    private final ComponentVisibleArea visible;
     public String player;
 
     public TileEntityAntiMagnet(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.antimagnet,pos,state);
         this.player = "";
+        visible = this.addComponent(new ComponentVisibleArea(this));
+    }
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        AABB axisalignedbb = new AABB(
+                this.getBlockPos().getX() - 10,
+                this.getBlockPos().getY() -10,
+                this.getBlockPos().getZ() -10,
+                this.getBlockPos().getX() +10 + 1,
+                this.getBlockPos().getY() + 10 + 1,
+                this.getBlockPos().getZ() +10 + 1
+        );
+        visible.aabb = axisalignedbb;
     }
 
     @Override

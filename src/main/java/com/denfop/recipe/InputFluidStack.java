@@ -1,8 +1,11 @@
 package com.denfop.recipe;
 
 
+import com.denfop.componets.Fluids;
 import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +32,17 @@ public class InputFluidStack implements IInputItemStack {
     public InputFluidStack(Fluid fluid) {
         this(fluid, 1000);
     }
-
+    public InputFluidStack(CompoundTag compoundTag){
+        boolean exist = compoundTag.getBoolean("exist");
+        if (exist){
+            ResourceLocation fluidId = new ResourceLocation(compoundTag.getString("Fluid"));
+            this.fluid = ForgeRegistries.FLUIDS.getValue(fluidId);
+            this.amount = compoundTag.getInt("Amount");
+        }else{
+            this.fluid = Fluids.EMPTY;
+            this.amount = 1;
+        }
+    }
     public InputFluidStack(FluidStack fluid) {
         this(fluid.getFluid(), fluid.getAmount());
     }
@@ -99,6 +112,10 @@ public class InputFluidStack implements IInputItemStack {
         return getFluidContainer(this.fluid);
     }
 
+    public FluidStack getFluid() {
+        return new FluidStack(fluid,amount);
+    }
+
     @Override
     public boolean hasTag() {
         return false;
@@ -110,9 +127,18 @@ public class InputFluidStack implements IInputItemStack {
     }
 
     @Override
-    public void toNetwork(FriendlyByteBuf buffer) {
-        buffer.writeInt(2);
-        buffer.writeFluidStack(new FluidStack(this.fluid, 1000));
+    public CompoundTag writeNBT() {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("id", (byte) 2);
+        compoundTag.putBoolean("exist",fluid != null && !fluid.equals(Fluids.EMPTY) && amount != 0);
+        if (fluid != null && !fluid.equals(Fluids.EMPTY)) {
+            ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
+            if (fluidId != null) {
+                compoundTag.putString("Fluid", fluidId.toString());
+                compoundTag.putInt("Amount", amount);
+            }
+        }
+        return null;
     }
 
 

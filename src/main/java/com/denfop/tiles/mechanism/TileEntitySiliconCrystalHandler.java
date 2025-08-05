@@ -14,6 +14,7 @@ import com.denfop.componets.ComponentTimer;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSiliconCrystalHandler;
+import com.denfop.events.IUEventHandler;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSiliconCrystalHandler;
 import com.denfop.invslot.InvSlot;
@@ -31,6 +32,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -57,7 +59,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
         inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this);
 
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 7, 30)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 0)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((TileEntitySiliconCrystalHandler) this.parent).levelBlock * 1.4);
@@ -66,7 +68,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
         this.flintSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.iudust.getItemFromMeta(21);
+                return stack.is(IUEventHandler.coalDustTag);
             }
         };
         this.addComponent(new SoilPollutionComponent(this, 0.1));

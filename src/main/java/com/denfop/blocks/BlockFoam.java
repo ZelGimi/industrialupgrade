@@ -120,7 +120,7 @@ public class BlockFoam<T extends Enum<T> & ISubEnum> extends BlockCore<T> {
 
 
         public BlockState getResult() {
-            return IUItem.blockResource.getBlock(6).defaultBlockState();
+            return IUItem.blockResource.getBlock(7).defaultBlockState();
         }
     }
 }

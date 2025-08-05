@@ -186,10 +186,10 @@ public class TileEntitySteamConverter extends TileElectricMachine implements IUp
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.work) {
-            if (this.getWorld().getGameTime() % 2 == 0) {
-                if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 1 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
+            if (this.getWorld().getGameTime() % 1 == 0) {
+                if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
                     this.steam.addEnergy(2);
-                    this.fluidTank.drain(1, IFluidHandler.FluidAction.EXECUTE);
+                    this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
                     this.setActive(true);
                 } else {
                     setActive(false);

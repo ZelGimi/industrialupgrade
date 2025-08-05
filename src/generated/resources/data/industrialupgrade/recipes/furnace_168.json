@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/inconel"
+    "item": "industrialupgrade:alloydust/zeliber"
   },
-  "result": "industrialupgrade:alloyingot/inconel"
+  "result": "industrialupgrade:alloyingot/zeliber"
 }

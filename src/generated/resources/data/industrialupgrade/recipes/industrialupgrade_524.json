@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:daynight_solar_panel_glass/qua"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:excitednucleus/quacore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:machines/ultimate_solar_paneliu"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:excitednucleus/ultcore"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:daynight_solar_panel_glass/qua"
+    },
+    "B": {
+      "item": "industrialupgrade:excitednucleus/quacore"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "D": {
+      "item": "industrialupgrade:machines/ultimate_solar_paneliu"
+    },
+    "E": {
+      "item": "industrialupgrade:excitednucleus/ultcore"
+    }
   },
   "pattern": [
     "ABA",

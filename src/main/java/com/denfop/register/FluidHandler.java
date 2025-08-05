@@ -4,13 +4,18 @@ import com.denfop.blocks.BlockFluidIU;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.IUFluid;
 import com.denfop.blocks.fluid.IUFluidType;
+import com.denfop.items.ItemBucket;
+import net.minecraft.client.particle.SmokeParticle;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
 
+import static com.denfop.DataItem.objects;
 import static com.denfop.register.Register.BLOCKS;
+import static com.denfop.register.Register.ITEMS;
 
 public class FluidHandler {
     public final RegistryObject<IUFluid> source;
@@ -25,10 +30,11 @@ public class FluidHandler {
         this.flowing = Register.FLUIDS.register(fluidName.getName().toLowerCase() + "_flowing",
                 () -> new IUFluid(this.properties, false));
         MapColor steam = MapColor.COLOR_GRAY;
-
-        RegistryObject<LiquidBlock> blockRegistryObject = BLOCKS.register("fluid/" + fluidName.name().toLowerCase(), () -> new BlockFluidIU(source, BlockBehaviour.Properties.of().mapColor(steam).replaceable().liquid()));
+        RegistryObject<Item> bucket = ITEMS.register("bucket/" + fluidName.name().toLowerCase().replace("fluid",""), () -> new ItemBucket(source,fluidName));
+        objects.add(bucket);
+        RegistryObject<LiquidBlock> blockRegistryObject = BLOCKS.register("fluid/" + fluidName.name().toLowerCase(), () -> new BlockFluidIU(source, BlockBehaviour.Properties.of().mapColor(steam).replaceable().liquid().lightLevel(state -> source.get().getFluidType().getLightLevel())));
         this.liquedBlock = blockRegistryObject;
-        this.properties = new ForgeFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).levelDecreasePerBlock(2).block(blockRegistryObject);
+        this.properties = new ForgeFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).bucket(bucket).levelDecreasePerBlock(2).block(blockRegistryObject);
 
     }
 

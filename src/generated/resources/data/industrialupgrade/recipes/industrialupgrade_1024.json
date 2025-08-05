@@ -1,28 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:upgrades/ejector"
-      }
-    ],
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "item": "industrialupgrade:upgrades/ejector"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "E": [
-      {
-        "item": "industrialupgrade:upgrades/pulling"
-      }
-    ]
+    "E": {
+      "item": "industrialupgrade:upgrades/pulling"
+    }
   },
   "pattern": [
     "   ",

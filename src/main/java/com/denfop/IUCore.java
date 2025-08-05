@@ -14,6 +14,7 @@ import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.*;
 import com.denfop.api.solar.SolarEnergySystem;
 import com.denfop.api.space.BaseSpaceSystem;
+import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
@@ -27,16 +28,15 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
+import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.cool.CoolNetGlobal;
-import com.denfop.damagesource.IUDamageSource;
 import com.denfop.datagen.*;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
+import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.datagen.itemtag.ItemTagProvider;
-import com.denfop.events.EventSaveData;
-import com.denfop.events.IUEventHandler;
-import com.denfop.events.TickHandlerIU;
-import com.denfop.events.WorldSavedDataIU;
+import com.denfop.entity.SmallBee;
+import com.denfop.events.*;
 import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.one_probe.RegisterProvider;
 import com.denfop.items.EnumInfoUpgradeModules;
@@ -48,6 +48,9 @@ import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
+import com.denfop.network.packet.PacketFixerRecipe;
+import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
+import com.denfop.network.packet.PacketUpdateRelocator;
 import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.ClientProxy;
 import com.denfop.proxy.CommonProxy;
@@ -65,9 +68,8 @@ import com.denfop.tiles.mechanism.TileSolidCooling;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.utils.*;
+import com.denfop.villager.TradingSystem;
 import com.denfop.world.WorldBaseGen;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -77,6 +79,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -88,12 +91,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.common.MinecraftForge;
@@ -104,6 +106,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -112,23 +115,22 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.denfop.api.Recipes.inputFactory;
+import static com.denfop.api.space.BaseSpaceSystem.fluidToLevel;
 import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 
@@ -176,7 +178,7 @@ public class IUCore
     static List<String> stringList = new ArrayList<>();
     static boolean change = false;
     static boolean register = false;
-    static boolean register1 = false;
+    public static boolean register1 = false;
     static {
         proxy= DistExecutor.unsafeRunForDist(()-> ClientProxy::new,()->CommonProxy::new);
         IUCore.network = new Sides<>("com.denfop.network.NetworkManager", "com.denfop.network.NetworkManagerClient");
@@ -188,33 +190,14 @@ public class IUCore
     public IUCore()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
         context = FMLJavaModLoadingContext.get();
         IUCore.instance = this;
         new TileBlockCreator();
         ElectricItem.manager = new ElectricItemManager();
-
-        new MultiBlockSystem();
+        EnergyNetGlobal.instance = new EnergyNetGlobal();
         Recipes.registerRecipes();
-        new VeinSystem();
-        new GasVeinSystem();
-        HeatNet.instance = HeatNetGlobal.initialize();
-        CoolNet.instance = CoolNetGlobal.initialize();
-        PressureNet.instance = PressureNetGlobal.initialize();
-        SolarEnergySystem.system = new SolarEnergySystem();
-        new RadiationSystem();
-        new WindSystem();
-        EnergyBase.init();
-        TransportNetGlobal.initialize();
-        TesseractSystem.init();
-        PollutionManager.pollutionManager = new PollutionManager();
-        SpaceNet.instance = new BaseSpaceSystem();
-        SpaceUpgradeSystem.system = new BaseSpaceUpgradeSystem();
-        RelocatorNetwork.init();
-        UpgradeSystem.system = new BaseUpgradeSystem();
-        new RotorUpgradeSystem();
-        new com.denfop.api.water.upgrade.RotorUpgradeSystem();
-        EnergyNetGlobal.initialize();
+
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
         MinecraftForge.EVENT_BUS.register(new EventSaveData());
@@ -222,21 +205,24 @@ public class IUCore
         MinecraftForge.EVENT_BUS.register(new IUEventHandler());
         Register.register();
         new WorldBaseGen();
-
+        TradingSystem.init();
+        MinecraftForge.EVENT_BUS.register(new EventUpdate());
         modEventBus.addListener(this::registerContent);
         modEventBus.addListener(this::registerItemTab);
-
-
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::preInit);
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::postInit);
+        modEventBus.addListener(this::onAttributeCreate);
 
 
         MinecraftForge.EVENT_BUS.register(this);
     }
     private static final RegistrySetBuilder BUILDER = (new RegistrySetBuilder()).add(Registries.CONFIGURED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ConfiguredFeaturesGen::bootstrap).add(Registries.PLACED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ModPlacedFeatures::bootstrap).add(Registries.DAMAGE_TYPE, DamageTypes::bootstrap);
-
+    @SubscribeEvent
+    public void onAttributeCreate(EntityAttributeCreationEvent event) {
+        event.put(IUItem.entity_bee.get(), SmallBee.createAttributes().build());
+    }
     @SubscribeEvent
     public void gatherData(GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
@@ -256,6 +242,8 @@ public class IUCore
                         Set.of(Constants.MOD_ID)
                 )
         );
+
+        gen.addProvider(event.includeServer(), new IUPoiTypeTagsProvider(packOutput, lookupProvider, existingFileHelper));
         gen.addProvider(event.includeServer(), blockTags);
         gen.addProvider(event.includeServer(), new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
         gen.addProvider(event.includeServer(), new RecipeProvider(packOutput));
@@ -387,6 +375,7 @@ public class IUCore
     public static final CreativeModeTab BeesTab = new TabCore(12, "BeesTab");
     public static final CreativeModeTab GenomeTab = new TabCore(13, "GenomeTab");
     public static final CreativeModeTab SpaceTab = new TabCore(14, "SpaceTab");
+    public static final CreativeModeTab fluidCellTab = new TabCore(15, "fluidCellTab");
     private void registerContent(RegisterEvent event) {
         if (Objects.equals(event.getForgeRegistry(), ForgeRegistries.ITEMS)) {
             Register.writeItems();
@@ -408,7 +397,149 @@ public class IUCore
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
         proxy.postInit();
+        for (IItemTag iItemTag : ItemTagProvider.list) {
+            Item item = iItemTag.getItem();
+            String[] stringTags = iItemTag.getTags();
+            for (String stringTag : stringTags) {
+                ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag),k -> new ArrayList<>()).add(new ItemStack(item));
+            }
+        }
+        new GuideBookCore();
+        GuideBookCore.init();
+        addIngot("Lithium", IUItem.crafting_elements.getStack(447));
+        addGem("Bor", IUItem.crafting_elements.getStack(448));
+        addGem("Beryllium", IUItem.crafting_elements.getStack(449));
+        addIngot("Uranium", IUItem.itemiu.getStack(2));
+        addPlate("Lithium", IUItem.crafting_elements.getStack(450));
+        addPlate("Bor", IUItem.crafting_elements.getStack(451));
+        addPlate("Beryllium", IUItem.crafting_elements.getStack(452));
+        addPlateDense("Beryllium", IUItem.crafting_elements.getStack(452));
+        if ( IUItem.machine == null)
+            Register.writeItems();
+        addCustom("machineBlock", IUItem.machine.getItem());
+        addCustom("machineBlockCasing", IUItem.machine.getItem());
+        addCustom("machineBlockAdvanced", IUItem.advancedMachine.getItem());
+        addCustom("machineBlockAdvancedCasing", IUItem.advancedMachine.getItem());
+        addPlate("AdvancedAlloy", IUItem.advancedAlloy.getItem());
+        addPlate("Carbon", IUItem.carbonPlate.getItem());
+        addCustom("circuitBasic", IUItem.electronicCircuit.getItem());
+        addCustom("circuitAdvanced", IUItem.advancedCircuit.getItem());
+        addCustom("dusts/redstone", Items.REDSTONE);
+        addPlateDense("Steel", IUItem.denseplateadviron.getItem());
+        addPlateDense("Iron", IUItem.denseplateiron.getItem());
+        addPlateDense("Gold", IUItem.denseplategold.getItem());
+        addPlateDense("Copper", IUItem.denseplatecopper.getItem());
+        addPlateDense("Tin", IUItem.denseplatetin.getItem());
+        addPlateDense("Lead", IUItem.denseplatelead.getItem());
+        addPlateDense("Lapis", IUItem.denseplatelapi.getItem());
+        addPlateDense("Obsidian", IUItem.denseplateobsidian.getItem());
+        addPlateDense("Bronze", IUItem.denseplatebronze.getItem());
+        addGem("Americium", IUItem.radiationresources.getStack(0));
+        addGem("Neptunium", IUItem.radiationresources.getStack(1));
+        addGem("Curium", IUItem.radiationresources.getStack(2));
 
+
+        addIngot("gold", Items.GOLD_INGOT);
+        addIngot("iron", Items.IRON_INGOT);
+        addIngot("copper", Items.COPPER_INGOT);
+        addGem("diamond", Items.DIAMOND);
+        addGem("emerald", Items.EMERALD);
+        addGem("coal", Items.COAL);
+        addGem("quarts", Items.QUARTZ);
+        addCustomMinecraft("wool",Blocks.WHITE_WOOL.asItem());
+        addCustom("string",Items.STRING);
+        addCustomMinecraft("saplings",Blocks.OAK_SAPLING.asItem());
+        addRawMaterials("gold", Items.GOLD_INGOT);
+        addRawMaterials("iron", Items.IRON_INGOT);
+        addRawMaterials("copper", Items.COPPER_INGOT);
+        addStorageBlocks("gold", Blocks.GOLD_BLOCK.asItem());
+        addStorageBlocks("iron", Blocks.IRON_BLOCK.asItem());
+        addStorageBlocks("copper", Blocks.COPPER_BLOCK.asItem());
+        addStorageBlocks("coal", Blocks.COAL_BLOCK.asItem());
+        addCustomMinecraft("leaves",Blocks.OAK_LEAVES.asItem());
+
+
+        addStorageBlocks("lapis", Blocks.LAPIS_BLOCK.asItem());
+        fluidToLevel.put(FluidName.fluidhydrazine.getInstance().get(), 1);
+        fluidToLevel.put(FluidName.fluiddimethylhydrazine.getInstance().get(), 2);
+        fluidToLevel.put(FluidName.fluiddecane.getInstance().get(), 3);
+        fluidToLevel.put(FluidName.fluidxenon.getInstance().get(), 4);
+    }
+    public void addCustom(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:" + tag};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+    public void addRawMaterials(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:raw_materials/" + tag};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+    public void addStorageBlocks(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:storage_blocks/" + tag};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+
+    }
+    public void addCustomMinecraft(String tag, Item item) {
+        String[] stringTags = new String[]{"minecraft:" + tag};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+    public void addPlate(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:plates/" + tag, "forge:plates"};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+
+    public void addPlateDense(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:platedense/" + tag, "forge:platedense"};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+
+    public void addIngot(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:ingots/" + tag, "forge:ingots"};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+
+    public void addDust(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:dusts/" + tag, "forge:dusts"};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+
+    public void addCasing(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:casings/" + tag, "forge:casings"};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent( new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
+    }
+
+    public void addGem(String tag, Item item) {
+        String[] stringTags = new String[]{"forge:gems/" + tag, "forge:gems"};
+        for (String stringTag : stringTags) {
+            ItemTagProvider.mapItems.computeIfAbsent( new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+
+        }
     }
 
 
@@ -417,7 +548,6 @@ public class IUCore
         if (!update) {
             update = true;
 
-            ListInformationUtils.init();
             Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
             long startTime = System.nanoTime();
             List<CraftingRecipe> listRecipes = event.getEntity().level().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
@@ -542,7 +672,6 @@ public class IUCore
         if (!update) {
             update = true;
 
-            ListInformationUtils.init();
             Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
             long startTime = System.nanoTime();
             List<CraftingRecipe> listRecipes = event.getServer().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
@@ -663,6 +792,27 @@ public class IUCore
     }
 
     public void preInit(FMLCommonSetupEvent setup) {
+        new VeinSystem();
+        new GasVeinSystem();
+        HeatNet.instance = HeatNetGlobal.initialize();
+        CoolNet.instance = CoolNetGlobal.initialize();
+        PressureNet.instance = PressureNetGlobal.initialize();
+
+        SolarEnergySystem.system = new SolarEnergySystem();
+        new MultiBlockSystem();
+        new RadiationSystem();
+        new WindSystem();
+        EnergyBase.init();
+        TransportNetGlobal.initialize();
+        TesseractSystem.init();
+        PollutionManager.pollutionManager = new PollutionManager();
+        SpaceNet.instance = new BaseSpaceSystem();
+        SpaceUpgradeSystem.system = new BaseSpaceUpgradeSystem();
+        RelocatorNetwork.init();
+        UpgradeSystem.system = new BaseUpgradeSystem();
+        new RotorUpgradeSystem();
+        new com.denfop.api.water.upgrade.RotorUpgradeSystem();
+        EnergyNetGlobal.initialize();
         proxy.preInit();
         InitMultiBlockSystem.init();
         IUItem.register_mineral();
@@ -679,7 +829,7 @@ public class IUCore
         if (!world.isClientSide) {
             EventHandlerPlanet.data = world.getDataStorage().computeIfAbsent(WorldSavedDataIU::new, WorldSavedDataIU::new, Constants.MOD_ID);
 
-            EventHandlerPlanet.data.setWorld((Level) world);
+            EventHandlerPlanet.data.setWorld(world);
             EventHandlerPlanet.data.setDirty(true);
 
         }
@@ -687,9 +837,9 @@ public class IUCore
     public void registerData(Level level) {
         if (!register1) {
             register1 = true;
-            Recipes.recipes.initializationRecipes();
-            Recipes.recipes.removeAllRecipesFromList();
-            Recipes.recipes.addAllRecipesFromList();
+
+
+            ListInformationUtils.init();
             List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
             for (IMultiTileBlock tileBlock : tiles)
 
@@ -702,12 +852,11 @@ public class IUCore
             CropInit.initBiomes(level.registryAccess().registryOrThrow(Registries.BIOME));
             RecipeManager recipeManager = level.getRecipeManager();
 
-
             Collection<SmeltingRecipe> furnaceRecipes = recipeManager.getAllRecipesFor(RecipeType.SMELTING);
 
             for (SmeltingRecipe recipe : furnaceRecipes) {
                 ItemStack input = recipe.getIngredients().get(0).getItems()[0];
-                ItemStack output = recipe.getResultItem(level.registryAccess());
+                ItemStack output = recipe.getResultItem(null);
                 if (input.isEmpty()) {
                     continue;
                 }
@@ -728,18 +877,7 @@ public class IUCore
                         )
                 );
             }
-            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-            for (int i = 0; i < 8; i++) {
-                Recipes.recipes.addRecipe(
-                        "matter",
-                        new BaseMachineRecipe(
-                                new Input(
-                                        input.getInput(new ItemStack(IUItem.matter.getStack(i), 1))
-                                ),
-                                new RecipeOutput(null, new ItemStack(IUItem.matter.getStack(i), 1))
-                        )
-                );
-            }
+
             if (!change) {
                 change = true;
                 removeOre("forge:gems/Iridium");
@@ -748,9 +886,16 @@ public class IUCore
                 removeOre("forge:gems/Curium");
                 removeOre("forge:gems/Thorium");
                 removeOre("forge:gems/Bor");
+                removeOre("forge:ores/Coal");
+                removeOre("forge:ores/apatite");
+                removeOre("forge:raw_materials/uranium");
+                removeOre("forge:ores/Thorium");
+                removeOre("forge:ores/Redstone");
+                removeOre("forge:ores/sheelite");
                 removeOre("forge:gems/CrystalFlux");
                 removeOre("forge:gems/Beryllium");
                 addOre1(new ItemStack(Items.REDSTONE));
+                addOre1(new ItemStack(Items.COAL));
                 for (String name : RegisterOreDictionary.list_heavyore) {
                     removeOre("forge:ores/" + name);
                 }
@@ -766,6 +911,8 @@ public class IUCore
                 removeOre("forge:ores/Lithium");
                 removeOre("forge:ores/Calcium");
                 removeOre("forge:ores/Draconium");
+                removeOre("forge:ores/uranium");
+                removeOre("forge:ores/Thorium");
                 removeOre("forge:ores/netherite_scrap");
                 removeOre("forge:ores/saltpeter");
                 for (ItemStack stack : IUCore.list) {
@@ -794,24 +941,30 @@ public class IUCore
                         this.get_ingot.add(stack);
                     }
                 }
-
-
+                IUCore.list_furnace_adding.forEach(this::addOre2);
+                IUCore.list_furnace_removing.forEach(this::removeOre2);
+                IUCore.list_adding.forEach(this::addOre1);
+                IUCore.list_removing.forEach(this::removeOre);
+                IUCore.list_comb_crushed_adding.forEach(this::addOre4);
+                IUCore.list_comb_crushed_removing.forEach(this::removeOre4);
+                IUCore.list_crushed_adding.forEach(this::addOre3);
+                IUCore.list_crushed_removing.forEach(this::removeOre3);
                 IUCore.list.forEach(stack -> {
 
                     get_all_list.add(new RecipeInputStack(stack));
                 });
-                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack));
+                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack.getItemStack().get(0)));
                 IUCore.get_ingot.forEach(stack -> {
 
                     get_all_list.add(new RecipeInputStack(stack));
                 });
 
-                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack));
+                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack.getItemStack().get(0)));
                 IUCore.get_comb_crushed.forEach(stack -> {
 
                     get_all_list.add(new RecipeInputStack(stack));
                 });
-                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack));
+                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack.getItemStack().get(0)));
                 IUCore.get_crushed.forEach(stack -> {
 
                     get_all_list.add(new RecipeInputStack(stack));
@@ -819,8 +972,7 @@ public class IUCore
 
                 IUCore.get_crushed.forEach(stack -> {
                     if (!stack.isEmpty()) {
-                        this.
-                                get_crushed_quarry.add(new QuarryItem(stack));
+                        get_crushed_quarry.add(new QuarryItem(stack));
                     }
                 });
                 IUCore.get_polisher.forEach(stack -> {
@@ -848,34 +1000,10 @@ public class IUCore
                                 get_comb_crushed_quarry.add(new QuarryItem(stack));
                     }
                 });
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_crushed.add(stack);
-                    }
-                }
-                this.get_comb_crushed.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_comb_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_comb_crushed.add(stack);
-                    }
-                }
-                get_ingot.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
-                    if (recipe != null) {
-                        this.get_ingot.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_ingot.add(stack);
-                    }
-                }
+
+
             }
-            try {
+
 
                 PotionRecipes.init();
                 List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
@@ -899,16 +1027,11 @@ public class IUCore
                             )
                     );
                 }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ;
         }
     }
     boolean reg = false;
     List<RegistryObject<?>> objects = new ArrayList<>();
+
     @SubscribeEvent
     public void registerItemTab(BuildCreativeModeTabContentsEvent event) {
         if (!reg){
@@ -917,76 +1040,60 @@ public class IUCore
             objects.addAll(DataBlock.objects);
             reg = true;
         }
-        NonNullList<ItemStack> stackNonNullList =  NonNullList.create();
+
         for (RegistryObject<?> object : objects){
-            if (object.get() instanceof IItemTab){
+            if (object != null && object.get() instanceof IItemTab){
+                NonNullList<ItemStack> stackNonNullList =  NonNullList.create();
                 IItemTab iItemTab = (IItemTab) object.get();
                 iItemTab.fillItemCategory(event.getTab(),stackNonNullList);
-
+                stackNonNullList.forEach(event::accept);
             }
         }
-        stackNonNullList.forEach(event::accept);
+
     }
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) {
             return;
         }
+
+        new PacketFixerRecipe(event.getEntity().level(), (ServerPlayer) event.getEntity(),2);
         if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())){
             GuideBookCore.instance.load(event.getEntity().getUUID(),event.getEntity());
+            event.getEntity().addItem(new ItemStack(IUItem.book.getItem()));
+            event.getEntity().addItem(new ItemStack(IUItem.veinsencor.getStack(0)));
+        }else{
+            GuideBookCore.instance.loadOrThrow(event.getEntity().getUUID());
+            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()),event.getEntity());
         }
+        new PacketUpdateRelocator(event.getEntity());
 
-        event.getEntity().addItem(new ItemStack(IUItem.book.getItem()));
     }
     @SubscribeEvent
     public void onServerStarting(ServerStartedEvent event) {
-        if (!register1) {
-            register1 = true;
-            Recipes.recipes.initializationRecipes();
-            Recipes.recipes.removeAllRecipesFromList();
-            Recipes.recipes.addAllRecipesFromList();
-            List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
-            for (IMultiTileBlock tileBlock : tiles)
+        registerData(event.getServer().overworld());
 
-                if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
-                    if (!mechanism_info1.containsKey(tileBlock)) {
-                        mechanism_info1.put(tileBlock, tileBlock.getDummyTe().getPickBlock(null, null).getDisplayName());
-                    }
-                }
-            RegistryAccess registryAccess = event.getServer().registryAccess();
-            Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registries.BIOME);
-            CropInit.initBiomes(biomeRegistry);
-            new GuideBookCore();
-            GuideBookCore.init();
-            ServerLevel level = event.getServer().overworld();
-            RecipeManager recipeManager = level.getRecipeManager();
-            IUDamageSource.initDamage(event.getServer().overworld().registryAccess());
+    }
 
-            Collection<SmeltingRecipe> furnaceRecipes = recipeManager.getAllRecipesFor(RecipeType.SMELTING);
 
-            for (SmeltingRecipe recipe : furnaceRecipes) {
-                ItemStack input = recipe.getIngredients().get(0).getItems()[0];
-                ItemStack output = recipe.getResultItem(event.getServer().getLevel(Level.OVERWORLD).registryAccess());
-                if (input.isEmpty()) {
-                    continue;
-                }
-                CompoundTag nbt = new CompoundTag();
-                try {
-                    nbt.putFloat("experience", recipe.getExperience());
-                } catch (Exception e) {
-                    nbt.putFloat("experience", 0.1F);
 
-                }
-                Recipes.recipes.addRecipe(
-                        "furnace",
-                        new BaseMachineRecipe(
-                                new Input(
-                                        inputFactory.getInput(input)
-                                ),
-                                new RecipeOutput(nbt, output)
-                        )
-                );
-            }
+    @SubscribeEvent
+    public void getore(TagsUpdatedEvent event) {
+        if (!register) {
+            register = true;
+            Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation("forge", "ores")));
+            MaceratorRecipe.recipe();
+            CompressorRecipe.recipe();
+            ExtractorRecipe.init();
+            OreWashingRecipe.init();
+            ReplicatorRecipe.init();
+            CentrifugeRecipe.init();
+            MetalFormerRecipe.init();
+            TileEntityPalletGenerator.init();
+            TileSolidCooling.init();
+            SpaceInit.jsonInit();
+            BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
+            IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
             final IInputHandler input = com.denfop.api.Recipes.inputFactory;
             for (int i = 0; i < 8; i++) {
                 Recipes.recipes.addRecipe(
@@ -999,193 +1106,10 @@ public class IUCore
                         )
                 );
             }
-            if (!change) {
-                change = true;
-                removeOre("forge:gems/Iridium");
-                removeOre("forge:gems/Americium");
-                removeOre("forge:gems/Neptunium");
-                removeOre("forge:gems/Curium");
-                removeOre("forge:gems/Thorium");
-                removeOre("forge:gems/Bor");
-                removeOre("forge:gems/CrystalFlux");
-                removeOre("forge:gems/Beryllium");
-                addOre1(new ItemStack(Items.REDSTONE));
-                for (String name : RegisterOreDictionary.list_heavyore) {
-                    removeOre("forge:ores/" + name);
-                }
-                for (String name : RegisterOreDictionary.list_mineral) {
-                    removeOre("forge:ores/" + name);
-                }
-                for (String name : RegisterOreDictionary.spaceElementList) {
-                    removeOre("forge:ores/" + name);
-                }
-                removeOre("forge:ores/Sulfur");
-                removeOre("forge:ores/apatite");
-                removeOre("forge:ores/Redstone");
-                removeOre("forge:ores/Boron");
-                removeOre("forge:ores/Beryllium");
-                removeOre("forge:ores/Lithium");
-                removeOre("forge:ores/Calcium");
-                removeOre("forge:ores/Draconium");
-                removeOre("forge:ores/netherite_scrap");
-                removeOre("forge:ores/saltpeter");
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_crushed.add(stack);
-                    }
-                }
-                this.get_comb_crushed.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_comb_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_comb_crushed.add(stack);
-                    }
-                }
-                get_ingot.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
-                    if (recipe != null) {
-                        this.get_ingot.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_ingot.add(stack);
-                    }
-                }
-
-
-                IUCore.list.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack));
-                IUCore.get_ingot.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-
-                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack));
-                IUCore.get_comb_crushed.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack));
-                IUCore.get_crushed.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-
-                IUCore.get_crushed.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_crushed_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                IUCore.get_polisher.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_polisher_quarry.add(new QuarryItem(stack));
-                    }
-                });
-
-                IUCore.list.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                list_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                IUCore.get_ingot.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_ingot_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                IUCore.get_comb_crushed.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_comb_crushed_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_crushed.add(stack);
-                    }
-                }
-                this.get_comb_crushed.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_comb_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_comb_crushed.add(stack);
-                    }
-                }
-                get_ingot.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
-                    if (recipe != null) {
-                        this.get_ingot.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_ingot.add(stack);
-                    }
-                }
-            }
-            try {
-
-                PotionRecipes.init();
-                List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
-                for (PotionRecipes.Mix<Potion> mix : potionMixes) {
-                    Holder<Potion> from = mix.from();
-                    Ingredient ingredient = mix.ingredient();
-                    Holder<Potion> to = mix.to();
-
-                    ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
-                    ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
-
-
-                    Recipes.recipes.addRecipe(
-                            "brewing",
-                            new BaseMachineRecipe(
-                                    new Input(
-                                            inputFactory.getInput(inputPotion),
-                                            inputFactory.getInput(ingredient.getItems()[0])
-                                    ),
-                                    new RecipeOutput(null, outputPotion)
-                            )
-                    );
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ;
-        }
-    }
-
-    private Ingredient getPrivateIngredient(Object instance, String fieldName) throws Exception {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return (Ingredient) field.get(instance);
-    }
-
-    private ItemStack getPrivateOutput(Object instance, String fieldName) throws Exception {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return (ItemStack) field.get(instance);
-    }
-
-    @SubscribeEvent
-    public void getore(TagsUpdatedEvent event) {
-        if (!register) {
-            register = true;
-            Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation("forge", "ores")));
-
+            new ScrapboxRecipeManager();
+            Recipes.recipes.initializationRecipes();
+            Recipes.recipes.removeAllRecipesFromList();
+            Recipes.recipes.addAllRecipesFromList();
             for (Holder<Item> holder : tagOres) {
                 get_ore.add(new ItemStack(holder));
                 Item item = holder.value();
@@ -1237,19 +1161,7 @@ public class IUCore
                     }
                 }
             }
-            MaceratorRecipe.recipe();
-            CompressorRecipe.recipe();
-            ExtractorRecipe.init();
-            OreWashingRecipe.init();
-            ReplicatorRecipe.init();
-            CentrifugeRecipe.init();
-            MetalFormerRecipe.init();
-            TileEntityPalletGenerator.init();
-            TileSolidCooling.init();
 
-            BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
-            IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
-            new ScrapboxRecipeManager();
 
 
 

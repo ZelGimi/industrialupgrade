@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -10,14 +11,17 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWirelessMatterCollector;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWirelessMatterCollector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,6 +36,7 @@ public class TileEntityWirelessMatterCollector extends TileEntityInventory {
     private final Fluids fluids;
     private final Fluids.InternalFluidTank fluidTank;
     private final Energy energy;
+    private final ComponentVisibleArea visible;
     Map<ChunkPos, List<IMatter>> chunkPosListMap = new HashMap<>();
 
     public TileEntityWirelessMatterCollector(BlockPos pos, BlockState state) {
@@ -41,9 +46,13 @@ public class TileEntityWirelessMatterCollector extends TileEntityInventory {
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
-
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.matter_collector.info"));
+    }
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2.getBlock(getTeBlock());
@@ -67,6 +76,30 @@ public class TileEntityWirelessMatterCollector extends TileEntityInventory {
     @OnlyIn(Dist.CLIENT)
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
         return new GuiWirelessMatterCollector((ContainerWirelessMatterCollector) menu);
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        ChunkPos chunkPos = new ChunkPos(this.pos);
+        int minX = Integer.MAX_VALUE;
+        int minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxZ = Integer.MIN_VALUE;
+
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                int chunkX = (chunkPos.x + dx) * 16;
+                int chunkZ = (chunkPos.z + dz) * 16;
+
+                if (chunkX < minX) minX = chunkX;
+                if (chunkZ < minZ) minZ = chunkZ;
+                if (chunkX + 15 > maxX) maxX = chunkX + 15;
+                if (chunkZ + 15 > maxZ) maxZ = chunkZ + 15;
+            }
+        }
+
+        visible.aabb = new AABB(minX,level.getMinBuildHeight(),minZ,maxX,level.getMaxBuildHeight(),maxZ);
     }
 
     @Override

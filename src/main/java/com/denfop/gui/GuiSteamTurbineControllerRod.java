@@ -8,6 +8,7 @@ import com.denfop.container.ContainerSteamTurbineControllerRod;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.recipes.BaseRecipes;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import com.denfop.tiles.mechanism.steamturbine.IRod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,8 @@ public class GuiSteamTurbineControllerRod<T extends ContainerSteamTurbineControl
     public GuiSteamTurbineControllerRod(ContainerSteamTurbineControllerRod guiContainer) {
         super(guiContainer);
         this.stack = BaseRecipes.getBlockStack(BlockSteamTurbine.steam_turbine_rod);
+        this.componentList.clear();
+        this.imageWidth=198;
     }
 
     @Override
@@ -32,8 +35,7 @@ public class GuiSteamTurbineControllerRod<T extends ContainerSteamTurbineControl
         int x = i - guiLeft;
         int y =j - guiTop;
         for (int index = 0; index < this.container.base.getRods().size(); index++) {
-            if (x >= 28 + (index / 3) * 36 && x < 46 + (index / 3) * 36) {
-                if (y >= 28 + (index % 3) * 18 && y < 46 + (index % 3) * 18) {
+            if (x >= 6 + (index) * 21 && x <= 23 + (index ) * 21 && y >= 34 && y <= 51) {
                     TileEntityMultiBlockElement tileMultiBlockBase =
                             (TileEntityMultiBlockElement) container.base
                                     .getRods()
@@ -46,7 +48,7 @@ public class GuiSteamTurbineControllerRod<T extends ContainerSteamTurbineControl
                     }
                 }
             }
-        }
+
     }
 
 
@@ -55,7 +57,7 @@ public class GuiSteamTurbineControllerRod<T extends ContainerSteamTurbineControl
         super.drawForegroundLayer(poseStack,par1, par2);
         for (int i = 0; i < this.container.base.getRods().size(); i++) {
             BlockPos pos = container.base.getRods().get(i).getBlockPos();
-            new Area(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+            new Area(this, 6 + (i) * 21, 34, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
                     ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack,par1, par2);
 
         }
@@ -66,19 +68,22 @@ public class GuiSteamTurbineControllerRod<T extends ContainerSteamTurbineControl
         super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         this.bindTexture();
         for (int i = 0; i < this.container.base.getRods().size(); i++) {
+            IRod tileMultiBlockBase =
+                    container.base
+                            .getRods()
+                            .get(i);
+          if (  tileMultiBlockBase.getRods().size() == 4){
+              drawTexturedModalRect(poseStack, this.guiLeft + 5+ (i) * 21, this.guiTop + 33, 236, 21, 20, 20);
 
+          }
 
-            new ItemStackImage(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, () -> stack).drawBackground(poseStack,
-                    this.guiLeft,
-                    this.guiTop
-            );
 
 
         }
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteamturbine_controllerblade.png");
     }
 
 }

@@ -5,6 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.Objects;
+
 public class BaseResource implements IBaseResource {
 
     private final FluidStack fluidStack;
@@ -112,4 +114,16 @@ public class BaseResource implements IBaseResource {
         return typeRovers;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseResource that = (BaseResource) o;
+        return max == that.max && min == that.min && percentplanet == that.percentplanet && Objects.equals(fluidStack, that.fluidStack) && typeRovers == that.typeRovers && Objects.equals(stack, that.stack) && Objects.equals(body, that.body);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fluidStack, typeRovers, stack, max, min, body, percentplanet);
+    }
 }

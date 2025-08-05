@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_260_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_140_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:basemachine3/imp_redstone_generator"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_260_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine3/imp_redstone_generator"
+    }
   },
   "pattern": [
     "BAB",

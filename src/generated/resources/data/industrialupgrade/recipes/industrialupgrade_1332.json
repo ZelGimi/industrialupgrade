@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_623_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:moremachine2/quad_extruder"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_622_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_52_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_616_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine2/quad_extruder"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_622_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_52_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_616_element"
+    }
   },
   "pattern": [
     "A A",

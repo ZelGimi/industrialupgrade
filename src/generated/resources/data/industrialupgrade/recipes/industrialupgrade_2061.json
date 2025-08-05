@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/aluminiumsilicon"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/vitalium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/cobaltchrome"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/aluminiumsilicon"
+    },
+    "B": {
+      "tag": "forge:plates/vitalium"
+    },
+    "C": {
+      "tag": "forge:plates/cobaltchrome"
+    }
   },
   "pattern": [
     " AB",

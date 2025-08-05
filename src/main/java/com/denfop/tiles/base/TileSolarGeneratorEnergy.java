@@ -85,6 +85,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.solarium_energy.info"));
+            tooltip.add(Localization.translate("iu.solarium_generator.info"));
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.cof);
 
         }

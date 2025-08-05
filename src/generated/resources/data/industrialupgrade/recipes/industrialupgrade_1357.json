@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/hafniumboride"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/tantalumtungstenhafnium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "tag": "forge:plates/hafniumboride"
+    },
+    "D": {
+      "tag": "forge:plates/tantalumtungstenhafnium"
+    }
   },
   "pattern": [
     " C ",

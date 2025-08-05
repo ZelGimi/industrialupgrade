@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:earth_quarry/earth_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:chest"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/gold"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:earth_quarry/earth_casing"
+    },
+    "B": {
+      "item": "minecraft:chest"
+    },
+    "C": {
+      "tag": "forge:plates/gold"
+    },
+    "D": {
+      "tag": "forge:plates/tin"
+    }
   },
   "pattern": [
     "   ",

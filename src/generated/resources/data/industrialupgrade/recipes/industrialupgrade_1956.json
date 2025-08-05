@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:water_rotor/water_myphical"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:excitednucleus/sincore"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:water_rotor/water_myphical"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "D": {
+      "item": "industrialupgrade:excitednucleus/sincore"
+    }
   },
   "pattern": [
     "DCD",

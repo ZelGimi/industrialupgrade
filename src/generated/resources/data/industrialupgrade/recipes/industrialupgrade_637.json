@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/titania_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/titania_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/titania_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/titania_pebble"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/titania_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/titania_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/titania_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/titania_pebble"
+    }
   ],
   "result": {
     "item": "industrialupgrade:itemspace/titania_boulder"

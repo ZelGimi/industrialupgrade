@@ -1,6 +1,7 @@
 package com.denfop.pressure;
 
 
+import com.denfop.ModConfig;
 import com.denfop.api.pressure.*;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.world.WorldBaseGen;
@@ -154,7 +155,7 @@ public class PressureNetLocal implements IPressureNet {
                 if (demandedEnergy <= 0.0) {
                     continue;
                 }
-                if (demandedEnergy != amount) {
+                if (demandedEnergy != amount && ModConfig.COMMON.pressureWork.get()) {
                     continue;
                 }
                 double energyProvided = Math.min(demandedEnergy, amount);

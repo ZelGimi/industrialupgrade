@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/tempered_glass"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:casings/orichalcum"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "B": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "tag": "forge:casings/orichalcum"
+    }
   },
   "pattern": [
     " A ",

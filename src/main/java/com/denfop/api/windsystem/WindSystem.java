@@ -1,6 +1,9 @@
 package com.denfop.api.windsystem;
 
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,8 +58,8 @@ public class WindSystem implements IWindSystem {
             return;
         }
         facing = facingMap.get(facing);
-        //TODO: back
-      /* if (windMechanism instanceof TileWindGenerator) {
+
+     if (windMechanism instanceof TileWindGenerator) {
             ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
             new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", (byte) windMechanism.getFacing().ordinal());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
@@ -68,7 +71,7 @@ public class WindSystem implements IWindSystem {
                     (byte) windMechanism.getFacing().ordinal()
             );
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
-        }*/
+        }
     }
 
     @SubscribeEvent
@@ -109,7 +112,7 @@ public class WindSystem implements IWindSystem {
 
     public void getNewPositionOfMechanism(IWindMechanism windMechanism) {
         final Direction newFacing = getNewFacing();
-     /*  if (windMechanism instanceof TileWindGenerator) {
+      if (windMechanism instanceof TileWindGenerator) {
             if (windMechanism.getFacing() != newFacing) {
                 ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
                 new PacketUpdateFieldTile(
@@ -130,7 +133,7 @@ public class WindSystem implements IWindSystem {
                 );
                 this.changeRotorSide(windMechanism, windMechanism.getFacing());
             }
-        }*/
+        }
     }
 
     public Direction getNewFacing() {

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,21 +8,15 @@
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:8}"
     },
-    "B": [
-      {
-        "item": "minecraft:stone_pressure_plate"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_271_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:wiring_storage/bar_mfsu"
-      }
-    ]
+    "B": {
+      "item": "minecraft:stone_pressure_plate"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_271_element"
+    },
+    "D": {
+      "item": "industrialupgrade:wiring_storage/bar_mfsu"
+    }
   },
   "pattern": [
     "ABA",

@@ -53,15 +53,6 @@
       }
     ]
   },
-  "machines.cannerop" : {
-    "category" : "block",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:machines/cannerop",
-        "stream" : false
-      }
-    ]
-  },
   "machines.centrifuge" : {
     "category" : "block",
     "sounds" : [
@@ -85,15 +76,6 @@
     "sounds" : [
       {
         "name" : "industrialupgrade:machines/cooling",
-        "stream" : false
-      }
-    ]
-  },
-  "machines.cooling2" : {
-    "category" : "block",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:machines/cooling2",
         "stream" : false
       }
     ]
@@ -494,74 +476,11 @@
       }
     ]
   },
-  "tools.batteryuse" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/batteryuse",
-        "stream" : false
-      }
-    ]
-  },
   "tools.bow" : {
     "category" : "player",
     "sounds" : [
       {
         "name" : "industrialupgrade:tools/bow",
-        "stream" : false
-      }
-    ]
-  },
-  "tools.chainsawidle" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/chainsawidle",
-        "stream" : false
-      }
-    ]
-  },
-  "tools.chainsawstop" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/chainsawstop",
-        "stream" : false
-      }
-    ]
-  },
-  "tools.chainsawuseone" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/chainsawuseone",
-        "stream" : false
-      }
-    ]
-  },
-  "tools.chainsawusetwo" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/chainsawusetwo",
-        "stream" : false
-      }
-    ]
-  },
-  "tools.crowbar" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/crowbar",
-        "stream" : false
-      }
-    ]
-  },
-  "tools.jetpackfire" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/jetpackfire",
         "stream" : false
       }
     ]
@@ -620,20 +539,20 @@
       }
     ]
   },
-  "tools.painter" : {
-    "category" : "player",
-    "sounds" : [
-      {
-        "name" : "industrialupgrade:tools/painter",
-        "stream" : false
-      }
-    ]
-  },
   "tools.purifier" : {
     "category" : "player",
     "sounds" : [
       {
         "name" : "industrialupgrade:tools/purifier",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.button" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/button",
         "stream" : false
       }
     ]

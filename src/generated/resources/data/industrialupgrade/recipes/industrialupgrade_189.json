@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/platinum"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/platinum"
+    }
   },
   "pattern": [
     "AAA",

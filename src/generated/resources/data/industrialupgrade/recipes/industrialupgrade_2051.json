@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/titanium"
+    },
+    "B": {
+      "item": "minecraft:redstone"
+    }
   },
   "pattern": [
     "BAB",

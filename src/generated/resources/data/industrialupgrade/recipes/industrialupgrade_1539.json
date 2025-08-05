@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/solar_iu"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_79_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/solar_iu"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_79_element"
+    }
   },
   "pattern": [
     " B ",

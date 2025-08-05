@@ -19,11 +19,11 @@ public class PacketUpdateInformationAboutQuestsPlayer implements IPacket{
         final CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
         buffer.writeUUID(player.getUUID());
-        buffer.writeVarInt(map.size());
+        buffer.writeInt(map.size());
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
             buffer.writeString(entry.getKey());
             List<String> list = entry.getValue();
-            buffer.writeVarInt(list.size());
+            buffer.writeInt(list.size());
             for (String str : list) {
                 buffer.writeString(str);
             }
@@ -37,12 +37,13 @@ public class PacketUpdateInformationAboutQuestsPlayer implements IPacket{
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
+
         final UUID uuid = customPacketBuffer.readUUID();
-        int mapSize = customPacketBuffer.readVarInt();
+        int mapSize = customPacketBuffer.readInt();
         Map<String, List<String>> map = new HashMap<>();
         for (int i = 0; i < mapSize; i++) {
             String key = customPacketBuffer.readString();
-            int listSize = customPacketBuffer.readVarInt();
+            int listSize = customPacketBuffer.readInt();
             List<String> list = new ArrayList<>();
             for (int j = 0; j < listSize; j++) {
                 list.add(customPacketBuffer.readString());

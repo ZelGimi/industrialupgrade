@@ -148,7 +148,7 @@ public class ItemStackBags extends ItemStackInventory {
                 list.add(new BagsDescription(stack));
             }
         }
-        final CompoundTag nbt = ModUtils.nbt(itemStack1);
+        final CompoundTag nbt = ModUtils.nbt(containerStack);
         CompoundTag nbt1 = new CompoundTag();
         nbt1.putInt("size", list.size());
         for (int i = 0; i < list.size(); i++) {
@@ -184,14 +184,14 @@ public class ItemStackBags extends ItemStackInventory {
                 boolean can = false;
                 if (white) {
                     for (ItemStack stack1 : this.list) {
-                        if (!stack1.isEmpty() && stack1.is(stack.getItem())) {
+                        if (!stack1.isEmpty() && ItemStack.isSameItemSameTags(stack1,stack)) {
                             can = true;
                             break;
                         }
                     }
                 } else {
                     for (ItemStack stack1 : this.list) {
-                        if (!stack1.isEmpty() && stack1.is(stack.getItem())) {
+                        if (!stack1.isEmpty() && ItemStack.isSameItemSameTags(stack1,stack)) {
                             can = false;
                             break;
                         } else {

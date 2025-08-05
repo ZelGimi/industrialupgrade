@@ -276,6 +276,7 @@ public class ItemNanoSaber extends TieredItem implements IEnergyItem, IUpgradeIt
         if (world.isClientSide && isActive(itemStack) && world.getGameTime() % 20 == 0) {
             SoundHandler.playSound(IUCore.proxy.getPlayerInstance(), getIdleSound());
         }
+
         CompoundTag nbtData = ModUtils.nbt(itemStack);
 
         if (!nbtData.getBoolean("active")) {

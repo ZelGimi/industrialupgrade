@@ -23,7 +23,9 @@ import com.denfop.container.ContainerElectrolyzer;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiElectrolyzer;
 import com.denfop.invslot.*;
+import com.denfop.utils.DamageHandler;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -287,10 +289,10 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                     ItemStack cathode = this.cathodeslot.get(0);
                     ItemStack anode = this.anodeslot.get(0);
                     if (cathode.getDamageValue() < cathode.getMaxDamage()) {
-                        cathode.setDamageValue(cathode.getDamageValue() + 1);
+                        DamageHandler.damage(cathode,1,null);
                     }
                     if (anode.getDamageValue() < anode.getMaxDamage()) {
-                        anode.setDamageValue(anode.getDamageValue() + 1);
+                        DamageHandler.damage(anode,1,null);
                     }
                     if (cathode.getDamageValue() == cathode.getMaxDamage()) {
                         this.cathodeslot.consume(1);
@@ -307,7 +309,9 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                 setActive(false);
             }
         }
-
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnElectrolyzerParticles(level,pos,level.random);
+        }
         if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }

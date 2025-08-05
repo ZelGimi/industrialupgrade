@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:ender_pearl"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:basemachine3/teleporter_iu"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "B": {
+      "item": "minecraft:ender_pearl"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/teleporter_iu"
+    }
   },
   "pattern": [
     "ABA",

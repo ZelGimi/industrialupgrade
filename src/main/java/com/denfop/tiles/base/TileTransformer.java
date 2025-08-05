@@ -231,12 +231,13 @@ public abstract class TileTransformer extends TileEntityInventory implements
 
 
     public double getinputflow() {
-        return !this.isStepUp() ? this.inputFlow : this.outputFlow;
+        return !this.isStepUp() ? this.inputFlow : this.inputFlow;
     }
 
     public double getoutputflow() {
-        return this.isStepUp() ? this.inputFlow : this.outputFlow;
+        return this.isStepUp() ? this.outputFlow : this.outputFlow;
     }
+
 
     public boolean isStepUp() {
         return this.transformMode == Mode.stepup;

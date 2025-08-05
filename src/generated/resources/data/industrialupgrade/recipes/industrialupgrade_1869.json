@@ -1,37 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:graphite_reactor/graphite_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:exchanger/simple_exchanger"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_356_element"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "F": [
-      {
-        "tag": "forge:doubleplate/nichrome"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:exchanger/simple_exchanger"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_356_element"
+    },
+    "E": {
+      "tag": "forge:plates/carbon"
+    },
+    "F": {
+      "tag": "forge:doubleplate/nichrome"
+    }
   },
   "pattern": [
     "EFE",

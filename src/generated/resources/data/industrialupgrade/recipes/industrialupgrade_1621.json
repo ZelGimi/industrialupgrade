@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:upgrades/energy_storage"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:battery/re_battery"
-      }
-    ]
+    {
+      "item": "industrialupgrade:upgrades/energy_storage"
+    },
+    {
+      "item": "industrialupgrade:battery/re_battery"
+    }
   ],
   "result": {
     "item": "industrialupgrade:upgrades/storageupgrade"

@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:upgrades/overclocker"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:upgrades/overclocker"
+    },
+    "D": {
+      "tag": "forge:plates/ferromanganese"
+    }
   },
   "pattern": [
     "DDD",

@@ -2,41 +2,67 @@ package com.denfop.api.crafting;
 
 import com.denfop.api.Recipes;
 import com.denfop.items.ItemToolCrafting;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.IngredientInput;
+import com.denfop.recipe.InputItemStack;
+import com.denfop.recipe.InputOreDict;
+import com.denfop.register.Register;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class BaseShapelessRecipe implements CraftingRecipe {
+public class BaseShapelessRecipe extends ShapelessRecipe {
 
     final NonNullList<Ingredient> listIngridient;
     private final ItemStack output;
     private final List<IInputItemStack> recipeInputList;
     private final String id;
     private ResourceLocation name;
+    public BaseShapelessRecipe(ResourceLocation id, String group, CraftingBookCategory category, ItemStack output, List<IInputItemStack> recipeInputList) {
+        super(id,group,category,output,NonNullList.create());
+        this.id = "";
 
+        this.output = output;
+        this.recipeInputList = recipeInputList;
+        this.listIngridient = NonNullList.create();
+
+
+        for (IInputItemStack input : this.recipeInputList) {
+            this.listIngridient.add(new IngredientInput(input).getInput());
+
+        }
+
+    }
     public BaseShapelessRecipe(ItemStack output, List<IInputItemStack> recipeInputList) {
+        super(ResourceLocation.tryParse("minecraft:minecraft"), "", CraftingBookCategory.MISC,output,NonNullList.create());
         this.output = output;
         this.recipeInputList = recipeInputList;
         listIngridient = NonNullList.create();
 
 
         for (IInputItemStack input : this.recipeInputList) {
-            listIngridient.add(new IngredientInput(input));
+            listIngridient.add(new IngredientInput(input).getInput());
 
         }
 
         this.id = Recipes.registerRecipe(this);
     }
+
+
 
     public List<IInputItemStack> getRecipeInputList() {
         return recipeInputList;
@@ -48,6 +74,12 @@ public class BaseShapelessRecipe implements CraftingRecipe {
 
 
     public ItemStack matches(final CraftingContainer inv) {
+
+        for (int i = 0; i < recipeInputList.size();i++) {
+            IInputItemStack input = this.recipeInputList.get(i);
+            if (input instanceof InputOreDict &&input .hasTag() &&  input .getInputs().isEmpty())
+                recipeInputList.set(i,new InputOreDict(input .getTag(),input .getAmount()));
+        }
         List<IInputItemStack> recipeInputList1 = new ArrayList<>(recipeInputList);
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack stack = inv.getItem(i);
@@ -117,29 +149,57 @@ public class BaseShapelessRecipe implements CraftingRecipe {
     @Override
     public NonNullList<Ingredient> getIngredients() {
 
-        return listIngridient;
+        NonNullList<Ingredient> ingredients = NonNullList.create();
+        for (IInputItemStack input : recipeInputList) {
+            ingredients.add(input.hasTag() ? Ingredient.of(input.getTag()) : Ingredient.of(input.getInputs().get(0)));
+
+        }
+        return ingredients;
     }
 
 
-    @Override
-    public ResourceLocation getId() {
-        return new ResourceLocation(id);
-    }
 
     @Override
     public RecipeType<?> getType() {
         return RecipeType.CRAFTING;
     }
 
-    @Override
-    public CraftingBookCategory category() {
-        return null;
-    }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeSerializer.SHAPELESS_RECIPE;
+        return Register.RECIPE_SERIALIZER_SHAPELESS_RECIPE.get();
     }
 
 
+    public void toNetwork(FriendlyByteBuf buf) {
+        CustomPacketBuffer packetBuffer = new CustomPacketBuffer(buf);
+        try {
+            EncoderHandler.encode(packetBuffer, getGroup());
+            EncoderHandler.encode(packetBuffer, category().ordinal());
+            EncoderHandler.encode(packetBuffer, output);
+
+            packetBuffer.writeInt(recipeInputList.size());
+            for (IInputItemStack part : recipeInputList)
+                EncoderHandler.encode(packetBuffer, part.writeNBT());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static BaseShapelessRecipe create(ResourceLocation id, CustomPacketBuffer customPacketBuffer) {
+        try {
+            String group = (String) DecoderHandler.decode(customPacketBuffer);
+            int category = (int) DecoderHandler.decode(customPacketBuffer);
+            ItemStack output = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+
+
+            List<IInputItemStack>  recipeInputList = new ArrayList<>();
+            int size = customPacketBuffer.readInt();
+            for (int i = 0; i < size; i++) {
+                recipeInputList.add(InputItemStack.create((CompoundTag) DecoderHandler.decode(customPacketBuffer)));
+            }
+            return new BaseShapelessRecipe(id, group, CraftingBookCategory.values()[category], output, recipeInputList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

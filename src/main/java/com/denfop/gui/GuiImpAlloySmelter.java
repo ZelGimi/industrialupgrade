@@ -45,7 +45,7 @@ public class GuiImpAlloySmelter<T extends ContainerImpAlloySmelter> extends GuiI
         componentList.add(new GuiComponent(this, 0, 0, getComponent(),
                 new Component<>(new ComponentRenderInventory(
                         EnumTypeComponentSlot.SLOT,
-                        Collections.singletonList(((TileEntityImpAlloySmelter) this.container.base).input_slot)
+                        Collections.singletonList(this.container.base.input_slot)
                 ))
         ));
     }

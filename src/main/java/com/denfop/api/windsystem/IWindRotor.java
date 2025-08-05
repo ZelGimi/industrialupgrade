@@ -4,6 +4,8 @@ import com.denfop.api.item.IDamageItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.awt.*;
+
 public interface IWindRotor extends IDamageItem {
 
     int getDiameter(ItemStack var1);
@@ -18,4 +20,5 @@ public interface IWindRotor extends IDamageItem {
 
     int getSourceTier();
 
+    Color getColor();
 }

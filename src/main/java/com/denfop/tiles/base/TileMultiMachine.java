@@ -14,6 +14,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
+import com.denfop.audio.SoundHandler;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.*;
 import com.denfop.componets.client.ComponentClientEffectRender;
@@ -39,9 +40,12 @@ import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -161,7 +165,9 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             }
         };
     }
-
+    public int getFertilizer(){
+        return  0;
+    }
     public FluidTank getTank() {
         return tank;
     }
@@ -254,6 +260,8 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.getMachine().type == EnumTypeMachines.FARMER)
+            tooltip.add(Localization.translate("iu.farmer.info"));
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -602,6 +610,26 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            switch (this.getMachine().type){
+                case FARMER ->  ParticleUtils.spawnFarmParticles(level,pos,level.random);
+                case CUTTING -> ParticleUtils.spawnCutterParticles(level,pos,level.random);
+                case ROLLING ->  ParticleUtils.spawnRollingMillParticles(level,pos,level.random);
+                case RECYCLER ->  ParticleUtils.spawnRecyclerParticles(level,pos,level.random);
+                case EXTRACTOR -> ParticleUtils.spawnExtractorParticles(level,pos,level.random);
+                case Centrifuge -> ParticleUtils.spawnCentrifugeParticles(level,pos,level.random);
+                case Gearing -> ParticleUtils.spawnGearParticles(level,pos,level.random);
+                case EXTRUDING ->  ParticleUtils.spawnExtruderParticles(level,pos,level.random);
+                case MACERATOR -> ParticleUtils.spawnMaceratorParticles(level,pos,level.random);
+                case COMPRESSOR ->  ParticleUtils.spawnCompressorParticles(level,pos,level.random);
+                case OreWashing -> ParticleUtils.spawnOreWashingParticles(level,pos,level.random);
+                case COMBRECYCLER -> ParticleUtils.spawnRecyclerParticles(level,pos,level.random);
+                case COMBMACERATOR ->  ParticleUtils.spawnMaceratorParticles(level,pos,level.random);
+                case ASSAMPLERSCRAP -> ParticleUtils.spawnScrapCollectorParticles(level,pos,level.random);
+                case ELECTRICFURNACE ->  ParticleUtils.showFlames((ServerLevel) this.getWorld(), this.getBlockPos(), this.getFacing());
+            }
+
+        }
         if (solartype != null) {
             if (this.energy.getEnergy() < this.energy.getCapacity()) {
                 if (panel == null) {

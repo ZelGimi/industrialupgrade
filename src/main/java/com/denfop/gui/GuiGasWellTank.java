@@ -1,20 +1,113 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGasWellTank;
+import com.denfop.utils.Keyboard;
+import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiGasWellTank<T extends ContainerGasWellTank> extends GuiIU<ContainerGasWellTank> {
 
     public GuiGasWellTank(ContainerGasWellTank guiContainer) {
         super(guiContainer);
-        this.addElement(TankGauge.createNormal(this, this.imageWidth / 2 - 10, 20, guiContainer.base.getTank()));
+        componentList.clear();
+        this.addElement(new TankGauge(
+                this,
+                75,
+                13,
+                26,
+                61,
+                guiContainer.base.getTank(),
+                TankGauge.TankGuiStyle.Normal
+        ) {
+
+            protected List<String> getToolTip() {
+                List<String> ret = new ArrayList<>();
+                FluidStack fs = guiContainer.base.getTank().getFluid();
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (this.tank instanceof Fluids.InternalFluidTank) {
+                        Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
+                        ret.add(Localization.translate("iu.tank.fluids"));
+                        ret.addAll(tank1.getFluidList());
+                    }
+                } else if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    Fluid fluid = fs.getFluid();
+                    if (fluid != null) {
+                        ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
+                    } else {
+                        ret.add("invalid fluid stack");
+                    }
+                } else {
+                    ret.add(Localization.translate("iu.generic.text.empty"));
+                }
+
+                return ret;
+            }
+
+            @Override
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+
+                FluidStack fs = guiContainer.base.getTank().getFluid();
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    int fluidX = this.x;
+                    int fluidY = this.y;
+                    int fluidWidth = this.width;
+                    int fluidHeight = this.height;
+                    if (this.getStyle().withBorder) {
+                        fluidX += 3;
+                        fluidY += 3;
+                        fluidWidth = 20;
+                        fluidHeight = 55;
+                    }
+
+                    Fluid fluid = fs.getFluid();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
+                    double renderHeight = (double) fluidHeight * ModUtils.limit(
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
+                            0.0D,
+                            1.0D
+                    );
+                    bindBlockTexture();
+                    this.gui.drawSprite(poseStack,mouseX+
+                                    fluidX,
+                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            fluidWidth,
+                            renderHeight,
+                            sprite,
+                            color,
+                            1.0D,
+                            false,
+                            true
+                    );
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                    this.gui.bindTexture();
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + 97, this.gui.guiTop + 14, 191, 5, 7, 46);
+
+                }
+
+
+            }
+        });
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigaswell_tank.png");
     }
 
 }

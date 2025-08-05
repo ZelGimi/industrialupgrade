@@ -8,19 +8,26 @@ import com.denfop.api.pollution.PollutionAirUnLoadEvent;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,24 +44,44 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
         this.pollution = pollution;
         this.default_pollution = pollution;
     }
+    public static void spawnAirPollutionDirected(Level level, BlockPos pos, RandomSource random) {
+        if (!(level instanceof ServerLevel server)) return;
 
-    @OnlyIn(Dist.CLIENT)
-    public static void spawnCustomPollutionParticle(Level world, double x, double y, double z, double windSpeed) {
-        if (world != null) {
-            Vec3 windDirection = WindSystem.windSystem.getWindSide().getDirectionVector();
+        Vec3 Vec3 = WindSystem.windSystem.getWindSide().getDirectionVector();
+        double dx = 0, dz = 0;
+        dx += Vec3.x;
+        dz += Vec3.z;
 
 
-            double motionX = windDirection.x * windSpeed * 0.5;
-            double motionY = 0.01D;
-            double motionZ = windDirection.z * windSpeed * 0.5;
+        double magnitude = Math.sqrt(dx * dx + dz * dz);
+        if (magnitude != 0) {
+            dx /= magnitude;
+            dz /= magnitude;
+        }
 
-            world.addParticle(
-                    ParticleTypes.SMOKE,
-                    x, y, z,
-                    motionX, motionY, motionZ
-            );
+        double x = pos.getX() + 0.5;
+        double y = pos.getY() + 1.2;
+        double z = pos.getZ() + 0.5;
+
+
+        if (random.nextFloat() < 0.5f) {
+            server.sendParticles(ParticleTypes.CLOUD, x, y, z, 0,
+                    0.05, 0.1, 0.05, 0.1);
+
+
+            for (int i = 0; i < 2; i++) {
+                double ox = x + (random.nextDouble() - 0.5) * 0.4;
+                double oy = y + random.nextDouble() * 0.2;
+                double oz = z + (random.nextDouble() - 0.5) * 0.4;
+                double vx = dx * 0.05 + (random.nextDouble() - 0.5) * 0.01;
+                double vz = dz * 0.05 + (random.nextDouble() - 0.5) * 0.01;
+
+                server.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, ox, oy, oz, 0, vx, 0.1, vz, 1);
+            }
         }
     }
+
+
 
     @Override
     public CompoundTag writeToNbt() {
@@ -165,28 +192,15 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
-        if (this.parent.getActive()) {
 
-           /*    if (this.parent.getWorld().getWorldTime() % 4 == 0) {
-                Vec3d windDirection = WindSystem.windSystem.getWindSide().getDirectionVector();
-                double windSpeed = WindSystem.windSystem.getSpeed() / 32F;
-                double motionX = windDirection.x * windSpeed;
-                double motionY = 0.02D;
-                double motionZ = windDirection.z * windSpeed;
-                Minecraft.getMinecraft().effectRenderer.addEffect(new CustomPollutionParticle(this.parent.getWorld(),
-                        this.parent.getPos().getX(),
-                        this.parent.getPos().getY() + 1,
-                        this.parent.getPos().getZ(),motionX,motionY,motionZ
-                ));
-            }*/
-        } else {
-
-        }
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.parent.getWorld().getGameTime() % 20 == 0 && this.parent.getActive()) {
+            spawnAirPollutionDirected(parent.getWorld(),parent.getPos(),parent.getWorld().random);
+        }
         if (this.parent.getActive()) {
             this.setPollution(this.default_pollution * this.percent);
         } else {

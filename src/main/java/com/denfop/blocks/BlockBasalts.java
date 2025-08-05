@@ -49,13 +49,14 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+    public List<ItemStack> getDrops(      @Nonnull final Level world,
+                                          @Nonnull final BlockPos pos,
+                                          @Nonnull final BlockState state,
+                                          final int fortune) {
         Random rand = WorldBaseGen.random;
         List<ItemStack> drops = new ArrayList<>();
 
         int meta = this.getElement().getId();
-        ItemStack tool = builder.getParameter(LootContextParams.TOOL);
-        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool);
         if (meta == 6) {
             drops.add(new ItemStack(IUItem.iudust.getItemFromMeta(31), rand.nextInt(2) + 1 + rand.nextInt(fortune + 1)));
         } else if (meta == 7) {

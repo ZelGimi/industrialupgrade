@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemplates/thallium"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:alloyplate/alcled"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_116_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemplates/thallium"
+    },
+    "B": {
+      "item": "industrialupgrade:alloyplate/alcled"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_116_element"
+    }
   },
   "pattern": [
     "AAA",

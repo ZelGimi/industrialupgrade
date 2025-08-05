@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:block/raw_block/raw_osmium"
+    }
+}

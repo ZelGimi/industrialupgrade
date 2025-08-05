@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_274_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:glowstone_dust"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:battery/energy_crystal"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "B": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "C": {
+      "tag": "forge:plates/carbon"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    }
   },
   "pattern": [
     "BA ",

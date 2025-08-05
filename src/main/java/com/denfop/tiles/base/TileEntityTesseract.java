@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tesseract.*;
 import com.denfop.api.tesseract.event.EventAdderChannel;
@@ -25,6 +26,7 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -54,6 +56,12 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
         tank = this.fluids.addTank("tank", 64000);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 18);
         this.getComponentPrivate().setActivate(true);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.tesseract.info"));
     }
 
     @Override

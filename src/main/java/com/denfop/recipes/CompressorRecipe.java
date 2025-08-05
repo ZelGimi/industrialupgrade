@@ -369,7 +369,7 @@ public class CompressorRecipe {
         addcompressor(
                 "forge:dusts/Lapis",
                 9,
-                "forge:plates/Lapis"
+                "forge:plateDense/Lapis"
         );
         addcompressor(
                 "forge:ingots/Steel",

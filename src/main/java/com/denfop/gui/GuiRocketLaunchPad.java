@@ -58,8 +58,6 @@ public class GuiRocketLaunchPad<T extends ContainerRocketLaunchPad> extends GuiI
             int fluidWidth = 16;
             int fluidHeight = 16;
             Fluid fluid = fs.getFluid();
-            if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                fluid = FluidName.fluidwater.getInstance().get();
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
             TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
             int color = extensions.getTintColor();

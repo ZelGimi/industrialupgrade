@@ -2,9 +2,9 @@
   "type": "minecraft:smelting",
   "category": "misc",
   "cookingtime": 200,
-  "experience": 0.6,
+  "experience": 0.1,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/alumel"
+    "item": "industrialupgrade:crafting_elements/crafting_770_element"
   },
-  "result": "industrialupgrade:alloyingot/alumel"
+  "result": "industrialupgrade:crafting_elements/crafting_771_element"
 }

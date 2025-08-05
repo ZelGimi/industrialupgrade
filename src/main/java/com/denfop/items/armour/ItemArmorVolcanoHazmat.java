@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IHazmatLike, ISpecialArmor {
+public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcanoArmor, ISpecialArmor {
 
     public ItemArmorVolcanoHazmat(String name, Type type) {
         super(ArmorMaterials.HAZMAT, name, type);

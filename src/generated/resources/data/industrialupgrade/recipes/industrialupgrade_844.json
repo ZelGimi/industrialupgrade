@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_25_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:ingots/uranium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    },
+    "B": {
+      "tag": "forge:ingots/uranium"
+    }
   },
   "pattern": [
     " B ",

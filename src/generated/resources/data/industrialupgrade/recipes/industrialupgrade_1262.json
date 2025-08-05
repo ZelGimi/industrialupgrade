@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/aluminiumsilicon"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/nitenol"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/aluminiumsilicon"
+    },
+    "B": {
+      "tag": "forge:plates/nitenol"
+    }
   },
   "pattern": [
     "BBB",

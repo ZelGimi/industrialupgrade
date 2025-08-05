@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:water_rotor/water_barionrotor"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "B": {
+      "item": "industrialupgrade:water_rotor/water_barionrotor"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,

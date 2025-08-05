@@ -169,13 +169,13 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
         if (this.currentStack == hyd) {
             this.power = 1;
         } else if (this.currentStack == nitrogen) {
-            this.power = 1.5;
+            this.power = 1.25;
         } else if (this.currentStack == coolant) {
-            this.power = 2.5;
+            this.power = 1.75;
         } else if (this.currentStack == hel) {
-            this.power = 4;
+            this.power = 2.25;
         } else if (this.currentStack == cryogen) {
-            this.power = 8;
+            this.power = 3;
         }
         return this.power;
     }
@@ -187,7 +187,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
 
     @Override
     public double getPower() {
-        return this.power * this.x;
+        return this.power * this.x * 0.8d;
     }
 
     @Override

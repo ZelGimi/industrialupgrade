@@ -1,5 +1,9 @@
 package com.denfop.api.crafting;
 
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +13,7 @@ public class RecipeGrid {
 
 
     private final List<List<String>> grids;
+    private final List<String> args;
     private List<Character> charactersList;
     private int x2;
     private int y2;
@@ -17,7 +22,7 @@ public class RecipeGrid {
     private boolean hasTwoX;
 
     public RecipeGrid(List<String> args) {
-
+        this.args = args;
         while (3 - args.size() > 0) {
             args.add("   ");
         }
@@ -233,4 +238,11 @@ public class RecipeGrid {
         return list;
     }
 
+    public void encode(CustomPacketBuffer customPacketBuffer) {
+        try {
+            EncoderHandler.encode(customPacketBuffer,args);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

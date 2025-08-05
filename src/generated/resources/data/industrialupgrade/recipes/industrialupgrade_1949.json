@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:storage_blocks/iron"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:water_rotor/water_rotor_bronze"
-      }
-    ]
+    "A": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "B": {
+      "item": "industrialupgrade:water_rotor/water_rotor_bronze"
+    }
   },
   "pattern": [
     " A ",

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/vanadoalumite"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:moremachine1/quad_comb_macerator"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "forge:doubleplate/vanadoalumite"
+    },
+    "D": {
+      "item": "industrialupgrade:moremachine1/quad_comb_macerator"
+    }
   },
   "pattern": [
     " D ",

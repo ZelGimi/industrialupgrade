@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/silver"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:storage_blocks/iridium"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:block_anvil/block_anvil"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/silver"
+    },
+    "C": {
+      "tag": "forge:storage_blocks/iridium"
+    },
+    "D": {
+      "item": "industrialupgrade:block_anvil/block_anvil"
+    }
   },
   "pattern": [
     "CCC",

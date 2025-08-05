@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:block/blockbeehive_top_tropical",
     "up" : "industrialupgrade:block/blockbeehive_top_tropical",
     "north" : "industrialupgrade:block/blockbeehive_tropical",
-    "east" : "industrialupgrade:block/blockbeehive_tropical",
-    "south" : "industrialupgrade:block/blockbeehive_tropical",
-    "west" : "industrialupgrade:block/blockbeehive_tropical"
+    "east" : "industrialupgrade:block/blockbeehive_tropical_side",
+    "south" : "industrialupgrade:block/blockbeehive_tropical_side",
+    "west" : "industrialupgrade:block/blockbeehive_tropical_side"
   }
 }

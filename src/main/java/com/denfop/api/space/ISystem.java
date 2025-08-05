@@ -7,4 +7,6 @@ public interface ISystem {
     String getName();
 
     List<IStar> getStarList();
+
+    int getDistanceFromSolar();
 }

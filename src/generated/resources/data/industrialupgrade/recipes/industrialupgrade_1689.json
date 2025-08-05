@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -14,21 +14,15 @@
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:5}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:battery/energy_crystal"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_282_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_282_element"
+    },
+    "E": {
+      "item": "industrialupgrade:nanobox"
+    }
   },
   "pattern": [
     "DCD",

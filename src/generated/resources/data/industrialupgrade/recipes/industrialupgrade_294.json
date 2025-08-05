@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/inconel"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/inconel"
+    }
   ],
   "result": {
     "count": 9,

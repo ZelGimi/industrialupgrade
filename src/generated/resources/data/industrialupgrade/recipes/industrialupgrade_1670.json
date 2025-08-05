@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:dusts/stone"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:clay_ball"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:sand"
-      }
-    ]
+    "A": {
+      "tag": "forge:dusts/stone"
+    },
+    "B": {
+      "item": "minecraft:clay_ball"
+    },
+    "C": {
+      "item": "minecraft:sand"
+    }
   },
   "pattern": [
     "ACA",

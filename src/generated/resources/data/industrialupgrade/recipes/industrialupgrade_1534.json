@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:dusts/coal"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:glass"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_37_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:basemachine3/generator_iu"
-      }
-    ]
+    "A": {
+      "tag": "forge:dusts/coal"
+    },
+    "B": {
+      "item": "minecraft:glass"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_37_element"
+    },
+    "E": {
+      "item": "industrialupgrade:basemachine3/generator_iu"
+    }
   },
   "pattern": [
     "ABA",

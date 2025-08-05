@@ -9,11 +9,13 @@ import com.denfop.api.guidebook.GuideBookCore;
 import com.denfop.api.guidebook.Quest;
 import com.denfop.gui.GuiResearchTableSpace;
 import com.denfop.network.packet.PacketUpdateCompleteQuest;
+import com.denfop.toast.GuideToast;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.AdvancementToast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -148,6 +150,8 @@ public class GuideQuest {
         }
         int j = -1;
         int size = quest.itemStacks.size() + quest.fluidStacks.size();
+        poseStack.pose().pushPose();
+        poseStack.pose().translate(0,0,200);
         for (int i = (itemPage - 1) * 11; i < Math.min((itemPage) * 11, size); i++) {
             j++;
             if (i < quest.itemStacks.size()) {
@@ -157,7 +161,7 @@ public class GuideQuest {
                         this.x + offsetX1 + 6 + j * 18,
                         this.y + offsetY1 + 64,
                         () -> quest.itemStacks.get(finalI)
-                ).drawForeground( poseStack,
+                ).drawForeground(poseStack,
                         x,
                         y
                 );
@@ -168,13 +172,14 @@ public class GuideQuest {
                         this.x + offsetX1 + 6 + j * 18,
                         this.y + offsetY1 + 64,
                         quest.fluidStacks.get(finalI)
-                ).drawForeground( poseStack,
+                ).drawForeground(poseStack,
                         x,
                         y
                 );
 
             }
         }
+        poseStack.pose().popPose();
     }
 
     public boolean isRemove(int x, int y) {
@@ -246,8 +251,8 @@ public class GuideQuest {
             }
         }
 
-        guiIU.drawString( poseStack,quest.localizedName,
-                mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth(quest.localizedName) / 2,
+        guiIU.drawString( poseStack, quest.getLocalizedName(),
+                mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth(quest.getLocalizedName()) / 2,
                 mouseY + y + offsetY1 + 5, 0
         );
         guiIU.drawString(poseStack,ChatFormatting.GREEN +
@@ -257,14 +262,14 @@ public class GuideQuest {
         );
 
         new ItemImage(guiIU, x + offsetX1 + 17, y + offsetY1 + 16, () -> quest.icon).drawBackground( poseStack,mouseX, mouseY);
-        List<String> lines = guiIU.splitTextToLines(quest.localizedDescription, width - 15, 1
+        List<String> lines = guiIU.splitTextToLines(quest.getLocalizedDescription(), width - 15, 1
         );
         maxPage = Math.max(1, lines.size() - 6);
         maxItemPage = Math.max(1, 1 + (quest.fluidStacks.size() + quest.itemStacks.size()) / 11);
 
         enableScissor(guiIU, mouseX + x + offsetX1 + 6, mouseY + y + offsetY1 + 90, width - 15, 70);
         guiIU.drawTextInCanvasWithScissor(poseStack,
-                quest.localizedDescription,
+                quest.getLocalizedDescription(),
                 mouseX + x + offsetX1 + 6,
                 mouseY +y + offsetY1 + 90,
                 width - 15,
@@ -420,6 +425,7 @@ public class GuideQuest {
     }
 
     public void complete(Player player, int tab) {
+        Minecraft.getInstance().getToasts().addToast(new GuideToast(this.quest));
         new PacketUpdateCompleteQuest(player,GuideBookCore.instance.getGuideTabs().get(tab).unLocalized,quest.unLocalizedName);
     }
 

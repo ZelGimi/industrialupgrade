@@ -33,7 +33,7 @@ public class TileEntityRenderSteamStorage implements BlockEntityRenderer<TileSte
         float scale = fluidStack.getAmount() / (float) tile.getFluidTank().getCapacity();
         poseStack.translate(0.04+ 0.05, 0, 0.04+ 0.05);
         poseStack.scale(0.95f, 0.95f * scale, 0.95f);
-        RenderFluidBlock.renderFluid(fluidStack, buffer, tile.getLevel(), tile.getPos(), poseStack, 0.95f * scale, 0.95f);
+        RenderFluidBlock.renderFluid(fluidStack, buffer, tile.getLevel(), tile.getPos(), poseStack, 0.95f * scale, 0.95f,0);
         poseStack.popPose();
     }
 

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemsunnariumpanel/nsp"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniumglass/photoniyglass9"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:stick/germanium"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:neutroniumingot"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemsunnariumpanel/nsp"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniumglass/photoniyglass9"
+    },
+    "C": {
+      "item": "industrialupgrade:stick/germanium"
+    },
+    "D": {
+      "item": "industrialupgrade:neutroniumingot"
+    }
   },
   "pattern": [
     "CDC",

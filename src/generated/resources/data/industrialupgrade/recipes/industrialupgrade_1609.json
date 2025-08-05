@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/tin1"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:casings/aluminiumlithium"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:charged_redstone"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:charged_quartz"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/tin1"
+    },
+    "C": {
+      "tag": "forge:casings/aluminiumlithium"
+    },
+    "D": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "E": {
+      "item": "industrialupgrade:charged_quartz"
+    }
   },
   "pattern": [
     "AEA",

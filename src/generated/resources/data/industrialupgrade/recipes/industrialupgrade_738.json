@@ -1,33 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_23_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:10}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:spectral_box"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_116_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_653_element"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:spectral_box"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_116_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_653_element"
+    }
   },
   "pattern": [
     "CCC",

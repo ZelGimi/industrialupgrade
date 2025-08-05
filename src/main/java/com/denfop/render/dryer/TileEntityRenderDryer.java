@@ -31,13 +31,13 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
             poseStack.pushPose();
             poseStack.translate(0.17, 0, 0.17);
             poseStack.translate(0.0, 1.2, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f,0);
             poseStack.popPose();
 
             poseStack.pushPose();
             poseStack.translate(0.1 + 0.6, 0, 0.1 + 0.6);
             poseStack.translate(0.0, 0.7, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.4f, 0.3f);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.4f, 0.3f,1);
             poseStack.popPose();
         }
         ItemStack itemstack = te.outputSlot.get(0);

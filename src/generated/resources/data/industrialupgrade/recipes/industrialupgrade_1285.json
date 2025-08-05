@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_32_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine3/oak_tank"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/steam_machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_123_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:battery/advanced_re_battery"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_32_element"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/oak_tank"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/steam_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_123_element"
+    },
+    "E": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    }
   },
   "pattern": [
     "DEA",

@@ -1,11 +1,13 @@
 package com.denfop.render.water;
 
 import com.denfop.api.windsystem.IWindMechanism;
+import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.render.windgenerator.RotorModel;
 import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -69,6 +71,11 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWater
 
         if (windGen.getSpace()) {
             angle = windGen.getAngle();
+            IWindRotor rotor = tile.getRotor();
+            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0){
+                angle = 0;
+            }
+            if (!Minecraft.getInstance().isPaused())
             poseStack.mulPose(Axis.XP.rotationDegrees(angle));
         }
 

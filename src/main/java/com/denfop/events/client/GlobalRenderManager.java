@@ -2,6 +2,7 @@ package com.denfop.events.client;
 
 
 import com.denfop.gui.GuiIU;
+import com.denfop.mixin.access.LevelRendererAccessor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -78,7 +79,7 @@ public class GlobalRenderManager {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
 
-        if (player == null || mc.level == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS) {
+        if (player == null || mc.level == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             return;
         }
 
@@ -102,7 +103,7 @@ public class GlobalRenderManager {
                     for (Function<RenderLevelStageEvent, Void> function : entry.getValue().values()) {
                         function.apply(event);
                     }
-
+                    ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
                     poseStack.popPose();
                 }
             }

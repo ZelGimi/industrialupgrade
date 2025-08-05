@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/imp_solar_destiller"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_198_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_140_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/imp_solar_destiller"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_198_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    }
   },
   "pattern": [
     "DBD",

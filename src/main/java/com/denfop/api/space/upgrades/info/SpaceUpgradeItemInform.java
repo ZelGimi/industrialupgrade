@@ -36,8 +36,8 @@ public class SpaceUpgradeItemInform {
             case PROTECTION:
                 return ChatFormatting.GOLD + Localization.translate("protect") + ChatFormatting.GREEN + ModUtils.getString(0.2 * this.number * 100) + "%";
             case COOLER:
-                return ChatFormatting.LIGHT_PURPLE + Localization.translate("iu.spaceupgrade.cool") + ChatFormatting.GREEN + ModUtils.getString(
-                        this.number * -37) + "C°";
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("iu.spaceupgrade.cool") + ChatFormatting.GREEN +
+                        this.number * -37 + "C°";
             case ENGINE:
                 return ChatFormatting.RED + Localization.translate("iu.spaceupgrade.engine") + ChatFormatting.GREEN + ModUtils.getString(
                         this.number * 12.5) + "%";

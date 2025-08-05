@@ -19,7 +19,7 @@ public class EnergyTileLoadEvent extends LevelEvent {
     public EnergyTileLoadEvent(Level world, IEnergyTile energyTile1) {
         super(world);
         this.tile = energyTile1;
-        this.tileentity = energyTile1.getTileEntity();
+        this.tileentity = world.getBlockEntity(energyTile1.getPos());
     }
 
 }

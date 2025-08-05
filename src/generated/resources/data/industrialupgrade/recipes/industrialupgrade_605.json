@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/ganymede_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/ganymede_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/ganymede_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/ganymede_pebble"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/ganymede_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/ganymede_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/ganymede_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/ganymede_pebble"
+    }
   ],
   "result": {
     "item": "industrialupgrade:itemspace/ganymede_boulder"

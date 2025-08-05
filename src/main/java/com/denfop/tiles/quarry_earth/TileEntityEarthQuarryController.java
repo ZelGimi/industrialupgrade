@@ -16,6 +16,8 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
@@ -34,11 +36,12 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
     public IAnalyzer analyzer;
     public boolean work;
     public int indexChunk = 0;
-    public Map<ChunkPos, List<DataPos>> map;
-    public List<ChunkPos> chunkPosList;
+    public Map<ChunkPos, List<DataPos>> map = new HashMap<>();
+    public List<ChunkPos> chunkPosList = new LinkedList<>();
+
+    private List<DataPos> dataPos = new LinkedList<>();
     public int max = 0;
     public int block_Col;
-    private List<DataPos> dataPos = new LinkedList<>();
     private IRigDrill quarry;
 
     public TileEntityEarthQuarryController(BlockPos pos, BlockState state) {
@@ -59,6 +62,41 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
         indexChunk = nbttagcompound.getInt("indexChunk");
         max = nbttagcompound.getInt("max");
         block_Col = nbttagcompound.getInt("block_Col");
+        dataPos = new LinkedList<>();
+        ListTag dataPosList = nbttagcompound.getList("DataPosList", CompoundTag.TAG_COMPOUND);
+        for (Tag t : dataPosList) {
+            CompoundTag dpTag = (CompoundTag) t;
+            dataPos.add(DataPos.load(dpTag));
+        }
+        ListTag nodAddedDataPosList = nbttagcompound.getList("nodAddedDataPosList", CompoundTag.TAG_COMPOUND);
+        for (Tag t : nodAddedDataPosList) {
+            CompoundTag dpTag = (CompoundTag) t;
+            notAddedPos.add(DataPos.load(dpTag));
+        }
+        chunkPosList = new ArrayList<>();
+        ListTag chunkList = nbttagcompound.getList("ChunkPosList", CompoundTag.TAG_COMPOUND);
+        for (Tag t : chunkList) {
+            CompoundTag cpTag = (CompoundTag) t;
+            int x = cpTag.getInt("x");
+            int z = cpTag.getInt("z");
+            chunkPosList.add(new ChunkPos(x, z));
+        }
+
+        map = new HashMap<>();
+        ListTag mapList = nbttagcompound.getList("ChunkDataMap", CompoundTag.TAG_COMPOUND);
+        for (Tag t : mapList) {
+            CompoundTag entryTag = (CompoundTag) t;
+            int x = entryTag.getInt("x");
+            int z = entryTag.getInt("z");
+            ChunkPos chunkPos = new ChunkPos(x, z);
+
+            ListTag dpList = entryTag.getList("data", CompoundTag.TAG_COMPOUND);
+            List<DataPos> list = new ArrayList<>();
+            for (Tag dpTag : dpList) {
+                list.add(DataPos.load((CompoundTag) dpTag));
+            }
+            map.put(chunkPos, list);
+        }
     }
 
     @Override
@@ -67,6 +105,43 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
         nbttagcompound.putInt("indexChunk", indexChunk);
         nbttagcompound.putInt("max", max);
         nbttagcompound.putInt("block_Col", block_Col);
+        ListTag dataPosList = new ListTag();
+        for (DataPos dp : dataPos) {
+            dataPosList.add(dp.save());
+        }
+        nbttagcompound.put("DataPosList", dataPosList);
+
+        ListTag nodAddedDataPosList = new ListTag();
+        for (DataPos dp : notAddedPos) {
+            nodAddedDataPosList.add(dp.save());
+        }
+        nbttagcompound.put("nodAddedDataPosList", nodAddedDataPosList);
+
+
+        ListTag chunkList = new ListTag();
+        for (ChunkPos cp : chunkPosList) {
+            CompoundTag cpTag = new CompoundTag();
+            cpTag.putInt("x", cp.x);
+            cpTag.putInt("z", cp.z);
+            chunkList.add(cpTag);
+        }
+        nbttagcompound.put("ChunkPosList", chunkList);
+
+        ListTag mapList = new ListTag();
+        for (Map.Entry<ChunkPos, List<DataPos>> entry : map.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putInt("x", entry.getKey().x);
+            entryTag.putInt("z", entry.getKey().z);
+
+            ListTag dpList = new ListTag();
+            for (DataPos dp : entry.getValue()) {
+                dpList.add(dp.save());
+            }
+            entryTag.put("data", dpList);
+
+            mapList.add(entryTag);
+        }
+        nbttagcompound.put("ChunkDataMap", mapList);
         return super.writeToNBT(nbttagcompound);
     }
 
@@ -104,11 +179,9 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
         if (var2 == 0 && !this.analyzer.getChunkPoses().isEmpty()) {
             this.work = !this.work;
             indexChunk = 0;
-            dataPos.clear();
-            this.block_Col = 0;
         }
     }
-
+    List<DataPos> notAddedPos = new ArrayList<>();
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -119,6 +192,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                     max = chunkPosList.size();
                     for (DataPos dataPos1 : dataPos) {
                         if (energy.getEnergy() < 50) {
+                            notAddedPos.add(dataPos1);
                             continue;
                         }
                         this.energy.useEnergy(50);
@@ -151,8 +225,41 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
 
                     }
                 } else {
-                    this.work = false;
-                    this.indexChunk = this.max;
+                    if (!notAddedPos.isEmpty()){
+                        Iterator<DataPos> iter = notAddedPos.iterator();
+                        while (iter.hasNext()) {
+                            DataPos dataPos1 = iter.next();
+                            if (energy.getEnergy() < 50) {
+                                continue;
+                            }
+                            this.energy.useEnergy(50);
+                            if (dataPos1.state.getBlock() == Blocks.DIRT) {
+                                if (random.nextInt(100) >= 90) {
+                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1),3);
+                                    this.dataPos.add(dataPos1);
+                                }
+                            } else if (dataPos1.state.getBlock() == Blocks.GRAVEL) {
+                                if (random.nextInt(100) >= 94) {
+                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2),3);
+                                    this.dataPos.add(dataPos1);
+                                }
+                            } else if (dataPos1.state.getBlock() == Blocks.SAND) {
+
+                                if (random.nextInt(100) >= 80) {
+                                    level.setBlock(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0),3);
+                                    this.dataPos.add(dataPos1);
+                                }
+
+                            }
+                            iter.remove();
+                        }
+                        this.block_Col = this.dataPos.size();
+                        this.work = false;
+                        this.indexChunk = this.max;
+                    }else {
+                        this.work = false;
+                        this.indexChunk = this.max;
+                    }
                 }
             }
 

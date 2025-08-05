@@ -88,6 +88,7 @@ public class Storage implements IStorage {
         List<FluidStack> fluidStacks = this.getFluidStacks();
         boolean added = false;
         fluidStacks.removeIf(Objects::isNull);
+        fluidStacks.removeIf(FluidStack::isEmpty);
         for (FluidStack stack : fluidStacks) {
             if (stack.isFluidEqual(fluidStack)) {
                 if (stack.getAmount() + fluidStack.getAmount() <= this.maxvaluefluid) {
@@ -244,7 +245,7 @@ public class Storage implements IStorage {
         size = nbt1.getInt("col_fluid");
         this.fluidStackList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt.getCompound(String.valueOf(i))));
+            this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt1.getCompound(String.valueOf(i))));
         }
     }
 

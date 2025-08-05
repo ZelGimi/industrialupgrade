@@ -111,18 +111,19 @@ public class TileQuarryVein extends TileElectricMachine implements
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (!player.getItemInHand(hand).isEmpty()) {
             if (player.getItemInHand(hand).getItem() instanceof ItemUpgradeMachinesKit) {
-                if (this.levelMech < 4 && this.levelMech ==
-                        (IUItem.machinekit.getMeta(player.getItemInHand(hand)) + 1)) {
-                    this.levelMech++;
-                    player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
-                    updateTileEntityField();
-                    this.setActive("active_" + levelMech);
-                    return true;
-                } else if (this.levelMech < 4 && IUItem.machinekit.getMeta(player.getItemInHand(hand)) == 3) {
+                ItemUpgradeMachinesKit<?> itemUpgradeMachinesKit = (ItemUpgradeMachinesKit) player.getItemInHand(hand).getItem();
+                if (this.levelMech < 4 && itemUpgradeMachinesKit.getElement().getId() == 3) {
                     this.levelMech = 4;
                     this.setActive("active_" + levelMech);
                     player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
                     updateTileEntityField();
+                    return true;
+                }else if (this.levelMech < 4 && this.levelMech ==
+                        (itemUpgradeMachinesKit.getElement().getId() + 1)) {
+                    this.levelMech++;
+                    player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
+                    updateTileEntityField();
+                    this.setActive("active_" + levelMech);
                     return true;
                 }
             } else if (player.getItemInHand(hand).getItem() instanceof ItemVeinSensor) {

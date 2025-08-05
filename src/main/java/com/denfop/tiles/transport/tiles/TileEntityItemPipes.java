@@ -463,13 +463,13 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     @Override
     public List<ItemStack> getBlackListItems(Direction facing) {
-        list = getInfoSlotFromFacing(facing);
+        list = getInfoSlotFromFacing(facing.getOpposite());
         return this.list.getListBlack();
     }
 
     @Override
     public List<ItemStack> getWhiteListItems(Direction facing) {
-        list = getInfoSlotFromFacing(facing);
+        list = getInfoSlotFromFacing(facing.getOpposite());
         return this.list.getListWhite();
 
     }

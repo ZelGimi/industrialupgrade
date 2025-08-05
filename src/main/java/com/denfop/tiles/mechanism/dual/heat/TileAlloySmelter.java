@@ -24,6 +24,7 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -98,7 +99,13 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
     public BlockTileEntity getBlock() {
         return IUItem.machines.getBlock(getTeBlock().getId());
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
+        }
+    }
     public void init() {
 
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
@@ -151,7 +158,7 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
         addAlloysmelter(
                 input.getInput("forge:ingots/nickel", 1),
                 input.getInput(new ItemStack(Items.IRON_INGOT), 2),
-                input.getInput("forge:ingots/Invar",4).getInputs().get(0), 5000
+                input.getInput("forge:ingots/invar",4).getInputs().get(0), 5000
         );
 
         addAlloysmelter(

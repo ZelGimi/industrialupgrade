@@ -1,23 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/osmiridium"
-      }
-    ],
-    "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:chemistry/anode",
-      "nbt": "{Damage:0}"
+    "A": {
+      "tag": "forge:plates/osmiridium"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:itemdust/silver_chloride_dust"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:chemistry/anode"
+    },
+    "C": {
+      "item": "industrialupgrade:itemdust/silver_chloride_dust"
+    }
   },
   "pattern": [
     " A ",

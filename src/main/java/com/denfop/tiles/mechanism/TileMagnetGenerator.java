@@ -18,6 +18,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -142,6 +143,9 @@ public class TileMagnetGenerator extends TileElectricMachine {
                 setActive(false);
             }
             return;
+        }
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnMagneticGeneratorParticles(level,pos,level.random);
         }
         if (this.getWorld().getGameTime() % 20 == 0) {
             timer--;

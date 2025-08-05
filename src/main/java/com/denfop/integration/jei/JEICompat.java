@@ -250,6 +250,8 @@ import com.denfop.integration.jei.quarry_mac.MQuarryCategory;
 import com.denfop.integration.jei.quarry_mac.MQuarryHandler;
 import com.denfop.integration.jei.radioactiveorehandler.RadioactiveOreHandlerCategory;
 import com.denfop.integration.jei.radioactiveorehandler.RadioactiveOreHandlerHandler;
+import com.denfop.integration.jei.reactorschemes.ReactorSchemesCategory;
+import com.denfop.integration.jei.reactorschemes.ReactorSchemesHandler;
 import com.denfop.integration.jei.recycler.RecyclerCategory;
 import com.denfop.integration.jei.recycler.RecyclerHandler;
 import com.denfop.integration.jei.refiner.RefinerCategory;
@@ -359,6 +361,8 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
+import mezz.jei.gui.overlay.bookmarks.BookmarkOverlay;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -547,6 +551,8 @@ public class JEICompat implements IModPlugin {
     public static JeiInform world_collector_nether = new JeiInform("world_collector_nether", NetherCategory.class, NetherHandler.class);
     public static JeiInform scrapbox = new JeiInform("scrapbox", ScrapboxRecipeCategory.class, ScrapboxRecipeHandler.class);
 
+
+  //  public static JeiInform reactor_schemes = new JeiInform("reactor_schemes", ReactorSchemesCategory.class, ReactorSchemesHandler.class);
     public JEICompat() {
 
     }
@@ -558,7 +564,9 @@ public class JEICompat implements IModPlugin {
 
     public static ItemStack getBlockStack(IMultiTileBlock block) {
         return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
+
     }
+
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {

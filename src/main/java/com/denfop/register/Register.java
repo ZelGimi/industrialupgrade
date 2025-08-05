@@ -11,6 +11,8 @@ import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.fluid.IUFluidType;
 import com.denfop.blocks.mechanism.*;
 import com.denfop.container.ContainerBase;
+import com.denfop.effects.EffectsRegister;
+import com.denfop.entity.SmallBee;
 import com.denfop.entity.EntityNuclearBombPrimed;
 import com.denfop.items.*;
 import com.denfop.items.armour.*;
@@ -23,6 +25,8 @@ import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.bee.ItemBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.items.book.ItemBook;
+import com.denfop.items.creative.ItemCreativeBattery;
+import com.denfop.items.creative.ItemCreativeTomeResearchSpace;
 import com.denfop.items.crop.ItemAgriculturalAnalyzer;
 import com.denfop.items.crop.ItemCrops;
 import com.denfop.items.energy.*;
@@ -45,11 +49,16 @@ import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.recipe.IURecipeSerializer;
+import com.denfop.recipe.IndustrialShapedRecipeSerializer;
+import com.denfop.recipe.IndustrialShapelessRecipeSerializer;
+import com.denfop.recipe.universalrecipe.*;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.villager.VillagerInit;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
@@ -57,6 +66,8 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -71,6 +82,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -79,7 +91,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.awt.*;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = IUCore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Register {
@@ -121,6 +135,31 @@ public class Register {
     public static RegistryObject<RecipeType<Recipe<?>>> UNIVERSAL_RECIPE_TYPE;
     public static RegistryObject<IURecipeSerializer> RECIPE_SERIALIZER_IU;
 
+    public static RegistryObject<RecipeType<Recipe<?>>> UNIVERSAL_RECIPE_TYPE_DELETE;
+    public static RegistryObject<IURecipeDeleteSerializer> RECIPE_SERIALIZER_IU_DELETE;
+
+    public static RegistryObject<RecipeType<Recipe<?>>> QUANTUM_QUARRY;
+    public static RegistryObject<QuantumQuarrySerializer> RECIPE_SERIALIZER_QUANTUM_QUARRY;
+    public static RegistryObject<RecipeType<Recipe<?>>> BODY_RECIPE;
+    public static RegistryObject<SpaceBodySerializer> RECIPE_SERIALIZER_BODY_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> SATELLITE_RECIPE;
+    public static RegistryObject<SatelliteSerializer> RECIPE_SERIALIZER_SATELLITE_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> PLANET_RECIPE;
+    public static RegistryObject<PlanetSerializer> RECIPE_SERIALIZER_PLANET_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> STAR_RECIPE;
+    public static RegistryObject<StarSerializer> RECIPE_SERIALIZER_STAR_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> SYSTEM_RECIPE;
+    public static RegistryObject<SystemSerializer> RECIPE_SERIALIZER_SYSTEM_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> ASTEROID_RECIPE;
+    public static RegistryObject<AsteroidSerializer> RECIPE_SERIALIZER_ASTEROID_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> COLONY_RECIPE;
+    public static RegistryObject<ColonySerializer> RECIPE_SERIALIZER_COLONY_RECIPE;
+    public static DeferredRegister<ParticleType<?>> PARTICLE_TYPE = DeferredRegister.create(Registries.PARTICLE_TYPE, IUCore.MODID);
+    public static DeferredRegister<PoiType> POI_TYPE = DeferredRegister.create(Registries.POINT_OF_INTEREST_TYPE, IUCore.MODID);
+    public static DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(Registries.VILLAGER_PROFESSION, IUCore.MODID);
+    public static RegistryObject<IndustrialShapelessRecipeSerializer> RECIPE_SERIALIZER_SHAPELESS_RECIPE;
+    public static RegistryObject<IndustrialShapedRecipeSerializer> RECIPE_SERIALIZER_SHAPED_RECIPE;
+
     public static void register() {
         ITEMS.register(IUCore.context.getModEventBus());
         BLOCKS.register(IUCore.context.getModEventBus());
@@ -138,8 +177,34 @@ public class Register {
         DAMAGE_TYPE.register(IUCore.context.getModEventBus());
         RECIPE_TYPE.register(IUCore.context.getModEventBus());
         TABS.register(IUCore.context.getModEventBus());
+        PARTICLE_TYPE.register(IUCore.context.getModEventBus());
+        POI_TYPE.register(IUCore.context.getModEventBus());
+        VILLAGER_PROFESSIONS.register(IUCore.context.getModEventBus());
+        EffectsRegister.register(PARTICLE_TYPE);
         UNIVERSAL_RECIPE_TYPE = RECIPE_TYPE.register("universal_recipe", () -> new RecipeType<>() {});
         RECIPE_SERIALIZER_IU = RECIPE_SERIALIZER.register("universal_recipe", IURecipeSerializer::new);
+        UNIVERSAL_RECIPE_TYPE_DELETE = RECIPE_TYPE.register("universal_recipe_delete", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_IU_DELETE = RECIPE_SERIALIZER.register("universal_recipe_delete", IURecipeDeleteSerializer::new);
+        RECIPE_SERIALIZER_SHAPED_RECIPE= RECIPE_SERIALIZER.register("shaped_recipe", IndustrialShapedRecipeSerializer::new);
+        RECIPE_SERIALIZER_SHAPELESS_RECIPE= RECIPE_SERIALIZER.register("shapeless_recipe", IndustrialShapelessRecipeSerializer::new);
+
+        
+        QUANTUM_QUARRY = RECIPE_TYPE.register("quantum_quarry", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_QUANTUM_QUARRY = RECIPE_SERIALIZER.register("quantum_quarry", QuantumQuarrySerializer::new);
+        BODY_RECIPE = RECIPE_TYPE.register("body_resource", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_BODY_RECIPE = RECIPE_SERIALIZER.register("body_resource", SpaceBodySerializer::new);
+        SATELLITE_RECIPE = RECIPE_TYPE.register("satellite_add", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_SATELLITE_RECIPE = RECIPE_SERIALIZER.register("satellite_add", SatelliteSerializer::new);
+        PLANET_RECIPE = RECIPE_TYPE.register("planet_add", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_PLANET_RECIPE = RECIPE_SERIALIZER.register("planet_add", PlanetSerializer::new);
+        STAR_RECIPE = RECIPE_TYPE.register("star_add", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_STAR_RECIPE = RECIPE_SERIALIZER.register("star_add", StarSerializer::new);
+        SYSTEM_RECIPE = RECIPE_TYPE.register("system_add", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_SYSTEM_RECIPE = RECIPE_SERIALIZER.register("system_add", SystemSerializer::new);
+        ASTEROID_RECIPE = RECIPE_TYPE.register("asteroid_add", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_ASTEROID_RECIPE = RECIPE_SERIALIZER.register("asteroid_add", AsteroidSerializer::new);
+        COLONY_RECIPE = RECIPE_TYPE.register("colony_resource_add", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_COLONY_RECIPE = RECIPE_SERIALIZER.register("colony_resource_add", ColonySerializer::new);
         TABS.register("iutab",
                 () -> IUCore.IUTab);
         TABS.register("moduletab",
@@ -168,14 +233,8 @@ public class Register {
                 () -> IUCore.GenomeTab);
         TABS.register("spacetab",
                 () -> IUCore.SpaceTab);
-                
-     /*   currentObject = DAMAGE_TYPE.register("current",() -> new DamageType("current", 0.1F, DamageEffects.HURT));
-
-        radiationObject =DAMAGE_TYPE.register("radiation",() -> new DamageType("radiation", 0.1F,DamageEffects.HURT));
-        frostbiteObject =DAMAGE_TYPE.register("frostbite",() -> new DamageType("frostbite", 0.1F,DamageEffects.HURT));
-        poison_gasObject =DAMAGE_TYPE.register("poison_gas",() -> new DamageType("poison_gas", 0.1F,DamageEffects.HURT));
-        beeObject =DAMAGE_TYPE.register("bee",() -> new DamageType("bee", 0.1F,DamageEffects.HURT));
-*/
+        TABS.register("fluidtab",
+                () -> IUCore.fluidCellTab);
         containerBase = MENU_TYPE.register("containerbase", () -> IForgeMenuType.create((windowId, inv, data) -> {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
             try {
@@ -228,6 +287,7 @@ public class Register {
                         .clientTrackingRange(10)
                         .updateInterval(10)
                         .build("nuclear_bomb"));
+        IUItem.entity_bee = ENTITIES.register("bee", () -> EntityType.Builder.of(SmallBee::new, MobCategory.CREATURE).sized(0.7F*0.2f, 0.6F*0.2f).clientTrackingRange(8).build("bee"));
         IUItem.combinersolidmatter = new DataBlockEntity<>(BlockCombinerSolid.class);
         IUItem.oiladvrefiner = new DataBlockEntity<>(BlockAdvRefiner.class);
         IUItem.adv_se_generator = new DataBlockEntity<>(BlockAdvSolarEnergy.class);
@@ -316,6 +376,9 @@ public class Register {
         IUItem.gas_reactor = new DataBlockEntity<>(BlockGasReactor.class);
         IUItem.graphite_reactor = new DataBlockEntity<>(BlocksGraphiteReactors.class);
         IUItem.heat_reactor = new DataBlockEntity<>(BlockHeatReactor.class);
+        IUItem.creativeBlock = new DataBlockEntity<>(BlockCreativeBlocks.class);
+
+
 
         IUItem.crafting_elements = new DataItem<>(ItemCraftingElements.Types.class, ItemCraftingElements.class);
         IUItem.basecircuit = new DataItem<>(ItemBaseCircuit.Types.class, ItemBaseCircuit.class);
@@ -369,6 +432,7 @@ public class Register {
         IUItem.compressIridiumplate = new DataSimpleItem<>(new ResourceLocation("", "quantumitems2"), IUItemBase::new);
         IUItem.advQuantumtool = new DataSimpleItem<>(new ResourceLocation("", "quantumitems3"), IUItemBase::new);
         IUItem.canister = new DataSimpleItem<>(new ResourceLocation("tools", "canister"), ItemCanister::new);
+        IUItem.pipette = new DataSimpleItem<>(new ResourceLocation("", "pipette"), ItemPipette::new);
 
         IUItem.radioprotector = new DataSimpleItem<>(new ResourceLocation("tools", "radioprotector"), ItemRadioprotector::new);
         IUItem.expmodule = new DataSimpleItem<>(new ResourceLocation("", "expmodule"), () -> new IUItemBase(IUCore.ModuleTab));
@@ -653,7 +717,12 @@ public class Register {
         IUItem.module = new DataItem<>(com.denfop.items.ItemUpgradeModule.Types.class, com.denfop.items.ItemUpgradeModule.class);
         IUItem.module9 = new DataItem<>(ItemQuarryModule.CraftingTypes.class, ItemQuarryModule.class);
         IUItem.fluidCell = new DataSimpleItem<>(new ResourceLocation("itemcell", "itemcell"), ItemFluidCell::new);
+        IUItem.smallFluidCell = new DataSimpleItem<>(new ResourceLocation("itemcell", "smallfluidcell"), ItemSmallFluidCell::new);
+        IUItem.reinforcedFluidCell = new DataSimpleItem<>(new ResourceLocation("itemcell", "reinforcedfluidcell"), ItemReinforcedFluidCell::new);
         IUItem.sprayer = new DataSimpleItem<>(new ResourceLocation("tools", "foam_sprayer"), ItemSprayer::new);
+        IUItem.latexPipette = new DataSimpleItem<>(new ResourceLocation("tools", "latex_pipette"), ItemLatexPipette::new);
+
+
         IUItem.ore = new DataBlock<>(BlockOre.Type.class, BlockOre.class, ItemBlockOre.class);
         IUItem.ore2 = new DataBlock<>(BlockOres2.Type.class, BlockOres2.class, ItemBlockOre2.class);
         IUItem.ore3 = new DataBlock<>(BlockOres3.Type.class, BlockOres3.class, ItemBlockOre3.class);
@@ -664,6 +733,7 @@ public class Register {
         IUItem.humus = new DataBlock<>(BlockHumus.Type.class, BlockHumus.class, ItemBlockHumus.class);
         IUItem.heavyore = new DataBlock<>(BlockHeavyOre.Type.class, BlockHeavyOre.class, ItemBlockHeavyOre.class);
         IUItem.blockResource = new DataBlock<>(BlockResource.Type.class, BlockResource.class, ItemBlockResource.class);
+        IUItem.blockRubberWoods = new DataBlock<>(BlockPlanksRubberWood.Type.class, BlockPlanksRubberWood.class, ItemBlockRubberPlanks.class);
         IUItem.rubWood = new DataMultiBlock<>(BlockRubWood.RubberWoodState.class, BlockRubWood.class, ItemBlockRubWood.class);
         IUItem.swampRubWood = new DataMultiBlock<>(BlockSwampRubWood.RubberWoodState.class, BlockSwampRubWood.class, ItemBlockSwampRubWood.class);
         IUItem.tropicalRubWood = new DataMultiBlock<>(BlockTropicalRubWood.RubberWoodState.class, BlockTropicalRubWood.class, ItemBlockTropicalRubWood.class);
@@ -687,6 +757,9 @@ public class Register {
         IUItem.space_stone1 = new DataBlock<>(BlockSpaceStone1.Type.class, BlockSpaceStone1.class, ItemBlockSpaceStone1.class);
         IUItem.space_cobblestone = new DataBlock<>(BlockSpaceCobbleStone.Type.class, BlockSpaceCobbleStone.class, ItemBlockSpaceCobbleStone.class);
         IUItem.space_cobblestone1 = new DataBlock<>(BlockSpaceCobbleStone1.Type.class, BlockSpaceCobbleStone1.class, ItemBlockSpaceCobbleStone1.class);
+
+        IUItem.rawsBlock = new DataBlock<>(BlockRaws.Type.class, BlockRaws.class, ItemBlockRaws.class);
+
 
         IUItem.basaltheavyore = new DataBlock<>(BlockBasaltHeavyOre.Type.class, BlockBasaltHeavyOre.class, ItemBlockBasaltHeavyOre.class);
         IUItem.basaltheavyore1 = new DataBlock<>(BlockBasaltHeavyOre1.Type.class, BlockBasaltHeavyOre1.class, ItemBlockBasaltHeavyOre1.class);
@@ -829,15 +902,15 @@ public class Register {
                 Constants.MOD_ID,
                 "textures/item/rotor" +
                         "/wood_rotor_model.png"
-        ), 1, 0));
+        ), 1, 0, new Color(94,71,39)));
         IUItem.water_rotor_bronze = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_bronze"), () -> new ItemWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/item/rotor/bronze_rotor_model_1.png"
-        ), 2, 1));
+        ), 2, 1, new Color(158,79,0)));
         IUItem.water_rotor_iron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_iron"), () -> new ItemWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/item/rotor/iron_rotor_model_1.png"
-        ), 3, 2));
+        ), 3, 2, new Color(159,159,159)));
         IUItem.water_rotor_steel = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_steel"), () -> new ItemWaterRotor(
                 "water_rotor_steel",
                 (int) (172800 / 1.5),
@@ -847,55 +920,55 @@ public class Register {
                         "textures/item/rotor/steel_rotor_model_1.png"
                 ),
                 4,
-                3
+                3, new Color(157,166,170)
         ));
         IUItem.water_rotor_carbon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_carbon"), () -> new ItemWaterRotor(
                 "water_rotor_carbon",
                 (int) (604800 / 1.5),
                 1.0F,
                 new ResourceLocation(
-                        Constants.MOD_ID, "textures/item/rotor/carbo_rotor_model1.png"),
+                        Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"),
                 5,
-                4
+                4,new Color(41,41,41)
         ));
-        IUItem.water_iridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_iridium"), () -> new ItemWaterRotor("water_iridium", 2,
-                (int) (172800 / 1.4D),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png"), 6, 5
+        IUItem.water_iridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_iridium"), () -> new ItemWaterRotor("water_iridium",
+                (int) (172800 / 1.4D),2,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png"), 6, 5, new Color(214,212,216)
         ));
         IUItem.water_compressiridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_compressiridium"), () -> new ItemWaterRotor("water_compressiridium",
                 (int) (172800 / 1.2D), 4.0F,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6, new Color(135,134,136)
         ));
         IUItem.water_spectral = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_spectral"), () -> new ItemWaterRotor("water_spectral",
                 (int) (172800 / 1.1D), 8.0F,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195,151,32)
         ));
         IUItem.water_myphical = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_myphical"), () -> new ItemWaterRotor("water_myphical",
                 3456000, 16,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98,22,182)
         ));
 
         IUItem.water_photon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_photon"), () -> new ItemWaterRotor("water_photon", 691200,
                 32,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36,175,17)
         ));
         IUItem.water_neutron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_neutron"), () -> new ItemWaterRotor("water_neutron", 27648000,
                 64,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10,new Color(41,86,208)
         ));
 
         IUItem.water_barionrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_barionrotor"), () -> new ItemWaterRotor("water_barionrotor",
                 27648000 * 4, 64 * 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11, new Color(155,17,175)
         ));
 
         IUItem.water_adronrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_adronrotor"), () -> new ItemWaterRotor("water_adronrotor",
                 27648000 * 16, 64 * 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12,new Color(0,179,192)
         ));
         IUItem.water_ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_ultramarinerotor"), () -> new ItemWaterRotor("water_ultramarinerotor",
                 27648000 * 64, 64 * 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13, new Color(17,175,166)
         ));
         IUItem.wood_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_wood"), () -> new ItemSteamRod(0, 0.02, 10800 / 2, new ResourceLocation(
                 Constants.MOD_ID,
@@ -906,60 +979,60 @@ public class Register {
                 Constants.MOD_ID,
                 "textures/item/rotor" +
                         "/wood_rotor_model.png"
-        ), 1, 0));
+        ), 1, 0, new Color(158,79,0)));
         IUItem.rotor_bronze = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_bronze"), () -> new ItemWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/item/rotor/bronze_rotor_model_1.png"
-        ), 2, 1));
+        ), 2, 1, new Color(158,79,0)));
         IUItem.rotor_iron = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_iron"), () -> new ItemWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/item/rotor/iron_rotor_model_1.png"
-        ), 3, 2));
+        ), 3, 2, new Color(159,159,159)));
         IUItem.rotor_steel = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_steel"), () -> new ItemWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/item/rotor/steel_rotor_model_1.png"
-        ), 4, 3));
+        ), 4, 3, new Color(157,166,170)));
         IUItem.rotor_carbon = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_carbon"), () -> new ItemWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
-                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"), 5, 4));
+                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"), 5, 4,new Color(41,41,41)));
 
         IUItem.iridium = new DataSimpleItem<>(new ResourceLocation("rotor", "iridium"), () -> new ItemWindRotor("iridium", 11, (int) (172800 / 1.4D),
                 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_1.png"), 6, 5
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_1.png"), 6, 5,  new Color(214,212,216)
         ));
         IUItem.compressiridium = new DataSimpleItem<>(new ResourceLocation("rotor", "compressiridium"), () -> new ItemWindRotor("compressiridium", 11,
                 (int) (172800 / 1.2D), 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6,new Color(135,134,136)
         ));
         IUItem.spectral = new DataSimpleItem<>(new ResourceLocation("rotor", "spectral"), () -> new ItemWindRotor("spectral", 11,
                 (int) (172800 / 1.1D), 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195,151,32)
         ));
         IUItem.myphical = new DataSimpleItem<>(new ResourceLocation("rotor", "myphical"), () -> new ItemWindRotor("myphical", 11,
                 3456000, 16,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98,22,182)
         ));
 
         IUItem.photon = new DataSimpleItem<>(new ResourceLocation("rotor", "photon"), () -> new ItemWindRotor("photon", 11, 691200,
                 32,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36,175,17)
         ));
         IUItem.neutron = new DataSimpleItem<>(new ResourceLocation("rotor", "neutron"), () -> new ItemWindRotor("neutron", 11, 27648000,
                 64,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10,new Color(41,86,208)
         ));
 
         IUItem.barionrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "barionrotor"), () -> new ItemWindRotor("barionrotor", 11,
                 27648000 * 4, 64 * 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11,  new Color(155,17,175)
         ));
 
         IUItem.adronrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "adronrotor"), () -> new ItemWindRotor("adronrotor", 11,
                 27648000 * 16, 64 * 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12,new Color(0,179,192)
         ));
         IUItem.ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("rotor", "ultramarinerotor"), () -> new ItemWindRotor("ultramarinerotor", 11,
                 27648000 * 64, 64 * 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13,new Color(17,175,166)
         ));
         IUItem.bronze_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_bronze"), () -> new ItemSteamRod(0, 0.04, 10800, new ResourceLocation(
                 Constants.MOD_ID,
@@ -1271,6 +1344,12 @@ public class Register {
         IUItem.ruby_shovel = new DataSimpleItem<>(new ResourceLocation("", "ruby_shovel"), () -> new ItemShovel("ruby_shovel"));
         IUItem.topaz_shovel = new DataSimpleItem<>(new ResourceLocation("", "topaz_shovel"), () -> new ItemShovel("topaz_shovel"));
         IUItem.sapphire_shovel = new DataSimpleItem<>(new ResourceLocation("", "sapphire_shovel"), () -> new ItemShovel("sapphire_shovel"));
+        VillagerInit.init();
+
+        IUItem.creativeBattery =new DataSimpleItem<>(new ResourceLocation("battery", "creative_battery"), () -> new ItemCreativeBattery(false));
+        IUItem.creativeBatteryWireless =new DataSimpleItem<>(new ResourceLocation("battery", "creative_battery_wireless"), () -> new ItemCreativeBattery(true));
+        IUItem.creativeTomeResearch = new DataSimpleItem<>(new ResourceLocation("", "creative_tome_research"), () -> new ItemCreativeTomeResearchSpace());
+
     }
 
     public static void registerFluids() {
@@ -1446,8 +1525,6 @@ public class Register {
         registerfluid(FluidName.fluidhot_water, 1000, 1000, false);
         registerfluid(FluidName.fluidair, 0, 500, true);
 
-        registerfluid(FluidName.fluidwater, 1000, 1000, false);
-        registerfluid(FluidName.fluidlava, 50000, 250000, false);
 
         registerfluid(FluidName.fluidroyaljelly, 1000, 50, false);
         registerfluid(FluidName.fluidhoney, 1000, 50, false);
@@ -1520,8 +1597,9 @@ public class Register {
             FluidName name, int density,
             int temperature, boolean isGaseous
     ) {
-        IUFluidType fluidType = new IUFluidType(name, FluidType.Properties.create().density(density).canDrown(!isGaseous).temperature(temperature).descriptionId("fluid." + name.getName()));
+        IUFluidType fluidType = new IUFluidType(name, FluidType.Properties.create().density(density).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY).canDrown(!isGaseous).temperature(temperature).descriptionId("fluid." + name.getName()));
         FLUID_TYPES.register(name.name().toLowerCase() + "_types", () -> fluidType);
+
         properties = new ForgeFlowingFluid.Properties(() -> fluidType, () -> new ForgeFlowingFluid.Source(properties), () -> new ForgeFlowingFluid.Flowing(properties));
         FluidHandler handler = new FluidHandler(fluidType, name);
         name.setInstance(handler.source);

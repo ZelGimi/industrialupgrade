@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_68_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_68_element"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+    }
   },
   "pattern": [
     " A ",

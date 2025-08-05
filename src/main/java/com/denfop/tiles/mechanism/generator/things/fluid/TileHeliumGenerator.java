@@ -22,6 +22,7 @@ import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -130,6 +131,9 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
             if (this.getActive()) {
                 this.setActive(false);
             }
+        }
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnHeliumGeneratorParticles(level,pos,level.random);
         }
         if (!this.containerslot.isEmpty() && this.fluidTank.getFluidAmount() > 0) {
             this.containerslot.processFromTank(this.fluidTank, this.outputSlot);

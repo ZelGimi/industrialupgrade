@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/miranda_pebble"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/miranda_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/miranda_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/miranda_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/miranda_pebble"
+    }
   ],
   "result": {
     "item": "industrialupgrade:itemspace/miranda_boulder"

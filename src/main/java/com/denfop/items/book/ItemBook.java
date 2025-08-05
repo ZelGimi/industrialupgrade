@@ -8,6 +8,7 @@ import com.denfop.container.ContainerBeeAnalyzer;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.bee.ItemStackBeeAnalyzer;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
@@ -30,7 +31,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 
-public class ItemBook extends Item implements IItemStackInventory, IItemTab {
+public class ItemBook extends Item implements IItemStackInventory, IItemTab, IUpdatableItemStackEvent {
 
 
     private final String internalName;
@@ -147,5 +148,15 @@ public class ItemBook extends Item implements IItemStackInventory, IItemTab {
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
+    }
+
+    @Override
+    public void updateField(String name, CustomPacketBuffer buffer, ItemStack stack) {
+
+    }
+
+    @Override
+    public void updateEvent(int event, ItemStack stack) {
+        ModUtils.nbt(stack).putInt("book_info",event);
     }
 }

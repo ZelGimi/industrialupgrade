@@ -1,0 +1,10 @@
+{
+  "values": [
+    "industrialupgrade:botanist",
+    "industrialupgrade:chemist",
+    "industrialupgrade:engineer",
+    "industrialupgrade:mechanic",
+    "industrialupgrade:nuclear",
+    "industrialupgrade:metallurg"
+  ]
+}

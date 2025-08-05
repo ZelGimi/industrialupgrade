@@ -113,7 +113,7 @@ public class ContainerEFReader extends ContainerHandHeldInventory<EFReaderInvent
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        NodeStats nodeStats = EnergyNetGlobal.instance.getNodeStats(this.tile);
+        NodeStats nodeStats = EnergyNetGlobal.instance.getNodeStats(this.tile,this.player.level());
 
         if (player instanceof ServerPlayer) {
             new PacketItemStackUpdate("energySink", nodeStats.getEnergyIn(), (ServerPlayer) player);

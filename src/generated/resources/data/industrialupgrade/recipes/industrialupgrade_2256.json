@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:steam_turbine/steam_turbine_rod"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_581_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_574_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_479_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_rod"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_581_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_574_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_479_element"
+    },
     "F": {
       "type": "forge:nbt",
       "count": 1,

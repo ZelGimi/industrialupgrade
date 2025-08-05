@@ -444,7 +444,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         }
         this.needsInvUpdate = false;
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
-        this.energy.receivingDisabled = false;
+        this.energy.setReceivingEnabled(true);
 
         if (chargepad) {
             if (this.player != null && this.energy.getEnergy() >= 1.0D) {

@@ -24,6 +24,7 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -143,6 +144,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
+        tooltip.add(Localization.translate("iu.storage_fluid") + this.fluidTank.getCapacity()/1000 + " B");
         super.addInformation(stack, tooltip);
     }
 

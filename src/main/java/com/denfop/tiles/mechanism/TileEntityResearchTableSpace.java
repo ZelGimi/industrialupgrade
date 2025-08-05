@@ -10,6 +10,7 @@ import com.denfop.api.space.colonies.InfoSends;
 import com.denfop.api.space.colonies.Sends;
 import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.fakebody.Data;
+import com.denfop.api.space.fakebody.EnumOperation;
 import com.denfop.api.space.fakebody.IFakeBody;
 import com.denfop.api.space.fakebody.SpaceOperation;
 import com.denfop.api.space.research.api.IResearchTable;
@@ -175,6 +176,15 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             colony = null;
             sends = null;
         }
+        int sizeSpaceBodyInformation = customPacketBuffer.readInt();
+        Map<IBody, SpaceOperation> information = getSpaceBody();
+        information.clear();
+        for (int i = 0; i < sizeSpaceBodyInformation; i++){
+            IBody body1 = SpaceNet.instance.getBodyFromName(customPacketBuffer.readString());
+            boolean auto = customPacketBuffer.readBoolean();
+            EnumOperation operation = EnumOperation.getID(customPacketBuffer.readInt());
+            information.put(body1 ,new SpaceOperation(body1,operation,auto));
+        }
     }
 
     @Override
@@ -204,6 +214,8 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             }
             customPacketBuffer.writeBytes(infoSends.writeBuffer());
         }
+
+
 
         return customPacketBuffer;
     }

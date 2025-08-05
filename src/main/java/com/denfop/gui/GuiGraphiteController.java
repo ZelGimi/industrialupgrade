@@ -14,6 +14,7 @@ import com.denfop.container.SlotInvSlot;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
@@ -134,26 +135,37 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
                                     if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
                                         if (slotInvSlot.index == component.getY() * this.container.base.getWidth() + component.getX()) {
                                             if (this.container.base.heat_sensor) {
-                                               draw(poseStack,
+                                                PoseStack pose = poseStack.pose();
+                                                pose.pushPose();
+                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(    String.valueOf((int) component.getHeat())) / 2,slotInvSlot.y + 5,0);
+                                                pose.scale(0.75f,0.75f,1f);
+                                                draw(poseStack,
                                                         String.valueOf((int) component.getHeat()),
-                                                        slotInvSlot.x + 3,
-                                                        slotInvSlot.y + 4,
+                                                        0,
+                                                        0,
                                                         ModUtils.convertRGBcolorToInt(195,
                                                                 64, 0
                                                         )
                                                 );
+                                                pose.popPose();
                                             }
                                             if (this.container.base.stable_sensor && component
                                                     .getItem()
                                                     .getType() != EnumTypeComponent.ROD) {
-                                               draw(poseStack,
+                                                PoseStack pose = poseStack.pose();
+                                                pose.pushPose();
+                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(     String.valueOf(-1 * component.getDamage())) / 2,slotInvSlot.y + 5,0);
+                                                pose.scale(0.75f,0.75f,1f);
+                                                draw(poseStack,
                                                         String.valueOf(-1 * component.getDamage()),
-                                                        slotInvSlot.x + 4 + (component.getDamage() > 0 ? -3 : 0),
-                                                        slotInvSlot.y + 4,
+                                                        0,
+                                                        0,
                                                         ModUtils.convertRGBcolorToInt(14,
                                                                 50, 86
                                                         )
                                                 );
+                                                pose.popPose();
+
                                             }
                                         }
                                     }

@@ -1,20 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/stainlesssteel"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/niobiumtitanium"
+    },
+    "B": {
+      "tag": "forge:plates/stainlesssteel"
+    }
   },
   "pattern": [
-    " AB",
+    "AAB",
     "AB ",
     "   "
   ],

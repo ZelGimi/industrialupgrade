@@ -21,7 +21,7 @@ public class ContainerVeinSensor extends ContainerHandHeldInventory<ItemStackVei
         this.inventory = player.getInventory();
         this.player = player;
         this.current = player.getInventory().selected;
-        addPlayerInventorySlots(player.getInventory(), 243);
+     //   addPlayerInventorySlots(player.getInventory(), 243);
 
     }
 

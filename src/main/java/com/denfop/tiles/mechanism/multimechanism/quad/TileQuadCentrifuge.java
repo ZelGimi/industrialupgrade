@@ -21,11 +21,15 @@ public class TileQuadCentrifuge extends TileMultiMachine {
                 EnumMultiMachine.QUAD_Centrifuge.usagePerTick,
                 EnumMultiMachine.QUAD_Centrifuge.lenghtOperation, BlockMoreMachine3.quadcentrifuge, pos, state
         );
-        this.cold.upgrade = true;
+
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        this.cold.storage=0;
+    }
     public IMultiTileBlock getTeBlock() {
         return BlockMoreMachine3.quadcentrifuge;
     }

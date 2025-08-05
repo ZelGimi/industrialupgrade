@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/mikhail"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:casings/chromium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/alcled"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:basemachine/per_matter"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ]
+    "A": {
+      "tag": "forge:casings/mikhail"
+    },
+    "B": {
+      "tag": "forge:casings/chromium"
+    },
+    "C": {
+      "tag": "forge:doubleplate/alcled"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/per_matter"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
   },
   "pattern": [
     "ABA",

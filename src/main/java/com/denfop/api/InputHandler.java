@@ -1,11 +1,14 @@
 package com.denfop.api;
 
 
+import com.denfop.mixin.access.IngredientAccessor;
+import com.denfop.mixin.access.TagValueAccessor;
 import com.denfop.recipe.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.List;
@@ -41,6 +44,8 @@ public class InputHandler implements IInputHandler {
 
     @Override
     public IInputItemStack getInput(final Object var1) {
+        if (var1 instanceof IInputItemStack)
+            return (IInputItemStack) var1;
         if (var1 instanceof ItemStack)
             return this.getInput((ItemStack) var1);
         if (var1 instanceof Fluid)
@@ -51,7 +56,26 @@ public class InputHandler implements IInputHandler {
             return this.getInput(new ItemStack((Item) var1));
         if (var1 instanceof TagKey)
             return this.getInput((TagKey<Item>) var1);
+        if (var1 instanceof Ingredient){
+            Ingredient ingredient = (Ingredient) var1;
+            if (((IngredientAccessor)ingredient).getValues()[0] instanceof Ingredient.TagValue){
+                Ingredient.TagValue tagValue = (Ingredient.TagValue) ((IngredientAccessor)ingredient).getValues()[0];
+                return this.getInput(((TagValueAccessor) tagValue).getTag());
+            }else {
+                return this.getInput(ingredient.getItems());
+            }
+        }
         if (var1 instanceof List) {
+            List<?> list = (List<?>) var1;
+
+
+            boolean allItemStacks = list.stream().allMatch(e -> e instanceof ItemStack);
+            if (allItemStacks) {
+                @SuppressWarnings("unchecked")
+                List<ItemStack> itemStacks = (List<ItemStack>) list;
+                return this.getInput(itemStacks.toArray(new ItemStack[0]));
+
+            }
             List<TagKey<Item>> var2 = (List<TagKey<Item>>) var1;
             TagKey<Item> mainTag = var2.get(0);
             for (TagKey<Item> tagKey : var2) {

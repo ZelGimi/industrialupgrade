@@ -459,7 +459,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         }
         if (work) {
             if (!inputSlotA.isEmpty() && this.output != null && this.fluid_handler.output() != null && this.fluid_handler.canFillFluid()) {
-                progress += 1;
+                progress += 2;
                 this.setActive(true);
                 if (progress >= 150) {
                     this.progress = 0;

@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:charged_redstone"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdust/diamond_dust"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:quartz"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "B": {
+      "tag": "forge:dusts/diamond"
+    },
+    "C": {
+      "item": "minecraft:quartz"
+    }
   },
   "pattern": [
     "ABA",

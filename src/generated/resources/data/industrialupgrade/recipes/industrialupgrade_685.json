@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:upgrades/overclockerupgrade1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:upgrades/overclockerupgrade1"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    }
   },
   "pattern": [
     "   ",

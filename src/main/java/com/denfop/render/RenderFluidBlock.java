@@ -18,40 +18,65 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
-public class RenderFluidBlock {
-    public static void renderFluid(FluidStack fluidStack, MultiBufferSource bufferSource, Level level, BlockPos pos, PoseStack poseStack, float scale, float scale1) {
-        if (fluidStack.isEmpty())
-            return;
-        if (Fluids.LAVA == fluidStack.getFluid()) {
-            fluidStack = new FluidStack(FluidName.fluidlava.getInstance().get(), fluidStack.getAmount());
-        }
-        if (Fluids.WATER == fluidStack.getFluid()) {
-            fluidStack = new FluidStack(FluidName.fluidwater.getInstance().get(), fluidStack.getAmount());
-        }
-        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
-        ResourceLocation stillTexture = fluidTypeExtensions.getFlowingTexture(fluidStack);
-        if (stillTexture == null)
-            return;
+public class RenderFluidBlock {
+    private static final  Map<Integer, Map<BlockPos, TickLerp>> lerpMap = new WeakHashMap<>();
+
+    private static class TickLerp {
+        long startTick;
+        float startAmount;
+        float targetAmount;
+    }
+
+    private static float getCurrentLerpHeight(TickLerp lerp, long currentTick) {
+        float progress = (currentTick - lerp.startTick) / 20f;
+        if (progress >= 1f)
+            return lerp.targetAmount;
+        return lerp.startAmount + (lerp.targetAmount - lerp.startAmount) * progress;
+    }
+
+    public static void renderFluid(FluidStack fluidStack, MultiBufferSource bufferSource, Level level, BlockPos pos, PoseStack poseStack, float scale, float scale1, int tank) {
+        if (fluidStack.isEmpty()) return;
+
+
+
+        IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        ResourceLocation stillTexture = fluidTypeExtensions.getStillTexture(fluidStack);
+        if (stillTexture == null) return;
 
         FluidState state = fluidStack.getFluid().defaultFluidState();
-
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(stillTexture);
         int tintColor = fluidTypeExtensions.getTintColor(state, level, pos);
-        scale*=0.99;
+
+        long gameTime = level.getGameTime();
+        float rawHeight = scale;
+
+        TickLerp lerp = lerpMap.computeIfAbsent(tank, k -> new HashMap<>()).get(pos);
+        if (lerp == null) {
+            lerp = new TickLerp();
+            lerp.startTick = gameTime;
+            lerp.startAmount = rawHeight;
+            lerp.targetAmount = rawHeight;
+            lerpMap.get(tank).put(pos, lerp);
+        } else if (lerp.targetAmount != rawHeight) {
+            lerp.startAmount = getCurrentLerpHeight(lerp, gameTime);
+            lerp.targetAmount = rawHeight;
+            lerp.startTick = gameTime;
+        }
+
+        float height = 1;
+
+        scale = (float) (getCurrentLerpHeight(lerp, gameTime) * 0.99 * scale);
         poseStack.translate(-0.5, 0, -0.5);
         poseStack.scale(2f * scale1, scale, 2f * scale1);
-        float height = 1f;
-        MultiBufferSource pBuffer = bufferSource;
-        VertexConsumer builder = pBuffer.getBuffer(ItemBlockRenderTypes.getRenderLayer(state));
-        int i;
-        if (level != null) {
-            i = LevelRenderer.getLightColor(level, pos);
-        } else {
-            i = 15728880;
-        }
-        drawQuad(builder, poseStack, 0.25f, height, 0.25f, 0.75f, height, 0.75f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
 
+        VertexConsumer builder = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderLayer(state));
+        int i = (level != null) ? LevelRenderer.getLightColor(level, pos) : 15728880;
+
+        drawQuad(builder, poseStack, 0.25f, height, 0.25f, 0.75f, height, 0.75f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
 
         poseStack.pushPose();
@@ -71,6 +96,7 @@ public class RenderFluidBlock {
         poseStack.translate(0, 0, -1f);
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         poseStack.popPose();
+
         poseStack.pushPose();
         poseStack.translate(-0, 1.01, 1);
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
@@ -79,15 +105,11 @@ public class RenderFluidBlock {
         poseStack.popPose();
     }
 
+
     public static void renderFluid(FluidStack fluidStack, MultiBufferSource bufferSource, Level level, BlockPos pos, PoseStack poseStack, float scale, float scale1, float scale2) {
         if (fluidStack.isEmpty())
             return;
-        if (Fluids.LAVA == fluidStack.getFluid()) {
-            fluidStack = new FluidStack(FluidName.fluidlava.getInstance().get(), fluidStack.getAmount());
-        }
-        if (Fluids.WATER == fluidStack.getFluid()) {
-            fluidStack = new FluidStack(FluidName.fluidwater.getInstance().get(), fluidStack.getAmount());
-        }
+
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
 
         ResourceLocation stillTexture = fluidTypeExtensions.getFlowingTexture(fluidStack);
@@ -98,10 +120,11 @@ public class RenderFluidBlock {
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(stillTexture);
         int tintColor = fluidTypeExtensions.getTintColor(state, level, pos);
-        scale*=0.99;
+
+
+        float height = 1;
         poseStack.translate(-0.5, 0, -0.5);
         poseStack.scale(2f * scale1, scale, 2f * scale2);
-        float height = 1f;
         MultiBufferSource pBuffer = bufferSource;
         VertexConsumer builder = pBuffer.getBuffer(ItemBlockRenderTypes.getRenderLayer(state));
         int i;

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gears/muntsa"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:bee_frame_template"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/gold"
-      }
-    ]
+    "A": {
+      "tag": "forge:gears/muntsa"
+    },
+    "B": {
+      "item": "industrialupgrade:bee_frame_template"
+    },
+    "C": {
+      "tag": "forge:plates/osmium"
+    },
+    "D": {
+      "tag": "forge:casings/gold"
+    }
   },
   "pattern": [
     "CDC",

@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/nichrome"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:experience_bottle"
-      }
-    ]
+    "A": {
+      "tag": "forge:doubleplate/nichrome"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "item": "minecraft:experience_bottle"
+    }
   },
   "pattern": [
     " C ",

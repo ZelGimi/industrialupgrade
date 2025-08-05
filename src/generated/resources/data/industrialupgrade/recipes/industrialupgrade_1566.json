@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,21 +8,15 @@
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/chromium"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "tag": "forge:plates/chromium"
+    }
   },
   "pattern": [
     " BC",

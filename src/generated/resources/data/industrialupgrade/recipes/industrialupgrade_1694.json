@@ -1,37 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:armour/nano_boots"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/ferromanganese"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/lapotron_crystal"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:compresscarbon"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems7"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:compresscarbon"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:armour/nano_boots"
+    },
+    "B": {
+      "tag": "forge:doubleplate/ferromanganese"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "D": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "F": {
+      "item": "industrialupgrade:compresscarbon"
+    }
   },
   "pattern": [
     "DCD",

@@ -1,52 +1,34 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/steel"
-      }
-    ]
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    },
+    {
+      "tag": "forge:ingots/steel"
+    }
   ],
   "result": {
     "item": "industrialupgrade:blockresource/steel_block"

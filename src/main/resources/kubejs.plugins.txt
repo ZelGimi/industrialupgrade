@@ -1,1 +1,0 @@
-com.denfop.integration.cubejs.IUKubeJSPlugin

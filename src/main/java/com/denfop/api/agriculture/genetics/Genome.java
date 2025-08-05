@@ -4,12 +4,15 @@ import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.utils.ModUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.common.Tags;
 
 import java.util.*;
 
@@ -40,30 +43,32 @@ public class Genome implements IGenome {
         return geneticTraitsMap;
     }
 
-    private static GeneticTraits getTemperatureCategory(Biome biome) {
-
-        if (biome.getBaseTemperature() < 0.1F) {
+    private static GeneticTraits getTemperatureCategory(Holder<Biome> biomeHolder) {
+        if (biomeHolder.is(Tags.Biomes.IS_SNOWY)||biomeHolder.is(BiomeTags.IS_HILL)||biomeHolder.is(BiomeTags.IS_MOUNTAIN)) {
             return GeneticTraits.BIOME_IV;
-        } else if (biome.getBaseTemperature() < 0.5F) {
+        } else if (biomeHolder.is(BiomeTags.IS_OCEAN)||biomeHolder.is(BiomeTags.IS_DEEP_OCEAN)||biomeHolder.is(BiomeTags.IS_TAIGA)||biomeHolder.is(BiomeTags.IS_BADLANDS)) {
             return GeneticTraits.BIOME_III;
-        } else if (biome.getBaseTemperature() < 1.0F) {
+        } else if (biomeHolder.is(BiomeTags.IS_OCEAN)||biomeHolder.is(BiomeTags.IS_DEEP_OCEAN)||biomeHolder.is(BiomeTags.IS_FOREST) || biomeHolder.is(Tags.Biomes.IS_PLAINS) || biomeHolder.is(BiomeTags.IS_RIVER)|| biomeHolder.is(BiomeTags.IS_BEACH)) {
             return GeneticTraits.BIOME;
-        } else if (biome.getBaseTemperature() < 1.5F) {
+        } else if (biomeHolder.is(BiomeTags.IS_JUNGLE)||biomeHolder.is(Tags.Biomes.IS_SWAMP)) {
             return GeneticTraits.BIOME_I;
-        } else {
+        } else if (biomeHolder.is(BiomeTags.IS_SAVANNA) ||biomeHolder.is(Tags.Biomes.IS_DESERT)) {
             return GeneticTraits.BIOME_II;
+        } else {
+            return null;
         }
     }
     public static void init(Registry<Biome> biomeRegistry) {
 
         for (Map.Entry<ResourceKey<Biome>, Biome> biome : biomeRegistry.entrySet()) {
-            GeneticTraits geneticTraits = getTemperatureCategory(biome.getValue());
+            GeneticTraits geneticTraits = getTemperatureCategory(biomeRegistry.getHolderOrThrow(biome.getKey()));
             List< ResourceKey<Biome> > biomes = geneticBiomes.get(geneticTraits);
             if (biomes != null) {
                 biomes.add(biome.getKey());
             }else{
                 biomes = new ArrayList<>();
                 biomes.add(biome.getKey());
+                if (geneticTraits != null)
                 geneticBiomes.put(geneticTraits,biomes);
             }
         }

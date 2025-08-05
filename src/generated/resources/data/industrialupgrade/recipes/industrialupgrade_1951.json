@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:water_rotor/water_rotor_steel"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/carbon"
+    },
+    "B": {
+      "item": "industrialupgrade:water_rotor/water_rotor_steel"
+    }
   },
   "pattern": [
     " A ",

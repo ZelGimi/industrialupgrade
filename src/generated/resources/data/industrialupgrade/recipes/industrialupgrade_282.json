@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/beryllium_bronze"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/beryllium_bronze"
+    }
   ],
   "result": {
     "count": 9,

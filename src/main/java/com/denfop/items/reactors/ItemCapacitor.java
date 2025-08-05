@@ -48,6 +48,7 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTa
 
         return this.nameItem;
     }
+
     @Override
     public double getPercent() {
         return percent;
@@ -64,6 +65,8 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTa
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
+                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
         p_41423_.add(Component.literal(Localization.translate("reactor.component_level") + (this.level + 1)));
         p_41423_.add(Component.literal(Localization.translate("reactor.component_level1")));
 

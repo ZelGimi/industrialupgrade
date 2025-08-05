@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:circuit/spectralcircuit_part1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:stick/manganese"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:circuit/spectralcircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:stick/manganese"
+    }
   },
   "pattern": [
     "BBB",

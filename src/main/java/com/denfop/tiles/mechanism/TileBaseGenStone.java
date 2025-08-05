@@ -19,6 +19,7 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -177,7 +178,9 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnStoneGeneratorParticles(level,pos,level.random);
+        }
         MachineRecipe output = this.output;
         if (output != null && canAdd() && this.energy.getEnergy() >= this.energyConsume) {
             if (!this.getActive()) {

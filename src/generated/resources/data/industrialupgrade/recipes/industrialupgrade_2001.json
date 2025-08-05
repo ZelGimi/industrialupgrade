@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/mikhail"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iridium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/invar"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/mikhail"
+    },
+    "B": {
+      "tag": "forge:plates/iridium"
+    },
+    "C": {
+      "tag": "forge:plates/invar"
+    }
   },
   "pattern": [
     "CBC",

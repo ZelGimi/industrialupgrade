@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/electrum"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/invar"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_601_element"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/electrum"
+    },
+    "C": {
+      "tag": "forge:plates/invar"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    },
+    "E": {
+      "tag": "forge:plates/ferromanganese"
+    }
   },
   "pattern": [
     "A A",

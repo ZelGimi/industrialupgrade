@@ -1,33 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quantumitems3"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:basemachine/adv_matter"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:doubleplate/vitalium"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemcore/admcore"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:basemachine/adv_matter"
+    },
+    "D": {
+      "tag": "forge:doubleplate/vitalium"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/admcore"
+    }
   },
   "pattern": [
     "DED",

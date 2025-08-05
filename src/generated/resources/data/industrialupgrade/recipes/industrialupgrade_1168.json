@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,26 +8,18 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:4}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:cokeoven/coke_oven_part"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_387_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_320_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemiucrafring/itemirradianturanium"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:cokeoven/coke_oven_part"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_387_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_320_element"
+    },
+    "E": {
+      "item": "industrialupgrade:itemiucrafring/itemirradianturanium"
+    }
   },
   "pattern": [
     "DED",

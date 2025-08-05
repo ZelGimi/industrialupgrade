@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_620_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:glass/reinforced"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:glass/reinforced"
+    }
   },
   "pattern": [
     "DCD",

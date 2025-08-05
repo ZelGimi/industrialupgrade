@@ -184,4 +184,20 @@ public abstract class AbstractComponent {
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
     }
+
+    public boolean canExtractLightLevel() {
+        return false;
+    }
+
+    public int getLightValue() {
+        return 0;
+    }
+
+    public int getLightOpacity() {
+        return 0;
+    }
+
+    public boolean onSneakingActivated(Player player, InteractionHand hand) {
+        return false;
+    }
 }

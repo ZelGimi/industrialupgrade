@@ -14,69 +14,31 @@ import net.minecraft.resources.ResourceLocation;
 public class GuiWaterRotorUpgrade<T extends ContainerWaterRotorUpgrade> extends GuiIU<ContainerWaterRotorUpgrade> {
 
     public final ContainerWaterRotorUpgrade container;
-    public final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guiwaterrotorupgrade.png");
+    public final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guiwater_rotor_upgrade.png");
     public final ResourceLocation rotors_gui = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotors.png");
 
     public GuiWaterRotorUpgrade(ContainerWaterRotorUpgrade guiContainer) {
         super(guiContainer);
         this.container = guiContainer;
-        this.imageHeight = 206;
-        this.elements.add(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.componentList.clear();
-        inventory = new GuiComponent(this, 7, 123, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
-        );
-        this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE))
-        );
 
-        componentList.add(inventory);
-        componentList.add(slots);
     }
 
 
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
-       bindTexture(background);
-
         if (!this.container.base.rotor_slot.isEmpty()) {
-            int j = guiLeft;
-            int k = guiTop;
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-            setTexture(rotors_gui);
-            drawTexturedModalRect(poseStack,j + 71, k + 5, 32 * (this.container.base.getRotor().getIndex() % 8),
-                    55 * (this.container.base.getRotor().getIndex() / 8), 32, 54
-            );
-            drawTexturedModalRect(poseStack,j + 71, k + 57, 32 * (this.container.base.getRotor().getIndex() % 8),
-                    55 * (this.container.base.getRotor().getIndex() / 8), 32, 54
-            );
-            drawTexturedModalRect(poseStack,j + 33, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
-                    112 + 33 * (this.container.base.getRotor().getIndex() / 4), 54, 32
-            );
-            drawTexturedModalRect(poseStack,j + 85, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
-                    112 + 33 * (this.container.base.getRotor().getIndex() / 4), 54, 32
-            );
-            setTexture(background);
-            drawTexturedModalRect(poseStack,j + 77, k + 6, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(poseStack,j + 34, k + 49, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(poseStack,j + 77, k + 49, 212,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(poseStack,j + 120, k + 49, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(poseStack,j + 77, k + 92, 230,
-                    33, 18, 18
+            RenderSystem.setShaderColor(this.container.base.getRotor().getColor().getRed()/255f,this.container.base.getRotor().getColor().getGreen()/255f,this.container.base.getRotor().getColor().getBlue()/255f,1);
+            drawTexturedModalRect(poseStack, guiLeft + 49, guiTop + 5, 177,
+                    81, 78, 78
             );
 
+            RenderSystem.setShaderColor(1,1,1,1);
+            drawTexturedModalRect(poseStack, guiLeft + 49, guiTop + 5, 177,
+                    0, 78, 78
+            );
         }
-
     }
 
     @Override

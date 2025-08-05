@@ -143,9 +143,9 @@ public class TileEntitySolidFluidIntegrator extends TileElectricMachine implemen
                 400
         ), new ItemStack(IUItem.iudust.getStack(61), 1), new FluidStack(FluidName.fluidaniline.getInstance().get(), 200));
 
-        addRecipe(new FluidStack(FluidName.fluidmotoroil.getInstance().get(), 1000), new FluidStack(
+        addRecipe(new FluidStack(FluidName.fluidmotoroil.getInstance().get(), 500), new FluidStack(
                 FluidName.fluidcoolant.getInstance().get(),
-                1000
+                500
         ), new ItemStack(IUItem.cooling_mixture.getItem()), new FluidStack(FluidName.fluidazot.getInstance().get(), 100));
 
         addRecipe(

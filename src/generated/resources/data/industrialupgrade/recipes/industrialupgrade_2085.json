@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,16 +8,12 @@
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:jar_bee/bees"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "industrialupgrade:jar_bee/bees"
+    }
   },
   "pattern": [
     "BBB",

@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/chromium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/aluminumbronze"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:wiring/copper"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/chromium"
+    },
+    "B": {
+      "tag": "forge:plates/aluminumbronze"
+    },
+    "C": {
+      "item": "industrialupgrade:wiring/copper"
+    }
   },
   "pattern": [
     "ABC",

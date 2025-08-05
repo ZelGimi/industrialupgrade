@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "tag": "forge:ingots/magnesium"
+    },
+    {
+      "tag": "forge:ingots/magnesium"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "minecraft:gravel"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "industrialupgrade:crafting_elements/crafting_770_element"
+  }
+}

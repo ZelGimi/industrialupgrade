@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/hafnium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/alcled"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/aluminiumsilicon"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/hafnium"
+    },
+    "B": {
+      "tag": "forge:plates/alcled"
+    },
+    "C": {
+      "tag": "forge:plates/aluminiumsilicon"
+    }
   },
   "pattern": [
     "ABC",

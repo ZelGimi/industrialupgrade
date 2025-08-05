@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_42_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:ingots/gold"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/iron"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_650_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "B": {
+      "tag": "forge:ingots/gold"
+    },
+    "C": {
+      "tag": "forge:ingots/iron"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_650_element"
+    }
   },
   "pattern": [
     "CCC",

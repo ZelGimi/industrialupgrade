@@ -35,6 +35,7 @@ public class TabCore extends CreativeModeTab {
             case 12-> new ItemStack(IUItem.jarBees.getStack(0));
             case 13-> new ItemStack(IUItem.genome_crop.getStack(0));
             case 14-> new ItemStack(IUItem.rocket.getItem());
+            case 15-> new ItemStack(IUItem.fluidCell.getItem());
             default -> new ItemStack(Blocks.COBBLESTONE);
         };
     }

@@ -3871,7 +3871,7 @@ public class BasicRecipeTwo {
 
                 ('A'), IUItem.charged_redstone,
 
-                ('B'), IUItem.diamondDust, 'C', Items.QUARTZ
+                ('B'), "forge:dusts/diamond", 'C', Items.QUARTZ
         );
 
         Recipes.recipe.addRecipe(

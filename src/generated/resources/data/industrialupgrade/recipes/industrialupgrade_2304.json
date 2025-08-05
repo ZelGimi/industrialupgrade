@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/woods"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/bloodstone"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/woods"
+    },
+    "C": {
+      "tag": "forge:plates/bloodstone"
+    }
   },
   "pattern": [
     " B ",

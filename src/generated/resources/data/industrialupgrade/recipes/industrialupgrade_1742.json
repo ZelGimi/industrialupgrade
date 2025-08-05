@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemplates/arsenic"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:ingots/invar"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:rods/silver"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemplates/arsenic"
+    },
+    "B": {
+      "tag": "forge:ingots/invar"
+    },
+    "C": {
+      "tag": "forge:rods/silver"
+    }
   },
   "pattern": [
     " A ",

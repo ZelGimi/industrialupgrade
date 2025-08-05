@@ -113,8 +113,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
         return stack;
     }
 
-    protected void putFromNBT(int index, ItemStack content) {
-        this.contents.set(index, content);
+    public void onChanged() {
         listBlack.clear();
         listWhite.clear();
         for (int i = 0; i < size(); i++) {
@@ -122,7 +121,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
             if (itemStack.isEmpty()) {
                 continue;
             }
-            if (index < 9) {
+            if (i < 9) {
                 listBlack.add(itemStack);
             } else {
                 listWhite.add(itemStack);

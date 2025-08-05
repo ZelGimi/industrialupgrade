@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:bricks"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:casing/adamantite"
-      }
-    ]
+    "A": {
+      "item": "minecraft:bricks"
+    },
+    "B": {
+      "item": "industrialupgrade:casing/adamantite"
+    }
   },
   "pattern": [
     " B ",

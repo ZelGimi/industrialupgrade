@@ -17,6 +17,7 @@ import com.denfop.network.packet.PacketStopSound;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileBaseWitherMaker;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -54,6 +55,14 @@ public class TileWitherMaker extends TileBaseWitherMaker implements IHasRecipe {
                 )
         ));
 
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnWitherFabricatorParticles(level,pos,level.random);
+        }
     }
 
     @Override

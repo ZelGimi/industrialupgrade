@@ -31,8 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class MixinServerGamePacketListenerImpl {
-    @Shadow
-    static final Logger LOGGER = LogUtils.getLogger();
+
     @Shadow
     public ServerPlayer player;
 
@@ -92,8 +91,6 @@ public abstract class MixinServerGamePacketListenerImpl {
 
                             this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos));
                             this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos.relative(direction)));
-                        } else {
-                            LOGGER.warn("Rejecting UseItemOnPacket from {}: Location {} too far away from hit block {}.", this.player.getGameProfile().getName(), vec3, blockpos);
                         }
                 }
             }

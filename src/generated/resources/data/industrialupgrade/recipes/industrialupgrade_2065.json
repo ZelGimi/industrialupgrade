@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wind_turbine/wind_turbine_casing_1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wind_turbine/wind_turbine_casing_2"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wind_turbine/wind_turbine_casing_1"
+    },
+    "B": {
+      "item": "industrialupgrade:wind_turbine/wind_turbine_casing_2"
+    }
   },
   "pattern": [
     "   ",

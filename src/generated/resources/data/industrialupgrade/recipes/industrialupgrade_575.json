@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quarrymodules/for1"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/nichrome"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:quarrymodules/for1"
+    },
+    "B": {
+      "tag": "forge:doubleplate/nichrome"
+    }
   },
   "pattern": [
     "ABA",

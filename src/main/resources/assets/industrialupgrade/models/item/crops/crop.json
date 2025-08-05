@@ -1,6 +1,506 @@
 {
-  "parent" : "industrialupgrade:item/default",
-  "textures" : {
-    "layer0" : "industrialupgrade:item/crop_seed"
+  "parent": "industrialupgrade:item/item/default",
+  "overrides": [
+   {
+      "model": "industrialupgrade:item/crops/crops",
+      "predicate": {
+        "id": -1
+      }
+    },
+    {
+      "model": "minecraft:item/wheat",
+      "predicate": {
+        "id": 0
+      }
+    },
+    {
+      "model": "minecraft:item/sugar_cane",
+      "predicate": {
+        "id": 1
+      }
+    },
+    {
+      "model": "industrialupgrade:item/raw_latex",
+      "predicate": {
+        "id": 2
+      }
+    },
+    {
+      "model": "minecraft:item/pink_tulip",
+      "predicate": {
+        "id": 4
+      }
+    },
+    {
+      "model": "minecraft:item/azure_bluet",
+      "predicate": {
+        "id": 5
+      }
+    },
+    {
+      "model": "minecraft:item/poppy",
+      "predicate": {
+        "id": 6
+      }
+    },
+    {
+      "model": "minecraft:item/allium",
+      "predicate": {
+        "id": 7
+      }
+    },
+    {
+      "model": "minecraft:item/brown_mushroom",
+      "predicate": {
+        "id": 8
+      }
+    },
+    {
+      "model": "minecraft:item/orange_tulip",
+      "predicate": {
+        "id": 9
+      }
+    },
+    {
+      "model": "minecraft:item/oxeye_daisy",
+      "predicate": {
+        "id": 10
+      }
+    },
+    {
+      "model": "minecraft:item/white_tulip",
+      "predicate": {
+        "id": 11
+      }
+    },
+    {
+      "model": "minecraft:item/dandelion",
+      "predicate": {
+        "id": 12
+      }
+    },
+    {
+      "model": "minecraft:item/red_tulip",
+      "predicate": {
+        "id": 13
+      }
+    },
+    {
+      "model": "minecraft:item/red_mushroom",
+      "predicate": {
+        "id": 14
+      }
+    },
+    {
+      "model": "minecraft:item/blue_orchid",
+      "predicate": {
+        "id": 15
+      }
+    },
+    {
+      "model": "industrialupgrade:item/corn",
+      "predicate": {
+        "id": 16
+      }
+    },
+    {
+      "model": "minecraft:item/beetroot",
+      "predicate": {
+        "id": 17
+      }
+    },
+    {
+      "model": "minecraft:item/carrot",
+      "predicate": {
+        "id": 18
+      }
+    },
+    {
+      "model": "minecraft:item/potato",
+      "predicate": {
+        "id": 19
+      }
+    },
+    {
+      "model": "industrialupgrade:item/raspberry",
+      "predicate": {
+        "id": 20
+      }
+    },
+    {
+      "model": "industrialupgrade:item/hops",
+      "predicate": {
+        "id": 21
+      }
+    },
+    {
+      "model": "industrialupgrade:item/tomato",
+      "predicate": {
+        "id": 22
+      }
+    },
+    {
+      "model": "minecraft:item/melon",
+      "predicate": {
+        "id": 23
+      }
+    },
+    {
+      "model": "minecraft:item/pumpkin",
+      "predicate": {
+        "id": 24
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/mikhail",
+      "predicate": {
+        "id": 25
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/aluminium",
+      "predicate": {
+        "id": 26
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/vanady",
+      "predicate": {
+        "id": 27
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/wolfram",
+      "predicate": {
+        "id": 28
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/invar",
+      "predicate": {
+        "id": 29
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/caravky",
+      "predicate": {
+        "id": 30
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/cobalt",
+      "predicate": {
+        "id": 31
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/magnesium",
+      "predicate": {
+        "id": 32
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/nickel",
+      "predicate": {
+        "id": 33
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/platium",
+      "predicate": {
+        "id": 34
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/titanium",
+      "predicate": {
+        "id": 35
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/chromium",
+      "predicate": {
+        "id": 36
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/spinel",
+      "predicate": {
+        "id": 37
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/electrium",
+      "predicate": {
+        "id": 38
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/silver",
+      "predicate": {
+        "id": 39
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/zinc",
+      "predicate": {
+        "id": 40
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/manganese",
+      "predicate": {
+        "id": 41
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/iridium",
+      "predicate": {
+        "id": 42
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/germanium",
+      "predicate": {
+        "id": 43
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/copper",
+      "predicate": {
+        "id": 44
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/gold",
+      "predicate": {
+        "id": 45
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/iron",
+      "predicate": {
+        "id": 46
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/diamond",
+      "predicate": {
+        "id": 47
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/emerald",
+      "predicate": {
+        "id": 48
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/quartz",
+      "predicate": {
+        "id": 49
+      }
+    },
+    {
+      "model": "industrialupgrade:item/nuclearresource/unprocessed_radioactive_uranium",
+      "predicate": {
+        "id": 50
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/lead",
+      "predicate": {
+        "id": 51
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/tin",
+      "predicate": {
+        "id": 52
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/arsenic",
+      "predicate": {
+        "id": 53
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/barium",
+      "predicate": {
+        "id": 54
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/bismuth",
+      "predicate": {
+        "id": 55
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/gadolinium",
+      "predicate": {
+        "id": 56
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/gallium",
+      "predicate": {
+        "id": 57
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/hafnium",
+      "predicate": {
+        "id": 58
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/yttrium",
+      "predicate": {
+        "id": 59
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/molybdenum",
+      "predicate": {
+        "id": 60
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/neodymium",
+      "predicate": {
+        "id": 61
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/niobium",
+      "predicate": {
+        "id": 62
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/palladium",
+      "predicate": {
+        "id": 63
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/polonium",
+      "predicate": {
+        "id": 64
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/strontium",
+      "predicate": {
+        "id": 65
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/thallium",
+      "predicate": {
+        "id": 66
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/zirconium",
+      "predicate": {
+        "id": 67
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/osmium",
+      "predicate": {
+        "id": 68
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/tantalum",
+      "predicate": {
+        "id": 69
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/cadmium",
+      "predicate": {
+        "id": 70
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/ender_pearl",
+      "predicate": {
+        "id": 71
+      }
+    },
+    {
+      "model": "minecraft:item/blaze_powder",
+      "predicate": {
+        "id": 72
+      }
+    },
+    {
+      "model": "minecraft:item/redstone",
+      "predicate": {
+        "id": 73
+      }
+    },
+    {
+      "model": "minecraft:item/flint",
+      "predicate": {
+        "id": 74
+      }
+    },
+    {
+      "model": "industrialupgrade:item/smalldust/ghast",
+      "predicate": {
+        "id": 75
+      }
+    },
+    {
+      "model": "industrialupgrade:item/crafting_elements/crafting_481_element",
+      "predicate": {
+        "id": 76
+      }
+    },
+    {
+      "model": "industrialupgrade:item/nuclearresource/curium_smalldust",
+      "predicate": {
+        "id": 77
+      }
+    },
+    {
+      "model": "industrialupgrade:item/nuclearresource/neptunium_smalldust",
+      "predicate": {
+        "id": 78
+      }
+    },
+    {
+      "model": "industrialupgrade:item/nuclearresource/americium_smalldust",
+      "predicate": {
+        "id": 79
+      }
+    },
+    {
+      "model": "industrialupgrade:item/nuclearresource/thorium_shard",
+      "predicate": {
+        "id": 80
+      }
+    },
+    {
+      "model": "minecraft:item/nether_wart",
+      "predicate": {
+        "id": 81
+      }
+    },
+    {
+      "model": "industrialupgrade:item/terra_wart",
+      "predicate": {
+        "id": 82
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "industrialupgrade:item/item/crop_seed"
   }
 }

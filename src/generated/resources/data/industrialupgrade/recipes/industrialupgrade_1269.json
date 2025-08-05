@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:mesh/steelmesh"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/hafniumboride"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:mesh/steelmesh"
+    },
+    "B": {
+      "tag": "forge:plates/hafniumboride"
+    }
   },
   "pattern": [
     " BB",

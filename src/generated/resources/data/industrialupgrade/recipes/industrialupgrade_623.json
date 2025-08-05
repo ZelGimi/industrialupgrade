@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/oberon_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/oberon_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/oberon_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/oberon_pebble"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/oberon_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/oberon_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/oberon_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/oberon_pebble"
+    }
   ],
   "result": {
     "item": "industrialupgrade:itemspace/oberon_boulder"

@@ -1,12 +1,19 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.bee.Product;
+import com.denfop.api.bee.genetics.EnumGenetic;
+import com.denfop.api.bee.genetics.GeneticTraits;
+import com.denfop.api.gui.Area;
+import com.denfop.api.gui.ScrollDirection;
 import com.denfop.container.ContainerApiary;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,11 +26,16 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
 
 
     public ContainerApiary container;
+    int indexGenome = 0;
+    int maxIndexGenome = 3;
+    int indexAdditionProducts = 0;
+    int maxIndexAdditionProducts = 3;
 
     public GuiApiary(ContainerApiary container1) {
         super(container1);
         this.container = container1;
         componentList.clear();
+        this.imageWidth = 199;
         this.imageHeight = 207;
         this.addElement(new AdvArea(this, 10, 21, 21, 69).withTooltip(() -> ModUtils.getString(container1.base.food)));
         this.addElement(new AdvArea(this, 154, 21, 165, 69).withTooltip(() -> ModUtils.getString(container1.base.royalJelly)));
@@ -38,6 +50,46 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
                 50,
                 109).withTooltip(() -> ModUtils.getString(container1.base.birth) + "/" + ModUtils.getString(container1.base.death)));
 
+    }
+
+    @Override
+    public boolean mouseScrolled(double d, double d2, double d3) {
+        ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
+        int mouseX = (int) (d - this.guiLeft);
+        int mouseY = (int) (d2 - this.guiTop);
+        if (mouseX >= 174 && mouseX <= 176 + 16 + 2 && mouseY >= 4 && mouseY <= 4 + 16 * (3.4)) {
+            if (scrollDirection == ScrollDirection.up) {
+                indexGenome--;
+                if (indexGenome < 0) {
+                    indexGenome = 0;
+                }
+            }
+            if (scrollDirection == ScrollDirection.down) {
+                indexGenome++;
+                if (indexGenome > maxIndexGenome - 3) {
+                    indexGenome = maxIndexGenome - 3;
+                    indexGenome = Math.max(0, indexGenome);
+                }
+            }
+        }
+        if (mouseX >= 174 && mouseX <= 176 + 16 + 2 && mouseY >= 4 + 16 * (0 + 3.5) && mouseY <= 8 + 16 * (4) + 16 * (0 + 3.5)) {
+            if (scrollDirection == ScrollDirection.up) {
+                indexAdditionProducts--;
+                if (indexAdditionProducts < 0) {
+                    indexAdditionProducts = 0;
+                }
+            }
+            if (scrollDirection == ScrollDirection.down) {
+                indexAdditionProducts++;
+                if (indexAdditionProducts > maxIndexAdditionProducts - 3) {
+                    indexAdditionProducts = maxIndexAdditionProducts - 3;
+
+                    indexAdditionProducts = Math.max(0, indexAdditionProducts);
+                }
+            }
+        }
+
+        return super.mouseScrolled(d, d2, d3);
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -60,7 +112,37 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
-        super.drawForegroundLayer( poseStack,par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        List<GeneticTraits> values = this.container.base.getGenome().getGeneticTraitsMap().values().stream().toList();
+        maxIndexGenome = values.size();
+        List<Product> products = this.container.base.getQueen().getProduct();
+        maxIndexAdditionProducts = products.size();
+        if (maxIndexGenome == 0) {
+            this.addElement(new Area(this, 174, 4, 20, 4 + 8 + 16 * (4)).withTooltip(() -> Localization.translate("iu.apiary_genome_descriptions")));
+
+        } else {
+            int j = 0;
+            for (int i = indexGenome; i < Math.min((indexGenome) + 3, maxIndexGenome); i++, j++) {
+                int finalI = i;
+                this.addElement(new Area(this, 176, 8 + 16 * (j), 16, 16).withTooltip(() ->Localization.translate("iu.info.bee_genome_"+ values.get(finalI).name().toLowerCase())));
+
+            }
+
+        }
+
+        if (maxIndexAdditionProducts == 0) {
+            this.addElement(new Area(this, 174, (int) (4 + 16 * (0 + 3.5)), 20, 4 + 8 + 16 * (4)).withTooltip(() -> Localization.translate("iu.apiary_additional_product_descriptions")));
+
+        } else {
+            int j = 0;
+            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+                Product product = products.get(i);
+
+                this.addElement(new Area(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> product.getCrop().getDrop().get(0).getDisplayName().getString()+"\n"+Localization.translate("iu.space_chance")+" " +ModUtils.getString( product.getChance()/3)+"%"));
+
+
+            }
+        }
         handleUpgradeTooltip(par1, par2);
     }
 
@@ -72,6 +154,26 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        List<GeneticTraits> values = this.container.base.getGenome().getGeneticTraitsMap().values().stream().toList();
+        maxIndexGenome = values.size();
+        int j = 0;
+        for (int i = indexGenome; i < Math.min((indexGenome) + 3, maxIndexGenome); i++, j++) {
+            GeneticTraits geneticTraits = values.get(i);
+            RenderSystem.enableBlend();
+            poseStack.renderItem(new ItemStack(IUItem.genome_bee.getStack(geneticTraits.ordinal()), 1), 176 + this.guiLeft(), 8 + 16 * (j) + this.guiTop());
+            RenderSystem.disableBlend();
+
+        }
+        j = 0;
+        List<Product> products = this.container.base.getQueen().getProduct();
+        maxIndexAdditionProducts = products.size();
+        for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+            Product product = products.get(i);
+            RenderSystem.enableBlend();
+            poseStack.renderItem(product.getCrop().getDrop().get(0), 176 + this.guiLeft(), (int) (8 + 16 * (j + 3.5) + this.guiTop()));
+            RenderSystem.disableBlend();
+
+        }
         bindTexture();
         switch (this.container.base.task) {
             case 0:

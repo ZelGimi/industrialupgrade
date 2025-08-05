@@ -50,9 +50,9 @@ public class ItemEnergyToolHoe extends ItemEnergyTool {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-        if (context.getClickedFace() == Direction.DOWN ||
-                !world.getBlockState(pos.below()).isAir() ||
-                (block != Blocks.MYCELIUM && block != Blocks.GRASS_BLOCK && block != Blocks.DIRT)) {
+        if (context.getClickedFace() == Direction.DOWN ||(
+                !world.getBlockState(pos.below()).isAir() &&
+                (block != Blocks.MYCELIUM && block != Blocks.GRASS_BLOCK && block != Blocks.DIRT))) {
             return super.useOn(context);
         }
 

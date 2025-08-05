@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/steam_ampere_generator"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/steam_ampere_generator"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    }
   },
   "pattern": [
     " A ",

@@ -71,7 +71,7 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
     protected double guiProgress;
 
     public TileEntityFluidMixer(BlockPos pos, BlockState state) {
-        super(100, 1, 4,BlockBaseMachine3.fluid_mixer,pos,state);
+        super(100, 1, 4, BlockBaseMachine3.fluid_mixer, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -182,11 +182,11 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
                 )
         )));
 
-        Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance().get(), 200), new FluidStack(
+        Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(new FluidStack(
                 FluidName.fluidmethanol.getInstance().get(),
                 100
-        )), Arrays.asList(
+        ),
+                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance().get(), 200)), Arrays.asList(
                 new FluidStack(FluidName.fluidweed_ex.getInstance().get(), 100),
                 new FluidStack(
                         FluidName.fluidmethylchloride.getInstance().get(),

@@ -6,6 +6,7 @@ import com.denfop.api.space.fakebody.FakeSpaceSystemBase;
 import com.denfop.api.space.fakebody.IFakeSpaceSystemBase;
 import com.denfop.api.space.research.BaseSpaceResearchSystem;
 import com.denfop.api.space.research.api.IResearchSystem;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
@@ -33,7 +34,23 @@ public class BaseSpaceSystem implements ISpaceNet {
     List<IStar> starList;
     Map<String, IBody> bodyMap;
     List<IBody> bodies;
-
+    public static   Map<Integer, Integer> rocketFuel = Map.of(
+            1, 10000,
+            2, 20000,
+            3, 30000,
+            4, 40000,
+            5, 60000,
+            6, 80000
+    );
+    public static    Map<Integer, Double> rocketFuelCoef = Map.of(
+            1, 1D,
+            2, 3D,
+            3, 4.4D,
+            4, 7.5D,
+            5, 12.5D,
+            6, 18D
+    );
+    public static    Map<Fluid, Integer> fluidToLevel = new HashMap<>();
     public BaseSpaceSystem() {
         this.planetISatelliteMap = new HashMap<>();
         this.systemIBodyMap = new HashMap<>();

@@ -1187,9 +1187,9 @@ public class BasicRecipeThree {
 
                 ('A'), "forge:plates/Invar", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 496)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_casing), " C ", "ABA", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_casing), "AA ", "AA ", "   ",
 
-                ('A'), "forge:casings/Spinel", ('B'), ItemStackHelper.fromData(Blocks.BRICKS), 'C', "forge:casings/Yttrium"
+                ('A'), new ItemStack(IUItem.crafting_elements.getStack(772))
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_tank), " C ", "DAD", " B ",
 

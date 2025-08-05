@@ -13,6 +13,7 @@ import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
@@ -164,6 +165,21 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
     @Override
     public boolean canoperate(final int size) {
         return !fertilizerSlot.isEmpty() && fertilizerSlot.get(0).getCount() * 8 + col >= size;
+    }
+    public int getFertilizer(){
+        return  col;
+    }
+    @Override
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        this.col = customPacketBuffer.readInt();
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
+        packetBuffer.writeInt(col);
+        return packetBuffer;
     }
 
     @Override

@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:alloyplate/vanadoalumite"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:alloyplate/yttrium_aluminium_garnet"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:alloyplate/vanadoalumite"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "D": {
+      "item": "industrialupgrade:alloyplate/yttrium_aluminium_garnet"
+    }
   },
   "pattern": [
     "   ",

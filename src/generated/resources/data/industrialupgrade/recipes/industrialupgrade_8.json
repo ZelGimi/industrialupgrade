@@ -1,52 +1,34 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/cadmium"
-      }
-    ]
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    },
+    {
+      "tag": "forge:ingots/cadmium"
+    }
   ],
   "result": {
     "item": "industrialupgrade:baseblockingot1/cadmium"

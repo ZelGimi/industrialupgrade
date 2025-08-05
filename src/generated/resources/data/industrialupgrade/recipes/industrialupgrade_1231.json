@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nuclearresource/americium_dust"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdust/stone_dust"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nuclearresource/americium_dust"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdust/stone_dust"
+    }
   },
   "pattern": [
     " B ",

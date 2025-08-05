@@ -74,6 +74,24 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, getUpgradeModules()));
 
     }
+    public boolean isBarVisible(final ItemStack stack) {
+        return true;
+    }
+
+    public int getBarColor(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        ));
+    }
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -327,7 +345,7 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
             Block block = state.getBlock();
             BlockState state1 = world.getBlockState(pos.below());
 
-            if (side != Direction.DOWN && state1.isAir()) {
+            if (side != Direction.DOWN && !state1.isAir()) {
                 if (block == Blocks.GRASS_BLOCK || block == Blocks.DIRT_PATH) {
                     return this.setHoedBlock(stack, player, world, pos, Blocks.FARMLAND.defaultBlockState());
                 }

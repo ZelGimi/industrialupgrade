@@ -38,8 +38,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -157,6 +159,26 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         BlockEntity te = world.getBlockEntity(pos);
         return te instanceof TileEntityBlock ? (TileEntityBlock) te : null;
     }    public TypeProperty typeProperty = this.getTypeProperty();
+
+    @Override
+    public boolean canBeReplaced(BlockState pState, Fluid pFluid) {
+        return false;
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+        return false;
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
+        return false;
+    }
+
+    @Override
+    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+        return true;
+    }
 
     private static TileEntityBlock getTe(BlockGetter getter, BlockPos pos) {
         BlockEntity blockEntity = getter.getBlockEntity(pos);
@@ -355,14 +377,14 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public void playerDestroy(Level p_49827_, Player p_49828_, BlockPos p_49829_, BlockState p_49830_, @Nullable BlockEntity p_49831_, ItemStack p_49832_) {
         super.playerDestroy(p_49827_, p_49828_, p_49829_, p_49830_, p_49831_, p_49832_);
     }
-
+    public  static LinkedList<TileEntityBlock> drops = new LinkedList<>();
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         TileEntityBlock te = getTe(world, pos);
         if (te != null) {
             if (!te.onRemovedByPlayer(player, willHarvest)) {
                 return false;
             }
-            teBlockDrop.put(pos, te);
+            drops.add(te);
         }
 
         return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
@@ -379,7 +401,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof TileEntityBlock te) {
-            te.onNeighborChange(state, neighbor);
+            te.onNeighborChange(level.getBlockState(neighbor), neighbor);
         }
 
     }
@@ -395,6 +417,11 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         } else {
             return super.getLightEmission(state, level, pos);
         }
+    }
+
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
     }
 
     private Direction getPlacementFacing(LivingEntity livingEntity, Direction direction) {
@@ -524,7 +551,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public List<ItemStack> getDrops(Level world, BlockPos pos, BlockState state, Entity player) {
         TileEntityBlock te = getTe(world, pos);
         if (te == null) {
-            te = teBlockDrop.get(pos);
+            te = drops.removeLast();
             if (te == null) {
                 return new ArrayList<>();
             } else {
@@ -539,7 +566,6 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
                 final int chance = te.getLevel().random.nextInt(100);
                 ret.addAll(te.getSelfDrops(chance, wasWrench));
                 ret.addAll(te.getAuxDrops(chance));
-                teBlockDrop.remove(pos);
                 return ret;
             }
         }

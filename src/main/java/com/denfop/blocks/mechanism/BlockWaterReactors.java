@@ -157,7 +157,7 @@ public enum BlockWaterReactors implements IMultiTileBlock {
             try {
                 this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
     }

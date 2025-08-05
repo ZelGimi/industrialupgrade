@@ -126,7 +126,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
                     poseStack.translate(0.19 + 0.19, 0.3, +0.44 + 0.19);
                     break;
             }
-            RenderFluidBlock.renderFluid(tile.fluidTank1.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.62f);
+            RenderFluidBlock.renderFluid(tile.fluidTank1.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.62f,0);
             poseStack.popPose();
         }
         if (!tile.fluidTank2.getFluid().isEmpty()) {
@@ -146,7 +146,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
                     poseStack.translate(+0.26 + 0.25, +0.15, -0.24 + 0.25);
                     break;
             }
-            RenderFluidBlock.renderFluid(tile.fluidTank2.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.49f);
+            RenderFluidBlock.renderFluid(tile.fluidTank2.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.49f,1);
             poseStack.popPose();
         }
     }

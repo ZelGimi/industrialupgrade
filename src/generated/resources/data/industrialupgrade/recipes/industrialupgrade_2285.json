@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gears/spinel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:imp_bee_frame_template"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/obsidian"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/cobalt"
-      }
-    ]
+    "A": {
+      "tag": "forge:gears/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:imp_bee_frame_template"
+    },
+    "C": {
+      "tag": "forge:plates/obsidian"
+    },
+    "D": {
+      "tag": "forge:casings/cobalt"
+    }
   },
   "pattern": [
     "CDC",

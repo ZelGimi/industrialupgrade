@@ -2,6 +2,12 @@ package com.denfop;
 
 
 import com.denfop.damagesource.IUDamageSource;
+import com.denfop.datagen.DamageTypes;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,14 +30,27 @@ public class IUPotion extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (this == radiation) {
-            entity.hurt(IUDamageSource.radiation, (float) (amplifier / 100) + 0.5F);
+
+        if (IUDamageSource.radiation == null || IUDamageSource.frostbite == null || IUDamageSource.poison_gas == null) {
+            IUDamageSource.initDamage(entity.level().registryAccess());
+        }
+        if (ModConfig.COMMON.damageRadiation.get())
+            if (this == radiation) {
+                Registry<DamageType> dTypeReg =entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
+                Holder.Reference<DamageType> dType = dTypeReg.getHolder(com.denfop.datagen.DamageTypes.radiationObject).orElse(dTypeReg.getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.MAGIC));
+                entity.hurt(new DamageSource(dType), (float) (amplifier / 100) + 0.5F);
+            }
+        if (this == poison_gas) {
+            Registry<DamageType> dTypeReg =entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
+            Holder.Reference<DamageType> dType = dTypeReg.getHolder(com.denfop.datagen.DamageTypes.frostbiteObject).orElse(dTypeReg.getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.MAGIC));
+
+            entity.hurt(new DamageSource(dType), (float) (amplifier / 100) + 0.5F);
         }
         if (this == poison_gas) {
-            entity.hurt(IUDamageSource.poison_gas, (float) (amplifier / 100) + 0.5F);
-        }
-        if (this == poison_gas) {
-            entity.hurt(IUDamageSource.poison_gas, (float) (amplifier / 100) + 0.5F);
+            Registry<DamageType> dTypeReg =entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
+            Holder.Reference<DamageType> dType = dTypeReg.getHolder(com.denfop.datagen.DamageTypes.poison_gasObject).orElse(dTypeReg.getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.MAGIC));
+
+            entity.hurt(new DamageSource(dType), (float) (amplifier / 100) + 0.5F);
         }
     }
 

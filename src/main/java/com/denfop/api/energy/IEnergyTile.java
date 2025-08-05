@@ -11,8 +11,6 @@ import java.util.Map;
 public interface IEnergyTile {
     List<InfoTile<IEnergyTile>> getValidReceivers();
 
-    BlockEntity getTileEntity();
-
     BlockPos getPos();
 
     long getIdNetwork();
@@ -29,4 +27,8 @@ public interface IEnergyTile {
 
     void setHashCodeSource(int hashCode);
 
+
+   default boolean isRemovedTile(){
+       return false;
+   };
 }

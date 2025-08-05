@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/enceladus_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/enceladus_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/enceladus_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/enceladus_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/enceladus_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/enceladus_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/enceladus_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/enceladus_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/enceladus_cobblestone"

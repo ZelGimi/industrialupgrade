@@ -1,33 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:6}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_16_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_651_element"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_16_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_651_element"
+    }
   },
   "pattern": [
     "CCC",

@@ -13,6 +13,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +44,10 @@ public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCor
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+    public List<ItemStack> getDrops(      @Nonnull final Level world,
+                                          @Nonnull final BlockPos pos,
+                                          @Nonnull final BlockState state,
+                                          final int fortune) {
         List<ItemStack> drops = new ArrayList<>();
         drops.add(new ItemStack(IUItem.mineral.getItem(this.getMetaFromState(state))));
         drops.add(new ItemStack(IUItem.basalts.getItem(0)));

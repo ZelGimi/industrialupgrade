@@ -188,6 +188,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
 
 
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        tooltip.add(Localization.translate("iu.air_purifier.info"));
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }

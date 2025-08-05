@@ -89,6 +89,7 @@ public enum EnumSound {
     interruptone_steam(TypePath.Machines, "interruptone_steam"),
     biomass_progress(TypePath.Machines, "biomass_progress"),
     biomass_interrupt(TypePath.Machines, "biomass_interrupt"),
+    button(TypePath.Machines, "button"),
     ;
     private final TypePath typePath;
     private final String nameSounds;

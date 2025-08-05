@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:machines/neutronium_solar_panel"
-      }
-    ]
+    {
+      "item": "industrialupgrade:machines/neutronium_solar_panel"
+    }
   ],
   "result": {
     "item": "industrialupgrade:modulestype/module70"

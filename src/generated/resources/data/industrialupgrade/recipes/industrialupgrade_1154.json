@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/universal1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_274_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:itemdoubleplates/tin_doubleplate"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/universal1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "C": {
+      "item": "industrialupgrade:itemdoubleplates/tin_doubleplate"
+    }
   },
   "pattern": [
     " A ",

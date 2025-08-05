@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:compressed_redstone"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:electronic_stabilizers"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:graphene_wire"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_96_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_592_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:compressed_redstone"
+    },
+    "B": {
+      "item": "industrialupgrade:electronic_stabilizers"
+    },
+    "C": {
+      "item": "industrialupgrade:graphene_wire"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_592_element"
+    }
   },
   "pattern": [
     " A ",

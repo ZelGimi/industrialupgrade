@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_23_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:glass"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:itemcell/itemcell"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
+    "B": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    }
   },
   "pattern": [
     "BCB",

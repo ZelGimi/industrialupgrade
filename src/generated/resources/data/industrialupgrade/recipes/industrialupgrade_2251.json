@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/triple_multi_crop"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_140_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_107_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_52_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/triple_multi_crop"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_107_element"
+    },
+    "D": {
+      "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_52_element"
+    }
   },
   "pattern": [
     "B B",

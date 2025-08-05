@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/glass7"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:photoniy_ingot"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/glass7"
+    }
   },
   "pattern": [
     "BBB",

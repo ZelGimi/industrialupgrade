@@ -29,16 +29,15 @@ public class RenderMiniSmeltery {
 
             poseStack.pushPose();
             poseStack.translate(0.175, 0, 0.175);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale, 0.82f);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale, 0.82f,0);
             poseStack.popPose();
         }
 
         ItemStack outputItem = te.outputSlot.get(0);
-        if (te.outputSlot.isEmpty() && te.fluidTank1.getFluidAmount() > 0) {
-            final float scale = (te.fluidTank1.getFluidAmount() - 144) * 1F / te.fluidTank1.getCapacity();
+        if (te.outputSlot.isEmpty() && te.fluidTank1.getFluidAmount() > 144) {
             poseStack.pushPose();
-            poseStack.translate(0.04, 0.8, 0.04);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f);
+            poseStack.translate(0.04, 0.975, 0.04);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f,1);
             poseStack.popPose();
         }
         if (!outputItem.isEmpty()) {
@@ -61,6 +60,7 @@ public class RenderMiniSmeltery {
                    ItemDisplayContext.GROUND,
                     0xF000F0, OverlayTexture.NO_OVERLAY,
                     poseStack, bufferSource,te.getLevel(), 0);
+            ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
 
             poseStack.popPose();
         }

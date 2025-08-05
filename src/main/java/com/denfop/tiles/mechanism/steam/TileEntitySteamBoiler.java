@@ -186,7 +186,7 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.work) {
-            if (this.getWorld().getGameTime() % 3 == 0) {
+            if (this.getWorld().getGameTime() % 2 == 0) {
                 if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
                     this.steam.addEnergy(2);
                     this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);

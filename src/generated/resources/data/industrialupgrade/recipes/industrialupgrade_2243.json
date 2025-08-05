@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/bio_machine"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_27_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_64_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_132_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/bio_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_64_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_132_element"
+    }
   },
   "pattern": [
     " E ",

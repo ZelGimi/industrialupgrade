@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/vanady"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:casings/caravky"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/duralumin"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:basemachine/per_matter"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ]
+    "A": {
+      "tag": "forge:casings/vanady"
+    },
+    "B": {
+      "tag": "forge:casings/caravky"
+    },
+    "C": {
+      "tag": "forge:doubleplate/duralumin"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/per_matter"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
   },
   "pattern": [
     "ABA",

@@ -1,0 +1,30 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:casings/steel"
+    },
+    "B": {
+      "item": "minecraft:glass_pane"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:tools/treetap",
+      "nbt": "{Damage:0}"
+    },
+    "D": {
+      "tag": "forge:casings/cobalt"
+    }
+  },
+  "pattern": [
+    "  A",
+    "DB ",
+    "CD "
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/latex_pipette"
+  },
+  "show_notification": true
+}

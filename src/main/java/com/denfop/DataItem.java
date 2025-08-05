@@ -16,7 +16,7 @@ import static com.denfop.register.Register.ITEMS;
 
 public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
     List<RegistryObject<E>> registryObjectList;
-    public static List<RegistryObject<Item>> objects = new ArrayList<>();
+    public static List<RegistryObject<Item>> objects = new LinkedList<>();
     public DataItem(Class<T> typeClass, Class<E> itemClass){
         this(typeClass,itemClass,Constants.MOD_ID);
     }
@@ -97,7 +97,7 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
         int i = 0;
         E item = (E) itemStack.getItem();
         for (RegistryObject<E> registryObject : registryObjectList) {
-            if (registryObject.get() == item) {
+            if (registryObject.get().equals(item)) {
                 return i;
             }
             i++;

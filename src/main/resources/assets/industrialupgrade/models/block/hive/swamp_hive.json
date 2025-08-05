@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:block/blockbeehive_top_swamp",
     "up" : "industrialupgrade:block/blockbeehive_top_swamp",
     "north" : "industrialupgrade:block/blockbeehive_swamp",
-    "east" : "industrialupgrade:block/blockbeehive_swamp",
-    "south" : "industrialupgrade:block/blockbeehive_swamp",
-    "west" : "industrialupgrade:block/blockbeehive_swamp"
+    "east" : "industrialupgrade:block/blockbeehive_swamp_side",
+    "south" : "industrialupgrade:block/blockbeehive_swamp_side",
+    "west" : "industrialupgrade:block/blockbeehive_swamp_side"
   }
 }

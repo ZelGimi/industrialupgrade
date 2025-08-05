@@ -17,6 +17,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Blocks;
@@ -62,10 +63,10 @@ public class RecipeProvider extends VanillaRecipeProvider {
                                 shaped.define(character, PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(),items.toArray(new Item[0])));
                             }
                         }else {
-                            shaped.define(character, new IngredientInput(recipeInput));
+                            shaped.define(character, new IngredientInput(recipeInput).getInput());
                         }
                     }
-                    shaped.unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()}));
+                    shaped.unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR));
                     Recipes.registerRecipe(consumer, shaped, id.toLowerCase());
                 } else if (recipe instanceof BaseShapelessRecipe baseShapelessRecipe) {
                     ShapelessRecipeBuilder shaped = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,baseShapelessRecipe.getOutput().getItem(), baseShapelessRecipe.getOutput().getCount());
@@ -79,10 +80,10 @@ public class RecipeProvider extends VanillaRecipeProvider {
                                 shaped.requires(PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(),items.toArray(new Item[0])));
                             }
                         }else {
-                            shaped.requires(new IngredientInput(recipeInput));
+                            shaped.requires(new IngredientInput(recipeInput).getInput());
                         }
 
-                    shaped.unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()}));
+                    shaped.unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR));
                     Recipes.registerRecipe(consumer, shaped, id.toLowerCase());
                 }
             }catch (Exception e){

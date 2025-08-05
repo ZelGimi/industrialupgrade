@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "minecraft:planks"
-      }
-    ],
-    "B": [
-      {
-        "tag": "minecraft:logs"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ]
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "tag": "minecraft:logs"
+    },
+    "C": {
+      "tag": "forge:plates/iron"
+    }
   },
   "pattern": [
     "C C",

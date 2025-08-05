@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_23_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/vanady"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/iridium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
+    "B": {
+      "tag": "forge:gears/vanady"
+    },
+    "C": {
+      "tag": "forge:gears/iridium"
+    }
   },
   "pattern": [
     "CCC",

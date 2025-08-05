@@ -2,17 +2,33 @@ package com.denfop.api.gui;
 
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.ComponentBioFuelEnergy;
+import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
+import com.denfop.gui.GuiAdvCokeOven;
+import com.denfop.gui.GuiBlastFurnace;
+import com.denfop.gui.GuiCokeOven;
 import com.denfop.gui.GuiCore;
+import com.denfop.items.ItemPipette;
+import com.denfop.network.packet.PacketDrainFluidPipette;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
 
@@ -57,6 +73,28 @@ public class TankGauge extends GuiElement<TankGauge> {
         return style;
     }
 
+    @Override
+    protected boolean onMouseClick(int mouseX, int mouseY, MouseButton button) {
+        if (this.visible() && this.contains(mouseX, mouseY)&& !this.tank.getFluid().isEmpty() && this.tank instanceof Fluids.InternalFluidTank fluidTank && Minecraft.getInstance().player.containerMenu.getCarried().getItem() instanceof ItemPipette pipette) {
+            IFluidHandlerItem handler = FluidHandlerFix.getFluidHandler(Minecraft.getInstance().player.containerMenu.getCarried());
+            TileEntityBlock block = (TileEntityBlock) this.gui.container.base;
+            ComponentSteamEnergy steamEnergy = block.getComp(ComponentSteamEnergy.class);
+            ComponentBioFuelEnergy bioEnergy = block.getComp(ComponentBioFuelEnergy.class);
+            if (steamEnergy != null && !steamEnergy.getFluidTank().getFluid().isEmpty() && steamEnergy.getFluidTank().getFluid().getAmount() == this.tank.getFluid().getAmount() && steamEnergy.getFluidTank().getFluid().isFluidEqual(this.tank.getFluid()))
+                return false;
+            if (bioEnergy != null && !bioEnergy.getFluidTank().getFluid().isEmpty() && bioEnergy.getFluidTank().getFluid().getAmount() == this.tank.getFluid().getAmount()&& bioEnergy.getFluidTank().getFluid().isFluidEqual(this.tank.getFluid()))
+                return false;
+            if (this.gui instanceof GuiBlastFurnace<?> || this.gui instanceof GuiCokeOven<?> || gui instanceof GuiAdvCokeOven<?>)
+                return false;
+             if (handler.getFluidInTank(0).isEmpty() || (handler.getFluidInTank(0).isFluidEqual(fluidTank.getFluid()))) {
+                this.getGui().getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+                new PacketDrainFluidPipette( (BlockEntity) gui.container.base, fluidTank.getIdentifier(),Math.min(fluidTank.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).getAmount(),handler.getTankCapacity(0)-handler.getFluidInTank(0).getAmount()));
+            }
+        }
+        return super.onMouseClick(mouseX, mouseY, button);
+    }
+
     public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         bindCommonTexture();
         FluidStack fs = this.tank.getFluid();
@@ -84,8 +122,7 @@ public class TankGauge extends GuiElement<TankGauge> {
             }
 
             Fluid fluid = fs.getFluid();
-            if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                fluid = FluidName.fluidwater.getInstance().get();
+
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
             TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
             int color = extensions.getTintColor();
@@ -101,7 +138,7 @@ public class TankGauge extends GuiElement<TankGauge> {
                     fluidWidth,
                     renderHeight,
                     sprite,
-                    -1,
+                    color,
                     1.0D,
                     false,
                     true

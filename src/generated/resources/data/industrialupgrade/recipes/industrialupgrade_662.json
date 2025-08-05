@@ -1,33 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
+    "B": {
+      "item": "industrialupgrade:quantumitems3"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:10}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:armour/impjetpack"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:battery/advanced_re_battery"
-      }
-    ],
-    "T": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:armour/impjetpack"
+    },
+    "F": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    },
+    "T": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    }
   },
   "pattern": [
     "TCT",

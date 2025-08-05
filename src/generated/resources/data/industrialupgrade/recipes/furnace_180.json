@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/niobium_titanium"
+    "item": "industrialupgrade:alloydust/hafnium_carbide"
   },
-  "result": "industrialupgrade:alloyingot/niobium_titanium"
+  "result": "industrialupgrade:alloyingot/hafnium_carbide"
 }

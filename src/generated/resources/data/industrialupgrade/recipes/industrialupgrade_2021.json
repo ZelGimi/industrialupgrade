@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/osmiridium"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/tempered_glass"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/iridium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/osmiridium"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "C": {
+      "tag": "forge:plates/iridium"
+    }
   },
   "pattern": [
     " AC",

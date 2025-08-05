@@ -19,20 +19,26 @@ import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
+import com.denfop.world.vein.noise.ShellCluster;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 import static com.denfop.api.guidebook.GuideBookCore.uuidGuideMap;
+import static com.denfop.world.vein.AlgorithmVein.*;
 
 public class WorldSavedDataIU extends SavedData {
 
@@ -48,8 +54,140 @@ public class WorldSavedDataIU extends SavedData {
         super();
     }
 
+    public static void loadShellClusterChunks(CompoundTag tag) {
+        Map<Integer, Map<Integer, Tuple<Color, Integer>>> result = new HashMap<>();
+        ShellCluster cluster = new ShellCluster();
+        cluster.point = new com.denfop.world.vein.noise.Point( tag.getCompound("volcano").getInt("x"), tag.getCompound("volcano").getInt("z"));
+        volcano =cluster;
+        ListTag outerList = tag.getList("shellClusterChunks", 10);
+
+        for (int i = 0; i < outerList.size(); i++) {
+            CompoundTag outerTag = outerList.getCompound(i);
+            int outerKey = outerTag.getInt("outer");
+
+            Map<Integer, Tuple<Color, Integer>> innerMap = new HashMap<>();
+            ListTag innerList = outerTag.getList("innerList", 10);
+
+            for (int j = 0; j < innerList.size(); j++) {
+                CompoundTag innerTag = innerList.getCompound(j);
+                int innerKey = innerTag.getInt("inner");
+
+                int r = innerTag.getInt("r");
+                int g = innerTag.getInt("g");
+                int b = innerTag.getInt("b");
+                int a = innerTag.getInt("a");
+                int value = innerTag.getInt("value");
+
+                Color color = new Color(r, g, b, a);
+                innerMap.put(innerKey, new Tuple<>(color, value));
+            }
+
+            result.put(outerKey, innerMap);
+        }
+        shellClusterChuncks = result;
+        Map<Integer, Map<Integer, List<Integer>>> veinMap = new HashMap<>();
+        ListTag outerVeinList = tag.getList("veinCoordination", 10);
+
+        for (int i = 0; i < outerVeinList.size(); i++) {
+            CompoundTag outerTag = outerVeinList.getCompound(i);
+            int outerKey = outerTag.getInt("outer");
+
+            Map<Integer, List<Integer>> innerMap = new HashMap<>();
+            ListTag innerList = outerTag.getList("innerList", 10);
+
+            for (int j = 0; j < innerList.size(); j++) {
+                CompoundTag innerTag = innerList.getCompound(j);
+                int innerKey = innerTag.getInt("inner");
+
+                ListTag coordsList = innerTag.getList("coords", 3);
+                List<Integer> coords = new ArrayList<>();
+                for (int k = 0; k < coordsList.size(); k++) {
+                    coords.add(coordsList.getInt(k));
+                }
+
+                innerMap.put(innerKey, coords);
+            }
+
+            veinMap.put(outerKey, innerMap);
+        }
+
+        veinCoordination = veinMap;
+    }
+
+    public static CompoundTag saveShellClusterChunks() {
+        CompoundTag tag = new CompoundTag();
+        ListTag outerList = new ListTag();
+        CompoundTag volcanoTag = new CompoundTag();
+        if (volcano != null) {
+            volcanoTag.putInt("x", volcano.point.x);
+            volcanoTag.putInt("z", volcano.point.y);
+            tag.put("volcano", volcanoTag);
+        }
+        for (Map.Entry<Integer, Map<Integer, Tuple<Color, Integer>>> outer : shellClusterChuncks.entrySet()) {
+            int outerKey = outer.getKey();
+            CompoundTag outerTag = new CompoundTag();
+            outerTag.putInt("outer", outerKey);
+
+            ListTag innerList = new ListTag();
+            for (Map.Entry<Integer, Tuple<Color, Integer>> inner : outer.getValue().entrySet()) {
+                int innerKey = inner.getKey();
+                Tuple<Color, Integer> tuple = inner.getValue();
+                Color color = tuple.getA();
+                int number = tuple.getB();
+
+                CompoundTag innerTag = new CompoundTag();
+                innerTag.putInt("inner", innerKey);
+                innerTag.putInt("r", color.getRed());
+                innerTag.putInt("g", color.getGreen());
+                innerTag.putInt("b", color.getBlue());
+                innerTag.putInt("a", color.getAlpha());
+                innerTag.putInt("value", number);
+
+                innerList.add(innerTag);
+            }
+
+            outerTag.put("innerList", innerList);
+            outerList.add(outerTag);
+        }
+
+        tag.put("shellClusterChunks", outerList);
+        ListTag veinOuterList = new ListTag();
+        for (Map.Entry<Integer, Map<Integer, List<Integer>>> outer : veinCoordination.entrySet()) {
+            int outerKey = outer.getKey();
+            CompoundTag outerTag = new CompoundTag();
+            outerTag.putInt("outer", outerKey);
+
+            ListTag innerList = new ListTag();
+            for (Map.Entry<Integer, List<Integer>> inner : outer.getValue().entrySet()) {
+                int innerKey = inner.getKey();
+                List<Integer> coords = inner.getValue();
+
+                CompoundTag innerTag = new CompoundTag();
+                innerTag.putInt("inner", innerKey);
+
+                ListTag coordsList = new ListTag();
+                for (Integer coord : coords) {
+                    coordsList.add(IntTag.valueOf(coord));
+                }
+
+                innerTag.put("coords", coordsList);
+                innerList.add(innerTag);
+            }
+
+            outerTag.put("innerList", innerList);
+            veinOuterList.add(outerTag);
+        }
+
+        tag.put("veinCoordination", veinOuterList);
+        return tag;
+    }
+
     public WorldSavedDataIU(@Nonnull CompoundTag compound) {
 
+        if (compound.contains("shells")) {
+            shellClusterChuncks.clear();
+            loadShellClusterChunks(compound.getCompound("shells"));
+        }
 
         SpaceNet.instance.getFakeSpaceSystem().unload();
         if (compound.contains("fakePlayers")) {
@@ -138,7 +276,7 @@ public class WorldSavedDataIU extends SavedData {
             PollutionManager.pollutionManager.loadData(pollutionTag);
         }
 
-          TileEntityEarthQuarryController.chunkPos.clear();
+        TileEntityEarthQuarryController.chunkPos.clear();
         if (compound.contains("earth_quarry")) {
             ListTag earthQuarryList = compound.getList("earth_quarry", 10);
             for (int i = 0; i < earthQuarryList.size(); i++) {
@@ -327,6 +465,7 @@ public class WorldSavedDataIU extends SavedData {
         for (Radiation radiation : RadiationSystem.rad_system.radiationList) {
             radiationsList.add(radiation.writeCompound());
         }
+
         compound.put("radiations", radiationsList);
         ListTag primitive = new ListTag();
         for (Map.Entry<EnumPrimitive, Map<UUID, Double>> entry : PrimitiveHandler.getMapPrimitives().entrySet()) {
@@ -409,29 +548,30 @@ public class WorldSavedDataIU extends SavedData {
         relocatorTag.put("worldUUID", worldListTag);
         compound.put("relocator", relocatorTag);
         final Map<UUID, Map<String, List<String>>> mapData = uuidGuideMap;
-        if (!mapData.isEmpty()){
+        if (!mapData.isEmpty()) {
             CompoundTag data = new CompoundTag();
             ListTag list = new ListTag();
-            for (Map.Entry<UUID, Map<String, List<String>>> entry : mapData.entrySet()){
+            for (Map.Entry<UUID, Map<String, List<String>>> entry : mapData.entrySet()) {
                 CompoundTag data1 = new CompoundTag();
-                data1.putUUID("uuid",entry.getKey());
+                data1.putUUID("uuid", entry.getKey());
                 ListTag list1 = new ListTag();
                 Map<String, List<String>> mapQuest = entry.getValue();
-                for (Map.Entry<String, List<String>> quest : mapQuest.entrySet()){
+                for (Map.Entry<String, List<String>> quest : mapQuest.entrySet()) {
                     CompoundTag data2 = new CompoundTag();
-                    data2.putString("tab",quest.getKey());
+                    data2.putString("tab", quest.getKey());
                     ListTag list2 = new ListTag();
                     quest.getValue().forEach(name -> list2.add(StringTag.valueOf(name)));
-                    data2.put("list",list2);
+                    data2.put("list", list2);
                     list1.add(data2);
                 }
-                data1.put("list",list1);
+                data1.put("list", list1);
                 list.add(data1);
             }
-            data.put("list",list);
+            data.put("list", list);
             compound.put("guide_book", data);
         }
 
+        compound.put("shells", saveShellClusterChunks());
         this.tagCompound = compound;
         return compound;
     }

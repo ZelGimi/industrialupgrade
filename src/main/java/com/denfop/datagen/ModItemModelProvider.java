@@ -1,16 +1,24 @@
 package com.denfop.datagen;
 
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import com.denfop.IUItem;
+import com.denfop.api.agriculture.CropNetwork;
+import com.denfop.api.agriculture.ICrop;
+import com.denfop.items.crop.ItemCrops;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static com.denfop.DataBlock.objectsBlock;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput generator, ExistingFileHelper existingFileHelper) {
@@ -19,20 +27,37 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        for (RegistryObject<?> registryObject : objectsBlock) {
-            Block block = (Block) registryObject.get();
-            try {
-             //   simple((RegistryObject<Block>) registryObject);
-            }catch (Exception e){};
-        }
-    }
-    private void simple(RegistryObject<Block> item) {
-        this.simple(item, "item/" + item.getId().getPath());
-    }
-    private <T extends Block> ItemModelBuilder simple(RegistryObject<T> item, String texturePath) {
-        ModelResourceLocation model = BlockModelShaper.stateToModelLocation(item.get().defaultBlockState());
 
-        return this.getBuilder(item.getId().getPath()).parent(new ItemModelBuilder(new ResourceLocation(model.getNamespace(),"block/"+model.getPath()), this.existingFileHelper));
+
+     //   simple(IUItem.crops.getRegistryObject(0));
+
+    }
+
+    private void simple(RegistryObject<ItemCrops> item) {
+        ItemModelBuilder builder = getBuilder(item.getId().getPath())
+                .parent(new ModelFile.UncheckedModelFile("industrialupgrade:item/default"))
+                .texture("layer0", "industrialupgrade:item/crop_seed");
+
+        for (Map.Entry<Integer, ICrop> entry : CropNetwork.instance.getCropMap().entrySet()) {
+            int id = entry.getKey();
+            ICrop crop = entry.getValue();
+            List<ItemStack> drops = crop.getDrop();
+
+            if (drops.isEmpty()) {
+                continue;
+            }
+
+            ResourceLocation dropId = ForgeRegistries.ITEMS.getKey(drops.get(0).getItem());
+            if (dropId == null) {
+                continue;
+            }
+
+            builder.override()
+                    .predicate(new ResourceLocation("id"), id)
+                    .model(new ModelFile.UncheckedModelFile(dropId));
+        }
+
+
     }
 
 }

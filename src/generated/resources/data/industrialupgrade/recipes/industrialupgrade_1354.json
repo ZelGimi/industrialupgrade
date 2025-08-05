@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/itemcable1"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:wiring/itemcable"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/itemcable1"
+    },
+    "C": {
+      "item": "industrialupgrade:wiring/itemcable"
+    }
   },
   "pattern": [
     " C ",

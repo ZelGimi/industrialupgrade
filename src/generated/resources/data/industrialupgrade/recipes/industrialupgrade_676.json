@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,21 +8,15 @@
       "item": "industrialupgrade:itemcell/itemcell",
       "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidazot\"}}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/adamantium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/stellite"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "forge:plates/adamantium"
+    },
+    "D": {
+      "tag": "forge:plates/stellite"
+    }
   },
   "pattern": [
     "ACA",

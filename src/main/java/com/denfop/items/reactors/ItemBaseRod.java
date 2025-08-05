@@ -84,7 +84,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
         double temp = Math.log10(this.numberOfCells);
         double temp1 = Math.log10(2);
         double m = temp / temp1;
-        p_41423_.add(Component.literal(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level) + " EF"));
+        p_41423_.add(Component.literal(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level * 1.25) + " EF"));
         p_41423_.add(Component.literal(Localization.translate("reactor.rod.radiation") + (int) this.radiation));
         p_41423_.add(Component.literal(Localization.translate("reactor.rod.heat") + this.heat));
         p_41423_.add(Component.literal(Localization.translate("reactor.rod_level") + this.level));
@@ -162,7 +162,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
         double temp = Math.log10(this.numberOfCells);
         double temp1 = Math.log10(2);
         double m = temp / temp1;
-        return p[(int) m] * this.power * this.level;
+        return p[(int) m] * this.power * this.level * 1.25;
     }
 
     @Override

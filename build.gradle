@@ -112,7 +112,7 @@ dependencies {
     implementation fg.deobf("curse.maven:crafttweaker-239197:6256146")
 
     compileOnly fg.deobf("curse.maven:kubejs-238086:5853326")
-    implementation fg.deobf("curse.maven:terralith-513688:5512076")
+//    implementation fg.deobf("curse.maven:terralith-513688:5512076")
     implementation fg.deobf("curse.maven:the-lost-cities-269024:6174986")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
@@ -139,6 +139,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:emi-580555:5872526")
 
+
     implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}")
     compileOnly fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:generators")
     //compileOnly fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:api")
@@ -158,6 +159,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
     compileOnly fg.deobf("curse.maven:jade-324717:6271651")
+ //   runtimeOnly fg.deobf("curse.maven:almost-unified-633823:6552475")
+  //  compileOnly fg.deobf("curse.maven:almost-unified-633823:6552475")
 
 // Mockito dependencies
     testImplementation 'org.mockito:mockito-core:5.3.1'

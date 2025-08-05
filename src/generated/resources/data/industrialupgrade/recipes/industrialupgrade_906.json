@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,21 +8,15 @@
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "B": [
-      {
-        "tag": "forge:ingots/iron"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/chromium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:ingots/germanium"
-      }
-    ]
+    "B": {
+      "tag": "forge:ingots/iron"
+    },
+    "C": {
+      "tag": "forge:ingots/chromium"
+    },
+    "D": {
+      "tag": "forge:ingots/germanium"
+    }
   },
   "pattern": [
     "B B",

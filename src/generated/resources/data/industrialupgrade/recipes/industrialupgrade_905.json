@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/titanium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/chromium"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/titanium"
+    },
+    "C": {
+      "tag": "forge:ingots/chromium"
+    }
   },
   "pattern": [
     "A A",

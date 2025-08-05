@@ -29,6 +29,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityLiquidTankInventory;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -174,6 +175,9 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnDieselGeneratorParticles(level,pos,level.random);
+        }
         if (!this.fluidTank.getFluid().isEmpty()) {
             Fluid fluid = this.fluidTank.getFluid().getFluid();
             if (fluid == FluidName.fluiddizel.getInstance().get()) {

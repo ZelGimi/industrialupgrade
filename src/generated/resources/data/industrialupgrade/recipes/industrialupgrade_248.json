@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/muntsa"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/muntsa"
+    }
   ],
   "result": {
     "count": 9,

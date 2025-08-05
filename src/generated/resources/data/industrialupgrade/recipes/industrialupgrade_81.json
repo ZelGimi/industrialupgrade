@@ -1,33 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:adv_spectral_box"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quantumitems2"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:9}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:energy_tools/quantum_bow"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:doubleplate/duralumin"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:energy_tools/quantum_bow"
+    },
+    "E": {
+      "tag": "forge:doubleplate/duralumin"
+    }
   },
   "pattern": [
     "ABA",

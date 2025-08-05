@@ -3,7 +3,7 @@ package com.denfop.recipe;
 
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +12,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class InputItemStack implements IInputItemStack {
-    public  static InputItemStack EMPTY = new InputItemStack(ItemStack.EMPTY,1,true);
+    public static IInputItemStack create(CompoundTag tag) {
+        byte id = tag.getByte("id");
+        if (id == 0)
+            return new InputItemStack(tag);
+        if (id == 1)
+            return new InputOreDict(tag);
+        return new InputFluidStack(tag);
+    }
+
+    public static InputItemStack EMPTY = new InputItemStack(ItemStack.EMPTY, 1, true);
     public final ItemStack input;
     public int amount;
 
@@ -28,18 +37,21 @@ public class InputItemStack implements IInputItemStack {
             this.amount = amount;
         }
     }
-    InputItemStack(ItemStack input, int amount,boolean f) {
+
+    InputItemStack(ItemStack input, int amount, boolean f) {
         this.input = input.copy();
         this.amount = amount;
     }
+
     @Override
     public void growAmount(final int col) {
         this.amount++;
         this.input.setCount(amount);
     }
+
     public boolean matches(ItemStack subject) {
         boolean energy = (this.input.getItem() instanceof IEnergyItem && subject.getItem() instanceof IEnergyItem);
-        return subject.getItem() == this.input.getItem() && ModUtils.checkItemEquality(this.input,subject);
+        return subject.getItem() == this.input.getItem() && ModUtils.checkItemEquality(this.input, subject);
     }
 
     public int getAmount() {
@@ -48,6 +60,17 @@ public class InputItemStack implements IInputItemStack {
 
     public List<ItemStack> getInputs() {
         return Collections.singletonList(ModUtils.setSize(this.input, this.getAmount()));
+    }
+
+    public InputItemStack(CompoundTag compoundTag) {
+        boolean exist = compoundTag.getBoolean("exist");
+        if (exist) {
+            this.input = ItemStack.of(compoundTag.getCompound("input"));
+            this.amount = compoundTag.getInt("amount");
+        } else {
+            this.input = ItemStack.EMPTY;
+            this.amount = 1;
+        }
     }
 
     @Override
@@ -60,10 +83,17 @@ public class InputItemStack implements IInputItemStack {
         return null;
     }
 
+
     @Override
-    public void toNetwork(FriendlyByteBuf buffer) {
-        buffer.writeInt(0);
-        buffer.writeItem(this.input);
+    public CompoundTag writeNBT() {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("id", (byte) 0);
+        compoundTag.putBoolean("exist", input != null && !input.isEmpty());
+        if (input != null && !input.isEmpty()) {
+            compoundTag.putInt("amount", amount);
+            compoundTag.put("input", input.save(new CompoundTag()));
+        }
+        return compoundTag;
     }
 
     public String toString() {

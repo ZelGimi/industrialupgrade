@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/universal4"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdoubleplates/steel_doubleplate"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/vitalium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/universal4"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdoubleplates/steel_doubleplate"
+    },
+    "C": {
+      "tag": "forge:doubleplate/vitalium"
+    }
   },
   "pattern": [
     " A ",

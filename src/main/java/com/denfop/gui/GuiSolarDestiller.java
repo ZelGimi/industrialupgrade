@@ -45,8 +45,6 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                         fluidHeight = 44;
                     }
                     Fluid fluid = fs.getFluid();
-                    if (fluid == Fluids.WATER)
-                        fluid = FluidName.fluidwater.getInstance().get();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
                     int color = extensions.getTintColor();
@@ -62,7 +60,7 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                             fluidWidth,
                             renderHeight,
                             sprite,
-                            -1,
+                            color,
                             1.0D,
                             false,
                             true
@@ -108,7 +106,7 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                             fluidWidth,
                             renderHeight,
                             sprite,
-                            -1,
+                            color,
                             1.0D,
                             false,
                             true

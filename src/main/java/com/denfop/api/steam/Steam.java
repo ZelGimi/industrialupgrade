@@ -59,6 +59,11 @@ public class Steam {
                         coolant.getCoolant().drain(coolant.getPressure(), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
+                for (IExchanger exchanger : steam.getExchanger()) {
+                    if (!exchanger.getSlot().isEmpty()) {
+                        this.steam.removeHeat(exchanger.getPower()*6);
+                    }
+                }
             } else {
                 this.steam.removePhase(random.nextInt(5));
             }

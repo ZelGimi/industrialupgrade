@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:gas_reactor/adv_gas_socket"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_376_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_373_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_371_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:gas_reactor/adv_gas_socket"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_376_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_373_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_371_element"
+    }
   },
   "pattern": [
     "BDB",

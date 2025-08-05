@@ -27,7 +27,7 @@ public class TileEntityTankRender implements BlockEntityRenderer<TileEntityLique
 
             poseStack.pushPose();
             poseStack.translate(0.1 + 0.125, 0.1, 0.1 + 0.125);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, tile.getLevel(), tile.getPos(), poseStack, 0.88f * scale, 0.8f);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, tile.getLevel(), tile.getPos(), poseStack, 0.88f * scale, 0.8f,0);
             poseStack.popPose();
         }
     }

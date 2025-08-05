@@ -7,16 +7,16 @@ import net.minecraft.world.item.ItemStack;
 public class ContainerSimulationReactors extends ContainerFullInv<TileEntitySimulatorReactor> {
 
     public ContainerSimulationReactors(TileEntitySimulatorReactor tileEntitySimulatorReactor, Player var1) {
-        super(var1, tileEntitySimulatorReactor, 254);
+        super(var1, tileEntitySimulatorReactor, 235,228);
         addSlotToContainer(new SlotInvSlot(
                 tileEntitySimulatorReactor.scheduleSlot,
                 0,
-                231,
-                170
+                9,
+                121
         ));
         if (tileEntitySimulatorReactor.type != -1 && tileEntitySimulatorReactor.levelReactor != -1 && tileEntitySimulatorReactor.reactors != null) {
             int minX = (int) (240 / 2 - (tileEntitySimulatorReactor.reactors.getWidth() / 2D) * 18);
-            int minY = (int) (190 / 2 - (tileEntitySimulatorReactor.reactors.getHeight() / 2D) * 18);
+            int minY = (int) (150 / 2 - (tileEntitySimulatorReactor.reactors.getHeight() / 2D) * 18);
 
             for (int y = 0; y < tileEntitySimulatorReactor.reactors.getHeight(); y++) {
                 for (int x = 0; x < tileEntitySimulatorReactor.reactors.getWidth(); x++) {

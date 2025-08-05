@@ -32,7 +32,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -120,11 +119,6 @@ public class TileEnergySubstitute extends TileEntityInventory implements
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
-
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.controller_cables.info"));
@@ -145,7 +139,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
             this.slot.onChanged();
 
@@ -180,7 +174,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
         }
         super.onUnloaded();
     }
@@ -250,10 +244,10 @@ public class TileEnergySubstitute extends TileEntityInventory implements
 
                         for (ItemStack stack : this.slot) {
 
-                            if (stack.is(main_cableItem.getStack().getItem()) && (ModUtils.nbt(main_cableItem.getStack()).equals(
+                            if (stack.is(main_cableItem.getStack().getItem()) && main_cableItem.getStack().getItem() instanceof ItemBlockTileEntity<?> && (ModUtils.nbt(main_cableItem.getStack()).equals(
                                     ModUtils.nbt(stack)))) {
                                     TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
-                                            conductor);
+                                            conductor,level);
                                     final List<ItemStack> drops = tile.getBlock().getDrops(level,
                                             tile.getPos(),
                                             tile.getBlockState(),

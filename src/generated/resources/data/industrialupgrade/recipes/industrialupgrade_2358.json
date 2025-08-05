@@ -1,40 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
-  "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_256_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "simplyquarries:simplyquarries/simply_quarry"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_20_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_138_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_47_element"
-      }
-    ]
-  },
-  "pattern": [
-    "D D",
-    "ABE",
-    "DCD"
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_vanady"
+    }
   ],
   "result": {
-    "item": "simplyquarries:simplyquarries/adv_simply_quarry"
-  },
-  "show_notification": true
+    "count": 9,
+    "item": "industrialupgrade:raw_metals/raw_vanadium"
+  }
 }

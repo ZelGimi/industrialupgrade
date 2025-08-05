@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,21 +8,15 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:3}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/polonium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/zirconium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/polonium"
+    },
+    "C": {
+      "tag": "forge:plates/zirconium"
+    },
+    "D": {
+      "tag": "forge:plates/niobiumtitanium"
+    }
   },
   "pattern": [
     "DCD",

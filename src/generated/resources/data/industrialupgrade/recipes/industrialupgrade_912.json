@@ -1,37 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/tantalumtungstenhafnium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:basemachine3/auto_digger"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_68_element"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:basemachine3/alkalineearthquarry"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/tantalumtungstenhafnium"
+    },
+    "B": {
+      "tag": "forge:plates/niobiumtitanium"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/auto_digger"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_68_element"
+    },
+    "E": {
+      "tag": "forge:plates/duralumin"
+    },
+    "F": {
+      "item": "industrialupgrade:basemachine3/alkalineearthquarry"
+    }
   },
   "pattern": [
     "ADA",

@@ -28,7 +28,7 @@ public  class BaseEnergyItem extends Item implements IEnergyItem, IItemTab {
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
             final ItemStack var4 = new ItemStack(this, 1);
-            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
+            ElectricItem.manager.charge(var4, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
             p_41392_.add(var4);
             p_41392_.add(new ItemStack(this, 1));
         }

@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_518_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_521_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/ferromanganese"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_518_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_521_element"
+    },
+    "C": {
+      "tag": "forge:doubleplate/ferromanganese"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,
@@ -29,16 +23,12 @@
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:5}"
     },
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_524_element"
-      }
-    ],
-    "H": [
-      {
-        "tag": "forge:rods/molybdenum"
-      }
-    ]
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_524_element"
+    },
+    "H": {
+      "tag": "forge:rods/molybdenum"
+    }
   },
   "pattern": [
     "ADB",

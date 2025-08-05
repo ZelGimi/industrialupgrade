@@ -342,7 +342,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
             }
         }
         if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
-                10)) {
+                5)) {
             final BaseFluidMachineRecipe output = this.fluid_handler.output();
             final FluidStack inputFluidStack = output.input.getInputs().get(0);
             int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.getAmount();
@@ -379,7 +379,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
                     this.setActive(true);
                     initiate(0);
                 }
-                this.energy.useEnergy(10);
+                this.energy.useEnergy(5);
                 setActive(true);
             } else {
                 setActive(false);
@@ -396,7 +396,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
             needUpdate = false;
             for (int i = 0; i < this.fluids.getManagedTanks().size(); i++) {
                 FluidTank tank = this.fluids.getManagedTanks().get(i);
-                new PacketUpdateFieldTile(this, "fluidTank" + (i + 1), tank);
+                new PacketUpdateFieldTile(this, "fluidtank" + (i + 1), tank);
             }
         }
         if (this.upgradeSlot.tickNoMark()) {
@@ -425,7 +425,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
         if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         } else {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 10 + Localization.translate("iu" +
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
         super.addInformation(stack, tooltip);

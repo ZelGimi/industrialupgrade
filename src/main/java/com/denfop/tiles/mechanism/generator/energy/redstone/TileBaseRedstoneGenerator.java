@@ -6,6 +6,7 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.LightComponent;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRedstoneGenerator;
 import com.denfop.gui.GuiCore;

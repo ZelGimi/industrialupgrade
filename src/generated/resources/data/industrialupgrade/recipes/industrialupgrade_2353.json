@@ -1,35 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:circuit/nanocircuit_part1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:transformer_iu/mv"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:circuit/quantumcircuit_part2"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:itemcore/hybcore"
-      }
-    ]
+    "A": {
+      "tag": "forge:raw_materials/mikhail"
+    }
   },
   "pattern": [
-    "ABA",
-    "CDC",
-    "ABA"
+    "AAA",
+    "AAA",
+    "AAA"
   ],
   "result": {
-    "item": "powerutils:module_fe"
+    "item": "industrialupgrade:raw_block/raw_mikhail"
   },
   "show_notification": true
 }

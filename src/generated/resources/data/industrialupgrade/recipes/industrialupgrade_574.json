@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,26 +8,18 @@
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:9}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:adv_spectral_box"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:doubleplate/germanium"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:alloycasing/ferromanganese"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "C": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "D": {
+      "tag": "forge:doubleplate/germanium"
+    },
+    "E": {
+      "item": "industrialupgrade:alloycasing/ferromanganese"
+    }
   },
   "pattern": [
     "ABA",

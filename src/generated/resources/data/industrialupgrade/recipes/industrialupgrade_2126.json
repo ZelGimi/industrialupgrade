@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/aluminiumsilicon"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/obsidian"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/osmiridium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/aluminiumsilicon"
+    },
+    "C": {
+      "tag": "forge:plates/obsidian"
+    },
+    "D": {
+      "tag": "forge:plates/osmiridium"
+    }
   },
   "pattern": [
     "CBC",

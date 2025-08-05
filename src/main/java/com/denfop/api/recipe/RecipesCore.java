@@ -36,6 +36,10 @@ public class RecipesCore implements IRecipes {
         fluid_recipe.init();
     }
 
+    public List<String> getMap_recipe_managers() {
+        return map_recipe_managers.keySet().stream().toList();
+    }
+
     public List<Fluid> getInputFluidsFromRecipe(String name) {
         return map_fluid_input.getOrDefault(name, Collections.emptyList());
     }
@@ -183,15 +187,21 @@ public class RecipesCore implements IRecipes {
     public void addFluidRemoveRecipe(String name, FluidStack stack) {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, false));
     }
+    public void addFluidRemoveRecipe(String name, FluidStack stack, boolean removeAll) {
+        this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, removeAll));
+    }
 
     public void removeAllRecipesFromList() {
         this.recipeRemoves.forEach(recipeRemove -> {
+            if (recipeRemove.isRemoveAll())
             this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+            else
+                this.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
 
         });
 
         this.recipeFluidRemoves.forEach(recipeRemove -> {
-            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.getStack());
+            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(),recipeRemove.isRemoveAll(), recipeRemove.getStack());
 
         });
     }
@@ -224,6 +234,9 @@ public class RecipesCore implements IRecipes {
         this.map_recipe_managers.put(name, new RecipeManager(name, size, consume));
     }
 
+    public List<String> getRecipes() {
+        return map_recipes.keySet().stream().toList();
+    }
 
     @Override
     public RecipesFluidCore getRecipeFluid() {

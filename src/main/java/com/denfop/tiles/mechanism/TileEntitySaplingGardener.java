@@ -12,6 +12,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSaplingGardener;
 import com.denfop.gui.GuiCore;
@@ -26,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
@@ -44,6 +46,11 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+    );
+    private ComponentVisibleArea visible;
 
     public TileEntitySaplingGardener(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.sapling_gardener,pos,state);
@@ -61,6 +68,7 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
@@ -88,6 +96,13 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
         return new GuiSaplingGardener((ContainerSaplingGardener) menu);
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+
+        visible.aabb = searchArea;
     }
 
     @Override

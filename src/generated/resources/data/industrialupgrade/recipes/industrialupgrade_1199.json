@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/iron"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/stainlesssteel"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "tag": "forge:plates/stainlesssteel"
+    }
   },
   "pattern": [
     " BB",

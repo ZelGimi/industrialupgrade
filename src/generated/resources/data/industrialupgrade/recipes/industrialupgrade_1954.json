@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems7"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:water_rotor/water_compressiridium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "B": {
+      "item": "industrialupgrade:water_rotor/water_compressiridium"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems2"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,

@@ -1,28 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/copper1"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:2}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_298_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:upgrade_casing"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_298_element"
+    },
+    "D": {
+      "item": "industrialupgrade:upgrade_casing"
+    }
   },
   "pattern": [
     "CCC",
@@ -30,6 +24,7 @@
     " D "
   ],
   "result": {
+    "count": 2,
     "item": "industrialupgrade:upgrades/overclocker"
   },
   "show_notification": true

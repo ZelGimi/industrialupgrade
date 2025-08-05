@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/red_brass"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/red_brass"
+    }
   ],
   "result": {
     "count": 9,

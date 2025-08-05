@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemdust/silicon_dust"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemdust/silicon_dust"
+    },
+    "B": {
+      "tag": "forge:plates/iron"
+    }
   },
   "pattern": [
     "A  ",

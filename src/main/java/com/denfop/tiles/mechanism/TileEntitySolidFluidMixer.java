@@ -28,6 +28,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
 import net.minecraft.core.BlockPos;
@@ -123,7 +124,25 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
                 outputfluidStack, outputfluidStack1)));
 
     }
+    public static void addRecipe(
+            IInputItemStack container, FluidStack fluidStack, FluidStack outputfluidStack,
+            FluidStack outputfluidStack1
+    ) {
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        Recipes.recipes.addRecipe(
+                "solid_fluid_mixer",
+                new BaseMachineRecipe(
+                        new Input(fluidStack, input.getInput(container)),
+                        new RecipeOutput(null, container.getInputs().get(0))
+                )
+        );
+        Recipes.recipes.getRecipeFluid().addRecipe("solid_fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
+                container,
+                fluidStack
+        ), Arrays.asList(
+                outputfluidStack, outputfluidStack1)));
 
+    }
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -156,7 +175,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.iudust.getStack(21), 1),
+        addRecipe(Recipes.inputFactory.getInput("forge:dusts/coal"),
                 new FluidStack(FluidName.fluidnitricoxide.getInstance().get(), 200),
                 new FluidStack(FluidName.fluidazot.getInstance().get()
                         , 200), new FluidStack(FluidName.fluidco2.getInstance().get()

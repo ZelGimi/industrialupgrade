@@ -103,7 +103,7 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem, IItem
 
     @Override
     public void damageItem(final ItemStack stack, final int damage) {
-        if (damage <= -150 * level)
+        if (damage > 150 * level)
             this.applyCustomDamage(stack, damage, null);
     }
 

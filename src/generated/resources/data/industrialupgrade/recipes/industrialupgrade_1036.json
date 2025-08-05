@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_88_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:itemplates/thallium"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:itemplates/tantalum"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_88_element"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/thallium"
+    },
+    "D": {
+      "item": "industrialupgrade:itemplates/tantalum"
+    }
   },
   "pattern": [
     "CAC",

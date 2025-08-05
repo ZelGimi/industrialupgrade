@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:block/creative_mfsu_bottom",
+    "down" : "industrialupgrade:block/creative_mfsu_bottom",
+    "up" : "industrialupgrade:block/creative_mfsu_bottom",
+    "north" : "industrialupgrade:block/creative_mfsu_main",
+    "east" : "industrialupgrade:block/creative_mfsu_side",
+    "south" : "industrialupgrade:block/creative_mfsu_side",
+    "west" : "industrialupgrade:block/creative_mfsu_side"
+  }
+}

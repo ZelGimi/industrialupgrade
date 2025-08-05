@@ -241,6 +241,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
     public void appendHoverText(ItemStack par1ItemStack, @Nullable Level p_41422_, List<Component> par3List, TooltipFlag p_41424_) {
         super.appendHoverText(par1ItemStack, p_41422_, par3List, p_41424_);
         int toolMode = readToolMode(par1ItemStack);
+        par3List.add(Component.literal(Localization.translate( "iu.lappack.info")));
         if (toolMode == 0) {
             par3List.add(Component.literal(ChatFormatting.GOLD + Localization.translate("iu.message.text.powerSupply") + ": " + ChatFormatting.RED + Localization.translate(
                     "iu.message.text.disabled")));

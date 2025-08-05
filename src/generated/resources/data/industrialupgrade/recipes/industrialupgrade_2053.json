@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/vitalium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/hafnium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/vitalium"
+    },
+    "B": {
+      "tag": "forge:plates/hafnium"
+    }
   },
   "pattern": [
     " AB",

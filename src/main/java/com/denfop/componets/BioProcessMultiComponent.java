@@ -6,17 +6,23 @@ import com.denfop.api.recipe.IMultiUpdateTick;
 import com.denfop.api.recipe.InvSlotBioMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.effects.EffectsRegister;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.IBioMachine;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,6 +76,27 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
         this.heat = ((TileEntityBlock) parent).getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
 
+    }
+
+    @Override
+    public boolean isClient() {
+        return true;
+    }
+
+    @Override
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (this.parent.getActive() && this.parent.getWorld().getGameTime() % 4 == 0) {
+            double x = this.parent.getBlockPos().getX() + 0.5;
+            double y = this.parent.getBlockPos().getY() + 1.1;
+            double z = this.parent.getBlockPos().getZ() + 0.5;
+
+            this.parent.getLevel().addParticle(
+                    new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()),
+                    x, y, z,
+                    0.0, 0.1, 0.0
+            );
+        }
     }
 
     @Override

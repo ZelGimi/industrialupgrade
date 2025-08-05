@@ -8,6 +8,7 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
 import com.denfop.componets.Energy;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerMagnet;
 import com.denfop.container.SlotInfo;
@@ -19,6 +20,7 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.tiles.base.TileEntityAntiMagnet;
+import com.denfop.utils.ParticleUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,6 +32,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -44,6 +47,7 @@ import java.util.List;
 public class TileMagnet extends TileElectricMachine implements IUpdatableTileEvent {
 
     public final SlotInfo slot;
+    private final ComponentVisibleArea visible;
     public int energyconsume;
     public boolean work;
     public String player;
@@ -52,6 +56,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
     public int z = 11;
     List<ChunkAccess> list = Lists.newArrayList();
     private AABB axisalignedbb;
+    private ChunkPos chunkPos;
 
     public TileMagnet(BlockPos pos, BlockState state) {
         super(100000, 14, 24, BlockBaseMachine1.magnet, pos, state);
@@ -59,6 +64,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         this.player = "";
         this.work = true;
         this.slot = new SlotInfo(this, 18, false);
+       visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     @Override
@@ -66,9 +72,17 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         super.readContainerPacket(customPacketBuffer);
         try {
             energyconsume = (int) DecoderHandler.decode(customPacketBuffer);
+            int prevX = x;
+            int prevY = y;
+            int prevZ= z;
+
             x = (int) DecoderHandler.decode(customPacketBuffer);
             y = (int) DecoderHandler.decode(customPacketBuffer);
             z = (int) DecoderHandler.decode(customPacketBuffer);
+            if (prevX != x || prevY != y || prevZ != z){
+                updateData();
+                visible.aabb = axisalignedbb;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -201,33 +215,35 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
                 this.getBlockPos().getX() - this.x,
                 this.getBlockPos().getY() - this.y,
                 this.getBlockPos().getZ() - this.z,
-                this.getBlockPos().getX() + this.x,
-                this.getBlockPos().getY() + this.y,
-                this.getBlockPos().getZ() + this.z
+                this.getBlockPos().getX() + this.x+ 1,
+                this.getBlockPos().getY() + this.y+ 1,
+                this.getBlockPos().getZ() + this.z + 1
         );
-        int j2 = (int) Math.floor((axisalignedbb.minX - 2) / 16.0D);
-        int k2 = (int) Math.ceil((axisalignedbb.maxX + 2) / 16.0D);
-        int l2 = (int) Math.floor((axisalignedbb.minZ - 2) / 16.0D);
-        int i3 = (int) Math.ceil((axisalignedbb.maxZ + 2) / 16.0D);
+        this.chunkPos = new ChunkPos(this.getPos());
+        int j2 = (int) Math.floor((axisalignedbb.minX) / 16.0D);
+        int k2 = (int) Math.ceil((axisalignedbb.maxX ) / 16.0D);
+        int l2 = (int) Math.floor((axisalignedbb.minZ) / 16.0D);
+        int i3 = (int) Math.ceil((axisalignedbb.maxZ) / 16.0D);
         list = Lists.newArrayList();
 
         for (int j3 = j2; j3 < k2; ++j3) {
             for (int k3 = l2; k3 < i3; ++k3) {
-                ChunkAccess chunk = getLevel().getChunkAt(new BlockPos(j3, 0, k3));
+                ChunkAccess chunk = getLevel().getChunk(j3,k3);
                 if (!list.contains(chunk)) {
                     list.add(chunk);
                 }
 
             }
         }
+        visible.aabb = axisalignedbb;
     }
 
     public List<ItemEntity> getEntitiesWithinAABB() {
         List<ItemEntity> list = Lists.newArrayList();
         LevelEntityGetter<Entity> list1 = ((ServerLevel) level).getEntities();
 
-        this.list.forEach(chunk -> list1.get(axisalignedbb.move(chunk.getPos().x * 16, 0, chunk.getPos().z), (p_151522_) -> {
-            if (p_151522_ instanceof ItemEntity) {
+        this.list.forEach(chunk -> list1.get(axisalignedbb.move((chunk.getPos().x- chunkPos.x) * 16, 0, (chunk.getPos().z- chunkPos.z) * 16), (p_151522_) -> {
+            if (p_151522_ instanceof ItemEntity && axisalignedbb.contains(p_151522_.position())) {
                 list.add((ItemEntity) p_151522_);
             }
         }));
@@ -240,6 +256,9 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         super.updateEntityServer();
         if (!this.work) {
             return;
+        }
+        if (this.getActive()){
+            ParticleUtils.spawnMagneticCatcherParticles(level,pos,level.random);
         }
         boolean ret = false;
         if (this.getWorld().getGameTime() % 4 == 0) {

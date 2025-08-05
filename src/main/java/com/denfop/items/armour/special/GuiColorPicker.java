@@ -148,7 +148,6 @@ public class GuiColorPicker<T extends ContainerBase<?>> extends GuiIU<ContainerS
     @Override
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
 
     }
 

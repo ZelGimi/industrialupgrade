@@ -1,5 +1,6 @@
 package com.denfop.tiles.reactors.heat.graphite_controller;
 
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.reactors.IHeatReactor;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -20,6 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
@@ -84,6 +87,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
         return new GuiHeatGraphiteGraphiteController((ContainerHeatGraphiteController) menu);
     }
+
 
 
     @Override

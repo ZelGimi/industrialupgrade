@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy1/hafnium_boride_alloy"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy1/hafnium_boride_alloy"
+    }
   ],
   "result": {
     "count": 9,

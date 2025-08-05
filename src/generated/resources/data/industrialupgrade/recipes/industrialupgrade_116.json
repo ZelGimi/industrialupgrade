@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
     "A": {
@@ -8,21 +8,15 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:4}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:energy/purifier"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_543_element"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "C": {
+      "item": "industrialupgrade:energy/purifier"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_543_element"
+    }
   },
   "pattern": [
     "DBD",

@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/iridium_ingot"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/iridium_ingot"
+    }
   ],
   "result": {
     "count": 9,

@@ -15,6 +15,7 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;

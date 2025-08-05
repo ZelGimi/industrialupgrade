@@ -12,6 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,8 +27,8 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
     private final T[] collections;
     Map<T, RegistryObject<F>> registryObjectList = new ConcurrentHashMap<>();
 
-    public static List<RegistryObject<?>> objects = new ArrayList<>();
-    public static List<RegistryObject<?>> objectsBlock = new ArrayList<>();
+    public static List<RegistryObject<?>> objects = new LinkedList<>();
+    public static List<RegistryObject<?>> objectsBlock = new LinkedList<>();
     public DataBlock(Class<T> typeClass, Class<E> blockClass, Class<F> itemClass) {
         T[] collections = typeClass.getEnumConstants();
         T element = collections[0];

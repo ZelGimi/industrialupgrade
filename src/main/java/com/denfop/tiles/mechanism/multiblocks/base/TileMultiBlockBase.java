@@ -50,7 +50,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     public boolean full;
     public boolean activate;
     public List<Player> entityPlayerList;
-
+    public boolean visible = true;
     @OnlyIn(Dist.CLIENT)
     private Function render;
 
@@ -101,6 +101,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.multiblock.info_visible_structure"));
         if (level == null) {
             tooltip.add(Localization.translate("multiblock.jei1"));
             if (getMultiBlockStucture() != null) {
@@ -269,7 +270,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     private void renderBlock(
             TileMultiBlockBase tile, RenderLevelStageEvent event
     ) {
-        if (facing == 0 || facing == 1) {
+        if (facing == 0 || facing == 1 || !visible) {
             return;
         }
         for (Map.Entry<BlockPos, ItemStack> entry : this.multiBlockStructure.ItemStackMap.entrySet()) {
@@ -384,6 +385,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             }
             renderItem.render(item, ItemDisplayContext.FIXED, false,
                     poseStack, ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource(), i, OverlayTexture.NO_OVERLAY, itemModel);
+            ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
             poseStack.popPose();
         }
     }
@@ -449,6 +451,13 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         if (name.equals("activate")) {
             try {
                 this.activate = (boolean) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (name.equals("visible")) {
+            try {
+                this.visible = (boolean) DecoderHandler.decode(is);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -547,6 +556,16 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         return super.onActivated(player, hand, side, vec3);
     }
 
+    @Override
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (this.level.isClientSide)
+            return true;
+        this.getCooldownTracker().setTick(20);
+        visible = !visible;
+        new PacketUpdateFieldTile(this,"visible",visible);
+        return super.onSneakingActivated(player, hand, side, vec3);
+
+    }
 
     @Override
     public void onLoaded() {
@@ -580,11 +599,13 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.activate = nbttagcompound.getBoolean("activate");
+        this.visible = nbttagcompound.getBoolean("visible");
     }
 
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.putBoolean("activate", this.activate);
+        nbttagcompound.putBoolean("visible", this.visible);
         return nbttagcompound;
     }
 

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:modules/genday"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:modules/gennight"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:alloydoubleplate/vitalium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "item": "industrialupgrade:modules/genday"
+    },
+    "C": {
+      "item": "industrialupgrade:modules/gennight"
+    },
+    "D": {
+      "item": "industrialupgrade:alloydoubleplate/vitalium"
+    }
   },
   "pattern": [
     "DDD",

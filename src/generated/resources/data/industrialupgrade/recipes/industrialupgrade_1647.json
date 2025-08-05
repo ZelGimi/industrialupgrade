@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:battery/energy_crystal"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/advanced_charging_re_battery"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/advanced_charging_re_battery"
+    }
   },
   "pattern": [
     " B ",

@@ -2,6 +2,7 @@ package com.denfop.network.packet;
 
 import com.denfop.IUCore;
 import com.denfop.api.guidebook.GuideBookCore;
+import com.denfop.utils.ExperienceUtils;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class PacketUpdateCompleteQuest implements IPacket {
         String tab = customPacketBuffer.readString();
         String quest = customPacketBuffer.readString();
         if (entityPlayer.getUUID().equals(uuid)) {
-
+            ExperienceUtils.addPlayerXP(entityPlayer,20);
             GuideBookCore.instance.remove(uuid, tab, quest);
         }
     }

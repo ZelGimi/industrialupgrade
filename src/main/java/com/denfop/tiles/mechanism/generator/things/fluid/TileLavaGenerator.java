@@ -21,6 +21,7 @@ import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -109,12 +110,16 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive()  && this.getLevel().getGameTime() % 5 == 0){
+            ParticleUtils.spawnLavaGeneratorParticles(this.getLevel(),pos,this.getLevel().random);
+        }
 
         boolean needsInvUpdate = false;
         if (!(this.energy.getEnergy() <= 0.0D) && this.fluidTank.getFluidAmount() < this.fluidTank.getCapacity()) {
 
 
             if (this.energy.getEnergy() >= this.energycost) {
+                this.setActive(true);
                 needsInvUpdate = this.attemptGeneration();
                 if (this.getLevel().getGameTime() % 40 == 0) {
                     initiate(0);

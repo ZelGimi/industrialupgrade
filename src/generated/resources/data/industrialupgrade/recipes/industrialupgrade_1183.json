@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/nichrome"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gems/diamond"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/nichrome"
+    },
+    "B": {
+      "tag": "forge:gems/diamond"
+    }
   },
   "pattern": [
     "A  ",

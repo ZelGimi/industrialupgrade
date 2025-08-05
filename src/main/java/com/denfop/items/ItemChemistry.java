@@ -2,33 +2,38 @@ package com.denfop.items;
 
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.item.IDamageItem;
+import com.denfop.items.reactors.ItemDamage;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class ItemChemistry extends Item implements IDamageItem, IItemTab {
+public class ItemChemistry extends ItemDamage implements IDamageItem, IItemTab {
     private String nameItem;
 
     public ItemChemistry(int durability) {
-        super(new Properties().setNoRepair().durability(durability));
+        super(new Properties().setNoRepair().stacksTo(1),durability);
 
     }
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
-    public ItemChemistry(CreativeModeTab tabCore) {
-        super(new Properties());
-    }
+
 
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
@@ -48,16 +53,6 @@ public class ItemChemistry extends Item implements IDamageItem, IItemTab {
         return this.nameItem + ".name";
     }
 
-    @Override
-    public int getCustomDamage(ItemStack stack) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        return nbt.getInt("advDmg");
-    }
-
-    @Override
-    public int getMaxCustomDamage(ItemStack stack) {
-        return 250;
-    }
 
     @Override
     public boolean applyCustomDamage(ItemStack stack, int damage, LivingEntity src) {
@@ -79,14 +74,11 @@ public class ItemChemistry extends Item implements IDamageItem, IItemTab {
     }
 
     @Override
-    public void setCustomDamage(ItemStack stack, int damage) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        nbt.putInt("advDmg", damage);
-        int maxStackDamage = stack.getMaxDamage();
-        if (maxStackDamage > 2) {
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
+                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
 
-            stack.setDamageValue(1 + (damage / 250 * ((maxStackDamage - 2))));
-        }
     }
 
     public boolean isDamaged(@Nonnull ItemStack stack) {

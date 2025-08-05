@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/vending"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_138_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/vending"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_138_element"
+    }
   },
   "pattern": [
     "B B",

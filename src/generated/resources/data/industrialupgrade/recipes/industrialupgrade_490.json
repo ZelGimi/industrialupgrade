@@ -1,28 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/glass5"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:wiring/glass5"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:10}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:battery/itembatlamacrystal"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    }
   },
   "pattern": [
     " A ",

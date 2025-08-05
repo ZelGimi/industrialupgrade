@@ -60,7 +60,7 @@ public class TileEntityGraphiteHandler extends TileElectricMachine implements
         inputSlotA = new InvSlotRecipes(this, "graphite_recipe", this);
 
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 10, 0)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 30)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((TileEntityGraphiteHandler) this.parent).levelBlock * 1.75);

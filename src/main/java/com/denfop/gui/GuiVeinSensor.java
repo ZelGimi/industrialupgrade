@@ -3,27 +3,29 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.*;
-import com.denfop.componets.ComponentRenderInventory;
-import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerVeinSensor;
 import com.denfop.items.DataOres;
 import com.denfop.network.packet.PacketItemStackEvent;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
 import com.denfop.world.WorldBaseGen;
-import com.denfop.world.vein.ChanceOre;
-import com.denfop.world.vein.VeinType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -36,94 +38,60 @@ import static com.denfop.items.ItemVeinSensor.getDataChunk;
 import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<ContainerVeinSensor> implements GuiPageButtonList.GuiResponder,
-        GuiVerticalSliderList.FormatHelper {
+public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<ContainerVeinSensor> {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png".toLowerCase());
-    private final String name;
+    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/gui_scanner_ores.png".toLowerCase());
+    private double pointScroll;
     int[][] colors;
-    List<ItemStack> itemStackList;
     boolean update = false;
-    List<Integer> integerList = new ArrayList<>();
-    int tick = 0;
-    private GuiVerticalSliderList slider;
+    List<Integer> integerList;
     private int value;
-
+    private int maxValue = 0;
+    public Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
+    public Map<Integer, ItemStack> ItemStackMap = new HashMap<>();
+    public EditBox searchField;
+    public int playerX = 0;
+    public int playerY = 0;
+    Direction direction = null;
     public GuiVeinSensor(ContainerVeinSensor container, final ItemStack itemStack1) {
         super(container);
-
-        this.name = Localization.translate(itemStack1.getDescriptionId());
-        this.imageHeight = 242;
-        this.imageWidth += 50;
+        this.imageHeight = 178;
+        this.imageWidth = 218;
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
-        );
         colors = new int[9 * 16][9 * 16];
         final CompoundTag nbt = ModUtils.nbt(itemStack1);
         integerList = Arrays.stream(nbt.getIntArray("list"))
                 .boxed()
                 .collect(Collectors.toList());
-        itemStackList = new LinkedList<>();
-        final List<VeinType> veins = WorldBaseGen.veinTypes;
-        for (VeinType veinType : veins) {
-            if (veinType.getHeavyOre() != null) {
-                itemStackList.add(new ItemStack(veinType.getHeavyOre().getBlock(), 1));
-            }
-            for (ChanceOre chanceOre : veinType.getOres()) {
-                boolean find = false;
-                ItemStack stack1 = new ItemStack(chanceOre.getBlock().getBlock(), 1);
-                for (ItemStack stack : itemStackList) {
-                    if (stack.is(stack1.getItem())) {
-                        find = true;
-                        break;
-                    }
-                }
-                if (!find) {
-                    itemStackList.add(stack1);
-                }
-            }
-        }
         final List<Map<Vector2, DataOres>> list = new ArrayList<>(container.base.getMap().values());
+        WorldBaseGen.blockStateMap.forEach((integer,blockstate) -> {
+            ItemStack stack = new ItemStack(blockstate.getBlock(), 1);
+            if (!idToblockStateMap.containsKey(blockstate)) {
+                if (integer != null) {
+                    idToblockStateMap.put(blockstate, integer);
+                    ItemStackMap.put(integer, stack);
+                }
+            }
+        });
         for (Map<Vector2, DataOres> map : list) {
             for (Map.Entry<Vector2, DataOres> entry : map.entrySet()) {
-                colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
-                        .getVector()
-                        .getZ()] = entry.getValue().getColor();
+
                 ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1);
-                if (!integerList.isEmpty()) {
-                    boolean find = false;
-                    for (Integer integer : integerList) {
-                        if (itemStackList.get(integer).is(stack.getItem())) {
-                            find = true;
-                            this.addElement(new Area(
-                                    this,
-                                    20 + entry.getKey().getX() - container.base.getVector().getX(),
-                                    10 + entry.getKey().getZ() - container.base
-                                            .getVector()
-                                            .getZ(),
-                                    1,
-                                    1
-                            ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry
-                                    .getKey()
-                                    .getX() + "\n" + "Z: " + entry
-                                    .getKey()
-                                    .getZ()));
-                            break;
-                        }
-                    }
-                    if (!find) {
-                        colors[entry.getKey().getX() - container.base.getVector().getX()][entry
-                                .getKey()
-                                .getZ() - container.base
-                                .getVector()
-                                .getZ()] = MapColor.STONE.col | -16777216;
-                    }
-                } else if (entry.getValue().getColor() != 0xFFFFFFFF) {
+                Integer meta1 = null;
+                if (!idToblockStateMap.containsKey(entry.getValue().getBlockState()) && WorldBaseGen.idToblockStateMap.containsKey(entry.getValue().getBlockState().getBlock())) {
+
+                } else {
+                    meta1 = idToblockStateMap.get(entry.getValue().getBlockState());
+                }
+
+                if (entry.getValue().getColor() != 0xFFFFFFFF && meta1 != null &&(integerList.isEmpty() || integerList.contains(meta1))) {
+                    colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
+                            .getVector()
+                            .getZ()] = entry.getValue().getColor();
                     this.addElement(new Area(
                             this,
-                            20 + entry.getKey().getX() - container.base.getVector().getX(),
-                            10 + entry.getKey().getZ() - container.base
+                            19 + entry.getKey().getX() - container.base.getVector().getX(),
+                            25 + entry.getKey().getZ() - container.base
                                     .getVector()
                                     .getZ(),
                             1,
@@ -134,55 +102,120 @@ public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<Containe
                 }
             }
         }
-        componentList.add(slots);
-        this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
-
-
+        int posX = (int) container.player.getX();
+        int posZ = (int) container.player.getZ();
+        playerX = posX - container.base.getVector().getX();
+        playerY = posZ - container.base
+                .getVector()
+                .getZ();
+        direction = container.player.getMotionDirection();
+        this.pointScroll = 127D / (idToblockStateMap.values().size() - 8);
+        maxValue = idToblockStateMap.values().size() - 8;
     }
-
     @Override
-    public String getText(final int var1, final String var2, final float var3) {
-        return "";
-    }
+    public boolean charTyped(char codePoint, int modifiers) {
+        if (this.searchField.charTyped(codePoint, modifiers)){
+            value = 0;
+            return true;
+        }
 
+        return super.charTyped(codePoint,modifiers);
+    }
     @Override
-    public void setEntryValue(final int i, final boolean b) {
-
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == this.minecraft.options.keyInventory.getKey().getValue() ) {
+            this.searchField.keyPressed(keyCode, scanCode, modifiers);
+            value = 0;
+            return true;
+        }
+        if (this.searchField.keyPressed(keyCode, scanCode, modifiers)){
+            value = 0;
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
-
     @Override
-    public void setEntryValue(final int i, final float v) {
-        value = (int) v;
-
-    }
-
-    @Override
-    public void setEntryValue(final int i, final String s) {
-
-    }
-
-    public void init() {
+    protected void init() {
         super.init();
+        this.searchField = new EditBox(this.font, this.leftPos + 97, this.topPos + 9, 209-95, 10, Component.literal(""));
+        this.searchField.setMaxLength(25);
+        this.searchField.setValue("");
+        this.searchField.setCanLoseFocus(true);
+        searchField.setBordered(false);
+        this.addWidget(this.searchField);
+        this.addRenderableWidget(this.searchField);
+    }
+    @Override
+    public boolean mouseScrolled(double d, double d2, double d3) {
+        super.mouseScrolled(d, d2, d3);
+        int mouseX = (int) (d - this.guiLeft);
+        int mouseY = (int) (d2 - this.guiTop);
+        ScrollDirection direction = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
+        if (mouseX >= 166 && mouseX <= 209 && mouseY >= 24 && mouseY <= 169)
+            if (direction != ScrollDirection.stopped) {
+                if (direction == ScrollDirection.down) {
+                    value++;
+                    value = Math.min(value, maxValue);
+                } else {
+                    value--;
+                    value = Math.max(0, value);
+
+                }
+            }
+        return super.mouseScrolled(d, d2, d3);
+    }
 
 
-        slider = new GuiVerticalSliderList(this, 2, (this.width - this.imageWidth) / 2 + 201,
-                (this.height - this.imageHeight) / 2 + 8 + 10,
-                "",
-                0, 0, 0,
-                this, 210
-        );
-        this.addWidget(slider);
-        this.addRenderableWidget(slider);
+
+    @Override
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
     }
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-        for (int i = value, j = 0; i < Math.min(
-                itemStackList.size(),
-                value + 12
-        ); i++, j++) {
-            final int finalI = i;
-            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawForeground(poseStack, par1, par2);
+        int i = 0;
+        int j = 0;
+        boolean emptySearch = searchField.getValue().isEmpty();
+        String name = "["+searchField.getValue().toLowerCase();
+        if (emptySearch) {
+            for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
+
+                if (i < value) {
+                    i++;
+                    continue;
+                }
+
+                if (i >= Math.min(
+                        ItemStackMap.values().size(),
+                        value + 8
+                ))
+                    break;
+                new ItemImage(this, 173, 26 + 18 * j, entry::getValue).withTooltip(() -> entry.getValue().getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                j++;
+                i++;
+
+            }
+        }else{
+            for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
+
+
+                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                if (builder.toLowerCase().startsWith(name)) {
+                    if (i < value) {
+                        i++;
+                        continue;
+                    }
+                    new ItemImage(this, 173, 26 + 18 * j, entry::getValue).withTooltip(() -> entry.getValue().getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                    j++;
+                    i++;
+                }else{
+                    continue;
+                }
+                if (j >= 8)
+                    break;
+            }
         }
     }
 
@@ -193,20 +226,71 @@ public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<Containe
         int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        for (int ii = value, jj = 0; ii < Math.min(
-                itemStackList.size(),
-                value + 12
-        ); ii++, jj++) {
-            if (x >= 175 && x <= 175 + 18 && y >= 5 + 10 + 18 * jj && y < 5 + 10 + 18 * jj + 18) {
-                if (!integerList.contains(ii)) {
-                    integerList.add(ii);
-                } else {
-                    integerList.remove((Object) ii);
+        int ii = 0;
+        int jj = 0;
+        if (this.searchField.mouseClicked(i,j,k)){
+            searchField.setFocused(true);
+            return;
+        }else{
+            searchField.setFocused(false);
+        }
+        boolean emptySearch = searchField.getValue().isEmpty();
+        String name = "["+searchField.getValue().toLowerCase();
+        if (emptySearch) {
+            for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
+
+                if (ii < value) {
+                    ii++;
+                    continue;
                 }
-                new PacketItemStackEvent(ii, minecraft.player);
-                final CompoundTag nbt = ModUtils.nbt(this.container.base.itemStack1);
-                nbt.putIntArray("list", integerList);
-                update = true;
+
+                if (ii >= Math.min(
+                        ItemStackMap.values().size(),
+                        value + 8
+                ))
+                    break;
+                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                if (emptySearch || builder.startsWith(name)) {
+                    if (x >= 173 && x <= 173 + 18 && y >= 26 + 18 * jj && y < 26 + 18 * jj + 18) {
+                        new PacketItemStackEvent(entry.getKey(), minecraft.player);
+                        update = true;
+                        if (integerList.contains(entry.getKey()))
+                            integerList.remove(entry.getKey());
+                        else
+                            this.integerList.add(entry.getKey());
+                    }
+                    jj++;
+                    ii++;
+                }
+
+            }
+        }else{
+            for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
+
+
+
+
+                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                if (builder.startsWith(name)) {
+                    if (ii < value) {
+                        ii++;
+                        continue;
+                    }
+                    if (x >= 173 && x <= 173 + 18 && y >= 26 + 18 * jj && y < 26 + 18 * jj + 18) {
+                        new PacketItemStackEvent(entry.getKey(), minecraft.player);
+                        update = true;
+                        if (integerList.contains(entry.getKey()))
+                            integerList.remove(entry.getKey());
+                        else
+                            this.integerList.add(entry.getKey());
+                    }
+                    jj++;
+                    ii++;
+                }else{
+                    continue;
+                }
+                if (jj >= 8)
+                    break;
             }
         }
     }
@@ -214,81 +298,54 @@ public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<Containe
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
-        slider.setMax(itemStackList.size() - 12);
-        if (tick == 400 || update) {
-            tick = 0;
+
+       if (update) {
             update = false;
-            Map<Integer, Map<Vector2, DataOres>> map = new HashMap<>();
-            ChunkPos pos = new ChunkPos(new BlockPos((int) minecraft.player.getX(), (int) minecraft.player.getY(), (int) minecraft.player.getZ()));
-            int i = 0;
-            for (int x = -4; x < 5; x++) {
-                for (int z = -4; z < 5; z++) {
-                    ChunkPos chunkPos = new ChunkPos(pos.x + x, pos.z + z);
-                    LevelChunk chunk = minecraft.player.level().getChunk(chunkPos.x, chunkPos.z);
-                    Map<Vector2, DataOres> map1 = getDataChunk(chunk);
-                    map.put(i, map1);
-                    i++;
-                }
-            }
-            colors = new int[9 * 16][9 * 16];
-            final List<Map<Vector2, DataOres>> list = new ArrayList<>(map.values());
             this.elements.clear();
-            this.componentList.clear();
-            ChunkPos pos2 = new ChunkPos(pos.x - 4, pos.z - 4);
-            container.base.vector = new Vector2(pos2.x * 16, pos2.z * 16);
-            for (Map<Vector2, DataOres> map1 : list) {
-                for (Map.Entry<Vector2, DataOres> entry : map1.entrySet()) {
-                    colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
-                            .getVector()
-                            .getZ()] = entry.getValue().getColor();
-                    ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1);
-                    if (!integerList.isEmpty()) {
-                        boolean find = false;
-                        for (Integer integer : integerList) {
-                            if (itemStackList.get(integer).is(stack.getItem())) {
-                                find = true;
-                                this.addElement(new Area(
-                                        this,
-                                        20 + entry.getKey().getX() - container.base.getVector().getX(),
-                                        10 + entry.getKey().getZ() - container.base
-                                                .getVector()
-                                                .getZ(),
-                                        1,
-                                        1
-                                ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry
-                                        .getKey()
-                                        .getX() + "\n" + "Z: " + entry
-                                        .getKey()
-                                        .getZ()));
-                                break;
-                            }
-                        }
-                        if (!find) {
-                            colors[entry.getKey().getX() - container.base.getVector().getX()][entry
-                                    .getKey()
-                                    .getZ() - container.base
-                                    .getVector()
-                                    .getZ()] = MapColor.STONE.col | -16777216;
-                        }
-                    } else if (entry.getValue().getColor() != 0xFFFFFFFF) {
-                        this.addElement(new Area(
-                                this,
-                                20 + entry.getKey().getX() - container.base.getVector().getX(),
-                                10 + entry.getKey().getZ() - container.base
-                                        .getVector()
-                                        .getZ(),
-                                1,
-                                1
-                        ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
-                                .getKey()
-                                .getZ()));
-                    }
-                }
-            }
-            componentList.add(slots);
-            this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
-        } else {
-            tick++;
+           final List<Map<Vector2, DataOres>> list = new ArrayList<>(container.base.getMap().values());
+           for (Map<Vector2, DataOres> map : list) {
+               for (Map.Entry<Vector2, DataOres> entry : map.entrySet()) {
+
+                   ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1);
+                   Integer meta1 = null;
+                   if (!idToblockStateMap.containsKey(entry.getValue().getBlockState()) && WorldBaseGen.idToblockStateMap.containsKey(entry.getValue().getBlockState().getBlock())) {
+                       Integer meta = WorldBaseGen.idToblockStateMap.get(entry.getValue().getBlockState().getBlock());
+                       if (meta != null) {
+                           idToblockStateMap.put(entry.getValue().getBlockState(), meta);
+                           ItemStackMap.put(meta, stack);
+                           meta1 = meta;
+                       }
+                   } else {
+                       meta1 = idToblockStateMap.get(entry.getValue().getBlockState());
+                   }
+                   if (entry.getValue().getColor() != 0xFFFFFFFF && meta1 != null && ( integerList.isEmpty() || integerList.contains(meta1))) {
+                       colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
+                               .getVector()
+                               .getZ()] = entry.getValue().getColor();
+                       this.addElement(new Area(
+                               this,
+                               19 + entry.getKey().getX() - container.base.getVector().getX(),
+                               25 + entry.getKey().getZ() - container.base
+                                       .getVector()
+                                       .getZ(),
+                               1,
+                               1
+                       ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
+                               .getKey()
+                               .getZ()));
+                   }else{
+                       colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
+                               .getVector()
+                               .getZ()]  = Blocks.STONE.defaultBlockState().getMapColor(
+                               container.base.player.level(),
+                               BlockPos.ZERO
+                       ).col | -16777216;
+                   }
+               }
+           }
+           this.pointScroll = 127D / (idToblockStateMap.values().size() - 8);
+           maxValue = idToblockStateMap.values().size() - 8;
+
         }
     }
 
@@ -296,94 +353,150 @@ public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<Containe
     @Override
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        drawTexturedModalRect(poseStack, this.guiLeft + 197, (int) (guiTop + 25 + value * pointScroll), 242, 20, 254 - 241, 36 - 19);
+        PoseStack   pose = poseStack.pose();
+        pose.pushPose();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, POSITION_COLOR);
+        boolean empty = true;
         for (int i = 0; i < 9 * 16; i++) {
             for (int j = 0; j < 9 * 16; j++) {
-                this.drawColoredRect(poseStack, 20 + i,
-                        10 + j, 1, 1,
-                        colors[i][j], bufferBuilder
-                );
+                int color = colors[i][j];
+                if (color != 0) {
+                    this.drawColoredRect(poseStack, 19 + i,
+                            25 + j, 1, 1,
+                            colors[i][j], bufferBuilder
+                    );
+                    empty = false;
+                } else {
+                    colors[i][j] = Blocks.STONE.defaultBlockState().getMapColor(
+                            container.base.player.level(),
+                            BlockPos.ZERO
+                    ).col | -16777216;
+                }
             }
         }
+        pose.popPose();
         BufferUploader.drawWithShader(bufferBuilder.end());
-        int centerX = 20 + (9 * 16) / 2;
-        int centerY = 10 + (9 * 16) / 2;
-
 
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        PoseStack pose = poseStack.pose();
-        pose.pushPose();
-        Matrix4f martix = pose.last().pose();
-
-        buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
-        buffer.vertex(martix,this.guiLeft + centerX, this.guiTop + 10, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.vertex(martix,this.guiLeft + centerX, this.guiTop + 10 + (9 * 16), 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        tessellator.end();
-
-
-        buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
-        buffer.vertex(martix,this.guiLeft + 20, this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.vertex(martix,this.guiLeft + 20 + (9 * 16), this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        tessellator.end();
-
-
-
-        pose.popPose();
+        pose = poseStack.pose();
+        Matrix4f martix;
         pose.pushPose();
         int chunkSize = 16;
         int numChunks = 9;
 
         for (int x = 0; x < numChunks; x++) {
             for (int y = 0; y < numChunks; y++) {
-                int offsetX = 20 + (x * chunkSize);
-                int offsetY = 10 + (y * chunkSize);
+                int offsetX = 19 + (x * chunkSize);
+                int offsetY = 25 + (y * chunkSize);
 
                 martix = pose.last().pose();
                 buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
-                buffer.vertex(martix,this.guiLeft + offsetX, this.guiTop + offsetY, 0)
-                        .color(0.0F, 1.0F, 0.0F, 1.0F)
-                        .endVertex(); // Нижний левый угол
-                buffer.vertex(martix,this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY, 0)
-                        .color(0.0F, 1.0F, 0.0F, 1.0F)
-                        .endVertex(); // Нижний правый угол
-                buffer.vertex(martix,this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY + chunkSize, 0)
-                        .color(0.0F, 1.0F, 0.0F, 1.0F)
-                        .endVertex(); // Верхний правый угол
-                buffer.vertex(martix,this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0)
-                        .color(0.0F, 1.0F, 0.0F, 1.0F)
+                buffer.vertex(martix, this.guiLeft + offsetX, this.guiTop + offsetY, 0)
+                        .color(0, 255 / 255f, 204 / 255f, 1.0F)
+                        .endVertex();
+                buffer.vertex(martix, this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY, 0)
+                        .color(0, 255 / 255f, 204 / 255f, 1.0F)
+                        .endVertex();
+                buffer.vertex(martix, this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY + chunkSize, 0)
+                        .color(0, 255 / 255f, 204 / 255f, 1.0F)
+                        .endVertex();
+                buffer.vertex(martix, this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0)
+                        .color(0, 255 / 255f, 204 / 255f, 1.0F)
+                        .endVertex();
+                tessellator.end();
+                buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
+                buffer.vertex(martix, this.guiLeft + offsetX, this.guiTop + offsetY, 0)
+                        .color(0, 255 / 255f, 204 / 255f, 1.0F)
+                        .endVertex();
+                buffer.vertex(martix, this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0)
+                        .color(0, 255 / 255f, 204 / 255f, 1.0F)
                         .endVertex();
                 tessellator.end();
             }
         }
 
         pose.popPose();
+        int i = 0;
+        int j = 0;
+        boolean emptySearch = searchField.getValue().isEmpty();
+        String name = "["+searchField.getValue().toLowerCase();
+        if (emptySearch) {
+            for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
+                if (i < value) {
+                    i++;
+                    continue;
+                }
 
-        new ImageResearchTableInterface(this, 171, 11, 40, (int) (18 * 12.4)).drawBackground(poseStack, this.guiLeft, guiTop);
+                if (i >= Math.min(
+                        ItemStackMap.values().size(),
+                        value + 8
+                ))
+                    break;
+                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                if (integerList.contains(entry.getKey())) {
+                    bindTexture();
+                    drawTexturedModalRect(poseStack, this.guiLeft + 172, (int) (guiTop + 25 + 18 * j), 237, 1, 18, 18);
 
-        for (int i = value, j = 0; i < Math.min(
-                itemStackList.size(),
-                value + 12
-        ); i++, j++) {
-            final int finalI = i;
-            if (integerList.contains(i)) {
-                new ImageResearchTableInterface(this, 175, 5 + 10 + 18 * j, 16, 16).drawBackground(poseStack, this.guiLeft, guiTop);
+                }
+                new ItemStackImage(this, 173, 26 + 18 * j, entry::getValue).drawBackground(poseStack, this.guiLeft, guiTop);
+                j++;
+                i++;
+
             }
-            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawBackground(poseStack, this.guiLeft, guiTop);
+        }else{
+            for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
+
+                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                if (builder.startsWith(name)) {
+                    if (i < value) {
+                        i++;
+                        continue;
+                    }
+                    if (integerList.contains(entry.getKey())) {
+                        bindTexture();
+                        drawTexturedModalRect(poseStack, this.guiLeft + 172, (int) (guiTop + 25 + 18 * j), 237, 1, 18, 18);
+
+                    }
+                    new ItemStackImage(this, 173, 26 + 18 * j, entry::getValue).drawBackground(poseStack, this.guiLeft, guiTop);
+                    j++;
+                    i++;
+                }else{
+                    continue;
+                }
+                if (i < value) {
+                    i++;
+                    continue;
+                }
+
+                if (j >= 8)
+                    break;
+            }
         }
-
+        pose.pushPose();
+        pose.translate(guiLeft + 19 + playerX - 0.5 , guiTop + 25 + playerY- 0.5, 20);
+        switch (direction.getOpposite()) {
+            case NORTH -> pose.mulPose(Axis.ZP.rotationDegrees(180));
+            case SOUTH -> pose.mulPose(Axis.ZP.rotationDegrees(0));
+            case WEST  -> pose.mulPose(Axis.ZP.rotationDegrees(90));
+            case EAST  -> pose.mulPose(Axis.ZP.rotationDegrees(-90));
+            case UP    -> pose.mulPose(Axis.XP.rotationDegrees(-90));
+            case DOWN  -> pose.mulPose(Axis.XP.rotationDegrees(90));
+        };
+        pose.scale(0.3f,0.3f,1f);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_space_icons.png"));
+        drawTexturedModalRect(poseStack, 0, 0, 29, 120, 42-29, 142-120);
+        pose.popPose();
     }
 
-    protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        this.bindTexture();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-    }
 
     protected ResourceLocation getTexture() {
         return background;

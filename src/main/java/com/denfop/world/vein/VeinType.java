@@ -3,7 +3,9 @@ package com.denfop.world.vein;
 import com.denfop.blocks.IMineral;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VeinType {
 
@@ -12,13 +14,26 @@ public class VeinType {
     private final int deposits_meta;
     private final int meta;
     private TypeVein vein;
-
+    public static Map<Integer, VeinType> veinTypeMap = new HashMap<>();
+    private int id;
+    public static int maxId = 0;
     public VeinType(IMineral heavyOre, int meta, int deposits_meta, TypeVein vein, ChanceOre... ores) {
         this.heavyOre = heavyOre;
         this.vein = vein;
         this.meta = meta;
         this.deposits_meta = deposits_meta;
         this.ores = Arrays.asList(ores);
+        this.id = maxId;
+        veinTypeMap.put(id,this);
+        maxId++;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public VeinType(IMineral heavyOre, int meta, TypeVein vein, ChanceOre... ores) {
@@ -27,6 +42,9 @@ public class VeinType {
         this.meta = meta;
         this.deposits_meta = meta;
         this.ores = Arrays.asList(ores);
+        this.id = maxId;
+        veinTypeMap.put(id,this);
+        maxId++;
     }
 
     public int getMeta() {

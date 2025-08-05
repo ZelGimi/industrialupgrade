@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/bronze"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_42_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/bronze"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "C": {
+      "tag": "forge:plates/tin"
+    }
   },
   "pattern": [
     "AAA",

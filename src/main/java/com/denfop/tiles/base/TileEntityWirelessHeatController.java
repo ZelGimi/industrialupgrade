@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.level.BlockEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -117,7 +118,6 @@ public class TileEntityWirelessHeatController extends TileEntityInventory implem
     @Override
     public void onLoaded() {
         super.onLoaded();
-        updateList();
     }
 
     @Override
@@ -133,7 +133,8 @@ public class TileEntityWirelessHeatController extends TileEntityInventory implem
         graphiteControllers.clear();
         itemStacks.clear();
         tileMultiBlockBase = null;
-
+        if (this.invslot.get(0).isEmpty())
+            return;
         final CompoundTag nbt = ModUtils.nbt(this.invslot.get(0));
         BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
         BlockEntity tileEntity = this.getWorld().getBlockEntity(pos);

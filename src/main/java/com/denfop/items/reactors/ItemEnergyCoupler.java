@@ -95,7 +95,7 @@ public class ItemEnergyCoupler extends ItemDamage implements IReactorItem, IItem
 
     @Override
     public double getHeatRemovePercent(final IAdvReactor reactor) {
-        return 0;
+        return 1.2-0.05*level;
     }
 
     @Override

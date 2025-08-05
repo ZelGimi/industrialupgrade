@@ -30,6 +30,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -59,7 +60,6 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
-    protected boolean sound = true;
 
     public TileEntityImpAlloySmelter(BlockPos pos, BlockState state) {
         super(300, 1, 1,BlockBaseMachine3.imp_alloy_smelter,pos,state);
@@ -104,7 +104,13 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.125));
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
+        }
+    }
     public static void addAlloysmelter(
             Object container, Object fill, Object fill1, Object fill2, ItemStack output,
             int temperature
@@ -197,7 +203,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
 
     public void init() {
 
-        addAlloysmelter(new ItemStack(IUItem.iudust.getStack(21),4), new ItemStack(IUItem.plastic_plate.getItem()),
+        addAlloysmelter(Recipes.inputFactory.getInput("forge:dusts/coal",4), new ItemStack(IUItem.plastic_plate.getItem()),
                 new ItemStack(IUItem.alloysingot.getStack(20)),
                 new ItemStack(IUItem.alloysingot.getStack(10)),
                 new ItemStack(IUItem.crafting_elements.getStack(479), 1)
@@ -223,7 +229,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
                 , 5000
         );
 
-        addAlloysmelter("forge:ingots/Iron", new ItemStack(IUItem.iudust.getStack(21), 2), "forge:ingots/Nickel", "forge:ingots/Molybdenum",
+        addAlloysmelter("forge:ingots/Iron", Recipes.inputFactory.getInput("forge:dusts/coal", 2), "forge:ingots/Nickel", "forge:ingots/Molybdenum",
                 new ItemStack(IUItem.alloysingot.getStack(21), 1)
                 , 8000
         );
@@ -239,6 +245,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
         return new GuiImpAlloySmelter((ContainerImpAlloySmelter) menu);
     }
+
 
 
     @Override
@@ -262,13 +269,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
 
     public void updateField(String name, CustomPacketBuffer is) {
 
-        if (name.equals("sound")) {
-            try {
-                this.sound = (boolean) DecoderHandler.decode(is);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+
         super.updateField(name, is);
     }
 
@@ -277,27 +278,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         return EnumSound.alloysmelter.getSoundEvent();
     }
 
-    public void initiate(int soundEvent) {
-        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
-            return;
-        }
 
-        setType(valuesAudio[soundEvent % valuesAudio.length]);
-        if (!getEnable()) {
-            return;
-        }
-        if (getSound() == null) {
-            return;
-        }
-        if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
-        } else if (soundEvent == 1) {
-            new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
-        } else {
-            new PacketStopSound(getWorld(), this.pos);
-        }
-    }
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {

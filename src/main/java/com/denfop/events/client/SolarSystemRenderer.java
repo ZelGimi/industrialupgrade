@@ -160,7 +160,7 @@ public class SolarSystemRenderer {
         poseStack.translate(x, y, z);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
         poseStack.mulPose(Axis.ZP.rotationDegrees(rotationAngle));
-       RenderSystem.setShaderColor(1, 1, 1, 1);
+         RenderSystem.setShaderColor(1, 1, 1, 1);
         GuiCore.bindTexture(texture);
         Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder buffer = tessellator.getBuilder();
@@ -334,19 +334,19 @@ public class SolarSystemRenderer {
                 float z = miniAsteroid.getX() * (float) Math.sin(currentAngle);
 
 
-                renderAsteroid(poseStack,event,miniAsteroid.getSize(), x, 0.5f, z, miniAsteroid.getRotationSpeed());
+                renderAsteroid(poseStack,event,miniAsteroid.getSize(), x, 0.5f, z, miniAsteroid.getRotationSpeed(),asteroids.getResource());
             });
         });
         poseStack.popPose();
     }
 
-    private void renderAsteroid(PoseStack poseStack, RenderLevelStageEvent event, float size, float x, float y, float z, float rotationSpeed) {
+    private void renderAsteroid(PoseStack poseStack, RenderLevelStageEvent event, float size, float x, float y, float z, float rotationSpeed, ResourceLocation resource) {
         poseStack.pushPose();
         poseStack.translate(x, y, z);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotationSpeed));
         RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f,1);
 
-        renderPlanet(poseStack, event, size, ASTEROID_TEXTURE, 0, 0, 0, 0, 0); // renderPlanet можно использовать для отрисовки объекта без текстуры
+        renderPlanet(poseStack, event, size, resource, 0, 0, 0, 0, 0);
 
         poseStack.popPose();
     }

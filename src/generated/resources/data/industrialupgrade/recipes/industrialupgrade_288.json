@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/stainless_steel"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/stainless_steel"
+    }
   ],
   "result": {
     "count": 9,

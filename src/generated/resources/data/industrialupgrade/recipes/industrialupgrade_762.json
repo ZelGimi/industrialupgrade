@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "minecraft:piston"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_290_element"
-      }
-    ]
+    {
+      "item": "minecraft:piston"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_290_element"
+    }
   ],
   "result": {
     "item": "minecraft:sticky_piston"

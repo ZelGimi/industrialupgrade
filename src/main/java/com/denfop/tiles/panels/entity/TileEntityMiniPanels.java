@@ -104,7 +104,9 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public void addInformation(final ItemStack itemStack, final List<String> info) {
-
+        info.add(Localization.translate(  "iu.minipanel.info"));
+        info.add(Localization.translate(  "iu.minipanel.info2"));
+        info.add(Localization.translate(  "iu.minipanel.info3"));
 
         if (this.getWorld() != null) {
 

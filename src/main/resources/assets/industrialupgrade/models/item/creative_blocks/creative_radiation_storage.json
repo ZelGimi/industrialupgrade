@@ -1,0 +1,68 @@
+{
+	"credit": "Made by frei",
+	"texture_size": [64, 64],
+	"textures": {
+		"1": "industrialupgrade:block/creative_radiation_storage",
+		"particle": "industrialupgrade:block/creative_radiation_storage"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 11],
+			"to": [15, 20, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10.25, 9.5]},
+			"faces": {
+				"north": {"uv": [7, 5.25, 3.5, 10.25], "texture": "#1"},
+				"east": {"uv": [1.25, 10.25, 0, 15.25], "texture": "#1"},
+				"south": {"uv": [3.5, 5.25, 0, 10.25], "texture": "#1"},
+				"west": {"uv": [2.5, 10.25, 1.25, 15.25], "texture": "#1"},
+				"up": {"uv": [2.5, 13.75, 3.75, 10.25], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [5, 13.75, 3.75, 10.25], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [16, 21, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 10.25, 9.5]},
+			"faces": {
+				"north": {"uv": [4, 0, 8, 5.25], "texture": "#1"},
+				"east": {"uv": [7, 5.25, 9.75, 10.5], "texture": "#1"},
+				"south": {"uv": [4, 0, 0, 5.25], "texture": "#1"},
+				"west": {"uv": [8, 0, 10.75, 5.25], "texture": "#1"},
+				"up": {"uv": [9.75, 9.25, 12.5, 5.25], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [12.5, 13.25, 9.75, 9.25], "rotation": 270, "texture": "#1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"translation": [0, -1, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

@@ -3,12 +3,11 @@ loaderVersion="[43,)"
 license="All Rights Reserved"
 [[mods]] 
 modId="industrialupgrade"
-version="3.3.0.4" #mandatory
+version="3.3.1.8" #mandatory
 displayName="Industrial Upgrade" #mandatory
 credits=""
 authors="Denfop"
 description=''''''
-
 [[dependencies.industrialupgrade]]
 modId="forge" 
 mandatory=true 
@@ -21,3 +20,9 @@ mandatory=true
 versionRange="[1.20.1,)"
 ordering="NONE"
 side="BOTH"
+#[[dependencies.industrialupgrade]]
+#modId="lmft"
+#mandatory=true
+#versionRange="[0,)"
+#ordering="NONE"
+#side="BOTH"

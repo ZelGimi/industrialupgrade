@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcell/itemcell"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdoubleplates/invar_doubleplate"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:alloyplate/nichrome"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdoubleplates/invar_doubleplate"
+    },
+    "C": {
+      "item": "industrialupgrade:alloyplate/nichrome"
+    }
   },
   "pattern": [
     "BAB",

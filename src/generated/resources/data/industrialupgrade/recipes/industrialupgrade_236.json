@@ -1,12 +1,10 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/aluminum_bronze"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/aluminum_bronze"
+    }
   ],
   "result": {
     "count": 9,

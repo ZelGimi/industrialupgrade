@@ -1,35 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
-  "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/copper"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:transformer_iu/mv"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:circuit/nanocircuit_part2"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:wiring_storage/cesu_iu"
-      }
-    ]
-  },
-  "pattern": [
-    "ABA",
-    "CDC",
-    "ABA"
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    }
   ],
   "result": {
-    "item": "powerutils:module_ic"
-  },
-  "show_notification": true
+    "item": "industrialupgrade:book/guide_book"
+  }
 }

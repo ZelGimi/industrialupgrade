@@ -100,7 +100,7 @@ public class EnergyTick {
     }
 
     public void rework() {
-        energyPaths.sort(Comparator.comparingInt(path -> path.target.getSinkTier()));
+        energyPaths.sort(Comparator.comparingInt(path -> path.target.getSinkTier(path.targetDirection)));
     }
 
     public List<Integer> getConductors() {

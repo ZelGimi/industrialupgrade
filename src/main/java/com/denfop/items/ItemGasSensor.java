@@ -2,6 +2,7 @@ package com.denfop.items;
 
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
@@ -15,8 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ItemGasSensor extends Item implements IItemTab {
     private String nameItem;
@@ -24,6 +29,15 @@ public class ItemGasSensor extends Item implements IItemTab {
     public ItemGasSensor() {
         super(new Item.Properties().stacksTo(1).setNoRepair());
     }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        pTooltipComponents.add(Component.literal(Localization.translate( "iu.gas_sensor.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate( "iu.gas_sensor.info1")));
+        pTooltipComponents.add(Component.literal(Localization.translate( "iu.gas_sensor.info2")));
+    }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;

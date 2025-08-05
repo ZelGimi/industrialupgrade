@@ -21,6 +21,7 @@ import com.denfop.gui.GuiHandlerHeavyOre;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -133,7 +134,13 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
 
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnMineralSeparatorParticles(level,pos,level.random);
+        }
+    }
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);

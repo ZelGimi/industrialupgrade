@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:battery/lapotron_crystal"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/stainlesssteel"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "B": {
+      "tag": "forge:plates/stainlesssteel"
+    },
+    "C": {
+      "tag": "forge:plates/niobiumtitanium"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,

@@ -1,5 +1,6 @@
 package com.denfop.api.recipe;
 
+import com.denfop.api.Recipes;
 import com.denfop.recipe.IInputItemStack;
 import net.minecraft.world.item.ItemStack;
 
@@ -8,20 +9,24 @@ import java.util.List;
 
 public class RecipeInputStack implements IRecipeInputStack {
 
-    private final List<ItemStack> input;
+    private final IInputItemStack input;
 
     public RecipeInputStack(IInputItemStack input) {
-        this.input = input.getInputs();
+        this.input = input;
 
     }
 
     public RecipeInputStack(ItemStack input) {
-        this.input = Collections.singletonList(input);
+        this.input = Recipes.inputFactory.getInput(input);
 
     }
 
     @Override
     public List<ItemStack> getItemStack() {
+        return input.getInputs();
+    }
+
+    public IInputItemStack getInput() {
         return input;
     }
 

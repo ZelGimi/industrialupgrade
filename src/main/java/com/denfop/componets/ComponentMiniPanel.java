@@ -526,11 +526,6 @@ public class ComponentMiniPanel extends AbstractComponent {
             return true;
         }
 
-        @Override
-        public BlockEntity getTileEntity() {
-            return this;
-        }
-
 
         @Override
         public BlockPos getPos() {

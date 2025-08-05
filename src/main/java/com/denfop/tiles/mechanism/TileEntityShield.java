@@ -62,7 +62,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     Energy energy;
     List<Integer> integerList = new LinkedList<>();
     AABB shieldBox;
-    AABB shieldDefaultBox = new AABB(-8, -8, -8, 8, 8, 8);
+    AABB shieldDefaultBox = new AABB(-8, -8, -8, 9, 9, 9);
     Vec3i center;
     LinkedList<LevelChunk> chunks = new LinkedList<>();
     List<UUID> uuidList = new LinkedList<>();

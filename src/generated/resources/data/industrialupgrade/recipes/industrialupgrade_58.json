@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:transformer_iu/hv"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:high_current_converter_to_low"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:upgrade_casing"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:wiring/gold1"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:transformer_iu/hv"
+    },
+    "B": {
+      "item": "industrialupgrade:high_current_converter_to_low"
+    },
+    "C": {
+      "item": "industrialupgrade:upgrade_casing"
+    },
+    "D": {
+      "item": "industrialupgrade:wiring/gold1"
+    }
   },
   "pattern": [
     " A ",

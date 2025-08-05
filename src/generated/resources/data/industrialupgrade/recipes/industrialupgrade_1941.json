@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "minecraft:wool"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/glass5"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:synthetic_plate"
-      }
-    ]
+    "A": {
+      "tag": "minecraft:wool"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/glass5"
+    },
+    "C": {
+      "item": "industrialupgrade:synthetic_plate"
+    }
   },
   "pattern": [
     "CAC",

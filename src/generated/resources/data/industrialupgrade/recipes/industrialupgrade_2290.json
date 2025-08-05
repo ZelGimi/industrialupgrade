@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gears/barium"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:adv_bee_frame_template"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/gadolinium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/vanady"
-      }
-    ]
+    "A": {
+      "tag": "forge:gears/barium"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_bee_frame_template"
+    },
+    "C": {
+      "tag": "forge:plates/gadolinium"
+    },
+    "D": {
+      "tag": "forge:casings/vanady"
+    }
   },
   "pattern": [
     "CDC",

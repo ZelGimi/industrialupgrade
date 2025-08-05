@@ -30,6 +30,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -58,7 +59,6 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
-    protected boolean sound = true;
 
     public TileEntityPerAlloySmelter(BlockPos pos, BlockState state) {
         super(300, 1, 1,BlockBaseMachine3.per_alloy_smelter,pos,state);
@@ -119,7 +119,13 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
         ));
 
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
+        }
+    }
     public void addInformation(ItemStack stack, List<String> tooltip) {
 
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {

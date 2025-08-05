@@ -29,7 +29,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -146,7 +145,7 @@ public class TileEnergyController extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
 
         }
 
@@ -155,7 +154,7 @@ public class TileEnergyController extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
         }
         super.onUnloaded();
     }
@@ -249,10 +248,5 @@ public class TileEnergyController extends TileEntityInventory implements
 
     }
 
-
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
 
 }

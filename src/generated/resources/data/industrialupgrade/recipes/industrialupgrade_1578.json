@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_258_element"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:basemachine3/generator_iu"
-      }
-    ]
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_258_element"
+    },
+    {
+      "item": "industrialupgrade:basemachine3/generator_iu"
+    }
   ],
   "result": {
     "item": "industrialupgrade:basemachine3/redstone_generator"

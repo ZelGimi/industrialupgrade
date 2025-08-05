@@ -439,7 +439,7 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
             }
         }
         if (tile instanceof IEnergyConductor) {
-            final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) tile);
+            final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) tile,tile.getLevel());
             euBar(probeInfo, (int) node.getEnergyOut(), (int) ((IEnergyConductor) tile).getConductorBreakdownEnergy());
         }
         if (tile instanceof TileEntityInventory) {
@@ -544,8 +544,6 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                             Fluid fluid = fluidStack.getFluid();
                             int amount = fluidStack.getAmount();
                             int capacity = tank.getCapacity();
-                            if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                                fluid = FluidName.fluidwater.getInstance().get();
                             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                             TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fluidStack));
                             int color = extensions.getTintColor();

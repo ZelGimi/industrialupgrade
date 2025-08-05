@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "industrialupgrade:block/raw_block/raw_osmium"
+        }
+    }
+}

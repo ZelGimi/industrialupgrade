@@ -16,6 +16,7 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -183,7 +184,9 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
                 this.fluid_handler.setOutput(null);
             }
         }
-
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnObsidianGeneratorParticles(level,pos,level.random);
+        }
 
         if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.energy.canUseEnergy(energyConsume) && this.outputSlot.canAdd(
                 this.fluid_handler.output().getOutput().items.get(0))) {

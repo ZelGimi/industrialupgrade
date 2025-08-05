@@ -144,12 +144,10 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         world.addParticle(ParticleTypes.FLAME, particlePos.x, particlePos.y, particlePos.z, 0, 0.05, 0);
                     }
 
-                    // Частицы дыма
                     for (int j = 0; j < 1 + rand.nextInt(2); j++) {
                         world.addParticle(ParticleTypes.SMOKE, particlePos.x, particlePos.y + 0.3, particlePos.z, 0, 0.02, 0);
                     }
 
-                    // Частицы красного камня
                     if (rand.nextInt(3) == 0) {
                         world.addParticle(new DustParticleOptions(new Vector3f(1, 0, 0), 1),
                                 pos.getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.4 - 0.2,
@@ -158,7 +156,6 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                                 1.0f, 0.3f, 0.1f);
                     }
 
-                    // Частицы лавы
                     if (rand.nextInt(5) == 0) {
                         world.addParticle(ParticleTypes.LAVA,
                                 pos.getX() + 0.5 + dx + offsetX * -4 + rand.nextDouble() * 0.4 - 0.2,

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_274_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "C": {
+      "tag": "forge:plates/carbon"
+    },
+    "D": {
+      "item": "industrialupgrade:blockresource/machine"
+    }
   },
   "pattern": [
     "ABA",

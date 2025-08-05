@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_402_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_582_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_574_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_582_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_574_element"
+    }
   },
   "pattern": [
     "CDC",

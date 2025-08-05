@@ -36,7 +36,7 @@ public class TileEntityAdvOilRefinerRender implements BlockEntityRenderer<TileAd
                 poseStack.translate(0.8825 + 0.435, 0.25 + dopY, +0.437 + 0.45);
             }
             final float scale = tile.getFluidTank(0).getFluidAmount() * 1F / tile.getFluidTank(0).getCapacity();
-            RenderFluidBlock.renderFluid(tile.getFluidTank(0).getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale * 0.88f, 0.125f);
+            RenderFluidBlock.renderFluid(tile.getFluidTank(0).getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale * 0.88f, 0.125f,0);
             poseStack.popPose();
         }
         if (!tile.getFluidTank(1).getFluid().isEmpty()) {
@@ -55,7 +55,7 @@ public class TileEntityAdvOilRefinerRender implements BlockEntityRenderer<TileAd
                 poseStack.translate(0.626 + 0.435, 0.25 + dopY, 0.8225 + 0.435);
             }
             final float scale = tile.getFluidTank(1).getFluidAmount() * 1F / tile.getFluidTank(1).getCapacity();
-            RenderFluidBlock.renderFluid(tile.getFluidTank(1).getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale * 0.88f, 0.125f);
+            RenderFluidBlock.renderFluid(tile.getFluidTank(1).getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale * 0.88f, 0.125f,1);
             poseStack.popPose();
         }
         if (!tile.getFluidTank(2).getFluid().isEmpty()) {
@@ -75,7 +75,7 @@ public class TileEntityAdvOilRefinerRender implements BlockEntityRenderer<TileAd
             }
 
             final float scale = tile.getFluidTank(2).getFluidAmount() * 1F / tile.getFluidTank(2).getCapacity();
-            RenderFluidBlock.renderFluid(tile.getFluidTank(2).getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale * 0.88f, 0.125f);
+            RenderFluidBlock.renderFluid(tile.getFluidTank(2).getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale * 0.88f, 0.125f,2);
             poseStack.popPose();
         }
     }

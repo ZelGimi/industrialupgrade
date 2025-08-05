@@ -1,33 +1,25 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quantumitems6"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:simplemachine/generator_matter"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:doubleplate/alumel"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:simplemachine/generator_matter"
+    },
+    "D": {
+      "tag": "forge:doubleplate/alumel"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
   },
   "pattern": [
     "DED",

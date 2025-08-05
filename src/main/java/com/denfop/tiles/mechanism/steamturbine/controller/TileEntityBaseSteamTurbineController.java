@@ -327,7 +327,6 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                         if (exchanger.getExchanger() == null) {
                             continue;
                         }
-                        this.removeHeat(exchanger.getPower());
                         boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), 1);
                         if (update) {
                             exchanger.getSlot().set(0, ItemStack.EMPTY);
@@ -514,13 +513,10 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0) {
             work = !work;
-        } else if (var2 == 1) {
-
+        } else if (var2 < 0) {
+            double index = (var2 * -1) - 1;
             final EnumSteamPhase[] values = EnumSteamPhase.values();
-            this.stableenumSteamPhase = values[(this.stableenumSteamPhase.ordinal() + 1) % values.length];
-        } else {
-            final EnumSteamPhase[] values = EnumSteamPhase.values();
-            this.stableenumSteamPhase = values[Math.max(0, (this.stableenumSteamPhase.ordinal() - 1))];
+            this.stableenumSteamPhase = values[(int) index];
         }
     }
 

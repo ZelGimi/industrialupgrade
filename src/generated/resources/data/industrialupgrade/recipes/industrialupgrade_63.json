@@ -1,43 +1,31 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_515_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_512_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/muntsa"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:energy_tools/nanopickaxe"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_515_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_512_element"
+    },
+    "C": {
+      "tag": "forge:doubleplate/muntsa"
+    },
+    "D": {
+      "item": "industrialupgrade:energy_tools/nanopickaxe"
+    },
     "E": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_516_element"
-      }
-    ],
-    "H": [
-      {
-        "tag": "forge:rods/electrum"
-      }
-    ]
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_516_element"
+    },
+    "H": {
+      "tag": "forge:rods/electrum"
+    }
   },
   "pattern": [
     "BDA",

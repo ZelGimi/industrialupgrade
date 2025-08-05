@@ -24,6 +24,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -118,7 +119,13 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
             }
         };
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnFusionCoreParticles(level,pos,level.random);
+        }
+    }
     public static void addsynthesis(ItemStack container, ItemStack fill, int number, ItemStack output, int rad) {
         CompoundTag nbt = ModUtils.nbt();
         nbt.putInt("percent", number);
@@ -162,25 +169,25 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
     public void init() {
         addsynthesis(
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(2), 1),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
+                new ItemStack(IUItem.crafting_elements.getStack(769)),
                 32,
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(3), 1), 200
         );
         addsynthesis(
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(3), 1),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
+                new ItemStack(IUItem.crafting_elements.getStack(769)),
                 27,
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(6), 1), 400
         );
         addsynthesis(
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(6), 1),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
+                new ItemStack(IUItem.crafting_elements.getStack(769)),
                 22,
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(7), 1), 500
         );
         addsynthesis(
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(7), 1),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
+                new ItemStack(IUItem.crafting_elements.getStack(769)),
                 19,
                 new ItemStack(IUItem.radiationresources.getItemFromMeta(11), 1), 750
         );

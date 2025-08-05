@@ -1,28 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/alcled"
-      }
-    ],
+    "A": {
+      "tag": "forge:plates/alcled"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:3}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_373_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/gold"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_373_element"
+    },
+    "D": {
+      "tag": "forge:plates/gold"
+    }
   },
   "pattern": [
     "AAA",

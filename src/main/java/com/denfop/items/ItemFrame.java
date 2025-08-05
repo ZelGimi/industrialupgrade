@@ -28,7 +28,7 @@ public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
 
     @Override
     public FrameAttributeLevel getAttribute(final int meta) {
-        return FrameAttributeLevel.values()[meta];
+        return FrameAttributeLevel.values()[this.getElement().getId()];
     }
     @Override
     public CreativeModeTab getItemCategory() {

@@ -84,7 +84,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         }
 
         if (this.flipGas && this.fluid != Fluids.EMPTY && this.fluid.getFluidType().isLighterThanAir()) {
-            modelState = new SimpleModelState(((ModelState)modelState).getRotation().compose(new Transformation((Vector3f)null, new Quaternionf(0.0F, 0.0F, 1.0F, 0.0F), (Vector3f)null, (Quaternionf)null)));
+            modelState = new SimpleModelState(modelState.getRotation().compose(new Transformation(null, new Quaternionf(0.0F, 0.0F, 1.0F, 0.0F), (Vector3f)null, (Quaternionf)null)));
         }
 
         StandaloneGeometryBakingContext itemContext = StandaloneGeometryBakingContext.builder(context).withGui3d(false).withUseBlockLight(false).build(modelLocation);
@@ -92,9 +92,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         RenderTypeGroup normalRenderTypes = getLayerRenderTypes(false);
         if (baseLocation != null && baseSprite != null) {
             List<BlockElement> unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, baseSprite.contents());
-            List<BakedQuad> quads = UnbakedGeometryHelper.bakeElements(unbaked, ($) -> {
-                return baseSprite;
-            }, (ModelState)modelState, modelLocation);
+            List<BakedQuad> quads = UnbakedGeometryHelper.bakeElements(unbaked, ($) -> baseSprite, modelState, modelLocation);
             modelBuilder.addQuads(normalRenderTypes, quads);
         }
 
@@ -187,7 +185,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
             if (!jsonObject.has("fluid")) {
                 throw new RuntimeException("Bucket model requires 'fluid' value.");
             } else {
-                ResourceLocation fluidName = new ResourceLocation(jsonObject.get("fluid").getAsString());
+                ResourceLocation fluidName = new ResourceLocation("minecraft:empty");
                 Fluid fluid = (Fluid)ForgeRegistries.FLUIDS.getValue(fluidName);
                 boolean flip = GsonHelper.getAsBoolean(jsonObject, "flip_gas", false);
                 boolean coverIsMask = GsonHelper.getAsBoolean(jsonObject, "cover_is_mask", true);

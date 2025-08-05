@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spectral_box"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/superalloyhaynes"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_509_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spectral_box"
+    },
+    "B": {
+      "tag": "forge:plates/superalloyhaynes"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_509_element"
+    }
   },
   "pattern": [
     " B ",

@@ -3,13 +3,17 @@ package com.denfop.items;
 import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,6 +22,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -36,6 +41,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     public ItemFluidCell() {
@@ -47,7 +53,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     }
     @Override
     public CreativeModeTab getItemCategory() {
-        return IUCore.ItemTab;
+        return IUCore.fluidCellTab;
     }
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
@@ -56,6 +62,19 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
 
         }
     }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, list, tooltipFlag);
+        if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            list.add(Component.literal(Localization.translate("press.lshift")));
+        }
+        if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            list.add(Component.literal(Localization.translate("iu.fluid_cell.info")));
+        }
+
+    }
+
     public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
         return new CapabilityFluidHandlerItem(stack, 1000) {
             public boolean canFillFluidType(FluidStack fluid) {

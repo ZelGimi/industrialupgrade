@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:energy/impmagnet"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine1/magnet"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/electrum"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/nickel"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:energy/impmagnet"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine1/magnet"
+    },
+    "C": {
+      "tag": "forge:plates/electrum"
+    },
+    "D": {
+      "tag": "forge:plates/nickel"
+    }
   },
   "pattern": [
     "DCD",

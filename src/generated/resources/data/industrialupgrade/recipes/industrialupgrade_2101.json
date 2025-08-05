@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spaceupgrademodule_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/alcled"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/inconel"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemplates/bloodstone"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/alcled"
+    },
+    "C": {
+      "tag": "forge:plates/inconel"
+    },
+    "E": {
+      "item": "industrialupgrade:itemplates/bloodstone"
+    }
   },
   "pattern": [
     " B ",

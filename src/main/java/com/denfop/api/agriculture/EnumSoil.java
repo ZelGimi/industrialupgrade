@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.denfop.blocks.BlockClassicOre.BOOL_PROPERTY;
+
 public enum EnumSoil {
     FARMLAND(Blocks.FARMLAND),
     MYCELIUM(Blocks.MYCELIUM),
@@ -46,7 +48,7 @@ public enum EnumSoil {
     COPPER(Blocks.COPPER_ORE, Blocks.COPPER_ORE.defaultBlockState(), false),
     TIN(IUItem.classic_ore.getBlock(1), IUItem.classic_ore.getStateFromMeta(1), false),
     LEAD(IUItem.classic_ore.getBlock(2), IUItem.classic_ore.getStateFromMeta(2), false),
-    URANIUM(IUItem.classic_ore.getBlock(3), IUItem.classic_ore.getStateFromMeta(3), false),
+    URANIUM(IUItem.classic_ore.getBlock(3), IUItem.classic_ore.getStateFromMeta(3).setValue(BOOL_PROPERTY, false), false),
     ARSENIC(IUItem.ore3.getBlock(0), IUItem.ore3.getStateFromMeta(0), false),
     BARIUM(IUItem.ore3.getBlock(1), IUItem.ore3.getStateFromMeta(1), false),
     BISMUTH(IUItem.ore3.getBlock(2), IUItem.ore3.getStateFromMeta(2), false),

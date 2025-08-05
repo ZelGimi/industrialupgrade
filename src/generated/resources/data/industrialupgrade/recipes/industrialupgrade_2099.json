@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spaceupgrademodule_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/aluminiumlithium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:itemplates/bloodstone"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/aluminiumlithium"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/bloodstone"
+    },
+    "E": {
+      "tag": "forge:plates/duralumin"
+    }
   },
   "pattern": [
     " B ",

@@ -37,7 +37,7 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
     public TileEntitySmelteryFurnace(BlockPos pos, BlockState state) {
         super(BlockSmeltery.smeltery_furnace,pos,state);
         this.smeltery = new InvSlotRecipes(this, "smeltery", this);
-        this.progress = this.addComponent(new ComponentProgress(this, 1, 180));
+        this.progress = this.addComponent(new ComponentProgress(this, 1, 108));
         Recipes.recipes.addInitRecipes(this);
     }
 

@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:graphite_reactor/graphite_tank"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_419_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_415_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_45_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_425_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_tank"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_419_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_415_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_45_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_425_element"
+    }
   },
   "pattern": [
     "BDB",

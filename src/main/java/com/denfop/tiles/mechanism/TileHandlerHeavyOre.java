@@ -143,8 +143,8 @@ public class TileHandlerHeavyOre extends TileBaseHandlerHeavyOre implements IHas
                 IUItem.tinOre}, (short) 4000, 80, 20);
         addhandlerore(
                 new ItemStack(IUItem.ore2.getItem(6)),
-                new ItemStack[]{new ItemStack(IUItem.crafting_elements.getStack(463)), new ItemStack(IUItem.crafting_elements.getStack(461)),
-                        new ItemStack(IUItem.crafting_elements.getStack(462))},
+                new ItemStack[]{new ItemStack(IUItem.crafting_elements.getStack(463),3), new ItemStack(IUItem.crafting_elements.getStack(461),2),
+                        new ItemStack(IUItem.crafting_elements.getStack(462),3)},
                 (short) 1000, 50, 5, 45
         );
         addhandlerore(

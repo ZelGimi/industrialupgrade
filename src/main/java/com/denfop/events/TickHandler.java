@@ -123,7 +123,11 @@ public class TickHandler {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
         } else if (block == Blocks.COAL_ORE) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block == Blocks.EMERALD_ORE) {
+        }
+        else if (block == Blocks.COPPER_ORE) {
+            return ModUtils.convertRGBcolorToInt(255, 144, 0);
+        }
+        else if (block == Blocks.EMERALD_ORE) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
         } else if (block == Blocks.NETHER_QUARTZ_ORE) {
             return ModUtils.convertRGBcolorToInt(223, 223, 223);
@@ -532,7 +536,9 @@ public class TickHandler {
                 int yRange = 0;
                 int zRange = 0;
 
+
                 Vec3 camera = event.getCamera().getPosition();
+
                 double x = camera.x;
                 double y = camera.y;
                 double z = camera.z;
@@ -542,15 +548,14 @@ public class TickHandler {
                 x = pos.getX();
                 y = pos.getY();
                 z = pos.getZ();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
-                Tesselator tessellator = Tesselator.getInstance();
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
                 VertexConsumer p_109623_ = Minecraft.getInstance()
                         .renderBuffers()
                         .bufferSource()
                         .getBuffer(RenderType.lines());
                 RenderSystem.lineWidth(10F);
-
                 Vec3 lookVec = player.getLookAngle();
                 for (int xPos = (int) (x - xRange); xPos <= x + xRange; xPos++) {
                     for (int yPos = (int) (y - yRange); yPos <= y + yRange; yPos++) {
@@ -562,9 +567,7 @@ public class TickHandler {
                                     currentPos.getZ() + 0.5 - player.getZ()
                             );
 
-                            if (lookVec.dot(blockVec) <= 0) {
-                                continue;
-                            }
+
                             float p_109630_ = 1.0f;
                             float p_109635_ = 1.0f;
                             float p_109636_ = 1.0f;
@@ -605,10 +608,10 @@ public class TickHandler {
                             p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
                             p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
 
-
                         }
                     }
                 }
+
 
                 poseStack.popPose();
             }

@@ -1,32 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/vanady"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:plastic_plate"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:plastic_plate"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:ingots/caravky"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/zinc"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/vanady"
+    },
+    "B": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "C": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "D": {
+      "tag": "forge:ingots/caravky"
+    },
+    "E": {
+      "tag": "forge:plates/zinc"
+    }
   },
   "pattern": [
     "ABA",

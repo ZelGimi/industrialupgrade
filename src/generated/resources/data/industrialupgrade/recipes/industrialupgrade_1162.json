@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:cokeoven/coke_oven_part"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/invar"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:cokeoven/coke_oven_part"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "C": {
+      "tag": "forge:gears/invar"
+    }
   },
   "pattern": [
     "CAC",

@@ -1,27 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/moon_spotter"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/permalloy"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/moon_spotter"
+    },
+    "B": {
+      "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "D": {
+      "tag": "forge:plates/permalloy"
+    }
   },
   "pattern": [
     "DCD",

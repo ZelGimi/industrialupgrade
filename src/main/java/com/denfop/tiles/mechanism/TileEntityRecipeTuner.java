@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
+
 public class TileEntityRecipeTuner extends TileEntityInventory implements IUpdatableTileEvent {
 
     public final InvSlot slot;
@@ -41,6 +44,12 @@ public class TileEntityRecipeTuner extends TileEntityInventory implements IUpdat
             }
         };
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.receptor_mechanism.info"));
     }
 
     @Override
