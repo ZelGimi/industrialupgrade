@@ -1,6 +1,7 @@
 package com.denfop.world.vein;
 
 import com.denfop.IUItem;
+import com.denfop.api.pollution.Vec2f;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -14,10 +15,13 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeHills;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.gen.IChunkGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -26,8 +30,13 @@ public class AlgorithmVein {
 
     static Random random = new Random();
     private static Map<ChunkPos, Chunk> chunkPosChunkMap = new HashMap<>();
+    private static HashSet<Vec2f> poses = new HashSet<>();
 
-    public static void generate(World world, VeinType veinType, BlockPos pos, Chunk chunk, int meta1) {
+    public static void generate(World world, VeinType veinType, BlockPos pos, Chunk chunk, int meta1,
+                                final IChunkProvider chunkProvider,
+                                final IChunkGenerator chunkGenerator
+    ) {
+
         if (random.nextInt(3) > 0) {
             return;
         }
@@ -47,7 +56,6 @@ public class AlgorithmVein {
         }
         final int chance_type = random.nextInt(101);
         if (chance_type <= 15 && biome instanceof BiomeHills) {
-            List<BlockPos> blockPosList = new ArrayList<>();
             final int height = chunk.getHeight(pos);
             int radius = 10;
             if (veinType.getVein() == TypeVein.SMALL) {
@@ -69,15 +77,20 @@ public class AlgorithmVein {
                             ChanceOre ore = veinType.getOres().get(meta);
                             final BlockPos pos1 = pos.add(x, y, z);
                             if (ore.needGenerate(world) && (random.nextInt(100) > 50)) {
+                                ChunkPos pos2 = new ChunkPos(pos1);
+                                chunk1 = chunkPosChunkMap.get(pos2);
                                 if (chunk1 == null || chunkPos == null) {
-                                    chunk1 = world.getChunkFromBlockCoords(pos1);
+                                    chunk1 = chunkProvider.provideChunk(pos2.x,pos2.z);
                                     chunkPos = chunk1.getPos();
+                                    chunkPosChunkMap.put(chunkPos, chunk1);
                                 } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                    chunk1 = world.getChunkFromBlockCoords(pos1);
-                                    chunkPos = chunk1.getPos();
+                                    chunk1 = chunkPosChunkMap.get(pos2);
+
                                 }
+
                                 if (canGenerateSphere(world, pos1, chunk1)) {
-                                    blockPosList.add(pos1);
+                                    Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                    poses.add(vec2f);
                                     setBlockState1(world, pos1,
                                             (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                     );
@@ -87,7 +100,8 @@ public class AlgorithmVein {
                             final BlockPos pos1 = pos.add(x, y, z);
                             if (veinType.getHeavyOre() != null) {
                                 if (random.nextInt(100) > 40 && canGenerateSphere(world, pos1, chunk1)) {
-                                    blockPosList.add(pos1);
+                                    Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                    poses.add(vec2f);
                                     setBlockState1(world, pos1,
                                             veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2
                                     );
@@ -96,15 +110,19 @@ public class AlgorithmVein {
                                 int meta = random.nextInt(veinType.getOres().size());
                                 ChanceOre ore = veinType.getOres().get(meta);
                                 if (ore.needGenerate(world) && (random.nextInt(100) > 50)) {
+                                    ChunkPos pos2 = new ChunkPos(pos1);
+                                    chunk1 = chunkPosChunkMap.get(pos2);
                                     if (chunk1 == null || chunkPos == null) {
                                         chunk1 = world.getChunkFromBlockCoords(pos1);
                                         chunkPos = chunk1.getPos();
+                                        chunkPosChunkMap.put(chunkPos, chunk1);
                                     } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
-                                        chunkPos = chunk1.getPos();
+                                        chunk1 = chunkPosChunkMap.get(pos2);
+
                                     }
                                     if (canGenerateSphere(world, pos1, chunk1)) {
-                                        blockPosList.add(pos1);
+                                        Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                        poses.add(vec2f);
                                         setBlockState1(world, pos1,
                                                 ore.getBlock(), 2
                                         );
@@ -133,26 +151,31 @@ public class AlgorithmVein {
                     k = 15;
                     break;
             }
-            while (ii < k && !blockPosList.isEmpty()) {
-                BlockPos pos1 = blockPosList.get(random.nextInt(blockPosList.size()));
-                if (chunk1 == null) {
-                    chunk1 = world.getChunkFromBlockCoords(pos1);
+            List<Vec2f> vec2fs = new ArrayList<>(poses);
+            while (ii < k && !vec2fs.isEmpty()) {
+                Vec2f pos1 = vec2fs.remove(random.nextInt(vec2fs.size()));
+
+                ChunkPos chunkpos = new ChunkPos(pos1.x >> 4, pos1.y >> 4);
+
+                if (chunk1 == null || chunkPos == null) {
+                    chunk1 = chunkProvider.provideChunk(chunkpos.x, chunkpos.z);
                     chunkPos = chunk1.getPos();
-                } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                    chunk1 = world.getChunkFromBlockCoords(pos1);
-                    chunkPos = chunk1.getPos();
+                    chunkPosChunkMap.put(chunkPos, chunk1);
+                } else if (pos1.x >> 4 != chunkPos.x && pos1.y >> 4 != chunk.z) {
+                    chunk1 = chunkPosChunkMap.get(chunkpos);
+
                 }
-                int y = chunk1.getHeight(pos1);
+                int y = chunk1.getHeight(new BlockPos(pos1.x, 70, pos1.y));
                 int height1 = y;
                 BlockPos pos2 = null;
                 IBlockState oldState;
                 boolean need = false;
                 while (height1 - 3 < y) {
-                    pos2 = new BlockPos(pos1.getX(), y - 1, pos1.getZ());
-                    oldState = world.getBlockState(pos2);
-                    pos2 = new BlockPos(pos1.getX(), y + 1, pos1.getZ());
-                    final IBlockState upState = world.getBlockState(pos2);
-                    pos2 = new BlockPos(pos1.getX(), y, pos1.getZ());
+                    pos2 = new BlockPos(pos1.x, y - 1, pos1.y);
+                    oldState = chunk1.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y + 1, pos1.y);
+                    final IBlockState upState = chunk1.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y, pos1.y);
                     final IBlockState oldState1 = world.getBlockState(pos2);
                     final boolean canSpawn = canSpawn(oldState, oldState1, upState);
                     if (canSpawn) {
@@ -162,7 +185,6 @@ public class AlgorithmVein {
                     y--;
                 }
                 if (!need) {
-                    blockPosList.remove(pos1);
                     continue;
                 } else {
                     if (meta1 < 16) {
@@ -176,11 +198,10 @@ public class AlgorithmVein {
                     }
 
                     ii++;
-                    blockPosList.remove(pos1);
                 }
             }
         } else if (chance_type <= 80) {
-            List<BlockPos> blockPosList = new ArrayList<>();
+
             final int height = chunk.getHeight(pos);
             pos = new BlockPos(pos.getX(), height / 2 + height / 4, pos.getZ());
             int x1 = random.nextInt(veinType.getVein().getMax()) + 3;
@@ -204,12 +225,15 @@ public class AlgorithmVein {
                             need = 0;
                         }
                         final BlockPos pos1 = pos.add(x, y, z);
+                        ChunkPos pos2 = new ChunkPos(pos1);
+                        chunk1 = chunkPosChunkMap.get(pos2);
                         if (chunk1 == null || chunkPos == null) {
                             chunk1 = world.getChunkFromBlockCoords(pos1);
                             chunkPos = chunk1.getPos();
+                            chunkPosChunkMap.put(chunkPos, chunk1);
                         } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                            chunk1 = world.getChunkFromBlockCoords(pos1);
-                            chunkPos = chunk1.getPos();
+                            chunk1 = chunkPosChunkMap.get(pos2);
+
                         }
                         if (random.nextInt(50) > 10 && ore.needGenerate(world) && (need == 0 || random.nextInt(100 - Math.min(
                                 need * veinType.getVein().getNeed(),
@@ -233,7 +257,8 @@ public class AlgorithmVein {
                             if (z > maxZ) {
                                 maxZ = z;
                             }
-                            blockPosList.add(pos1);
+                            Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                            poses.add(vec2f);
                             setBlockState1(world, pos1,
                                     (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                             );
@@ -243,7 +268,8 @@ public class AlgorithmVein {
                                 if (random.nextInt(50) > 40 && random.nextInt(100 - Math.min(need * veinType
                                         .getVein()
                                         .getNeed(), 90)) > 50 && canGenerate(world, pos1, chunk1)) {
-                                    blockPosList.add(pos1);
+                                    Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                    poses.add(vec2f);
                                     setBlockState1(world, pos1,
                                             veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2
                                     );
@@ -294,15 +320,19 @@ public class AlgorithmVein {
 
                                 if (ore.needGenerate(world) && (random.nextInt(100) > 50)) {
                                     final BlockPos pos1 = pos.add(yxz[1], yxz[0], yxz[2]);
+                                    ChunkPos pos2 = new ChunkPos(pos1);
+                                    chunk1 = chunkPosChunkMap.get(pos2);
                                     if (chunk1 == null || chunkPos == null) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
+                                        chunk1 = chunkProvider.provideChunk(pos2.x,pos2.z);
                                         chunkPos = chunk1.getPos();
+                                        chunkPosChunkMap.put(chunkPos, chunk1);
                                     } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
-                                        chunkPos = chunk1.getPos();
+                                        chunk1 = chunkPosChunkMap.get(pos2);
+
                                     }
                                     if (canGenerate(world, pos1, chunk1)) {
-                                        blockPosList.add(pos1);
+                                        Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                        poses.add(vec2f);
                                         setBlockState1(world, pos1,
                                                 (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                         );
@@ -321,15 +351,19 @@ public class AlgorithmVein {
                                 ChanceOre ore = veinType.getOres().get(meta);
                                 if (ore.needGenerate(world) && (random.nextInt(100) > 50)) {
                                     final BlockPos pos1 = pos.add(yxz[1], yxz[0], yxz[2]);
+                                    ChunkPos pos2 = new ChunkPos(pos1);
+                                    chunk1 = chunkPosChunkMap.get(pos2);
                                     if (chunk1 == null || chunkPos == null) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
+                                        chunk1 = chunkProvider.provideChunk(pos2.x,pos2.z);
                                         chunkPos = chunk1.getPos();
+                                        chunkPosChunkMap.put(chunkPos, chunk1);
                                     } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
-                                        chunkPos = chunk1.getPos();
+                                        chunk1 = chunkPosChunkMap.get(pos2);
+
                                     }
                                     if (canGenerate(world, pos1, chunk1)) {
-                                        blockPosList.add(pos1);
+                                        Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                        poses.add(vec2f);
                                         setBlockState1(world, pos1,
                                                 (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                         );
@@ -364,27 +398,32 @@ public class AlgorithmVein {
             }
             chunk1 = null;
             int ii = 0;
-            while (ii < k && !blockPosList.isEmpty()) {
-                BlockPos pos1 = blockPosList.get(random.nextInt(blockPosList.size()));
-                if (chunk1 == null) {
-                    chunk1 = world.getChunkFromBlockCoords(pos1);
+            List<Vec2f> vec2fs = new ArrayList<>(poses);
+            while (ii < k && !vec2fs.isEmpty()) {
+                Vec2f pos1 = vec2fs.remove(random.nextInt(vec2fs.size()));
+
+                ChunkPos chunkpos = new ChunkPos(pos1.x >> 4, pos1.y >> 4);
+
+                if (chunk1 == null || chunkPos == null) {
+                    chunk1 = chunkProvider.provideChunk(chunkpos.x, chunkpos.z);
                     chunkPos = chunk1.getPos();
-                } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                    chunk1 = world.getChunkFromBlockCoords(pos1);
-                    chunkPos = chunk1.getPos();
+                    chunkPosChunkMap.put(chunkPos, chunk1);
+                } else if (pos1.x >> 4 != chunkPos.x && pos1.y >> 4 != chunk.z) {
+                    chunk1 = chunkPosChunkMap.get(chunkpos);
+
                 }
-                int y = chunk1.getHeight(pos1);
+                int y = chunk1.getHeight(new BlockPos(pos1.x, 70, pos1.y));
                 int height1 = y;
                 BlockPos pos2 = null;
                 IBlockState oldState;
                 boolean need = false;
                 while (height1 - 3 < y) {
-                    pos2 = new BlockPos(pos1.getX(), y - 1, pos1.getZ());
-                    oldState = world.getBlockState(pos2);
-                    pos2 = new BlockPos(pos1.getX(), y + 1, pos1.getZ());
-                    final IBlockState upState = world.getBlockState(pos2);
-                    pos2 = new BlockPos(pos1.getX(), y, pos1.getZ());
-                    final IBlockState oldState1 = world.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y - 1, pos1.y);
+                    oldState = chunk1.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y + 1, pos1.y);
+                    final IBlockState upState = chunk1.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y, pos1.y);
+                    final IBlockState oldState1 = chunk1.getBlockState(pos2);
                     final boolean canSpawn = canSpawn(oldState, oldState1, upState);
                     if (canSpawn) {
                         need = true;
@@ -393,7 +432,7 @@ public class AlgorithmVein {
                     y--;
                 }
                 if (!need) {
-                    blockPosList.remove(pos1);
+
                     continue;
                 } else {
                     if (meta1 < 16) {
@@ -407,7 +446,7 @@ public class AlgorithmVein {
                     }
 
                     ii++;
-                    blockPosList.remove(pos1);
+
                 }
             }
         } else {
@@ -433,7 +472,6 @@ public class AlgorithmVein {
                 r = world.rand.nextInt(4) + 4;
                 y1 = world.rand.nextInt(5) + 3;
             }
-            List<BlockPos> blockPosList = new ArrayList<>();
             ChunkPos chunkPos = null;
             Chunk chunk1 = null;
             for (int y2 = centerY - y1; y2 < centerY + y1; y2++) {
@@ -444,15 +482,19 @@ public class AlgorithmVein {
                             int meta = random.nextInt(veinType.getOres().size());
                             ChanceOre ore = veinType.getOres().get(meta);
                             if (ore.needGenerate(world) && (random.nextInt(100) > 50)) {
+                                ChunkPos pos2 = new ChunkPos(pos1);
+                                chunk1 = chunkPosChunkMap.get(pos2);
                                 if (chunk1 == null || chunkPos == null) {
                                     chunk1 = world.getChunkFromBlockCoords(pos1);
                                     chunkPos = chunk1.getPos();
+                                    chunkPosChunkMap.put(chunkPos, chunk1);
                                 } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                    chunk1 = world.getChunkFromBlockCoords(pos1);
-                                    chunkPos = chunk1.getPos();
+                                    chunk1 = chunkPosChunkMap.get(pos2);
+
                                 }
                                 if (canGenerate(world, pos1, chunk1)) {
-                                    blockPosList.add(pos1);
+                                    Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                    poses.add(vec2f);
                                     setBlockState1(world, pos1,
                                             (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                     );
@@ -462,16 +504,20 @@ public class AlgorithmVein {
                         } else if (x * x + z * z <= (R + r) * (R + r) && (x * x + z * z >= r * r)) {
 
                             BlockPos pos1 = new BlockPos(centerX + x, y2, centerZ + z);
+                            ChunkPos pos2 = new ChunkPos(pos1);
+                            chunk1 = chunkPosChunkMap.get(pos2);
                             if (chunk1 == null || chunkPos == null) {
-                                chunk1 = world.getChunkFromBlockCoords(pos1);
+                                chunk1 = chunkProvider.provideChunk(pos2.x,pos2.z);
                                 chunkPos = chunk1.getPos();
+                                chunkPosChunkMap.put(chunkPos, chunk1);
                             } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                chunk1 = world.getChunkFromBlockCoords(pos1);
-                                chunkPos = chunk1.getPos();
+                                chunk1 = chunkPosChunkMap.get(pos2);
+
                             }
                             if (veinType.getHeavyOre() != null) {
                                 if (random.nextInt(100) > 40 && canGenerate(world, pos1, chunk1)) {
-                                    blockPosList.add(pos1);
+                                    Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                    poses.add(vec2f);
                                     setBlockState1(world, pos1,
                                             veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2
                                     );
@@ -480,15 +526,19 @@ public class AlgorithmVein {
                                 int meta = random.nextInt(veinType.getOres().size());
                                 ChanceOre ore = veinType.getOres().get(meta);
                                 if (ore.needGenerate(world) && (random.nextInt(100) > 50)) {
+                                    ChunkPos pos3 = new ChunkPos(pos1);
+                                    chunk1 = chunkPosChunkMap.get(pos3);
                                     if (chunk1 == null || chunkPos == null) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
+                                        chunk1 = chunkProvider.provideChunk(pos3.x,pos3.z);
                                         chunkPos = chunk1.getPos();
+                                        chunkPosChunkMap.put(chunkPos, chunk1);
                                     } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                                        chunk1 = world.getChunkFromBlockCoords(pos1);
-                                        chunkPos = chunk1.getPos();
+                                        chunk1 = chunkPosChunkMap.get(pos3);
+
                                     }
                                     if (canGenerate(world, pos1, chunk1)) {
-                                        blockPosList.add(pos1);
+                                        Vec2f vec2f = new Vec2f(pos1.getX(), pos1.getZ());
+                                        poses.add(vec2f);
                                         setBlockState1(world, pos1,
                                                 (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                         );
@@ -513,27 +563,32 @@ public class AlgorithmVein {
                     k = 15;
                     break;
             }
-            while (ii < k && !blockPosList.isEmpty()) {
-                BlockPos pos1 = blockPosList.get(random.nextInt(blockPosList.size()));
-                if (chunk1 == null) {
-                    chunk1 = world.getChunkFromBlockCoords(pos1);
+            List<Vec2f> vec2fs = new ArrayList<>(poses);
+            while (ii < k && !vec2fs.isEmpty()) {
+                Vec2f pos1 = vec2fs.remove(random.nextInt(vec2fs.size()));
+
+                ChunkPos chunkpos = new ChunkPos(pos1.x >> 4, pos1.y >> 4);
+
+                if (chunk1 == null || chunkPos == null) {
+                    chunk1 = chunkProvider.provideChunk(chunkpos.x, chunkpos.z);
                     chunkPos = chunk1.getPos();
-                } else if (pos1.getX() >> 4 != chunkPos.x && pos1.getZ() >> 4 != chunk.z) {
-                    chunk1 = world.getChunkFromBlockCoords(pos1);
-                    chunkPos = chunk1.getPos();
+                    chunkPosChunkMap.put(chunkPos, chunk1);
+                } else if (pos1.x >> 4 != chunkPos.x && pos1.y >> 4 != chunk.z) {
+                    chunk1 = chunkPosChunkMap.get(chunkpos);
+
                 }
-                int y = chunk1.getHeight(pos1);
+                int y = chunk1.getHeight(new BlockPos(pos1.x, 70, pos1.y));
                 int height1 = y;
                 BlockPos pos2 = null;
                 IBlockState oldState;
                 boolean need = false;
                 while (height1 - 3 < y) {
-                    pos2 = new BlockPos(pos1.getX(), y - 1, pos1.getZ());
-                    oldState = world.getBlockState(pos2);
-                    pos2 = new BlockPos(pos1.getX(), y + 1, pos1.getZ());
-                    final IBlockState upState = world.getBlockState(pos2);
-                    pos2 = new BlockPos(pos1.getX(), y, pos1.getZ());
-                    final IBlockState oldState1 = world.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y - 1, pos1.y);
+                    oldState = chunk1.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y + 1, pos1.y);
+                    final IBlockState upState = chunk1.getBlockState(pos2);
+                    pos2 = new BlockPos(pos1.x, y, pos1.y);
+                    final IBlockState oldState1 = chunk1.getBlockState(pos2);
                     final boolean canSpawn = canSpawn(oldState, oldState1, upState);
                     if (canSpawn) {
                         need = true;
@@ -542,7 +597,6 @@ public class AlgorithmVein {
                     y--;
                 }
                 if (!need) {
-                    blockPosList.remove(pos1);
                     continue;
                 } else {
                     if (meta1 < 16) {
@@ -556,11 +610,11 @@ public class AlgorithmVein {
                     }
 
                     ii++;
-                    blockPosList.remove(pos1);
                 }
             }
         }
         chunkPosChunkMap.clear();
+        poses.clear();
     }
 
     private static boolean canSpawn(IBlockState underState, IBlockState state, final IBlockState upState) {
@@ -578,86 +632,7 @@ public class AlgorithmVein {
     }
 
     public static IBlockState setBlockState(World world, Chunk chunk, BlockPos pos, IBlockState state) {
-        int i = pos.getX() & 15;
-        int j = pos.getY();
-        int k = pos.getZ() & 15;
-        int l = k << 4 | i;
-
-        if (j >= chunk.precipitationHeightMap[l] - 1) {
-            chunk.precipitationHeightMap[l] = -999;
-        }
-
-        int i1 = chunk.heightMap[l];
-        IBlockState iblockstate = chunk.getBlockState(pos);
-
-        if (iblockstate == state) {
-            return null;
-        } else {
-            Block block = state.getBlock();
-            Block block1 = iblockstate.getBlock();
-            int k1 = iblockstate.getLightOpacity(
-                    world,
-                    pos
-            ); // Relocate old light value lookup here, so that it is called before TE is removed.
-            ExtendedBlockStorage extendedblockstorage = chunk.storageArrays[j >> 4];
-            boolean flag = false;
-
-            if (extendedblockstorage == Chunk.NULL_BLOCK_STORAGE) {
-                if (block == Blocks.AIR) {
-                    return null;
-                }
-
-                extendedblockstorage = new ExtendedBlockStorage(j >> 4 << 4, world.provider.hasSkyLight());
-                chunk.storageArrays[j >> 4] = extendedblockstorage;
-                flag = j >= i1;
-            }
-
-            extendedblockstorage.set(i, j & 15, k, state);
-
-            {
-                if (!world.isRemote) {
-                    if (block1 != block) //Only fire block breaks when the block changes.
-                    {
-                        block1.breakBlock(world, pos, iblockstate);
-                    }
-                    TileEntity te = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-                    if (te != null && te.shouldRefresh(world, pos, iblockstate, state)) {
-                        world.removeTileEntity(pos);
-                    }
-                } else if (block1.hasTileEntity(iblockstate)) {
-                    TileEntity te = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-                    if (te != null && te.shouldRefresh(world, pos, iblockstate, state)) {
-                        world.removeTileEntity(pos);
-                    }
-                }
-            }
-
-            if (extendedblockstorage.get(i, j & 15, k).getBlock() != block) {
-                return null;
-            } else {
-
-
-                if (!world.isRemote && block1 != block && (!world.captureBlockSnapshots || block.hasTileEntity(state))) {
-                    block.onBlockAdded(world, pos, state);
-                }
-
-                if (block.hasTileEntity(state)) {
-                    TileEntity tileentity1 = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-
-                    if (tileentity1 == null) {
-                        tileentity1 = block.createTileEntity(world, state);
-                        world.setTileEntity(pos, tileentity1);
-                    }
-
-                    if (tileentity1 != null) {
-                        tileentity1.updateContainingBlockInfo();
-                    }
-                }
-
-                chunk.markDirty();
-                return iblockstate;
-            }
-        }
+        return chunk.setBlockState(pos,state);
     }
 
     private static boolean canGenerate(World world, BlockPos pos, final Chunk chunk) {
@@ -694,26 +669,11 @@ public class AlgorithmVein {
 
             pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks
             net.minecraftforge.common.util.BlockSnapshot blockSnapshot = null;
-            if (world.captureBlockSnapshots && !world.isRemote) {
-                blockSnapshot = net.minecraftforge.common.util.BlockSnapshot.getBlockSnapshot(world, pos, flags);
-                world.capturedBlockSnapshots.add(blockSnapshot);
-            }
+
             IBlockState iblockstate = setBlockState(world, chunk, pos, newState);
 
-            if (iblockstate == null) {
-                if (blockSnapshot != null) {
-                    world.capturedBlockSnapshots.remove(blockSnapshot);
-                }
-                return false;
-            } else {
+            return true;
 
-
-                if (blockSnapshot == null) // Don't notify clients or update physics while capturing blockstates
-                {
-                    world.markAndNotifyBlock(pos, chunk, iblockstate, newState, flags);
-                }
-                return true;
-            }
         }
     }
 

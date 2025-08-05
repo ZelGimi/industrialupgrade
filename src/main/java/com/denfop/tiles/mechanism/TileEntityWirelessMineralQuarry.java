@@ -62,7 +62,7 @@ public class TileEntityWirelessMineralQuarry extends TileEntityInventory impleme
                 }
                 final NBTTagCompound nbt = ModUtils.nbt(stack);
                 if (!nbt.getString("type").isEmpty()) {
-                    return !nbt.getString("type").equals("oil");
+                    return !nbt.getString("type").equals("oil") && !nbt.getString("type").equals("gas");
                 }
                 return false;
             }

@@ -46,10 +46,9 @@ public class ItemSprayer extends ItemFluidContainer {
         if (Objects.requireNonNull(target) == Target.Any) {
             return IUItem.foam.canPlaceBlockOnSide(world, pos, EnumFacing.DOWN);
         } else {
-            assert false;
+            return false;
         }
 
-        return false;
     }
 
     public String getItemStackDisplayName(ItemStack stack) {

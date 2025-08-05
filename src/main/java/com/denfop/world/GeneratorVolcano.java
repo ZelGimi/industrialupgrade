@@ -105,14 +105,7 @@ public class GeneratorVolcano {
             initBasaltsOres();
         }
         final int height = chunk.getHeight(position2);
-        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), world.getHeight(), position2.getZ());
-        while (checkPos.getY() > 0) {
-            checkPos.add(0, -1, 0);
-            IBlockState state = world.getBlockState(checkPos);
-            if (!(state.getMaterial() == Material.AIR ) && !state.getMaterial().isLiquid()) {
-                break;
-            }
-        }
+        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
         this.position = checkPos.add(0, -maxbaseHeight / 2,0);
         if (position.getY() > 60)
             position = position.add(0,-(position.getY()-60),0);

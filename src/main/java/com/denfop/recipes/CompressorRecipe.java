@@ -285,7 +285,7 @@ public class CompressorRecipe {
         addcompressor(
                 "dustLapis",
                 9,
-                "plateLapis"
+                "plateDenseLapis"
         );
         addcompressor(
                 "dustLapis",

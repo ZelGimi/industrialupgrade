@@ -287,8 +287,7 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemInput,
-                UpgradableProperty.FluidExtract
+                UpgradableProperty.ItemInput,UpgradableProperty.ItemExtract
         );
     }
 

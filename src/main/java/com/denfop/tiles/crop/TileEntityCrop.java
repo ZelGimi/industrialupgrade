@@ -46,6 +46,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -314,6 +315,11 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         downState = world.getBlockState(pos.down());
         downBlock = downState.getBlock();
         for (EnumSoil soil1 : soil) {
+            if (soil1 == EnumSoil.REDSTONE){
+                if ((soil1.getState() == downState && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore()) || (downBlock == IUItem.humus) || (downBlock == Blocks.LIT_REDSTONE_ORE)) {
+                    return true;
+                }
+            }
             if ((soil1.getState() == downState && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore()) || (downBlock == IUItem.humus)) {
                 return true;
             }

@@ -76,7 +76,8 @@ public class TileModuleMachine extends TileElectricMachine
     @Override
     public void updateTileServer(EntityPlayer player, double event) {
         if (!this.inputslotA.isEmpty()) {
-            initiate(1);
+            initiate(2);
+            initiate(0);
             this.inputslotA.get(0).setTagCompound(new NBTTagCompound());
             for (int i = 0; i < this.inputslot.size(); i++) {
                 String l = "number_" + i;

@@ -68,7 +68,6 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
-    protected boolean sound = true;
 
     public TileEntityPerAlloySmelter() {
         super(300, 1, 1);

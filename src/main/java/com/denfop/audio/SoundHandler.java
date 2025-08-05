@@ -45,7 +45,10 @@ public class SoundHandler {
                 : sound.toString().toLowerCase();
 
         if (!isSoundPlaying(soundName)) {
-            player.playSound(EnumSound.getSondFromString(soundName), 1.0F, 1.0F);
+            Minecraft.getMinecraft().getSoundHandler().playSound(new PlayerSound(
+                    player,
+                    EnumSound.getSondFromString(soundName).getSoundName()
+            ));
         }
     }
 
@@ -74,8 +77,15 @@ public class SoundHandler {
 
 
     private static Optional<ISound> getSoundAtPosition(BlockPos pos) {
+        if (pos.getX() < 0){
+            pos = pos.add(-1,0,0);
+        }
+        if (pos.getZ() < 0){
+            pos = pos.add(0,0,-1);
+        }
+        final BlockPos finalPos = pos;
         return soundManager.invPlayingSounds.keySet().stream()
-                .filter(sound -> isSoundFromMod(sound) && isSoundAtPosition(sound, pos))
+                .filter(sound -> isSoundFromMod(sound) && isSoundAtPosition(sound, finalPos))
                 .findFirst();
     }
 

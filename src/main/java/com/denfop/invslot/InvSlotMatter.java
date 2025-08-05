@@ -41,7 +41,8 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
         return (itemStack
                 .getItem()
                 .equals(Item.getItemFromBlock(IUItem.machines)) && itemStack.getItemDamage() <= 3) || (itemStack.isItemEqual(
-                new ItemStack(IUItem.simplemachine, 1, 6)));
+                new ItemStack(IUItem.simplemachine, 1, 6)))|| (itemStack.isItemEqual(
+                new ItemStack(IUItem.pho_machine, 1, 12)));
     }
 
     public int getStackSizeLimit() {
@@ -64,6 +65,9 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                     return 700000;
             }
         }
+        if (stack.getItem().equals(Item.getItemFromBlock(IUItem.pho_machine))) {
+            return 600000;
+        }
         return 1000000;
     }
 
@@ -78,6 +82,9 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 case 3:
                     return 256000000;
             }
+        }
+        if (stack.getItem().equals(Item.getItemFromBlock(IUItem.pho_machine))) {
+            return 512000000;
         }
         return 5000000;
     }
@@ -128,6 +135,9 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 case 3:
                     return 16;
             }
+        }
+        if (itemStack.getItem().equals(Item.getItemFromBlock(IUItem.pho_machine))) {
+            return 16;
         }
         return 10;
     }

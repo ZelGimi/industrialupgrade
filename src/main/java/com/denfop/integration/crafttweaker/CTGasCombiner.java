@@ -19,13 +19,12 @@ import java.util.Arrays;
 public class CTGasCombiner {
 
     @ZenMethod
-    public static void addRecipe(ILiquidStack input, ILiquidStack output, ILiquidStack output1) {
+    public static void addRecipe(ILiquidStack input, ILiquidStack input1, ILiquidStack output1) {
 
 
         Recipes.recipes.getRecipeFluid().addRecipe(
                 "gas_combiner",
-                new BaseFluidMachineRecipe(new InputFluid(new FluidRecipeInput(input).getInputs()), Arrays.asList(
-                        new FluidRecipeInput(output).getInputs(),
+                new BaseFluidMachineRecipe(new InputFluid(new FluidRecipeInput(input).getInputs(),new FluidRecipeInput(input1).getInputs()), Arrays.asList(
                         (new FluidRecipeInput(output1).getInputs())
                 ))
         );

@@ -601,7 +601,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                 if (dataOre.getVeinsList() != null && !dataOre.getVeinsList().isEmpty()) {
                     Vein vein = dataOre.getVeinsList().get(indexVein);
                     indexVein++;
-                    if (vein.getCol() >= 0) {
+                    if (vein.getCol() <= 0) {
                         for (TileEntityAnalyzerChest analyzerChest : target1) {
                             final int col1 = Math.min(vein.getCol(), 64);
                             if (vein.getCol() <= 0) {

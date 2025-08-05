@@ -535,8 +535,10 @@ public class WorldBaseGen implements IWorldGenerator {
             }
             int meta = WorldBaseGen.random.nextInt(veinTypes1.size());
             final VeinType veinType = veinTypes1.remove(meta);
+
             AlgorithmVein.generate(world, veinType,
-                    new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16)), chunk, veinType.getDeposits_meta()
+                    new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16)), chunk, veinType.getDeposits_meta(),
+                    chunkProvider,chunkGenerator
             );
         }
 

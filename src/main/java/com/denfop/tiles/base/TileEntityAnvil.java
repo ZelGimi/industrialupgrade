@@ -28,6 +28,7 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -345,6 +346,27 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                         new PacketUpdateFieldTile(this, "durability", this.durability);
 
 
+                    }
+                    if (WorldBaseGen.random.nextInt(100) < data.getOrDefault(player.getUniqueID(), 0.0) & this.output != null && this.outputSlot.canAdd(
+                            this.output.getRecipe().output.items.get(
+                                    0))){
+                        this.outputSlot.add(this.output.getRecipe().output.items.get(0));
+                        this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
+                        if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
+                            this.output = null;
+
+                        }
+                        if (!world.isRemote) {
+                            if (!this.inputSlotA.get(0).isEmpty()) {
+                                new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                            } else {
+                                new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
+                            }
+                            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+                            new PacketUpdateFieldTile(this, "durability", this.durability);
+
+
+                        }
                     }
                 }
 

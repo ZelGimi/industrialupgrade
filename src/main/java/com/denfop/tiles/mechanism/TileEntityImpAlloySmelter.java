@@ -69,7 +69,6 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
-    protected boolean sound = true;
 
     public TileEntityImpAlloySmelter() {
         super(300, 1, 1);
@@ -273,13 +272,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
 
     public void updateField(String name, CustomPacketBuffer is) {
 
-        if (name.equals("sound")) {
-            try {
-                this.sound = (boolean) DecoderHandler.decode(is);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+
         super.updateField(name, is);
     }
 

@@ -504,7 +504,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
             needUpdate = false;
             for (int i = 0; i < this.fluids.getManagedTanks().size(); i++) {
                 FluidTank tank = this.fluids.getManagedTanks().get(i);
-                new PacketUpdateFieldTile(this, "fluidTank" + (i + 1), tank);
+                new PacketUpdateFieldTile(this, "fluidtank" + (i + 1), tank);
             }
         }
         if (this.upgradeSlot.tickNoMark()) {

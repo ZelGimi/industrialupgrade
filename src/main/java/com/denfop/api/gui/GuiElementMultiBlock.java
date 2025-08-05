@@ -116,14 +116,7 @@ public class GuiElementMultiBlock extends GuiElement<GuiElementFluidToFluids> {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
             buffer.begin(7, DefaultVertexFormats.BLOCK);
-            blockRenderer.getBlockModelRenderer().renderModel(
-                    ((GUIBook) this.gui).player.world,
-                    model,
-                    state,
-                    BlockPos.ORIGIN,
-                    buffer,
-                    false
-            );
+
             tessellator.draw();
             GlStateManager.popMatrix();
         }

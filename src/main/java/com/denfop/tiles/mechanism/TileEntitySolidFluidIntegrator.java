@@ -348,7 +348,7 @@ public class TileEntitySolidFluidIntegrator extends TileElectricMachine implemen
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemInput,
-                UpgradableProperty.FluidExtract
+                UpgradableProperty.FluidExtract,UpgradableProperty.ItemExtract
         );
     }
 

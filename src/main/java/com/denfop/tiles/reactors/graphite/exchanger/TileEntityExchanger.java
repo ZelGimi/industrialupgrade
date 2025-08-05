@@ -116,7 +116,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
     @Override
     public int getBlockLevel() {
-        return -1;
+        return level;
     }
 
 

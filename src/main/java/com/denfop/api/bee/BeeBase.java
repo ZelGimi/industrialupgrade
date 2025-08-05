@@ -6,8 +6,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.biome.Biome;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BeeBase implements IBee {
 
@@ -182,65 +184,56 @@ public class BeeBase implements IBee {
 
     @Override
     public void addPercentProduct(ICrop crop, double percent) {
-        double totalChance = products.stream().mapToDouble(Product::getChance).sum();
-        boolean find = false;
-        if (totalChance <= 99.5) {
-            for (Product product : products) {
-                if (product.equals(crop)) {
-                    product.addChance(0.1D);
-                    find = true;
-                    break;
-                }
+
+        Product target = null;
+        for (Product product : products) {
+            if (product.getCrop().getId() == crop.getId()) {
+                target = product;
+                break;
             }
-            if (!find) {
-                products.add(new Product(0.5, crop));
-            }
-        } else {
-            Product product1 = null;
-            for (Product product : products) {
-                if (product.equals(crop)) {
-                    product1 = product;
-                    find = true;
-                    break;
-                }
-            }
-            if (product1 != null && products.size() == 1) {
-                return;
-            }
-            products.sort((p1, p2) -> Double.compare(p2.getChance(), p1.getChance()));
-            final Iterator<Product> iter = products.iterator();
-            if (find) {
-                double total = 0.5D / (products.size() - 1);
-                int count = 0;
-                while (iter.hasNext()) {
-                    Product product = iter.next();
-                    if (!product.equals(crop)) {
-                        if (product.getChance() < total) {
-                            double total1 = product.getChance() - total;
-                            total += total1 / ((products.size() - 1) - count);
-                        }
-                    }
-                    if (product.getChance() <= 0) {
-                        iter.remove();
-                    }
-                }
-                product1.addChance(0.5);
-            } else {
-                double total = 0.5D / (products.size());
-                int count = 0;
-                while (iter.hasNext()) {
-                    Product product = iter.next();
-                    if (product.getChance() < total) {
-                        double total1 = product.getChance() - total;
-                        total += total1 / ((products.size()) - count);
-                    }
-                    if (product.getChance() <= 0) {
-                        iter.remove();
-                    }
-                }
-                products.add(new Product(0.5, crop));
+        }
+
+
+        if (target == null) {
+            target = new Product(0, crop);
+            products.add(target);
+        }
+
+
+        double currentTotal = products.stream().mapToDouble(Product::getChance).sum();
+
+
+        double availableSpace = 100.0 - currentTotal;
+
+
+        double actualAdd = Math.min(percent, availableSpace);
+        target.addChance(actualAdd);
+
+
+        double overflow = percent - actualAdd;
+
+
+        if (overflow > 0) {
+            double toReduce = overflow;
+
+
+            Product finalTarget = target;
+            List<Product> others = products.stream()
+                    .filter(p -> p != finalTarget)
+                    .sorted(Comparator.comparingDouble(Product::getChance).reversed()).collect(Collectors.toList());
+
+            for (Product other : others) {
+                if (toReduce <= 0) break;
+
+                double chance = other.getChance();
+                double reducible = Math.min(chance, toReduce);
+
+                other.addChance(-reducible);
+                toReduce -= reducible;
             }
 
+
+            products.removeIf(p -> p.getChance() <= 0);
         }
     }
 

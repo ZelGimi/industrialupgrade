@@ -373,9 +373,10 @@ public class Colony implements IColony {
     @Override
     public void update() {
         if (!this.enumProblemsList.isEmpty()) {
-            if (toDelete > 0) {
+            if (toDelete > 0 && this.workers == 0) {
                 toDelete -= 1;
             }
+
 
             enumProblemsList.clear();
         } else {

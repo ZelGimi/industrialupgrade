@@ -614,6 +614,10 @@ public class BaseRecipeFour {
                 ('A'), getBlockStack(BlockBaseMachine3.steam_converter), 'B', new ItemStack(IUItem.blockResource, 1, 8),
                 'C', new ItemStack(IUItem.crafting_elements, 1, 276)
         );
+        Recipes.recipe.addShapelessRecipe(new ItemStack(IUItem.book),
+                Items.BOOK,
+                "ingotCopper"
+        );
     }
 
 }

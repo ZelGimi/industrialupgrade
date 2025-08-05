@@ -29,6 +29,7 @@ import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
@@ -40,6 +41,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.denfop.api.guidebook.GuideBookCore.uuidGuideMap;
 
 public class WorldSavedDataIU extends WorldSavedData {
 
@@ -246,6 +249,39 @@ public class WorldSavedDataIU extends WorldSavedData {
         } else {
             compound.setTag("relocator", new NBTTagCompound());
         }
+        Map<UUID, Map<String, List<String>>> mapData = new HashMap<>();
+        uuidGuideMap.clear();
+        if (compound.hasKey("guide_book")) {
+            NBTTagCompound data = compound.getCompoundTag("guide_book");
+            NBTTagList list = data.getTagList("list", 10);
+
+            for (int i = 0; i < list.tagCount(); i++) {
+                NBTTagCompound data1 = list.getCompoundTagAt(i);
+                UUID uuid = data1.getUniqueId("uuid");
+
+                Map<String, List<String>> mapQuest = new HashMap<>();
+                NBTTagList list1 = data1.getTagList("list", 10);
+
+                for (int j = 0; j < list1.tagCount(); j++) {
+                    NBTTagCompound data2 = list1.getCompoundTagAt(j);
+                    String tab = data2.getString("tab");
+
+                    NBTTagList list2 = data2.getTagList("list", 8);
+                    List<String> names = new ArrayList<>();
+
+                    for (int k = 0; k < list2.tagCount(); k++) {
+                        names.add(list2.getStringTagAt(k));
+                    }
+
+                    mapQuest.put(tab, names);
+                }
+
+                mapData.put(uuid, mapQuest);
+            }
+        }
+        uuidGuideMap = mapData;
+
+
     }
 
     public NBTTagCompound getTagCompound() {
@@ -389,6 +425,29 @@ public class WorldSavedDataIU extends WorldSavedData {
         }
 
         relocatorTag.setTag("worldUUID", worldListTag);
+        final Map<UUID, Map<String, List<String>>> mapData = uuidGuideMap;
+        if (!mapData.isEmpty()){
+            NBTTagCompound data = new NBTTagCompound();
+            NBTTagList list = new NBTTagList();
+            for (Map.Entry<UUID, Map<String, List<String>>> entry : mapData.entrySet()){
+                NBTTagCompound data1 = new NBTTagCompound();
+                data1.setUniqueId("uuid",entry.getKey());
+                NBTTagList list1 = new NBTTagList();
+                Map<String, List<String>> mapQuest = entry.getValue();
+                for (Map.Entry<String, List<String>> quest : mapQuest.entrySet()){
+                    NBTTagCompound data2 = new NBTTagCompound();
+                    data2.setString("tab",quest.getKey());
+                    NBTTagList list2 = new NBTTagList();
+                    quest.getValue().forEach(name -> list2.appendTag(new NBTTagString(name)));
+                    data2.setTag("list",list2);
+                    list1.appendTag(data2);
+                }
+                data1.setTag("list",list1);
+                list.appendTag(data1);
+            }
+            data.setTag("list",list);
+            compound.setTag("guide_book", data);
+        }
         compound.setTag("relocator", relocatorTag);
 
 

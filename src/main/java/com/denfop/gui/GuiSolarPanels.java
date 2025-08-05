@@ -47,10 +47,7 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
 
     protected void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        String formatPanelName = Localization.translate("blockAdministatorSolarPanel.name");
-        if (tileentity.getPanels() != null) {
-            formatPanelName = Localization.translate(container.base.getName());
-        }
+        final String formatPanelName = Localization.translate(container.base.getName());
         int nmPos = (this.xSize - this.fontRenderer.getStringWidth(formatPanelName)) / 2 + 10;
         this.fontRenderer.drawString(formatPanelName, nmPos, 15, 7718655);
 
