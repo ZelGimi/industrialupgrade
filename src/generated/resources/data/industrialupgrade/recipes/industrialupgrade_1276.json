@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_32_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/steam_machine"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_32_element"
+    },
+    "B": {
+      "item": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/steam_machine"
+    }
   },
   "pattern": [
     " A ",

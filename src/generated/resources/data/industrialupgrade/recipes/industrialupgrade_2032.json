@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/barium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/zeliber"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/osmium"
+    },
+    "B": {
+      "tag": "forge:plates/barium"
+    },
+    "C": {
+      "tag": "forge:plates/zeliber"
+    }
   },
   "pattern": [
     "AAB",

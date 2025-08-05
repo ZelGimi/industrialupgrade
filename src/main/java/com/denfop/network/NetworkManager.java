@@ -74,7 +74,11 @@ public class NetworkManager {
         this.registerPacket(new PacketSuccessUpdateColony());
         this.registerPacket(new PacketCreateAutoSends());
         this.registerPacket(new PacketDeleteColony());
-
+        this.registerPacket(new PacketUpdateCompleteQuest());
+        this.registerPacket(new PacketUpdateInformationAboutQuestsPlayer());
+        this.registerPacket(new PacketSynhronyzationRelocator());
+        this.registerPacket(new PacketUpdateRelocator());
+        this.registerPacket(new PacketDrainFluidPipette());
 
         channel.registerMessage(0, CustomPacketBuffer.class,
                 (customPacketBuffer, buf) -> {

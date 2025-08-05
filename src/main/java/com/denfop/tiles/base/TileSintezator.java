@@ -559,11 +559,6 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     }
 
     @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
-
-    @Override
     public boolean emitsEnergyTo(final IEnergyAcceptor var1, final Direction var2) {
         return true;
     }

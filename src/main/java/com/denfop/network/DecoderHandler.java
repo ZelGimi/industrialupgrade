@@ -164,6 +164,8 @@ public class DecoderHandler {
     public static Object decode(final CustomPacketBuffer is, EncodedType type) throws IOException {
         final int inputAmount;
         int i;
+        if (is == null)
+            return null;
         switch (type) {
             case Array:
                 EncodedType componentType = typeFromId(is.readUnsignedByte());

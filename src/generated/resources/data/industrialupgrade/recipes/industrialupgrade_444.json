@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:machines/hybrid_solar_paneliu"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:armour/quantum_helmet"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:machines/hybrid_solar_paneliu"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "C": {
+      "item": "industrialupgrade:armour/quantum_helmet"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "E": [
-      {
-        "item": "industrialupgrade:compresscarbonultra"
-      }
-    ]
+    "E": {
+      "item": "industrialupgrade:compresscarbonultra"
+    }
   },
   "pattern": [
     " A ",

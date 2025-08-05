@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,21 +7,15 @@
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/zinc"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_42_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_365_element"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/zinc"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_365_element"
+    }
   },
   "pattern": [
     "BCB",

@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spectral_box"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:alloydoubleplate/alcled"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:alloydoubleplate/inconel"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spectral_box"
+    },
+    "B": {
+      "item": "industrialupgrade:alloydoubleplate/alcled"
+    },
+    "C": {
+      "item": "industrialupgrade:alloydoubleplate/inconel"
+    }
   },
   "pattern": [
     "B B",

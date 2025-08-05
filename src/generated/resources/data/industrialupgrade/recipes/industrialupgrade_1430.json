@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/per_replicator"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_634_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_622_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_623_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_603_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/per_replicator"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_634_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_622_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_603_element"
+    }
   },
   "pattern": [
     "DED",

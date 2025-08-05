@@ -22,6 +22,7 @@ import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -110,7 +111,9 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnHeliumGeneratorParticles(level,pos,level.random);
+        }
         boolean needsInvUpdate = false;
         if (!(this.energy.getEnergy() <= 0.0D)) {
 

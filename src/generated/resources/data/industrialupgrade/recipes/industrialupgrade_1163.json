@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:cokeoven/coke_oven_part"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine3/steel_tank"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:cokeoven/coke_oven_part"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/steel_tank"
+    }
   },
   "pattern": [
     " A ",

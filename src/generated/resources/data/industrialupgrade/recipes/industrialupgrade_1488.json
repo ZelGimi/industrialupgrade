@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_23_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/vanadoalumite"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/aluminiumsilicon"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/vitalium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
+    "B": {
+      "tag": "forge:plates/vanadoalumite"
+    },
+    "C": {
+      "tag": "forge:plates/aluminiumsilicon"
+    },
+    "D": {
+      "tag": "forge:plates/vitalium"
+    }
   },
   "pattern": [
     "B B",

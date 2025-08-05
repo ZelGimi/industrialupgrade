@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:lightning_rod/lightning_rod_casing"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:charged_redstone"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:lightning_rod/lightning_rod_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:charged_redstone"
+    }
   },
   "pattern": [
     "ACA",

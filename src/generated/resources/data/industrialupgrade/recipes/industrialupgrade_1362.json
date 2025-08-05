@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:cyclotron/cyclotron_casing"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_470_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:cyclotron/cyclotron_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_470_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    }
   },
   "pattern": [
     " C ",

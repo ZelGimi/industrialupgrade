@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/nichrome"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/nichrome"
+    }
   ],
   "result": {
     "count": 9,

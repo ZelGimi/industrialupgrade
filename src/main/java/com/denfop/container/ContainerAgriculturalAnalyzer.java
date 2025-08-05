@@ -7,6 +7,7 @@ import com.denfop.items.crop.ItemStackAgriculturalAnalyzer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -26,7 +27,7 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
         this.inventory = player.getInventory();
         inventorySize = Toolbox1.inventorySize;
         int slots = Toolbox1.inventorySize;
-        this.addSlotToContainer(new Slot(Toolbox1, 0, 12, 24) {
+        this.addSlotToContainer(new Slot(Toolbox1, 0, 180, 65) {
             @Override
             public boolean mayPlace(final ItemStack stack) {
                 return stack.getItem() instanceof ICropItem;
@@ -52,21 +53,15 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
             }
         });
         this.current = player.getInventory().selected;
-        addPlayerInventorySlots(player.getInventory(), 233);
+        addPlayerInventorySlots(player.getInventory(), 166);
 
     }
 
-    protected void addPlayerInventorySlots(Player player, int width, int height) {
+    protected void addPlayerInventorySlots(Inventory inventory, int width, int height) {
         int xStart = (width - 162) / 2;
 
         int col;
-        for (col = 0; col < 3; ++col) {
-            for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(player.getInventory(), col1 + col * 9 + 9, xStart + col1 * 18,
-                        height + -82 + col * 18
-                ));
-            }
-        }
+
 
         for (col = 0; col < 9; ++col) {
             this.addSlotToContainer(new Slot(player.getInventory(), col, xStart + col * 18, height + -24));

@@ -3,6 +3,7 @@ package com.denfop.recipe;
 
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -12,6 +13,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class InputItemStack implements IInputItemStack {
+    public static IInputItemStack create(CompoundTag tag) {
+        byte id = tag.getByte("id");
+        if (id == 0)
+            return new InputItemStack(tag);
+        if (id == 1)
+            return new InputOreDict(tag);
+        return new InputFluidStack(tag);
+    }
     public  static InputItemStack EMPTY = new InputItemStack(ItemStack.EMPTY,1,true);
     public final ItemStack input;
     public int amount;
@@ -27,6 +36,27 @@ public class InputItemStack implements IInputItemStack {
             this.input = input.copy();
             this.amount = amount;
         }
+    }
+    public InputItemStack(CompoundTag compoundTag) {
+        boolean exist = compoundTag.getBoolean("exist");
+        if (exist) {
+            this.input = ItemStack.of(compoundTag.getCompound("input"));
+            this.amount = compoundTag.getInt("amount");
+        } else {
+            this.input = ItemStack.EMPTY;
+            this.amount = 1;
+        }
+    }
+    @Override
+    public CompoundTag writeNBT() {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("id", (byte) 0);
+        compoundTag.putBoolean("exist", input != null && !input.isEmpty());
+        if (input != null && !input.isEmpty()) {
+            compoundTag.putInt("amount", amount);
+            compoundTag.put("input", input.save(new CompoundTag()));
+        }
+        return compoundTag;
     }
     InputItemStack(ItemStack input, int amount,boolean f) {
         this.input = input.copy();

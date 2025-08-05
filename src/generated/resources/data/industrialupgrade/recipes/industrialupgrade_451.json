@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:rotor/rotor_carbon"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/iridium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "B": {
+      "item": "industrialupgrade:rotor/rotor_carbon"
+    },
+    "C": {
+      "tag": "forge:doubleplate/iridium"
+    }
   },
   "pattern": [
     "CAC",

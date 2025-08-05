@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/dione_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/dione_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/dione_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/dione_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/dione_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/dione_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/dione_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/dione_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/dione_cobblestone"

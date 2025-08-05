@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:graphite_reactor/graphite_graphite_controller"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_419_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_426_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_424_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_410_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_graphite_controller"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_419_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_426_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_424_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_410_element"
+    }
   },
   "pattern": [
     "BDB",

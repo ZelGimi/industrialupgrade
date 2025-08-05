@@ -119,7 +119,7 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
     public void onLoaded() {
         super.onLoaded();
 
-        updateList();
+
     }
 
     @Override
@@ -135,6 +135,8 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
         graphiteControllers.clear();
         itemStacks.clear();
         tileMultiBlockBase = null;
+        if (this.invslot.get(0).isEmpty())
+            return;
         final CompoundTag nbt = ModUtils.nbt(this.invslot.get(0));
         BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
         BlockEntity tileEntity = this.getWorld().getBlockEntity(pos);

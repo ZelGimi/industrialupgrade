@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
+    }
   },
   "pattern": [
     "   ",

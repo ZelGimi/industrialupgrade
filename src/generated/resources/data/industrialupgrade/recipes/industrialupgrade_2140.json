@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "B": [
-      {
-        "tag": "minecraft:planks"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/iron"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "item": "minecraft:redstone"
+    }
   },
   "pattern": [
     "BBB",

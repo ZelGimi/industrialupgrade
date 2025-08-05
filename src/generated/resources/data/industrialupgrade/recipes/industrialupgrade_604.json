@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/europe_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/europe_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/europe_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/europe_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/europe_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/europe_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/europe_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/europe_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/europe_cobblestone"

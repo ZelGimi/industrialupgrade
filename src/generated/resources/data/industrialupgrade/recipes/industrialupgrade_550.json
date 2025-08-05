@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:blockprecious/topaz_block"
-      }
-    ]
+    {
+      "item": "industrialupgrade:blockprecious/topaz_block"
+    }
   ],
   "result": {
     "count": 9,

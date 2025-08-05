@@ -7,8 +7,13 @@ import com.denfop.api.pollution.PollutionSoilLoadEvent;
 import com.denfop.api.pollution.PollutionSoilUnLoadEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.mojang.math.Vector3f;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -114,10 +119,27 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
         }
         return super.onBlockActivated(player, hand);
     }
+    public static void spawnSoilPollution(Level level, BlockPos pos, RandomSource random) {
+        if (!(level instanceof ServerLevel server)) return;
 
+        double x = pos.getX() + 0.5;
+        double y = pos.getY() + 0.1;
+        double z = pos.getZ() + 0.5;
+
+
+
+        if (random.nextFloat() < 0.3f) {
+            Vector3f dirtyColor = new Vector3f(0.2f, 0.4f, 0.1f);
+            server.sendParticles(new DustParticleOptions(dirtyColor, 0.8f),
+                    x, y, z, 2, 0.02, 0.005, 0.02, 0.001);
+        }
+    }
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.parent.getWorld().getGameTime() % 20 == 0 && this.parent.getActive()) {
+            spawnSoilPollution(parent.getWorld(),parent.getPos(),parent.getWorld().random);
+        }
         if (this.parent.getActive()) {
             this.setPollution(this.default_pollution * percent);
         } else {

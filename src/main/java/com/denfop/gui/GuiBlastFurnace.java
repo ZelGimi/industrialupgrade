@@ -129,8 +129,6 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                         fluidHeight = 47;
                     }
                     Fluid fluid = fs.getFluid();
-                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                        fluid = FluidName.fluidwater.getInstance().get();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
                     int color = extensions.getTintColor();
@@ -209,8 +207,6 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                     }
 
                     Fluid fluid = fs.getFluid();
-                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                        fluid = FluidName.fluidwater.getInstance().get();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
                     int color = extensions.getTintColor();

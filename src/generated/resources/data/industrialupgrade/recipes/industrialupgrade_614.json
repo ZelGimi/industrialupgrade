@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/mars_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/mars_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/mars_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/mars_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/mars_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/mars_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/mars_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/mars_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/mars_cobblestone"

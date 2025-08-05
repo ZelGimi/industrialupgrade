@@ -7,13 +7,20 @@ import com.denfop.api.tesseract.Channel;
 import com.denfop.api.tesseract.TypeChannel;
 import com.denfop.api.tesseract.TypeMode;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerTesseract;
 import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,22 +32,114 @@ import static com.denfop.recipes.BaseRecipes.getBlockStack;
 public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerTesseract> {
 
     private final ItemStack stack;
-    private final GuiComponent energy;
     private final TankGauge fluid;
     private int guiScreenID = 0;
     private int index = 24;
     private int index1 = 24;
-
+    boolean hoverShowPublicChannels;
+    boolean hoverShowInventory;
+    boolean hoverShowOwnChannels;
+    boolean hoverShowCreateChannels;
+    double scrollPositionChannels;
+    double posScrollPositionChannels;
+    boolean hoverUpChannel;
+    boolean hoverDownChannel;
+    boolean hoverEnergyChannel;
+    boolean hoverFluidChannel;
+    boolean hoverItemChannel;
+    boolean hoverExtractChannel;
+    boolean hoverReceiveChannel;
+    boolean hoverPublicChannel;
+    boolean hoverDeleteChannel;
+    boolean hoverChangeModeChannel;
+    boolean hoverBack;
+    int indexTesseract = 0;
+    int indexMaxTesseract = 1;
+    int indexPublicTesseract = 0;
+    int indexPublicMaxTesseract = 1;
     public GuiTesseract(ContainerTesseract guiContainer) {
         super(guiContainer);
-        this.imageWidth = 191;
-        this.imageHeight = 208;
         this.componentList.clear();
         this.stack = getBlockStack(BlockBaseMachine3.tesseract);
-        this.energy = new GuiComponent(this, 140, 95, EnumTypeComponent.ENERGY_WEIGHT,
-                new Component<>(this.container.base.getEnergy())
-        );
-        this.fluid = TankGauge.createNormal(this, 150, 35, container.base.getTank());
+        this.fluid = new TankGauge(
+                this,
+                147,
+                10,
+                16,
+                53,
+                container.base.getTank(),
+                TankGauge.TankGuiStyle.Normal
+        ) {
+
+            protected List<String> getToolTip() {
+                List<String> ret = new ArrayList<>();
+                FluidStack fs = container.base.getTank().getFluid();
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (this.tank instanceof Fluids.InternalFluidTank) {
+                        Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
+                        ret.add(Localization.translate("iu.tank.fluids"));
+                        ret.addAll(tank1.getFluidList());
+                    }
+                } else if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    Fluid fluid = fs.getFluid();
+                    if (fluid != null) {
+                        ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
+                    } else {
+                        ret.add("invalid fluid stack");
+                    }
+                } else {
+                    ret.add(Localization.translate("iu.generic.text.empty"));
+                }
+
+                return ret;
+            }
+
+            @Override
+            public void drawBackground(PoseStack poseStack, final int mouseX, final int mouseY) {
+
+                FluidStack fs = container.base.getTank().getFluid();
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    int fluidX = this.x;
+                    int fluidY = this.y;
+                    int fluidWidth = this.width;
+                    int fluidHeight = this.height;
+                    if (this.getStyle().withBorder) {
+                        fluidX += 4;
+                        fluidY += 4;
+                        fluidWidth =9;
+                        fluidHeight = 46;
+                    }
+
+                    Fluid fluid = fs.getFluid();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
+                    double renderHeight = (double) fluidHeight * ModUtils.limit(
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
+                            0.0D,
+                            1.0D
+                    );
+                    bindBlockTexture();
+                    this.gui.drawSprite(poseStack,mouseX+
+                                    fluidX,
+                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            fluidWidth,
+                            renderHeight,
+                            sprite,
+                            color,
+                            1.0D,
+                            false,
+                            true
+                    );
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                    this.gui.bindTexture();
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + 97, this.gui.guiTop + 14, 191, 5, 7, 46);
+
+                }
+
+
+            }
+        };
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -61,68 +160,252 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
             this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+    int prevId = -1;
+    @Override
+    protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        blit(poseStack, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
+        String name =this.container.base.getDisplayName().getString();
+        int textWidth = this.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+        PoseStack pose = poseStack;
+        pose.pushPose();
+        pose.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.imageWidth / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6) / scale);
+
+        if (guiScreenID == 0)
+            drawString(poseStack, Minecraft.getInstance().font,name, textX, textY, 4210752);
+        pose.scale(1/scale,1/scale,1);
+
+        pose.popPose();
+    }
+
+    @Override
+    public boolean mouseScrolled(double d, double d2, double d3) {
+        ScrollDirection scrollDirection = d3 != 0.0 ? (d3 < 0.0 ? ScrollDirection.down : ScrollDirection.up) : ScrollDirection.stopped;
+        int mouseX = (int) (d - this.guiLeft);
+        int mouseY = (int) (d2 - this.guiTop);
+        if (guiScreenID == 2){
+            if (mouseX >= 20 && mouseY >= 17 && mouseX <= 155 && mouseY <= 69) {
+                if (scrollDirection == ScrollDirection.down) {
+                    indexTesseract++;
+
+                    indexMaxTesseract = indexTesseract * 7 + 21;
+                    indexMaxTesseract = Math.min(indexMaxTesseract, this.container.base.getChannels().size());
+                    double temp =  this.container.base.getChannels().size() / 7D;
+                    temp -= 2;
+                    if (indexTesseract >= temp)
+                        indexTesseract--;
+                    if (indexTesseract < 0)
+                        indexTesseract = 0;
+                }
+                if (scrollDirection == ScrollDirection.up) {
+                    indexTesseract--;
+                    if (indexTesseract < 0)
+                        indexTesseract = 0;
+                    indexMaxTesseract = indexTesseract * 7 + 21;
+                    indexMaxTesseract = Math.min(indexMaxTesseract, this.container.base.getChannels().size());
+
+                }
+            }
+        }
+        if (guiScreenID == 4){
+            if (mouseX >= 20 && mouseY >= 17 && mouseX <= 155 && mouseY <= 69) {
+                if (scrollDirection == ScrollDirection.down) {
+                    indexPublicTesseract++;
+
+                    indexPublicMaxTesseract = indexPublicTesseract * 7 + 21;
+                    indexPublicMaxTesseract = Math.min(indexPublicMaxTesseract, this.container.base.getPublicChannel().size());
+                    double temp =  this.container.base.getPublicChannel().size() / 7D;
+                    temp -= 2;
+                    if (indexPublicTesseract >= temp)
+                        indexPublicTesseract--;
+                    if (indexPublicTesseract < 0)
+                        indexPublicTesseract = 0;
+
+                }
+                if (scrollDirection == ScrollDirection.up) {
+                    indexPublicTesseract--;
+                    if (indexPublicTesseract < 0)
+                        indexPublicTesseract = 0;
+                    indexPublicMaxTesseract = indexPublicTesseract * 7 + 21;
+                    indexPublicMaxTesseract = Math.min(indexPublicMaxTesseract, this.container.base.getPublicChannel().size());
+
+                }
+            }
+        }
+        return super.mouseScrolled(d, d2, d3);
+    }
 
     @Override
     protected void drawForegroundLayer(PoseStack poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack,par1, par2);
-        handleUpgradeTooltip(par1, par2);
+        if (guiScreenID == 0)
+            handleUpgradeTooltip(par1, par2);
         switch (guiScreenID) {
+            case 0:
+                hoverShowPublicChannels = false;
+                hoverShowInventory = false;
+                hoverShowOwnChannels = false;
+                hoverShowCreateChannels = false;
+                if (par1 >= 31 && par1 <= 54 && par2 >= 31 && par2 <= 54)
+                    hoverShowCreateChannels = true;
+                if (par1 >= 61 && par1 <= 84 && par2 >= 31 && par2 <= 54)
+                    hoverShowOwnChannels = true;
+                if (par1 >= 91 && par1 <= 114 && par2 >= 31 && par2 <= 54)
+                    hoverShowPublicChannels = true;
+                if (par1 >= 121 && par1 <= 164 && par2 >= 31 && par2 <= 54)
+                    hoverShowInventory = true;
+                if (hoverShowCreateChannels){
+                    new AdvArea(this,31,31,54,54).withTooltip(  Localization.translate("tesseract.create_channel")).drawForeground(poseStack,par1,par2);
+                }
+                if (hoverShowPublicChannels){
+                    new AdvArea(this,91,31,124,54).withTooltip( Localization.translate("tesseract.public_channel")).drawForeground(poseStack,par1,par2);
+                }
+                if (hoverShowInventory){
+                    new AdvArea(this,121,31,164,54).withTooltip( Localization.translate("tesseract.inventory")).drawForeground(poseStack,par1,par2);
+                }
+                if (hoverShowOwnChannels){
+                    new AdvArea(this,61,31,84,54).withTooltip( Localization.translate("tesseract.lists")).drawForeground(poseStack,par1,par2);
+                }
+
+
+
+                break;
             case 1:
-                new AdvArea(this, 16, 36, 32, 62).withTooltip(Localization.translate("tesseract.energy")).drawForeground(
-                        poseStack, par1,
-                        par2
-                );
-                new AdvArea(this, 37, 34, 52, 62).withTooltip(Localization.translate("tesseract.fluid")).drawForeground(
-                        poseStack, par1,
-                        par2
-                );
-                new AdvArea(this, 56, 34, 75, 62).withTooltip(Localization.translate("tesseract.item")).drawForeground(
-                        poseStack,   par1,
-                        par2
-                );
-                new AdvArea(this, 20, 91, 30, 101).withTooltip(Localization.translate("tesseract.plus")).drawForeground(
-                        poseStack, par1,
-                        par2
-                );
-                new AdvArea(this, 60, 91, 70, 101).withTooltip(Localization.translate("tesseract.minus")).drawForeground(
-                        poseStack,  par1,
-                        par2
-                );
-                new AdvArea(this, 79, 69, 91, 86).withTooltip(Localization.translate("tesseract.sink")).drawForeground(
-                        poseStack,  par1,
-                        par2
-                );
-                new AdvArea(this, 95, 69, 107, 86).withTooltip(Localization.translate("tesseract.source")).drawForeground(
-                        poseStack, par1,
-                        par2
-                );
-                new AdvArea(this, 112, 67, 122, 89)
-                        .withTooltip(Localization.translate("tesseract.private_channel"))
-                        .drawForeground(
-                                poseStack,   par1,
-                                par2
-                        );
-                new AdvArea(this, 170, 103, 180, 112).withTooltip(Localization.translate("tesseract.activate")).drawForeground(
-                        poseStack,    par1,
-                        par2
-                );
+                if (this.container.base.channel == null) {
+                    return;
+                }
+                hoverUpChannel = false;
+                hoverDownChannel = false;
+                hoverEnergyChannel = false;
+                hoverFluidChannel = false;
+                hoverItemChannel = false;
+                hoverExtractChannel = false;
+                hoverReceiveChannel = false;
+                hoverPublicChannel = false;
+                hoverDeleteChannel = false;
+                hoverChangeModeChannel = false;
+                hoverBack = false;
+                if (par1 >= 56 && par2 >= 7 && par1 <= 56+19 && par2 <= 7+20){
+                    hoverEnergyChannel = true;
+                    new Area(this, 56, 7, 19, 20).withTooltip(Localization.translate("tesseract.energy")).drawForeground(
+                            poseStack, par1,
+                            par2
+                    );
+                }
+                if (par1 >= 78 && par2 >= 7 && par1 <= 78+19 && par2 <= 7+20){
+                    hoverFluidChannel = true;
+                    new Area(this, 78, 7, 19, 20).withTooltip(Localization.translate("tesseract.fluid")).drawForeground(
+                            poseStack, par1,
+                            par2
+                    );
+                }
+                if (par1 >= 100 && par2 >= 7 && par1 <= 100+19 && par2 <= 7+20){
+                    hoverItemChannel = true;
+                    new Area(this, 100, 7, 19, 20).withTooltip(Localization.translate("tesseract.item")).drawForeground(
+                            poseStack,   par1,
+                            par2
+                    );
+                }
+                if (par1 >= 7 && par2 >= 55 && par1 <= 7+14 && par2 <= 55 + 10){
+                    hoverUpChannel = true;
+                    new Area(this, 7, 55, 14, 10).withTooltip(Localization.translate("tesseract.plus")).drawForeground(
+                            poseStack, par1,
+                            par2
+                    );
+                }
+
+                if (par1 >= 7 && par2 >= 67 && par1 <= 7+14 && par2 <= 67 + 10){
+                    hoverDownChannel = true;
+                    new Area(this, 7, 67, 14, 10).withTooltip(Localization.translate("tesseract.minus")).drawForeground(
+                            poseStack,  par1,
+                            par2
+                    );
+                }
+                if (par1 >= 67 && par2 >= 57 && par1 <= 67+19 && par2 <= 57 + 20){
+                    hoverReceiveChannel = true;
+                    new Area(this, 67, 57, 19, 20).withTooltip(Localization.translate("tesseract.sink")).drawForeground(
+                            poseStack,  par1,
+                            par2
+                    );
+                }
+
+                if (par1 >= 89 && par2 >= 57 && par1 <= 89+19 && par2 <= 57 + 20){
+                    hoverExtractChannel = true;
+                    new Area(this, 89, 57, 19, 20).withTooltip(Localization.translate("tesseract.source")).drawForeground(
+                            poseStack, par1,
+                            par2
+                    );
+                }
+
+                if (par1 >= 149 && par2 >= 34 && par1 <= 149+19 && par2 <= 34 + 20){
+                    hoverPublicChannel = true;
+                    new Area(this, 149, 34, 19, 20)
+                            .withTooltip(Localization.translate("tesseract.player_channel") +"- "+this.container.base.channel.getTesseract().getPlayer()+"\n"+  Localization.translate("tesseract.private") + (container.base.channel.isPrivate() ? Localization.translate("iu.yes") : Localization.translate("iu.no")))
+                            .drawForeground(
+                                    poseStack,   par1,
+                                    par2
+                            );
+                }
+
+                if (par1 >= 65 && par2 >= 35 && par1 <= 110 && par2 <= 50){
+                    hoverChangeModeChannel = true;
+                    new AdvArea(this, 65, 35, 110, 50).withTooltip(Localization.translate("tesseract.activate")).drawForeground(
+                            poseStack,    par1,
+                            par2
+                    );
+                }
+                if (par1 >= 149 && par2 >= 57 && par1 <= 149+19 && par2 <= 57 + 20){
+                    hoverDeleteChannel = true;
+                    new Area(this, 149, 57, 19, 20).withTooltip(Localization.translate("tesseract.delete")).drawForeground(
+                            poseStack,    par1,
+                            par2
+                    );
+                }
+                if (par1 >= 5 && par2 >= 5 && par1 <=13 && par2 <=16){
+                    hoverBack = true;
+
+                }
                 break;
             case 2:
-                for (int i = index - 24; i < Math.min(this.container.base.getChannels().size(), index); i++) {
+                hoverBack = false;
+                indexMaxTesseract = indexTesseract * 7 + 21;
+                indexMaxTesseract = Math.min(indexMaxTesseract,this.container.base.getChannels().size());
+                if (indexTesseract  >  Math.floor((double) this.container.base.getChannels().size() / 7) - 2)
+                    indexTesseract--;
+                if (indexTesseract < 0)
+                    indexTesseract = 0;
+                int j = 0;
+                for (int i = indexTesseract * 7; i < Math.min(this.container.base.getChannels().size(), indexMaxTesseract); i++, j++) {
                     final Channel channel = this.container.base.getChannel(i);
-                    new ItemStackImageText(this, 18 + ((i % 24) % 8) * 20, 31 + ((i % 24) / 8) * 22, () -> this.stack,
+                    new ItemStackImageText(this, 22 + ((j ) % 7) * 17, 19 + ((j ) / 7) * 17, () -> this.stack,
                             Localization.translate("tesseract.channel") + channel.getChannel() + "\n" +
-                                    Localization.translate("tesseract.private") + (channel.isPrivate() ? "да" : "нет") + "\n" +
+                                    Localization.translate("tesseract.private") + (channel.isPrivate() ?Localization.translate("iu.yes") : Localization.translate("iu.no")) + "\n" +
                                     Localization.translate("tesseract.player") + channel.getTesseract().getPlayer() + "\n" +
                                     Localization.translate("tesseract.type_channel") + channel.getTypeChannel().name() + "\n" +
                                     Localization.translate("tesseract.mode") + channel.getMode().name() + "\n" +
-                                    Localization.translate("tesseract.private") + (channel.isActive() ? "да" : "нет") + "\n"
+                                    Localization.translate("tesseract.private") + (channel.isActive() ? Localization.translate("iu.yes") : Localization.translate("iu.no")) + "\n"
 
                     ).drawForeground(poseStack,par1, par2);
                 }
+                if (par1 >= 5 && par2 >= 5 && par1 <=13 && par2 <=16){
+                    hoverBack = true;
+
+                }
                 break;
             case 3:
-                this.energy.drawForeground(poseStack,par1, par2);
+                hoverBack = false;
                 this.fluid.drawForeground(poseStack,par1, par2);
                 List<ItemStack> itemStackList =
                         this.container.base
@@ -132,29 +415,45 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
                                 .toList();
                 for (int i = 0; i < itemStackList.size(); i++) {
                     final int finalI = i;
-                    new Area(this, 18 + (i % 6) * 20, 35 + (i / 6) * 22, 18, 18).withTooltip(() -> itemStackList
+                    new Area(this, 35 + (i % 6) * 20, 11 + (i / 6) * 22, 18, 18).withTooltip(() -> itemStackList
                             .get(finalI)
                             .getDisplayName().getString()).drawForeground(poseStack,par1, par2);
                 }
+                if (par1 >= 5 && par2 >= 5 && par1 <=13 && par2 <=16){
+                    hoverBack = true;
+
+                }
+
+                new AdvArea(this, 7,68, 168, 79).withTooltip( ModUtils.getString(Math.min(
+                        this.container.base.getEnergy().getEnergy(),
+                        this.container.base.getEnergy().getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.getEnergy().getCapacity()) + " " +
+                        "EF").drawForeground(poseStack,par1, par2);
                 break;
             case 4:
-                for (int i = index1 - 24; i < Math.min(this.container.base.getPublicChannel().size(), index1); i++) {
+                hoverBack = false;
+                indexPublicMaxTesseract = indexPublicTesseract * 7 + 21;
+                indexPublicMaxTesseract = Math.min(indexPublicMaxTesseract,this.container.base.getPublicChannel().size());
+                if (indexPublicTesseract  >  Math.floor((double) this.container.base.getPublicChannel().size() / 7) - 2)
+                    indexPublicTesseract--;
+                if (indexPublicTesseract < 0)
+                    indexPublicTesseract = 0;
+                j = 0;
+                for (int i = indexPublicTesseract * 7; i < Math.min(this.container.base.getPublicChannel().size(), indexPublicMaxTesseract); i++, j++) {
                     final Channel channel = this.container.base.getPublicChannel().get(i);
-                    new ItemStackImageText(this, 18 + ((i % 24) % 8) * 20, 31 + ((i % 24) / 8) * 22, () -> this.stack,
+                    new ItemStackImageText(this, 22 + ((j ) % 7) * 17, 19 + ((j ) / 7) * 17, () -> this.stack,
                             Localization.translate("tesseract.channel") + channel.getChannel() + "\n" +
+                                    Localization.translate("tesseract.private") + (channel.isPrivate() ?Localization.translate("iu.yes") : Localization.translate("iu.no")) + "\n" +
                                     Localization.translate("tesseract.player") + channel.getTesseract().getPlayer() + "\n" +
-                                    Localization.translate("tesseract.channel") + channel.getTypeChannel().name() + "\n" +
+                                    Localization.translate("tesseract.type_channel") + channel.getTypeChannel().name() + "\n" +
                                     Localization.translate("tesseract.mode") + channel.getMode().name() + "\n" +
-                                    Localization.translate("tesseract.active") + (channel.isActive() ? "да" : "нет") + "\n" +
-                                    Localization.translate("tesseract.coordinate") + "x:" + channel
-                                    .getTesseract()
-                                    .getPos()
-                                    .getX() + " y: " + channel
-                                    .getTesseract()
-                                    .getPos()
-                                    .getY() + " z: " + channel.getTesseract().getPos().getZ() + "\n"
+                                    Localization.translate("tesseract.private") + (channel.isActive() ? Localization.translate("iu.yes") : Localization.translate("iu.no")) + "\n"
 
                     ).drawForeground(poseStack,par1, par2);
+                }
+                if (par1 >= 5 && par2 >= 5 && par1 <=13 && par2 <=16){
+                    hoverBack = true;
+
                 }
 
                 break;
@@ -166,137 +465,204 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
         super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         switch (guiScreenID) {
             case 0:
-                this.drawXCenteredString(poseStack,
-                        this.imageWidth / 2,
-                        25,
-                        Localization.translate("tesseract.lists"),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34),
-                        false
-                );
-                this.drawXCenteredString(poseStack,
-                        50,
-                        65,
-                        Localization.translate("tesseract.inventory"),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34),
-                        false
-                );
-                this.drawXCenteredString(poseStack,
-                        150,
-                        65,
-                        Localization.translate("tesseract.create_channel"),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34),
-                        false
-                );
-                this.drawXCenteredString(poseStack,
-                        this.imageWidth / 2,
-                        95,
-                        Localization.translate("tesseract.public_channel"),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34),
-                        false
-                );
-
+                if (hoverShowCreateChannels)
+                    drawTexturedModalRect(poseStack,this.guiLeft + 31, this.guiTop + 31,
+                            232,
+                            0, 24, 25
+                    );
+                if (hoverShowInventory)
+                    drawTexturedModalRect(poseStack,this.guiLeft + 121, this.guiTop + 31,
+                            232,
+                            0, 24, 25
+                    );
+                if (hoverShowPublicChannels)
+                    drawTexturedModalRect(poseStack,this.guiLeft + 91, this.guiTop + 31,
+                            232,
+                            0, 24, 25
+                    );
+                if (hoverShowOwnChannels)
+                    drawTexturedModalRect(poseStack,this.guiLeft + 61, this.guiTop + 31,
+                            232,
+                            0, 24, 25
+                    );
                 break;
             case 1:
                 if (this.container.base.channel == null) {
                     return;
                 }
-                this.drawXCenteredString(poseStack,46, 73, String.valueOf(this.container.base.channel.getChannel()),
+                this.drawXCenteredString(poseStack,38, 64, String.valueOf(this.container.base.channel.getChannel()),
                         ModUtils.convertRGBcolorToInt(13,
 
                                 229, 34
                         ), false
                 );
-                this.drawXCenteredString(poseStack,
-                        105,
-                        100,
-                        Localization.translate("tesseract.delete"),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34),
-                        false
-                );
 
-                this.drawXCenteredString(poseStack,137, 40, Localization.translate("tesseract.player_channel"),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34), false
-                );
-                this.drawXCenteredString(poseStack,137, 50, this.container.base.channel.getTesseract().getPlayer(),
-                        ModUtils.convertRGBcolorToInt(13, 229, 34), false
-                );
+
+
 
 
                 this.bindTexture();
+                if (hoverReceiveChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 67, this.guiTop + 57,
+                            236,
+                            81, 20, 21
+                    );
+                }
+                if (hoverExtractChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 89, this.guiTop + 57,
+                            236,
+                            81, 20, 21
+                    );
+                }
+                if (hoverEnergyChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 56, this.guiTop + 7,
+                            236,
+                            81, 20, 21
+                    );
+                }
+                if (hoverFluidChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 78, this.guiTop + 7,
+                            236,
+                            81, 20, 21
+                    );
+                }
+                if (hoverItemChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 100, this.guiTop + 7,
+                            236,
+                            81, 20, 21
+                    );
+                }
+
+                if (hoverDeleteChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 149, this.guiTop + 57,
+                            236,
+                            81, 20, 21
+                    );
+                }
+                if (hoverUpChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 7, this.guiTop + 55,
+                            241,
+                            103, 15, 12
+                    );
+                }
+                if (hoverDownChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 7, this.guiTop + 67,
+                            241,
+                            103, 15, 12
+                    );
+                }
                 if (this.container.base.channel.getMode() == TypeMode.INOUT || this.container.base.channel.getMode() == TypeMode.INPUT) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 79, this.guiTop + 69,
-                            217,
-                            59, 13, 27
+                    drawTexturedModalRect(poseStack,this.guiLeft + 67, this.guiTop + 57,
+                            215,
+                            22, 19, 20
                     );
                 }
                 if (this.container.base.channel.getMode() == TypeMode.INOUT || this.container.base.channel.getMode() == TypeMode.OUTPUT) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 95, this.guiTop + 69,
-                            230,
-                            59, 13, 27
+                    drawTexturedModalRect(poseStack,this.guiLeft + 89, this.guiTop + 57,
+                            236,
+                            22, 19, 20
                     );
                 }
                 if (this.container.base.channel.getTypeChannel() == TypeChannel.ENERGY) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 20, this.guiTop + 52,
-                            232,
-                            97, 10, 11
+                    drawTexturedModalRect(poseStack,this.guiLeft + 56, this.guiTop + 7,
+                            194,
+                            0, 19, 20
                     );
                 }
                 if (this.container.base.channel.getTypeChannel() == TypeChannel.FLUID) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 41, this.guiTop + 52,
-                            232,
-                            97, 10, 11
+                    drawTexturedModalRect(poseStack,this.guiLeft + 78, this.guiTop + 7,
+                            215,
+                            0, 19, 20
                     );
                 }
                 if (this.container.base.channel.getTypeChannel() == TypeChannel.ITEM) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 61, this.guiTop + 52,
-                            232,
-                            97, 10, 11
+                    drawTexturedModalRect(poseStack,this.guiLeft + 100, this.guiTop + 7,
+                            236,
+                            0, 19, 20
+                    );
+                }
+                if (hoverBack){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 6, this.guiTop + 6,
+                            249,
+                            130, 7, 10
                     );
                 }
                 if (this.container.base.channel.isPrivate()) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 113, this.guiTop + 78,
-                            232,
-                            97, 10, 11
+                    drawTexturedModalRect(poseStack,this.guiLeft + 149, this.guiTop + 33,
+                            236,
+                            58, 19, 20
                     );
                 }
                 if (this.container.base.channel.isActive()) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 171, this.guiTop + 102,
-                            232,
-                            97, 10, 11
+                    drawTexturedModalRect(poseStack,this.guiLeft + 66 + 22, this.guiTop + 36,
+                            234,
+                            44, 22, 14
+                    );
+                    if (hoverChangeModeChannel){
+                        drawTexturedModalRect(poseStack,this.guiLeft + 66 + 22, this.guiTop + 36,
+                                234,
+                                115, 22, 14
+                        );
+                    }
+                }else{
+                    drawTexturedModalRect(poseStack,this.guiLeft + 66, this.guiTop + 36,
+                            211,
+                            44, 22, 14
+                    );
+                    if (hoverChangeModeChannel){
+                        drawTexturedModalRect(poseStack,this.guiLeft + 66, this.guiTop + 36,
+                                234,
+                                115, 22, 14
+                        );
+                    }
+                }
+                if (hoverPublicChannel){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 149, this.guiTop + 33,
+                            236,
+                            81, 20, 21
                     );
                 }
                 break;
             case 2:
                 this.bindTexture();
-               RenderSystem.setShaderColor(1, 1, 1, 1);
-                if (index < this.container.base.getChannels().size()) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 156, this.guiTop + 97,
-                            227,
-                            124, 243 - 226, 135 - 123
-                    );
-                }
-                if (index - 24 > 0) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 15, this.guiTop + 97,
-                            204,
-                            124, 243 - 226, 135 - 123
-                    );
-                }
-                for (int i = index - 24; i < Math.min(this.container.base.getChannels().size(), index); i++) {
-                    new ItemImage(this, 18 + ((i % 24) % 8) * 20, 31 + ((i % 24) / 8) * 22, () -> this.stack).drawBackground(
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                drawTexturedModalRect(poseStack,this.guiLeft + 145, (int) (this.guiTop + 18 + (50-18)*(indexTesseract/(Math.floor((double) this.container.base.getChannels().size() / 7D) - 2))),
+                        246,
+                        0, 10, 19
+                );
+                int j = 0;
+                for (int i = indexTesseract * 7; i < Math.min(this.container.base.getChannels().size(), indexMaxTesseract); i++, j++) {
+                    new ItemImage(this, 22 + ((j ) % 7) * 17, 19 + ((j ) / 7) * 17, () -> this.stack).drawBackground(
                             poseStack, this.guiLeft,
                             this.guiTop
                     );
                 }
-
+                if (hoverBack){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 6, this.guiTop + 6,
+                            249,
+                            130, 7, 10
+                    );
+                }
                 break;
             case 3:
-                this.energy.drawBackground(
-                        poseStack,   this.guiLeft,
-                        this.guiTop
-                );
+
                 this.fluid.drawBackground(
                         poseStack, this.guiLeft,
                         this.guiTop
+                );
+                if (hoverBack){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 6, this.guiTop + 6,
+                            249,
+                            130, 7, 10
+                    );
+                }
+                drawTexturedModalRect(poseStack,this.guiLeft + 56, this.guiTop + 7,
+                        236,
+                        81, 20, 21
+                );
+                drawTexturedModalRect(poseStack,this.guiLeft + 10, this.guiTop + 71,
+                        10,
+                        172, (int) (156*container.base.getEnergy().getFillRatio()), 8
                 );
                 List<ItemStack> itemStackList =
                         this.container.base
@@ -307,29 +673,30 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
                                         Collectors.toList());
                 for (int i = 0; i < itemStackList.size(); i++) {
 
-                    this.drawItemStack(18 + (i % 6) * 20, 35 + (i / 6) * 22, itemStackList.get(i));
+                    this.drawItemStack(35 + (i % 6) * 20, 11 + (i / 6) * 22, itemStackList.get(i));
 
                 }
                 break;
             case 4:
                 bindTexture();
                 RenderSystem.setShaderColor(1, 1, 1, 1);
-                if (index1 < this.container.base.getPublicChannel().size()) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 156, this.guiTop + 97,
-                            227,
-                            124, 243 - 226, 135 - 123
-                    );
-                }
-                if (index1 - 24 > 0) {
-                    drawTexturedModalRect(poseStack,this.guiLeft + 15, this.guiTop + 97,
-                            204,
-                            124, 243 - 226, 135 - 123
-                    );
-                }
-                for (int i = index1 - 24; i < Math.min(this.container.base.getPublicChannel().size(), index1); i++) {
-                    new ItemImage(this, 18 + ((i % 24) % 8) * 20, 31 + ((i % 24) / 8) * 22, () -> this.stack).drawBackground(
-                            poseStack,   this.guiLeft,
+                this.bindTexture();
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                drawTexturedModalRect(poseStack,this.guiLeft + 145, (int) (this.guiTop + 18 + (50-18)*((indexPublicTesseract)/(Math.floor((double) this.container.base.getPublicChannel().size() / 7D) - 2))),
+                        246,
+                        0, 10, 19
+                );
+                j = 0;
+                for (int i = indexPublicTesseract * 7; i < Math.min(this.container.base.getPublicChannel().size(), indexPublicMaxTesseract); i++, j++) {
+                    new ItemImage(this, 22 + ((j ) % 7) * 17, 19 + ((j ) / 7) * 17, () -> this.stack).drawBackground(
+                            poseStack, this.guiLeft,
                             this.guiTop
+                    );
+                }
+                if (hoverBack){
+                    drawTexturedModalRect(poseStack,this.guiLeft + 6, this.guiTop + 6,
+                            249,
+                            130, 7, 10
                     );
                 }
                 break;
@@ -347,74 +714,75 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
         int y = j - yMin;
         switch (guiScreenID) {
             case 0:
-                if (x >= 117 && x <= 181 && y >= 53 && y <= 86) {
+                if (hoverShowCreateChannels) {
                     new PacketUpdateServerTile(this.container.base, 1);
                     guiScreenID = 1;
+                    prevId = 0;
                 }
-                if (x >= 19 && x <= 182 && y >= 15 && y <= 48) {
+                if (hoverShowOwnChannels) {
                     guiScreenID = 2;
+                    prevId = 0;
                 }
-                if (x >= 19 && x <= 84 && y >= 53 && y <= 86) {
+                if (hoverShowInventory) {
                     guiScreenID = 3;
+                    prevId = 0;
                 }
-                if (x >= 19 && x <= 182 && y >= 90 && y <= 110) {
+                if (hoverShowPublicChannels) {
                     guiScreenID = 4;
+                    prevId = 0;
                 }
                 break;
             case 1:
-                if (x >= 9 && x <= 27 && y >= 8 && y <= 20) {
+                if (hoverBack) {
                     new PacketUpdateServerTile(this.container.base, 8);
-                    guiScreenID = 0;
+                    if (prevId != 0){
+                        guiScreenID = prevId;
+                        prevId = 1;
+                    }else {
+                        guiScreenID = 0;
+                        prevId = 1;
+                    }
                 }
-                if (x >= 20 && x <= 30 && y >= 91 && y <= 101) {
+                if (hoverUpChannel) {
                     new PacketUpdateServerTile(this.container.base, 2);
                 }
-                if (x >= 60 && x <= 70 && y >= 91 && y <= 101) {
+                if (hoverDownChannel) {
                     new PacketUpdateServerTile(this.container.base, 3);
                 }
-                if (x >= 90 && x <= 127 && y >= 103 && y <= 111) {
+                if (hoverDeleteChannel) {
                     new PacketUpdateServerTile(this.container.base, 9);
                     guiScreenID = 0;
                 }
-                if (x >= 79 && x <= 91 && y >= 69 && y <= 86) {
+                if (hoverReceiveChannel) {
                     new PacketUpdateServerTile(this.container.base, 4);
                 }
-                if (x >= 95 && x <= 107 && y >= 69 && y <= 86) {
+                if (hoverExtractChannel) {
                     new PacketUpdateServerTile(this.container.base, 4.1);
                 }
-                if (x >= 20 && x <= 27 && y >= 54 && y <= 61) {
+                if (hoverEnergyChannel) {
                     new PacketUpdateServerTile(this.container.base, 5);
                 }
-                if (x >= 41 && x <= 48 && y >= 54 && y <= 61) {
+                if (hoverFluidChannel) {
                     new PacketUpdateServerTile(this.container.base, 5.1);
                 }
-                if (x >= 61 && x <= 68 && y >= 54 && y <= 61) {
+                if (hoverItemChannel) {
                     new PacketUpdateServerTile(this.container.base, 5.2);
                 }
-                if (x >= 113 && x <= 120 && y >= 80 && y <= 87) {
+                if (hoverPublicChannel) {
                     new PacketUpdateServerTile(this.container.base, 6);
                 }
-                if (x >= 171 && x <= 178 && y >= 105 && y <= 112) {
+                if (hoverChangeModeChannel) {
                     new PacketUpdateServerTile(this.container.base, 7);
                 }
                 break;
             case 2:
-                if (index < this.container.base.getChannels().size()) {
-                    if (x >= 156 && y >= 97 && x <= 173 && y <= 109) {
-                        index += 24;
-                    }
 
-                }
-                if (index - 24 > 0) {
-                    if (x >= 15 && y >= 97 && x <= 32 && y <= 109) {
-                        index -= 24;
-                    }
-                }
-                for (int index1 = index - 24; index1 < Math.min(this.container.base.getChannels().size(), index); index1++) {
-                    final int x1 = 18 + ((index1 % 24) % 8) * 20;
-                    final int y1 = 31 + ((index1 % 24) / 8) * 22;
-                    if (x >= x1 && x < x1 + 20 && y >= y1 && y < y1 + 22) {
-                        double index2 = index1;
+                int jj = 0;
+                for (int ii = indexTesseract * 7; ii < Math.min(this.container.base.getChannels().size(), indexMaxTesseract); ii++, jj++) {
+                    int x1 =   22 + ((jj ) % 7) * 17;
+                    int y1 =   19 + ((jj ) / 7) * 17;
+                    if (x >= x1 && x < x1 + 17 && y >= y1 && y < y1 + 17) {
+                        double index2 = ii;
                         int del = 0;
                         while (index2 >= 1) {
                             index2 /= 10;
@@ -422,11 +790,13 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
                         }
                         new PacketUpdateServerTile(this.container.base, 10 + del / 10D + index2 / 10D);
                         this.guiScreenID = 1;
+                        prevId = 2;
                         break;
                     }
                 }
                 if (x >= 9 && x <= 27 && y >= 8 && y <= 20) {
                     new PacketUpdateServerTile(this.container.base, 8);
+                    prevId = 2;
                     guiScreenID = 0;
                 }
                 break;
@@ -461,13 +831,14 @@ public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerT
     protected ResourceLocation getTexture() {
         switch (guiScreenID) {
             default:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitesseract_main.png");
+                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitesseract.png");
             case 1:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_tesseract_4.png");
-            case 2:
+                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitesseract_create_channel.png");
             case 3:
+                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitesseract_inventory.png");
+            case 2:
             case 4:
-                return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_tesseract_2.png");
+                return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitesseract_public_channels.png");
 
         }
     }

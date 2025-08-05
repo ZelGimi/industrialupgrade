@@ -1,23 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "key": {
-    "A": [
-      {
-        "item": "quantumgenerators:qg/bsp_gen"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/adrcore"
-      }
-    ]
-  },
-  "pattern": [
-    " B ",
-    "BAB",
-    " B "
+  "type": "industrialupgrade:shapeless_recipe",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_nickel"
+    }
   ],
   "result": {
-    "item": "quantumgenerators:qg/adsp_gen"
+    "count": 9,
+    "item": "industrialupgrade:raw_metals/raw_nickel"
   }
 }

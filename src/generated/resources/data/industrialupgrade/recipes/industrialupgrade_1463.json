@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/quad_handlerho"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_623_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_633_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_622_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/quad_handlerho"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_633_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_622_element"
+    }
   },
   "pattern": [
     "BDB",

@@ -11,10 +11,10 @@ public class ContainerSteamTurbineRod extends ContainerFullInv<TileEntitySteamTu
     ) {
         super(entityPlayer, tileEntity1, 255);
 
-        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 0, 88, 11));
-        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 1, 28, 71));
-        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 2, 88, 131));
-        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 3, 148, 71));
+        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 0, 80, 11));
+        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 1, 56, 35));
+        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 2, 80, 59));
+        addSlotToContainer(new SlotInvSlot((tileEntity1).getSlot(), 3, 104, 35));
     }
 
 

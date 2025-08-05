@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/caravky"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/caravky"
+    }
   },
   "pattern": [
     "AAA",

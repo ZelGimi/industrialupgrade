@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:upgrade_casing"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:itemcell/itemcell"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/tin"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:upgrade_casing"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    }
   },
   "pattern": [
     "ADA",

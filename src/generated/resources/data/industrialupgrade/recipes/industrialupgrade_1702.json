@@ -1,37 +1,27 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:armour/quantum_leggings"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:armour/quantum_leggings"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:9}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:battery/itembatlamacrystal"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:adv_spectral_box"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:energy/impmagnet"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
+    "D": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "E": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "F": {
+      "item": "industrialupgrade:energy/impmagnet"
+    }
   },
   "pattern": [
     "DCD",

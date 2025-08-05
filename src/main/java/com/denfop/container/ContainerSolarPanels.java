@@ -15,7 +15,12 @@ public class ContainerSolarPanels extends ContainerFullInv<TileSolarPanel> {
             this.addSlotToContainer(new SlotInvSlot(tileEntity1.inputslot, j, 27 + j * 18, 121));
 
         }
-
+        this.addSlotToContainer(new SlotInvSlot(tileEntity1.slotDept, 0, 64, 51){
+            @Override
+            public boolean isActive() {
+                return false;
+            }
+        });
 
     }
 

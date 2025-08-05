@@ -1,6 +1,7 @@
 package com.denfop.items.relocator;
 
 
+import com.denfop.network.packet.PacketSynhronyzationRelocator;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -29,6 +30,22 @@ public class RelocatorNetwork {
         );
         final List<Point> list = map.computeIfAbsent(player.getUUID(), k -> new LinkedList<>());
         list.add(point);
+        new PacketSynhronyzationRelocator(player,list);
+    }
+    public void addPoints(Player player, ResourceKey<Level> levelKey, List<Point> points) {
+        final Map<UUID, List<Point>> map = worldDataPoints.computeIfAbsent(
+                levelKey,
+                k -> new ConcurrentHashMap<>()
+        );
+        map.put(player.getUUID(),points);
+    }
+    public void addPoints(Player player, List<Point> points) {
+        final Map<UUID, List<Point>> map = worldDataPoints.computeIfAbsent(
+                player.getLevel().dimension(),
+                k -> new ConcurrentHashMap<>()
+        );
+        map.put(player.getUUID(),points);
+
     }
 
     public void removePoint(Player player, Point point) {
@@ -38,7 +55,9 @@ public class RelocatorNetwork {
         );
         final List<Point> list = map.computeIfAbsent(player.getUUID(), k -> new LinkedList<>());
         list.removeIf(point1 -> point1.getName().equals(point.getName()));
+        new PacketSynhronyzationRelocator(player,list);
     }
+
 
     public void teleportPlayer(Player player, Point point) {
         if (!player.getLevel().isClientSide()) {

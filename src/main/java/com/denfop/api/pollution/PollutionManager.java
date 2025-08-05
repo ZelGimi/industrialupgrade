@@ -1,6 +1,7 @@
 package com.denfop.api.pollution;
 
 import com.denfop.IUPotion;
+import com.denfop.ModConfig;
 import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.EnumWindSide;
 import com.denfop.api.windsystem.IWindSystem;
@@ -40,32 +41,34 @@ public class PollutionManager {
         if (player.getLevel().getGameTime() % 200 == 0) {
             ChunkPos pos = new ChunkPos(new BlockPos(player.position()));
             ChunkLevel pollution = this.pollutionSoil.get(pos);
-            if (pollution != null) {
-                if (pollution.getLevelPollution().ordinal() >= 2) {
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
+            if (ModConfig.COMMON.soilPollution.get())
+                if (pollution != null) {
+                    if (pollution.getLevelPollution().ordinal() >= 2) {
+                        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
 
-                    if (pollution.getLevelPollution().ordinal() >= 3) {
-                        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 0));
+                        if (pollution.getLevelPollution().ordinal() >= 3) {
+                            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 0));
 
-                        if (pollution.getLevelPollution().ordinal() >= 4) {
-                            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+                            if (pollution.getLevelPollution().ordinal() >= 4) {
+                                player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+                            }
                         }
                     }
                 }
-            }
             pollution = this.pollutionAir.get(pos);
-            if (pollution != null) {
-                if (pollution.getLevelPollution().ordinal() >= 2) {
-                    player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
-                    if (pollution.getLevelPollution().ordinal() >= 3) {
-                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
-                        if (pollution.getLevelPollution().ordinal() >= 4) {
-                            player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
+            if (ModConfig.COMMON.airPollution.get())
+                if (pollution != null) {
+                    if (pollution.getLevelPollution().ordinal() >= 2) {
+                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+                        if (pollution.getLevelPollution().ordinal() >= 3) {
+                            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
+                            if (pollution.getLevelPollution().ordinal() >= 4) {
+                                player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
 
+                            }
                         }
                     }
                 }
-            }
         }
     }
 
@@ -217,72 +220,76 @@ public class PollutionManager {
         final EnumWindSide windSide = this.wind.getWindSide();
         final Vec2f vector = getVector(windSide);
         final EnumTypeWind windLevel = this.wind.getEnumTypeWind();
-
-        entries.parallelStream().forEach(entry -> {
-            ChunkLevel chunkLevel = entry.getValue();
-
-            double distance = calculateDistance(chunkLevel.getDefaultPos(), chunkLevel.getPos());
-
-            if (canChange(windLevel) && distance <= 10) {
-                pollutionAir.remove(entry.getKey());
-                chunkLevel.addChunkPos((int) vector.x, (int) vector.y);
-                pollutionAir.put(chunkLevel.getPos(), chunkLevel);
-            }
-        });
-        if (world.getGameTime() % 6000 == 0) {
-            for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionSoil.entrySet()) {
+        if (ModConfig.COMMON.airPollution.get())
+            entries.parallelStream().forEach(entry -> {
                 ChunkLevel chunkLevel = entry.getValue();
-                if (chunkLevel != null) {
-                    chunkLevel.setPollution(chunkLevel.getPollution() / 2);
-                    if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW) {
-                        chunkLevel.setPollution(10);
-                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
-                                chunkLevel.getLevelPollution().ordinal() - 1)]);
+
+                double distance = calculateDistance(chunkLevel.getDefaultPos(), chunkLevel.getPos());
+
+                if (canChange(windLevel) && distance <= 10) {
+                    pollutionAir.remove(entry.getKey());
+                    chunkLevel.addChunkPos((int) vector.x, (int) vector.y);
+                    pollutionAir.put(chunkLevel.getPos(), chunkLevel);
+                }
+            });
+        if (ModConfig.COMMON.soilPollution.get())
+            if (world.getGameTime() % 6000 == 0) {
+                for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionSoil.entrySet()) {
+                    ChunkLevel chunkLevel = entry.getValue();
+                    if (chunkLevel != null) {
+                        chunkLevel.setPollution(chunkLevel.getPollution() / 2);
+                        if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW) {
+                            chunkLevel.setPollution(10);
+                            chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
+                                    chunkLevel.getLevelPollution().ordinal() - 1)]);
+                        }
                     }
                 }
             }
-        }
-        if (world.getGameTime() % 6000 == 0) {
-            for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionAir.entrySet()) {
-                ChunkLevel chunkLevel = entry.getValue();
-                if (chunkLevel != null) {
-                    chunkLevel.setPollution(chunkLevel.getPollution() / 2);
-                    if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW) {
-                        chunkLevel.setPollution(10);
-                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
-                                chunkLevel.getLevelPollution().ordinal() - 1)]);
+        if (ModConfig.COMMON.airPollution.get())
+            if (world.getGameTime() % 6000 == 0) {
+                for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionAir.entrySet()) {
+                    ChunkLevel chunkLevel = entry.getValue();
+                    if (chunkLevel != null) {
+                        chunkLevel.setPollution(chunkLevel.getPollution() / 2);
+                        if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW) {
+                            chunkLevel.setPollution(10);
+                            chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
+                                    chunkLevel.getLevelPollution().ordinal() - 1)]);
+                        }
                     }
                 }
             }
-        }
-        for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionAirChunks.entrySet()) {
-            ChunkLevel chunkLevel = pollutionAir.get(entry.getKey());
-            if (chunkLevel == null) {
-                chunkLevel = new ChunkLevel(entry.getKey(), LevelPollution.VERY_LOW, 0);
-                for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
-                    chunkLevel.addPollution(pollutionMechanism.getPollution());
-                }
-                pollutionAir.put(chunkLevel.getPos(), chunkLevel);
-            } else {
-                for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
-                    chunkLevel.addPollution(pollutionMechanism.getPollution());
-                }
-            }
-        }
-        for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionSoilChunks.entrySet()) {
-            ChunkLevel chunkLevel = pollutionSoil.get(entry.getKey());
-            if (chunkLevel == null) {
-                chunkLevel = new ChunkLevel(entry.getKey(), LevelPollution.VERY_LOW, 0);
-                for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
-                    chunkLevel.addPollution(pollutionMechanism.getPollution());
-                }
-                pollutionSoil.put(chunkLevel.getPos(), chunkLevel);
-            } else {
-                for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
-                    chunkLevel.addPollution(pollutionMechanism.getPollution());
+        if (ModConfig.COMMON.airPollution.get())
+            for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionAirChunks.entrySet()) {
+                ChunkLevel chunkLevel = pollutionAir.get(entry.getKey());
+                if (chunkLevel == null) {
+                    chunkLevel = new ChunkLevel(entry.getKey(), LevelPollution.VERY_LOW, 0);
+                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                        chunkLevel.addPollution(pollutionMechanism.getPollution());
+                    }
+                    pollutionAir.put(chunkLevel.getPos(), chunkLevel);
+                } else {
+                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                        chunkLevel.addPollution(pollutionMechanism.getPollution());
+                    }
                 }
             }
-        }
+        if (ModConfig.COMMON.soilPollution.get())
+            for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionSoilChunks.entrySet()) {
+                ChunkLevel chunkLevel = pollutionSoil.get(entry.getKey());
+                if (chunkLevel == null) {
+                    chunkLevel = new ChunkLevel(entry.getKey(), LevelPollution.VERY_LOW, 0);
+                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                        chunkLevel.addPollution(pollutionMechanism.getPollution());
+                    }
+                    pollutionSoil.put(chunkLevel.getPos(), chunkLevel);
+                } else {
+                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                        chunkLevel.addPollution(pollutionMechanism.getPollution());
+                    }
+                }
+            }
     }
 
     public double calculateDistance(ChunkPos pos1, ChunkPos pos2) {

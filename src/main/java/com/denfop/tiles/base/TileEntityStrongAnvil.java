@@ -207,7 +207,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         if ((stack.getItem() == IUItem.ObsidianForgeHammer.getItem()) && this.output != null && this.outputSlot.canAdd(
                 this.output.getRecipe().output.items.get(
                         0))) {
-            progress += 10;
+            progress += 20;
             this.getCooldownTracker().setTick(10);
             if (!this.getWorld().isClientSide) {
                 this.initiate(0);

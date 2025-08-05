@@ -34,8 +34,8 @@ public class PacketRelocatorTeleportPlayer implements IPacket {
         if (entityPlayer.getUUID().equals(uuid)) {
             Point point = new Point(customPacketBuffer);
             ItemStack stack = entityPlayer.getMainHandItem();
-            if (ElectricItem.manager.canUse(stack, 1000000)) {
-                ElectricItem.manager.discharge(stack, 1000000, 14, true, false, false);
+            if (ElectricItem.manager.canUse(stack, 100000)) {
+                ElectricItem.manager.discharge(stack, 100000, 14, true, false, false);
                 entityPlayer.closeContainer();
                 RelocatorNetwork.instance.teleportPlayer(entityPlayer, point);
             }

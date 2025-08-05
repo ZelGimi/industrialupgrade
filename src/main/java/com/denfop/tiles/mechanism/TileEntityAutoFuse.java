@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -25,6 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class TileEntityAutoFuse extends TileEntityInventory {
 
@@ -55,7 +58,11 @@ public class TileEntityAutoFuse extends TileEntityInventory {
                                 }
         );
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.autofuse.info"));
+    }
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.autofuse;

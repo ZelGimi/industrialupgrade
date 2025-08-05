@@ -21,6 +21,7 @@ import com.denfop.gui.GuiHandlerHeavyOre;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -140,7 +141,13 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnMineralSeparatorParticles(level,pos,level.random);
+        }
+    }
     protected double getCoef() {
         switch (this.enumTypeSlot) {
             case ADVANCED:

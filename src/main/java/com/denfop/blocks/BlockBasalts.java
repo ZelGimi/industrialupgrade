@@ -29,6 +29,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
@@ -49,13 +50,11 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
         Random rand = WorldBaseGen.random;
         List<ItemStack> drops = new ArrayList<>();
 
         int meta = this.getElement().getId();
-        ItemStack tool = builder.getParameter(LootContextParams.TOOL);
-        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool);
         if (meta == 6) {
             drops.add(new ItemStack(IUItem.iudust.getItemFromMeta(31), rand.nextInt(2) + 1 + rand.nextInt(fortune + 1)));
         } else if (meta == 7) {

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:energy/impmagnet"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine1/magnet_generator"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:compresscarbon"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/nichrome"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:energy/impmagnet"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine1/magnet_generator"
+    },
+    "C": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "D": {
+      "tag": "forge:plates/nichrome"
+    }
   },
   "pattern": [
     "CDC",

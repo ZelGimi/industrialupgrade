@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_601_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_98_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_79_element"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_154_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_98_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_79_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_154_element"
+    }
   },
   "pattern": [
     "AFA",

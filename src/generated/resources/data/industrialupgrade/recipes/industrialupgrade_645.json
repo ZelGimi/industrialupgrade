@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:stick"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ]
+    "A": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "tag": "forge:plates/ferromanganese"
+    }
   },
   "pattern": [
     "BBB",

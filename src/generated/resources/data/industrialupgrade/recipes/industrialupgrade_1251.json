@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "minecraft:glass"
-      }
-    ],
-    "C": [
-      {
-        "tag": "minecraft:planks"
-      }
-    ]
+    "B": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     "CBC",

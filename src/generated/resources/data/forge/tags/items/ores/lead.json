@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:classicore/lead"
+    "industrialupgrade:classicore/lead",
+    "industrialupgrade:blockspace/dione_lead_ore"
   ]
 }

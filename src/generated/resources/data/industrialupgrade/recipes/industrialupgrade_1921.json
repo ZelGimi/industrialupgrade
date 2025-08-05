@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/oak_tank"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:smeltery/smeltery_casing"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:lava_bucket"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/strontium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/oak_tank"
+    },
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_casing"
+    },
+    "C": {
+      "item": "minecraft:lava_bucket"
+    },
+    "D": {
+      "tag": "forge:plates/strontium"
+    }
   },
   "pattern": [
     " C ",

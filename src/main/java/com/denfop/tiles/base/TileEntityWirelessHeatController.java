@@ -117,7 +117,7 @@ public class TileEntityWirelessHeatController extends TileEntityInventory implem
     @Override
     public void onLoaded() {
         super.onLoaded();
-        updateList();
+
     }
 
     @Override
@@ -133,7 +133,8 @@ public class TileEntityWirelessHeatController extends TileEntityInventory implem
         graphiteControllers.clear();
         itemStacks.clear();
         tileMultiBlockBase = null;
-
+        if (this.invslot.get(0).isEmpty())
+            return;
         final CompoundTag nbt = ModUtils.nbt(this.invslot.get(0));
         BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
         BlockEntity tileEntity = this.getWorld().getBlockEntity(pos);

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,31 +7,21 @@
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:5}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:lapis_lazuli"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems7"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:basemachine3/energy_controller"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "F": {
+      "item": "industrialupgrade:basemachine3/energy_controller"
+    }
   },
   "pattern": [
     "CED",

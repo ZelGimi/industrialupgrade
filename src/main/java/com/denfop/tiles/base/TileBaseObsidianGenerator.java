@@ -16,6 +16,7 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -152,6 +153,9 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnObsidianGeneratorParticles(level,pos,level.random);
+        }
         MutableObject<ItemStack> output1 = new MutableObject<>();
         boolean check = false;
         if (this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity() && this.fluidSlot1.transferToTank(

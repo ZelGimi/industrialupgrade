@@ -1,33 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemsunnarium/sunnarium2"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:radiationresources/curium_gem"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:itemcore/quacore"
-      }
-    ]
+    "A": {
+      "tag": "forge:raw_materials/vanady"
+    }
   },
   "pattern": [
-    "ABA",
-    "CDC",
-    "ABA"
+    "AAA",
+    "AAA",
+    "AAA"
   ],
   "result": {
-    "item": "powerutils:module_qe"
+    "item": "industrialupgrade:raw_block/raw_vanady"
   }
 }

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/tempered_glass"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/molybdenumsteel"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_678_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/berylliumbronze"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "B": {
+      "tag": "forge:plates/molybdenumsteel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_678_element"
+    },
+    "D": {
+      "tag": "forge:gears/berylliumbronze"
+    }
   },
   "pattern": [
     "BBB",

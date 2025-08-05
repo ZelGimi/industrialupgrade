@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:dyes/yellow"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_271_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:dyes/yellow"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_271_element"
+    }
   },
   "pattern": [
     "   ",

@@ -28,6 +28,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Keyboard;
 import net.minecraft.core.BlockPos;
@@ -112,6 +113,20 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
                 outputfluidStack)));
 
     }
+    public static void addRecipe(IInputItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        Recipes.recipes.addRecipe(
+                "fluid_integrator",
+                new BaseMachineRecipe(
+                        new Input(fluidStack, input.getInput(container)),
+                        new RecipeOutput(null, output)
+                )
+        );
+        Recipes.recipes.getRecipeFluid().addRecipe("fluid_integrator", new BaseFluidMachineRecipe(new InputFluid(
+                container, fluidStack), Collections.singletonList(
+                outputfluidStack)));
+
+    }
 
     @Override
     public SoundEvent getSound() {
@@ -160,7 +175,7 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidcarbonmonoxide.getInstance().get()
                         , 20)
         );
-        addRecipe(new ItemStack(IUItem.iudust.getStack(21)), new ItemStack(IUItem.crafting_elements.getStack(498)),
+        addRecipe(Recipes.inputFactory.getInput("forge:dusts/coal"), new ItemStack(IUItem.crafting_elements.getStack(498)),
                 new FluidStack(FluidName.fluidhyd.getInstance().get(), 200),
                 new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 100)

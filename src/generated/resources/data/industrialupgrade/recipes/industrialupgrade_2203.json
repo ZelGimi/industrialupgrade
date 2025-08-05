@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:glass"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/cobalt"
-      }
-    ]
+    "A": {
+      "item": "minecraft:glass"
+    },
+    "B": {
+      "tag": "forge:plates/cobalt"
+    }
   },
   "pattern": [
     " B ",

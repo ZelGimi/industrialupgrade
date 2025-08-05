@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/alcled"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/alcled"
+    }
   ],
   "result": {
     "count": 9,

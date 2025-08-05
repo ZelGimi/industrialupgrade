@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/hafniumcarbide"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/osmium"
+    },
+    "B": {
+      "tag": "forge:plates/niobiumtitanium"
+    },
+    "C": {
+      "tag": "forge:plates/hafniumcarbide"
+    }
   },
   "pattern": [
     "AAB",

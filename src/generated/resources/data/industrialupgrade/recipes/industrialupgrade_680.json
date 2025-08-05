@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemsunnarium/sunnarium2"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/copper"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_271_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemsunnarium/sunnarium2"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/copper"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_271_element"
+    }
   },
   "pattern": [
     " C ",

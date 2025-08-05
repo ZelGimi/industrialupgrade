@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:bricks"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/inconel"
-      }
-    ]
+    "A": {
+      "item": "minecraft:bricks"
+    },
+    "B": {
+      "tag": "forge:plates/inconel"
+    }
   },
   "pattern": [
     " B ",

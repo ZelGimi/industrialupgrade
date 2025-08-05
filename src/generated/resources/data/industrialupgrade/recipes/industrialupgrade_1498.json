@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_25_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:platedense/iron"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    },
+    "B": {
+      "tag": "forge:platedense/iron"
+    }
   },
   "pattern": [
     " B ",

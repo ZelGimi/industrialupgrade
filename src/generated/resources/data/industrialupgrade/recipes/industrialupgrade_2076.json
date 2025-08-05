@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "minecraft:slabs"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:rubber_wood/plain_y"
-      }
-    ]
+    "A": {
+      "tag": "minecraft:slabs"
+    },
+    "B": {
+      "item": "industrialupgrade:rubber_wood/plain_y"
+    }
   },
   "pattern": [
     "AAA",

@@ -70,6 +70,24 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         IUCore.proxy.addProperties(this);
         runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list));
     }
+    public boolean isBarVisible(final ItemStack stack) {
+        return true;
+    }
+
+    public int getBarColor(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        ));
+    }
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));

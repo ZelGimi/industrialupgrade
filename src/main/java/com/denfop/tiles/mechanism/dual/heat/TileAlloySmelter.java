@@ -24,6 +24,7 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -69,7 +70,13 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
+        }
+    }
     public static void addAlloysmelter(IInputItemStack container, IInputItemStack fill, ItemStack output, int temperature) {
         final CompoundTag nbt = ModUtils.nbt();
         nbt.putShort("temperature", (short) temperature);

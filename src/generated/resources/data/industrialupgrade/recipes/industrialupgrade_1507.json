@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:simplemachine/generator_matter"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_56_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:module_stack"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_240_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:simplemachine/generator_matter"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_56_element"
+    },
+    "D": {
+      "item": "industrialupgrade:module_stack"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_240_element"
+    }
   },
   "pattern": [
     " E ",

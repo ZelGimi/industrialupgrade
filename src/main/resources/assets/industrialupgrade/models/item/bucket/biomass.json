@@ -1,0 +1,12 @@
+{
+    "parent": "forge:item/default",
+    "loader": "industrialupgrade:fluid_container",
+    "textures": {
+        "base": "industrialupgrade:items/bucket",
+        "fluid": "industrialupgrade:items/bucket_background",
+        "particle": "industrialupgrade:items/bucket_background"
+    },
+    "flip_gas": false,
+    "apply_tint": true,
+    "fluid": "industrialupgrade:biomass"
+}

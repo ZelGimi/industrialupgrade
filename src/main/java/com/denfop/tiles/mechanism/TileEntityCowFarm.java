@@ -13,6 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCowFarm;
 import com.denfop.gui.GuiCore;
@@ -46,11 +47,11 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
+    private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
             pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS, RADIUS, RADIUS)
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
     );
-
     public TileEntityCowFarm(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.cow_farm,pos,state);
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
@@ -67,6 +68,7 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
@@ -93,6 +95,7 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
     @Override
     public void onLoaded() {
         super.onLoaded();
+        visible.aabb = searchArea;
 
     }
 

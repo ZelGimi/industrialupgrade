@@ -2,17 +2,22 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.blocks.*;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
+import com.denfop.world.WorldBaseGen;
+import com.denfop.world.vein.VeinType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,8 +39,14 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.denfop.utils.ModUtils.inChanceOre;
+import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
+import static com.denfop.world.vein.VeinType.veinTypeMap;
 
 public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IUpdatableItemStackEvent,
         IItemStackInventory,IProperties {
@@ -80,6 +91,8 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
             return ModUtils.convertRGBcolorToInt(156, 156, 156);
         } else if (block == Blocks.GOLD_ORE) {
             return 0xFFFFD700;
+        }else if (block == Blocks.COPPER_ORE) {
+            return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.DIAMOND_ORE) {
             return 0xFF00FFFF;
         } else if (block == Blocks.LAPIS_ORE) {
@@ -211,7 +224,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
                 case 11:
                     return ModUtils.convertRGBcolorToInt(109, 206, 167);
                 case 12:
-                    return ModUtils.convertRGBcolorToInt(110, 110, 110);
+                    return ModUtils.convertRGBcolorToInt(76, 76, 76);
                 case 13:
                     return ModUtils.convertRGBcolorToInt(198, 147, 64);
                 case 14:
@@ -397,6 +410,9 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         final CompoundTag nbt = ModUtils.nbt(stack);
         tooltip.add(Component.translatable("iu.sensor.info"));
 
+        tooltip.add(Component.translatable("iu.scanner_ore.info4"));
+        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7")+  KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
+                "iu.changemode_rcm")));
         if (!nbt.getString("type").isEmpty()) {
             String s = nbt.getString("type");
             if (!s.equals("oil") && !s.equals("gas")) {
@@ -419,29 +435,76 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     @Nonnull
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
-       /* if (world.isClientSide) {
-            try {
-                Optional<MenuScreens.ScreenConstructor<ContainerBase<?>, ?>> factory = MenuScreens.getScreenFactory(Register.inventory_container.get(), Minecraft.getInstance(), 0, Component.translatable("iu"));
-                factory.get().create(getInventory(player,stack).getGuiContainer(player),player.getInventory(), Component.translatable(""));
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }*/
-
-
-        if (!world.isClientSide) {
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
-
-            growingBuffer.writeByte(1);
-
-            growingBuffer.flip();
-            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
-
-
+        if (player.isShiftKeyDown()){
+            final CompoundTag nbt = ModUtils.nbt(stack);
+            nbt.putIntArray("list", new ArrayList<>());
             return InteractionResultHolder.success(player.getItemInHand(hand));
+        }else {
+            if (IUCore.keyboard.isChangeKeyDown(player)) {
+                final CompoundTag nbt = ModUtils.nbt(stack);
+                final List<Integer> list1 = Arrays.stream(nbt.getIntArray("list"))
+                        .boxed()
+                        .toList();
+                if (!list1.isEmpty()) {
+                    int meta = list1.get(0);
+                    BlockState state = WorldBaseGen.blockStateMap.get(meta);
+                    List<Integer> veinTypes = new LinkedList<>();
+                    for (VeinType vein : WorldBaseGen.veinTypes) {
+                        if ((vein.getHeavyOre() != null && vein.getHeavyOre().getStateMeta(vein.getMeta()) == state) || inChanceOre(
+                                vein,
+                                state
+                        )) {
+                            veinTypes.add(vein.getId());
+                        }
+                    }
 
+                    ChunkPos chunkPos1 = new ChunkPos(new BlockPos(player.position()));
+                    Set<ChunkPos> chunkPosList = new HashSet<>();
+                    for (int x = -8; x < 9; x++)
+                        for (int z = -8; z < 9; z++) {
+                            chunkPosList.add(new ChunkPos(chunkPos1.x + x, chunkPos1.z + z));
+                        }
+                    for (ChunkPos chunkPos : chunkPosList) {
+                        Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.get(chunkPos.x % 256);
+                        if (tupleMap == null)
+                            continue;
+                        Tuple<Color, Integer> tuple = tupleMap.get(chunkPos.z % 256);
+
+                        if (tuple != null) {
+
+                            VeinType veinType = veinTypeMap.get(tuple.getB());
+                            if (veinTypes.contains(veinType.getId())){
+                                final String s = Localization.translate("deposists.jei1") + (veinType.getHeavyOre() != null ?
+                                        new ItemStack(veinType.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
+                                        new ItemStack(veinType.getOres().get(0).getBlock().getBlock(), 1
+                                        ).getDisplayName().getString());
+                                IUCore.proxy.messagePlayer(
+                                        player,
+                                        Component.literal(
+                                                "X: " + (chunkPos.getMinBlockX() + 16) +
+                                                        ", Z: " + (chunkPos.getMinBlockZ() + 16) +
+                                                        " " + s
+                                        ).getString()
+                                );
+                            }
+                        }
+                    }
+                }
+                return InteractionResultHolder.success(player.getItemInHand(hand));
+            }
+            if (!world.isClientSide && world.dimension() == Level.OVERWORLD) {
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+                growingBuffer.writeByte(1);
+
+                growingBuffer.flip();
+                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
+                return InteractionResultHolder.success(player.getItemInHand(hand));
+
+            }
         }
-
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 

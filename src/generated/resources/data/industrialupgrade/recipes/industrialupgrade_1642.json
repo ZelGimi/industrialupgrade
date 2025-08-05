@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_271_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_271_element"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:3}"
     },
-    "C": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:glass/reinforced"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:battery/advanced_re_battery"
-      }
-    ]
+    "C": {
+      "tag": "forge:plates/carbon"
+    },
+    "D": {
+      "item": "industrialupgrade:glass/reinforced"
+    },
+    "E": {
+      "item": "industrialupgrade:battery/advanced_re_battery"
+    }
   },
   "pattern": [
     " E ",

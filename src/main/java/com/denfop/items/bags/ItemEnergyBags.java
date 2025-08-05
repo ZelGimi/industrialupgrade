@@ -2,6 +2,7 @@ package com.denfop.items.bags;
 
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
@@ -70,6 +71,7 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
             List<Component> tooltip,
             TooltipFlag flag
     ) {
+        tooltip.add(Component.literal(Localization.translate( "iu.bags.info")));
         if (!Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("press.lshift"));
         } else {

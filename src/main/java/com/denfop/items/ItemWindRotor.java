@@ -32,6 +32,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.List;
 
 public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgradeItem {
@@ -41,17 +42,19 @@ public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgra
     private final int level;
     private final int index;
     private final int tier;
+    private final Color color;
 
     public ItemWindRotor(
             String name, int Radius, int durability, float efficiency,
-            ResourceLocation RenderTexture, int level, int index
-    ) {
+            ResourceLocation RenderTexture, int level, int index, Color color
+            ) {
         super(new Properties().tab(IUCore.ItemTab).stacksTo(1), durability);
         this.radius = Radius;
         this.efficiency = efficiency;
         this.renderTexture = RenderTexture;
         this.level = level;
         this.index = index;
+        this.color = color;
         double KU1 = 20 * efficiency * 27.0F;
         this.tier = EnergyNetGlobal.instance.getTierFromPower(KU1);
         IUCore.runnableListAfterRegisterItem.add(() -> {
@@ -70,6 +73,12 @@ public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgra
             }
         });
     }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));

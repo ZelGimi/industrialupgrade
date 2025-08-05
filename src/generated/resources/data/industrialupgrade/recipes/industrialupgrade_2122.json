@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/bismuth"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/molybdenum"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/bismuth"
+    },
+    "C": {
+      "tag": "forge:plates/molybdenum"
+    },
+    "D": {
+      "tag": "forge:plates/duralumin"
+    }
   },
   "pattern": [
     "BCB",

@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:bags/adv_iu_bags"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:compresscarbon"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/re_battery"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:bags/adv_iu_bags"
+    },
+    "B": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/re_battery"
+    }
   },
   "pattern": [
     "BCB",

@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_169_element"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ]
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_169_element"
+    },
+    {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    }
   ],
   "result": {
     "item": "industrialupgrade:basemachine3/limiter"

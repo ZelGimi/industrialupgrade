@@ -33,7 +33,7 @@ public class PollutionModel<T extends Entity> extends EntityModel<T> {
         int maxIterations = switch (index) {
             case 1 -> 64;
             case 2 -> 128;
-            case 3 -> 192;
+            case 3, -1 -> 192;
             default -> 0;
         };
 

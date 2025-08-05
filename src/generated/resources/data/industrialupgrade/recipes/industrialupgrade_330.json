@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/cobalt_chrome"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/cobalt_chrome"
+    }
   ],
   "result": {
     "count": 9,

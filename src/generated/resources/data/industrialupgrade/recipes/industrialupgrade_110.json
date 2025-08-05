@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/alcled"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/vanadoalumite"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:itemcore/hybcore"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:upgrades/overclockerupgrade2"
-      }
-    ]
+    "A": {
+      "tag": "forge:doubleplate/alcled"
+    },
+    "B": {
+      "tag": "forge:doubleplate/vanadoalumite"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/hybcore"
+    },
+    "E": {
+      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+    }
   },
   "pattern": [
     "ABA",

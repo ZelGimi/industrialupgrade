@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/aluminium_ingot"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/aluminium_ingot"
+    }
   ],
   "result": {
     "count": 9,

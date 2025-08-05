@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/vitalium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/platinum"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:spawnermodules/spawner_module1"
-      }
-    ],
+    "A": {
+      "tag": "forge:doubleplate/vitalium"
+    },
+    "B": {
+      "tag": "forge:doubleplate/platinum"
+    },
+    "C": {
+      "item": "industrialupgrade:spawnermodules/spawner_module1"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ]
+    "E": {
+      "item": "industrialupgrade:quantumitems6"
+    }
   },
   "pattern": [
     "ABA",

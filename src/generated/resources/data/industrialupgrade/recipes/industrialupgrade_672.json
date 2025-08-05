@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine1"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine2"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/manganese"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine"
+    },
+    "B": {
+      "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine1"
+    },
+    "C": {
+      "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine2"
+    },
+    "D": {
+      "tag": "forge:plates/manganese"
+    }
   },
   "pattern": [
     " A ",

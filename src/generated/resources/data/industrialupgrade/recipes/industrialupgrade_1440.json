@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/per_quantum_storage"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_626_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_623_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/per_quantum_storage"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_626_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    }
   },
   "pattern": [
     "DBD",

@@ -15,7 +15,7 @@ public class GuiLevelFuel<T extends ContainerLevelFuel> extends GuiIU<ContainerL
 
     public GuiLevelFuel(ContainerLevelFuel guiContainer) {
         super(guiContainer);
-
+        this.imageWidth = 255;
         this.componentList.clear();
         this.elements.add(TanksGauge.createNormal(this, 7, 7, guiContainer.base.getFluidTankInputList()));
         this.elements.add(TanksGauge.createNormal(this, 30, 7, guiContainer.base.getFluidTankCoolantList()));
@@ -30,19 +30,19 @@ public class GuiLevelFuel<T extends ContainerLevelFuel> extends GuiIU<ContainerL
     @Override
     protected void drawForegroundLayer(PoseStack poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack,par1, par2);
-        this.font.draw(poseStack, Localization.translate("iu.potion.radiation") + ": " + ModUtils.getString(
+        draw(poseStack, Localization.translate("effect.industrialupgrade.radiation") + ": " + ModUtils.getString(
                 this.container.base.getReactor().getRadGeneration()) + "☢", 100, 7, ModUtils.convertRGBcolorToInt(19, 40, 73));
-        this.font.draw(poseStack,Localization.translate("gui.iu.tier") + ": " + ModUtils.getString(
+        draw(poseStack,Localization.translate("gui.iu.tier") + ": " + ModUtils.getString(
                 this.container.base.getLevelReactor()), 100, 19, ModUtils.convertRGBcolorToInt(19, 40, 73));
-        this.font.draw(poseStack,this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor() ?
+        draw(poseStack,this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor() ?
                         Localization.translate("reactor.canupgrade") : Localization.translate("reactor.notcanupgrade"), 100, 31,
                 ModUtils.convertRGBcolorToInt(19, 40, 73)
         );
-        this.font.draw(poseStack,Localization.translate("iu.minipanel.output") + ModUtils.getString(
+        draw(poseStack,Localization.translate("iu.minipanel.output") + ModUtils.getString(
                         this.container.base.output), 100, 43,
                 ModUtils.convertRGBcolorToInt(19, 40, 73)
         );
-        this.font.draw(poseStack,Localization.translate("gui.SuperSolarPanel.generating") + ": " + ModUtils.getString(
+        draw(poseStack,Localization.translate("gui.SuperSolarPanel.generating") + ": " + ModUtils.getString(
                 this.container.base.output) + " EF/t", 100, 56, ModUtils.convertRGBcolorToInt(19, 40, 73));
 
     }
@@ -56,7 +56,7 @@ public class GuiLevelFuel<T extends ContainerLevelFuel> extends GuiIU<ContainerL
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor4.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor5.png");
     }
 
 }

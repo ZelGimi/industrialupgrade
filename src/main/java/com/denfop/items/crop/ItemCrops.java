@@ -7,14 +7,18 @@ import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.items.IProperties;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,9 +29,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICropItem {
+public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICropItem, IProperties {
     public ItemCrops(T element) {
         super(new Item.Properties().tab(IUCore.CropsTab), element);
+        IUCore.proxy.addProperties(this);
     }
 
 
@@ -47,6 +52,18 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
         }
 
         return this.nameItem;
+    }
+    @Override
+    public String[] properties() {
+        return new String[]{"id"};
+    }
+
+    @Override
+    public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
+        ICrop crop = getCrop(0, itemStack);
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+            return crop.getId() == 3 ? -1 : crop.getId();
+        return -1;
     }
 
     @Override
@@ -115,7 +132,13 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
         CompoundTag tag = ModUtils.nbt(stack);
         return CropNetwork.instance.getCrop(tag.getInt("crop_id"));
     }
-
+    public ItemStack getCrop(int meta) {
+        ItemStack stack = new ItemStack(this);
+        CompoundTag tag = ModUtils.nbt(stack);
+        tag.putInt("crop_id", meta);
+        new Genome(stack);
+        return stack;
+    }
     public enum Types implements ISubEnum {
         crop;
 

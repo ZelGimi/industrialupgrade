@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:cooling_mixture"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/tin"
+    },
+    "B": {
+      "item": "industrialupgrade:cooling_mixture"
+    }
   },
   "pattern": [
     " A ",

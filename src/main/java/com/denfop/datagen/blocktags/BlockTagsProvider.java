@@ -9,6 +9,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
@@ -17,15 +18,21 @@ import java.util.List;
 
 public class BlockTagsProvider extends net.minecraft.data.tags.BlockTagsProvider {
     public static List<IBlockTag> list = new LinkedList<>();
+    private final String key;
 
     public BlockTagsProvider(DataGenerator gen, @Nullable ExistingFileHelper existingFileHelper) {
-        super(gen, Constants.MOD_ID, existingFileHelper);
+        this(gen, Constants.MOD_ID, existingFileHelper);
     }
-
+    public BlockTagsProvider(DataGenerator gen, String modid, @Nullable ExistingFileHelper existingFileHelper) {
+        super(gen, modid, existingFileHelper);
+        this.key = modid;
+    }
     @Override
     protected void addTags() {
         for (IBlockTag tag : list) {
             Block block = tag.getBlock();
+            if (!ForgeRegistries.BLOCKS.getKey(block).getNamespace().equals(key))
+                continue;
             Pair<String, Integer> pair = tag.getHarvestLevel();
             if (pair.getA() != null) {
                 TagKey<Block> blockTagKey = getToolFromString(pair.getA());
@@ -34,12 +41,13 @@ public class BlockTagsProvider extends net.minecraft.data.tags.BlockTagsProvider
                 this.tag(level).add(block);
             }
         }
-
-        this.tag(BlockTags.LOGS).add(IUItem.swampRubWood.getBlock().get());
-        this.tag(BlockTags.LOGS).add(IUItem.rubWood.getBlock().get());
-        this.tag(BlockTags.LOGS).add(IUItem.tropicalRubWood.getBlock().get());
-        this.tag(BlockTags.LEAVES).add(IUItem.leaves.getBlock().get());
-        this.tag(BlockTags.SAPLINGS).add(IUItem.rubberSapling.getBlock().get());
+        if (key.equals(Constants.MOD_ID)) {
+            this.tag(BlockTags.LOGS).add(IUItem.swampRubWood.getBlock().get());
+            this.tag(BlockTags.LOGS).add(IUItem.rubWood.getBlock().get());
+            this.tag(BlockTags.LOGS).add(IUItem.tropicalRubWood.getBlock().get());
+            this.tag(BlockTags.LEAVES).add(IUItem.leaves.getBlock().get());
+            this.tag(BlockTags.SAPLINGS).add(IUItem.rubberSapling.getBlock().get());
+        }
     }
 
     private TagKey<Block> getLevelFromInteger(Integer b) {

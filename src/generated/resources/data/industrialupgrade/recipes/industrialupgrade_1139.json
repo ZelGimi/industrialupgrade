@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/copper"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "tag": "forge:plates/tin"
+    },
+    "D": {
+      "tag": "forge:plates/copper"
+    }
   },
   "pattern": [
     "CCC",

@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_2"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
+    },
+    "B": {
+      "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_2"
+    }
   },
   "pattern": [
     "   ",

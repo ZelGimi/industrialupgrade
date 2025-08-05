@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_41_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/invar"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_41_element"
+    },
+    "B": {
+      "tag": "forge:plates/ferromanganese"
+    },
+    "C": {
+      "tag": "forge:plates/invar"
+    }
   },
   "pattern": [
     "C C",

@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -44,7 +45,11 @@ public class TileEntityFacadeBlock extends TileEntityInventory implements IUpdat
         };
         this.stackSlot.setStackSizeLimit(1);
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.facade_mechanism.info"));
+    }
     @Override
     public ContainerFacadeBlock getGuiContainer(final Player var1) {
         return new ContainerFacadeBlock(var1, this);

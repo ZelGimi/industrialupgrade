@@ -158,7 +158,29 @@ public abstract class GuiIU<T extends ContainerBase<? extends IAdvInventory>> ex
     protected void drawGuiContainerBackgroundLayer(PoseStack poseStack, final float partialTicks, final int mouseX, final int mouseY) {
 
     }
+    public void drawTextInCanvasWithScissor(PoseStack poseStack, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, int scale) {
+        int maxWidth = (int) (canvasWidth / 1);
+        int lineHeight = (int) (10 * 1);
+        int x = canvasX;
+        int y = canvasY;
 
+
+        List<String> lines = splitTextToLines(text, maxWidth,1);
+
+
+        for (int i = scale - 1; i < lines.size();i++) {
+            String line = lines.get(i);
+            if (y + lineHeight > canvasY + canvasHeight) {
+                break;
+            }
+            poseStack.pushPose();
+            poseStack.scale(1, 1, 1);
+            drawString(poseStack,line, (int) (x / 1), (int) (y / 1), 0xFFFFFF);
+            poseStack.popPose();
+
+            y += lineHeight;
+        }
+    }
     protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         blit(poseStack, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());

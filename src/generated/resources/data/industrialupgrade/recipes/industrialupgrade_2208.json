@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:research_lens/lens_5"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/stellite"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:research_lens/lens_5"
+    },
+    "B": {
+      "tag": "forge:plates/stellite"
+    }
   },
   "pattern": [
     " B ",

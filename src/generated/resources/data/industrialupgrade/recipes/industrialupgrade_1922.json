@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:smeltery/smeltery_casing"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:furnace"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_casing"
+    },
+    "C": {
+      "item": "minecraft:furnace"
+    }
   },
   "pattern": [
     " C ",

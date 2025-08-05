@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,21 +7,15 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:3}"
     },
-    "B": [
-      {
-        "item": "minecraft:stone_pressure_plate"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_271_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:wiring_storage/mfe_iu"
-      }
-    ]
+    "B": {
+      "item": "minecraft:stone_pressure_plate"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_271_element"
+    },
+    "D": {
+      "item": "industrialupgrade:wiring_storage/mfe_iu"
+    }
   },
   "pattern": [
     "ABA",

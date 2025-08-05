@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemdust/trinitrotoluene_dust"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:gunpowder"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:sand"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemdust/trinitrotoluene_dust"
+    },
+    "B": {
+      "item": "minecraft:gunpowder"
+    },
+    "C": {
+      "item": "minecraft:sand"
+    }
   },
   "pattern": [
     "BCB",

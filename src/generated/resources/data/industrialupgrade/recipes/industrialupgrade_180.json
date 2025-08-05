@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/magnesium_ingot"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/magnesium_ingot"
+    }
   ],
   "result": {
     "count": 9,

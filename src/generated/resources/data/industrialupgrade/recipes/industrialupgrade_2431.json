@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:wiring/copper"
+    },
+    "B": {
+      "item": "industrialupgrade:transformer_iu/mv"
+    },
+    "C": {
+      "item": "industrialupgrade:circuit/nanocircuit_part2"
+    },
+    "D": {
+      "item": "industrialupgrade:wiring_storage/cesu_iu"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "ABA"
+  ],
+  "result": {
+    "item": "powerutils:module_ic"
+  }
+}

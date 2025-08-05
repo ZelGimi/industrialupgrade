@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/muntsa"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/alcled"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/zinc"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/caravky"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:doubleplate/muntsa"
+    },
+    "C": {
+      "tag": "forge:doubleplate/alcled"
+    },
+    "D": {
+      "tag": "forge:plates/zinc"
+    },
+    "E": {
+      "tag": "forge:plates/caravky"
+    }
   },
   "pattern": [
     "BCB",

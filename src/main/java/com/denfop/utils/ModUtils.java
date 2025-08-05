@@ -1376,7 +1376,7 @@ public class ModUtils {
         Preconditions.checkNotNull(handler);
 
         ItemStack heldItem = player.getItemInHand(hand);
-        if (!heldItem.isEmpty() && (heldItem.getItem() instanceof ItemFluidCell || heldItem.getItem() instanceof BucketItem)) {
+        if (!heldItem.isEmpty()) {
 
             IItemHandler playerInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(new InvWrapper(player.getInventory()));
             if (playerInventory != null) {

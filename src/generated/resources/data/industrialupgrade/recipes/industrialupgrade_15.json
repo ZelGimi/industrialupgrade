@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:glowstone_dust"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/copper1"
-      }
-    ],
+    "A": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,

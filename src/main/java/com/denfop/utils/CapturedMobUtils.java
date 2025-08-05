@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nonnull;
@@ -145,6 +146,9 @@ public final class CapturedMobUtils {
 
     public static boolean isBlacklisted(@Nonnull Entity entity) {
         ResourceLocation entityId = EntityType.getKey(entity.getType());
+        if (entity.getType().is(Tags.EntityTypes.BOSSES))
+            return true;
+
         return entityId == null;
     }
 

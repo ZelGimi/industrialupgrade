@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/aluminium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/aluminium"
+    }
   ],
   "result": {
     "count": 9,

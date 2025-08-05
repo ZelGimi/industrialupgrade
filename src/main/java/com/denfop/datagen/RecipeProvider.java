@@ -7,17 +7,12 @@ import com.denfop.api.crafting.PartRecipe;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.IngredientInput;
 import com.denfop.recipes.BaseRecipes;
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 
@@ -56,10 +51,10 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                                 shaped.define(character, PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(),items.toArray(new Item[0])));
                             }
                         }else {
-                            shaped.define(character, new IngredientInput(recipeInput));
+                            shaped.define(character, new IngredientInput(recipeInput).getInput());
                         }
                     }
-                    shaped.unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()}));
+                    shaped.unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR));
                     Recipes.registerRecipe(consumer, shaped, id.toLowerCase());
                 } else if (recipe instanceof BaseShapelessRecipe baseShapelessRecipe) {
                     ShapelessRecipeBuilder shaped = ShapelessRecipeBuilder.shapeless(baseShapelessRecipe.getOutput().getItem(), baseShapelessRecipe.getOutput().getCount());
@@ -73,10 +68,10 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                                 shaped.requires(PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(),items.toArray(new Item[0])));
                             }
                         }else {
-                            shaped.requires(new IngredientInput(recipeInput));
+                            shaped.requires(new IngredientInput(recipeInput).getInput());
                         }
 
-                    shaped.unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()}));
+                    shaped.unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR));
                     Recipes.registerRecipe(consumer, shaped, id.toLowerCase());
                 }
             }catch (Exception e){

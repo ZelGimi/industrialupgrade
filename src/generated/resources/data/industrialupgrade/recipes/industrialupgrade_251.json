@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:alloynugget/muntsa"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:alloynugget/muntsa"
+    }
   },
   "pattern": [
     "AAA",

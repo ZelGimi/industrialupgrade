@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:tank_iu/imp_tank"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems7"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:tank_iu/imp_tank"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniy_ingot"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems7"
+    }
   },
   "pattern": [
     "CBC",

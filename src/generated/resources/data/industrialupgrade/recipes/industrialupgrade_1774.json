@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:water_reactors/water_tank"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_420_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_415_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_45_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_425_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:water_reactors/water_tank"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_420_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_415_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_45_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_425_element"
+    }
   },
   "pattern": [
     "BDB",

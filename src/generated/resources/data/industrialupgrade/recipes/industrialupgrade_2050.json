@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/woods"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/molybdenumsteel"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/vanadoalumite"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/woods"
+    },
+    "B": {
+      "tag": "forge:plates/molybdenumsteel"
+    },
+    "C": {
+      "tag": "forge:plates/vanadoalumite"
+    }
   },
   "pattern": [
     "BAB",

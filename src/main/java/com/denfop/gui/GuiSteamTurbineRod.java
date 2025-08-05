@@ -12,16 +12,13 @@ public class GuiSteamTurbineRod<T extends ContainerSteamTurbineRod> extends GuiI
 
     public GuiSteamTurbineRod(ContainerSteamTurbineRod guiContainer) {
         super(guiContainer);
-        this.imageWidth = 206;
-        this.imageHeight = 256;
-        this.inventory.setY(172);
-        this.elements.add(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
+        this.componentList.clear();
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guisteamturbine_blades.png");
 
     }
 
@@ -31,7 +28,7 @@ public class GuiSteamTurbineRod<T extends ContainerSteamTurbineRod> extends GuiI
     protected void drawGuiContainerBackgroundLayer(PoseStack poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         this.bindTexture();
-      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 
     }

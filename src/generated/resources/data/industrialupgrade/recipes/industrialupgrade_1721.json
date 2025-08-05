@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_436_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_436_element"
+    },
+    "B": {
+      "item": "industrialupgrade:nanobox"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:6}"
     },
-    "D": [
-      {
-        "tag": "forge:platedense/gold"
-      }
-    ]
+    "D": {
+      "tag": "forge:platedense/gold"
+    }
   },
   "pattern": [
     "BCB",

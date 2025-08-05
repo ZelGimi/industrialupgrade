@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemiucrafring/itemuraningot"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/spinel"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:platedense/lead"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemiucrafring/itemuraningot"
+    },
+    "C": {
+      "tag": "forge:plates/spinel"
+    },
+    "D": {
+      "tag": "forge:platedense/lead"
+    }
   },
   "pattern": [
     "CDC",

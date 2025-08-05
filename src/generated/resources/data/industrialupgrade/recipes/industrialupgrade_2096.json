@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spaceupgrademodule_schedule"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemplates/adamantite"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/redbrass"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/palladium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/adamantite"
+    },
+    "C": {
+      "tag": "forge:plates/redbrass"
+    },
+    "E": {
+      "tag": "forge:plates/palladium"
+    }
   },
   "pattern": [
     " B ",

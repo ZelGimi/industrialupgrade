@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.denfop.api.space.BaseSpaceSystem.fluidToLevel;
+
 public class FakePlanet implements IFakePlanet {
 
     SpaceOperation spaceOperation;
@@ -38,6 +40,7 @@ public class FakePlanet implements IFakePlanet {
         this.data = data;
         int seconds =
                 (int) ((Math.abs(planet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+        seconds+= (int) (planet.getSystem().getDistanceFromSolar()*60*60*2);
         if (SpaceUpgradeSystem.system.hasModules(
                 EnumTypeUpgrade.ENGINE,
                 rovers.getItemStack()
@@ -49,16 +52,7 @@ public class FakePlanet implements IFakePlanet {
             seconds = (int) (seconds * (1 - (engine * 0.125D)));
         }
         FluidStack fluidStack = rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(1, IFluidHandler.FluidAction.SIMULATE);
-        double coef = 1;
-        if (fluidStack.getFluid().equals(FluidName.fluiddimethylhydrazine.getInstance().get())) {
-            coef = 3;
-        }
-        if (fluidStack.getFluid().equals(FluidName.fluiddecane.getInstance().get())) {
-            coef = 4.4;
-        }
-        if (fluidStack.getFluid().equals(FluidName.fluidxenon.getInstance().get())) {
-            coef = 7.5;
-        }
+        double coef = BaseSpaceSystem.rocketFuelCoef.get(fluidToLevel.get(fluidStack.getFluid()));
         seconds = (int) (seconds / coef);
         this.timerToPlanet = new Timer(seconds);
         this.timerFromPlanet = new Timer(seconds);

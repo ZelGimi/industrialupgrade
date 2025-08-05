@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/cobaltchrome"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:synthetic_plate"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "tag": "forge:plates/cobaltchrome"
+    },
+    "C": {
+      "tag": "forge:plates/niobiumtitanium"
+    },
+    "D": {
+      "item": "industrialupgrade:synthetic_plate"
+    }
   },
   "pattern": [
     "DBD",

@@ -13,6 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTreeBreaker;
 import com.denfop.gui.GuiCore;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -45,7 +47,11 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
-
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
+    );
+    private ComponentVisibleArea visible;
     public TileEntityTreeBreaker(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.tree_breaker,pos,state);
         this.slot = new InvSlotOutput(this, 18);
@@ -55,13 +61,19 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract
         );
     }
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        visible.aabb = searchArea;
 
+    }
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2.getBlock(getTeBlock());

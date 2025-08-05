@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_418_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/cobalt"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_453_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_418_element"
+    },
+    "B": {
+      "tag": "forge:plates/cobalt"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_453_element"
+    }
   },
   "pattern": [
     "AA ",

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:nuclearresource/uranium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/lapis"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:nuclearresource/uranium"
+    },
+    "C": {
+      "tag": "forge:plates/lapis"
+    },
+    "D": {
+      "tag": "forge:plates/carbon"
+    }
   },
   "pattern": [
     " C ",

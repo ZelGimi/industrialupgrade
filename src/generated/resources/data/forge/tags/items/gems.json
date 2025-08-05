@@ -7,6 +7,7 @@
     "industrialupgrade:crafting_elements/crafting_449_element",
     "industrialupgrade:radiationresources/americium_gem",
     "industrialupgrade:radiationresources/neptunium_gem",
-    "industrialupgrade:radiationresources/curium_gem"
+    "industrialupgrade:radiationresources/curium_gem",
+    "industrialupgrade:reactors/toriy"
   ]
 }

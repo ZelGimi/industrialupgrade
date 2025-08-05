@@ -11,6 +11,7 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -53,7 +54,10 @@ public class WorldGenGas extends Feature<NoneFeatureConfiguration> {
             int var5 = chunkPos.getMinBlockZ() + WorldBaseGen.random.nextInt(16) + 8;
 
             // Get the biome at the position
-            Holder<Biome> biome = level.getBiome(new BlockPos(var3, 0, var5));
+            int y = context.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, context.origin().getX(), context.origin().getZ());
+
+            // Get the biome at the position
+            Holder<Biome> biome = level.getBiome(new BlockPos(var3, y, var5));
 
             // If the biome is ocean or river, choose a gas type
             if (biome.is(BiomeTags.IS_OCEAN) || biome.is(BiomeTags.IS_RIVER)) {

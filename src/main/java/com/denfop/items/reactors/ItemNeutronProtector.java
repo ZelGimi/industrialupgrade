@@ -83,7 +83,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem {
 
     @Override
     public double getHeatRemovePercent(final IAdvReactor reactor) {
-        return 1;
+        return 1-0.05*level;
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem {
 
     @Override
     public double getEnergyProduction(final IAdvReactor reactor) {
-        return 0;
+        return 0.05 * this.level;
     }
 
 

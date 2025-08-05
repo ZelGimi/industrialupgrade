@@ -90,12 +90,12 @@ public class ItemEnergyCoupler extends ItemDamage implements IReactorItem {
 
     @Override
     public double getHeatRemovePercent(final IAdvReactor reactor) {
-        return 0;
+        return 1.2-0.05*level;
     }
 
     @Override
     public void damageItem(final ItemStack stack, final int damage) {
-        applyCustomDamage(stack, -1, null);
+        applyCustomDamage(stack, 1, null);
     }
 
     @Override

@@ -3,14 +3,14 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.energy.*;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockResource;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.state.HarvestTool;
-import com.denfop.componets.AbstractComponent;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.Redstone;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -26,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,17 +34,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -198,19 +204,7 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public void readFromNBT(CompoundTag nbt) {
-        if (!this.getSupportedFacings().isEmpty()) {
-            byte facingValue = nbt.getByte("facing");
-            if (facingValue >= 0 && facingValue < Direction.values().length && this
-                    .getSupportedFacings()
-                    .contains(Direction.values()[facingValue])) {
-                this.facing = facingValue;
-            } else if (!this.getSupportedFacings().isEmpty()) {
-                this.facing = (byte) this.getSupportedFacings().iterator().next().ordinal();
-            } else {
-                this.facing = (byte) Direction.NORTH.ordinal();
-            }
-        }
-
+        this.facing = nbt.getByte("facing");
         this.active = nbt.getString("active");
         if (!this.componentList.isEmpty() && nbt.contains("components", 10)) {
             CompoundTag componentsNbt = nbt.getCompound("components");
@@ -247,7 +241,9 @@ public abstract class TileEntityBlock extends BlockEntity {
                     TileEntityBlock.this.onLoaded();
                 });
             }
+
         }
+
     }
 
     @Override
@@ -264,14 +260,36 @@ public abstract class TileEntityBlock extends BlockEntity {
         if (!this.getLevel().isClientSide && this.needUpdate()) {
             IUCore.network.getServer().addTileToOvertimeUpdate(this);
         }
+        for (Direction direction : Direction.values())
+            if (!this.getLevel().isClientSide) {
+                BlockPos neighborPos = pos.offset(direction.getNormal());
+                BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
+                BlockState neighbor = getLevel().getBlockState(neighborPos);
+                if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>)) && blockEntity != null) {
+                    IEnergyStorage storage = blockEntity.getCapability(ForgeCapabilities.ENERGY, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos)).orElse(null);
+                    if (storage != null && !blockEntity.isRemoved()) {
+                        IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
+                        if (energyTile == null) {
+                            EnergyForge energyForge = null;
+                            if (storage.canExtract() && storage.canReceive()) {
+                                energyForge = new EnergyForgeSinkSource(blockEntity);
+                            } else if (storage.canReceive()) {
+                                energyForge = new EnergyForgeSink(blockEntity);
+                            } else if (storage.canExtract()) {
+                                energyForge = new EnergyForgeSource(blockEntity);
+                            }
+                            if (energyForge != null) {
+                                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                            }
+                        }
+                    }
+                }
+            }
         this.hashCode();
     }
 
     public CompoundTag writeToNBT(CompoundTag nbt) {
-        if (!this.getSupportedFacings().isEmpty()) {
-            nbt.putByte("facing", this.facing);
-        }
-
+        nbt.putByte("facing", this.facing);
         nbt.putString("active", this.active);
         if (!this.componentList.isEmpty()) {
             CompoundTag componentsNbt = new CompoundTag();
@@ -334,6 +352,16 @@ public abstract class TileEntityBlock extends BlockEntity {
 
     public void updateEntityServer() {
         this.pos = this.worldPosition;
+        if (!this.getSupportedFacings().contains(getFacing())) {
+            for (Property<?> property : blockState.getProperties()) {
+                if (property.getName().equals("facing")) {
+
+                    Direction value = (Direction) blockState.getValue(property);
+                    this.setFacing(value);
+                    break;
+                }
+            }
+        }
         for (AbstractComponent component : this.updateServerList) {
             component.updateEntityServer();
         }
@@ -348,6 +376,31 @@ public abstract class TileEntityBlock extends BlockEntity {
     public void loadBeforeFirstUpdate() {
         isLoaded = true;
         try {
+            for (Direction direction : Direction.values())
+                if (!this.getLevel().isClientSide) {
+                    BlockPos neighborPos = pos.offset(direction.getNormal());
+                    BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
+                    BlockState neighbor = getLevel().getBlockState(neighborPos);
+                    if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>))) {
+                        IEnergyStorage storage = blockEntity.getCapability(ForgeCapabilities.ENERGY, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos)).orElse(null);
+                        if (storage != null && !blockEntity.isRemoved()) {
+                            IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
+                            if (energyTile == EnergyNetGlobal.EMPTY) {
+                                EnergyForge energyForge = null;
+                                if (storage.canExtract() && storage.canReceive()) {
+                                    energyForge = new EnergyForgeSinkSource(blockEntity);
+                                } else if (storage.canReceive()) {
+                                    energyForge = new EnergyForgeSink(blockEntity);
+                                } else if (storage.canExtract()) {
+                                    energyForge = new EnergyForgeSource(blockEntity);
+                                }
+                                if (energyForge != null) {
+                                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                                }
+                            }
+                        }
+                    }
+                }
             this.rerender();
         } catch (Exception e) {
         }
@@ -373,14 +426,68 @@ public abstract class TileEntityBlock extends BlockEntity {
                 component.onNeighborChange(neighbor, neighborPos);
             }
         }
+        if (!this.getLevel().isClientSide) {
+            BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
 
+            if ((this instanceof IEnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>)) && blockEntity != null) {
+                IEnergyStorage storage = blockEntity.getCapability(ForgeCapabilities.ENERGY, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos)).orElse(null);
+                if (storage != null && !blockEntity.isRemoved()) {
+                    IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
+                    if (energyTile != EnergyNetGlobal.EMPTY) {
+                        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
+                    }
+                    EnergyForge energyForge = null;
+                    if (storage.canExtract() && storage.canReceive()) {
+                        energyForge = new EnergyForgeSinkSource(blockEntity);
+                    } else if (storage.canReceive()) {
+                        energyForge = new EnergyForgeSink(blockEntity);
+                    } else if (storage.canExtract()) {
+                        energyForge = new EnergyForgeSource(blockEntity);
+                    }
+                    if (energyForge != null) {
+                        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                    }
+                }
+            } else if (this instanceof IEnergyTile || this.getComp(Energy.class) != null) {
+                IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
+                if (energyTile != EnergyNetGlobal.EMPTY && energyTile instanceof EnergyForge) {
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
+                }
+            }
+        }
     }
 
     public boolean hasSpecialModel() {
         return false;
     }
 
-    public boolean canPlace(TileEntityBlock te, BlockPos pos, Level world) {
+    public boolean canPlace(TileEntityBlock te, BlockPos pos, Level world, Direction direction, LivingEntity entity) {
+        Direction facing = this.getPlacementFacing(entity, direction);
+        byte temp = this.facing;
+        this.facing = (byte) facing.ordinal();
+        AABB aabb = this.getAabb(false).move(pos);
+        int minX = Mth.floor(aabb.minX);
+        int maxX = Mth.ceil(aabb.maxX);
+        int minY = Mth.floor(aabb.minY);
+        int maxY = Mth.ceil(aabb.maxY);
+        int minZ = Mth.floor(aabb.minZ);
+        int maxZ = Mth.ceil(aabb.maxZ);
+
+        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                for (int z = minZ; z < maxZ; z++) {
+                    checkPos.set(x, y, z);
+                    BlockState state = world.getBlockState(checkPos);
+                    if (!state.isAir() && !state.getCollisionShape(world, checkPos).isEmpty()) {
+                        this.facing = temp;
+                        return false;
+                    }
+                }
+            }
+        }
+
+        this.facing = temp;
         return true;
     }
 
@@ -732,7 +839,10 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-
+        for (AbstractComponent component : componentList) {
+            if (component.onSneakingActivated(player, hand))
+                return true;
+        }
         return this.getLevel().isClientSide;
     }
 
@@ -975,6 +1085,7 @@ public abstract class TileEntityBlock extends BlockEntity {
         this.active = customPacketBuffer.readString();
         this.facing = customPacketBuffer.readByte();
         this.rerender();
+
     }
 
 

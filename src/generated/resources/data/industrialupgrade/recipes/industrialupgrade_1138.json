@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_620_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:furnace"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "minecraft:furnace"
+    },
+    "D": {
+      "item": "minecraft:redstone"
+    }
   },
   "pattern": [
     " C ",

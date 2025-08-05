@@ -13,6 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSheepFarm;
 import com.denfop.gui.GuiCore;
@@ -49,9 +50,10 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
+    private final ComponentVisibleArea visible;
     AABB searchArea = new AABB(
             pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS, RADIUS, RADIUS)
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
     );
     List<LevelChunk> chunks = new ArrayList<>();
 
@@ -70,6 +72,7 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
 
@@ -108,7 +111,7 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     @Override
     public void onLoaded() {
         super.onLoaded();
-
+        visible.aabb = searchArea;
     }
 
     @Override

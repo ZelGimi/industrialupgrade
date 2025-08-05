@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/stellite"
+    "item": "industrialupgrade:alloydust/inconel"
   },
-  "result": "industrialupgrade:alloyingot/stellite"
+  "result": "industrialupgrade:alloyingot/inconel"
 }

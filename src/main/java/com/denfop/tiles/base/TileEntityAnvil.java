@@ -11,6 +11,7 @@ import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockAnvil;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.effects.EffectsRegister;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -19,6 +20,7 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,9 +30,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -134,6 +139,8 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.primal_repair"));
+
+        tooltip.add(Localization.translate("iu.primal_repair.info"));
         tooltip.add(Localization.translate("primitive_rcm.info"));
         tooltip.add(Localization.translate("primitive_use.info") + IUItem.ForgeHammer.getItem().getDescription().getString());
     }
@@ -219,6 +226,25 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         if (name.equals("slot2")) {
             outputSlot.set(0, ItemStack.EMPTY);
         }
+        if (name.equals("effect")) {
+
+            spawnItemParticles(level, pos, this.inputSlotA.get(0));
+        }
+    }
+    @OnlyIn(Dist.CLIENT)
+    private void spawnItemParticles(Level world, BlockPos pos, ItemStack stack) {
+        Random rand = new Random();
+
+        for (int i = 0; i < 1; i++) {
+            double offsetX = -0.05;
+            double offsetY = 0.05;
+            double offsetZ = -0.05;
+            world.addParticle(
+                    EffectsRegister.ANVIL.get(),
+                    pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
+                    offsetX, offsetY, offsetZ
+            );
+        }
     }
 
     @Override
@@ -291,6 +317,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                 if (stack.getItem() == IUItem.ObsidianForgeHammer.getItem()) {
                     progress += 10;
                 }
+                new PacketUpdateFieldTile(this, "effect", true);
                 progress += (int) (data.getOrDefault(player.getUUID(), 0.0) / 5D);
                 if (!this.getWorld().isClientSide) {
                     this.initiate(0);
@@ -327,6 +354,27 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                         new PacketUpdateFieldTile(this, "durability", this.durability);
 
 
+                    }
+                    if (WorldBaseGen.random.nextInt(100) < data.getOrDefault(player.getUUID(), 0.0) & this.output != null && this.outputSlot.canAdd(
+                            this.output.getRecipe().output.items.get(
+                                    0))){
+                        this.outputSlot.add(this.output.getRecipe().output.items.get(0));
+                        this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
+                        if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
+                            this.output = null;
+
+                        }
+                        if (!level.isClientSide) {
+                            if (!this.inputSlotA.get(0).isEmpty()) {
+                                new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                            } else {
+                                new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
+                            }
+                            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+                            new PacketUpdateFieldTile(this, "durability", this.durability);
+
+
+                        }
                     }
                 }
 

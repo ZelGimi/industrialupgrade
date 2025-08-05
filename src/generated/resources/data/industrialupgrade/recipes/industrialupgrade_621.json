@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/moon_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/moon_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/moon_pebble"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/moon_pebble"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/moon_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/moon_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/moon_pebble"
+    },
+    {
+      "item": "industrialupgrade:itemspace/moon_pebble"
+    }
   ],
   "result": {
     "item": "industrialupgrade:itemspace/moon_boulder"

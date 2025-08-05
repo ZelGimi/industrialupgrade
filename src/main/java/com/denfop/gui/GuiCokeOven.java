@@ -129,8 +129,6 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                     }
 
                     Fluid fluid = fs.getFluid();
-                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                        fluid = FluidName.fluidwater.getInstance().get();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
                     int color = extensions.getTintColor();
@@ -146,7 +144,7 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                             fluidWidth,
                             renderHeight,
                             sprite,
-                            -1,
+                            color,
                             1.0D,
                             false,
                             true
@@ -209,8 +207,6 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                     }
 
                     Fluid fluid = fs.getFluid();
-                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
-                        fluid = FluidName.fluidwater.getInstance().get();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
                     int color = extensions.getTintColor();
@@ -226,7 +222,7 @@ public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCok
                             fluidWidth,
                             renderHeight,
                             sprite,
-                            -1,
+                            color,
                             1.0D,
                             false,
                             true

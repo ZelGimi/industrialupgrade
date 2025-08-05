@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_425_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/vitalium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_425_element"
+    },
+    "B": {
+      "tag": "forge:doubleplate/vitalium"
+    }
   },
   "pattern": [
     " A ",

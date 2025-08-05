@@ -173,7 +173,7 @@ public class LogicComponent {
                 } else {
                     if (this.damage >= 150 * getItem().getLevel()) {
                         this.item.damageItem(this.stack,  damage);
-                        this.maxDamageItem = 0;
+                        this.maxDamageItem = 1;
                     }
                 }
             }

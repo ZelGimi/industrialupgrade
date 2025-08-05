@@ -123,11 +123,12 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        tooltip.add(Localization.translate(  "iu.oil_quarry.info"));
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 2 + Localization.translate("iu" +
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
@@ -320,7 +321,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
                 this.outputSlot.add(output.getValue());
             }
         }
-        if (this.energy.getEnergy() >= 2 && this.find) {
+        if (this.energy.getEnergy() >= 1 && this.find) {
             get_oil();
             if (!this.getActive()) {
                 this.setActive(true);
@@ -375,7 +376,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
 
                 vein.removeCol(size);
                 this.count = vein.getCol();
-                this.energy.useEnergy(2);
+                this.energy.useEnergy(1);
                 updateTileEntityField();
                 if (this.upgradeSlot.tickNoMark()) {
                     setUpgradestat();

@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/gallium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/gallium"
+    }
   ],
   "result": {
     "count": 9,

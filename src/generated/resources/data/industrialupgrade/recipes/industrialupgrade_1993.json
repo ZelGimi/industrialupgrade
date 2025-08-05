@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/molybdenum"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_0_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/molybdenum"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_0_element"
+    }
   },
   "pattern": [
     "AAA",

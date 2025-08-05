@@ -82,6 +82,9 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
             y += 9;
         }
     }
+    public ItemRenderer getItemRenderer(){
+        return this.itemRenderer;
+    }
     public void drawSplitString(PoseStack poseStack, String str, int x, int y, int wrapWidth, int textColor)
     {
         if (this.font == null)
@@ -92,6 +95,9 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
             font.draw(poseStack, s, x, y, textColor);
             y += 9;
         }
+    }
+    public void changeParams() {
+
     }
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
         ArrayList<ItemStack> ret = new ArrayList<>();
@@ -191,7 +197,29 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
 
         return lines;
     }
+    public void drawTextInCanvasWithScissor(PoseStack poseStack, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, int scale) {
+        int maxWidth = (int) (canvasWidth / 1);
+        int lineHeight = (int) (10 * 1);
+        int x = canvasX;
+        int y = canvasY;
 
+
+        List<String> lines = splitTextToLines(text, maxWidth,1);
+
+
+        for (int i = scale - 1; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (y + lineHeight > canvasY + canvasHeight) {
+                break;
+            }
+            poseStack.pushPose();
+            poseStack.scale(1, 1, 1);
+            drawString(poseStack, line, (int) (x / 1), (int) (y / 1), 0xFFFFFF);
+            poseStack.popPose();
+
+            y += lineHeight;
+        }
+    }
     public void drawTextInCanvas(PoseStack poseStack, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
         int maxWidth = (int) (canvasWidth / scale);
         int lineHeight = (int) (font.lineHeight * scale);
@@ -366,7 +394,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
         RenderSystem.enableDepthTest();
 
         this.renderTooltip(graphics, mouseX, mouseY);
-
+        changeParams();
     }
 
     public void renderSlot(PoseStack p_97800_, Slot p_97801_) {
@@ -847,7 +875,12 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
             RenderSystem.disableBlend();
         }
     }
-
+    public int draw(PoseStack poseStack, String text, int x, int y, int color) {
+        if (font == null)
+            font = Minecraft.getInstance().font;
+        this.font.draw(poseStack, text, x + this.guiLeft - leftPos, y + this.guiTop - topPos, color);
+        return x;
+    }
     public int drawString(PoseStack poseStack, String text, int x, int y, int color) {
         if (font == null)
             font = Minecraft.getInstance().font;
@@ -1002,6 +1035,8 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
     public void drawTexturedModalRect(PoseStack poseStack, int i, int i1, int i2, int i3, int i4, int i5) {
         blit(poseStack, i, i1, i2, i3, i4, i5);
     }
+
+
 
     private static class Tooltip {
         final int x;

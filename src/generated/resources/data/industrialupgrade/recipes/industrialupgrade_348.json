@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy1/superalloy_haynes"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy1/superalloy_haynes"
+    }
   ],
   "result": {
     "count": 9,

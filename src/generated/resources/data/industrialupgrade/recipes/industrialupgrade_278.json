@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/aluminium_silicon"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/aluminium_silicon"
+    }
   ],
   "result": {
     "count": 9,

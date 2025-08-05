@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_11_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_70_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_11_element"
+    },
+    "C": {
+      "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_70_element"
+    }
   },
   "pattern": [
     "DBD",

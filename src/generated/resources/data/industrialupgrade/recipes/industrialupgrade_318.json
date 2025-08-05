@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/tantalum_tungsten_hafnium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/tantalum_tungsten_hafnium"
+    }
   ],
   "result": {
     "count": 9,

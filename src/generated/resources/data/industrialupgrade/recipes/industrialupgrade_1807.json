@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:heat_reactors/heat_adv_socket"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_375_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_373_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_371_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_310_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_adv_socket"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_375_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_373_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_371_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_310_element"
+    }
   },
   "pattern": [
     "BDB",

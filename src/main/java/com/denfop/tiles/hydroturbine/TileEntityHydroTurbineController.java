@@ -50,6 +50,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -428,6 +429,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
                             this.getItemStack()
                     ) * this.biome * this.coefficient_power / 100D;
             this.energy.getEnergy().addEnergy(generation);
+
             this.energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
 
             if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
@@ -488,6 +490,10 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
             }
 
             if (windGen.getSpace()) {
+                IWindRotor rotor = this.getRotor();
+                if (rotor.getMaxCustomDamage(this.slot.get(0)) - rotor.getCustomDamage(this.slot.get(0)) == 0){
+                    angle = 0;
+                }
                 if (!Minecraft.getInstance().isPaused()) {
                     poseStack.mulPose(Vector3f.XP.rotationDegrees(angle));
                 }
@@ -632,7 +638,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
     }
 
     @Override
-    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world) {
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world, Direction direction, LivingEntity entity) {
         for (int i = pos.getX() - 4; i <= pos.getX() + 4; i++) {
             for (int j = pos.getY() - 4; j <= pos.getY() + 4; j++) {
                 for (int k = pos.getZ() - 4; k <= pos.getZ() + 4; k++) {

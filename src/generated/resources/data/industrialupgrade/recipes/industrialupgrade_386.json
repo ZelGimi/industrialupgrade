@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/hafnium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/hafnium"
+    }
   ],
   "result": {
     "count": 9,

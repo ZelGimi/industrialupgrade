@@ -190,7 +190,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
             if (!jsonObject.has("fluid"))
                 throw new RuntimeException("Bucket model requires 'fluid' value.");
 
-            ResourceLocation fluidName = new ResourceLocation(jsonObject.get("fluid").getAsString());
+            ResourceLocation fluidName = new ResourceLocation("minecraft:empty");
 
             Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
 

@@ -1,18 +1,5 @@
 {
   "values": [
-    "simplyquarries:simplyquarries/simply_quarry",
-    "powerutils:converter/power_utilities_fe",
-    "quantumgenerators:qg/phsp_gen",
-    "simplyquarries:simplyquarries/adv_simply_quarry",
-    "quantumgenerators:qg/nsp_gen",
-    "simplyquarries:simplyquarries/imp_simply_quarry",
-    "quantumgenerators:qg/bsp_gen",
-    "powerutils:converter/power_utilities_qe",
-    "simplyquarries:simplyquarries/per_simply_quarry",
-    "quantumgenerators:qg/adsp_gen",
-    "simplyquarries:simplyquarries/pho_simply_quarry",
-    "quantumgenerators:qg/grasp_gen",
-    "quantumgenerators:qg/kvsp_gen",
     "industrialupgrade:combiner_solid_matter/combiner_solid_matter",
     "industrialupgrade:adv_refiner/adv_refiner",
     "industrialupgrade:adv_se_gen/adv_se_gen",
@@ -671,6 +658,12 @@
     "industrialupgrade:heat_reactors/heat_circulationpump",
     "industrialupgrade:heat_reactors/heat_adv_circulationpump",
     "industrialupgrade:heat_reactors/heat_imp_circulationpump",
-    "industrialupgrade:heat_reactors/heat_per_circulationpump"
+    "industrialupgrade:heat_reactors/heat_per_circulationpump",
+    "industrialupgrade:creative_blocks/creative_mfsu",
+    "industrialupgrade:creative_blocks/creative_steam_storage",
+    "industrialupgrade:creative_blocks/creative_solarium_storage",
+    "industrialupgrade:creative_blocks/creative_quantum_storage",
+    "industrialupgrade:creative_blocks/creative_radiation_storage",
+    "industrialupgrade:creative_blocks/creative_tank_storage"
   ]
 }

@@ -20,7 +20,7 @@ public class SunCoef {
 
 
         float k = 0;
-        float celestialAngle = ((this.getWorld().getGameTime() % 24000)) * 360 / 24000F;
+        float celestialAngle = ((this.getWorld().getDayTime() % 24000)) * 360 / 24000F;
         celestialAngle %= 360;
 
         if (celestialAngle <= 90) {

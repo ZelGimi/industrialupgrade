@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_599_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemplates/hafnium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:itemplates/bismuth"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_599_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/hafnium"
+    },
+    "C": {
+      "item": "industrialupgrade:itemplates/bismuth"
+    }
   },
   "pattern": [
     "CBC",

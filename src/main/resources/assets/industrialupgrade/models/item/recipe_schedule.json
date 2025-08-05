@@ -1,6 +1,20 @@
 {
-  "parent" : "industrialupgrade:item/default",
-  "textures" : {
-    "layer0" : "industrialupgrade:items/recipe_schedule"
-  }
+  "parent": "industrialupgrade:item/default",
+  "textures": {
+    "layer0": "industrialupgrade:items/recipe_schedule"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "mode": 0
+      },
+      "model": "industrialupgrade:item/recipe_schedule_black"
+    },
+	{
+      "predicate": {
+        "mode": 1
+      },
+      "model": "industrialupgrade:item/recipe_schedule_white"
+    }
+  ]
 }

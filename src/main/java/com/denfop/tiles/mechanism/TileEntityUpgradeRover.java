@@ -85,6 +85,7 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
                         this.updateTick.setRecipeOutput(null);
                         return;
                     }
+                    module = module.copy();
                     EnumTypeUpgrade type = ItemSpaceUpgradeModule.getType(((ItemSpaceUpgradeModule<?>) module.getItem()).getElement().getId());
                     boolean should = SpaceUpgradeSystem.system.shouldUpdate(type, stack1);
                     if (!should) {

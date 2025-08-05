@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/niobium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/niobium"
+    }
   ],
   "result": {
     "count": 9,

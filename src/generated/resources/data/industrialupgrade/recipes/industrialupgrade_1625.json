@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/nichrome"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_296_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/vanadoalumite"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:doubleplate/nichrome"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_296_element"
+    },
+    "D": {
+      "tag": "forge:plates/vanadoalumite"
+    }
   },
   "pattern": [
     " C ",

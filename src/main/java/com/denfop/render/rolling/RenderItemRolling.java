@@ -69,8 +69,9 @@ public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingM
                     poseStack.translate(0.5, 1.02, -0.1);
                     poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
                 } else {
-                    poseStack.translate(0.05, 1.02, 0.35);
+                    poseStack.translate(0.1, 1.02, 0.5);
                     poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
+                    poseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
                 }
 
                 for (int i = 0; i < itemstack.getCount() - 1; i++) {
@@ -91,7 +92,7 @@ public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingM
             ItemRenderer itemRenderer = mc.getItemRenderer();
 
             if (tile.getFacing() != Direction.EAST && tile.getFacing() != Direction.WEST) {
-                poseStack.translate(0.19, 1.01, 0.5);
+                poseStack.translate(1.07, 1.01, 0.5);
             } else {
                 poseStack.translate(0.49, 1.01, 0.81);
             }

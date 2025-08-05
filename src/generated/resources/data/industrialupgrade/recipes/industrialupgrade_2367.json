@@ -1,23 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "key": {
-    "A": [
-      {
-        "item": "quantumgenerators:qg/grasp_gen"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/kvrcore"
-      }
-    ]
-  },
-  "pattern": [
-    " B ",
-    "BAB",
-    " B "
+  "type": "industrialupgrade:shapeless_recipe",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_platinum"
+    }
   ],
   "result": {
-    "item": "quantumgenerators:qg/kvsp_gen"
+    "count": 9,
+    "item": "industrialupgrade:raw_metals/raw_platinum"
   }
 }

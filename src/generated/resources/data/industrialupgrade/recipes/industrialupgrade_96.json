@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/tungsten"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:casings/invar"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/titanium"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:basemachine/per_matter"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ]
+    "A": {
+      "tag": "forge:casings/tungsten"
+    },
+    "B": {
+      "tag": "forge:casings/invar"
+    },
+    "C": {
+      "tag": "forge:doubleplate/titanium"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/per_matter"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
   },
   "pattern": [
     "ABA",

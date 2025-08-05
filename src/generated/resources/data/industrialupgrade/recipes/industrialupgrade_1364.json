@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:cyclotron/cyclotron_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_398_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:cyclotron/cyclotron_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_398_element"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:10}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_402_element"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
   },
   "pattern": [
     "BCB",

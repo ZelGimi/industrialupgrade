@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/zirconium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/zirconium"
+    }
   ],
   "result": {
     "count": 9,

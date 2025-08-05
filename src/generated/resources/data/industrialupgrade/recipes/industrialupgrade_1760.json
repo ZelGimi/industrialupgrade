@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:water_reactors/water_imp_levelfuel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_405_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_397_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_402_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:water_reactors/water_imp_levelfuel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_405_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    }
   },
   "pattern": [
     "BDB",

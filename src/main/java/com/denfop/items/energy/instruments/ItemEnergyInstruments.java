@@ -538,7 +538,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         final int level = this.getLevel(par1ItemStack);
         final int maxLevel = this.getMaxLevel(par1ItemStack);
         final int experience = this.getExperience(par1ItemStack);
-        par3List.add(Component.literal(Localization.translate("iu.tier") + "" + level));
+        par3List.add(Component.literal(Localization.translate("circuit.level") + ": " + level));
         par3List.add(Component.literal(Localization.translate("iu.space_colony_experience") + experience + "/" + maxLevel));
     }
 

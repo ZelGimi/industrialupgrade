@@ -119,7 +119,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
                     );
         }
         if (this.tileentity.pollution.isActive()) {
-            new ItemStackImage(this, 170, 93, this.tileentity.pollution::getStack).drawForeground(poseStack,mouseX, mouseY);
+            new ItemStackImage(this, 184, 93, this.tileentity.pollution::getStack).drawForeground(poseStack,mouseX, mouseY);
         }
 
         for (int i = 0; i < this.tileentity.invSlotGlass.size(); i++) {
@@ -459,7 +459,7 @@ public class GuiMiniPanel<T extends ContainerMiniPanels> extends GuiCore<Contain
             }
         }
         if (this.tileentity.pollution.isActive()) {
-            new ItemStackImage(this, 170, 93, this.tileentity.pollution::getStack).drawBackground(poseStack,h, k);
+            new ItemStackImage(this, 184, 93, this.tileentity.pollution::getStack).drawBackground(poseStack,h, k);
         }
 
         this.bindTexture();

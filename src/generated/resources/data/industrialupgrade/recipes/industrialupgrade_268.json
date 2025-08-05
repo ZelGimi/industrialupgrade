@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/duralumin"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/duralumin"
+    }
   ],
   "result": {
     "count": 9,

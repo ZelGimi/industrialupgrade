@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:rubber_wood/plain_y"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/invar"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_683_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_678_element"
-      }
-    ],
-    "H": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:rubber_wood/plain_y"
+    },
+    "B": {
+      "tag": "forge:gears/invar"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_683_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_678_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    }
   },
   "pattern": [
     " H ",

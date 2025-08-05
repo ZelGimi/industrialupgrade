@@ -1,5 +1,6 @@
 package com.denfop.api.energy;
 
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.transport.ITransportTile;
 import com.denfop.api.transport.TransportNetGlobal;
@@ -81,16 +82,26 @@ public class EnergyNetLocal {
     }
 
     void explodeMachineAt(BlockEntity entity) {
+        if (entity == null)
+            return;
         if (this.explosing) {
             final BlockPos pos = entity.getBlockPos();
-            final ITransportTile IEnergyTile = TransportNetGlobal.instance.getSubTile(world, pos);
-            if (IEnergyTile != null) {
+            final ITransportTile transportTile = TransportNetGlobal.instance.getSubTile(world, pos);
+            if (transportTile != null) {
                 MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
                         world,
-                        IEnergyTile
+                        transportTile
                 ));
             }
-
+            if (!(entity instanceof TileEntityBlock)) {
+                IEnergyTile energyTile = EnergyNetGlobal.instance.getTile(world, pos);
+                if (energyTile != null) {
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
+                            world,
+                            energyTile
+                    ));
+                }
+            }
             Explosion explosion = new Explosion(this.world, null, pos.getX(), pos.getY() + 1, pos.getZ(), 4, false, Explosion.BlockInteraction.NONE);
             this.world.playSound(
                     null,
@@ -241,9 +252,7 @@ public class EnergyNetLocal {
                 return;
             }
         } else {
-            if (!this.chunkCoordinatesIEnergyTileMap.containsKey(tile.getTileEntity().getBlockPos())) {
-                return;
-            }
+            return;
         }
         BlockPos coord;
         coord = tile.getPos();
@@ -278,9 +287,6 @@ public class EnergyNetLocal {
         }
     }
 
-    public BlockEntity getTileFromMap(IEnergyTile tile) {
-        return tile.getTileEntity();
-    }
 
     public double emitEnergyFrom(final IEnergySource energySource, double amount, final EnergyTick tick) {
         List<Path> energyPaths = tick.getList();
@@ -308,15 +314,15 @@ public class EnergyNetLocal {
 
         if (amount > 0) {
             for (Path energyPath : energyPaths) {
-                if (amount <= 0) {
-                    break;
+                if (energySource.canExtractEnergy(energyPath.sourceDirection) <= 0) {
+                    continue;
                 }
                 final IEnergySink energySink = energyPath.target;
-                double demandedEnergy = energySink.getDemandedEnergy();
+                double demandedEnergy = energySink.getDemandedEnergy(energyPath.targetDirection);
                 if (demandedEnergy <= 0.0) {
                     continue;
                 }
-                double energyProvided = amount;
+                double energyProvided = energySource.canExtractEnergy(energyPath.sourceDirection);
 
                 double adding;
                 if (this.hasrestrictions && !this.explosing) {
@@ -335,7 +341,7 @@ public class EnergyNetLocal {
                 }
                 if (this.ignoring) {
 
-                    int tier = energySink.getSinkTier();
+                    int tier = energySink.getSinkTier(energyPath.targetDirection);
                     if (!(energySink instanceof IMultiDual)) {
                         int tier1 = EnergyNetGlobal.instance.getTierFromPower(adding);
                         if (tier1 > tier) {
@@ -346,7 +352,7 @@ public class EnergyNetLocal {
                             continue;
                         }
                     } else {
-                        int tier1 = energySource.getSourceTier();
+                        int tier1 = energySource.getSourceTier(energyPath.sourceDirection);
                         if (tier1 > tier) {
                             if (energyPath.hasController) {
                                 continue;
@@ -356,17 +362,20 @@ public class EnergyNetLocal {
                         }
                     }
                 }
-                energySink.receiveEnergy(adding);
+                energySink.receiveEnergy(energyPath.targetDirection, adding);
                 energyPath.adding = adding;
                 energyPath.tick(this.tick, adding);
+                energySource.extractEnergy(energyPath.sourceDirection, adding);
+                tick.addEnergy(adding);
                 amount -= adding;
                 amount -= energyPath.loss;
                 amount = Math.max(0, amount);
-                if (this.hasrestrictions && this.explosing) {
-                    if (adding > energyPath.min) {
-                        for (IEnergyConductor energyConductor : energyPath.getConductorList()) {
-                            if (energyConductor.getConductorBreakdownEnergy() < adding) {
-                                conductorsRemove.add(energyConductor);
+                for (ConductorInfo energyConductor : energyPath.getConductorList()) {
+                    energyConductor.addEnergy((byte) this.tick, adding);
+                    if (this.hasrestrictions && this.explosing) {
+                        if (adding > energyPath.min) {
+                            if (energyConductor.getBreakdownEnergy() < adding) {
+                                conductorsRemove.add((IEnergyConductor) this.getTileEntity(energyConductor.getPos()));
                             } else {
                                 break;
                             }
@@ -384,25 +393,8 @@ public class EnergyNetLocal {
         double ret = 0.0;
         int col = 0;
         if (tileEntity instanceof IEnergyConductor) {
-            for (EnergyTick tick : energyTickList) {
-                double energy = 0;
-                if (tick.getList() != null) {
-                    final List<Path> paths = tick.getList();
-                    for (Path path : paths) {
-                        if (path.getConductorList().contains(tileEntity)) {
-                            energy += path.adding;
-                            break;
-                        }
-
-                    }
-                }
-                ret += energy;
-                if (energy != 0) {
-                    col++;
-                }
-
-            }
-
+            ret = Math.max(((IEnergyConductor) tileEntity).getInfo().getEnergy(this.tick), ret);
+            return ret;
         }
 
         if ((tileEntity instanceof IEnergySource)) {
@@ -415,13 +407,6 @@ public class EnergyNetLocal {
 
             }
         }
-        if (tileEntity instanceof IEnergyConductor) {
-            try {
-                return ret / col;
-            } catch (Exception e) {
-                return 0;
-            }
-        }
 
         return ret;
     }
@@ -431,26 +416,10 @@ public class EnergyNetLocal {
         int col = 0;
         if (!(tileEntity instanceof IEnergySink)) {
             if (tileEntity instanceof IEnergyConductor) {
-                for (EnergyTick tick : energyTickList) {
-                    double energy = 0;
-                    final List<Path> paths = tick.getList();
-                    if (paths != null) {
-                        for (Path path : paths) {
-                            if (path.getConductorList().contains(tileEntity)) {
-                                energy += path.adding;
-                                break;
-                            }
-
-                        }
-                    }
-                    ret += energy;
-                    if (energy != 0) {
-                        col++;
-                    }
-
+                if (tileEntity instanceof IEnergyConductor) {
+                    ret = Math.max(((IEnergyConductor) tileEntity).getInfo().getEnergy(this.tick), ret);
+                    return ret;
                 }
-
-
             }
         } else {
             IEnergySink advEnergySink = (IEnergySink) tileEntity;
@@ -465,13 +434,6 @@ public class EnergyNetLocal {
             }
 
         }
-        if (tileEntity instanceof IEnergyConductor) {
-            try {
-                return ret / col;
-            } catch (Exception e) {
-                return 0;
-            }
-        }
         return ret;
     }
 
@@ -481,7 +443,7 @@ public class EnergyNetLocal {
         }
 
 
-        return tile.getTileEntity();
+        return world.getBlockEntity(tile.getPos());
     }
 
     public Tuple<List<Path>, LinkedList<Integer>> discover(
@@ -523,18 +485,21 @@ public class EnergyNetLocal {
 
         for (Path energyPath : energyPaths) {
             IEnergyTile tileEntity = energyPath.target;
-            List<IEnergyConductor> pathConductorsList = new LinkedList<>();
+            List<ConductorInfo> pathConductorsList = new LinkedList<>();
             energyPath.target.getEnergyTickList().add(tick.getSource().hashCode());
             Direction energyBlockLink = energyPath.targetDirection;
+            energyPath.sourceDirection = null;
+            Direction direction = null;
             tileEntity = tileEntity.getTiles().get(energyBlockLink);
             if (!(tileEntity instanceof IEnergyConductor)) {
                 continue;
             }
+            InfoCable prev;
             InfoCable cable = ((IEnergyConductor) tileEntity).getCable();
             while (cable != null) {
 
                 final IEnergyConductor energyConductor = cable.getConductor();
-                pathConductorsList.add(energyConductor);
+                pathConductorsList.add(energyConductor.getInfo());
                 if (energyConductor.getHashCodeSource() != id1) {
                     energyConductor.setHashCodeSource(id1);
                     set.add(energyConductor.hashCode());
@@ -545,11 +510,21 @@ public class EnergyNetLocal {
                 if (this.losing) {
                     energyPath.loss += energyConductor.getConductionLoss();
                 }
+
+                prev = cable;
                 cable = cable.getPrev();
+
                 if (cable == null) {
+                    direction = prev.getConductor().getTiles().entrySet().stream()
+                            .filter(entry -> entry.getValue() == emitter)
+                            .map(Map.Entry::getKey)
+                            .findFirst()
+                            .orElse(null);
                     break;
                 }
             }
+            if (direction != null)
+                energyPath.sourceDirection = direction.getOpposite();
             energyPath.conductorList = new ArrayList<>(pathConductorsList);
 
         }
@@ -638,13 +613,14 @@ public class EnergyNetLocal {
 
     public void remove(final IEnergySource par1) {
         final EnergyTick energyTick = this.energyTickList.removeSource(par1);
-        if (energyTick.getList() != null) {
-            for (Path path : energyTick.getList()) {
-                path.target.getEnergyTickList().remove((Object) energyTick.hashCode());
+        if (energyTick != null)
+            if (energyTick.getList() != null) {
+                for (Path path : energyTick.getList()) {
+                    path.target.getEnergyTickList().remove((Object) energyTick.hashCode());
+                }
+
+
             }
-
-
-        }
     }
 
 
@@ -672,8 +648,7 @@ public class EnergyNetLocal {
                 final List<Path> paths1 = tick.getList();
                 if (paths1 != null) {
                     for (Path path : paths1) {
-
-                        if (path.getConductorList().contains(par1)) {
+                        if (path.getConductorList().contains(((IEnergyConductor) par1).getInfo())) {
                             paths.add(path);
                             break;
                         }
@@ -768,9 +743,9 @@ public class EnergyNetLocal {
             explodeMachineAt(getTileFromIEnergy(source));
         }
         for (IEnergyConductor conductor : conductorsRemove) {
-            TileEntityBlock tile = (TileEntityBlock)conductor;
+            TileEntityBlock tile = (TileEntityBlock) conductor;
             tile.onUnloaded();
-           this.world.removeBlock( conductor.getPos(),false);
+            this.world.removeBlock(conductor.getPos(), false);
         }
         conductorsRemove.clear();
         energySourceList.clear();
@@ -785,9 +760,13 @@ public class EnergyNetLocal {
             sourceToUpdateList.clear();
         }
 
-        for (EnergyTick tick : energyTickList) {
+        for (EnergyTick tick : new ArrayList<>(energyTickList)) {
             final IEnergySource entry = tick.getSource();
             tick.tick();
+            if (entry.isRemovedTile()) {
+                sourceToUpdateList.add(entry);
+                continue;
+            }
             if (tick.getList() == null || !tick.getList().isEmpty()) {
                 int multi = entry instanceof IMultiDual ? 4 : 1;
                 for (int k = 0; k < multi; k++) {
@@ -796,9 +775,7 @@ public class EnergyNetLocal {
                             EnergyNetGlobal.instance.getPowerFromTier(entry.getSourceTier())
                     );
                     if (offer > 0) {
-                        final double removed = offer - emitEnergyFrom(entry, offer, tick);
-                        entry.extractEnergy(removed);
-                        tick.addEnergy(removed);
+                        emitEnergyFrom(entry, offer, tick);
                     } else {
                         if (tick.isAdv() && tick.getAdvSource().isSource()) {
                             tick.getAdvSource().setPastEnergy(tick.getAdvSource().getPerEnergy());
@@ -815,6 +792,8 @@ public class EnergyNetLocal {
         }
         explodeTiles.clear();
         this.tick++;
+        if (tick > 100)
+            tick = 0;
     }
 
     public IEnergyTile getTileEntity(BlockPos pos) {
@@ -822,13 +801,11 @@ public class EnergyNetLocal {
     }
 
     public NodeStats getNodeStats(final IEnergyTile tile) {
-        if (tile instanceof IEnergyConductor) {
-            return new NodeStats(0, 0);
-        } else {
-            final double emitted = this.getTotalEnergyEmitted(tile);
-            final double received = this.getTotalEnergySunken(tile);
-            return new NodeStats(received, emitted);
-        }
+
+        final double emitted = this.getTotalEnergyEmitted(tile);
+        final double received = this.getTotalEnergySunken(tile);
+        return new NodeStats(received, emitted);
+
     }
 
     public List<Path> getEnergyPaths(IEnergyTile energyTile) {

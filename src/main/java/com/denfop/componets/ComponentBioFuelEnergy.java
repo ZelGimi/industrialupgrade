@@ -104,4 +104,7 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
         return true;
     }
 
+    public FluidTank getFluidTank() {
+        return fluidTank;
+    }
 }

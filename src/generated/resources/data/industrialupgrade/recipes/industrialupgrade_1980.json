@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/steel"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:storage_blocks/iridium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:casings/aluminumbronze"
-      }
-    ]
+    "A": {
+      "tag": "forge:casings/steel"
+    },
+    "B": {
+      "tag": "forge:storage_blocks/iridium"
+    },
+    "C": {
+      "tag": "forge:casings/aluminumbronze"
+    }
   },
   "pattern": [
     "CAC",

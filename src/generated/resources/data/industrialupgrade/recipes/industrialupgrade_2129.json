@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemplates/palladium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/thallium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/stellite"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/palladium"
+    },
+    "C": {
+      "tag": "forge:plates/thallium"
+    },
+    "D": {
+      "tag": "forge:plates/stellite"
+    }
   },
   "pattern": [
     "CBC",

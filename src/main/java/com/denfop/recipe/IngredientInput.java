@@ -6,10 +6,15 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.crafting.PartialNBTIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class IngredientInput extends Ingredient {
@@ -24,13 +29,29 @@ public class IngredientInput extends Ingredient {
 
     }
 
-    public ItemStack[] getItem() {
+    public ItemStack[] getItems() {
         if (this.items == null) {
             this.items = this.input.getInputs().toArray(new ItemStack[0]);
         }
         return this.items;
     }
-
+    public Ingredient getInput() {
+        if (!input.getInputs().isEmpty() && input.getInputs().get(0).hasTag()) {
+            if (input.getInputs().size() == 1) {
+                return StrictNBTIngredient.of(input.getInputs().get(0));
+            } else {
+                List<Item> items = new ArrayList<>();
+                input.getInputs().forEach(stack -> items.add(stack.getItem()));
+                return PartialNBTIngredient.of(input.getInputs().get(0).getTag(), items.toArray(new Item[0]));
+            }
+        } else {
+            if (this.input.hasTag()) {
+                return Ingredient.of(this.input.getTag());
+            } else {
+                return Ingredient.of(this.input.getInputs().get(0));
+            }
+        }
+    }
     public JsonElement toJson() {
 
         JsonArray jsonarray = new JsonArray();
@@ -50,7 +71,7 @@ public class IngredientInput extends Ingredient {
 
     public IntList getStackingIds() {
         if (this.list == null) {
-            final ItemStack[] items = this.getItem();
+            final ItemStack[] items = this.getItems();
             this.list = new IntArrayList(items.length);
             for (final ItemStack itemstack : items) {
                 this.list.add(StackedContents.getStackingIndex(itemstack));

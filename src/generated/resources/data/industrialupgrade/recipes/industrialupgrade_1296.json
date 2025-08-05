@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:reactors/proton"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:radiationresources/curium_gem"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:reactors/proton_energy_coupler"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:reactors/proton"
+    },
+    "B": {
+      "item": "industrialupgrade:radiationresources/curium_gem"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/proton_energy_coupler"
+    }
   },
   "pattern": [
     "ABA",

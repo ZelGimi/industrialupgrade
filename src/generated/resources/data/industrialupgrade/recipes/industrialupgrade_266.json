@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/vitalium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/vitalium"
+    }
   ],
   "result": {
     "count": 9,

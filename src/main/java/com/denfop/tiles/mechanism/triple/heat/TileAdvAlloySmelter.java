@@ -31,6 +31,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumTripleElectricMachine;
 import com.denfop.tiles.base.TileTripleElectricMachine;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -80,7 +81,13 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnAlloySmelterParticles(level,pos,level.random);
+        }
+    }
     public static void addAlloysmelter(Object container, Object fill, Object fill1, ItemStack output, int temperature) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         final CompoundTag nbt = ModUtils.nbt();

@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/cobalt"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_274_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:plastic_plate"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/cobalt"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+    },
+    "D": {
+      "tag": "forge:plates/titanium"
+    },
+    "E": {
+      "item": "industrialupgrade:plastic_plate"
+    }
   },
   "pattern": [
     "CCC",

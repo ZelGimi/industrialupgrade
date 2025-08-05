@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:machines/advanced_solar_paneliu"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:compresscarbon"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:armour/adv_nano_helmet"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:machines/advanced_solar_paneliu"
+    },
+    "B": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "C": {
+      "item": "industrialupgrade:armour/adv_nano_helmet"
+    },
     "D": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:5}"
     },
-    "E": [
-      {
-        "item": "industrialupgrade:compresscarbonultra"
-      }
-    ]
+    "E": {
+      "item": "industrialupgrade:compresscarbonultra"
+    }
   },
   "pattern": [
     " A ",

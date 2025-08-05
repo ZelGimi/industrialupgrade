@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "key": {
+    "A": {
+      "tag": "forge:casings/tungsten"
+    },
+    "B": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:itemcell/reinforcedfluidcell"
+  }
+}

@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/iron"
+    }
   },
   "pattern": [
     " B ",

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:doubleplate/invar"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems2"
+    },
+    "D": {
+      "tag": "forge:doubleplate/invar"
+    }
   },
   "pattern": [
     "ADA",

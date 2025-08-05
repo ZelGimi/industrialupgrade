@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,11 +7,9 @@
       "item": "minecraft:shield",
       "nbt": "{Damage:0}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/vitalium"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/vitalium"
+    }
   },
   "pattern": [
     "  B",

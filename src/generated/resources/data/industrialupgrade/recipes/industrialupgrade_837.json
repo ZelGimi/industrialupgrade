@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_620_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/vanady"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:casings/nickel"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/manganese"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:casings/mikhail"
-      }
-    ],
-    "F": [
-      {
-        "tag": "forge:doubleplate/titanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "B": {
+      "tag": "forge:plates/vanady"
+    },
+    "C": {
+      "tag": "forge:casings/nickel"
+    },
+    "D": {
+      "tag": "forge:gears/manganese"
+    },
+    "E": {
+      "tag": "forge:casings/mikhail"
+    },
+    "F": {
+      "tag": "forge:doubleplate/titanium"
+    }
   },
   "pattern": [
     "DCD",

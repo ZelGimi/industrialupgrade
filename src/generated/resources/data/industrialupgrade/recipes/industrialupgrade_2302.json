@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gears/aluminumbronze"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:adv_bee_frame_template"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/mithril"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/yttrium"
-      }
-    ]
+    "A": {
+      "tag": "forge:gears/aluminumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_bee_frame_template"
+    },
+    "C": {
+      "tag": "forge:plates/mithril"
+    },
+    "D": {
+      "tag": "forge:casings/yttrium"
+    }
   },
   "pattern": [
     "CDC",

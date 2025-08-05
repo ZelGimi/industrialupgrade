@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems7"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:rotorupgrade_schemes"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:casings/nichrome"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:quantumitems7"
+    },
+    "B": {
+      "item": "industrialupgrade:rotorupgrade_schemes"
+    },
+    "C": {
+      "tag": "forge:casings/nichrome"
+    }
   },
   "pattern": [
     "A A",

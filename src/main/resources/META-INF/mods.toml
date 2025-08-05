@@ -17,7 +17,7 @@ license="All Rights Reserved"
 # The modid of the mod
 modId="industrialupgrade" #mandatory
 # The version number of the mod
-version="3.3.0.15" #mandatory
+version="3.3.1.8" #mandatory
 # A display name for the mod
 displayName="Industrial Upgrade" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/latest/misc/updatechecker/
@@ -62,3 +62,9 @@ mandatory=true
 versionRange="[1.19.2,1.20)"
 ordering="NONE"
 side="BOTH"
+#[[dependencies.industrialupgrade]]
+#modId="lmft"
+#mandatory=true
+#versionRange="[0,)"
+#ordering="NONE"
+#side="BOTH"

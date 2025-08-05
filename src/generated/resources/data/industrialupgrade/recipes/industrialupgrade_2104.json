@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/cobaltchrome"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:polonium_palladium_composite"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:itemplates/mythril"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/zeliber"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/cobaltchrome"
+    },
+    "C": {
+      "item": "industrialupgrade:polonium_palladium_composite"
+    },
+    "D": {
+      "item": "industrialupgrade:itemplates/mythril"
+    },
+    "E": {
+      "tag": "forge:plates/zeliber"
+    }
   },
   "pattern": [
     "BEB",

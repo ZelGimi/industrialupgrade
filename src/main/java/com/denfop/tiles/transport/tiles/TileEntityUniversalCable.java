@@ -47,6 +47,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         IConductor {
 
 
+    private final ConductorInfo conductor;
     public boolean addedToEnergyNet;
     protected UniversalType cableType;
     EnumTypeOperation enumTypeOperation = null;
@@ -80,6 +81,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     public TileEntityUniversalCable(UniversalType cableType, IMultiTileBlock block, BlockPos pos, BlockState state) {
         super(cableType, block, pos, state);
         this.cableType = cableType;
+        this.conductor = new ConductorInfo(pos,this);
     }
 
     @Override
@@ -92,11 +94,16 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         loss = type.loss;
 
 
+        info.add(Localization.translate("iu.universal_cable.info"));
         info.add(ModUtils.getString(capacity) + " " + Localization.translate("iu.generic.text.EUt"));
         info.add(Localization.translate("cable.tooltip.loss", lossFormat.format(loss)));
         info.add(Localization.translate("iu.transport.cold") + "-" + ModUtils.getString(64) + " °C");
         info.add(Localization.translate("iu.transport.heat") + ModUtils.getString(16000) + " °C");
 
+    }
+    @Override
+    public ConductorInfo getInfo() {
+        return conductor;
     }
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
@@ -772,11 +779,6 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
     @Override
     public BlockEntity getTile() {
-        return this;
-    }
-
-    @Override
-    public BlockEntity getTileEntity() {
         return this;
     }
 

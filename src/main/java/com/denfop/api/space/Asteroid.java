@@ -87,7 +87,7 @@ public class Asteroid implements IAsteroid {
 
     @Override
     public double getOrbitPeriod() {
-        return time;
+        return 0.5;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Asteroid implements IAsteroid {
 
     @Override
     public double getDistance() {
-        return distance;
+        return minLocation;
     }
 
     @Override

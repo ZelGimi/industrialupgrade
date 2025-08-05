@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:steam_turbine/steam_turbine_adv_exchanger"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/draconid"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_91_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_373_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_583_element"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_563_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_adv_exchanger"
+    },
+    "B": {
+      "tag": "forge:plates/draconid"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_91_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_373_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_583_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_563_element"
+    }
   },
   "pattern": [
     "DCD",

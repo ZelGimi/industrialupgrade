@@ -1,8 +1,10 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.steam.ISteamBlade;
 import com.denfop.items.reactors.ItemDamage;
+import com.denfop.utils.ModUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +38,7 @@ public class ItemSteamRod extends ItemDamage implements ISteamBlade {
 
     @Override
     public boolean damageBlade(final ItemStack stack) {
-        return applyCustomDamage(stack, -1, null);
+        return applyCustomDamage(stack, 1, null);
     }
 
     @Override
@@ -52,7 +54,21 @@ public class ItemSteamRod extends ItemDamage implements ISteamBlade {
             @Nonnull final TooltipFlag flag
     ) {
         super.appendHoverText(stack, world, tooltip, flag);
+        double hours = 0;
+        double minutes = 0;
+        double seconds = 0;
+        final List<Double> time = ModUtils.Time(this.getMaxCustomDamage(stack) - this.getCustomDamage(stack));
+        if (time.size() > 0) {
+            hours = time.get(0);
+            minutes = time.get(1);
+            seconds = time.get(2);
+        }
 
+        String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") : "";
+        String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";
+        String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") : "";
+
+        tooltip.add(Component.literal(Localization.translate("iu.timetoend") + time1 + time2 + time3));
         tooltip.add(Component.translatable("iu.reactoritem.durability")
                 .append(" " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(stack)) + "/" + this.getMaxCustomDamage(stack)));
 

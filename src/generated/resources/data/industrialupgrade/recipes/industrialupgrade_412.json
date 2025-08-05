@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot2/strontium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot2/strontium"
+    }
   ],
   "result": {
     "count": 9,

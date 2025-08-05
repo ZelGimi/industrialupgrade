@@ -6,10 +6,12 @@ import com.denfop.blocks.ItemBlockCore;
 import com.denfop.tiles.base.FakePlayerSpawner;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +72,8 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
         BlockState blockstate = level.getBlockState(blockpos);
         Block block = this.getBlock();
         IMultiTileBlock iMultiTileBlock =  getTeBlock(pContext.getItemInHand());
-        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(),blockpos,level))
+        Direction direction = pContext.getClickedFace();
+        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(),blockpos,level,direction,pContext.getPlayer()))
             return null;
         return super.updatePlacementContext(pContext);
     }
@@ -78,10 +82,14 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
     @Override
     protected BlockState getPlacementState(BlockPlaceContext p_40613_) {
         BlockState blockstate = this.getBlock().getStateForPlacement(p_40613_);
-        return blockstate != null && this.canPlace(p_40613_, blockstate) ? blockstate : null;
+        return blockstate != null && this.canPlace(p_40613_, blockstate)  ? blockstate : null;
 
     }
-
+    protected boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
+        Player player = pContext.getPlayer();
+        CollisionContext collisioncontext = player == null ? CollisionContext.empty() : CollisionContext.of(player);
+        return (!this.mustSurvive()  || pContext.replacingClickedOnBlock() || pState.canSurvive(pContext.getLevel(), pContext.getClickedPos())) && pContext.getLevel().isUnobstructed(pState, pContext.getClickedPos(), collisioncontext);
+    }
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("industrialupgrade", Registry.ITEM.getKey(this)));

@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:energy_tools/spectralaxe"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:energy_tools/spectraldrill"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:energy_tools/spectralaxe"
+    },
+    "B": {
+      "item": "industrialupgrade:energy_tools/spectraldrill"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/photoncircuit",
       "nbt": "{level:11}"
     },
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:upgrades/overclockerupgrade2"
-      }
-    ]
+    "E": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "F": {
+      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+    }
   },
   "pattern": [
     "ACB",

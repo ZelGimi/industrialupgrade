@@ -1,23 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "quantumgenerators:qg/adsp_gen"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/gracore"
-      }
-    ]
+    "A": {
+      "tag": "forge:raw_materials/platinum"
+    }
   },
   "pattern": [
-    " B ",
-    "BAB",
-    " B "
+    "AAA",
+    "AAA",
+    "AAA"
   ],
   "result": {
-    "item": "quantumgenerators:qg/grasp_gen"
+    "item": "industrialupgrade:raw_block/raw_platinum"
   }
 }

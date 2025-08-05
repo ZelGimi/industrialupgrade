@@ -132,7 +132,7 @@ public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
             if (count != 0) {
                 if (minSlot != this.size()) {
                     if (!simulate) {
-                        this.set(minSlot, new ItemStack(stack.getItem(), count, stack.getTag()));
+                        this.set(minSlot, ModUtils.setSize(stack,count));
                     }
                     return 0;
                 }

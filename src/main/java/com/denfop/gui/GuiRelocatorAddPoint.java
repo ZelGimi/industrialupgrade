@@ -17,37 +17,39 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Pose;
 
 public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> extends GuiIU<ContainerBase<ItemStackRelocator>> {
 
     public EditBox textField;
-
+    boolean hoverAdd ;
     public GuiRelocatorAddPoint(ContainerBase<ItemStackRelocator> guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        this.imageWidth = 100;
-        this.imageHeight = 50;
-        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, imageHeight));
-        this.addElement(new ImageScreen(this, 8, 6, 82, 14));
-        this.addElement(new CustomButton(this, 8, 26, 84, 14, null, 0, Localization.translate("button.write")) {
-            @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
-                if (this.visible() && this.contains(mouseX, mouseY)) {
-                    Minecraft.getInstance().getSoundManager().play(
-                            SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F)
-                    );
-                    new PacketAddRelocatorPoint(minecraft.player, new Point(textField.getValue(), minecraft.player.blockPosition()));
-                }
-                return true;
-            }
-        });
+        this.imageWidth = 176;
+        this.imageHeight = 77;
+
+
 
     }
 
     @Override
+    protected void mouseClicked(int i, int j, int k) {
+        super.mouseClicked(i, j, k);
+        if (hoverAdd){
+            new PacketAddRelocatorPoint(minecraft.player, new Point(textField.getValue(), minecraft.player.blockPosition()));
+
+        }
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return this.textField.charTyped(codePoint, modifiers) || super.charTyped(codePoint,modifiers);
+    }
+    @Override
     protected void init() {
         super.init();
-        this.textField = new EditBox(this.font, this.leftPos + 14, this.topPos + 10, 76, 10, Component.literal(""));
+        this.textField = new EditBox(this.font, this.leftPos + 46, this.topPos + 28, 132-43, 12, Component.literal(""));
         this.textField.setMaxLength(50);
         this.textField.setValue("");
         this.textField.setFocus(true);
@@ -74,6 +76,23 @@ public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> e
     }
 
     @Override
+    protected void drawGuiContainerBackgroundLayer(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        if (hoverAdd){
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 79, this.guiTop + 40, 237, 0, 19, 20);
+
+        }
+    }
+
+    @Override
+    protected void drawForegroundLayer(PoseStack poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        hoverAdd = false;
+        if (par1 >= 79 && par2 >= 40 && par1 <= 97 && par2 <= 59)
+            hoverAdd = true;
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == this.minecraft.options.keyInventory.getKey().getValue()) {
             this.textField.keyPressed(keyCode, scanCode, modifiers);
@@ -83,7 +102,7 @@ public class GuiRelocatorAddPoint<T extends ContainerBase<ItemStackRelocator>> e
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirelocator_add.png");
     }
 
 }

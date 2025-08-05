@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:additionmodule/purifier"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_64_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "C": {
+      "item": "industrialupgrade:additionmodule/purifier"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_64_element"
+    }
   },
   "pattern": [
     "   ",

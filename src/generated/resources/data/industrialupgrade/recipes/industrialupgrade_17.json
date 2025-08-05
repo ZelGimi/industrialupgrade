@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_storage"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:module_storage"
+    },
+    "B": {
+      "tag": "forge:plates/carbon"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:5}"
     },
-    "D": [
-      {
-        "tag": "forge:gears/electrum"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:doubleplate/aluminumbronze"
-      }
-    ]
+    "D": {
+      "tag": "forge:gears/electrum"
+    },
+    "E": {
+      "tag": "forge:doubleplate/aluminumbronze"
+    }
   },
   "pattern": [
     "BBB",

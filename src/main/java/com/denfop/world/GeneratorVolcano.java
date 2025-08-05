@@ -290,7 +290,7 @@ public class GeneratorVolcano {
                                     } else {
                                         final boolean remove = blockPosList.remove(pos);
                                         if (!remove) {
-                                            setBlockState1(world, pos, Fluids.FLOWING_LAVA.getSource().defaultFluidState().createLegacyBlock(), 3);
+                                            setBlockState1(world, pos,FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(), 3);
                                         }
                                     }
                                 } else {
@@ -341,14 +341,9 @@ public class GeneratorVolcano {
                 initBasaltsOres();
             }
 
-            BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), world.getMaxBuildHeight(), position2.getZ());
-            while (checkPos.getY() > world.getMinBuildHeight()) {
-                checkPos.move(0, -1, 0);
-                BlockState state = world.getBlockState(checkPos);
-                if (!state.isAir() && !state.getMaterial().isLiquid()) {
-                    break;
-                }
-            }
+            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(),position2.getZ());
+            BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
+
             this.position = checkPos.above(maxbaseHeight / 2);
             if (position.getY() > 60)
                 position = position.below(position.getY()-60);

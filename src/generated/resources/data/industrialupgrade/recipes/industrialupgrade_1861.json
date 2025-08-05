@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:graphite_reactor/graphite_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_436_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_342_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_322_element"
-      }
-    ],
-    "F": [
-      {
-        "tag": "forge:plates/lithium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:graphite_reactor/graphite_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_436_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_342_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_322_element"
+    },
+    "F": {
+      "tag": "forge:plates/lithium"
+    }
   },
   "pattern": [
     "CBC",

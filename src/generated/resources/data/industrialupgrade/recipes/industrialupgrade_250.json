@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/muntsa"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/muntsa"
+    }
   ],
   "result": {
     "count": 9,

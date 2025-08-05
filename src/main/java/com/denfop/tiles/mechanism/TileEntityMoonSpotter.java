@@ -53,7 +53,7 @@ public class TileEntityMoonSpotter extends TileElectricMachine implements
         inputSlotA = new InvSlotRecipes(this, "solar_glass_recipe", this);
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         inputSlotA.setStackSizeLimit(1);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 30)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 1, 0)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((TileEntityMoonSpotter) this.parent).getLevelMechanism() * 1.75);

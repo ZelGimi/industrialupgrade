@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/germanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/germanium"
+    }
   },
   "pattern": [
     "AAA",

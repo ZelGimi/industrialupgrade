@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_232_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_139_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:basemachine/adv_gen"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_232_element"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/adv_gen"
+    }
   },
   "pattern": [
     "BAB",

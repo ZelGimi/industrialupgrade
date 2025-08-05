@@ -20,6 +20,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileBaseGenerationMicrochip;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -104,7 +105,13 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                 )
         );
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnMicrochipAssemblerParticles(level,pos,level.random);
+        }
+    }
     public static void add(
             ItemStack first,
             ItemStack second,

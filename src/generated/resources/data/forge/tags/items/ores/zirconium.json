@@ -1,5 +1,7 @@
 {
   "values": [
-    "industrialupgrade:baseore2/zirconium"
+    "industrialupgrade:baseore2/zirconium",
+    "industrialupgrade:blockspace3/miranda_zirconium",
+    "industrialupgrade:blockspace3/phobos_zirconium_ore"
   ]
 }

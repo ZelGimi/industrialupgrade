@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:steam_boiler/steam_boiler_casing"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:steam_boiler/steam_boiler_casing"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "C": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/bismuth"
-      }
-    ]
+    "C": {
+      "tag": "forge:plates/osmium"
+    },
+    "D": {
+      "tag": "forge:casings/bismuth"
+    }
   },
   "pattern": [
     "CBC",

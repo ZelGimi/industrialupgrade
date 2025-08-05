@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/spinel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:coal_chunk"
-      }
-    ]
+    "A": {
+      "tag": "forge:doubleplate/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
+    },
+    "E": {
+      "item": "industrialupgrade:coal_chunk"
+    }
   },
   "pattern": [
     "DAD",

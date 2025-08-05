@@ -1,37 +1,27 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:armour/adv_nano_chestplate"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:armour/adv_nano_chestplate"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:battery/itembatlamacrystal"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_285_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:armour/impjetpack"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "F": {
+      "item": "industrialupgrade:armour/impjetpack"
+    }
   },
   "pattern": [
     "DCD",

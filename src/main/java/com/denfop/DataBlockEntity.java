@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.lang.reflect.Constructor;
@@ -33,9 +34,9 @@ public class DataBlockEntity<T extends Enum<T> & IMultiTileBlock> {
     Map<T, RegistryObject<ItemBlockTileEntity<T>>> registryObjectList = new ConcurrentHashMap<>();
 
     public DataBlockEntity(Class<T> typeClass){
-        this(typeClass,Constants.MOD_ID);
+        this(typeClass,Constants.MOD_ID,BLOCKS,BLOCK_ENTITIES,ITEMS);
     }
-    public DataBlockEntity(Class<T> typeClass, String location) {
+    public DataBlockEntity(Class<T> typeClass, String location, DeferredRegister<Block> BLOCKS, DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES,DeferredRegister<Item> ITEMS) {
         T[] collections = typeClass.getEnumConstants();
         this.collections = collections;
         for (T type : collections) {
@@ -56,7 +57,7 @@ public class DataBlockEntity<T extends Enum<T> & IMultiTileBlock> {
                     throw new IllegalArgumentException("Duplicate registration " + type.getMainPath());
                 }
                 this.block.put(type, ret);
-                registerBlockItem(type, ret,location);
+                registerBlockItem(type, ret,location,ITEMS);
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -83,7 +84,7 @@ public class DataBlockEntity<T extends Enum<T> & IMultiTileBlock> {
 
     }
 
-    private void registerBlockItem(T type, RegistryObject<BlockTileEntity<T>> block, String location) {
+    private void registerBlockItem(T type, RegistryObject<BlockTileEntity<T>> block, String location,DeferredRegister<Item> ITEMS) {
         int indexMax = 0;
         if (!type.register())
             return;
@@ -191,5 +192,9 @@ public class DataBlockEntity<T extends Enum<T> & IMultiTileBlock> {
     }
     public BlockTileEntity<T> getBlock(IMultiTileBlock teBlock) {
         return block.get(getElementFromID(teBlock.getId())).get();
+    }
+
+    public RegistryObject<? extends Block> getObject(int i) {
+        return block.get(getElementFromID(i));
     }
 }

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/charon_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/charon_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/charon_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/charon_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/charon_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/charon_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/charon_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/charon_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/charon_cobblestone"

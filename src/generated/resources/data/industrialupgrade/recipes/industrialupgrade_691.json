@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blastfurnace/blast_furnace_part"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:blastfurnace/blast_furnace_part"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,

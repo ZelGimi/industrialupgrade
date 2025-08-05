@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_402_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_596_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:plastic_plate"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/superalloyhaynes"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_402_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_596_element"
+    },
+    "D": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "E": {
+      "tag": "forge:plates/superalloyhaynes"
+    }
   },
   "pattern": [
     "DCD",

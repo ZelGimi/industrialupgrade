@@ -106,7 +106,7 @@ public class ItemDamage extends Item implements IDamageItem {
         if (damage1 <= 0)
             damage1 = 0;
         this.setCustomDamage(stack, damage1);
-        return true;
+        return this.getBarWidth(stack) == 0;
     }
 
 

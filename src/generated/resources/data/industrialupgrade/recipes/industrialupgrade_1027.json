@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_363_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine3/wireless_controller_reactors"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_363_element"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/wireless_controller_reactors"
+    }
   },
   "pattern": [
     "A A",

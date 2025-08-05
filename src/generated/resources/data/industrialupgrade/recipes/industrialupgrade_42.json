@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/tantalumtungstenhafnium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:ef/reader"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "B": {
+      "tag": "forge:plates/tantalumtungstenhafnium"
+    },
+    "C": {
+      "item": "industrialupgrade:ef/reader"
+    }
   },
   "pattern": [
     "AAA",

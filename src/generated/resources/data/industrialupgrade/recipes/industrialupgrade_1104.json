@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_23_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/germanium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/germanium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/nichrome"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_23_element"
+    },
+    "B": {
+      "tag": "forge:doubleplate/germanium"
+    },
+    "C": {
+      "tag": "forge:gears/germanium"
+    },
+    "D": {
+      "tag": "forge:gears/nichrome"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems2"
+    }
   },
   "pattern": [
     "CCC",

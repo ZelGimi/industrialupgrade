@@ -20,6 +20,7 @@ import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -132,6 +133,9 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
         }
         if (this.upgradeSlot.tickNoMark()) {
             setUpgradestat();
+        }
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnWaterGeneratorParticles(level,pos,level.random);
         }
     }
 

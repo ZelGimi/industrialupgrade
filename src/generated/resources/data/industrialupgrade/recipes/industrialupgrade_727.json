@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/electrum"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/alumel"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_16_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_614_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:doubleplate/electrum"
+    },
+    "B": {
+      "tag": "forge:doubleplate/alumel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_16_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_614_element"
+    }
   },
   "pattern": [
     "ABA",

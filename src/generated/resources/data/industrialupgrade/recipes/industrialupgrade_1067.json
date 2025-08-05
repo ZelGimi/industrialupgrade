@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/lead"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/lead"
+    },
+    "B": {
+      "tag": "forge:plates/titanium"
+    }
   },
   "pattern": [
     "AB ",

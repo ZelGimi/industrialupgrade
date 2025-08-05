@@ -53,8 +53,6 @@ public enum FluidName implements ISubEnum {
     fluidsteam(false),
     fluidsuperheated_steam(false),
     fluiduu_matter,
-    fluidwater,
-    fluidlava,
     fluidcryogen,
     fluidazurebrilliant,
     fluidrawlatex,

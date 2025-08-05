@@ -89,6 +89,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
 
 
                     CompoundTag nbt1 = ModUtils.nbt(stack1);
+                    module = module.copy();
                     if (module.getItem() instanceof ItemUpgradeModule) {
                         if (UpgradeSystem.system.getRemaining(stack1) == 0) {
                             this.updateTick.setRecipeOutput(null);

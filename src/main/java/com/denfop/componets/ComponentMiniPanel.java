@@ -16,9 +16,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
@@ -115,7 +115,7 @@ public class ComponentMiniPanel extends AbstractComponent {
     public void onNeighborChange(final BlockState srcBlock, final BlockPos srcPos) {
         BlockEntity tile = this.getParent().getWorld().getBlockEntity(srcPos);
         boolean hasElement = this.energyStorageMap.containsKey(srcPos);
-        if (srcBlock.getMaterial() == Material.AIR && hasElement) {
+        if (srcBlock.getBlock() == Blocks.AIR && hasElement) {
             this.energyStorageMap.remove(srcPos);
         } else if (hasElement) {
             this.energyStorageMap.remove(srcPos);
@@ -524,11 +524,6 @@ public class ComponentMiniPanel extends AbstractComponent {
         @Override
         public boolean isSource() {
             return true;
-        }
-
-        @Override
-        public BlockEntity getTileEntity() {
-            return this;
         }
 
 

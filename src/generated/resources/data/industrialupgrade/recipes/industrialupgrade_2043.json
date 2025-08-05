@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/yttrium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/yttrium"
+    },
+    "B": {
+      "tag": "forge:plates/steel"
+    }
   },
   "pattern": [
     " A ",

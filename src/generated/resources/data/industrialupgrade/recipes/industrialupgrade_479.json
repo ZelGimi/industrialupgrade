@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:transformer_iu/ev"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_210_element"
-      }
-    ]
+    {
+      "item": "industrialupgrade:transformer_iu/ev"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_210_element"
+    }
   ],
   "result": {
     "item": "industrialupgrade:transformer_iu/umv"

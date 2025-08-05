@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "C": [
-      {
-        "item": "industrialupgrade:wiring/copper1"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
+    "C": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
+    "D": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
     "E": {
       "type": "forge:nbt",
       "count": 1,

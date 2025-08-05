@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/gadolinium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/gadolinium"
+    }
   ],
   "result": {
     "count": 9,

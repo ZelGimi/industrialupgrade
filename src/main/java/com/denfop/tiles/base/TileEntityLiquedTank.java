@@ -143,6 +143,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
+        tooltip.add(Localization.translate("iu.storage_fluid") + this.fluidTank.getCapacity()/1000 + " B");
         super.addInformation(stack, tooltip);
     }
 

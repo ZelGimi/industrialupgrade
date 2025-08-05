@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:gen_sunnarium_plate/gen_sunnarium_plate"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_55_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:se_gen/se_gen"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:gen_sunnarium_plate/gen_sunnarium_plate"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_55_element"
+    },
+    "C": {
+      "item": "industrialupgrade:se_gen/se_gen"
+    }
   },
   "pattern": [
     "CAB",

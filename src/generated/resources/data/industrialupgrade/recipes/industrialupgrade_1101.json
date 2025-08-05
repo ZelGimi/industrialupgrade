@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemiucrafring/itemmtcore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:neutroniumingot"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/germanium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemiucrafring/itemmtcore"
+    },
+    "B": {
+      "item": "industrialupgrade:neutroniumingot"
+    },
+    "C": {
+      "tag": "forge:plates/germanium"
+    },
+    "D": {
+      "tag": "forge:plates/osmium"
+    }
   },
   "pattern": [
     "CDC",

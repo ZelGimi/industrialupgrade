@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine3/steamboiler"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:basemachine3/steel_tank"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/steel"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine3/steamboiler"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/steel_tank"
+    }
   },
   "pattern": [
     "AAA",

@@ -1,51 +1,33 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/copper"
-      }
-    ]
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:ingots/copper"
+    }
   ],
   "result": {
     "item": "minecraft:copper_block"

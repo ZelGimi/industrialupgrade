@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:blocks/blockbeehive_top",
     "up" : "industrialupgrade:blocks/blockbeehive_top",
     "north" : "industrialupgrade:blocks/blockbeehive",
-    "east" : "industrialupgrade:blocks/blockbeehive",
-    "south" : "industrialupgrade:blocks/blockbeehive",
-    "west" : "industrialupgrade:blocks/blockbeehive"
+    "east" : "industrialupgrade:blocks/blockbeehive_side",
+    "south" : "industrialupgrade:blocks/blockbeehive_side",
+    "west" : "industrialupgrade:blocks/blockbeehive_side"
   }
 }

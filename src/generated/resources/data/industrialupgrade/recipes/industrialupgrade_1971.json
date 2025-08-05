@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/aluminumbronze"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_601_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:casings/aluminumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_601_element"
+    }
   },
   "pattern": [
     " A ",

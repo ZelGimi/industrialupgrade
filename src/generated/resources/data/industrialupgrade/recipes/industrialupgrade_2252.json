@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:glass/reinforced"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:casings/titanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:glass/reinforced"
+    },
+    "B": {
+      "tag": "forge:casings/titanium"
+    }
   },
   "pattern": [
     "ABA",

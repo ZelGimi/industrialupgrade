@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spaceupgrademodule_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/molybdenum"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/cadmium"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/lapis"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/molybdenum"
+    },
+    "C": {
+      "tag": "forge:plates/cadmium"
+    },
+    "E": {
+      "tag": "forge:plates/lapis"
+    }
   },
   "pattern": [
     " B ",

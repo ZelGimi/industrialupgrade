@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/manganese"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/yttrium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/barium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/manganese"
+    },
+    "B": {
+      "tag": "forge:plates/yttrium"
+    },
+    "C": {
+      "tag": "forge:plates/barium"
+    }
   },
   "pattern": [
     " A ",

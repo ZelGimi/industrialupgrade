@@ -117,14 +117,7 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
             tooltip.add(Localization.translate("iu.matter_work_info") + (int) this.energycost);
         }
 
-        if (this.getComp(Energy.class) != null) {
-            Energy energy = this.getComp(Energy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
-        }
+
         super.addInformation(stack, tooltip);
 
     }

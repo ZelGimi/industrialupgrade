@@ -220,7 +220,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
     public double getInput() {
         return EnergyNetGlobal.instance
-                .getNodeStats(this.energy.getDelegate())
+                .getNodeStats(this.energy.getDelegate(),level)
                 .getEnergyIn();
     }
 

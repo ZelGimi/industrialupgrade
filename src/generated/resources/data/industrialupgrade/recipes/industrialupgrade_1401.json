@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_140_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:moremachine3/triple_assamplerscrap"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_120_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_51_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_110_element"
-      }
-    ],
-    "G": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_131_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine3/triple_assamplerscrap"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_120_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_110_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_131_element"
+    }
   },
   "pattern": [
     "AGA",

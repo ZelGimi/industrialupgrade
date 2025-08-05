@@ -1,6 +1,7 @@
 package com.denfop.pressure;
 
 
+import com.denfop.ModConfig;
 import com.denfop.api.pressure.*;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.world.WorldBaseGen;
@@ -54,6 +55,7 @@ public class PressureNetLocal implements IPressureNet {
 
     public void remove(final IPressureSource par1) {
         final PressureTick<IPressureSource, PressurePath> energyTick = this.senderPath.removeSource(par1);
+        if (energyTick != null)
         if (energyTick.getList() != null) {
             for (PressurePath PressurePath : energyTick.getList()) {
                 PressurePath.target.getEnergyTickList().remove(energyTick.getSource());
@@ -153,7 +155,7 @@ public class PressureNetLocal implements IPressureNet {
                 if (demandedEnergy <= 0.0) {
                     continue;
                 }
-                if (demandedEnergy != amount) {
+                if (demandedEnergy != amount && ModConfig.COMMON.pressureWork.get()) {
                     continue;
                 }
                 double energyProvided = Math.min(demandedEnergy, amount);

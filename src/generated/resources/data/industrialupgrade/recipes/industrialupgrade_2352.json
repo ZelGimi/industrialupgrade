@@ -1,33 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/copper"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:transformer_iu/mv"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:circuit/nanocircuit_part2"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:wiring_storage/cesu_iu"
-      }
-    ]
+    "A": {
+      "tag": "forge:raw_materials/mikhail"
+    }
   },
   "pattern": [
-    "ABA",
-    "CDC",
-    "ABA"
+    "AAA",
+    "AAA",
+    "AAA"
   ],
   "result": {
-    "item": "powerutils:module_ic"
+    "item": "industrialupgrade:raw_block/raw_mikhail"
   }
 }

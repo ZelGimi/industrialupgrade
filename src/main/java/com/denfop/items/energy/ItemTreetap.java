@@ -2,6 +2,7 @@ package com.denfop.items.energy;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockRubWood;
 import com.denfop.blocks.BlockSwampRubWood;
@@ -11,14 +12,17 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -27,6 +31,12 @@ public class ItemTreetap extends Item {
 
     public ItemTreetap() {
         super(new Properties().tab(IUCore.EnergyTab).durability(16).defaultDurability(0).setNoRepair());
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        pTooltipComponents.add(Component.literal(Localization.translate( "iu.treetap.info")));
     }
 
     public static boolean attemptExtract(

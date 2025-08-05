@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/neodymium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/obsidian"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/osmium"
+    },
+    "C": {
+      "tag": "forge:plates/neodymium"
+    },
+    "D": {
+      "tag": "forge:plates/obsidian"
+    }
   },
   "pattern": [
     "BBB",

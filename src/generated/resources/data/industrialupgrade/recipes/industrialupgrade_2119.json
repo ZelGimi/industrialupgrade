@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/zinc"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/tin"
+    },
+    "C": {
+      "tag": "forge:gears/zinc"
+    }
   },
   "pattern": [
     "BCB",

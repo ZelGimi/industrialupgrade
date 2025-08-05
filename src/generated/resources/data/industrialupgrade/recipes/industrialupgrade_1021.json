@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:primal_silicon_crystal_handler/primal_silicon_crystal_handler"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_495_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:primal_silicon_crystal_handler/primal_silicon_crystal_handler"
+    },
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_495_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    }
   },
   "pattern": [
     "CAC",

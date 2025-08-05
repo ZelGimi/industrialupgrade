@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/solid_cooling"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_43_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_20_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_27_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/solid_cooling"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    }
   },
   "pattern": [
     "B D",

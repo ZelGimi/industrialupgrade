@@ -21,6 +21,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
@@ -46,6 +48,8 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
     public BlockClassicOre(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of(Material.STONE).destroyTime(1f).randomTicks().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         BlockTagsProvider.list.add(this);
+        if (element.getId() == 3)
+            this.registerDefaultState(this.stateDefinition.any().setValue(BOOL_PROPERTY, false));
 
     }
 
@@ -103,9 +107,8 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
         final int meta = getElement().getId();
-        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, p_60538_.getParameter(TOOL));
         if (meta == 0) {
             return Collections.singletonList((new ItemStack(IUItem.rawMetals.getStack(16), 1 + getDrop(fortune))));
         } else if (meta == 1) {
@@ -113,9 +116,9 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         } else if (meta == 2) {
             return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(19), 1 + getDrop(fortune)));
         } else if (meta == 3) {
-            return super.getDrops(p_60537_, p_60538_);
+            return super.getDrops(world, pos,state,fortune);
         }
-        return super.getDrops(p_60537_, p_60538_);
+        return super.getDrops(world, pos,state,fortune);
     }
 
     private int getDrop(int fortune) {
@@ -123,11 +126,11 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
             case 0:
                 return 0;
             case 1:
-                return WorldBaseGen.random.nextDouble() < 0.25 ? 1 : 0;
+                return WorldBaseGen.random.nextInt(100) < 50 ? 1 : 0;
             case 2:
-                return WorldBaseGen.random.nextDouble() < 0.5 ? 1 : 0;
+                return WorldBaseGen.random.nextInt(100) < 100 ? 1 : 1;
             default:
-                return WorldBaseGen.random.nextDouble() < 0.75 ? 1 : 0;
+                return WorldBaseGen.random.nextInt(100) < 50 ? 2 : 1;
         }
     }
 

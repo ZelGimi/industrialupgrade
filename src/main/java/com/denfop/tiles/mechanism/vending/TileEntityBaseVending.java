@@ -183,7 +183,23 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
                 if (countCan == 0) {
                     continue;
                 }
-                final int countCan1 = countCan;
+                int totalFreeSpace = 0;
+                for (ItemStack outStack : this.output) {
+                    if (outStack.isEmpty()) {
+                        totalFreeSpace += privateStack.getMaxStackSize();
+                    } else if (outStack.is(privateStack.getItem())) {
+                        totalFreeSpace += privateStack.getMaxStackSize() - outStack.getCount();
+                    }
+                }
+
+
+                int maxByOutput = totalFreeSpace / privateStack.getCount();
+
+
+                final int countCan1 = Math.min(maxByOutput, countCan);
+                if (countCan1 == 0) {
+                    continue;
+                }
                 for (ItemStack stack1 : invSlotInventoryInput) {
                     if (countCan == 0) {
                         break;

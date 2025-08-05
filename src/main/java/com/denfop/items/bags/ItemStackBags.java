@@ -148,7 +148,7 @@ public class ItemStackBags extends ItemStackInventory {
                 list.add(new BagsDescription(stack));
             }
         }
-        final CompoundTag nbt = ModUtils.nbt(itemStack1);
+        final CompoundTag nbt = ModUtils.nbt(containerStack);
         CompoundTag nbt1 = new CompoundTag();
         nbt1.putInt("size", list.size());
         for (int i = 0; i < list.size(); i++) {

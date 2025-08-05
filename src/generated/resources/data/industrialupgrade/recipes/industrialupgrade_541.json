@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:daynight_solar_panel_glass/gra"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:excitednucleus/gracore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:machines/hadron_solar_panel"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:excitednucleus/adrcore"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:daynight_solar_panel_glass/gra"
+    },
+    "B": {
+      "item": "industrialupgrade:excitednucleus/gracore"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "D": {
+      "item": "industrialupgrade:machines/hadron_solar_panel"
+    },
+    "E": {
+      "item": "industrialupgrade:excitednucleus/adrcore"
+    }
   },
   "pattern": [
     "ABA",

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/mercury_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/mercury_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/mercury_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/mercury_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/mercury_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/mercury_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/mercury_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/mercury_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/mercury_cobblestone"

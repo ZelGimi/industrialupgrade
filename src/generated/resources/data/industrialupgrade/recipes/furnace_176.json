@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/aluminium_lithium_alloy"
+    "item": "industrialupgrade:alloydust/tantalum_tungsten_hafnium"
   },
-  "result": "industrialupgrade:alloyingot/aluminium_lithium_alloy"
+  "result": "industrialupgrade:alloyingot/tantalum_tungsten_hafnium"
 }

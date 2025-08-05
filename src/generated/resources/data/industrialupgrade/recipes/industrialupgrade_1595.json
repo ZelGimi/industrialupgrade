@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcore/phocore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_25_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/caravky"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gems/curium"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcore/phocore"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    },
+    "C": {
+      "tag": "forge:doubleplate/caravky"
+    },
+    "D": {
+      "tag": "forge:gems/curium"
+    },
+    "E": {
+      "tag": "forge:plates/duralumin"
+    }
   },
   "pattern": [
     "CEC",

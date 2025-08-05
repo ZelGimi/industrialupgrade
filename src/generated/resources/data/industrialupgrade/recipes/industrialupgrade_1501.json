@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_25_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    }
   },
   "pattern": [
     " A ",

@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:alloynugget/yttrium_aluminium_garnet"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:alloynugget/yttrium_aluminium_garnet"
+    }
   },
   "pattern": [
     "AAA",

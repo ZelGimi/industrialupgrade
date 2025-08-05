@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:reactors/per_heat_exchange"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:reactors/per_vent"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:reactors/proton"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:reactors/per_heat_exchange"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/per_vent"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/proton"
+    }
   },
   "pattern": [
     "ABA",

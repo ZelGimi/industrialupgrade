@@ -9,6 +9,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerApothecaryBee;
 import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiApothecaryBee;
@@ -19,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
@@ -35,14 +37,16 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
     public final ComponentBaseEnergy energy;
     AABB searchArea = new AABB(
             pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS, RADIUS, RADIUS)
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
     );
     List<List<TileEntityApiary>> list = new ArrayList<>();
-    List<LevelChunk> chunks;
+    List<ChunkPos> chunks;
+    private ComponentVisibleArea visible;
 
     public TileEntityApothecaryBee(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.apothecary_bee,pos,state);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 20000));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     @Override
@@ -64,6 +68,7 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
     @Override
     public void onLoaded() {
         super.onLoaded();
+        visible.aabb = searchArea;
         if (!this.getWorld().isClientSide) {
             final AABB aabb = searchArea;
             int j2 = Mth.floor((aabb.minX - 2) / 16.0D);
@@ -74,13 +79,13 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
                     final LevelChunk chunk = level.getChunk(j3, k3);
-                    if (!chunks.contains(chunk)) {
-                        chunks.add(chunk);
+                    if (!chunks.contains(chunk.getPos())) {
+                        chunks.add(chunk.getPos());
                     }
                 }
             }
-            for (LevelChunk chunk : chunks) {
-                this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk.getPos()));
+            for (ChunkPos chunk : chunks) {
+                this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk));
             }
         }
     }
@@ -111,8 +116,8 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
 
     private void updateBee() {
         list.clear();
-        for (LevelChunk chunk : chunks) {
-            this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk.getPos()));
+        for (ChunkPos chunk : chunks) {
+            this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk));
         }
     }
 

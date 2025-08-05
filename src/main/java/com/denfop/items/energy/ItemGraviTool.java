@@ -92,6 +92,24 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
 
         return this.nameItem;
     }
+    public boolean isBarVisible(final ItemStack stack) {
+        return true;
+    }
+
+    public int getBarColor(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        ));
+    }
     public static GraviToolMode readToolMode(ItemStack stack) {
         return GraviToolMode.getFromID(ModUtils.nbt(stack).getInt("toolMode"));
     }

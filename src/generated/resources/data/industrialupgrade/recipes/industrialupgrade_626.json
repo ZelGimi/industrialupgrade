@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/phobos_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/phobos_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/phobos_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/phobos_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/phobos_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/phobos_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/phobos_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/phobos_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone1/phobos_cobblestone"

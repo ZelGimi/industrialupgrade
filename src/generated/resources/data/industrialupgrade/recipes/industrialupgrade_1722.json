@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_428_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_428_element"
+    },
+    "B": {
+      "item": "industrialupgrade:quantumitems6"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "D": [
-      {
-        "tag": "forge:doubleplate/osmium"
-      }
-    ]
+    "D": {
+      "tag": "forge:doubleplate/osmium"
+    }
   },
   "pattern": [
     "BCB",

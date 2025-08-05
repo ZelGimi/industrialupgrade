@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_29_element"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_29_element"
+    }
   },
   "pattern": [
     " E ",

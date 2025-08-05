@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:blockprecious/sapphire_block"
-      }
-    ]
+    {
+      "item": "industrialupgrade:blockprecious/sapphire_block"
+    }
   ],
   "result": {
     "count": 9,

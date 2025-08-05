@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wax_stick"
-      }
-    ],
-    "B": [
-      {
-        "tag": "minecraft:planks"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wax_stick"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     "AAA",

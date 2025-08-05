@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/arsenic"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/arsenic"
+    }
   },
   "pattern": [
     "AAA",

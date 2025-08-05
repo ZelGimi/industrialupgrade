@@ -405,6 +405,7 @@ public class CoolNetLocal {
 
     public void remove(final ICoolSource par1) {
         final CoolTick<ICoolSource, Path> coolTick = this.senderPath.removeSource(par1);
+        if (coolTick != null)
         if (coolTick.getList() != null) {
             for (Path path : coolTick.getList()) {
                 path.target.getEnergyTickList().remove(coolTick.getSource());

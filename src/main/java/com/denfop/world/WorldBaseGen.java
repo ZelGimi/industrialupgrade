@@ -1,9 +1,7 @@
 package com.denfop.world;
 
 import com.denfop.IUItem;
-import com.denfop.blocks.BlockHeavyOre;
-import com.denfop.blocks.BlockMineral;
-import com.denfop.blocks.BlockOre;
+import com.denfop.blocks.*;
 import com.denfop.world.vein.AlgorithmVein;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.TypeVein;
@@ -12,6 +10,7 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -28,10 +27,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import static com.denfop.blocks.BlocksRadiationOre.BOOL_PROPERTY;
 import static com.denfop.register.Register.*;
 
 public class WorldBaseGen {
@@ -158,7 +156,8 @@ public class WorldBaseGen {
     public static List<VeinType> veinTypes = new ArrayList<>();
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
-
+    public static Map<Integer, BlockState> blockStateMap = new HashMap<>();
+    public static    Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
     public WorldBaseGen() {
         MinecraftForge.EVENT_BUS.register(this);
         WorldGenGas.registerFluid();
@@ -201,11 +200,11 @@ public class WorldBaseGen {
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(6)).get(), 6, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3), 60, 3),
-                        new ChanceOre(IUItem.toriyore.getBlockState(0), 32, 0),
-                        new ChanceOre(IUItem.radiationore.getBlockState(1), 4, 1),
-                        new ChanceOre(IUItem.radiationore.getBlockState(0), 3, 0),
-                        new ChanceOre(IUItem.radiationore.getBlockState(2), 1, 2),
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 60, 3),
+                        new ChanceOre(IUItem.toriyore.getBlockState(0).setValue(BlockThoriumOre.BOOL_PROPERTY, true), 32, 0),
+                        new ChanceOre(IUItem.radiationore.getBlockState(1).setValue(BOOL_PROPERTY, true), 4, 1),
+                        new ChanceOre(IUItem.radiationore.getBlockState(0).setValue(BOOL_PROPERTY, true), 3, 0),
+                        new ChanceOre(IUItem.radiationore.getBlockState(2).setValue(BOOL_PROPERTY, true), 1, 2),
                 }
 
         ));
@@ -229,8 +228,8 @@ public class WorldBaseGen {
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(10)).get(), 10, TypeVein.SMALL,
                 new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 50, 8),
-                        new ChanceOre(IUItem.classic_ore.getBlockState(3), 25, 3),
-                        new ChanceOre(IUItem.toriyore.getDefaultState(), 25, 0),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 25, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY,true), 25, 0),
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(11)).get(), 11, TypeVein.SMALL,
@@ -415,6 +414,26 @@ public class WorldBaseGen {
 
                 }
         ));
+
+        int id = 0;
+        for (VeinType veinType : veinTypes){
+            if (veinType.getHeavyOre() != null){
+                BlockState state = veinType.getHeavyOre().getBlock().defaultBlockState();
+                if (!idToblockStateMap.containsKey(state)){
+                    idToblockStateMap.put(state,id);
+                    blockStateMap.put(id,state);
+                    id++;
+                }
+            }
+            for (ChanceOre chanceOre : veinType.getOres()){
+                BlockState state = chanceOre.getBlock();
+                if (!idToblockStateMap.containsKey(state)){
+                    idToblockStateMap.put(state,id);
+                    blockStateMap.put(id,state);
+                    id++;
+                }
+            }
+        }
     }
 
     @SubscribeEvent

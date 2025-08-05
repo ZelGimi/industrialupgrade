@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/yttrium_aluminium_garnet"
+    "item": "industrialupgrade:alloydust/superalloy_haynes"
   },
-  "result": "industrialupgrade:alloyingot/yttrium_aluminium_garnet"
+  "result": "industrialupgrade:alloyingot/superalloy_haynes"
 }

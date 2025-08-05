@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/cadmium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/zirconium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/niobium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/cadmium"
+    },
+    "B": {
+      "tag": "forge:plates/zirconium"
+    },
+    "C": {
+      "tag": "forge:plates/ferromanganese"
+    },
+    "D": {
+      "tag": "forge:plates/niobium"
+    }
   },
   "pattern": [
     "DCC",

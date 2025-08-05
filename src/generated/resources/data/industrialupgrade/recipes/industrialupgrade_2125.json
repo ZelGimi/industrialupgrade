@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/neodymium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/hafniumcarbide"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/lapis"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/neodymium"
+    },
+    "C": {
+      "tag": "forge:plates/hafniumcarbide"
+    },
+    "D": {
+      "tag": "forge:plates/lapis"
+    }
   },
   "pattern": [
     "CBC",

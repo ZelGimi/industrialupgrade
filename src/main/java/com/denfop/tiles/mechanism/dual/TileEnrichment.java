@@ -24,6 +24,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -67,7 +68,13 @@ public class TileEnrichment extends TileDoubleElectricMachine implements IHasRec
             }
         };
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getActive()  && this.level.getGameTime() % 5 == 0){
+            ParticleUtils.spawnRadiationParticles(level,pos,level.random);
+        }
+    }
     public static void addenrichment(ItemStack container, ItemStack fill, ItemStack output, int rad_amount) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         CompoundTag nbt = ModUtils.nbt();

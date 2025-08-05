@@ -30,12 +30,9 @@ public class Energy extends AbstractComponent {
 
     public final boolean fullEnergy;
     public final double defaultCapacity;
-    public double tick;
+    public final BufferEnergy buffer;
+
     public boolean upgrade;
-    public double capacity;
-    public double storage;
-    public int sinkTier;
-    public int sourceTier;
 
     public int defaultSinkTier;
     public int defaultSourceTier;
@@ -44,21 +41,16 @@ public class Energy extends AbstractComponent {
     public List<InvSlot> managedSlots = new ArrayList<>();
     public boolean multiSource;
     public int sourcePackets;
-    public Energy.EnergyNetDelegate delegate;
+    public EnergyNetDelegate delegate;
     public boolean loaded;
-    public boolean receivingDisabled;
-    public boolean sendingSidabled;
+
     public boolean limit;
     public double limit_amount = 0;
-    protected double pastEnergy;
-    protected double perenergy;
-    protected double pastEnergy1;
-    protected double perenergy1;
+
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
-    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+
     private ChunkPos chunkPos;
-    private long id;
+
 
     public Energy(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -87,19 +79,13 @@ public class Energy extends AbstractComponent {
 
         this.multiSource = false;
         this.sourcePackets = 1;
-        this.capacity = capacity;
-
-        this.sinkTier = sinkTier;
-        this.sourceTier = sourceTier;
         this.sinkDirections = sinkDirections == null ? Collections.emptySet() : sinkDirections;
         this.sourceDirections = sourceDirections == null ? Collections.emptySet() : sourceDirections;
         this.fullEnergy = fullEnergy;
-        this.pastEnergy = 0;
-        this.perenergy = 0;
-        this.tick = 0;
         this.defaultSinkTier = sinkTier;
         this.defaultSourceTier = sourceTier;
         this.defaultCapacity = capacity;
+        this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
     }
 
     public Energy(
@@ -115,19 +101,16 @@ public class Energy extends AbstractComponent {
 
         this.multiSource = false;
         this.sourcePackets = 1;
-        this.capacity = capacity;
 
-        this.sinkTier = sinkTier;
-        this.sourceTier = sourceTier;
+
         this.sinkDirections = sinkDirections == null ? Collections.emptySet() : new HashSet<>(sinkDirections);
         this.sourceDirections = sourceDirections == null ? Collections.emptySet() : new HashSet<>(sourceDirections);
         this.fullEnergy = fullEnergy;
-        this.pastEnergy = 0;
-        this.perenergy = 0;
-        this.tick = 0;
+        ;
         this.defaultSinkTier = sinkTier;
         this.defaultSourceTier = sourceTier;
         this.defaultCapacity = capacity;
+        this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
     }
 
     public static Energy asBasicSink(TileEntityInventory parent, double capacity) {
@@ -157,18 +140,19 @@ public class Energy extends AbstractComponent {
 
     @Override
     public void updateEntityServer() {
-
+        if (this.delegate != null)
+            this.delegate.limit_amount=limit_amount;
         if (!managedSlots.isEmpty()) {
             for (InvSlot slot : managedSlots) {
                 if (slot instanceof InvSlotDischarge) {
                     InvSlotDischarge discharge = (InvSlotDischarge) slot;
                     if (!discharge.isEmpty()) {
                         if (discharge.get(0).getItem() == Items.REDSTONE) {
-                            double energy = discharge.dischargeWithRedstone(this.capacity, this.getFreeEnergy());
+                            double energy = discharge.dischargeWithRedstone(buffer.capacity, this.getFreeEnergy());
                             this.addEnergy(energy);
                         } else {
                             if (this.getFreeEnergy() > 0) {
-                                 double energy = discharge.discharge(this.getFreeEnergy(), false);
+                                double energy = discharge.discharge(this.getFreeEnergy(), false);
                                 this.addEnergy(energy);
                             }
                         }
@@ -176,7 +160,7 @@ public class Energy extends AbstractComponent {
                 } else if (slot instanceof InvSlotCharge) {
                     InvSlotCharge charge = (InvSlotCharge) slot;
                     if (!charge.isEmpty()) {
-                        double energy = charge.charge(this.storage);
+                        double energy = charge.charge(this.buffer.storage);
                         this.useEnergy(energy);
                     }
                 }
@@ -205,45 +189,15 @@ public class Energy extends AbstractComponent {
         return this;
     }
 
-    public Map<Direction, IEnergyTile> getConductors() {
-        return energyConductorMap;
-    }
-
-    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
-        if (!this.parent.getLevel().isClientSide) {
-            this.energyConductorMap.remove(facing1);
-            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
-            while (iter.hasNext()) {
-                InfoTile<IEnergyTile> tileInfoTile = iter.next();
-                if (tileInfoTile.tileEntity == tile) {
-                    iter.remove();
-                    break;
-                }
-            }
-        }
-    }
-
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
-        return validReceivers;
-    }
-
-    public void AddTile(IEnergyTile tile, final Direction facing1) {
-        if (!this.parent.getLevel().isClientSide) {
-            if (!this.energyConductorMap.containsKey(facing1)) {
-                this.energyConductorMap.put(facing1, tile);
-                validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
-            }
-        }
-    }
 
     public void readFromNbt(CompoundTag nbt) {
-        this.storage = nbt.getDouble("storage");
+        this.buffer.storage = nbt.getDouble("storage");
         this.limit_amount = nbt.getDouble("limit_amount");
     }
 
     public CompoundTag writeToNbt() {
         CompoundTag ret = new CompoundTag();
-        ret.putDouble("storage", this.storage);
+        ret.putDouble("storage", this.buffer.storage);
         ret.putDouble("limit_amount", this.limit_amount);
 
         return ret;
@@ -257,8 +211,6 @@ public class Energy extends AbstractComponent {
         if (!this.parent.getLevel().isClientSide) {
             if (!(this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty())) {
                 this.createDelegate();
-                this.energyConductorMap.clear();
-                validReceivers.clear();
                 MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
             }
             this.loaded = true;
@@ -267,30 +219,31 @@ public class Energy extends AbstractComponent {
     }
 
     public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0 / this.capacity), 15);
+        return Math.min((int) (this.buffer.storage * 15.0 / this.buffer.capacity), 15);
     }
 
     public void setLimit(final boolean limit) {
         this.limit = limit;
+        if (delegate != null)
+            this.delegate.limit = limit;
     }
 
     public void createDelegate() {
         if (this.delegate == null) {
             if (!this.multiSource) {
                 if (this.sinkDirections.isEmpty()) {
-                    this.delegate = new Energy.EnergyNetDelegateSource();
+                    this.delegate = new EnergyNetDelegateSource(this);
                 } else if (this.sourceDirections.isEmpty()) {
-                    this.delegate = new Energy.EnergyNetDelegateSink();
+                    this.delegate = new EnergyNetDelegateSink(this);
                 } else {
 
-                    this.delegate = new Energy.EnergyNetDelegateDual();
+                    this.delegate = new EnergyNetDelegateDual(this);
                 }
             } else {
-                this.delegate = new Energy.EnergyNetDelegateMultiDual();
+                this.delegate = new EnergyNetDelegateMultiDual(this);
             }
 
 
-            this.delegate.setLevel(this.parent.getLevel());
         }
     }
 
@@ -304,26 +257,32 @@ public class Energy extends AbstractComponent {
 
     public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
-        buffer.writeDouble(this.capacity);
-        buffer.writeDouble(this.storage);
+        buffer.writeDouble(this.buffer.capacity);
+        buffer.writeDouble(this.buffer.storage);
         buffer.writeDouble(this.limit_amount);
+        buffer.writeInt(this.buffer.sourceTier);
+        buffer.writeInt(this.buffer.sinkTier);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
 
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer buffer = super.updateComponent();
-        buffer.writeDouble(this.capacity);
-        buffer.writeDouble(this.storage);
+        buffer.writeDouble(this.buffer.capacity);
+        buffer.writeDouble(this.buffer.storage);
         buffer.writeDouble(this.limit_amount);
+        buffer.writeInt(this.buffer.sourceTier);
+        buffer.writeInt(this.buffer.sinkTier);
         return buffer;
     }
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
-        this.capacity = is.readDouble();
-        this.storage = is.readDouble();
+        this.buffer.capacity = is.readDouble();
+        this.buffer.storage = is.readDouble();
         limit_amount = is.readDouble();
+        this.buffer.sourceTier = is.readInt();
+        this.buffer.sinkTier = is.readInt();
 
     }
 
@@ -332,51 +291,51 @@ public class Energy extends AbstractComponent {
     }
 
     public double getCapacity() {
-        return this.capacity;
+        return this.buffer.capacity;
     }
 
     public void setCapacity(double capacity) {
-        this.capacity = capacity;
-        this.storage = Math.min(this.capacity, this.storage);
+        this.buffer.capacity = capacity;
+        this.buffer.storage = Math.min(this.buffer.capacity, this.buffer.storage);
     }
 
     public void addCapacity(double capacity) {
-        this.capacity += capacity;
+        this.buffer.capacity += capacity;
     }
 
     public double getEnergy() {
-        return this.storage;
+        return this.buffer.storage;
     }
 
     public double getFreeEnergy() {
-        return Math.max(0.0D, this.capacity - this.storage);
+        return Math.max(0.0D, this.buffer.capacity - this.buffer.storage);
     }
 
     public double getFillRatio() {
-        if (this.storage > this.capacity) {
-            this.storage = this.capacity;
+        if (this.buffer.storage > this.buffer.capacity) {
+            this.buffer.storage = this.buffer.capacity;
         }
-        return this.storage / this.capacity;
+        return this.buffer.storage / this.buffer.capacity;
     }
 
     public double addEnergy(double amount) {
-        amount = Math.min(this.capacity - this.storage, amount);
-        this.storage += amount;
-        this.storage = Math.min(this.storage, this.capacity);
+        amount = Math.min(this.buffer.capacity - this.buffer.storage, amount);
+        this.buffer.storage += amount;
+        this.buffer.storage = Math.min(this.buffer.storage, this.buffer.capacity);
         return amount;
     }
 
     public void forceAddEnergy(double amount) {
-        this.storage += amount;
+        this.buffer.storage += amount;
     }
 
     public boolean canUseEnergy(double amount) {
-        return this.storage >= amount;
+        return this.buffer.storage >= amount;
     }
 
     public boolean useEnergy(double amount) {
-        if (this.storage >= amount) {
-            this.storage -= amount;
+        if (this.buffer.storage >= amount) {
+            this.buffer.storage -= amount;
             return true;
         } else {
             return false;
@@ -384,9 +343,9 @@ public class Energy extends AbstractComponent {
     }
 
     public double useEnergy(double amount, boolean simulate) {
-        double ret = Math.abs(Math.max(0.0D, amount - this.storage) - amount);
+        double ret = Math.abs(Math.max(0.0D, amount - this.buffer.storage) - amount);
         if (!simulate) {
-            this.storage -= ret;
+            this.buffer.storage -= ret;
         }
         return ret;
     }
@@ -418,11 +377,11 @@ public class Energy extends AbstractComponent {
     }
 
     public int getSinkTier() {
-        return this.sinkTier;
+        return this.buffer.sinkTier;
     }
 
     public void setSinkTier(int tier) {
-        this.sinkTier = tier;
+        this.buffer.sinkTier = tier;
         for (InvSlot slot : this.managedSlots) {
             if (slot instanceof InvSlotDischarge) {
                 InvSlotDischarge discharge = (InvSlotDischarge) slot;
@@ -432,7 +391,7 @@ public class Energy extends AbstractComponent {
     }
 
     public int getSourceTier() {
-        return this.sourceTier;
+        return this.buffer.sourceTier;
     }
 
     public void setSourceTier(int tier) {
@@ -442,19 +401,22 @@ public class Energy extends AbstractComponent {
                 discharge.setTier(tier);
             }
         }
-        this.sourceTier = tier;
+        buffer.sourceTier = tier;
     }
 
     public void setEnabled(boolean enabled) {
-        this.receivingDisabled = this.sendingSidabled = !enabled;
+        if (delegate != null)
+            delegate.receivingDisabled = delegate.sendingSidabled = !enabled;
     }
 
     public void setReceivingEnabled(boolean enabled) {
-        this.receivingDisabled = !enabled;
+        if (delegate != null)
+            delegate.receivingDisabled = !enabled;
     }
 
     public void setSendingEnabled(boolean enabled) {
-        this.sendingSidabled = !enabled;
+        if (delegate != null)
+            delegate.sendingSidabled = !enabled;
     }
 
     public Energy setMultiSource(boolean multiSource) {
@@ -489,24 +451,18 @@ public class Energy extends AbstractComponent {
             this.createDelegate();
         }
         if (this.delegate != null) {
-
+            this.delegate.sourceDirections = sourceDirections;
+            this.delegate.sinkDirections = sinkDirections;
 
             assert !this.parent.getLevel().isClientSide;
-            this.energyConductorMap.clear();
-            validReceivers.clear();
+            delegate.energyConductorMap.clear();
+            delegate.validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
 
     }
 
-    public long getIdNetwork() {
-        return this.id;
-    }
-
-    public void setId(final long id) {
-        this.id = id;
-    }
 
     public void setDirections(List<Direction> sinkDirections, List<Direction> sourceDirections) {
         if (this.delegate != null) {
@@ -521,13 +477,13 @@ public class Energy extends AbstractComponent {
         if (sinkDirections.isEmpty() && sourceDirections.isEmpty()) {
             this.delegate = null;
         } else if (this.delegate == null && this.loaded) {
-            this.energyConductorMap.clear();
             this.createDelegate();
         }
         if (this.delegate != null) {
 
-
-            this.energyConductorMap.clear();
+            this.delegate.sourceDirections = new HashSet<>(sourceDirections);
+            this.delegate.sinkDirections = new HashSet<>(sinkDirections);
+            delegate.energyConductorMap.clear();
             assert !this.parent.getLevel().isClientSide;
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
@@ -547,615 +503,6 @@ public class Energy extends AbstractComponent {
         return this.delegate;
     }
 
-    private double getSourceEnergy() {
-        if (!limit) {
-            return Math.min(this.storage, EnergyNetGlobal.instance.getPowerFromTier(this.sourceTier));
-        } else {
-
-            return Math.min(this.storage, this.limit_amount);
-        }
-    }
-
-
-    private abstract class EnergyNetDelegate extends BlockEntity implements IEnergyTile {
-
-        private EnergyNetDelegate() {
-            super(Energy.this.parent.getType(), Energy.this.parent.getBlockPos(), Energy.this.parent.getBlockState());
-
-        }
-
-    }
-
-    private class EnergyNetDelegateDual extends Energy.EnergyNetDelegate implements IDual {
-
-
-        int hashCodeSource;
-        boolean hasHashCode = false;
-        List<Integer> energyTicks = new LinkedList<>();
-        private int hashCode;
-
-        private EnergyNetDelegateDual() {
-            super();
-        }
-
-        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
-            for (Direction facing1 : Energy.this.sinkDirections) {
-                if (facing1.ordinal() == dir.ordinal()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public long getIdNetwork() {
-            return Energy.this.getIdNetwork();
-        }
-
-        @Override
-        public int getHashCodeSource() {
-            return hashCodeSource;
-        }
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
-
-        public void setId(final long id) {
-            Energy.this.setId(id);
-        }
-
-        public List<InfoTile<IEnergyTile>> getValidReceivers() {
-            return validReceivers;
-        }
-
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
-            for (Direction facing1 : Energy.this.sourceDirections) {
-                if (facing1.ordinal() == dir.ordinal()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public @NotNull BlockPos getPos() {
-            return Energy.this.parent.getBlockPos();
-        }
-
-        @Override
-        public void AddTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.AddTile(tile, dir);
-        }
-
-        @Override
-        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.RemoveTile(tile, dir);
-        }
-
-        @Override
-        public Map<Direction, IEnergyTile> getTiles() {
-            return Energy.this.energyConductorMap;
-        }
-
-        @Override
-        public BlockEntity getTileEntity() {
-            return Energy.this.parent;
-        }
-
-        public double getDemandedEnergy() {
-            return !Energy.this.receivingDisabled && Energy.this.storage < Energy.this.capacity
-                    ? Energy.this.capacity - Energy.this.storage
-                    : 0.0D;
-        }
-
-        public double canExtractEnergy() {
-
-            return !Energy.this.sendingSidabled
-                    ? Energy.this.getSourceEnergy()
-                    : 0.0D;
-        }
-
-        public int getSinkTier() {
-            return Energy.this.sinkTier;
-        }
-
-        public int getSourceTier() {
-            return Energy.this.sourceTier;
-        }
-
-        public void receiveEnergy(double amount) {
-            Energy.this.storage = Energy.this.storage + amount;
-        }
-
-        @Override
-        public List<Integer> getEnergyTickList() {
-            return energyTicks;
-        }
-
-        public void extractEnergy(double amount) {
-            assert amount <= Energy.this.storage;
-
-            Energy.this.storage = Energy.this.storage - amount;
-        }
-
-
-        @Override
-        public double getPerEnergy() {
-            return Energy.this.perenergy;
-        }
-
-        @Override
-        public double getPastEnergy() {
-            return Energy.this.pastEnergy;
-        }
-
-        @Override
-        public void setPastEnergy(final double pastEnergy) {
-            Energy.this.pastEnergy = pastEnergy;
-        }
-
-        @Override
-        public void addPerEnergy(final double setEnergy) {
-            Energy.this.perenergy += setEnergy;
-        }
-
-        @Override
-        public boolean isSource() {
-            return !Energy.this.sendingSidabled;
-        }
-
-
-        @Override
-        public void addTick(final double tick) {
-            Energy.this.tick = tick;
-        }
-
-        @Override
-        public double getTick() {
-            return Energy.this.tick;
-        }
-
-        @Override
-        public boolean isSink() {
-            return !Energy.this.receivingDisabled;
-        }
-
-
-        @Override
-        public double getPerEnergy1() {
-            return Energy.this.perenergy1;
-        }
-
-        @Override
-        public double getPastEnergy1() {
-            return Energy.this.pastEnergy1;
-        }
-
-        @Override
-        public void setPastEnergy1(final double pastEnergy) {
-            Energy.this.pastEnergy1 = pastEnergy;
-        }
-
-        @Override
-        public void addPerEnergy1(final double setEnergy) {
-            Energy.this.perenergy1 += setEnergy;
-        }
-
-
-    }
-
-    private class EnergyNetDelegateMultiDual extends Energy.EnergyNetDelegate implements IMultiDual {
-
-
-        int hashCodeSource;
-        boolean hasHashCode = false;
-        List<Integer> energyTicks = new ArrayList<>();
-        private int hashCode;
-
-        private EnergyNetDelegateMultiDual() {
-            super();
-        }
-
-        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
-            for (Direction facing1 : Energy.this.sinkDirections) {
-                if (facing1.ordinal() == dir.ordinal()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public int getHashCodeSource() {
-            return hashCodeSource;
-        }
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
-
-        public long getIdNetwork() {
-            return Energy.this.getIdNetwork();
-        }
-
-        public void setId(final long id) {
-            Energy.this.setId(id);
-        }
-
-        public List<InfoTile<IEnergyTile>> getValidReceivers() {
-            return validReceivers;
-        }
-
-        @Override
-        public void AddTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.AddTile(tile, dir);
-        }
-
-        @Override
-        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.RemoveTile(tile, dir);
-        }
-
-        @Override
-        public Map<Direction, IEnergyTile> getTiles() {
-            return Energy.this.energyConductorMap;
-        }
-
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
-            for (Direction facing1 : Energy.this.sourceDirections) {
-                if (facing1.ordinal() == dir.ordinal()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public @NotNull BlockPos getPos() {
-            return Energy.this.parent.getBlockPos();
-        }
-
-        @Override
-        public BlockEntity getTileEntity() {
-            return Energy.this.parent;
-        }
-
-        public double getDemandedEnergy() {
-            return !Energy.this.receivingDisabled && Energy.this.storage < Energy.this.capacity
-                    ? Energy.this.capacity - Energy.this.storage
-                    : 0.0D;
-        }
-
-        public double canExtractEnergy() {
-
-            return !Energy.this.sendingSidabled
-                    ? Energy.this.getSourceEnergy()
-                    : 0.0D;
-        }
-
-        public int getSinkTier() {
-            return Energy.this.sinkTier;
-        }
-
-        public int getSourceTier() {
-            return Energy.this.sourceTier;
-        }
-
-        public void receiveEnergy(double amount) {
-            Energy.this.storage = Energy.this.storage + amount;
-        }
-
-        public void extractEnergy(double amount) {
-            assert amount <= Energy.this.storage;
-
-            Energy.this.storage = Energy.this.storage - amount;
-        }
-
-        @Override
-        public List<Integer> getEnergyTickList() {
-            return energyTicks;
-        }
-
-        @Override
-        public double getPerEnergy() {
-            return Energy.this.perenergy;
-        }
-
-        @Override
-        public double getPastEnergy() {
-            return Energy.this.pastEnergy;
-        }
-
-        @Override
-        public void setPastEnergy(final double pastEnergy) {
-            Energy.this.pastEnergy = pastEnergy;
-        }
-
-        @Override
-        public void addPerEnergy(final double setEnergy) {
-            Energy.this.perenergy += setEnergy;
-        }
-
-        @Override
-        public boolean isSource() {
-            return !Energy.this.sendingSidabled;
-        }
-
-
-        @Override
-        public void addTick(final double tick) {
-            Energy.this.tick = tick;
-        }
-
-        @Override
-        public double getTick() {
-            return Energy.this.tick;
-        }
-
-        @Override
-        public boolean isSink() {
-            return !Energy.this.receivingDisabled;
-        }
-
-
-        @Override
-        public double getPerEnergy1() {
-            return Energy.this.perenergy1;
-        }
-
-        @Override
-        public double getPastEnergy1() {
-            return Energy.this.pastEnergy1;
-        }
-
-        @Override
-        public void setPastEnergy1(final double pastEnergy) {
-            Energy.this.pastEnergy1 = pastEnergy;
-        }
-
-        @Override
-        public void addPerEnergy1(final double setEnergy) {
-            Energy.this.perenergy1 += setEnergy;
-        }
-
-
-    }
-
-    private class EnergyNetDelegateSink extends Energy.EnergyNetDelegate implements IEnergySink {
-
-        boolean hasHashCode = false;
-        int hashCodeSource;
-        List<Integer> energyTicks = new LinkedList<>();
-        private int hashCode;
-
-
-        private EnergyNetDelegateSink() {
-            super();
-        }
-
-        public int getSinkTier() {
-            return Energy.this.sinkTier;
-        }
-
-        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
-            for (Direction facing1 : Energy.this.sinkDirections) {
-                if (facing1.ordinal() == dir.ordinal()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public long getIdNetwork() {
-            return Energy.this.getIdNetwork();
-        }
-
-        public void setId(final long id) {
-            Energy.this.setId(id);
-        }
-
-        public List<InfoTile<IEnergyTile>> getValidReceivers() {
-            return validReceivers;
-        }
-
-        @Override
-        public int getHashCodeSource() {
-            return hashCodeSource;
-        }
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
-
-        @Override
-        public void AddTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.AddTile(tile, dir);
-        }
-
-        @Override
-        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.RemoveTile(tile, dir);
-        }
-
-        @Override
-        public Map<Direction, IEnergyTile> getTiles() {
-            return Energy.this.energyConductorMap;
-        }
-
-        public double getDemandedEnergy() {
-            return !Energy.this.receivingDisabled ? Energy.this.capacity - Energy.this.storage : 0;
-        }
-
-        public void receiveEnergy(double amount) {
-            Energy.this.storage += amount;
-        }
-
-        @Override
-        public List<Integer> getEnergyTickList() {
-            return energyTicks;
-        }
-
-        @Override
-        public double getPerEnergy() {
-            return Energy.this.perenergy;
-        }
-
-        @Override
-        public double getPastEnergy() {
-            return Energy.this.pastEnergy;
-        }
-
-        @Override
-        public void setPastEnergy(final double pastEnergy) {
-            Energy.this.pastEnergy = pastEnergy;
-        }
-
-        @Override
-        public void addPerEnergy(final double setEnergy) {
-            Energy.this.perenergy += setEnergy;
-        }
-
-        @Override
-        public void addTick(final double tick) {
-            Energy.this.tick = tick;
-        }
-
-        @Override
-        public double getTick() {
-            return Energy.this.tick;
-        }
-
-        @Override
-        public boolean isSink() {
-            return true;
-        }
-
-        @Override
-        public BlockEntity getTileEntity() {
-            return Energy.this.parent;
-        }
-
-        @Override
-        public @NotNull BlockPos getPos() {
-            return Energy.this.parent.getBlockPos();
-        }
-
-    }
-
-    private class EnergyNetDelegateSource extends Energy.EnergyNetDelegate implements IEnergySource {
-
-
-        int hashCodeSource;
-        boolean hasHashCode = false;
-        private int hashCode;
-
-        private EnergyNetDelegateSource() {
-            super();
-
-        }
-
-        @Override
-        public int getHashCodeSource() {
-            return hashCodeSource;
-        }
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
-
-        public List<InfoTile<IEnergyTile>> getValidReceivers() {
-            return validReceivers;
-        }
-
-        @Override
-        public void AddTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.AddTile(tile, dir);
-        }
-
-        @Override
-        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
-            Energy.this.RemoveTile(tile, dir);
-        }
-
-        @Override
-        public Map<Direction, IEnergyTile> getTiles() {
-            return Energy.this.energyConductorMap;
-        }
-
-        @Override
-        public @NotNull BlockPos getPos() {
-            return Energy.this.parent.getBlockPos();
-        }
-
-        public int getSourceTier() {
-            return Energy.this.sourceTier;
-        }
-
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
-            for (Direction facing1 : Energy.this.sourceDirections) {
-                if (facing1.ordinal() == dir.ordinal()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public long getIdNetwork() {
-            return Energy.this.getIdNetwork();
-        }
-
-
-        public void setId(final long id) {
-            Energy.this.setId(id);
-        }
-
-        public double canExtractEnergy() {
-
-            return !Energy.this.sendingSidabled ? Energy.this.getSourceEnergy() : 0.0D;
-        }
-
-
-        public void extractEnergy(double amount) {
-            assert amount <= Energy.this.storage;
-
-            Energy.this.storage = Energy.this.storage - amount;
-        }
-
-        @Override
-        public double getPerEnergy() {
-            return Energy.this.perenergy;
-        }
-
-        @Override
-        public double getPastEnergy() {
-            return Energy.this.pastEnergy;
-        }
-
-        @Override
-        public void setPastEnergy(final double pastEnergy) {
-            Energy.this.pastEnergy = pastEnergy;
-        }
-
-        @Override
-        public void addPerEnergy(final double setEnergy) {
-            Energy.this.perenergy += setEnergy;
-        }
-
-        @Override
-        public boolean isSource() {
-            return true;
-        }
-
-        @Override
-        public BlockEntity getTileEntity() {
-            return this;
-        }
-
-    }
-
 
 }
+

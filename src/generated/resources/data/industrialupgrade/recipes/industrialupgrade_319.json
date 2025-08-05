@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:alloynugget/tantalum_tungsten_hafnium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:alloynugget/tantalum_tungsten_hafnium"
+    }
   },
   "pattern": [
     "AAA",

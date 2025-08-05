@@ -35,7 +35,7 @@ public class RenderMiniSmeltery {
         if (te.outputSlot.isEmpty() && te.fluidTank1.getFluidAmount() > 0) {
             final float scale = (te.fluidTank1.getFluidAmount() - 144) * 1F / te.fluidTank1.getCapacity();
             poseStack.pushPose();
-            poseStack.translate(0.04, 0.8, 0.04);
+            poseStack.translate(0.04, 0.975, 0.04);
             RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f);
             poseStack.popPose();
         }

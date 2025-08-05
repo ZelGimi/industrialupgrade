@@ -2,6 +2,7 @@ package com.denfop.items.energy;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.items.CapabilityFluidHandlerItem;
 import com.denfop.items.ItemFluidContainer;
@@ -16,6 +17,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
@@ -24,11 +26,9 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class ItemSprayer extends ItemFluidContainer {
 
@@ -40,8 +40,14 @@ public class ItemSprayer extends ItemFluidContainer {
         if (target == Target.Any) {
             return world.getBlockState(pos).getMaterial().isReplaceable();
         } else {
-            throw new IllegalStateException("Invalid target type");
+           return false;
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, list, tooltipFlag);
+        list.add(Component.literal(Localization.translate( "iu.sprayer.info")));
     }
 
     @Override

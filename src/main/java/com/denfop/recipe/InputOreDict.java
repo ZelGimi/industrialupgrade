@@ -3,12 +3,17 @@ package com.denfop.recipe;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +33,43 @@ public class InputOreDict implements IInputItemStack {
     public InputOreDict(String input, int amount) {
         this(input.toLowerCase(), amount, 0);
     }
+    public InputOreDict(CompoundTag tagCompound) {
+        this.amount = tagCompound.getInt("Amount");
 
+        this.meta = tagCompound.contains("Meta") ? tagCompound.getInt("Meta") : 0;
+
+
+        this.tag = TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), new ResourceLocation(tagCompound.getString("ItemTag")));
+
+
+        this.ores = new ArrayList<>();
+        ListTag list = tagCompound.getList("Ores", Tag.TAG_COMPOUND);
+        for (int i = 0; i < list.size(); i++) {
+            ores.add(ItemStack.of(list.getCompound(i)));
+        }
+    }
+    @Override
+    public CompoundTag writeNBT() {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putByte("id", (byte) 1);
+        tagCompound.putInt("Amount", amount);
+
+        if (meta != null) {
+            tagCompound.putInt("Meta", meta);
+        }
+
+        if (tag != null) {
+            tagCompound.putString("ItemTag", tag.location().toString());
+        }
+
+        ListTag list = new ListTag();
+        for (ItemStack stack : ores) {
+            list.add(stack.save(new CompoundTag()));
+        }
+        tagCompound.put("Ores", list);
+
+        return tagCompound;
+    }
     public InputOreDict(String input, int amount, Integer meta) {
         ResourceLocation input1 = new ResourceLocation(input.toLowerCase());
         this.amount = amount;
@@ -89,12 +130,7 @@ public class InputOreDict implements IInputItemStack {
         Item subjectItem = subject.getItem();
         int subjectMeta = 0;
 
-        return inputs.stream()
-                .anyMatch(oreStack -> {
-                    Item oreItem = oreStack.getItem();
-                    int metaRequired = useOreStackMeta ? 0 : this.meta;
-                    return subjectItem == oreItem && (subjectMeta == metaRequired || metaRequired == 32767);
-                });
+        return subject.is(tag);
     }
 
     @Override

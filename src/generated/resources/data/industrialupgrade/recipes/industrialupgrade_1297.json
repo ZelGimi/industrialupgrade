@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/nimonic"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:reactors/adv_proton_energy_coupler"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "B": {
+      "tag": "forge:doubleplate/nimonic"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/adv_proton_energy_coupler"
+    }
   },
   "pattern": [
     "ABA",

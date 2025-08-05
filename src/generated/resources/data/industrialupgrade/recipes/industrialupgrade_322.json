@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/permalloy"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/permalloy"
+    }
   ],
   "result": {
     "count": 9,

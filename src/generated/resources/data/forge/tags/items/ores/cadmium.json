@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore1/cadmium"
+    "industrialupgrade:baseore1/cadmium",
+    "industrialupgrade:blockspace/asteroid_cadmium_ore"
   ]
 }

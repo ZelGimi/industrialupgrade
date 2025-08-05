@@ -244,7 +244,7 @@ public class Storage implements IStorage {
         size = nbt1.getInt("col_fluid");
         this.fluidStackList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt.getCompound(String.valueOf(i))));
+            this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt1.getCompound(String.valueOf(i))));
         }
     }
 

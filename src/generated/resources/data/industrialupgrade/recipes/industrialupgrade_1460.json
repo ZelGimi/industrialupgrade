@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine1/handler_ho"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_138_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_204_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_20_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine1/handler_ho"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_138_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_204_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+    }
   },
   "pattern": [
     "BDB",

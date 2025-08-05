@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring_storage/cesu_iu"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:transformer_iu/uhv"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_25_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:blockresource/reinforced_stone"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring_storage/cesu_iu"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/procore"
+    },
+    "C": {
+      "item": "industrialupgrade:transformer_iu/uhv"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    },
+    "E": {
+      "item": "industrialupgrade:blockresource/reinforced_stone"
+    }
   },
   "pattern": [
     "EDE",

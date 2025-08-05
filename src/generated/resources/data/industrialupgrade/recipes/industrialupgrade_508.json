@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:circuit/nanocircuit_part1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_543_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_282_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/bronze"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:circuit/nanocircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_543_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_282_element"
+    },
+    "D": {
+      "tag": "forge:plates/bronze"
+    }
   },
   "pattern": [
     "CCC",

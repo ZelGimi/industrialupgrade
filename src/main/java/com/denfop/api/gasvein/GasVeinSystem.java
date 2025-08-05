@@ -1,5 +1,6 @@
 package com.denfop.api.gasvein;
 
+import com.denfop.ModConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -42,12 +43,11 @@ public class GasVeinSystem implements IGasVeinSystem {
     public void addVein(final ChunkAccess chunk) {
 
         int chance = rand.nextInt(100);
-        rand.setSeed(rand.nextLong());
         GasVein vein = new GasVein(TypeGas.NONE, chunk.getPos());
-        if (chance < 25) {
+        if (chance < ModConfig.COMMON.gasChance.get()) {
             vein.setType(TypeGas.values()[rand.nextInt(4) + 1]);
-            vein.setMaxCol(200000);
-            vein.setCol(200000);
+            vein.setMaxCol(ModConfig.COMMON.gasMaxVein.get());
+            vein.setCol(ModConfig.COMMON.gasMaxVein.get());
         }
         this.list.add(vein);
         this.chunkPos.add(vein.getChunk());

@@ -1,5 +1,6 @@
 package com.denfop.api.vein;
 
+import com.denfop.ModConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -68,8 +69,8 @@ public class VeinSystem implements IVeinSystem {
             vein.setType(Type.VEIN);
             vein.setOldMineral(meta <= 15);
             vein.setMeta(meta);
-            vein.setMaxCol(30000);
-            vein.setCol(30000);
+            vein.setMaxCol(ModConfig.COMMON.maxVein.get());
+            vein.setCol(ModConfig.COMMON.maxVein.get());
         }
         this.list.add(vein);
         this.chunkPos.add(vein.getChunk());

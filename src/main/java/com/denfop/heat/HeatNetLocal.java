@@ -405,6 +405,7 @@ public class HeatNetLocal {
 
     public void remove(final IHeatSource par1) {
         final HeatTick<IHeatSource, Path> heatTick = this.senderPath.removeSource(par1);
+        if (heatTick != null)
         if (heatTick.getList() != null) {
             for (Path path : heatTick.getList()) {
                 path.target.getEnergyTickList().remove(heatTick.getSource());

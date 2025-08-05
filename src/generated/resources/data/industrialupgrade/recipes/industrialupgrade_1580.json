@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/copper1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    }
   },
   "pattern": [
     "   ",

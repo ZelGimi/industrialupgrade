@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/alumel"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/aluminumbronze"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/alumel"
+    },
+    "C": {
+      "tag": "forge:plates/aluminumbronze"
+    },
+    "D": {
+      "tag": "forge:plates/titanium"
+    },
+    "E": {
+      "tag": "forge:plates/iron"
+    }
   },
   "pattern": [
     "CCC",

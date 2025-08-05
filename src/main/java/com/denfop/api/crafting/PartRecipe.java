@@ -1,6 +1,10 @@
 package com.denfop.api.crafting;
 
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputItemStack;
+
+import java.io.IOException;
 
 public class PartRecipe {
 
@@ -20,4 +24,12 @@ public class PartRecipe {
         return index;
     }
 
+    public void encode(CustomPacketBuffer customPacketBuffer) {
+        try {
+            EncoderHandler.encode(customPacketBuffer,index);
+            EncoderHandler.encode(customPacketBuffer,input.writeNBT());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

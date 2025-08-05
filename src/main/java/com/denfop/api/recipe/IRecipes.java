@@ -101,6 +101,7 @@ public interface IRecipes {
     void addRemoveRecipe(String name, ItemStack stack);
 
     void addFluidRemoveRecipe(String name, FluidStack stack);
+    void addFluidRemoveRecipe(String name, FluidStack stack,boolean allRemove);
 
     void removeAllRecipesFromList();
 

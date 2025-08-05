@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:gas_well/gas_well_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_43_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/gold"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/tin"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_27_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:gas_well/gas_well_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "C": {
+      "tag": "forge:plates/gold"
+    },
+    "D": {
+      "tag": "forge:plates/tin"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_27_element"
+    }
   },
   "pattern": [
     " E ",

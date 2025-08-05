@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/comb_pump"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_135_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_138_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/comb_pump"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_135_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_138_element"
+    }
   },
   "pattern": [
     "CBC",

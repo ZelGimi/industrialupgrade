@@ -6,8 +6,13 @@ import com.denfop.api.gasvein.TypeGas;
 import com.denfop.api.gui.*;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentButton;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGasWellController;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.tiles.gaswell.TileEntityGasWellAnalyzer;
 import com.denfop.tiles.gaswell.TileEntityGasWellController;
+import com.denfop.utils.Keyboard;
+import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,34 +29,93 @@ import static com.denfop.api.gui.GuiElement.bindBlockTexture;
 import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
 
 public class GuiGasWellController<T extends ContainerGasWellController> extends GuiIU<ContainerGasWellController> {
-
+    boolean hoverController = false;
     public GuiGasWellController(ContainerGasWellController guiContainer) {
         super(guiContainer);
-        this.componentList.add(new GuiComponent(this, 30, 30, EnumTypeComponent.WORK_BUTTON,
-                new Component<>(new ComponentButton(this.container.base, 0, "") {
-                    @Override
-                    public String getText() {
-                        return ((TileEntityGasWellController) this.getEntityBlock()).work ? Localization.translate(
-                                "turn_off") :
-                                Localization.translate("turn_on");
-                    }
-
-                    @Override
-                    public boolean active() {
-                        return !((TileEntityGasWellController) this.getEntityBlock()).work;
-                    }
-                })
-        ));
-        this.componentList.add(new GuiComponent(this, 70, 32, EnumTypeComponent.FLUIDS_SLOT,
-                new Component<>(new ComponentEmpty())
-        ));
-        this.componentList.add(new GuiComponent(this, 90, 34, EnumTypeComponent.FLUID_PART1,
-                new Component<>(new ComponentEmpty())
-        ));
-        this.componentList.add(new GuiComponent(this, 60, 58, EnumTypeComponent.ENERGY_WEIGHT_1,
+        componentList.clear();
+        this.componentList.add(new GuiComponent(this, 7, 64, EnumTypeComponent.ENERGY,
                 new Component<>(guiContainer.base.getEnergy())
         ));
-        this.elements.add(TankGauge.createNormal(this, 110, 15, guiContainer.base.tank.getTank()));
+
+        this.addElement(new TankGauge(
+                this,
+                75,
+                13,
+                26,
+                61,
+                guiContainer.base.tank.getTank(),
+                TankGauge.TankGuiStyle.Normal
+        ) {
+
+            protected List<String> getToolTip() {
+                List<String> ret = new ArrayList<>();
+                FluidStack fs = guiContainer.base.tank.getTank().getFluid();
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (this.tank instanceof Fluids.InternalFluidTank) {
+                        Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
+                        ret.add(Localization.translate("iu.tank.fluids"));
+                        ret.addAll(tank1.getFluidList());
+                    }
+                } else if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    Fluid fluid = fs.getFluid();
+                    if (fluid != null) {
+                        ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
+                    } else {
+                        ret.add("invalid fluid stack");
+                    }
+                } else {
+                    ret.add(Localization.translate("iu.generic.text.empty"));
+                }
+
+                return ret;
+            }
+
+            @Override
+            public void drawBackground(PoseStack poseStack, final int mouseX, final int mouseY) {
+
+                FluidStack fs = guiContainer.base.tank.getTank().getFluid();
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    int fluidX = this.x;
+                    int fluidY = this.y;
+                    int fluidWidth = this.width;
+                    int fluidHeight = this.height;
+                    if (this.getStyle().withBorder) {
+                        fluidX += 3;
+                        fluidY += 3;
+                        fluidWidth = 20;
+                        fluidHeight = 55;
+                    }
+
+                    Fluid fluid = fs.getFluid();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
+                    double renderHeight = (double) fluidHeight * ModUtils.limit(
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
+                            0.0D,
+                            1.0D
+                    );
+                    bindBlockTexture();
+                    this.gui.drawSprite(poseStack,mouseX+
+                                    fluidX,
+                            mouseY+(double) (fluidY + fluidHeight) - renderHeight,
+                            fluidWidth,
+                            renderHeight,
+                            sprite,
+                            color,
+                            1.0D,
+                            false,
+                            true
+                    );
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                    this.gui.bindTexture();
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + 97, this.gui.guiTop + 14, 191, 5, 7, 46);
+
+                }
+
+
+            }
+        });
     }
 
 
@@ -76,9 +140,25 @@ public class GuiGasWellController<T extends ContainerGasWellController> extends 
     }
 
     @Override
+    protected void mouseClicked(int i, int j, int k) {
+        super.mouseClicked(i, j, k);
+        if (hoverController){
+
+            new PacketUpdateServerTile(container.base, 0);
+        }
+    }
+
+    @Override
     protected void drawForegroundLayer(PoseStack poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
+        hoverController = false;
+        if (par1 >= 122 && par2 >= 32 && par1 <= 142 && par2 <= 52){
+            hoverController = true;
+            new AdvArea(this,122,32,142,52).withTooltip((this.container.base).work ? Localization.translate(
+                    "turn_off") :
+                    Localization.translate("turn_on")).drawForeground(poseStack,par1,par2);
+        }
         if (container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() != TypeGas.NONE) {
             String text = "";
             if (container.base.vein.getType() == TypeGas.IODINE) {
@@ -97,7 +177,7 @@ public class GuiGasWellController<T extends ContainerGasWellController> extends 
                 text = Localization.translate(FluidName.fluidfluor.getInstance().get().getFluidType().getDescriptionId());
             }
 
-            new Area(this, 70, 32, 18, 18)
+            new AdvArea(this, 34, 36, 48, 50)
                     .withTooltip((text + " " + container.base.vein.getCol() + "/" + container.base.vein.getMaxCol() + "mb"))
                     .drawForeground(poseStack,
                             par1,
@@ -118,62 +198,52 @@ public class GuiGasWellController<T extends ContainerGasWellController> extends 
     protected void drawGuiContainerBackgroundLayer(PoseStack poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         componentList.forEach(guiComponent -> guiComponent.drawBackground(poseStack, guiLeft(), guiTop()));
+        bindTexture();
+        if ((this.container.base).work){
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 122, this.guiTop + 32, 235, 64, 21, 21);
 
+        }
         if (container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() != TypeGas.NONE) {
 
             FluidStack fs;
+            int x1 = 0;
+            int y1 = 0;
             switch (container.base.vein.getType()) {
                 case CHLORINE:
-                    fs = new FluidStack(FluidName.fluidchlorum.getInstance().get(), container.base.vein.getCol());
+                    x1 = 241;
+                    y1= 16;
                     break;
                 case BROMIDE:
-                    fs = new FluidStack(FluidName.fluidbromine.getInstance().get(), container.base.vein.getCol());
+                    x1 = 241;
+                    y1= 0;
                     break;
                 case FLORINE:
-                    fs = new FluidStack(FluidName.fluidfluor.getInstance().get(), container.base.vein.getCol());
+                    x1 = 241;
+                    y1= 36;
                     break;
                 default:
-                    fs = new FluidStack(FluidName.fluidiodine.getInstance().get(), container.base.vein.getCol());
+                    x1 = 241;
+                    y1= 48;
                     break;
             }
-            int fluidX = 70 + 1;
-            int fluidY = 32 + 1;
-            int fluidWidth = 16;
-            int fluidHeight = 16;
-            Fluid fluid = fs.getFluid();
-            IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
-            int color = extensions.getTintColor();
-            bindBlockTexture();
-            this.drawSprite(poseStack,
-                  +guiLeft+  fluidX,
-                   guiTop()+    fluidY,
-                    fluidWidth,
-                    fluidHeight,
-                    sprite,
-                    color,
-                    1.0,
-                    false,
-                    false
-            );
-
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 34, this.guiTop + 36, x1, y1, 15, 16);
         }
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
     }
 
     @Override
     protected void drawBackgroundAndTitle(PoseStack poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawBackgroundAndTitle(poseStack,partialTicks, mouseX, mouseY);
-       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigaswell_controller.png");
     }
 
 }

@@ -7,19 +7,30 @@ import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.pollution.PollutionManager;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ItemPollutionDevice extends Item {
     private String nameItem;
 
     public ItemPollutionDevice() {
         super(new Properties().tab(IUCore.EnergyTab).stacksTo(1).setNoRepair());
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        pTooltipComponents.add(Component.literal(Localization.translate( "iu.pollution_scanner.info")));
     }
 
     @Override

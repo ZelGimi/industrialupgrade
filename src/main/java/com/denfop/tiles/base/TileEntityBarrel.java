@@ -11,6 +11,7 @@ import com.denfop.blocks.mechanism.BlockBarrel;
 import com.denfop.componets.Fluids;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -129,6 +130,9 @@ public class TileEntityBarrel extends TileEntityInventory {
         }
         if (this.hops + this.wheat == 10 && this.waterVariety != null) {
             this.time++;
+            if (this.level.getGameTime() % 5 == 0){
+                ParticleUtils.spawnFermenterParticles(level,pos,level.random);
+            }
             if (this.time % 1200 == 0) {
                 this.timeVariety = EnumTimeVariety.getVarietyFromTime(this.time / (3600 * 20D));
             }

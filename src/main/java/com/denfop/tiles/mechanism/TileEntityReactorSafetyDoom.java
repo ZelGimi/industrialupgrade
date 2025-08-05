@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.radiationsystem.RadiationSystem;
@@ -20,6 +21,7 @@ import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +44,11 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.RADIATION, this, 5000000000D));
 
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.reactor_safety_doom.info1"));
+    }
     @Override
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();

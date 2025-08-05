@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,26 +7,18 @@
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:8}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_585_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_589_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_397_element"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_585_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_589_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_397_element"
+    }
   },
   "pattern": [
     "EAE",

@@ -24,6 +24,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -173,7 +174,9 @@ public class TileFisher extends TileElectricMachine
     public void updateEntityServer() {
 
         super.updateEntityServer();
-
+        if (this.getActive()  && this.getLevel().getGameTime() % 5 == 0){
+            ParticleUtils.spawnFishingMachineParticles(this.getLevel(),pos,this.getLevel().random);
+        }
 
         if (this.getWorld().getGameTime() % 100 == 0) {
             checkwater = checkwater();

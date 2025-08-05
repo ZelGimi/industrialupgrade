@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/wolfram"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/wolfram"
+    }
   ],
   "result": {
     "count": 9,

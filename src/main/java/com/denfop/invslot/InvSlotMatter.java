@@ -5,6 +5,7 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.blocks.mechanism.BlockSimpleMachine;
+import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
 import com.denfop.tiles.base.TileCombinerMatter;
 import net.minecraft.world.item.ItemStack;
 
@@ -53,6 +54,9 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 || (itemStack
                 .getItem()
                 instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlockBaseMachine.per_matter.getIDBlock())
+                || (itemStack
+                .getItem()
+                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlocksPhotonicMachine.photonic_gen_matter.getIDBlock() && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getId() ==12)
 
                 ;
 
@@ -75,6 +79,8 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 return 800000;
             case 3:
                 return 700000;
+            case 12:
+                return 600000;
         }
         return 1000000;
     }
@@ -88,6 +94,8 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
                 return 64000000;
             case 3:
                 return 256000000;
+            case 12:
+                return 512000000;
         }
         return 5000000;
     }
@@ -135,6 +143,8 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
             case 2:
                 return 14;
             case 3:
+                return 16;
+            case 12:
                 return 16;
         }
         return 10;

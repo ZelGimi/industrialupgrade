@@ -157,12 +157,14 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
 
     @Override
     public void init() {
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(502)),  IUItem.advIronIngot);
         addRecipe("forge:ores/Diamond", new ItemStack(Items.DIAMOND, 4));
         addRecipe("forge:ores/Coal", new ItemStack(Items.COAL, 5));
         addRecipe("forge:ores/Quartz", new ItemStack(Items.QUARTZ, 4));
         addRecipe("forge:ores/Lapis", new ItemStack(Items.LAPIS_LAZULI, 5));
         addRecipe("forge:ores/Sulfur", new ItemStack(IUItem.iudust.getStack(31), 4));
         addRecipe("forge:ores/Bor", new ItemStack(IUItem.crafting_elements.getStack(448)));
+        addRecipe("forge:ores/Boron", new ItemStack(IUItem.crafting_elements.getStack(448)));
         addRecipe("forge:ores/Redstone", new ItemStack(Items.REDSTONE, 5));
         addRecipe("forge:dusts/Quartz", new ItemStack(Items.QUARTZ));
         addRecipe(319, new ItemStack(IUItem.crafting_elements.getStack(357)));

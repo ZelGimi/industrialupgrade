@@ -134,26 +134,37 @@ public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends G
                                     if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
                                         if (slotInvSlot.index == component.getY() * this.container.base.getWidth() + component.getX()) {
                                             if (this.container.base.heat_sensor) {
-                                                this.font.draw(poseStack,
+                                                PoseStack pose = poseStack;
+                                                pose.pushPose();
+                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(    String.valueOf((int) component.getHeat())) / 2,slotInvSlot.y + 5,0);
+                                                pose.scale(0.75f,0.75f,1f);
+                                                drawString(poseStack,
                                                         String.valueOf((int) component.getHeat()),
-                                                        slotInvSlot.x + 3,
-                                                        slotInvSlot.y + 4,
+                                                        0,
+                                                        0,
                                                         ModUtils.convertRGBcolorToInt(195,
                                                                 64, 0
                                                         )
                                                 );
+                                                pose.popPose();
                                             }
                                             if (this.container.base.stable_sensor && component
                                                     .getItem()
                                                     .getType() != EnumTypeComponent.ROD) {
-                                                this.font.draw(poseStack,
+                                                PoseStack pose = poseStack;
+                                                pose.pushPose();
+                                                pose.translate(slotInvSlot.x + 22 / 2  - getStringWidth(     String.valueOf(-1 * component.getDamage())) / 2,slotInvSlot.y + 5,0);
+                                                pose.scale(0.75f,0.75f,1f);
+                                                drawString(poseStack,
                                                         String.valueOf(-1 * component.getDamage()),
-                                                        slotInvSlot.x + 4 + (component.getDamage() > 0 ? -3 : 0),
-                                                        slotInvSlot.y + 4,
+                                                        0,
+                                                        0,
                                                         ModUtils.convertRGBcolorToInt(14,
                                                                 50, 86
                                                         )
                                                 );
+                                                pose.popPose();
+
                                             }
                                         }
                                     }

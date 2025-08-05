@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore/zinc"
+    "industrialupgrade:baseore/zinc",
+    "industrialupgrade:blockspace/charon_zinc"
   ]
 }

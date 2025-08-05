@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:alloynugget/beryllium_bronze"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:alloynugget/beryllium_bronze"
+    }
   },
   "pattern": [
     "AAA",

@@ -619,7 +619,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
 
                             ItemStack stack;
                             if (vein.isOldMineral()) {
-                                stack = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()));
+                                stack = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()), col1);
                             } else {
                                 stack = new ItemStack(IUItem.mineral.getItem(vein.getMeta()), col1);
                             }

@@ -218,13 +218,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
                     for (FluidStack stacks : fluidStacks) {
                         if (stacks != null) {
-                            if (stacks.getFluid() == FluidName.fluidwater.getInstance().get()) {
-                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.WATER);
-                            } else if (stacks.getFluid() == FluidName.fluidlava.getInstance().get()) {
-                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.LAVA);
-                            } else {
-                                fluidStacks1.add(stacks.getFluid());
-                            }
+                            fluidStacks1.add(stacks.getFluid());
                         }
                     }
                     this.whiteList1.set(i, fluidStacks1);
@@ -246,15 +240,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                     List<Fluid> fluidStacks1 = new ArrayList<>();
 
                     for (FluidStack stacks : fluidStacks) {
-                        if (stacks != null) {
-                            if (stacks.getFluid() == FluidName.fluidwater.getInstance().get()) {
-                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.WATER);
-                            } else if (stacks.getFluid() == FluidName.fluidlava.getInstance().get()) {
-                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.LAVA);
-                            } else {
-                                fluidStacks1.add(stacks.getFluid());
-                            }
-                        }
+                        fluidStacks1.add(stacks.getFluid());
                     }
                     this.whiteList1.set(i, fluidStacks1);
                 }

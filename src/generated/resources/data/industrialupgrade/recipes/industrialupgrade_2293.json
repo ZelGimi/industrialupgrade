@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gears/gallium"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:adv_bee_frame_template"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/lead"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/aluminium"
-      }
-    ]
+    "A": {
+      "tag": "forge:gears/gallium"
+    },
+    "B": {
+      "item": "industrialupgrade:adv_bee_frame_template"
+    },
+    "C": {
+      "tag": "forge:plates/lead"
+    },
+    "D": {
+      "tag": "forge:casings/aluminium"
+    }
   },
   "pattern": [
     "CDC",

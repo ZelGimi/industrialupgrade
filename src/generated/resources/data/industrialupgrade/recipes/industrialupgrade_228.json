@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/osmium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/osmium"
+    }
   ],
   "result": {
     "count": 9,

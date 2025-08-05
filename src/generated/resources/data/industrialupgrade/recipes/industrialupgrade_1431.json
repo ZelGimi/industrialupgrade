@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_79_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_79_element"
+    }
   },
   "pattern": [
     " B ",

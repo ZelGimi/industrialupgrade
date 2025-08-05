@@ -13,6 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWeeder;
 import com.denfop.gui.GuiCore;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
@@ -48,11 +50,12 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     private final ComponentUpgradeSlots componentUpgrade;
     AABB searchArea = new AABB(
             pos.offset(-RADIUS, -RADIUS, -RADIUS),
-            pos.offset(RADIUS, RADIUS, RADIUS)
+            pos.offset(RADIUS+1, RADIUS+1, RADIUS+1)
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<LevelChunk> chunks;
+    List<ChunkPos> chunks;
     private FakePlayerSpawner player;
+    private ComponentVisibleArea visible;
 
     public TileEntityWeeder(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3.weeder,pos,state);
@@ -67,6 +70,7 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
@@ -101,6 +105,7 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     @Override
     public void onLoaded() {
         super.onLoaded();
+        visible.aabb = searchArea;
         if (!this.getWorld().isClientSide) {
             this.player = new FakePlayerSpawner(level);
             final AABB aabb = searchArea;
@@ -112,13 +117,13 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
                     final LevelChunk chunk = level.getChunk(j3, k3);
-                    if (!chunks.contains(chunk)) {
-                        chunks.add(chunk);
+                    if (!chunks.contains(chunk.getPos())) {
+                        chunks.add(chunk.getPos());
                     }
                 }
             }
-            for (LevelChunk chunk : chunks) {
-                this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk.getPos()));
+            for (ChunkPos chunk : chunks) {
+                this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk));
             }
         }
     }
@@ -174,8 +179,8 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
 
     private void updateCrop() {
         list.clear();
-        for (LevelChunk chunk : chunks) {
-            this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk.getPos()));
+        for (ChunkPos chunk : chunks) {
+            this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk));
         }
     }
 

@@ -15,6 +15,7 @@ import com.denfop.container.ContainerAgriculturalAnalyzer;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @OnlyIn(Dist.CLIENT)
 public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> extends GuiIU<ContainerAgriculturalAnalyzer> {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
+    private static ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guicropanalyzer.png");
     private final String name;
     private int prevText;
     private float scaled;
@@ -38,15 +39,9 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
         super(container);
 
         this.name = Localization.translate(itemStack1.getDescriptionId());
-        this.imageHeight = 232;
-        this.componentList.clear();
-        this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
-        );
 
-        componentList.add(slots);
-        this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
-        this.addElement(new ImageScreen(this, 30, 20, imageWidth - 36, 124));
+        this.componentList.clear();
+        this.imageWidth=203;
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -79,7 +74,7 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
     protected void drawForegroundLayer(PoseStack poseStack,int par1, int par2) {
         super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
-        this.font.draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 11, 0);
+        drawString(poseStack, Minecraft.getInstance().font, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 4, 0);
         if (!this.container.base.get(0).isEmpty() && this.container.base.genome == null){
             ModUtils.nbt(this.container.base.get(0)).putBoolean("analyzed", true);
             this.container.base.genome = new Genome(this.container.base.get(0));
@@ -93,31 +88,30 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
         }
         if (this.container.base.genome != null) {
             String text = getInformationFromCrop();
-            int canvasX = 34;
-            int canvasY = 24;
-            int canvasWidth = imageWidth - 42;
-            int canvasHeight = 124 - 8;
-            float scale = (float) (2D / minecraft.getWindow().getGuiScale());
-            if (prevText != text.length()) {
-                scaled = -1;
-                prevText = text.length();
+            int canvasX = 13;
+            int canvasY = 19;
+            int canvasWidth = 150;
+            int canvasHeight = 112;
+
+            float scale = 0.5f;
+            int maxWidth = (int) (canvasWidth / scale);
+            double lineHeight = (font.lineHeight * 0.5);
+            int x = canvasX;
+            double y = canvasY;
+            PoseStack pose = poseStack;
+            List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+            for (String line : lines) {
+                if (y + lineHeight > canvasY + canvasHeight) break;
+
+                pose.pushPose();
+                pose.translate(x,y,0);
+                pose.scale(scale, scale, scale);
+                drawString(poseStack,font, line,0,0, 0xFFFFFF);
+                pose.popPose();
+
+                y += lineHeight;
             }
-            if (scaled == -1) {
-                scale = adjustTextScale(text, canvasWidth, canvasHeight, scale, 0.8F);
-                scaled = scale;
-            } else {
-                scale = scaled;
-            }
-            if (this.container.base.player.getLevel().getGameTime() % 2 == 0) {
-                if (textIndex < text.length()) {
-                    textIndex++;
-                }
-            }
-            if (textIndex > text.length()) {
-                textIndex = text.length();
-            }
-            String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(poseStack, visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale * 1.39f);
         }
     }
 
@@ -173,15 +167,7 @@ public class GuiAgriculturalAnalyzer<T extends ContainerAgriculturalAnalyzer> ex
     protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        int slots = this.container.inventorySize;
-        slots = slots / 9;
 
-        int col;
-        for (col = 0; col < slots; ++col) {
-            for (int col1 = 0; col1 < 9; ++col1) {
-                this.drawTexturedModalRect(poseStack, this.guiLeft + 7 + col1 * 18, this.guiTop + 23 + col * 18, 176, 0, 18, 18);
-            }
-        }
     }
 
     protected ResourceLocation getTexture() {

@@ -69,6 +69,7 @@ public abstract class MixinServerGamePacketListenerImpl {
             BlockEntity blockEntity = this.player.getLevel().getBlockEntity(blockpos);
             if (blockEntity instanceof TileEntityBlock base) {
                 AABB aabb = base.getAabb(false);
+                if (aabb.maxX > 1 || aabb.maxY > 1 && aabb.maxZ > 1)
                 if ((Math.abs(vec32.x()) > 1 || Math.abs(vec32.y()) > 1 || Math.abs(vec32.z()) > 1) && Math.abs(vec32.x()) <= aabb.maxX && Math.abs(vec32.y()) <= aabb.maxY && Math.abs(vec32.z()) <= aabb.maxZ) {
                     Direction direction = blockhitresult.getDirection();
                     this.player.resetLastActionTime();

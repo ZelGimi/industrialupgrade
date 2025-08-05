@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
     {
       "type": "forge:nbt",
@@ -7,11 +7,9 @@
       "item": "industrialupgrade:energy/wrench",
       "nbt": "{Damage:0}"
     },
-    [
-      {
-        "item": "industrialupgrade:wiring_storage/gra_mfsu"
-      }
-    ]
+    {
+      "item": "industrialupgrade:wiring_storage/gra_mfsu"
+    }
   ],
   "result": {
     "item": "industrialupgrade:upgradekitstorage/upgradekit7"

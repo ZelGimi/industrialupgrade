@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,26 +7,18 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:4}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/copper"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:graphene_wire"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/nitenol"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/alumel"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:wiring/copper"
+    },
+    "C": {
+      "item": "industrialupgrade:graphene_wire"
+    },
+    "D": {
+      "tag": "forge:plates/nitenol"
+    },
+    "E": {
+      "tag": "forge:plates/alumel"
+    }
   },
   "pattern": [
     "BDD",

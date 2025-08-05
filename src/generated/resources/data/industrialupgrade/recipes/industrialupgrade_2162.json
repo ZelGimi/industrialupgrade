@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_122_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/cobaltchrome"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_122_element"
+    },
+    "B": {
+      "tag": "forge:plates/cobaltchrome"
+    }
   },
   "pattern": [
     "BBB",

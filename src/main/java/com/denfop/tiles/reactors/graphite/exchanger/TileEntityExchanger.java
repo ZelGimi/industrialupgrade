@@ -71,7 +71,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
                 if (item == null) {
                     this.item = (IExchangerItem) this.slot.get(0).getItem();
                 }
-                this.item.damageItem(this.slot.get(0), -1);
+                this.item.damageItem(this.slot.get(0), 1);
             }
         }
     }
@@ -123,7 +123,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
     @Override
     public int getBlockLevel() {
-        return -1;
+        return levelBlock;
     }
 
 

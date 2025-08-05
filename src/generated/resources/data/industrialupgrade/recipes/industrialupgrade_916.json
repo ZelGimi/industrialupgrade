@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/electrum"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:fan/fan"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/electrum"
+    },
+    "B": {
+      "item": "industrialupgrade:fan/fan"
+    },
+    "C": {
+      "tag": "forge:plates/titanium"
+    }
   },
   "pattern": [
     "ACA",

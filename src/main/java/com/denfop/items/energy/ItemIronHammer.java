@@ -1,10 +1,12 @@
 package com.denfop.items.energy;
 
+import com.denfop.Localization;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.RetraceDiggingUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -14,6 +16,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -26,6 +30,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -41,6 +46,12 @@ public class ItemIronHammer extends ItemToolIU {
         this.materials = EnumTypeInstruments.DRILL.getMaterials();
         this.mineableBlocks = EnumTypeInstruments.DRILL.getMineableBlocks();
         this.item_tools = EnumTypeInstruments.DRILL.getListItems();
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        pTooltipComponents.add(Component.literal(Localization.translate( "iu.hammer.info")));
     }
 
     public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull Player player) {
@@ -240,5 +251,14 @@ public class ItemIronHammer extends ItemToolIU {
         }
 
         return true;
+    }
+    @Override
+    public boolean isEnchantable(ItemStack p_41456_) {
+        return true;
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        return Tiers.IRON.getEnchantmentValue();
     }
 }

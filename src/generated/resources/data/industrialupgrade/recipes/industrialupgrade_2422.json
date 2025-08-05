@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "B": {
+      "tag": "forge:plates/yttrium"
+    },
+    "C": {
+      "tag": "forge:plates/spinel"
+    }
+  },
+  "pattern": [
+    "  A",
+    "BA ",
+    "CCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:pipette"
+  }
+}

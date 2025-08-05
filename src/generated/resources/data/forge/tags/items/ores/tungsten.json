@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore/wolfram"
+    "industrialupgrade:baseore/wolfram",
+    "industrialupgrade:blockspace2/ganymede_tungsten_ore"
   ]
 }

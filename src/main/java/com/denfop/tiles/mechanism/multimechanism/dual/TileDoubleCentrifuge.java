@@ -23,11 +23,15 @@ public class TileDoubleCentrifuge extends TileMultiMachine {
                 EnumMultiMachine.DOUBLE_Centrifuge.usagePerTick,
                 EnumMultiMachine.DOUBLE_Centrifuge.lenghtOperation, BlockMoreMachine3.doublecentrifuge, pos, state
         );
-        this.cold.upgrade = true;
+
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        this.cold.storage=0;
+    }
     public IMultiTileBlock getTeBlock() {
         return BlockMoreMachine3.doublecentrifuge;
     }

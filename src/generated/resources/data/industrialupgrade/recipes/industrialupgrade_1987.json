@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/stainlesssteel"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/stainlesssteel"
+    }
   },
   "pattern": [
     "AAA",

@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/obsidian"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:stick"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/obsidian"
+    },
+    "B": {
+      "tag": "forge:plates/steel"
+    },
+    "C": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "ABA",

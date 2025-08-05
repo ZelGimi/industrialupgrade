@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/spinel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_92_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/manganese"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/spinel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_92_element"
+    },
+    "C": {
+      "tag": "forge:plates/manganese"
+    }
   },
   "pattern": [
     "AAA",

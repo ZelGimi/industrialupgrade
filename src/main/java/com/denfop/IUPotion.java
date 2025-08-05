@@ -24,6 +24,8 @@ public class IUPotion extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
+
+        if (ModConfig.COMMON.damageRadiation.get())
         if (this == radiation) {
             entity.hurt(IUDamageSource.radiation, (float) (amplifier / 100) + 0.5F);
         }

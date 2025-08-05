@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcore/specore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniy"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:itemcore/specore"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniy"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,

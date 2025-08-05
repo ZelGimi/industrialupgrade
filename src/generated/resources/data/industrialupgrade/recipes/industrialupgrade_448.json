@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:storage_blocks/iron"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:rotor/rotor_bronze"
-      }
-    ]
+    "A": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "B": {
+      "item": "industrialupgrade:rotor/rotor_bronze"
+    }
   },
   "pattern": [
     " A ",

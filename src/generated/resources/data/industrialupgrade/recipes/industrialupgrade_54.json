@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:compresscarbonultra"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_275_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:compresscarbon"
-      }
-    ],
-    "F": [
-      {
-        "tag": "forge:doubleplate/iridium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nanobox"
+    },
+    "B": {
+      "item": "industrialupgrade:compresscarbonultra"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_275_element"
+    },
+    "D": {
+      "item": "industrialupgrade:compresscarbon"
+    },
+    "F": {
+      "tag": "forge:doubleplate/iridium"
+    }
   },
   "pattern": [
     "FDF",

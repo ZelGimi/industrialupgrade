@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,16 +7,12 @@
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
     },
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_320_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/cadmium"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_320_element"
+    },
+    "D": {
+      "tag": "forge:plates/cadmium"
+    }
   },
   "pattern": [
     "B B",

@@ -1,10 +1,18 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.recipes.ScrapboxRecipeManager;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class IUItemBase extends Item {
     private String nameItem;
@@ -16,7 +24,26 @@ public class IUItemBase extends Item {
     public IUItemBase(CreativeModeTab tabCore) {
         super(new Properties().tab(tabCore));
     }
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
+        if (!player.getItemInHand(hand).is(IUItem.doublescrapBox.getItem())) {
+            return super.use(pLevel, player, hand);
+        } else {
+            int i = 0;
+            ItemStack stack = player.getItemInHand(hand);
+            while (i < 9) {
+                if (!pLevel.isClientSide) {
+                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox);
+                    player.drop(drop, false);
+                }
+                i++;
+            }
+            stack.shrink(1);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
 
+        }
+
+    }
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));

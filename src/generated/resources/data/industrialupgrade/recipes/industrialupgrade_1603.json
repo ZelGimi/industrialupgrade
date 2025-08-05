@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:machines/quark_solar_panel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:excitednucleus/kvrcore"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:machines/quark_solar_panel"
+    },
+    "B": {
+      "item": "industrialupgrade:excitednucleus/kvrcore"
+    }
   },
   "pattern": [
     "   ",

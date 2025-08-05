@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine1/adv_alloy_smelter"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_618_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_51_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_96_element"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_139_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine1/adv_alloy_smelter"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_618_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    }
   },
   "pattern": [
     "F F",

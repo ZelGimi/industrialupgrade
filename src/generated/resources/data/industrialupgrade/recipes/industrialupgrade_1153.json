@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/universal"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdoubleplates/tin_doubleplate"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/cobalt"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/universal"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdoubleplates/tin_doubleplate"
+    },
+    "C": {
+      "tag": "forge:ingots/cobalt"
+    }
   },
   "pattern": [
     " A ",

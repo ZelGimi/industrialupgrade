@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/alumel"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/alumel"
+    }
   ],
   "result": {
     "count": 9,

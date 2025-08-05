@@ -10,13 +10,14 @@ public class Path {
 
     final IEnergySink target;
     final Direction targetDirection;
+    public Direction sourceDirection;
     double min = Double.MAX_VALUE;
     double loss = 0.0D;
     boolean hasController = false;
     boolean isLimit = false;
     double limit_amount = Double.MAX_VALUE;
     double adding = 0;
-    List<IEnergyConductor> conductorList = new LinkedList<>();
+    List<ConductorInfo> conductorList = new LinkedList<>();
 
     Path(IEnergySink sink, Direction facing) {
         this.target = sink;
@@ -69,7 +70,7 @@ public class Path {
 
     }
 
-    public List<IEnergyConductor> getConductorList() {
+    public List<ConductorInfo> getConductorList() {
         return conductorList;
     }
 

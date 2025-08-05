@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "minecraft:logs"
-      }
-    ],
-    "B": [
-      {
-        "tag": "minecraft:planks"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:stone_button"
-      }
-    ]
+    "A": {
+      "tag": "minecraft:logs"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "item": "minecraft:stone_button"
+    }
   },
   "pattern": [
     "ABA",

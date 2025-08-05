@@ -93,7 +93,7 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
     public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
         if (this.allowedIn(tab)) {
             ItemStack chargedItem = new ItemStack(this);
-            ElectricItem.manager.charge(chargedItem, 2.147483647E9, Integer.MAX_VALUE, true, false);
+            ElectricItem.manager.charge(chargedItem, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
             items.add(chargedItem);
             items.add(new ItemStack(this));
         }

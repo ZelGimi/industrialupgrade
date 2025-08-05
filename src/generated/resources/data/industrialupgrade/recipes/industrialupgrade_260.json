@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/vanadoalumite"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/vanadoalumite"
+    }
   ],
   "result": {
     "count": 9,

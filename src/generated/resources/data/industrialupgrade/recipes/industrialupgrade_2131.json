@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/cobaltchrome"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/permalloy"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/tantalum"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:casings/cadmium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/cobaltchrome"
+    },
+    "C": {
+      "tag": "forge:gears/permalloy"
+    },
+    "D": {
+      "tag": "forge:gears/tantalum"
+    },
+    "E": {
+      "tag": "forge:casings/cadmium"
+    }
   },
   "pattern": [
     "CBC",

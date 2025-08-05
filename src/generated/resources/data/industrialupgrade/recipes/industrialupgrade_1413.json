@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_139_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:moremachine1/double_comb_macerator"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_96_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_49_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_146_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine1/double_comb_macerator"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_49_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_146_element"
+    }
   },
   "pattern": [
     "A A",

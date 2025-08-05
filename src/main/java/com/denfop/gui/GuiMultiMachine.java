@@ -10,6 +10,7 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
+import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
@@ -93,6 +94,10 @@ public class GuiMultiMachine<T extends ContainerMultiMachine> extends GuiIU<Cont
     protected void drawForegroundLayer(PoseStack poseStack, final int mouseX, final int mouseY) {
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         this.drawForeground(poseStack, mouseX, mouseY);
+        if (this.container.base.getMachine().type == EnumTypeMachines.FARMER){
+            draw(poseStack,String.valueOf(this.container.base.getFertilizer()),12,35, ModUtils.convertRGBcolorToInt(0,0,0));
+            new Area(this,10,33,10,10).withTooltip(Localization.translate("iu.farmer.fertilizer.info")+"\n"+Localization.translate("iu.farmer.fertilizer.info1")).drawForeground(poseStack,mouseX,mouseY);
+        }
         int i = 0;
         for (Slot slot : this.container.slots) {
             if (slot instanceof SlotInvSlot) {

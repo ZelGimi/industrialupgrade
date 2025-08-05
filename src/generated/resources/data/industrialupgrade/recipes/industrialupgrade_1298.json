@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:adv_spectral_box"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/superalloyhaynes"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:reactors/imp_proton_energy_coupler"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:adv_spectral_box"
+    },
+    "B": {
+      "tag": "forge:doubleplate/superalloyhaynes"
+    },
+    "C": {
+      "item": "industrialupgrade:reactors/imp_proton_energy_coupler"
+    }
   },
   "pattern": [
     "ABA",

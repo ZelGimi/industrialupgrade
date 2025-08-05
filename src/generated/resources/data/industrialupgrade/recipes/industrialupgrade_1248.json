@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/inconel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_585_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_565_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_592_element"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/stainlesssteel"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/inconel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_585_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_565_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_592_element"
+    },
+    "E": {
+      "tag": "forge:plates/stainlesssteel"
+    }
   },
   "pattern": [
     "ECB",

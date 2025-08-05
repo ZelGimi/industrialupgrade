@@ -1,38 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_252_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "simplyquarries:simplyquarries/adv_simply_quarry"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_96_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_139_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_49_element"
-      }
-    ]
-  },
-  "pattern": [
-    "D D",
-    "ABE",
-    "DCD"
+  "type": "industrialupgrade:shapeless_recipe",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_tungsten"
+    }
   ],
   "result": {
-    "item": "simplyquarries:simplyquarries/imp_simply_quarry"
+    "count": 9,
+    "item": "industrialupgrade:raw_metals/raw_tungsten"
   }
 }

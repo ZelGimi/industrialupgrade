@@ -1,6 +1,7 @@
 package com.denfop.items.crop;
 
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerAgriculturalAnalyzer;
 import com.denfop.items.IItemStackInventory;
@@ -9,6 +10,7 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,12 +18,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventory {
     private final int slots;
@@ -30,6 +35,12 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
     public ItemAgriculturalAnalyzer() {
         super(new Properties().tab(IUCore.EnergyTab).stacksTo(1));
         this.slots = 1;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.crop_analyzer.info")));
     }
 
     protected String getOrCreateDescriptionId() {

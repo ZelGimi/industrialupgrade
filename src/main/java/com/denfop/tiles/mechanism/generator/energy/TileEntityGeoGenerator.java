@@ -114,10 +114,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
 
     public void onBlockBreak(boolean wrench) {
         super.onBlockBreak(false);
-        if (this.fluidTank.getFluidAmount() >= 1000) {
-            BlockState lavaState = net.minecraft.world.level.material.Fluids.LAVA.defaultFluidState().createLegacyBlock();
-            level.setBlock(getBlockPos(), lavaState, 3);
-        }
+
     }
 
 }

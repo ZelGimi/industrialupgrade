@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_25_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/alumel"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_25_element"
+    },
+    "B": {
+      "tag": "forge:plates/alumel"
+    },
+    "C": {
+      "tag": "forge:plates/ferromanganese"
+    },
+    "D": {
+      "tag": "forge:plates/duralumin"
+    }
   },
   "pattern": [
     "B B",

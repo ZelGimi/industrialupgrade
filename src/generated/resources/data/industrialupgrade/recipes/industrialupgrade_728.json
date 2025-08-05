@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/platinum"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/vitalium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_20_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_92_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:doubleplate/platinum"
+    },
+    "B": {
+      "tag": "forge:doubleplate/vitalium"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_92_element"
+    }
   },
   "pattern": [
     " B ",

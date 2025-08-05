@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quarrymodules/kar1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:quarrymodules/kar1"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniy_ingot"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,

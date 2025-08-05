@@ -48,7 +48,7 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
         this.tile.solid_col = new int[9];
         double prev = this.tile.energy.getEnergy();
         this.tile.energy.useEnergy(this.tile.energy.getEnergy());
-        this.tile.energy.capacity = 0;
+        this.tile.energy.buffer.capacity = 0;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 this.tile.solid[i] = ItemSolidMatter.getsolidmatter(IUItem.solidmatter.getMetaFromItemStack(this.get(i)));

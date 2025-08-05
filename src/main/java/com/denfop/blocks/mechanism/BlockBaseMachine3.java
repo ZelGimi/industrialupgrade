@@ -81,6 +81,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
 import java.util.Set;
 
 public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
@@ -337,6 +338,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     ampere_storage(TileEntityAmpereStorage.class, 259),
     bio_generator(TileEntityBioGenerator.class, 260),
     steam_generator(TileEntitySteamGenerator.class, 261),
+    auto_latex_collector(TileEntityAutoLatexCollector.class,262),
     ;
 
 
@@ -379,10 +381,16 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
             throw new IllegalAccessError("Don't mess with this please.");
         }
         if (this.getTeClass() != null) {
-            try {
-                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
-            } catch (Exception e) {
-                System.out.println(2);
+            for (Constructor<?> constructor : this.teClass.getConstructors()) {
+                try {
+
+                    this.dummyTe = (TileEntityBlock)constructor.newInstance(BlockPos.ZERO, defaultState);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (dummyTe != null)
+                    break;
             }
         }
     }
@@ -452,7 +460,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
             return HarvestTool.Axe;
         }
         if (this == BlockBaseMachine3.steel_tank
-                ||  this == BlockBaseMachine3.quarry_pipe
+                ||  this == BlockBaseMachine3.quarry_pipe || this == BlockBaseMachine3.auto_latex_collector
         ) {
             return HarvestTool.Pickaxe;
         }
@@ -466,7 +474,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     @Nonnull
     public DefaultDrop getDefaultDrop() {
       if (this == oak_tank || this == steel_tank
-                  || this == quarry_pipe
+              || this == quarry_pipe   || this == auto_latex_collector
         ) {
             return DefaultDrop.Self;
         }

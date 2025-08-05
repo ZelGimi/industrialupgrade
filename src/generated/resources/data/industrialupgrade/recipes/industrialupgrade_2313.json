@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/berylliumbronze"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:cokeoven/coke_oven_input"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/permalloy"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/berylliumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:cokeoven/coke_oven_input"
+    },
+    "C": {
+      "tag": "forge:plates/permalloy"
+    }
   },
   "pattern": [
     " A ",

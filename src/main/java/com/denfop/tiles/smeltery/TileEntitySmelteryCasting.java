@@ -37,7 +37,7 @@ public class TileEntitySmelteryCasting extends TileEntityMultiBlockElement imple
 
     public TileEntitySmelteryCasting(BlockPos pos, BlockState state) {
         super(BlockSmeltery.smeltery_casting,pos,state);
-        this.progress = this.addComponent(new ComponentProgress(this, 1, 180));
+        this.progress = this.addComponent(new ComponentProgress(this, 1, 108));
         this.fluid_handler = new FluidHandlerRecipe("ingot_casting");
 
         this.outputSlot = new InvSlotOutput(this, 1);

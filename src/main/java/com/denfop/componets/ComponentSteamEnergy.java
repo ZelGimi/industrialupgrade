@@ -2,12 +2,15 @@ package com.denfop.componets;
 
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.blocks.FluidName;
+import com.denfop.effects.EffectsRegister;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -100,7 +103,22 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         return true;
     }
 
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (this.parent.getActive() && this.parent.getWorld().getGameTime() % 4 == 0) {
+            double x = this.parent.getBlockPos().getX();
+            double y = this.parent.getBlockPos().getY() + 1.0;
+            double z = this.parent.getBlockPos().getZ();
 
+            this.parent.getLevel().addParticle(
+                    EffectsRegister.STEAM_ASH.get(),
+                    x, y, z,
+                    0.0, 0.1, 0.0
+            );
+        }
+    }
     @Override
     public boolean useEnergy(final double amount) {
         super.useEnergy(amount);
@@ -113,4 +131,7 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         return true;
     }
 
+    public FluidTank getFluidTank() {
+        return fluidTank;
+    }
 }

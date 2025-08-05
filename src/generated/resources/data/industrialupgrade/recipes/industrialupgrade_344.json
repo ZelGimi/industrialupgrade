@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy1/osmiridium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy1/osmiridium"
+    }
   ],
   "result": {
     "count": 9,

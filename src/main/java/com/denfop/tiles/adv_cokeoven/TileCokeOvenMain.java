@@ -285,7 +285,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                     if (!this.getActive()) {
                         this.setActive(true);
                     }
-                    progress += 1 + (0.25 * (bar1 - 1));
+                    progress += 1 + (0.5 * (bar1 - 1));
                     tank.drain(Math.min(bar1, this.tank.getFluidAmount()), IFluidHandler.FluidAction.EXECUTE);
                     if (progress >= 2340) {
                         progress = 0;

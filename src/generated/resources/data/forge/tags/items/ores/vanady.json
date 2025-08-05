@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore/vanadium"
+    "industrialupgrade:baseore/vanadium",
+    "industrialupgrade:blockspace4/rhea_vanadium_ore"
   ]
 }

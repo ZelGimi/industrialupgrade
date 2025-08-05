@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/nimonic"
+    "item": "industrialupgrade:alloydust/hafnium_boride_alloy"
   },
-  "result": "industrialupgrade:alloyingot/nimonic"
+  "result": "industrialupgrade:alloyingot/hafnium_boride_alloy"
 }

@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
@@ -18,16 +16,12 @@
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:5}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:quantumitems6"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:doubleplate/iridium"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:quantumitems6"
+    },
+    "E": {
+      "tag": "forge:doubleplate/iridium"
+    }
   },
   "pattern": [
     "BBB",

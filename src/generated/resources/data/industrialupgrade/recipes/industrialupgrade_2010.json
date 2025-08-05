@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:solar_panel_glass/adv"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/lead"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:solar_panel_glass/adv"
+    },
+    "B": {
+      "tag": "forge:plates/osmium"
+    },
+    "C": {
+      "tag": "forge:plates/lead"
+    }
   },
   "pattern": [
     "CBC",

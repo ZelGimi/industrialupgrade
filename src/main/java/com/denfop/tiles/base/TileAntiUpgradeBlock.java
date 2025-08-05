@@ -38,7 +38,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
     public boolean need;
 
     public TileAntiUpgradeBlock(BlockPos pos, BlockState state) {
-        super(1000, 14, 4,BlockBaseMachine3.antiupgradeblock,pos,state);
+        super(1000, 14, 4, BlockBaseMachine3.antiupgradeblock, pos, state);
         this.need = false;
         this.progress = 0;
         this.input = new InvSlotAntiUpgradeBlock(this);
@@ -90,7 +90,6 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
     }
 
 
-
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.need) {
@@ -103,7 +102,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
                         if (this.outputSlot.canAdd(list.get(this.index))) {
                             this.outputSlot.add(list.get(this.index));
                         }
-                        UpgradeSystem.system.removeUpdate(this.input.get(0), this.getWorld(), ((ItemUpgradeModule<?>)list.get(index).getItem()).getElement().getId());
+                        UpgradeSystem.system.removeUpdate(this.input.get(0), this.getWorld(), ((ItemUpgradeModule<?>) list.get(index).getItem()).getElement().getId());
                         this.need = false;
                         this.progress = 0;
 
@@ -156,14 +155,17 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
 
         if (i >= 1) {
             final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
-            if (!list.get((int) (i - 1)).isEmpty()) {
-                this.index = (int) (i - 1);
-                return;
-            }
+            if (list != null && list.size() > i - 1)
+                if (!list.get((int) (i - 1)).isEmpty()) {
+                    this.index = (int) (i - 1);
+                    return;
+                }
         }
         if (i == 0) {
             final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
             boolean need = false;
+            if (list.size() <= index)
+                return;
             final ItemStack stack = list.get(this.index);
             if (!stack.isEmpty()) {
                 if (this.outputSlot.canAdd(stack)) {

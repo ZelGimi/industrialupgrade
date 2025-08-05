@@ -83,7 +83,7 @@ public class GuiChemicalWaste<T extends ContainerDefaultMultiElement> extends Gu
                 76, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(poseStack, mouseX, mouseY);
+            element.drawBackground(poseStack, guiLeft, guiTop);
         }
     }
 

@@ -6,6 +6,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
@@ -38,7 +39,20 @@ public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
         super.updateEntityServer();
         this.cold.storage = 0;
     }
-
+    @Override
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        this.col = customPacketBuffer.readInt();
+    }
+    public int getFertilizer(){
+        return  col;
+    }
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
+        packetBuffer.writeInt(col);
+        return packetBuffer;
+    }
     @Override
     public InvSlot getFertilizerSlot() {
         return fertilizerSlot;

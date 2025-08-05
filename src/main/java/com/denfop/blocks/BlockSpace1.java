@@ -7,6 +7,7 @@ import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
@@ -44,14 +47,10 @@ public class BlockSpace1<T extends Enum<T> & ISubEnum> extends BlockCore<T> impl
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder p_60538_) {
-        RandomSource rand = p_60538_.getLevel().random;
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
+        RandomSource rand = world.random;
         //
         NonNullList<ItemStack> ret = NonNullList.create();
-        ItemStack stack1 = p_60538_.getOptionalParameter(LootContextParams.TOOL);
-        int fortune = 0;
-        if (stack1 != null)
-            fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack1);
         BlockSpace1.Type type = (Type) this.getElement();
         if (type.ordinal() == 0 || type.ordinal() == 1 || type.ordinal() == 4 || type.ordinal() == 7 || type.ordinal() == 12 || type.ordinal() == 13 || type.ordinal() == 14) {
             ItemStack stack = type.getStack();
@@ -113,11 +112,11 @@ public class BlockSpace1<T extends Enum<T> & ISubEnum> extends BlockCore<T> impl
             case 0:
                 return 0;
             case 1:
-                return WorldBaseGen.random.nextDouble() < 0.25 ? 1 : 0;
+                return WorldBaseGen.random.nextInt(100) < 50 ? 1 : 0;
             case 2:
-                return WorldBaseGen.random.nextDouble() < 0.5 ? 1 : 0;
+                return WorldBaseGen.random.nextInt(100) < 100 ? 1 : 1;
             default:
-                return WorldBaseGen.random.nextDouble() < 0.75 ? 1 : 0;
+                return WorldBaseGen.random.nextInt(100) < 50 ? 2 : 1;
         }
     }
 

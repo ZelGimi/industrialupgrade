@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore/aluminium"
+    "industrialupgrade:baseore/aluminium",
+    "industrialupgrade:blockspace2/ganymede_aluminium_ore"
   ]
 }

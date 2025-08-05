@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gears/molybdenum"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:imp_bee_frame_template"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/tantalum"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:casings/silver"
-      }
-    ]
+    "A": {
+      "tag": "forge:gears/molybdenum"
+    },
+    "B": {
+      "item": "industrialupgrade:imp_bee_frame_template"
+    },
+    "C": {
+      "tag": "forge:plates/tantalum"
+    },
+    "D": {
+      "tag": "forge:casings/silver"
+    }
   },
   "pattern": [
     "CDC",

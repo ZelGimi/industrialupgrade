@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcore/ultcore"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/osmium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcore/ultcore"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "C": {
+      "tag": "forge:ingots/osmium"
+    },
+    "D": {
+      "tag": "forge:plates/titanium"
+    }
   },
   "pattern": [
     "CDC",

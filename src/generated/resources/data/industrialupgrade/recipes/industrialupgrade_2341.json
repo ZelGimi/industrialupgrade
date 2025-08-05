@@ -1,22 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
+    "A": {
+      "tag": "forge:plates/iron"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:2}"
     },
-    "C": [
-      {
-        "tag": "forge:gems/americium"
-      }
-    ]
+    "C": {
+      "tag": "forge:gems/americium"
+    }
   },
   "pattern": [
     "AAA",

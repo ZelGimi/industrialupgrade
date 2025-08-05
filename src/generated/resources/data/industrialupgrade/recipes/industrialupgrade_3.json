@@ -1,51 +1,33 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ],
-    [
-      {
-        "tag": "forge:ingots/lead"
-      }
-    ]
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    },
+    {
+      "tag": "forge:ingots/lead"
+    }
   ],
   "result": {
     "item": "industrialupgrade:blockresource/lead_block"

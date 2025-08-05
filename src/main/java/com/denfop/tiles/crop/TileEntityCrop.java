@@ -32,6 +32,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
@@ -212,7 +213,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         tickPest = 7000;
     }
 
-    public boolean canPlace(TileEntityBlock te, BlockPos pos, Level world) {
+    public boolean canPlace(TileEntityBlock te, BlockPos pos, Level world, Direction direction, LivingEntity entity) {
         EnumSoil[] soil = EnumSoil.values();
         downState = world.getBlockState(pos.below());
         downBlock = downState.getBlock();
@@ -306,7 +307,15 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 chunkPosListMap.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(level, chunkPos));
             }
         }
-
+        if (crop != null){
+            int tick = crop.getTick();
+            int gen = crop.getGeneration();
+            crop = CropNetwork.instance.getCrop(crop.getId()).copy();
+            crop.setTick(tick);
+            crop.setGeneration(gen);
+            this.genome = new Genome(this.cropItem);
+            genome.loadCrop(crop);
+        }
 
         if (downState == null) {
             downState = level.getBlockState(pos.below());
@@ -363,6 +372,14 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
         if (this.pos.below().equals(neighborPos)) {
+            EnumSoil[] soil = EnumSoil.values();
+            downState = neighbor;
+            downBlock = downState.getBlock();
+            for (EnumSoil soil1 : soil) {
+                if ((soil1.getState() == downState && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore())|| (downBlock == IUItem.humus.getBlock(0))) {
+                    return;
+                }
+            }
             if (crop != null) {
                 if (!this.cropItem.isEmpty() && crop.getId() != 3) {
                     ModUtils.dropAsEntity(level, pos, cropItem, 1);
@@ -1037,7 +1054,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
         if (hasDouble && this
                 .getWorld()
-                .getGameTime() % 40 == 0 && !this.cropMap.isEmpty() && WorldBaseGen.random.nextInt(50) == 0) {
+                .getGameTime() % 10 == 0 && !this.cropMap.isEmpty() && WorldBaseGen.random.nextInt(50) == 0) {
             List<TileEntityCrop> crops = this.cropMap.values().stream()
                     .filter(cropTile -> cropTile.crop != null && cropTile.crop.getTick() == cropTile.crop.getMaxTick())
                     .toList();

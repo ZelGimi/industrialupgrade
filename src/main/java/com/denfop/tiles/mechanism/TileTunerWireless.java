@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -18,9 +19,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class TileTunerWireless extends TileElectricMachine
         implements IUpdatableTileEvent {
@@ -35,7 +39,11 @@ public class TileTunerWireless extends TileElectricMachine
 
         this.inputslot = new InvSlotTuner(this);
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.wireless_mechanism.info"));
+    }
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.tuner;
     }

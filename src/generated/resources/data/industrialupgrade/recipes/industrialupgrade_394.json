@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/molybdenum"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/molybdenum"
+    }
   ],
   "result": {
     "count": 9,

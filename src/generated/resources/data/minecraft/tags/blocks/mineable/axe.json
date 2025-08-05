@@ -8,6 +8,9 @@
     "industrialupgrade:apiary/apiary",
     "industrialupgrade:primal_wire_insulator/primal_wire_insulator",
     "industrialupgrade:rubber_wood",
+    "industrialupgrade:planks/forest",
+    "industrialupgrade:planks/swamp",
+    "industrialupgrade:planks/tropical",
     "industrialupgrade:swamp_rubber_wood",
     "industrialupgrade:tropical_rubber_wood"
   ]

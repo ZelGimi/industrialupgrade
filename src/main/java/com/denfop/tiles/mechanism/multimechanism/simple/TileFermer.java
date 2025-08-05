@@ -13,6 +13,7 @@ import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
@@ -47,7 +48,20 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
-
+    @Override
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        this.col = customPacketBuffer.readInt();
+    }
+    public int getFertilizer(){
+        return  col;
+    }
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
+        packetBuffer.writeInt(col);
+        return packetBuffer;
+    }
     public static void addrecipe(ItemStack input, Item output) {
         final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(

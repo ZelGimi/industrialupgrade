@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:nuclearresource/small_uranium_235"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:nuclearresource/small_uranium_235"
+    }
   },
   "pattern": [
     "BBB",

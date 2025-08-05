@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot1/tantalum"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot1/tantalum"
+    }
   ],
   "result": {
     "count": 9,

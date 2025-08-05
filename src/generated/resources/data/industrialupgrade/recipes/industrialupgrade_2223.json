@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/tempered_glass"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_678_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/spinel"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/tempered_glass"
+    },
+    "B": {
+      "tag": "forge:plates/steel"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_678_element"
+    },
+    "D": {
+      "tag": "forge:gears/spinel"
+    }
   },
   "pattern": [
     "BBB",

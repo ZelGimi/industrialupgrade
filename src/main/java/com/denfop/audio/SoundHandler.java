@@ -30,6 +30,12 @@ public class SoundHandler {
                 BlockPos pos1 = new BlockPos(map.getKey().getX() - 0.5, map.getKey().getY() - 0.5,
                         map.getKey().getZ() - 0.5
                 );
+                if (pos1.getX() < 0){
+                    pos1 = pos1.offset(-1,0,0);
+                }
+                if (pos1.getZ() < 0){
+                    pos1 = pos1.offset(0,0,-1);
+                }
                 if (pos1.equals(pos)) {
                     map.getValue().execute(Channel::stop);
                     break;
@@ -101,7 +107,7 @@ public class SoundHandler {
         }
 
         if (can) {
-            player.playSound(sound1.getSoundEvent(), 1, 1);
+            Minecraft.getInstance().getSoundManager().play(new PlayerSound(player, sound1.getSoundEvent()));
 
         }
     }
@@ -129,7 +135,8 @@ public class SoundHandler {
         }
 
         if (can) {
-            player.playSound(EnumSound.getSondFromString(sound1), 1, 1);
+            Minecraft.getInstance().getSoundManager().play(new PlayerSound(player, EnumSound.getSondFromString(sound1)));
+
 
         }
     }

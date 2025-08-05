@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/copper"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:iron_ingot"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/copper"
+    },
+    "B": {
+      "item": "minecraft:iron_ingot"
+    }
   },
   "pattern": [
     "AAA",

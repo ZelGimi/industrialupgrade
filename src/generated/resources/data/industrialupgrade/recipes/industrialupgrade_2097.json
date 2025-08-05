@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:spaceupgrademodule_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/hafniumcarbide"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/osmiridium"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/niobiumtitanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:spaceupgrademodule_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/hafniumcarbide"
+    },
+    "C": {
+      "tag": "forge:plates/osmiridium"
+    },
+    "E": {
+      "tag": "forge:plates/niobiumtitanium"
+    }
   },
   "pattern": [
     " B ",

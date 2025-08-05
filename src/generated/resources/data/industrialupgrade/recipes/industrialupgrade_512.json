@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:circuit/nanocircuit_part1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:stick/titanium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:circuit/nanocircuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:stick/titanium"
+    }
   },
   "pattern": [
     "BBB",

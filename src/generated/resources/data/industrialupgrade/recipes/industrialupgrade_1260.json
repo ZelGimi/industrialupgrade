@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:glass"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:basemachine3/oak_tank"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ]
+    "A": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "industrialupgrade:basemachine3/oak_tank"
+    },
+    "D": {
+      "tag": "forge:plates/iron"
+    }
   },
   "pattern": [
     "   ",

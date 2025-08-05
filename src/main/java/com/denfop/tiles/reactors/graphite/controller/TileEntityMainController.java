@@ -1,5 +1,6 @@
 package com.denfop.tiles.reactors.graphite.controller;
 
+import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.multiblock.IMultiElement;
@@ -115,7 +116,11 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
         );
         this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation() * 100));
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.reactor_safety_doom.info"));
+    }
     @Override
     public double getModuleStableHeat() {
         return reactorsModules.getStableHeat();
@@ -252,7 +257,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                 this.energy.createDelegate();
                 this.energy.onLoaded();
                 this.energy.setCapacity(this.energy.defaultCapacity);
-                this.energy.storage = 0;
+                this.energy.buffer.storage = 0;
             }
         }
     }
@@ -329,7 +334,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
             if (this.full) {
 
                 if (this.typeWork == EnumTypeWork.WORK) {
-                    this.energy.capacity = Math.max(this.output, this.energy.getDefaultCapacity());
+                    this.energy.buffer.capacity = Math.max(this.output, this.energy.getDefaultCapacity());
                     if (this.getWorld().getGameTime() % 20 == 0 && this.work) {
                         reactor.onTick();
                         if (this.rad.getEnergy() >= this.rad.getCapacity() * 0.5 && this.rad.getEnergy() < this.rad.getCapacity() * 0.75) {
@@ -365,7 +370,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                         this.energy.delegate = null;
                         this.energy.createDelegate();
                         this.energy.onLoaded();
-                        this.energy.storage = 0;
+                        this.energy.buffer.storage = 0;
                     }
                 }
 

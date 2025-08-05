@@ -17,14 +17,15 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ import static com.denfop.blocks.BlockTileEntity.*;
 public class TileEntityCable extends TileEntityMultiCable implements IEnergyConductor {
 
 
+    private final ConductorInfo conductor;
     public boolean addedToEnergyNet;
     public int type;
     protected CableType cableType;
@@ -53,6 +55,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         this.addedToEnergyNet = false;
         this.cableType = cableType;
         this.type = cableType.ordinal();
+        this.conductor = new ConductorInfo(pos,this);
     }
 
     @Override
@@ -70,28 +73,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
 
     }
 
-    @Override
-    public void onEntityCollision(final Entity entity) {
-        super.onEntityCollision(entity);
-        if (!this.getWorld().isClientSide && entity instanceof LivingEntity) {
-            if (cableType == CableType.tin || cableType == CableType.copper || cableType == CableType.gold || cableType == CableType.iron) {
-                NodeStats stats = EnergyNetGlobal.instance.getNodeStats(this);
-                if (entity instanceof Player) {
-                    Player player = (Player) entity;
-                    if (!IHazmatLike.hasCompleteHazmat(player)) {
-                        if (stats.getEnergyIn() > 0) {
-                            entity.hurt(IUDamageSource.current, 0.25f)
-                            ;
-                        }
-                    }
-                } else if (stats.getEnergyIn() > 0) {
-                    entity.hurt(IUDamageSource.current, 0.25f)
-                    ;
-                }
-            }
 
-        }
-    }
 
     public ICableItem getCableItem() {
         return cableType;
@@ -128,6 +110,25 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
+        }
+        NodeStats stats = EnergyNetGlobal.instance.getNodeStats(this, this.level);
+        if ((cableType == CableType.tin || cableType == CableType.copper || cableType == CableType.gold || cableType == CableType.iron) && stats.getEnergyIn() > 0) {
+            AABB aabb = new AABB(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(),
+                    this.worldPosition.getX() + 1, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 1)
+                    .inflate(0.1D, 0.1D, 0.1D);
+
+            List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
+            for (LivingEntity entity : targets)
+                if (entity instanceof Player) {
+                    Player player = (Player) entity;
+                    if (!IHazmatLike.hasCompleteHazmat(player)) {
+
+                        entity.hurt(IUDamageSource.current, 0.25f);
+                    }
+                } else if (stats.getEnergyIn() > 0) {
+                    entity.hurt(IUDamageSource.current, 0.25f);
+
+                }
         }
     }
 
@@ -173,6 +174,11 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
     @Override
     public void setCable(final InfoCable cable) {
         this.cable = cable;
+    }
+
+    @Override
+    public ConductorInfo getInfo() {
+        return conductor;
     }
 
     public void updateConnectivity() {
@@ -243,7 +249,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
                 boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
                 booleanMap.put(facing, hasConnection);
             }
-            this.blockState = this.block
+            this.setBlockState(this.block
                     .defaultBlockState()
                     .setValue(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
                     .setValue(
@@ -254,8 +260,8 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
                     .setValue(WEST, booleanMap.get(Direction.UP))
                     .setValue(EAST, booleanMap.get(Direction.DOWN))
                     .setValue(UP, booleanMap.get(Direction.WEST))
-                    .setValue(DOWN, booleanMap.get(Direction.EAST));
-            this.getWorld().setBlock(this.worldPosition, blockState, 3);
+                    .setValue(DOWN, booleanMap.get(Direction.EAST)));
+            this.getWorld().setBlock(this.worldPosition, getBlockState(), 3);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -313,11 +319,6 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
             }
             updateConnect = true;
         }
-    }
-
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
     }
 
     @Override

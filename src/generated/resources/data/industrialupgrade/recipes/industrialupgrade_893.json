@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:itemcell/itemcell",
       "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidsour_heavy_oil\"}}"
     },
-    "C": [
-      {
-        "tag": "forge:gears/magnesium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/titanium"
-      }
-    ]
+    "C": {
+      "tag": "forge:gears/magnesium"
+    },
+    "D": {
+      "tag": "forge:plates/titanium"
+    }
   },
   "pattern": [
     "CBC",

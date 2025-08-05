@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/zinc"
-      }
-    ],
+    "A": {
+      "tag": "forge:plates/zinc"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:6}"
     },
-    "C": [
-      {
-        "item": "industrialupgrade:baseblockingot/vanady"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:doubleplate/platinum"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ]
+    "C": {
+      "item": "industrialupgrade:baseblockingot/vanady"
+    },
+    "D": {
+      "tag": "forge:doubleplate/platinum"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems2"
+    }
   },
   "pattern": [
     "AAA",

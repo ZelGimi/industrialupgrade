@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "minecraft:iron_axe",
       "nbt": "{Damage:0}"
     },
-    "C": [
-      {
-        "tag": "forge:gears/cobalt"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/bronze"
-      }
-    ]
+    "C": {
+      "tag": "forge:gears/cobalt"
+    },
+    "D": {
+      "tag": "forge:plates/bronze"
+    }
   },
   "pattern": [
     "CBC",

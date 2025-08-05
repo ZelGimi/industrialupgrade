@@ -1,6 +1,7 @@
 package com.denfop.api.energy;
 
 
+import com.denfop.ModConfig;
 import com.denfop.api.IAdvEnergyNet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -106,31 +107,13 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
 
-    @Override
-    public Level getWorld(final IEnergyTile tile) {
-        if (tile == null) {
-            return null;
-        } else if (tile instanceof BlockEntity) {
-            return ((BlockEntity) tile).getLevel();
-        } else if (tile.getTileEntity() != null) {
-            return tile.getTileEntity().getLevel();
-        } else {
-            throw new UnsupportedOperationException("unlocatable tile type: " + tile.getClass().getName());
-        }
-    }
+
+
+
 
     @Override
-    public BlockPos getPos(final IEnergyTile iEnergyTile) {
-        final EnergyNetLocal local = getForWorld(this.getWorld(iEnergyTile));
-        if (local != EnergyNetLocal.EMPTY) {
-            return local.getPos(iEnergyTile);
-        }
-        return null;
-    }
-
-    @Override
-    public NodeStats getNodeStats(final IEnergyTile te) {
-        final EnergyNetLocal local = getForWorld(getWorld(te));
+    public NodeStats getNodeStats(final IEnergyTile te, Level level) {
+        final EnergyNetLocal local = getForWorld(level);
         if (local == EnergyNetLocal.EMPTY) {
             return new NodeStats(0.0, 0.0);
         }
@@ -189,8 +172,8 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
     @Override
-    public BlockEntity getBlockPosFromEnergyTile(final IEnergyTile tile) {
-        final EnergyNetLocal local = getForWorld(getWorld(tile));
+    public BlockEntity getBlockPosFromEnergyTile(final IEnergyTile tile,Level level) {
+        final EnergyNetLocal local = getForWorld(level);
         if (local != EnergyNetLocal.EMPTY) {
             return local.getTileFromIEnergy(tile);
         } else {
@@ -211,11 +194,11 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
 
     @Override
     public void update() {
-        this.transformer = true;
-        this.losing = true;
-        this.ignoring = false;
-        this.explosing = true;
-        this.hasrestrictions = true;
+        this.transformer = ModConfig.COMMON.newsystem.get();
+        this.losing = ModConfig.COMMON.enableLosing.get();
+        this.ignoring = ModConfig.COMMON.enableEasyMode.get();
+        this.explosing = ModConfig.COMMON.enableExplosion.get();
+        this.hasrestrictions = !ModConfig.COMMON.cableEasyMode.get();
     }
 
 }

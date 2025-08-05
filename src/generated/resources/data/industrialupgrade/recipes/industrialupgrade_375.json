@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/bismuth"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/bismuth"
+    }
   },
   "pattern": [
     "AAA",

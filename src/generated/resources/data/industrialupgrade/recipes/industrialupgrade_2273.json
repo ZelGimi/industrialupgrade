@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/neodymium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_39_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_582_element"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_581_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
+    },
+    "B": {
+      "tag": "forge:plates/neodymium"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_39_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_582_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_581_element"
+    }
   },
   "pattern": [
     "DCD",

@@ -37,6 +37,7 @@ public class BlockThoriumOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
     public BlockThoriumOre(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of(Material.STONE).destroyTime(1f).randomTicks().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         BlockTagsProvider.list.add(this);
+        this.registerDefaultState(this.stateDefinition.any().setValue(BOOL_PROPERTY, false));
 
     }
 

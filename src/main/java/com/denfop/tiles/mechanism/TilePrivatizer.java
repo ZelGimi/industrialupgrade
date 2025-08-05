@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -19,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,7 +43,11 @@ public class TilePrivatizer extends TileElectricMachine
         this.inputslot = new InvSlotPrivatizer(this, 0, 9);
         this.inputslotA = new InvSlotPrivatizer(this, 1, 1);
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.privatizer_mechanism.info"));
+    }
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.privatizer;
     }

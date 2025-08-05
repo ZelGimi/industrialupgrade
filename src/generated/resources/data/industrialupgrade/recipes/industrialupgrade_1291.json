@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_32_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:block_squeezer/squeezer"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/steam_machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_123_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_32_element"
+    },
+    "B": {
+      "item": "industrialupgrade:block_squeezer/squeezer"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/steam_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_123_element"
+    }
   },
   "pattern": [
     "D A",

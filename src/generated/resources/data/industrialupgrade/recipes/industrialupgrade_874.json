@@ -1,51 +1,33 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_24_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:oak_sapling"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:dandelion"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:poppy"
-      }
-    ],
-    "E": [
-      {
-        "item": "minecraft:nether_wart"
-      }
-    ],
-    "F": [
-      {
-        "item": "minecraft:vine"
-      }
-    ],
-    "G": [
-      {
-        "item": "minecraft:lily_pad"
-      }
-    ],
-    "H": [
-      {
-        "item": "minecraft:brown_mushroom"
-      }
-    ],
-    "J": [
-      {
-        "item": "minecraft:red_mushroom"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_24_element"
+    },
+    "B": {
+      "item": "minecraft:oak_sapling"
+    },
+    "C": {
+      "item": "minecraft:dandelion"
+    },
+    "D": {
+      "item": "minecraft:poppy"
+    },
+    "E": {
+      "item": "minecraft:nether_wart"
+    },
+    "F": {
+      "item": "minecraft:vine"
+    },
+    "G": {
+      "item": "minecraft:lily_pad"
+    },
+    "H": {
+      "item": "minecraft:brown_mushroom"
+    },
+    "J": {
+      "item": "minecraft:red_mushroom"
+    }
   },
   "pattern": [
     "BCD",

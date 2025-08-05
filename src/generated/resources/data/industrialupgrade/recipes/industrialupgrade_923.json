@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:reactors/reactor_plate"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/iron"
+    },
+    "B": {
+      "item": "industrialupgrade:reactors/reactor_plate"
+    }
   },
   "pattern": [
     "ABA",

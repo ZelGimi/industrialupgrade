@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/alcled"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/aluminumbronze"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/alcled"
+    },
+    "B": {
+      "tag": "forge:plates/aluminumbronze"
+    }
   },
   "pattern": [
     "BBB",

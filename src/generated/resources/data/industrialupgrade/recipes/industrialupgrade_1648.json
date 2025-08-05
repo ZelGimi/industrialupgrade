@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:battery/lapotron_crystal"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/charging_energy_crystal"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/charging_energy_crystal"
+    }
   },
   "pattern": [
     " B ",

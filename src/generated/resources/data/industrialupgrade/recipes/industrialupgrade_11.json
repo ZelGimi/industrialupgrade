@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:blockresource/tin_block"
-      }
-    ]
+    {
+      "item": "industrialupgrade:blockresource/tin_block"
+    }
   ],
   "result": {
     "count": 9,

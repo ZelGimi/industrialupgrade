@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/glass_1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemiucrafring/itemirradianturanium"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:synthetic_rubber"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/glass_1"
+    },
+    "B": {
+      "item": "industrialupgrade:itemiucrafring/itemirradianturanium"
+    },
+    "C": {
+      "item": "industrialupgrade:synthetic_rubber"
+    }
   },
   "pattern": [
     " A ",

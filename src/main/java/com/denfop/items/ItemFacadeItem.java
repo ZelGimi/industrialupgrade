@@ -104,17 +104,7 @@ public class ItemFacadeItem extends Item implements IItemStackInventory {
             List<Component> tooltip,
             TooltipFlag flag
     ) {
-        tooltip.add(Component.translatable("iu.radiationbox"));
-        CompoundTag nbt = stack.getOrCreateTag();
-        boolean rod = nbt.getBoolean("rod");
-        tooltip.add(Component.translatable("message.text.mode_no_instrument").append(": ")
-                .append(rod ? Component.translatable("message.leadbox.enable") : Component.translatable("message.leadbox.disable")));
 
-        if (!Screen.hasShiftDown()) {
-            tooltip.add(Component.translatable("press.lshift"));
-        } else {
-            tooltip.add(Component.translatable("iu.changemode_key").append(Component.translatable("iu.changemode_rcm1")).append(" + SHIFT"));
-        }
         super.appendHoverText(stack, world, tooltip, flag);
     }
 

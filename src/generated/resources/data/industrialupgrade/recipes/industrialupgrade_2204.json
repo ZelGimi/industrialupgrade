@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:research_lens/lens_1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemplates/adamantite"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:research_lens/lens_1"
+    },
+    "B": {
+      "item": "industrialupgrade:itemplates/adamantite"
+    }
   },
   "pattern": [
     " B ",

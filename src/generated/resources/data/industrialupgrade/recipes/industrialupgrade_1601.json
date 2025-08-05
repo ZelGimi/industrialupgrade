@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_255_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:basemachine/imp_quantum_quarry"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_140_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_255_element"
+    },
+    "B": {
+      "item": "industrialupgrade:basemachine/imp_quantum_quarry"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    }
   },
   "pattern": [
     "C C",

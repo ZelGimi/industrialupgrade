@@ -1,8 +1,17 @@
 package com.denfop.events;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.Recipes;
+import com.denfop.api.agriculture.CropInit;
+import com.denfop.api.guidebook.GuideBookCore;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeInputStack;
+import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -14,6 +23,11 @@ import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.energy.instruments.EnumOperations;
 import com.denfop.items.energy.instruments.ItemEnergyInstruments;
 import com.denfop.mixin.invoker.ParticleInvoker;
+import com.denfop.recipe.IInputHandler;
+import com.denfop.recipes.PotionRecipes;
+import com.denfop.register.RegisterOreDictionary;
+import com.denfop.tiles.base.IManufacturerBlock;
+import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,11 +43,21 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -51,14 +75,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.denfop.api.Recipes.inputFactory;
 import static com.denfop.render.base.RenderType.LEASH;
+import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 public class TickHandler {
     final int latitudeSegments = 4;
@@ -116,6 +144,8 @@ public class TickHandler {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
         } else if (block == Blocks.COAL_ORE) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
+        }else if (block == Blocks.COPPER_ORE) {
+            return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.EMERALD_ORE) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
         } else if (block == Blocks.NETHER_QUARTZ_ORE) {
@@ -525,7 +555,9 @@ public class TickHandler {
                 int yRange = 0;
                 int zRange = 0;
 
+
                 Vec3 camera = event.getCamera().getPosition();
+
                 double x = camera.x;
                 double y = camera.y;
                 double z = camera.z;
@@ -535,15 +567,14 @@ public class TickHandler {
                 x = pos.getX();
                 y = pos.getY();
                 z = pos.getZ();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
-                Tesselator tessellator = Tesselator.getInstance();
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
                 VertexConsumer p_109623_ = Minecraft.getInstance()
                         .renderBuffers()
                         .bufferSource()
                         .getBuffer(RenderType.lines());
                 RenderSystem.lineWidth(10F);
-
                 Vec3 lookVec = player.getLookAngle();
                 for (int xPos = (int) (x - xRange); xPos <= x + xRange; xPos++) {
                     for (int yPos = (int) (y - yRange); yPos <= y + yRange; yPos++) {
@@ -555,9 +586,7 @@ public class TickHandler {
                                     currentPos.getZ() + 0.5 - player.getZ()
                             );
 
-                            if (lookVec.dot(blockVec) <= 0) {
-                                continue;
-                            }
+
                             float p_109630_ = 1.0f;
                             float p_109635_ = 1.0f;
                             float p_109636_ = 1.0f;
@@ -598,10 +627,10 @@ public class TickHandler {
                             p_109623_.vertex(matrix4f, f3, f4, f2).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
                             p_109623_.vertex(matrix4f, f3, f4, f5).color(p_109630_, p_109631_, p_109632_, p_109633_).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
 
-
                         }
                     }
                 }
+
 
                 poseStack.popPose();
             }
@@ -783,7 +812,12 @@ public class TickHandler {
         }
 
     }
-
+    @SubscribeEvent
+    public void initData(TickEvent.LevelTickEvent event){
+        if (event.level.isClientSide && event.phase == TickEvent.Phase.END){
+            IUCore.instance.registerData(event.level);
+        }
+    }
 
     @SubscribeEvent
     public void onRenderOres(RenderLevelStageEvent event) {

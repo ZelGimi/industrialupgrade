@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/cadmium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/cadmium"
+    }
   },
   "pattern": [
     "AAA",

@@ -8,13 +8,14 @@ public class GuiGasTurbineRecuperator<T extends ContainerGasTurbineRecuperator> 
 
     public GuiGasTurbineRecuperator(ContainerGasTurbineRecuperator guiContainer) {
         super(guiContainer);
+        this.componentList.clear();
     }
 
 
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigas_turbine_recuperator.png");
     }
 
 }

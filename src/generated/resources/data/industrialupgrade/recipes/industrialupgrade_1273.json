@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "A": {
       "type": "forge:nbt",
@@ -7,21 +7,15 @@
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "B": [
-      {
-        "tag": "forge:plates/nimonic"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/woods"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/zeliber"
-      }
-    ]
+    "B": {
+      "tag": "forge:plates/nimonic"
+    },
+    "C": {
+      "tag": "forge:plates/woods"
+    },
+    "D": {
+      "tag": "forge:plates/zeliber"
+    }
   },
   "pattern": [
     "DCD",

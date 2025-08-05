@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:reactormodules/exchanger2"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:doubleplate/duralumin"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:reactormodules/exchanger2"
+    },
+    "B": {
+      "tag": "forge:doubleplate/duralumin"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:reactors/per_heat_exchange"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:spectral_box"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:reactors/per_heat_exchange"
+    },
+    "E": {
+      "item": "industrialupgrade:spectral_box"
+    }
   },
   "pattern": [
     "BCB",

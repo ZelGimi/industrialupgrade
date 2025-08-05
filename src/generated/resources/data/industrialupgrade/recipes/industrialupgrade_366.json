@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/arsenic"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/arsenic"
+    }
   ],
   "result": {
     "count": 9,

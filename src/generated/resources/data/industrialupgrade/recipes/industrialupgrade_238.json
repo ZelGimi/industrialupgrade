@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/aluminum_bronze"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/aluminum_bronze"
+    }
   ],
   "result": {
     "count": 9,

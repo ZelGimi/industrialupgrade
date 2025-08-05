@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/zirconium"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/zirconium"
+    }
   },
   "pattern": [
     "AAA",

@@ -122,10 +122,12 @@ dependencies {
     implementation fg.deobf("curse.maven:allthecompressed-514045:4068231")
     implementation fg.deobf("curse.maven:ato-405593:4046926")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    compileOnly fg.deobf(files('lib/quantumgenerators-1.1-dev.jar'))
-    compileOnly (files('lib/simplyquarries-1.1-dev.jar'))
-    compileOnly (files('lib/powerutils-1.1-dev.jar'))
-
+    compileOnly fg.deobf(files('lib/quantumgenerators-1.4-dev.jar'))
+    compileOnly (files('lib/simplyquarries-1.4-dev.jar'))
+    compileOnly (files('lib/powerutils-1.4-dev.jar'))
+    runtimeOnly fg.deobf(files('lib/quantumgenerators-1.4-dev.jar'))
+    runtimeOnly (files('lib/simplyquarries-1.4-dev.jar'))
+    runtimeOnly (files('lib/powerutils-1.4-dev.jar'))
     runtimeOnly fg.deobf("curse.maven:jade-324717:4914105")
     compileOnly fg.deobf("curse.maven:jade-324717:4914105")
 
@@ -173,3 +175,17 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 jar.finalizedBy('reobfJar')
+task devJar(type: Jar) {
+    archiveClassifier.set('dev')
+    from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives devJar
+    archives sourcesJar
+}

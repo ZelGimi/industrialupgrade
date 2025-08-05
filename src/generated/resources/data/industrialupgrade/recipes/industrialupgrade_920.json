@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/obsidian"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:capacitor/simple_capacitor"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/carbon"
+    },
+    "B": {
+      "tag": "forge:plates/obsidian"
+    },
+    "C": {
+      "item": "industrialupgrade:capacitor/simple_capacitor"
+    }
   },
   "pattern": [
     "AAA",

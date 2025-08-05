@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:machines/admin_solar_panel"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/phocore"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "DBD"
+  ],
+  "result": {
+    "item": "quantumgenerators:qg/phsp_gen"
+  }
+}

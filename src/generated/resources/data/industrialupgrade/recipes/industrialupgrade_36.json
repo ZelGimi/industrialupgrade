@@ -1,22 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring_storage/adv_mfsu"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:wiring_storage/adv_mfsu"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
+    }
   },
   "pattern": [
     "CDC",

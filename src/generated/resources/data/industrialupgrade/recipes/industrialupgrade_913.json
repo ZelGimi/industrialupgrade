@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gems/topaz"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:pumps/adv_pump"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/gold"
-      }
-    ]
+    "A": {
+      "tag": "forge:gems/topaz"
+    },
+    "B": {
+      "item": "industrialupgrade:pumps/adv_pump"
+    },
+    "C": {
+      "tag": "forge:ingots/gold"
+    }
   },
   "pattern": [
     "A A",

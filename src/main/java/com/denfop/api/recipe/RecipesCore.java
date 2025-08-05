@@ -183,18 +183,26 @@ public class RecipesCore implements IRecipes {
     public void addFluidRemoveRecipe(String name, FluidStack stack) {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, false));
     }
-
-    public void removeAllRecipesFromList() {
-        this.recipeRemoves.forEach(recipeRemove -> {
-            this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
-
-        });
-
-        this.recipeFluidRemoves.forEach(recipeRemove -> {
-            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.getStack());
-
-        });
+    public void addFluidRemoveRecipe(String name, FluidStack stack, boolean removeAll) {
+        this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, removeAll));
     }
+
+       public void removeAllRecipesFromList() {
+            this.recipeRemoves.forEach(recipeRemove -> {
+                if (recipeRemove.isRemoveAll())
+                    this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+                else
+                    this.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+
+            });
+
+            this.recipeFluidRemoves.forEach(recipeRemove -> {
+
+                    this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(),recipeRemove.isRemoveAll(), recipeRemove.getStack());
+
+            });
+        }
+
 
     @Override
     public void addAdderRecipe(final String name, final BaseMachineRecipe baseMachineRecipe) {

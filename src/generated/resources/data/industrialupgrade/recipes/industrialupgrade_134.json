@@ -1,27 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:lens/nightlinse"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:lens/nightlinse"
+    },
+    "B": {
+      "item": "industrialupgrade:quantumitems4"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:9}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:quantumitems3"
+    }
   },
   "pattern": [
     "BBB",

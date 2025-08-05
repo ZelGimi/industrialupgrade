@@ -266,7 +266,7 @@ public class EventSpectralSuitEffect {
     private boolean isRenderStreak(Player player) {
         NonNullList<ItemStack> armors = player.getInventory().armor;
 
-        return armors.get(2).getItem() == IUItem.spectral_chestplate.getItem();
+        return Minecraft.getInstance().screen == null &&armors.get(2).getItem() == IUItem.spectral_chestplate.getItem();
     }
 
     public static class StreakLocation {

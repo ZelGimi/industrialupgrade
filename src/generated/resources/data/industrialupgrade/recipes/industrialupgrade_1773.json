@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:water_reactors/water_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_43_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_367_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_387_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:water_reactors/water_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_43_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_367_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_387_element"
+    }
   },
   "pattern": [
     "DBD",

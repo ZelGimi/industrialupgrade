@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:machines/quark_solar_panel"
-      }
-    ]
+    {
+      "item": "industrialupgrade:machines/quark_solar_panel"
+    }
   ],
   "result": {
     "item": "industrialupgrade:modulestype/module94"

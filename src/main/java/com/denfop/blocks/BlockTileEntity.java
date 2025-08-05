@@ -59,10 +59,12 @@ import oshi.util.tuples.Pair;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.denfop.api.tile.IMultiTileBlock.CABLE;
 
 public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block implements EntityBlock, IWrenchable, IPlantable, IBlockTag {
+    public  static LinkedList<TileEntityBlock> drops = new LinkedList<>();
 
     public static final Map<BlockPos, TileEntityBlock> teBlockDrop = new HashMap<>();
     public static final Property<Direction> ALL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.allFacings);
@@ -360,7 +362,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
             if (!te.onRemovedByPlayer(player, willHarvest)) {
                 return false;
             }
-            teBlockDrop.put(pos, te);
+           drops.add(te);
         }
 
         return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
@@ -377,7 +379,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof TileEntityBlock te) {
-            te.onNeighborChange(state, neighbor);
+            te.onNeighborChange(level.getBlockState(neighbor), neighbor);
         }
 
     }
@@ -518,7 +520,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public List<ItemStack> getDrops(Level world, BlockPos pos, BlockState state, Entity player) {
         TileEntityBlock te = getTe(world, pos);
         if (te == null) {
-            te = teBlockDrop.get(pos);
+            te = drops.removeLast();
             if (te == null) {
                 return new ArrayList<>();
             } else {
@@ -533,7 +535,6 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
                 final int chance = te.getLevel().random.nextInt(100);
                 ret.addAll(te.getSelfDrops(chance, wasWrench));
                 ret.addAll(te.getAuxDrops(chance));
-                teBlockDrop.remove(pos);
                 return ret;
             }
         }

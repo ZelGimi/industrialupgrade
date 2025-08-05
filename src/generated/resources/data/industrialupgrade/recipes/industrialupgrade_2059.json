@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/barium"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/electrum"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/galliumarsenic"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/barium"
+    },
+    "B": {
+      "tag": "forge:plates/electrum"
+    },
+    "C": {
+      "tag": "forge:plates/galliumarsenic"
+    }
   },
   "pattern": [
     "ABB",

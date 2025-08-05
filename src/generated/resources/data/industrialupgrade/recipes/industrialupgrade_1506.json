@@ -1,41 +1,27 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/machine"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_51_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_276_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_44_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_71_element"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_66_element"
-      }
-    ],
-    "G": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_67_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_71_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_66_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_67_element"
+    }
   },
   "pattern": [
     " E ",

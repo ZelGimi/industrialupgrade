@@ -1,5 +1,7 @@
 {
   "values": [
-    "industrialupgrade:baseore/magnesium"
+    "industrialupgrade:baseore/magnesium",
+    "industrialupgrade:blockspace/enceladus_magnesium_ore",
+    "industrialupgrade:blockspace/eris_magnesium"
   ]
 }

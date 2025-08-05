@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/chromium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/chromium"
+    }
   },
   "pattern": [
     "AAA",

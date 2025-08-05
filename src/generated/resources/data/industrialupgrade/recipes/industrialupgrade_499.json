@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemsunnariumpanel/psp"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:photoniumglass/photoniyglass5"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:stick/manganese"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:reactors/proton"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemsunnariumpanel/psp"
+    },
+    "B": {
+      "item": "industrialupgrade:photoniumglass/photoniyglass5"
+    },
+    "C": {
+      "item": "industrialupgrade:stick/manganese"
+    },
+    "E": {
+      "item": "industrialupgrade:reactors/proton"
+    }
   },
   "pattern": [
     "CEC",

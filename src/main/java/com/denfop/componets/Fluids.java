@@ -372,6 +372,9 @@ public class Fluids extends AbstractComponent {
             this.canAccept = b;
         }
 
+        public String getIdentifier() {
+            return identifier;
+        }
     }
 
     private class FluidHandler implements IFluidHandler {

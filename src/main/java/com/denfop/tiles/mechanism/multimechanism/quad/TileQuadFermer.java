@@ -9,6 +9,7 @@ import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
@@ -40,7 +41,20 @@ public class TileQuadFermer extends TileMultiMachine implements IFarmer {
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
-
+    @Override
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        this.col = customPacketBuffer.readInt();
+    }
+    public int getFertilizer(){
+        return  col;
+    }
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
+        packetBuffer.writeInt(col);
+        return packetBuffer;
+    }
     @Override
     public InvSlot getFertilizerSlot() {
         return fertilizerSlot;

@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcell/itemcell"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:casings/iron"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    },
+    "B": {
+      "tag": "forge:casings/iron"
+    }
   },
   "pattern": [
     "B  ",

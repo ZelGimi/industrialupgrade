@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:tnt"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:nuclearresource/uranium"
-      }
-    ]
+    "A": {
+      "item": "minecraft:tnt"
+    },
+    "B": {
+      "item": "industrialupgrade:nuclearresource/uranium"
+    }
   },
   "pattern": [
     "ABA",

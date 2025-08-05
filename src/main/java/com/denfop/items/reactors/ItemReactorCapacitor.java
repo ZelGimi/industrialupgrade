@@ -21,7 +21,7 @@ public class ItemReactorCapacitor extends ItemDamage implements IReactorItem {
     private final int heat_to_damage;
 
     public ItemReactorCapacitor(final int maxDamage, int level, int heat_to_damage) {
-        super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1), maxDamage);
+        super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1), maxDamage*2);
         this.level = level;
         this.heat_to_damage = heat_to_damage;
     }

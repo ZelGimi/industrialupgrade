@@ -27,8 +27,7 @@ public class SolarSystemRenderer {
             "textures/planet/saturn_ring" +
                     ".png"
     );
-    public static final ResourceLocation ASTEROID_TEXTURE = new ResourceLocation(Constants.MOD_ID, "textures/planet/asteroid" +
-            ".png");
+
     static Map<IBody, Map<IBody, Float[]>> trajectories = new HashMap<>();
     static Random random = new Random(42);
     boolean writeData = false;
@@ -194,6 +193,7 @@ public class SolarSystemRenderer {
         poseStack.pushPose();
         RenderSystem.disableCull();
         RenderSystem.enableBlend();
+        RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
 
         buffer.begin(VertexFormat.Mode.QUADS, POSITION_TEX);
@@ -236,6 +236,7 @@ public class SolarSystemRenderer {
 
         Tesselator.getInstance().end();
         RenderSystem.enableCull();
+        RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
         poseStack.popPose();
     }
@@ -333,20 +334,19 @@ public class SolarSystemRenderer {
                 float z = miniAsteroid.getX() * (float) Math.sin(currentAngle);
 
 
-                renderAsteroid(poseStack,event,miniAsteroid.getSize(), x, 0.5f, z, miniAsteroid.getRotationSpeed());
+                renderAsteroid(poseStack,event,miniAsteroid.getSize(), x, 0.5f, z, miniAsteroid.getRotationSpeed(),asteroids);
             });
         });
         poseStack.popPose();
     }
 
-    private void renderAsteroid(PoseStack poseStack, RenderLevelStageEvent event, float size, float x, float y, float z, float rotationSpeed) {
+    private void renderAsteroid(PoseStack poseStack, RenderLevelStageEvent event, float size, float x, float y, float z, float rotationSpeed, IAsteroid asteroid) {
         poseStack.pushPose();
         poseStack.translate(x, y, z);
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotationSpeed));
         RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f,1);
 
-        renderPlanet(poseStack, event, size, ASTEROID_TEXTURE, 0, 0, 0, 0, 0); // renderPlanet можно использовать для отрисовки объекта без текстуры
-
+        renderPlanet(poseStack, event, size, asteroid.getLocation(), 0, 0, 0, 0, 0);
         poseStack.popPose();
     }
 }

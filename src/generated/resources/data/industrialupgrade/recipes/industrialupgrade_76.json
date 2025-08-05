@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:doubleplate/muntsa"
-      }
-    ],
+    "A": {
+      "tag": "forge:doubleplate/muntsa"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
@@ -18,11 +16,9 @@
       "item": "industrialupgrade:energy/electric_wrench",
       "nbt": "{Damage:0}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:battery/energy_crystal"
-      }
-    ],
+    "D": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    },
     "E": {
       "type": "forge:nbt",
       "count": 1,
@@ -35,11 +31,9 @@
       "item": "industrialupgrade:circuit/nanocircuit",
       "nbt": "{level:6}"
     },
-    "G": [
-      {
-        "item": "industrialupgrade:energy/purifier"
-      }
-    ]
+    "G": {
+      "item": "industrialupgrade:energy/purifier"
+    }
   },
   "pattern": [
     "ABA",

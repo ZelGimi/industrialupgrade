@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:royal_jelly"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/advancedalloy"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/carbon"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_295_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:royal_jelly"
+    },
+    "C": {
+      "tag": "forge:plates/advancedalloy"
+    },
+    "D": {
+      "tag": "forge:plates/carbon"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_295_element"
+    }
   },
   "pattern": [
     "DBD",

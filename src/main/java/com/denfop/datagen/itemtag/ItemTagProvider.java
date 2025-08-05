@@ -9,15 +9,19 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemTagProvider extends ItemTagsProvider {
     public static List<IItemTag> list = new ArrayList<>();
+    public static Map<ResourceLocation,List<ItemStack>> mapItems = new HashMap<>();
 
     public ItemTagProvider(DataGenerator gen, BlockTagsProvider blockTags, @Nullable ExistingFileHelper existingFileHelper) {
         super(gen, blockTags, Constants.MOD_ID, existingFileHelper);
@@ -62,6 +66,8 @@ public class ItemTagProvider extends ItemTagsProvider {
         addGem("Americium", IUItem.radiationresources.getStack(0));
         addGem("Neptunium", IUItem.radiationresources.getStack(1));
         addGem("Curium", IUItem.radiationresources.getStack(2));
+        addGem("Thorium", IUItem.toriy.getItem());
+        addIngot("Uranium", IUItem.itemiu.getStack(2));
         this.tag(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge:crystal/proton"))).add(IUItem.proton.getItem());
         this.tag(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge:crystal/photon"))).add(IUItem.photoniy.getItem());
         this.tag(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("forge:crystalingot/photon"))).add(IUItem.photoniy_ingot.getItem());

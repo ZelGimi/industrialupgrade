@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/callisto_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/callisto_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/callisto_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/callisto_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/callisto_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/callisto_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/callisto_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/callisto_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone/callisto_cobblestone"

@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.*;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -41,7 +42,11 @@ public class TileEntityHologramSpace extends TileEntityBlock {
     public TileEntityHologramSpace(BlockPos p_155229_, BlockState p_155230_) {
         super(BlockBaseMachine3.hologram_space, p_155229_, p_155230_);
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.hologram.info"));
+    }
     @Override
     public void onLoaded() {
         super.onLoaded();

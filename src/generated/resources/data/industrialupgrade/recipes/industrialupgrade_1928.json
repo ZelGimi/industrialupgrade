@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/antimagnet"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_124_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_137_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:motors_with_improved_bearings_"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/antimagnet"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_124_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_137_element"
+    },
+    "E": {
+      "item": "industrialupgrade:motors_with_improved_bearings_"
+    }
   },
   "pattern": [
     "CBC",

@@ -1,6 +1,7 @@
 package com.denfop.recipe;
 
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -15,7 +16,7 @@ public interface IInputItemStack {
     int getAmount();
 
     List<ItemStack> getInputs();
-
+    CompoundTag writeNBT();
     boolean hasTag();
 
     TagKey<Item> getTag();

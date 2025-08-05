@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/stellite"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/stellite"
+    }
   ],
   "result": {
     "count": 9,

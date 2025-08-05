@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_320_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/glass_1"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/zeliber"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:medium_current_converter_to_low"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:adv_motors_with_improved_bearings_"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_320_element"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/glass_1"
+    },
+    "C": {
+      "tag": "forge:plates/zeliber"
+    },
+    "D": {
+      "item": "industrialupgrade:medium_current_converter_to_low"
+    },
+    "E": {
+      "item": "industrialupgrade:adv_motors_with_improved_bearings_"
+    }
   },
   "pattern": [
     "AAA",

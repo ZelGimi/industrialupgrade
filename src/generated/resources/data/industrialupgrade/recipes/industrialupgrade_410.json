@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/polonium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/polonium"
+    }
   ],
   "result": {
     "count": 9,

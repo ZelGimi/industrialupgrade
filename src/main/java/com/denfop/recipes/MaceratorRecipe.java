@@ -5,6 +5,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.blocks.BlockRaws;
 import com.denfop.recipe.IInputHandler;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -230,7 +231,12 @@ public class MaceratorRecipe {
         addmacerator(new ItemStack(Blocks.LAPIS_BLOCK), "forge:dusts/Lapis", 9);
         addmacerator(new ItemStack(Items.LAPIS_LAZULI), "forge:dusts/Lapis", 1);
         addmacerator(new ItemStack(Blocks.STONE), new ItemStack(Blocks.COBBLESTONE));
-
+        for (int i = 0; i < BlockRaws.Type.values().length; i++) {
+            addmacerator("forge:storage_blocks/"+BlockRaws.Type.values()[i].getName(), "forge:crushed/"+BlockRaws.Type.values()[i].name(),18);
+        }
+        addmacerator("forge:storage_blocks/raw_iron", "forge:crushed/iron",18);
+        addmacerator("forge:storage_blocks/raw_copper", "forge:crushed/copper",18);
+        addmacerator("forge:storage_blocks/raw_gold", "forge:crushed/gold",18);
     }
 
     private static void addmacerator(ItemStack input, String output, int i) {

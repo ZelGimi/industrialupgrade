@@ -5,6 +5,7 @@ import com.denfop.DataBlock;
 import com.denfop.DataMultiBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +23,7 @@ import net.minecraft.world.phys.HitResult;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN;
-import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL;
+import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.*;
 
 public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     final String modName;
@@ -85,8 +85,30 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
         ItemStack tool = p_60538_.getParameter(TOOL);
         BlockPos pos = new BlockPos(p_60538_.getParameter(ORIGIN));
         List<ItemStack> drops = NonNullList.create();
-        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool));
+        if (tool.isEmpty() && (p_60538_.getOptionalParameter(THIS_ENTITY) instanceof Player player))
+            tool = player.getItemInHand(InteractionHand.MAIN_HAND);
+        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0)
+            drops = getDropsSilk(p_60538_.getLevel(), pos, p_60537_, 0);
+        else
+            drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool));
+
         return drops;
+    }
+    public List<ItemStack> getDropsSilk(
+            @Nonnull final Level world,
+            @Nonnull final BlockPos pos,
+            @Nonnull final BlockState state,
+            final int fortune
+    ) {
+        if (data != null) {
+            return List.of(new ItemStack(this.getData().getItem(getMetaFromState(state))));
+
+        }
+        if (multiData != null) {
+            return List.of(new ItemStack(this.getMultiData().getItem(getMetaFromState(state))));
+
+        }
+        return List.of(ItemStack.EMPTY);
     }
 
     public List<ItemStack> getDrops(

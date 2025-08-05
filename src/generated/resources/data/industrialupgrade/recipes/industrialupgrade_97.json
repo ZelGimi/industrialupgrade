@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/manganese"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:casings/chromium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/redbrass"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:basemachine/per_matter"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:itemcore/procore"
-      }
-    ]
+    "A": {
+      "tag": "forge:casings/manganese"
+    },
+    "B": {
+      "tag": "forge:casings/chromium"
+    },
+    "C": {
+      "tag": "forge:doubleplate/redbrass"
+    },
+    "D": {
+      "item": "industrialupgrade:basemachine/per_matter"
+    },
+    "E": {
+      "item": "industrialupgrade:itemcore/procore"
+    }
   },
   "pattern": [
     "ABA",

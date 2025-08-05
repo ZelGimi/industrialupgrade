@@ -88,11 +88,6 @@ public class TileEnergyRemover extends TileEntityInventory implements
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
-
 
 
     public long getIdNetwork() {
@@ -123,7 +118,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
 
         }
@@ -148,7 +143,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
         }
         super.onUnloaded();
     }
@@ -207,14 +202,16 @@ public class TileEnergyRemover extends TileEntityInventory implements
         if (this.work) {
             for (IEnergyConductor conductor : this.conductorList) {
                 TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
-                        conductor);
-                tile.onUnloaded();
+                        conductor,level);
                 final List<ItemStack> drops = tile.getBlock().getDrops(
                         level,
                         tile.getPos(),
                         tile.getBlockState(),null
                 );
                 if (this.slot.add(drops.get(0))) {
+                tile.onUnloaded();
+
+
                    this.getWorld().removeBlock( tile.getPos(),false);
                 }
 

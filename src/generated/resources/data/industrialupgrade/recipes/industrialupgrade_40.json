@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring_storage/had_mfsu"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:battery/itembatlamacrystal"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:wiring_storage/had_mfsu"
+    },
+    "B": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:10}"
     },
-    "D": [
-      {
-        "item": "industrialupgrade:itemcore/adrcore"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ]
+    "D": {
+      "item": "industrialupgrade:itemcore/adrcore"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems2"
+    }
   },
   "pattern": [
     "EBE",

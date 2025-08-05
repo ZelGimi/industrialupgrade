@@ -6,6 +6,7 @@ import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.mechanism.*;
 import com.denfop.entity.EntityNuclearBombPrimed;
+import com.denfop.entity.SmallBee;
 import com.denfop.items.ItemUpgradeModule;
 import com.denfop.items.*;
 import com.denfop.items.armour.*;
@@ -14,6 +15,9 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.bee.ItemBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
+import com.denfop.items.book.ItemBook;
+import com.denfop.items.creative.ItemCreativeBattery;
+import com.denfop.items.creative.ItemCreativeTomeResearchSpace;
 import com.denfop.items.crop.ItemAgriculturalAnalyzer;
 import com.denfop.items.crop.ItemCrops;
 import com.denfop.items.energy.*;
@@ -826,6 +830,19 @@ public class IUItem {
     public static DataSimpleItem<ItemAxe, ResourceLocation> topaz_axe;
     public static DataSimpleItem<ItemShovel, ResourceLocation> topaz_shovel;
     public static DataSimpleItem<ItemShovel, ResourceLocation> sapphire_shovel;
+    public static DataSimpleItem<ItemBook, ResourceLocation> book;
+    public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBattery;
+    public static DataSimpleItem<ItemCreativeTomeResearchSpace, ResourceLocation> creativeTomeResearch;
+    public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBatteryWireless;
+    public static DataBlockEntity<BlockCreativeBlocks> creativeBlock;
+    public static RegistryObject<EntityType<SmallBee>> entity_bee;
+    public static DataBlock<BlockRaws.Type, BlockRaws, ItemBlockRaws> rawsBlock;
+    public static DataSimpleItem<ItemPipette, ResourceLocation> pipette;
+    public static DataBlock<BlockPlanksRubberWood.Type, BlockPlanksRubberWood, ItemBlockRubberPlanks> blockRubberWoods;
+    public static DataSimpleItem<ItemSmallFluidCell, ResourceLocation> smallFluidCell;
+    public static DataSimpleItem<ItemReinforcedFluidCell, ResourceLocation> reinforcedFluidCell;
+    public static DataSimpleItem<ItemLatexPipette, ResourceLocation> latexPipette;
+
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

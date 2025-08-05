@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nuclearresource/neptunium_dust"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdust/stone_dust"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nuclearresource/neptunium_dust"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdust/stone_dust"
+    }
   },
   "pattern": [
     " B ",

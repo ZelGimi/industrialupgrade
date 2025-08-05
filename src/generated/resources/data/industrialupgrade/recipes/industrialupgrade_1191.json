@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/inconel"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_575_element"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/inconel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_575_element"
+    }
   },
   "pattern": [
     "AAA",

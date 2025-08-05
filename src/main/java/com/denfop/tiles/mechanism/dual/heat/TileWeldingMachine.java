@@ -173,11 +173,11 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
 
         addRecipe(IUItem.crafting_elements.getItemStack(437),
                 IUItem.sunnariumpanel.getItemStack(3, 4),
-                IUItem.crafting_elements.getItemStack(302), 2000);
+                IUItem.crafting_elements.getItemStack(407), 2000);
 
         addRecipe(IUItem.crafting_elements.getItemStack(437),
                 IUItem.sunnariumpanel.getItemStack(4, 4),
-                IUItem.crafting_elements.getItemStack(407), 2000);
+                IUItem.crafting_elements.getItemStack(382), 2000);
 
         addRecipe(IUItem.crafting_elements.getItemStack(437),
                 IUItem.sunnariumpanel.getItemStack(5, 4),

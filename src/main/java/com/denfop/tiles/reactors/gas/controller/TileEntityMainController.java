@@ -1,5 +1,6 @@
 package com.denfop.tiles.reactors.gas.controller;
 
+import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.multiblock.IMultiElement;
@@ -119,7 +120,11 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
         );
         this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation() * 100));
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.reactor_safety_doom.info"));
+    }
     @Override
     public double getModuleStableHeat() {
         return reactorsModules.getStableHeat();
@@ -268,7 +273,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
                 this.energy.createDelegate();
                 this.energy.onLoaded();
                 this.energy.setCapacity(this.energy.defaultCapacity);
-                this.energy.storage = 0;
+                this.energy.buffer.storage = 0;
             }
         }
     }
@@ -346,7 +351,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
             if (this.full) {
 
                 if (this.typeWork == EnumTypeWork.WORK) {
-                    this.energy.capacity = Math.max(this.output, this.energy.getDefaultCapacity());
+                    this.energy.buffer.capacity = Math.max(this.output, this.energy.getDefaultCapacity());
                     if (this.getWorld().getGameTime() % 20 == 0 && this.work) {
                         try {
                             reactor.onTick();
@@ -385,7 +390,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
                         this.energy.delegate = null;
                         this.energy.createDelegate();
                         this.energy.onLoaded();
-                        this.energy.storage = 0;
+                        this.energy.buffer.storage = 0;
                     }
                 }
 
@@ -996,7 +1001,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
     public void damageFan(final int i) {
         ((ItemsFan) listInterCooler.get(i).getSlot().get(0).getItem()).applyCustomDamage(
                 listInterCooler.get(i).getSlot().get(0),
-                -1,
+                1,
                 null
         );
 
@@ -1037,7 +1042,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
         ((ItemsPumps) listReCirculationPump.get(i).getSlot().get(0).getItem()).applyCustomDamage(listReCirculationPump
                 .get(i)
                 .getSlot()
-                .get(0), -1, null);
+                .get(0), 1, null);
     }
 
 }

@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/silver"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/duralumin"
+    },
+    "B": {
+      "tag": "forge:plates/silver"
+    }
   },
   "pattern": [
     " A ",

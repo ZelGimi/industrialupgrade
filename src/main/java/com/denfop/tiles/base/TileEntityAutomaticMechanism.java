@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -69,7 +70,12 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
         }
         main_handler = this.getCapability(ForgeCapabilities.ITEM_HANDLER, this.getFacing()).orElse(null);
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.automation_mechanism.info"));
+        tooltip.add(Localization.translate("iu.automation_mechanism.info1"));
+    }
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();

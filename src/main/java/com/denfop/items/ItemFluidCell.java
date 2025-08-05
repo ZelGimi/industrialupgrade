@@ -1,13 +1,18 @@
 package com.denfop.items;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,6 +21,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,10 +41,13 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
+
+import static com.denfop.IUCore.fluidCellTab;
 
 public class ItemFluidCell extends ItemFluidContainer {
     public ItemFluidCell() {
-        super(1000);
+        super(new Properties().tab(fluidCellTab).stacksTo(64).setNoRepair(), 1000);
     }
 
     public boolean canfill(Fluid fluid) {
@@ -50,6 +59,17 @@ public class ItemFluidCell extends ItemFluidContainer {
         if (this.allowedIn(p_41391_)) {
             p_41392_.addAll(getAllStacks());
 
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, list, tooltipFlag);
+        if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            list.add(Component.literal(Localization.translate("press.lshift")));
+        }
+        if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            list.add(Component.literal(Localization.translate("iu.fluid_cell.info")));
         }
     }
 

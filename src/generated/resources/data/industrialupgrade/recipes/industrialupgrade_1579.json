@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "minecraft:planks"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/tin1"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ]
+    "A": {
+      "tag": "minecraft:planks"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/tin1"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    }
   },
   "pattern": [
     "ABA",

@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:alloynugget/molybdenum_steel"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:alloynugget/molybdenum_steel"
+    }
   },
   "pattern": [
     "AAA",

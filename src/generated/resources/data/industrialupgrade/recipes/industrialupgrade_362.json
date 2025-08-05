@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/gallium_arsenic"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/gallium_arsenic"
+    }
   ],
   "result": {
     "count": 9,

@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemdust/nanoactivated_mixture_dust"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:itemdust/emerald_dust"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/aluminumbronze"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:itemdust/nanoactivated_mixture_dust"
+    },
+    "C": {
+      "item": "industrialupgrade:itemdust/emerald_dust"
+    },
+    "D": {
+      "tag": "forge:plates/ferromanganese"
+    },
+    "E": {
+      "tag": "forge:plates/aluminumbronze"
+    }
   },
   "pattern": [
     "EBE",

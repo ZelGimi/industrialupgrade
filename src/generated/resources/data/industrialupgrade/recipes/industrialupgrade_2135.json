@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:fertilizer"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gears/barium"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/steel"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "industrialupgrade:fertilizer"
+    },
+    "C": {
+      "tag": "forge:gears/barium"
+    },
+    "D": {
+      "tag": "forge:plates/steel"
+    }
   },
   "pattern": [
     "CBC",

@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_623_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:moremachine3/quad_farmer"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_622_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_52_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_611_element"
-      }
-    ],
-    "H": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_604_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    },
+    "B": {
+      "item": "industrialupgrade:moremachine3/quad_farmer"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_622_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_52_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_611_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_604_element"
+    }
   },
   "pattern": [
     "AHA",

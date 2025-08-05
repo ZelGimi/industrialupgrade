@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/invar"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:gems/sapphire"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:gears/ferromanganese"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/ferromanganese"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/invar"
+    },
+    "C": {
+      "tag": "forge:gems/sapphire"
+    },
+    "D": {
+      "tag": "forge:gears/ferromanganese"
+    },
+    "E": {
+      "tag": "forge:plates/ferromanganese"
+    }
   },
   "pattern": [
     "CBC",

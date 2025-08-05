@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/yttrium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/yttrium"
+    }
   ],
   "result": {
     "count": 9,

@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:gems/diamond"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:pumps/imp_pump"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/osmium"
-      }
-    ]
+    "A": {
+      "tag": "forge:gems/diamond"
+    },
+    "B": {
+      "item": "industrialupgrade:pumps/imp_pump"
+    },
+    "C": {
+      "tag": "forge:plates/osmium"
+    }
   },
   "pattern": [
     "A A",

@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:smeltery/smeltery_casing"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:redstone_block"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:repeater"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:smeltery/smeltery_casing"
+    },
+    "C": {
+      "item": "minecraft:redstone_block"
+    },
+    "D": {
+      "item": "minecraft:repeater"
+    }
   },
   "pattern": [
     " C ",

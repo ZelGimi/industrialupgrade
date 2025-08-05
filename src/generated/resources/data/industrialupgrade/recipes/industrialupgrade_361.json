@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:ingots/galliumarsenic"
-      }
-    ]
+    "A": {
+      "tag": "forge:ingots/galliumarsenic"
+    }
   },
   "pattern": [
     "AAA",

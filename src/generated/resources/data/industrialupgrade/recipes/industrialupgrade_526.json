@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:daynight_solar_panel_glass/spe"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:excitednucleus/specore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:machines/quantum_solar_paneliu"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:daynight_solar_panel_glass/spe"
+    },
+    "B": {
+      "item": "industrialupgrade:excitednucleus/specore"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems2"
+    },
+    "D": {
+      "item": "industrialupgrade:machines/quantum_solar_paneliu"
+    },
     "E": {
       "type": "forge:nbt",
       "count": 1,

@@ -69,7 +69,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
                     List<TagKey<Item>> tags = itemStack.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList();
                     for (TagKey<Item> i : tags) {
                         String name = i.location().getPath();
-                        if (name.startsWith("ores") || name.startsWith("raw_materials")) {
+                        if (name.startsWith("ores") || name.startsWith("raw_materials")|| name.startsWith("storage_blocks/raw_")) {
                             return false;
                         }
                     }
@@ -102,6 +102,11 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.primal_repair1"));
+
+        tooltip.add(Localization.translate("iu.primal_repair.info"));
+        tooltip.add(Localization.translate("iu.primal_macerator.infi"));
+
+        tooltip.add(Localization.translate( "iu.primal_macerator.info2"));
     }
 
     @Override
@@ -243,7 +248,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
         ItemStack stack = player.getItemInHand(hand);
         if (!this.getWorld().isClientSide) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (4 + (data.getOrDefault(player.getUUID(), 0.0) / 10d));
+                progress += (int) (15 + (data.getOrDefault(player.getUUID(), 0.0) / 10d));
                 this.getCooldownTracker().setTick(10);
                 this.setActive(!this.getActive());
                 if (!this.getWorld().isClientSide) {

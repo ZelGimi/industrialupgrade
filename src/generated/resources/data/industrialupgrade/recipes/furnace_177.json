@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/cobalt_chrome"
+    "item": "industrialupgrade:alloydust/permalloy"
   },
-  "result": "industrialupgrade:alloyingot/cobalt_chrome"
+  "result": "industrialupgrade:alloyingot/permalloy"
 }

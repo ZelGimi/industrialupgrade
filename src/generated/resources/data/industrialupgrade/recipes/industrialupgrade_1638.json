@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
     {
       "type": "forge:nbt",
@@ -7,11 +7,9 @@
       "item": "industrialupgrade:tools/treetap",
       "nbt": "{Damage:0}"
     },
-    [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_278_element"
-      }
-    ]
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_278_element"
+    }
   ],
   "result": {
     "item": "industrialupgrade:energy/electric_treetap"

@@ -1,0 +1,12 @@
+{
+    "parent": "forge:item/default",
+    "loader": "industrialupgrade:fluid_container",
+    "textures": {
+        "base": "industrialupgrade:items/reinforced_empty_cell",
+        "fluid": "industrialupgrade:items/fluid_background",
+        "particle": "industrialupgrade:items/fluid_background"
+    },
+    "flip_gas": false,
+    "apply_tint": true,
+    "fluid": "minecraft:empty"
+}

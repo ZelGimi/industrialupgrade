@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore/manganese"
+    "industrialupgrade:baseore/manganese",
+    "industrialupgrade:blockspace/eris_manganese"
   ]
 }

@@ -15,7 +15,7 @@ public class TilePhotonicCentrifuge extends TileMultiMachine {
         super(
                 EnumMultiMachine.Pho_Centrifuge, BlocksPhotonicMachine.photonic_centrifuge, pos, state
         );
-        this.cold.upgrade = true;
+
     }
 
     @Override

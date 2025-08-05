@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot2/neodymium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot2/neodymium"
+    }
   ],
   "result": {
     "count": 9,

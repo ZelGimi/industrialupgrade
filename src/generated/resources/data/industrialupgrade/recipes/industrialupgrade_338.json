@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:alloyingot/molybdenum_steel"
-      }
-    ]
+    {
+      "item": "industrialupgrade:alloyingot/molybdenum_steel"
+    }
   ],
   "result": {
     "count": 9,

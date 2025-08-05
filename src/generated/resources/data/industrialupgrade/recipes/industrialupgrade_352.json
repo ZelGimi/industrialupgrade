@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy1/superalloy_rene"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy1/superalloy_rene"
+    }
   ],
   "result": {
     "count": 9,

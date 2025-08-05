@@ -1,8 +1,11 @@
 package com.denfop.recipe;
 
 
+import com.denfop.componets.Fluids;
 import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +25,31 @@ public class InputFluidStack implements IInputItemStack {
     static {
         fluidHandlerInfo = new FluidHandlerInfo(Collections.emptyList());
     }
-
+    public InputFluidStack(CompoundTag compoundTag){
+        boolean exist = compoundTag.getBoolean("exist");
+        if (exist){
+            ResourceLocation fluidId = new ResourceLocation(compoundTag.getString("Fluid"));
+            this.fluid = ForgeRegistries.FLUIDS.getValue(fluidId);
+            this.amount = compoundTag.getInt("Amount");
+        }else{
+            this.fluid = Fluids.EMPTY;
+            this.amount = 1;
+        }
+    }
+    @Override
+    public CompoundTag writeNBT() {
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putByte("id", (byte) 2);
+        compoundTag.putBoolean("exist",fluid != null && !fluid.equals(Fluids.EMPTY) && amount != 0);
+        if (fluid != null && !fluid.equals(Fluids.EMPTY)) {
+            ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
+            if (fluidId != null) {
+                compoundTag.putString("Fluid", fluidId.toString());
+                compoundTag.putInt("Amount", amount);
+            }
+        }
+        return null;
+    }
     private final Fluid fluid;
     private final int amount;
 
@@ -124,6 +151,10 @@ public class InputFluidStack implements IInputItemStack {
     public boolean equals(Object obj) {
         InputFluidStack other;
         return obj != null && this.getClass() == obj.getClass() && (other = (InputFluidStack) obj).fluid == this.fluid && other.amount == this.amount;
+    }
+
+    public FluidStack getFluid() {
+        return  new FluidStack(fluid,amount);
     }
 
     private static class FluidHandlerInfo {

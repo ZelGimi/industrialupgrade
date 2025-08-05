@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
     "D": {
       "type": "forge:nbt",
@@ -7,11 +7,9 @@
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:4}"
     },
-    "M": [
-      {
-        "item": "industrialupgrade:itemiucrafring/itemirradiantglasspane"
-      }
-    ]
+    "M": {
+      "item": "industrialupgrade:itemiucrafring/itemirradiantglasspane"
+    }
   },
   "pattern": [
     "MDM",

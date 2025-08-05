@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/invar"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/invar"
+    }
   ],
   "result": {
     "count": 9,

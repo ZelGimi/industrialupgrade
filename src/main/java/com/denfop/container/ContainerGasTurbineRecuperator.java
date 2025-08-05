@@ -10,7 +10,7 @@ public class ContainerGasTurbineRecuperator extends ContainerFullInv<TileEntityG
             Player var1
     ) {
         super(tileEntityGeothermalExchanger, var1);
-        this.addSlotToContainer(new SlotInvSlot(tileEntityGeothermalExchanger.getExchanger(), 0, 81, 45));
+        this.addSlotToContainer(new SlotInvSlot(tileEntityGeothermalExchanger.getExchanger(), 0, 80, 35));
     }
 
 }

@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "B": [
-      {
-        "item": "industrialupgrade:battery/lapotron_crystal"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:photoniy_ingot"
-      }
-    ]
+    "B": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
+    }
   },
   "pattern": [
     "BCB",

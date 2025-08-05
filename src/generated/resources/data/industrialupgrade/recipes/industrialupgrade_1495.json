@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/chromium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/cobalt"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/nichrome"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/alcled"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/chromium"
+    },
+    "C": {
+      "tag": "forge:plates/cobalt"
+    },
+    "D": {
+      "tag": "forge:plates/nichrome"
+    },
+    "E": {
+      "tag": "forge:plates/alcled"
+    }
   },
   "pattern": [
     "CDC",

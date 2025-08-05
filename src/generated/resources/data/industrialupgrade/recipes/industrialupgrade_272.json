@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockalloy/ferromanganese"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockalloy/ferromanganese"
+    }
   ],
   "result": {
     "count": 9,

@@ -1,26 +1,14 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:casings/spinel"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:bricks"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:casings/yttrium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_772_element"
+    }
   },
   "pattern": [
-    " C ",
-    "ABA",
-    " C "
+    "AA ",
+    "AA ",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:smeltery/smeltery_casing"

@@ -4,6 +4,7 @@ import com.denfop.mixin.access.DeferredRegisterAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
@@ -14,9 +15,9 @@ public class DataSimpleItem<E extends Item, T extends ResourceLocation> {
 
     RegistryObject<E> registryObject;
     public DataSimpleItem(T resource, Supplier<E> supplier) {
-        this(resource,supplier,IUCore.MODID);
+        this(resource,supplier,IUCore.MODID,ITEMS);
     }
-    public DataSimpleItem(T resource, Supplier<E> supplier,String location) {
+    public DataSimpleItem(T resource, Supplier<E> supplier, String location, DeferredRegister<Item> ITEMS) {
         String namespace = resource.getNamespace().equals("minecraft") ? "" : resource.getNamespace() + "/";
         final ResourceLocation key = new ResourceLocation(location, namespace + resource.getPath());
         RegistryObject<E> ret = RegistryObject.create(key, ITEMS.getRegistryKey(), location);

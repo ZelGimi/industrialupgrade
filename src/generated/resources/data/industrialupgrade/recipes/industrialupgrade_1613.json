@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wiring/copper1"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:dusts/coal"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:wiring/copper1"
+    },
+    "B": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "tag": "forge:dusts/coal"
+    }
   },
   "pattern": [
     " A ",

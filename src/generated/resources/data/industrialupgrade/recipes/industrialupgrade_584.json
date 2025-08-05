@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:itemcell/itemcell"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/alumel"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:itemcell/itemcell"
+    },
+    "B": {
+      "tag": "forge:plates/alumel"
+    }
   },
   "pattern": [
     "B B",

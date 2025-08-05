@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemspace/umbriel_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/umbriel_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/umbriel_boulder"
-      }
-    ],
-    [
-      {
-        "item": "industrialupgrade:itemspace/umbriel_boulder"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemspace/umbriel_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/umbriel_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/umbriel_boulder"
+    },
+    {
+      "item": "industrialupgrade:itemspace/umbriel_boulder"
+    }
   ],
   "result": {
     "item": "industrialupgrade:spacecobblestone1/umbriel_cobblestone"

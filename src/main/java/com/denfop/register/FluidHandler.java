@@ -4,7 +4,9 @@ import com.denfop.blocks.BlockFluidIU;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.IUFluid;
 import com.denfop.blocks.fluid.IUFluidType;
+import com.denfop.items.ItemBucket;
 import com.denfop.mixin.invoker.MaterialInvoker;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
@@ -13,6 +15,7 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
 
 import static com.denfop.register.Register.BLOCKS;
+import static com.denfop.register.Register.ITEMS;
 
 public class FluidHandler {
     public final RegistryObject<IUFluid> source;
@@ -27,10 +30,10 @@ public class FluidHandler {
         this.flowing = Register.FLUIDS.register(fluidName.getName().toLowerCase() + "_flowing",
                 () -> new IUFluid(this.properties, false));
         Material steam = ((MaterialInvoker) new Material.Builder(MaterialColor.COLOR_GRAY).liquid()).getNotSolidBlocking().replaceable().build();
-
+        RegistryObject<Item> bucket = ITEMS.register("bucket/" + fluidName.name().toLowerCase().replace("fluid",""), () -> new ItemBucket(source,fluidName));
         RegistryObject<LiquidBlock> blockRegistryObject = BLOCKS.register("fluid/" + fluidName.name().toLowerCase(), () -> new BlockFluidIU(source, BlockBehaviour.Properties.of(steam)));
         this.liquedBlock = blockRegistryObject;
-        this.properties = new ForgeFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).levelDecreasePerBlock(2).block(blockRegistryObject);
+        this.properties = new ForgeFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).levelDecreasePerBlock(2).bucket(bucket).block(blockRegistryObject);
 
     }
 

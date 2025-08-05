@@ -1,5 +1,6 @@
 package com.denfop.componets;
 
+import com.denfop.IUItem;
 import com.denfop.api.cool.*;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -116,6 +118,19 @@ public class CoolComponent extends AbstractComponent {
         ret.putBoolean("allow", this.allow);
 
         return ret;
+    }
+    public TypePurifierJob getPurifierJob() {
+        return TypePurifierJob.ItemStack;
+    }
+
+    public boolean canUsePurifier(Player player) {
+        return this.upgrade;
+    }
+
+    public ItemStack getItemStackUpgrade() {
+        this.upgrade = false;
+        this.meta = 0;
+        return new ItemStack(IUItem.coolupgrade.getStack(meta));
     }
 
     public void onLoaded() {

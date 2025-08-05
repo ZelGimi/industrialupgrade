@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:daynight_solar_panel_glass/kvr"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:excitednucleus/kvrcore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:quantumitems4"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:machines/graviton_solar_panel"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:daynight_solar_panel_glass/kvr"
+    },
+    "B": {
+      "item": "industrialupgrade:excitednucleus/kvrcore"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems4"
+    },
+    "D": {
+      "item": "industrialupgrade:machines/graviton_solar_panel"
+    },
     "E": {
       "type": "forge:nbt",
       "count": 1,

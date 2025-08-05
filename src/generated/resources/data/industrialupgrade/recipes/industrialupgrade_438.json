@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:circuit/spectralcircuit"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:wiring/glass9"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:doubleplate/vanadoalumite"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:circuit/spectralcircuit"
+    },
+    "B": {
+      "item": "industrialupgrade:wiring/glass9"
+    },
+    "C": {
+      "tag": "forge:doubleplate/vanadoalumite"
+    }
   },
   "pattern": [
     "BBB",

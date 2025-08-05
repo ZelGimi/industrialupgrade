@@ -289,7 +289,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
 
             }
         }
-        if (work && !explode && this.reactors != null) {
+        if (work && !explode && this.reactors != null && logicReactor != null) {
             this.logicReactor.onTick();
             this.reactor.tick(this.logicReactor.getMaxHeat());
             this.explode = this.reactor.explode;

@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:additionmodule/mov_charge_rf_item"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:additionmodule/wireless"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:additionmodule/mov_charge_rf_item"
+    },
+    "B": {
+      "item": "industrialupgrade:additionmodule/wireless"
+    }
   },
   "pattern": [
     "ABA",

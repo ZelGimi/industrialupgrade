@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:machines/ultimate_solar_paneliu"
-      }
-    ]
+    {
+      "item": "industrialupgrade:machines/ultimate_solar_paneliu"
+    }
   ],
   "result": {
     "item": "industrialupgrade:modulestype/module63"

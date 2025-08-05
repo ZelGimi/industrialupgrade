@@ -146,7 +146,7 @@ public class TileEnergyController extends TileEntityInventory implements
         if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventLoadController(this,level));
 
         }
 
@@ -155,7 +155,7 @@ public class TileEnergyController extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         if (!this.getWorld().isClientSide) {
-            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
+            MinecraftForge.EVENT_BUS.post(new EventUnloadController(this,level));
         }
         super.onUnloaded();
     }
@@ -250,9 +250,5 @@ public class TileEnergyController extends TileEntityInventory implements
     }
 
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
 
 }

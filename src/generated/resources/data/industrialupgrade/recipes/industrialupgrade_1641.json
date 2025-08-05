@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:energy_tools/drill"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gems/diamond"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:energy_tools/drill"
+    },
+    "B": {
+      "tag": "forge:gems/diamond"
+    }
   },
   "pattern": [
     "   ",

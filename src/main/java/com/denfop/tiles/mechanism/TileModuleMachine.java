@@ -78,7 +78,8 @@ public class TileModuleMachine extends TileElectricMachine
     @Override
     public void updateTileServer(Player player, double event) {
         if (!this.inputslotA.isEmpty()) {
-            initiate(1);
+            initiate(2);
+            initiate(0);
             this.inputslotA.get(0).setTag(new CompoundTag());
             for (int i = 0; i < this.inputslot.size(); i++) {
                 String l = "number_" + i;
@@ -89,7 +90,6 @@ public class TileModuleMachine extends TileElectricMachine
             }
             final CompoundTag nbt = this.inputslotA.get(0).getTag();
             nbt.putInt("size", this.listItems.size());
-
         }
 
 

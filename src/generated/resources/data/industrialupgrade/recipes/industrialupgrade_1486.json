@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_620_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:battery/itembatlamacrystal"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_620_element"
+    },
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    }
   },
   "pattern": [
     " C ",

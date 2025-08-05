@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:quantumitems3"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:itemcore/specore"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:rotors_upgrade/rotorupgrade6"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:quantumitems2"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/specore"
+    },
+    "C": {
+      "item": "industrialupgrade:rotors_upgrade/rotorupgrade6"
+    },
+    "D": {
+      "item": "industrialupgrade:quantumitems2"
+    }
   },
   "pattern": [
     "ADA",

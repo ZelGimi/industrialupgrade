@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:upgrade_block/upgrade_block"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:upgrade_block/upgrade_block"
+    },
     "B": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_273_element",
       "nbt": "{level:3}"
     },
-    "C": [
-      {
-        "tag": "forge:plates/caravky"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/nichrome"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_67_element"
-      }
-    ]
+    "C": {
+      "tag": "forge:plates/caravky"
+    },
+    "D": {
+      "tag": "forge:plates/nichrome"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_67_element"
+    }
   },
   "pattern": [
     "DED",

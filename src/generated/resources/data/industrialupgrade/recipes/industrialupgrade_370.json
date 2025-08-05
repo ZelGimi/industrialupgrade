@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:itemingots/barium"
-      }
-    ]
+    {
+      "item": "industrialupgrade:itemingots/barium"
+    }
   ],
   "result": {
     "count": 9,

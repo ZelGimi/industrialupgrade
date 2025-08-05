@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:blockresource/steel_block"
-      }
-    ]
+    {
+      "item": "industrialupgrade:blockresource/steel_block"
+    }
   ],
   "result": {
     "count": 9,

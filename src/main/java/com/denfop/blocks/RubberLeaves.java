@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -20,6 +22,8 @@ import net.minecraftforge.common.Tags;
 
 import java.util.List;
 
+import static com.denfop.utils.ParticleUtils.spawnFallingLeavesParticles;
+
 public class RubberLeaves extends LeavesBlock {
     public RubberLeaves() {
         super(Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((S, W, P, E) -> E == EntityType.OCELOT || E == EntityType.PARROT).isSuffocating((K, V, E) -> false).isViewBlocking((K, V, E) -> false));
@@ -31,7 +35,12 @@ public class RubberLeaves extends LeavesBlock {
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 60;
     }
-
+    @Override
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        super.tick(pState, pLevel, pPos, pRandom);
+        spawnFallingLeavesParticles(pLevel,pPos,this);
+        pLevel.scheduleTick(pPos, this, pRandom.nextInt(200)+100);
+    }
     @OnlyIn(Dist.CLIENT)
     public RenderType getType() {
         return Minecraft.useFancyGraphics() ? RenderType.cutoutMipped() : RenderType.solid();

@@ -1,10 +1,12 @@
 package com.denfop.render.windgenerator;
 
 import com.denfop.api.windsystem.IWindMechanism;
+import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -67,6 +69,11 @@ public class KineticGeneratorRenderer implements BlockEntityRenderer<TileWindGen
 
         if (windGen.getSpace()) {
             angle = windGen.getAngle();
+            IWindRotor rotor = tile.getRotor();
+            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0){
+                angle = 0;
+            }
+            if (!Minecraft.getInstance().isPaused())
             poseStack.mulPose(Vector3f.XP.rotationDegrees(angle));
         }
 

@@ -1,36 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:heat_reactors/heat_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_385_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_356_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:basemachine3/cooling"
-      }
-    ],
-    "F": [
-      {
-        "tag": "forge:plates/beryllium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_385_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_356_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "E": {
+      "item": "industrialupgrade:basemachine3/cooling"
+    },
+    "F": {
+      "tag": "forge:plates/beryllium"
+    }
   },
   "pattern": [
     "CBC",

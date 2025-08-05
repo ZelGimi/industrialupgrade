@@ -3,10 +3,12 @@ package com.denfop.recipes;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockRaws;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
+import com.denfop.items.resource.ItemRawMetals;
 import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
@@ -625,6 +627,55 @@ public class BaseRecipeFour {
                 " C ",
                 ('A'), getBlockStack(BlockBaseMachine3.steam_converter), 'B', ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 276)
+        );
+        for (int i = 0; i < BlockRaws.Type.values().length; i++) {
+            Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rawsBlock.getItem(i),1), "AAA", "AAA", "AAA",
+
+                    ('A'),"forge:raw_materials/"+BlockRaws.Type.values()[i].name()
+            );
+            for (int ii = 0; ii < ItemRawMetals.Types.values().length; ii++) {
+                if (IUItem.rawMetals.getRegistryObject(ii) != null && IUItem.rawMetals.getStack(ii).getTags()[0].equals("forge:raw_materials/"+BlockRaws.Type.values()[i].name())){
+                    Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.rawMetals.getStack(ii),9), ItemStackHelper.fromData(IUItem.rawsBlock.getItem(i),1));
+                    break;
+                }
+            }
+        }
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 4, 773),
+
+                Items.CLAY_BALL, Items.CLAY_BALL, "forge:nuggets/spinel","forge:nuggets/spinel",
+                "forge:nuggets/yttrium", "forge:nuggets/yttrium",Blocks.SAND, Blocks.GRAVEL
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 4, 770),
+
+                Items.CLAY_BALL, Items.CLAY_BALL, "forge:ingots/magnesium","forge:ingots/magnesium",Blocks.SAND, Blocks.GRAVEL
+        );
+        Recipes.recipe.addRecipe(IUItem.pipette.getItem(1), "  A", "BA ",
+                "CCB",
+                ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 13), 'B', "forge:plates/yttrium",
+                'C', "forge:plates/spinel"
+        );
+        Recipes.recipe.addShapelessRecipe(ModUtils.setSize(IUItem.blockRubberWoods.getItem(0),4), ItemStackHelper.fromData(IUItem.rubWood, 1));
+        Recipes.recipe.addShapelessRecipe(ModUtils.setSize(IUItem.blockRubberWoods.getItem(1),4), ItemStackHelper.fromData(IUItem.swampRubWood, 1));
+        Recipes.recipe.addShapelessRecipe(ModUtils.setSize(IUItem.blockRubberWoods.getItem(2),4), ItemStackHelper.fromData(IUItem.tropicalRubWood, 1));
+        Recipes.recipe.addShapelessRecipe(new ItemStack(IUItem.book.getItem()),
+                Items.BOOK,
+                Items.COPPER_INGOT
+        );
+        Recipes.recipe.addRecipe(IUItem.smallFluidCell.getItem(1), " A ", "ABA",
+                " A ",
+                ('A'),"forge:casings/copper", 'B', Blocks.GLASS_PANE
+        );
+        Recipes.recipe.addRecipe(IUItem.reinforcedFluidCell.getItem(1), " A ", "ABA",
+                " A ",
+                ('A'),"forge:casings/tungsten", 'B', Blocks.GLASS_PANE
+        );
+        Recipes.recipe.addRecipe(IUItem.latexPipette, "  A", "DB ",
+                "CD ",
+                ('A'),"forge:casings/steel", 'B', Blocks.GLASS_PANE,'C', IUItem.treetap,'D',"forge:casings/cobalt"
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.auto_latex_collector), "A  ", "CBC",
+                "CCC",
+                ('A'),"planks", 'B',IUItem.latexPipette.getItem(),'C', "terracotta"
         );
         if (ModList.get().isLoaded("powerutils")) {
             RecipesPowerUtils.register();

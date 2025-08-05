@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/permalloy"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/draconid"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/permalloy"
+    },
+    "C": {
+      "tag": "forge:plates/draconid"
+    }
   },
   "pattern": [
     " B ",

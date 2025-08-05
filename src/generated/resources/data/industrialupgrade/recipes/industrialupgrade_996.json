@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:blockresource/reinforced_stone"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_471_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:blockresource/advanced_machine"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_99_element"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:blockresource/reinforced_stone"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_471_element"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/advanced_machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_99_element"
+    },
     "E": {
       "type": "forge:nbt",
       "count": 1,

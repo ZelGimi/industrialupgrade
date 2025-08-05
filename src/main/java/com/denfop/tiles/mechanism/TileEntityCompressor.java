@@ -113,6 +113,8 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.primal_repair2"));
+
+        tooltip.add(Localization.translate("iu.primal_repair.info"));
     }
 
     @Override
@@ -242,7 +244,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         ItemStack stack = player.getItemInHand(hand);
         if (!this.getWorld().isClientSide) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (4 + (data.getOrDefault(player.getUUID(), 0.0) / 10d));
+                progress += (int) (15 + (data.getOrDefault(player.getUUID(), 0.0) / 10d));
                 this.getCooldownTracker().setTick(15);
                 this.setActive(String.valueOf((int) ((progress * 9D) / 100)));
                 if (!this.getWorld().isClientSide) {

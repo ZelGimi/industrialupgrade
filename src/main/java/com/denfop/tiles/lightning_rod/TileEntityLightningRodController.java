@@ -1,6 +1,7 @@
 package com.denfop.tiles.lightning_rod;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockLightningRod;
@@ -13,7 +14,10 @@ import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.Timer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,9 +44,14 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
     }
 
 
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.lightning.info"));
+    }
 
     @Override
-    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world) {
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world, Direction direction, LivingEntity entity) {
         for (int x = -7; x <= 7; x++) {
             for (int z = -7; z <= 7; z++) {
                 for (int y = -14; y <= 14; y++) {

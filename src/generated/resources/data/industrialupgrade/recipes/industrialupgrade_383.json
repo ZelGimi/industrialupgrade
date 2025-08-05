@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:nugget/gallium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:nugget/gallium"
+    }
   },
   "pattern": [
     "AAA",

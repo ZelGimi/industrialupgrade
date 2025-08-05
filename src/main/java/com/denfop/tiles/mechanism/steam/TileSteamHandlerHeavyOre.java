@@ -151,6 +151,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
             tooltip.add(Localization.translate("iu.heatmachine.info"));
 
         }
+        tooltip.add(Localization.translate( "iu.steam_separator"));
         super.addInformation(stack, tooltip);
     }
 

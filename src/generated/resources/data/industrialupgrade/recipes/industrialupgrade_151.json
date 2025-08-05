@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/mikhail"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/mikhail"
+    }
   ],
   "result": {
     "count": 9,

@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:heat_reactors/heat_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_322_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_356_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_322_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_356_element"
+    }
   },
   "pattern": [
     "   ",

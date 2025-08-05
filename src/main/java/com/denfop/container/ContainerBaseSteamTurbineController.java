@@ -9,7 +9,7 @@ public class ContainerBaseSteamTurbineController extends ContainerFullInv<TileEn
             TileEntityBaseSteamTurbineController tile,
             Player var1
     ) {
-        super(var1, tile, 178 + 40, 166 + 20);
+        super(var1, tile);
     }
 
 }

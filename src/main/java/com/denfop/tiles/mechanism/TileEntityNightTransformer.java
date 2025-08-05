@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -39,7 +40,11 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
         this.se = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.SOLARIUM, this, 20000));
         this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
     }
-
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.night_converter.info"));
+    }
     @Override
     public int getLevelMechanism() {
         return this.levelBlock;
@@ -58,7 +63,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
                 return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);

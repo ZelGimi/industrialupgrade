@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_491_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/redbrass"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/duralumin"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_491_element"
+    },
+    "B": {
+      "tag": "forge:plates/redbrass"
+    },
+    "C": {
+      "tag": "forge:plates/duralumin"
+    }
   },
   "pattern": [
     " C ",

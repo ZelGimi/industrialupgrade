@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "industrialupgrade:shapeless_recipe",
   "ingredients": [
-    [
-      {
-        "item": "industrialupgrade:baseblockingot/vanady"
-      }
-    ]
+    {
+      "item": "industrialupgrade:baseblockingot/vanady"
+    }
   ],
   "result": {
     "count": 9,

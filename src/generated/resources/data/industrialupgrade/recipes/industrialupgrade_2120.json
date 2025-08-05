@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/strontium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "minecraft:saplings"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/hafnium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:plates/strontium"
+    },
+    "C": {
+      "tag": "minecraft:saplings"
+    },
+    "D": {
+      "tag": "forge:plates/hafnium"
+    }
   },
   "pattern": [
     "BCB",

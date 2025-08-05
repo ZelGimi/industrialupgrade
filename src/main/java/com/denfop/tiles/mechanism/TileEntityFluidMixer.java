@@ -182,11 +182,11 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
                 )
         )));
 
-        Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance().get(), 200), new FluidStack(
+        Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(new FluidStack(
                 FluidName.fluidmethanol.getInstance().get(),
                 100
-        )), Arrays.asList(
+        ),
+                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance().get(), 200)), Arrays.asList(
                 new FluidStack(FluidName.fluidweed_ex.getInstance().get(), 100),
                 new FluidStack(
                         FluidName.fluidmethylchloride.getInstance().get(),

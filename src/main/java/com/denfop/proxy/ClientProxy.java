@@ -9,20 +9,28 @@ import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.blocks.ItemBlockCore;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockCreativeBlocks;
 import com.denfop.container.ContainerBase;
+import com.denfop.effects.BreakingItemParticle;
+import com.denfop.effects.EffectsRegister;
+import com.denfop.effects.SteamAshParticle;
 import com.denfop.events.ElectricItemTooltipHandler;
 import com.denfop.events.TickHandler;
+import com.denfop.events.client.EventAutoQuests;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.gui.GuiCore;
 import com.denfop.items.IProperties;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
+import com.denfop.mixin.access.RenderChunkRegionAccessor;
 import com.denfop.register.Register;
 import com.denfop.render.TileEntityRenderGasChamber;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.anvil.RenderItemAnvil;
+import com.denfop.render.autocollector.TileEntityRenderAutoLatexCollector;
 import com.denfop.render.base.DynamicFluidContainerModel;
 import com.denfop.render.base.NuclearBombRenderer;
 import com.denfop.render.base.RenderCoreProcess;
+import com.denfop.render.base.SmallBeeRenderer;
 import com.denfop.render.compressor.TileEntityRenderCompressor;
 import com.denfop.render.dryer.TileEntityRenderDryer;
 import com.denfop.render.fluidheater.TileEntityRenderFluidHeater;
@@ -65,24 +73,26 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -105,6 +115,7 @@ public class ClientProxy extends CommonProxy {
     public ClientProxy() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::onRegisterAdditionalModels);
+        modEventBus.addListener(this::registerParticleFactories);
         modEventBus.addListener(this::registerBlockColor);
         modEventBus.addListener(this::registerItemColor);
         modEventBus.addListener(this::registerRenderers);
@@ -112,6 +123,7 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(this::registerKeys);
         modEventBus.addListener(this::onRegisterGeometryLoaders);
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new EventAutoQuests());
         new GlobalRenderManager();
     }
     @OnlyIn(Dist.CLIENT)
@@ -124,6 +136,7 @@ public class ClientProxy extends CommonProxy {
     @OnlyIn(Dist.CLIENT)
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(IUItem.entity_nuclear_bomb.get(), NuclearBombRenderer::new);
+        event.registerEntityRenderer(IUItem.entity_bee.get(), SmallBeeRenderer::new);
     }
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
@@ -133,6 +146,7 @@ public class ClientProxy extends CommonProxy {
             if (ItemUpgradeMachinesKit.tick % 40 == 0) {
                 for (int i = 0; i < ItemUpgradeMachinesKit.inform.length; i++) {
                     final List<ItemStack> list1 = IUItem.map_upgrades.get(i);
+                    if (list1 != null)
                     ItemUpgradeMachinesKit.inform[i] = ++ItemUpgradeMachinesKit.inform[i] % list1.size();
                 }
             }
@@ -151,12 +165,37 @@ public class ClientProxy extends CommonProxy {
         }
 
     }
+    @SubscribeEvent
+    public void registerParticleFactories(RegisterParticleProvidersEvent event) {
+        event.register(EffectsRegister.STEAM_ASH.get(), SteamAshParticle.Factory::new);
+        event.register(EffectsRegister.ANVIL.get(), BreakingItemParticle.AnvilProvider::new);
 
+    }
     @SubscribeEvent
     public void registerBlockColor(RegisterColorHandlersEvent.Block event) {
-        event.register((state, world, pos, tintIndex) -> ModUtils.convertRGBcolorToInt(10
-                , 96, 8), IUItem.leaves.getBlock().get());
+        event.register((state, world, pos, tintIndex) -> {
+
+            Level level = null;
+            if (world instanceof RenderChunkRegion)
+                level    = ((RenderChunkRegionAccessor) world).getLevel();
+            if (world instanceof Level)
+                level = (Level) world;
+            if (level == null)
+                return ModUtils.convertRGBcolorToInt(10
+                        , 96, 8);
+            Holder<Biome> biome = level.getBiome(pos);
+            if (biome.is(Tags.Biomes.IS_SWAMP))
+                return   ModUtils.convertRGBcolorToInt(105
+                        , 122, 93);
+            if (biome.is(BiomeTags.IS_JUNGLE))
+                return   ModUtils.convertRGBcolorToInt(12
+                        , 82, 32);
+            return   ModUtils.convertRGBcolorToInt(10
+                    , 96, 8);
+        }, IUItem.leaves.getBlock().get());
+
     }
+
 
     @SubscribeEvent
     public void registerItemColor(RegisterColorHandlersEvent.Item event) {
@@ -243,6 +282,10 @@ public class ClientProxy extends CommonProxy {
         BlockEntityRenderers.register((BlockEntityType<? extends TileBaseWaterGenerator>) IUItem.basemachine2.getBlock(BlockBaseMachine3.adv_water_generator).getValue().getBlockType(), WaterGeneratorRenderer::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileBaseWaterGenerator>) IUItem.basemachine2.getBlock(BlockBaseMachine3.imp_water_generator).getValue().getBlockType(), WaterGeneratorRenderer::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileBaseWaterGenerator>) IUItem.basemachine2.getBlock(BlockBaseMachine3.per_water_generator).getValue().getBlockType(), WaterGeneratorRenderer::new);
+
+        BlockEntityRenderers.register((BlockEntityType<? extends TileSteamStorage>) IUItem.creativeBlock.getBlock(BlockCreativeBlocks.creative_steam_storage).getValue().getBlockType(), TileEntityRenderSteamStorage::new);
+        BlockEntityRenderers.register((BlockEntityType<? extends TileEntityLiquedTank>) IUItem.creativeBlock.getBlock(BlockCreativeBlocks.creative_tank_storage).getValue().getBlockType(), TileEntityTankRender::new);
+        BlockEntityRenderers.register((BlockEntityType<? extends TileEntityAutoLatexCollector>) IUItem.basemachine2.getBlock(BlockBaseMachine3.auto_latex_collector).getValue().getBlockType(), TileEntityRenderAutoLatexCollector::new);
 
 
         MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());

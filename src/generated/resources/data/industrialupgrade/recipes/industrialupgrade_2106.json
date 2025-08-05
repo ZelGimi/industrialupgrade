@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "item": "minecraft:redstone"
-      }
-    ],
-    "C": [
-      {
-        "item": "minecraft:glowstone_dust"
-      }
-    ],
-    "D": [
-      {
-        "item": "minecraft:glass_bottle"
-      }
-    ],
-    "H": [
-      {
-        "item": "minecraft:gunpowder"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "D": {
+      "item": "minecraft:glass_bottle"
+    },
+    "H": {
+      "item": "minecraft:gunpowder"
+    }
   },
   "pattern": [
     "BDB",

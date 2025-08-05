@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/creative_solarium_storage_bottom",
+    "down" : "industrialupgrade:blocks/creative_solarium_storage_bottom",
+    "up" : "industrialupgrade:blocks/creative_solarium_storage_bottom",
+    "north" : "industrialupgrade:blocks/creative_solarium_storage_front",
+    "east" : "industrialupgrade:blocks/creative_solarium_storage_side",
+    "south" : "industrialupgrade:blocks/creative_solarium_storage_side",
+    "west" : "industrialupgrade:blocks/creative_solarium_storage_side"
+  }
+}

@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:circuit/circuit_part1"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:stick/zinc"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:circuit/circuit_part1"
+    },
+    "B": {
+      "item": "industrialupgrade:stick/zinc"
+    }
   },
   "pattern": [
     "BBB",

@@ -1,0 +1,19 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "key": {
+    "A": {
+      "item": "quantumgenerators:qg/grasp_gen"
+    },
+    "B": {
+      "item": "industrialupgrade:itemcore/kvrcore"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "quantumgenerators:qg/kvsp_gen"
+  }
+}

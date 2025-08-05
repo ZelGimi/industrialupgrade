@@ -79,6 +79,10 @@ public class TileEntityStampMechanism extends TileElectricMachine implements
             public ItemStack set(final int index, final ItemStack content) {
                 super.set(index, content);
                 ((TileEntityStampMechanism) this.base).inputSlotA.setRecipe("empty");
+                if (content.isEmpty()) {
+                    ((TileEntityStampMechanism) this.base).getOutput();
+                    return content;
+                }
                 int damage =((ItemCraftingElements<?>) content.getItem()).getElement().getId();
                 if (damage == 369) {
                     ((TileEntityStampMechanism) this.base).inputSlotA.setRecipe("stamp_coolant");

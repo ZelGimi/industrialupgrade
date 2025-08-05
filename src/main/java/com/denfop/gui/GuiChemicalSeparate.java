@@ -88,7 +88,7 @@ public class GuiChemicalSeparate<T extends ContainerDefaultMultiElement> extends
                 76, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(poseStack, mouseX, mouseY);
+            element.drawBackground(poseStack, guiLeft,guiTop);
         }
     }
 

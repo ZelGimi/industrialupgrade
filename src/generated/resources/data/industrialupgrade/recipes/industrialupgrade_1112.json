@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:stick"
-      }
-    ]
+    "A": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "A A",

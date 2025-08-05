@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_486_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/tantalumtungstenhafnium"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/osmiridium"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_486_element"
+    },
+    "B": {
+      "tag": "forge:plates/tantalumtungstenhafnium"
+    },
+    "C": {
+      "tag": "forge:plates/osmiridium"
+    }
   },
   "pattern": [
     " C ",

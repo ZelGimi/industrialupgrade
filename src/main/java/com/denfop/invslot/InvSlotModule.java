@@ -43,10 +43,12 @@ public class InvSlotModule extends InvSlot implements ITypeSlot {
 
                     List<TagKey<Item>> list = this.get(i).getTags().toList();
 
-                    TagKey<Item> ore = list.get(0);
-                    if (!this.tile.listItems.contains(ore)) {
-                        this.tile.listItems.add(ore);
-                    }
+                    for (TagKey<Item> ore : list)
+                        if (ore.location().getPath().startsWith("ores/") || ore.location().getPath().startsWith("raw_materials/") || ore.location().getPath().startsWith("gems/") || ore.location().getPath().startsWith("ingots/") || ore.location().getPath().startsWith("dusts/") || ore.location().getPath().startsWith(
+                                "shards/"))
+                            if (!this.tile.listItems.contains(ore)) {
+                                this.tile.listItems.add(ore);
+                            }
                 }
 
             }
@@ -57,10 +59,12 @@ public class InvSlotModule extends InvSlot implements ITypeSlot {
         if (type == 0) {
             if (!itemStack.getTags().toList().isEmpty()) {
 
-                TagKey<Item> ore = itemStack.getTags().toList().get(0);
-
-                return ore.location().getPath().startsWith("ore") || ore.location().getPath().startsWith("gem") || ore.location().getPath().startsWith("ingot") || ore.location().getPath().startsWith("dust") || ore.location().getPath().startsWith(
-                        "shard");
+                List<TagKey<Item>> ores = itemStack.getTags().toList();
+                for (TagKey<Item> ore : ores)
+                    if (ore.location().getPath().startsWith("ores/") || ore.location().getPath().startsWith("raw_materials/") || ore.location().getPath().startsWith("gems/") || ore.location().getPath().startsWith("ingots/") || ore.location().getPath().startsWith("dusts/") || ore.location().getPath().startsWith(
+                            "shards/"))
+                        return true;
+                return false;
             } else {
                 return false;
             }

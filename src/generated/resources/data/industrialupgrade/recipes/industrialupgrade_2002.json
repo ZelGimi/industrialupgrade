@@ -1,21 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:nuggets/electrum"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/iron"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:ingots/gold"
-      }
-    ]
+    "A": {
+      "tag": "forge:nuggets/electrum"
+    },
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "tag": "forge:ingots/gold"
+    }
   },
   "pattern": [
     "ABA",

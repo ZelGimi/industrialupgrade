@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "minecraft:paper"
-      }
-    ],
+    "A": {
+      "item": "minecraft:paper"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,

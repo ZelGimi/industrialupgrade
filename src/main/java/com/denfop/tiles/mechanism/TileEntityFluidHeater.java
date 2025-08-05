@@ -104,14 +104,14 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 100)), Collections.singletonList(new FluidStack(
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 150)), Collections.singletonList(new FluidStack(
                 FluidName.fluidsteam.getInstance().get(),
-                25
+                75
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsteam.getInstance().get(), 100)), Collections.singletonList(new FluidStack(
+                new FluidStack(FluidName.fluidsteam.getInstance().get(), 150)), Collections.singletonList(new FluidStack(
                 FluidName.fluidsuperheated_steam.getInstance().get(),
-                50
+                75
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidtertbutylalcohol.getInstance().get(), 100)), Collections.singletonList(new FluidStack(

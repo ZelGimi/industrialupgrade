@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:wind_turbine/wind_turbine_casing_1"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/nimonic"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:wind_turbine/wind_turbine_casing_1"
+    },
+    "B": {
+      "tag": "forge:plates/nimonic"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:10}"
     },
-    "D": [
-      {
-        "tag": "forge:plates/nitenol"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:basemachine3/per_wind_generator"
-      }
-    ]
+    "D": {
+      "tag": "forge:plates/nitenol"
+    },
+    "E": {
+      "item": "industrialupgrade:basemachine3/per_wind_generator"
+    }
   },
   "pattern": [
     "DCD",

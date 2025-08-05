@@ -6,6 +6,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
 
@@ -19,7 +20,9 @@ public class ItemToolIU extends DiggerItem {
     public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties) {
         super(damage, speed, Tiers.IRON, p_204111_, properties);
     }
-
+    public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties, Tier tier) {
+        super(damage, speed, tier, p_204111_, properties);
+    }
     @Override
     public boolean isEnchantable(ItemStack p_41456_) {
         return false;

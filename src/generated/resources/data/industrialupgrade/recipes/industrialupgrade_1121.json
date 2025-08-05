@@ -1,16 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_21_element"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:gears/iridium"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_21_element"
+    },
+    "B": {
+      "tag": "forge:gears/iridium"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
@@ -29,11 +25,9 @@
       "item": "minecraft:diamond_shovel",
       "nbt": "{Damage:0}"
     },
-    "F": [
-      {
-        "tag": "forge:gears/magnesium"
-      }
-    ]
+    "F": {
+      "tag": "forge:gears/magnesium"
+    }
   },
   "pattern": [
     "CDE",

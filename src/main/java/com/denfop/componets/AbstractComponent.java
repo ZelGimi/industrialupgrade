@@ -66,7 +66,9 @@ public abstract class AbstractComponent {
     public void ActionPurifier() {
 
     }
-
+    public boolean onSneakingActivated(Player player, InteractionHand hand) {
+        return false;
+    }
     public boolean canUpgradeBlock() {
         return false;
     }

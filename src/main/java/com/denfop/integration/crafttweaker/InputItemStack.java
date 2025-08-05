@@ -12,14 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class InputItemStack implements IInputItemStack {
+public abstract class InputItemStack implements IInputItemStack {
 
     List<ItemStack> stacks;
-
-    public InputItemStack(IIngredient ingredient) {
-        stacks = new ArrayList<>();
-      Arrays.asList(ingredient.getItems()).forEach(iItemStack -> stacks.add(iItemStack.getInternal()));
-    }
 
     public boolean matches(ItemStack subject) {
         List<ItemStack> inputs = stacks;

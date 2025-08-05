@@ -1,26 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:basemachine3/elec_heat"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "C": [
-      {
-        "tag": "forge:plates/inconel"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/mithril"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:basemachine3/elec_heat"
+    },
+    "B": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "forge:plates/inconel"
+    },
+    "D": {
+      "tag": "forge:plates/mithril"
+    }
   },
   "pattern": [
     "CAC",

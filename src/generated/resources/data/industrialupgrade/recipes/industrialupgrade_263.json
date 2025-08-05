@@ -1,11 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:alloynugget/vanadoalumite"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:alloynugget/vanadoalumite"
+    }
   },
   "pattern": [
     "AAA",

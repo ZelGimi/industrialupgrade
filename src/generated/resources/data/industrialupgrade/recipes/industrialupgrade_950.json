@@ -1,32 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:module_schedule"
-      }
-    ],
-    "B": [
-      {
-        "tag": "forge:plates/tantalum"
-      }
-    ],
+    "A": {
+      "item": "industrialupgrade:module_schedule"
+    },
+    "B": {
+      "tag": "forge:plates/tantalum"
+    },
     "C": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:2}"
     },
-    "D": [
-      {
-        "tag": "forge:doubleplate/alumel"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:nanobox"
-      }
-    ]
+    "D": {
+      "tag": "forge:doubleplate/alumel"
+    },
+    "E": {
+      "item": "industrialupgrade:nanobox"
+    }
   },
   "pattern": [
     "BCB",

@@ -1,31 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "tag": "forge:plates/berylliumbronze"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_563_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_565_element"
-      }
-    ],
-    "D": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_598_element"
-      }
-    ],
-    "E": [
-      {
-        "tag": "forge:plates/tantalumtungstenhafnium"
-      }
-    ]
+    "A": {
+      "tag": "forge:plates/berylliumbronze"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_563_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_565_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_598_element"
+    },
+    "E": {
+      "tag": "forge:plates/tantalumtungstenhafnium"
+    }
   },
   "pattern": [
     "ECB",

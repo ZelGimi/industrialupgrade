@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=creative_mfsu": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu"
+    },
+    "facing=south,type=creative_mfsu": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "y": 180
+    },
+    "facing=west,type=creative_mfsu": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "y": 270
+    },
+    "facing=east,type=creative_mfsu": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "y": 90
+    },
+    "facing=down,type=creative_mfsu": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "x": 90
+    },
+    "facing=up,type=creative_mfsu": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "x": 270
+    },
+    "facing=north,type=creative_mfsu_invalid": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu"
+    },
+    "facing=south,type=creative_mfsu_invalid": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "y": 180
+    },
+    "facing=west,type=creative_mfsu_invalid": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "y": 270
+    },
+    "facing=east,type=creative_mfsu_invalid": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "y": 90
+    },
+    "facing=down,type=creative_mfsu_invalid": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "x": 90
+    },
+    "facing=up,type=creative_mfsu_invalid": {
+      "model": "industrialupgrade:block/wiring/creative_mfsu",
+      "x": 270
+    }
+  }
+}

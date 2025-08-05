@@ -14,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
 
@@ -56,14 +58,10 @@ public class BlockPreciousOre<T extends Enum<T> & ISubEnum> extends BlockCore<T>
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
-        RandomSource rand = p_60538_.getLevel().random;
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
+        RandomSource rand = world.random;
 
-        List<ItemStack> list = new ArrayList<>();
-        ItemStack stack = p_60538_.getOptionalParameter(LootContextParams.TOOL);
-        int fortune = 0;
-        if (stack != null)
-            fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
+        List<ItemStack> list = new ArrayList<>();;
         int count = quantityDropped(fortune, rand);
         for (int i = 0; i < count; i++) {
             if (this.getElement().getId() != 3) {
@@ -75,6 +73,8 @@ public class BlockPreciousOre<T extends Enum<T> & ISubEnum> extends BlockCore<T>
         }
         return list;
     }
+
+
 
     public int quantityDropped(int fortune, RandomSource random) {
 

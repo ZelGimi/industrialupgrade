@@ -1,41 +1,27 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "industrialupgrade:shaped_recipe",
   "key": {
-    "A": [
-      {
-        "item": "industrialupgrade:heat_reactors/heat_casing"
-      }
-    ],
-    "B": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_324_element"
-      }
-    ],
-    "C": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_414_element"
-      }
-    ],
-    "D": [
-      {
-        "tag": "forge:plates/beryllium"
-      }
-    ],
-    "E": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_342_element"
-      }
-    ],
-    "F": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_321_element"
-      }
-    ],
-    "G": [
-      {
-        "item": "industrialupgrade:crafting_elements/crafting_365_element"
-      }
-    ]
+    "A": {
+      "item": "industrialupgrade:heat_reactors/heat_casing"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_324_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_414_element"
+    },
+    "D": {
+      "tag": "forge:plates/beryllium"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_342_element"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_321_element"
+    },
+    "G": {
+      "item": "industrialupgrade:crafting_elements/crafting_365_element"
+    }
   },
   "pattern": [
     "EGF",

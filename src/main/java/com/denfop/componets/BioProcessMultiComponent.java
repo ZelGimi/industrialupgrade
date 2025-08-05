@@ -12,10 +12,13 @@ import com.denfop.tiles.base.IBioMachine;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
@@ -71,7 +74,26 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
 
     }
+    @Override
+    public boolean isClient() {
+        return true;
+    }
 
+    @Override
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (this.parent.getActive() && this.parent.getWorld().getGameTime() % 4 == 0) {
+            double x = this.parent.getBlockPos().getX() + 0.5;
+            double y = this.parent.getBlockPos().getY() + 1.1;
+            double z = this.parent.getBlockPos().getZ() + 0.5;
+
+            this.parent.getLevel().addParticle(
+                    new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()),
+                    x, y, z,
+                    0.0, 0.1, 0.0
+            );
+        }
+    }
     @Override
     public void onLoaded() {
         super.onLoaded();
