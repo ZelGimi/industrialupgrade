@@ -134,10 +134,10 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
                 new ItemStack(Items.PUMPKIN_SEEDS),
                 new FluidStack(FluidName.fluidseedoil.getInstance().get(), 35)
         );
-       /* addRecipe(
-                new ItemStack(IUItem.crops),
+        addRecipe(
+                new ItemStack(IUItem.crops.getStack(0)),
                 new FluidStack(FluidName.fluidseedoil.getInstance().get(), 50)
-        );*/
+        );
     }
 
     public List<AABB> getAabbs(boolean forCollision) {
@@ -270,10 +270,11 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
         }
 
         if (stack.getItem().equals(IUItem.treetap.getItem()) && !inputSlotA.isEmpty() && this.output != null && this.fluid_handler.output() != null && this.fluid_handler.canFillFluid()) {
-            progress += (short) (10 + (short) (data.getOrDefault(player.getUUID(), 0.0) / 2.5d));
+            progress += (short) (20 + (short) (data.getOrDefault(player.getUUID(), 0.0) / 15d));
+
             this.getCooldownTracker().setTick(8);
             this.setActive(String.valueOf(progress / 10));
-            if (progress >= 150) {
+            if (progress >= 100) {
                 this.progress = 0;
                 this.setActive("");
                 if (!this.getWorld().isClientSide)

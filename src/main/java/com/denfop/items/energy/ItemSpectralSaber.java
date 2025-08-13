@@ -92,7 +92,7 @@ public class ItemSpectralSaber extends TieredItem implements IEnergyItem, IUpgra
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.itemNanoSaber";
+            this.nameItem = "iu.itemnanosaber";
         }
 
         return this.nameItem;

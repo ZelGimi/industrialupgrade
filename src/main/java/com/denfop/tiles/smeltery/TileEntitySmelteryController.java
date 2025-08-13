@@ -735,7 +735,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                 new FluidStack(FluidName.fluidtin.getInstance().get(), 144 / 4)
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidcopper.getInstance().get(), 144 * 4),
+                new FluidStack(FluidName.fluidcopper.getInstance().get(), 144 * 3),
                 new FluidStack(FluidName.fluidtin.getInstance().get(), 144 * 1)
         ), new FluidStack(
                 FluidName.fluidbronze.getInstance().get(),

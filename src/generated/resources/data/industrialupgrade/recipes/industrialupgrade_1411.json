@@ -1,5 +1,5 @@
 {
-  "type": "industrialupgrade:shaped_recipe",
+  "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
       "item": "industrialupgrade:crafting_elements/crafting_137_element"

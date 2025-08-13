@@ -1,5 +1,5 @@
 {
-  "type": "industrialupgrade:shaped_recipe",
+  "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
       "item": "industrialupgrade:primal_silicon_crystal_handler/primal_silicon_crystal_handler"

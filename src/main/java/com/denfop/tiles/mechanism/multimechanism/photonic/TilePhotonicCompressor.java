@@ -21,7 +21,7 @@ public class TilePhotonicCompressor extends TileMultiMachine {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.cold.storage = 0;
+        this.cold.buffer.storage = 0;
     }
 
     public IMultiTileBlock getTeBlock() {

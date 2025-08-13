@@ -31,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -47,6 +48,10 @@ public class ItemSteelHammer extends ItemToolIU {
         this.materials = EnumTypeInstruments.DRILL.getMaterials();
         this.mineableBlocks = EnumTypeInstruments.DRILL.getMineableBlocks();
         this.item_tools = EnumTypeInstruments.DRILL.getListItems();
+    }
+    @Override
+    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+        return ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
     }
     @Override
     public boolean isEnchantable(ItemStack p_41456_) {

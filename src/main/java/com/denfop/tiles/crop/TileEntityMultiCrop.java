@@ -74,6 +74,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     public EnumSoil[] enumSoils;
     public boolean[] place;
     public int[] tickSoil;
+    public double[] biomeCoef;
     public int[] maxTickSoil;
     private Radiation radLevel;
     private ChunkPos chunkPos;
@@ -91,6 +92,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
         place = new boolean[col];
         tickSoil = new int[col];
         maxTickSoil = new int[col];
+        biomeCoef = new double[col];
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidWaterTank = fluids.addTankInsert("waterTank", 16000, Fluids.fluidPredicate(Fluids.WATER));
         this.fluidPestTank = fluids.addTankInsert("pestTank", 16000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance().get()));
@@ -158,10 +160,13 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                     genome[index] = null;
                     place[index] = false;
                 } else {
-                    genome[index] = new Genome(content);
-                    crop[index] = CropNetwork.instance.getCropFromStack(content).copy();
-                    genome[index].loadCrop(crop[index]);
-                    place[index] = true;
+                    if (crop[index] == null) {
+                        genome[index] = new Genome(content);
+                        crop[index] = CropNetwork.instance.getCropFromStack(content).copy();
+                        genome[index].loadCrop(crop[index]);
+                        place[index] = true;
+                        biomeCoef[index] = crop[index].canGrowInBiome(biome, level) ? 1 : 0.5;
+                    }
                 }
                 return content;
             }
@@ -254,6 +259,8 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isClientSide) {
+
+            this.biome = this.getWorld().getBiome(pos).get();
             for (int i = 0; i < crop.length; i++) {
                 if (downBlockSlot.get(i).isEmpty()) {
                     enumSoils[i] = null;
@@ -272,6 +279,8 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                     genome[i].loadCrop(crop[i]);
                     crop[i].setTick(tickSoil[i]);
                     place[i] = true;
+
+                    biomeCoef[i] = crop[i].canGrowInBiome(biome,level) ? 1 : 0.5;
                 }
             }
             this.chunkPos = new ChunkPos(pos);
@@ -288,7 +297,6 @@ public class TileEntityMultiCrop extends TileEntityInventory {
             }
             this.chunkLevel = chunkLevel;
             this.chunk = this.getWorld().getChunkAt(pos);
-            this.biome = this.getWorld().getBiome(pos).get();
         }
     }
 
@@ -344,7 +352,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                             canAdaptationCrop(i);
                         }
                         if (crop.getTick() < crop.getMaxTick()) {
-                            crop.addTick((int) (20 * crop.getGrowthSpeed()));
+                            crop.addTick((int) (biomeCoef[i] * 20 * crop.getGrowthSpeed()));
                             this.useWater(crop);
                             if (pestUse[i] < 40 && !fertilizerSlot.get(0).isEmpty()) {
                                 pestUse[i]++;

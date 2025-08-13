@@ -113,30 +113,7 @@ public class IUEventHandler {
         return item instanceof IUpgradeItem;
 
     }
-    @SubscribeEvent
-    public  void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        Level world = (Level) event.getLevel();
 
-        if (world.isClientSide) return;
-
-        BlockPos placingPos = event.getPos();
-        ChunkAccess chunkAccess = world.getChunk(placingPos);
-
-        if (!(chunkAccess instanceof LevelChunk chunk)) return;
-
-        for (BlockEntity tile : chunk.getBlockEntities().values()) {
-            if (!(tile instanceof TileEntityBlock te)) continue;
-            if (((TileEntityBlock) tile).getPos().equals(placingPos))
-                continue;
-            AABB aabb = te.getAabb(false).move(te.getBlockPos());
-            AABB placingAabb = new AABB(placingPos);
-
-            if (aabb.intersects(placingAabb)) {
-                event.setCanceled(true);
-                return;
-            }
-        }
-    }
     @SubscribeEvent
     public void onWorldTick1(TickEvent.LevelTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {

@@ -1,6 +1,7 @@
 package com.denfop.heat;
 
 import com.denfop.api.cool.ICoolConductor;
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.heat.*;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.world.WorldBaseGen;
@@ -26,7 +27,7 @@ public class HeatNetLocal {
     public void addTile(IHeatTile tile1) {
 
 
-        this.addTileEntity(getTileFromIHeat(tile1).getBlockPos(), tile1);
+        this.addTileEntity(tile1.getPos(), tile1);
 
 
     }
@@ -188,9 +189,9 @@ public class HeatNetLocal {
 
 
                 if (adding > HeatPath.min) {
-                    for (IHeatConductor HeatConductor : HeatPath.conductors) {
-                        if (HeatConductor.getConductorBreakdownHeat() < adding) {
-                            HeatConductor.removeConductor();
+                    for (ConductorInfo HeatConductor : HeatPath.conductors) {
+                        if (HeatConductor.getBreakdownEnergy() < adding) {
+                            ((IHeatConductor)this.chunkCoordinatesIHeatTileMap.get(HeatConductor.getPos())).removeConductor();
                         } else {
                             break;
                         }
@@ -262,7 +263,7 @@ public class HeatNetLocal {
             while (cable != null) {
 
                 final IHeatConductor energyConductor = cable.getConductor();
-                energyPath.conductors.add(energyConductor);
+                energyPath.conductors.add(energyConductor.getHeatConductor());
                 if (energyConductor.getHashCodeSource() != id1) {
                     energyConductor.setHashCodeSource(id1);
                     set.add(energyConductor);
@@ -366,9 +367,9 @@ public class HeatNetLocal {
 
 
             if (adding > HeatPath.min) {
-                for (IHeatConductor HeatConductor : HeatPath.conductors) {
-                    if (HeatConductor.getConductorBreakdownHeat() < adding) {
-                        HeatConductor.removeConductor();
+                for (ConductorInfo HeatConductor : HeatPath.conductors) {
+                    if (HeatConductor.getBreakdownEnergy() < adding) {
+                        ((IHeatConductor)this.chunkCoordinatesIHeatTileMap.get(HeatConductor.getPos())).removeConductor();
                     } else {
                         break;
                     }
@@ -406,11 +407,11 @@ public class HeatNetLocal {
     public void remove(final IHeatSource par1) {
         final HeatTick<IHeatSource, Path> heatTick = this.senderPath.removeSource(par1);
         if (heatTick != null)
-        if (heatTick.getList() != null) {
-            for (Path path : heatTick.getList()) {
-                path.target.getEnergyTickList().remove(heatTick.getSource());
+            if (heatTick.getList() != null) {
+                for (Path path : heatTick.getList()) {
+                    path.target.getEnergyTickList().remove(heatTick.getSource());
+                }
             }
-        }
     }
 
 

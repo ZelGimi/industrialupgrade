@@ -1,10 +1,11 @@
 package com.denfop.network.packet;
 
 
-import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.*;
 import com.denfop.componets.AbstractComponent;
 import com.mojang.math.Vector3d;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -57,6 +58,12 @@ public enum EncodedType {
     RecipeInfo(com.denfop.api.recipe.RecipeInfo.class),
     PlayerStreakInfo(com.denfop.render.streak.PlayerStreakInfo.class),
     DataOre(com.denfop.tiles.base.DataOre.class),
+    BaseRecipe(BaseMachineRecipe.class),
+    BaseFluidRecipe(BaseFluidMachineRecipe.class),
+    recipeOutput(RecipeOutput.class),
+    inputStack(IInput.class),
+    inputFluidStack(IInputFluid.class),
+    tuple(Tuple.class),
     Object(Object.class);
 
     public static final EncodedType[] types = values();

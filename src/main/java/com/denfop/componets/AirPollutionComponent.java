@@ -9,6 +9,7 @@ import com.denfop.api.windsystem.WindSystem;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -20,27 +21,29 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 
 import java.io.IOException;
 import java.util.List;
 
-public class AirPollutionComponent extends AbstractComponent implements IPollutionMechanism {
+public class AirPollutionComponent extends AbstractComponent  {
 
-    private double pollution;
+
+    private final PollutionMechanism pollution;
     private double default_pollution;
-    private ChunkPos chunkPos;
+
     private double percent = 1;
 
     public AirPollutionComponent(final TileEntityInventory parent, double pollution) {
         super(parent);
-        this.pollution = pollution;
+        this.pollution = new PollutionMechanism(new ChunkPos(parent.pos));
         this.default_pollution = pollution;
     }
-
     public static void spawnAirPollutionDirected(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
@@ -77,6 +80,8 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
             }
         }
     }
+
+
 
     @Override
     public CompoundTag writeToNbt() {
@@ -155,7 +160,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
     public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
-        buffer.writeDouble(this.pollution);
+        buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
         buffer.flip();
@@ -164,7 +169,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer buffer = super.updateComponent();
-        buffer.writeDouble(this.pollution);
+        buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
         return buffer;
@@ -172,7 +177,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
-        this.pollution = is.readDouble();
+        this.pollution.pollution = is.readDouble();
         this.default_pollution = is.readDouble();
         this.percent = is.readDouble();
 
@@ -208,7 +213,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this));
+            MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), pollution));
 
 
         }
@@ -223,24 +228,15 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     public void onUnloaded() {
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this));
+            MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), pollution));
 
 
         }
     }
 
-    @Override
-    public ChunkPos getChunkPos() {
-        if (this.chunkPos == null) {
-            chunkPos = new ChunkPos(this.getParent().getBlockPos());
-        }
-        return chunkPos;
-    }
 
-    @Override
-    public double getPollution() {
-        return pollution;
-    }
+
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -254,11 +250,11 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     }
 
     public void setPollution(double pollution) {
-        if (this.pollution != pollution * percent) {
+        if (this.pollution.pollution != pollution * percent) {
             if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-                MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this));
-                this.pollution = pollution * percent;
-                MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this));
+                MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this.pollution));
+                this.pollution.pollution = pollution * percent;
+                MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this.pollution));
 
             }
         }

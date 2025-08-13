@@ -49,7 +49,7 @@ public class ItemFacadeItem extends Item implements IItemStackInventory {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.facadeItem";
+            this.nameItem = "iu.facadeitem";
         }
 
         return this.nameItem;

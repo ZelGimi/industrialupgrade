@@ -116,7 +116,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.itemNanoSaber1";
+            this.nameItem = "iu.itemnanosaber1";
         }
 
         return this.nameItem;

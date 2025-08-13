@@ -253,7 +253,7 @@ public class TileStorageExp extends TileEntityInventory implements
         // 1 добавить в мех опыт
         if (event == 1) {
             if (this.energy.getEnergy() < this.energy.getCapacity()) {
-                this.energy.storage = ExperienceUtils.removePlayerXP(player, this.energy.getCapacity(), this.energy.getEnergy());
+                this.energy.buffer.storage = ExperienceUtils.removePlayerXP(player, this.energy.getCapacity(), this.energy.getEnergy());
                 initiate(1);
             }
 
@@ -264,7 +264,7 @@ public class TileStorageExp extends TileEntityInventory implements
                 if (this.energy.getEnergy() > 2000000000) {
                     temp = (int) (this.energy.getEnergy() - 2000000000);
                 }
-                this.energy.storage = ExperienceUtils.addPlayerXP1(player, (int) Math.min(this.energy.getEnergy(), 2000000000));
+                this.energy.buffer.storage = ExperienceUtils.addPlayerXP1(player, (int) Math.min(this.energy.getEnergy(), 2000000000));
                 this.energy.addEnergy(temp);
                 initiate(0);
             }

@@ -123,7 +123,7 @@ public class CropNetwork {
         if (crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
                 .getSoil()
                 .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore()) )|| (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))) {
-            return crop.canGrowInBiome(biome,world);
+            return true;
         }
         return false;
     }
@@ -152,7 +152,7 @@ public class CropNetwork {
                         boolean rain = world.isRaining();
                         boolean thundering = world.isThundering();
                         if ((rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering)) {
-                            return crop.canGrowInBiome(biome,world);
+                            return true;
                         }
                     }
                 }
@@ -178,7 +178,7 @@ public class CropNetwork {
                         boolean rain = world.isRaining();
                         boolean thundering = world.isThundering();
                         if ((rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering)) {
-                            return crop.canGrowInBiome(biome,world);
+                            return true;
                         }
                     }
                 }

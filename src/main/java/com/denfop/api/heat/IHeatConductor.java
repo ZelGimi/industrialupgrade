@@ -1,6 +1,8 @@
 package com.denfop.api.heat;
 
 
+import com.denfop.api.energy.ConductorInfo;
+
 public interface IHeatConductor extends IHeatAcceptor, IHeatEmitter {
 
 
@@ -14,5 +16,8 @@ public interface IHeatConductor extends IHeatAcceptor, IHeatEmitter {
     InfoCable getHeatCable();
 
     void setHeatCable(InfoCable cable);
+
+
+    ConductorInfo getHeatConductor();
 }
 

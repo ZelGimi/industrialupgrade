@@ -66,18 +66,18 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
             poseStack.popPose();
 
             rotation += 0.25f;
-            Component stack = null;
+            String stack = null;
             if (tile.vein.getType() == Type.VEIN) {
                 if (tile.vein.isOldMineral()) {
-                    stack = new ItemStack(IUItem.heavyore.getItem(tile.vein.getMeta()), 1).getDisplayName();
+                    stack = Localization.translate(new ItemStack(IUItem.heavyore.getItem(tile.vein.getMeta()), 1).getDescriptionId());
                 } else {
-                    stack = new ItemStack(IUItem.mineral.getItem(tile.vein.getMeta()), 1).getDisplayName();
+                    stack = Localization.translate(new ItemStack(IUItem.mineral.getItem(tile.vein.getMeta()), 1).getDescriptionId());
                 }
 
             } else if (tile.vein.getType() == Type.OIL) {
-                stack = new ItemStack(IUItem.oilblock.getItem()).getDisplayName();
+                stack = Localization.translate(new ItemStack(IUItem.oilblock.getItem()).getDescriptionId());
             } else if (tile.vein.getType() == Type.GAS) {
-                stack = FluidName.fluidgas.getInstance().get().getFluidType().getDescription();
+                stack = Localization.translate(FluidName.fluidgas.getInstance().get().getFluidType().getDescriptionId());
 
             }
 
@@ -94,17 +94,18 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
                 if (tile.vein.getType() != Type.GAS) {
                     itextcomponent =
                             Component.literal(Localization.translate(varietyString) + " " + Localization.translate(
-                                    typeString)).append(stack);
+                                    typeString)).append(Component.literal(" "+stack));
                 } else {
-                    itextcomponent =
-                            stack;
+                    itextcomponent =  Component.literal(
+                            stack);
                 }
             } else {
-                itextcomponent =
-                        stack;
+                itextcomponent =  Component.literal(
+                        stack);
 
 
             }
+
 
             Component itextcomponent1 = Component.literal(col + (isOil ? "mb" :
                     "") + "/" + colmax + (

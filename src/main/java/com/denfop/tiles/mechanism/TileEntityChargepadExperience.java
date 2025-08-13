@@ -93,7 +93,7 @@ public class TileEntityChargepadExperience extends TileEntityInventory {
 
     protected void chargeitems(Player player) {
         final double value = Math.min(this.energy.getEnergy(), 1);
-        this.energy.storage -= (value - ExperienceUtils.addPlayerXP1(player, (int) value));
+        this.energy.buffer.storage -= (value - ExperienceUtils.addPlayerXP1(player, (int) value));
     }
 
     @OnlyIn(Dist.CLIENT)

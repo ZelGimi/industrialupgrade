@@ -118,7 +118,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
             progress = (double) DecoderHandler.decode(customPacketBuffer);
             bar = (int) DecoderHandler.decode(customPacketBuffer);
             sound = (boolean) DecoderHandler.decode(customPacketBuffer);
-            heat.storage = (double) DecoderHandler.decode(customPacketBuffer);
+            heat.buffer.storage = (double) DecoderHandler.decode(customPacketBuffer);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -136,7 +136,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
             EncoderHandler.encode(packet, progress);
             EncoderHandler.encode(packet, bar);
             EncoderHandler.encode(packet, sound);
-            EncoderHandler.encode(packet, heat.storage);
+            EncoderHandler.encode(packet, heat.buffer.storage);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

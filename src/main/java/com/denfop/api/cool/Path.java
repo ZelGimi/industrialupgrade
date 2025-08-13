@@ -1,5 +1,6 @@
 package com.denfop.api.cool;
 
+import com.denfop.api.energy.ConductorInfo;
 import net.minecraft.core.Direction;
 
 import java.util.LinkedList;
@@ -7,7 +8,7 @@ import java.util.List;
 
 public class Path {
 
-    public final List<ICoolConductor> conductors;
+    public final List<ConductorInfo> conductors;
     public final ICoolSink target;
     public final Direction targetDirection;
     public double min = Double.MAX_VALUE;
@@ -27,7 +28,7 @@ public class Path {
     }
 
 
-    public List<ICoolConductor> getConductors() {
+    public List<ConductorInfo> getConductors() {
         return conductors;
     }
 

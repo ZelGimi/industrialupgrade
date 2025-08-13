@@ -24,8 +24,8 @@ public class GuiSolariumStorage<T extends ContainerSolariumStorage> extends GuiI
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         this.drawForeground(poseStack, mouseX, mouseY);
         new AdvArea(this, 5, 30, 170, 54).withTooltip(ModUtils
-                .getString(this.container.base.se.storage) + "/" + ModUtils
-                .getString(this.container.base.se.capacity) + " " +
+                .getString(this.container.base.se.buffer.storage) + "/" + ModUtils
+                .getString(this.container.base.se.buffer.capacity) + " " +
                 "SE").drawForeground(poseStack, mouseX, mouseY);
     }
 

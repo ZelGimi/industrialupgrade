@@ -63,8 +63,8 @@ public class ComponentSteamProcess extends AbstractComponent {
                 "temperature") <= this.heatComponent.getEnergy()) {
             return true;
         } else {
-            if (!this.heatComponent.need) {
-                this.heatComponent.need = true;
+            if (!this.heatComponent.buffer.need) {
+                this.heatComponent.buffer.need = true;
             }
         }
         return false;
@@ -181,7 +181,7 @@ public class ComponentSteamProcess extends AbstractComponent {
                         .getOutput().items) && checkHeatRecipe() && checkRecipe() && pressureComponent.getEnergy() == pressure && checkFluidRecipe() && this.invSlotRecipes.continue_process(
                 this.updateTick.getRecipeOutput())) {
             if (this.heatComponent != null) {
-                this.heatComponent.need = true;
+                this.heatComponent.buffer.need = true;
             }
             if (!this.parent.getActive()) {
                 this.parent.setActive(true);
@@ -221,7 +221,7 @@ public class ComponentSteamProcess extends AbstractComponent {
             }
         } else {
             if (this.heatComponent != null && this.updateTick.getRecipeOutput() == null) {
-                this.heatComponent.need = false;
+                this.heatComponent.buffer.need = false;
             }
             if (componentProgress == null) {
                 this.heatComponent = this.getParent().getComp(HeatComponent.class);

@@ -154,7 +154,8 @@ public class Register {
     public static DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(Registry.VILLAGER_PROFESSION_REGISTRY, IUCore.MODID);
     public static RegistryObject<IndustrialShapelessRecipeSerializer> RECIPE_SERIALIZER_SHAPELESS_RECIPE;
     public static RegistryObject<IndustrialShapedRecipeSerializer> RECIPE_SERIALIZER_SHAPED_RECIPE;
-
+    public static RegistryObject<SmelterSerializer> RECIPE_SERIALIZER_SMELTERY_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> SMELTERY_RECIPE;
     public static void register() {
         ITEMS.register(IUCore.context.getModEventBus());
         BLOCKS.register(IUCore.context.getModEventBus());
@@ -197,6 +198,8 @@ public class Register {
         RECIPE_SERIALIZER_SHAPED_RECIPE= RECIPE_SERIALIZER.register("shaped_recipe", IndustrialShapedRecipeSerializer::new);
         RECIPE_SERIALIZER_SHAPELESS_RECIPE= RECIPE_SERIALIZER.register("shapeless_recipe", IndustrialShapelessRecipeSerializer::new);
 
+        SMELTERY_RECIPE = RECIPE_TYPE.register("smeltery", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_SMELTERY_RECIPE = RECIPE_SERIALIZER.register("smeltery", () -> new SmelterSerializer());
 
         containerBase = MENU_TYPE.register("containerbase", () -> IForgeMenuType.create((windowId, inv, data) -> {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);

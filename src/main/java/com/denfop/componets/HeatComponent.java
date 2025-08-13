@@ -1,10 +1,13 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.heat.*;
+import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
+import com.denfop.componets.heat.EnergyNetDelegate;
+import com.denfop.componets.heat.EnergyNetDelegateSink;
+import com.denfop.componets.heat.EnergyNetDelegateSource;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -18,37 +21,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
 
 public class HeatComponent extends AbstractComponent {
-
+    public final BufferEnergy buffer;
     public final Level world;
-    public final boolean fullEnergy;
+
     private final double defaultCapacity;
-    public double capacity;
-    public double storage;
-    public int sinkTier;
-    public int sourceTier;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    public List<InvSlot> managedSlots;
-    public boolean multiSource;
-    public int sourcePackets;
-    public HeatComponent.EnergyNetDelegate delegate;
+    public EnergyNetDelegate delegate;
     public boolean loaded;
-    public boolean receivingDisabled;
-    public boolean sendingSidabled;
-    public boolean need;
     public boolean auto;
-    public boolean allow;
     Random rand = new Random();
-    Map<Direction, IHeatTile> energyHeatConductorMap = new HashMap<>();
-    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
     private double coef;
 
     public HeatComponent(TileEntityInventory parent, double capacity) {
@@ -75,18 +63,11 @@ public class HeatComponent extends AbstractComponent {
             boolean fullEnergy
     ) {
         super(parent);
-        this.multiSource = false;
-        this.sourcePackets = 1;
-        this.capacity = capacity;
-        this.sinkTier = sinkTier;
-        this.sourceTier = sourceTier;
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
-        this.fullEnergy = fullEnergy;
         this.world = parent.getLevel();
         this.defaultCapacity = capacity;
-        this.need = true;
-        this.allow = false;
+        this.buffer = new BufferEnergy(0,capacity,sinkTier,sourceTier);
         this.coef = 0;
     }
 
@@ -112,10 +93,10 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public void readFromNbt(CompoundTag nbt) {
-        this.storage = nbt.getDouble("storage");
-        this.capacity = nbt.getDouble("capacity");
-        this.need = nbt.getBoolean("need");
-        this.allow = nbt.getBoolean("allow");
+        this.buffer.storage = nbt.getDouble("storage");
+        this.buffer.capacity = nbt.getDouble("capacity");
+        this.buffer.need = nbt.getBoolean("need");
+        this.buffer.allow = nbt.getBoolean("allow");
         this.auto = nbt.getBoolean("auto");
 
 
@@ -123,39 +104,34 @@ public class HeatComponent extends AbstractComponent {
 
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer packet = super.updateComponent();
-        packet.writeDouble(this.capacity);
-        packet.writeDouble(this.storage);
-        packet.writeBoolean(this.need);
-        packet.writeBoolean(this.allow);
+        packet.writeDouble(this.buffer.capacity);
+        packet.writeDouble(this.buffer.storage);
+        packet.writeBoolean(this.buffer.need);
+        packet.writeBoolean(this.buffer.allow);
         packet.writeBoolean(this.auto);
         return packet;
     }
 
     public CompoundTag writeToNbt() {
         CompoundTag ret = new CompoundTag();
-        ret.putDouble("storage", this.storage);
-        ret.putDouble("capacity", this.capacity);
-        ret.putBoolean("need", this.need);
-        ret.putBoolean("allow", this.allow);
+        ret.putDouble("storage", this.buffer.storage);
+        ret.putDouble("capacity", this.buffer.capacity);
+        ret.putBoolean("need", this.buffer.need);
+        ret.putBoolean("allow", this.buffer.allow);
         ret.putBoolean("auto", this.auto);
         return ret;
     }
 
     public void onLoaded() {
         assert this.delegate == null;
-        if (this.capacity < this.defaultCapacity) {
-            this.capacity = this.defaultCapacity;
+        if (this.buffer.capacity < this.defaultCapacity) {
+            this.buffer.capacity = this.defaultCapacity;
         }
         if (!this.parent.getLevel().isClientSide) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
 
             } else {
-
-
                 this.createDelegate();
-
-                this.validHeatReceivers.clear();
-                this.energyHeatConductorMap.clear();
                 MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.parent.getLevel()));
             }
 
@@ -168,7 +144,7 @@ public class HeatComponent extends AbstractComponent {
             Biome biome = world.getBiome(pos).value();
             if (biome.coldEnoughToSnow(pos)) {
                 coef = -1;
-            } else if (biome.shouldSnowGolemBurn(pos)) {
+            } else if (biome.coldEnoughToSnow(pos)) {
                 coef = 1;
             } else {
                 coef = 0;
@@ -196,14 +172,14 @@ public class HeatComponent extends AbstractComponent {
             assert !this.sinkDirections.isEmpty() || !this.sourceDirections.isEmpty();
 
             if (this.sinkDirections.isEmpty()) {
-                this.delegate = new HeatComponent.EnergyNetDelegateSource();
+                this.delegate = new EnergyNetDelegateSource(this);
             } else if (this.sourceDirections.isEmpty()) {
-                this.delegate = new HeatComponent.EnergyNetDelegateSink();
+                this.delegate = new EnergyNetDelegateSink(this);
             }
             if (delegate == null) {
                 return;
             }
-            this.delegate.setLevel(this.parent.getLevel());
+
         }
     }
 
@@ -241,53 +217,53 @@ public class HeatComponent extends AbstractComponent {
 
     public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
-        buffer.writeDouble(this.capacity);
-        buffer.writeDouble(this.storage);
-        buffer.writeBoolean(this.need);
-        buffer.writeBoolean(this.allow);
+        buffer.writeDouble(this.buffer.capacity);
+        buffer.writeDouble(this.buffer.storage);
+        buffer.writeBoolean(this.buffer.need);
+        buffer.writeBoolean(this.buffer.allow);
         buffer.writeBoolean(this.auto);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
-        this.capacity = is.readDouble();
-        this.storage = is.readDouble();
-        this.need = is.readBoolean();
-        this.allow = is.readBoolean();
+        this.buffer.capacity = is.readDouble();
+        this.buffer.storage = is.readDouble();
+        this.buffer.need = is.readBoolean();
+        this.buffer.allow = is.readBoolean();
         this.auto = is.readBoolean();
     }
 
 
     public double getCapacity() {
-        return this.capacity;
+        return this.buffer.capacity;
     }
 
     public void setCapacity(double capacity) {
-        this.capacity = capacity;
-        if (this.storage > this.capacity) {
-            this.storage = this.capacity;
+        this.buffer.capacity = capacity;
+        if (this.buffer.storage > this.buffer.capacity) {
+            this.buffer.storage = this.buffer.capacity;
         }
     }
 
     public double getEnergy() {
-        return this.storage;
+        return this.buffer.storage;
     }
 
 
     public double getFillRatio() {
-        return this.storage / this.capacity;
+        return this.buffer.storage / this.buffer.capacity;
     }
 
 
     public double addEnergy(double amount) {
 
-        this.storage += amount;
+        this.buffer.storage += amount;
         if (this.coef != 0 && rand.nextInt(2) == 1) {
-            this.storage += 7 * this.coef;
+            this.buffer.storage += 7 * this.coef;
         }
-        this.storage = Math.min(this.storage, this.capacity);
-        this.storage = Math.max(this.storage, 0);
+        this.buffer.storage = Math.min(this.buffer.storage, this.buffer.capacity);
+        this.buffer.storage = Math.max(this.buffer.storage, 0);
 
 
         return amount;
@@ -295,19 +271,19 @@ public class HeatComponent extends AbstractComponent {
 
 
     public boolean canUseEnergy(double amount) {
-        return this.storage >= amount;
+        return this.buffer.storage >= amount;
     }
 
     public boolean useEnergy(double amount) {
-        if (this.storage >= amount) {
-            this.storage -= amount;
+        if (this.buffer.storage >= amount) {
+            this.buffer.storage -= amount;
             if (rand.nextInt(2) == 1) {
                 if (this.coef == -1) {
-                    this.storage -= 1;
+                    this.buffer.storage -= 1;
                 }
             }
-            if (storage < 0) {
-                this.storage = 0;
+            if (buffer.storage < 0) {
+                this.buffer.storage = 0;
             }
             return true;
         } else {
@@ -326,48 +302,37 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public double useEnergy(double amount, boolean simulate) {
-        double ret = Math.abs(Math.max(0.0D, amount - this.storage) - amount);
+        double ret = Math.abs(Math.max(0.0D, amount - this.buffer.storage) - amount);
         if (!simulate) {
-            this.storage -= ret;
+            this.buffer.storage -= ret;
             if (rand.nextInt(2) == 1) {
                 if (this.coef == -1) {
-                    this.storage -= 1;
+                    this.buffer.storage -= 1;
                 }
             }
-            if (storage < 0) {
-                this.storage = 0;
+            if (buffer.storage < 0) {
+                this.buffer.storage = 0;
             }
         }
         return ret;
     }
 
     public int getSinkTier() {
-        return this.sinkTier;
+        return this.buffer.sinkTier;
     }
 
     public void setSinkTier(int tier) {
-        this.sinkTier = tier;
+        this.buffer.sinkTier = tier;
     }
 
     public int getSourceTier() {
-        return this.sourceTier;
+        return this.buffer.sourceTier;
     }
 
     public void setSourceTier(int tier) {
-        this.sourceTier = tier;
+        this.buffer.sourceTier = tier;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.receivingDisabled = this.sendingSidabled = !enabled;
-    }
-
-    public void setReceivingEnabled(boolean enabled) {
-        this.receivingDisabled = !enabled;
-    }
-
-    public void setSendingEnabled(boolean enabled) {
-        this.sendingSidabled = !enabled;
-    }
 
 
     public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
@@ -390,10 +355,9 @@ public class HeatComponent extends AbstractComponent {
 
         if (this.delegate != null) {
 
-
+            this.delegate.sinkDirections = sinkDirections;
+            this.delegate.sourceDirections = sourceDirections;
             assert !this.parent.getLevel().isClientSide;
-            this.validHeatReceivers.clear();
-            this.energyHeatConductorMap.clear();
             MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.world));
         }
 
@@ -413,217 +377,10 @@ public class HeatComponent extends AbstractComponent {
     }
 
 
-    private abstract class EnergyNetDelegate extends BlockEntity implements IHeatTile {
 
-        private EnergyNetDelegate() {
-            super(HeatComponent.this.parent.getType(), HeatComponent.this.parent.getBlockPos(), HeatComponent.this.parent.getBlockState());
-        }
 
-    }
 
-    private class EnergyNetDelegateSink extends HeatComponent.EnergyNetDelegate implements IHeatSink {
 
-        List<IHeatSource> list = new LinkedList<>();
-        int hashCodeSource;
-        private long id;
 
-        private EnergyNetDelegateSink() {
-            super();
-        }
-
-        public int getSinkTier() {
-            return HeatComponent.this.sinkTier;
-        }
-
-        public boolean acceptsHeatFrom(IHeatEmitter emitter, Direction dir) {
-            return HeatComponent.this.sinkDirections.contains(dir);
-        }
-
-        @Override
-        public List<IHeatSource> getEnergyTickList() {
-            return list;
-        }
-
-        @Override
-        public @NotNull BlockPos getPos() {
-            return HeatComponent.this.parent.getBlockPos();
-        }
-
-        public double getDemandedHeat() {
-
-            return HeatComponent.this.capacity;
-        }
-
-        public long getIdNetwork() {
-            return this.id;
-        }
-
-        @Override
-        public int getHashCodeSource() {
-            return hashCodeSource;
-        }
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
-
-        public void setId(final long id) {
-            this.id = id;
-        }
-
-        @Override
-        public void AddHeatTile(final IHeatTile tile, final Direction dir) {
-            if (!this.getLevel().isClientSide) {
-                energyHeatConductorMap.put(dir, tile);
-                validHeatReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
-            }
-        }
-
-        @Override
-        public void RemoveHeatTile(final IHeatTile tile, final Direction dir) {
-            if (!this.getLevel().isClientSide) {
-                energyHeatConductorMap.remove(dir);
-                final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
-                while (iter.hasNext()) {
-                    InfoTile<IHeatTile> tileInfoTile = iter.next();
-                    if (tileInfoTile.tileEntity == tile) {
-                        iter.remove();
-                        break;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public Map<Direction, IHeatTile> getHeatTiles() {
-            return energyHeatConductorMap;
-        }
-
-        @Override
-        public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
-            return validHeatReceivers;
-        }
-
-        public void receivedHeat(double amount) {
-            this.setHeatStored(amount);
-
-        }
-
-        @Override
-        public boolean needTemperature() {
-            return HeatComponent.this.need;
-        }
-
-        public void setHeatStored(double amount) {
-            if (HeatComponent.this.storage < amount) {
-                HeatComponent.this.storage = amount;
-            }
-        }
-
-        @Override
-        public BlockEntity getTile() {
-            return HeatComponent.this.parent;
-        }
-
-    }
-
-    private class EnergyNetDelegateSource extends HeatComponent.EnergyNetDelegate implements IHeatSource {
-
-        int hashCodeSource;
-        private long id;
-
-        private EnergyNetDelegateSource() {
-            super();
-        }
-
-        public int getSourceTier() {
-            return HeatComponent.this.sourceTier;
-        }
-
-        public boolean emitsHeatTo(IHeatAcceptor receiver, Direction dir) {
-            return HeatComponent.this.sourceDirections.contains(dir);
-        }
-
-        public double getOfferedHeat() {
-
-            return HeatComponent.this.storage;
-        }
-
-        @Override
-        public @NotNull BlockPos getPos() {
-            return HeatComponent.this.parent.getBlockPos();
-        }
-
-        public void drawHeat(double amount) {
-        }
-
-        public long getIdNetwork() {
-            return this.id;
-        }
-
-        @Override
-        public int getHashCodeSource() {
-            return hashCodeSource;
-        }
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
-
-        public void setId(final long id) {
-            this.id = id;
-        }
-
-        @Override
-        public void AddHeatTile(final IHeatTile tile, final Direction dir) {
-            if (!this.getLevel().isClientSide) {
-                energyHeatConductorMap.put(dir, tile);
-                validHeatReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
-            }
-        }
-
-        @Override
-        public void RemoveHeatTile(final IHeatTile tile, final Direction dir) {
-            if (!this.getLevel().isClientSide) {
-                energyHeatConductorMap.remove(dir);
-                final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
-                while (iter.hasNext()) {
-                    InfoTile<IHeatTile> tileInfoTile = iter.next();
-                    if (tileInfoTile.tileEntity == tile) {
-                        iter.remove();
-                        break;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public Map<Direction, IHeatTile> getHeatTiles() {
-            return energyHeatConductorMap;
-        }
-
-        @Override
-        public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
-            return validHeatReceivers;
-        }
-
-        @Override
-        public boolean isAllowed() {
-            return HeatComponent.this.allow;
-        }
-
-        @Override
-        public boolean setAllowed(final boolean allowed) {
-            return HeatComponent.this.allow = allowed;
-        }
-
-        @Override
-        public BlockEntity getTile() {
-            return HeatComponent.this.parent;
-        }
-
-    }
 
 }

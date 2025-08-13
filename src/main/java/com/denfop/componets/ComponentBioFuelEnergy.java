@@ -40,7 +40,7 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
             int sourceTier,
             boolean fullEnergy
     ) {
-        super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier, fullEnergy);
+        super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier);
     }
 
     public ComponentBioFuelEnergy(
@@ -52,7 +52,7 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
             int sourceTier,
             boolean fullEnergy
     ) {
-        super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier, fullEnergy);
+        super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier);
     }
 
     public static ComponentBioFuelEnergy asBasicSink(TileEntityInventory parent, double capacity) {
@@ -79,9 +79,9 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     public double addEnergy(final double amount) {
         super.addEnergy(amount);
         if (fluidTank.getFluid().isEmpty() && amount >= 1) {
-            fluidTank.fill(new FluidStack(FluidName.fluidbiomass.getInstance().get(), (int) this.storage), IFluidHandler.FluidAction.EXECUTE);
+            fluidTank.fill(new FluidStack(FluidName.fluidbiomass.getInstance().get(), (int) this.buffer.storage), IFluidHandler.FluidAction.EXECUTE);
         } else if (!fluidTank.getFluid().isEmpty()) {
-            fluidTank.getFluid().setAmount((int) this.storage);
+            fluidTank.getFluid().setAmount((int) this.buffer.storage);
         }
         return amount;
     }
@@ -96,7 +96,7 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     public boolean useEnergy(final double amount) {
         super.useEnergy(amount);
         if (!fluidTank.getFluid().isEmpty()) {
-            fluidTank.getFluid().setAmount((int) this.storage);
+            fluidTank.getFluid().setAmount((int) this.buffer.storage);
             if (fluidTank.getFluid().getAmount() == 0) {
                 fluidTank.setFluid(FluidStack.EMPTY);
             }

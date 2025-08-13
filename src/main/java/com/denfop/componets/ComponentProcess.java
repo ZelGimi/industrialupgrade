@@ -216,8 +216,8 @@ public class ComponentProcess extends AbstractComponent {
                 "temperature") <= this.heatComponent.getEnergy()) {
             return true;
         } else {
-            if (!this.heatComponent.need) {
-                this.heatComponent.need = true;
+            if (!this.heatComponent.buffer.need) {
+                this.heatComponent.buffer.need = true;
             }
         }
         return false;
@@ -284,7 +284,7 @@ public class ComponentProcess extends AbstractComponent {
                 false) && checkFluidRecipe() && checkHeatRecipe() && checkSE() && checkRadiation(
                 false) && this.invSlotRecipes.continue_process(this.updateTick.getRecipeOutput())) {
             if (this.heatComponent != null) {
-                this.heatComponent.need = true;
+                this.heatComponent.buffer.need = true;
             }
             if (!this.parent.getActive()) {
                 this.parent.setActive(true);
@@ -339,7 +339,7 @@ public class ComponentProcess extends AbstractComponent {
             }
         } else {
             if (this.heatComponent != null && this.updateTick.getRecipeOutput() == null) {
-                this.heatComponent.need = false;
+                this.heatComponent.buffer.need = false;
             }
             onFailedProcess();
             if (componentProgress == null) {

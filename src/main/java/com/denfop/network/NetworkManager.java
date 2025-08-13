@@ -79,7 +79,8 @@ public class NetworkManager {
         this.registerPacket(new PacketSynhronyzationRelocator());
         this.registerPacket(new PacketUpdateRelocator());
         this.registerPacket(new PacketDrainFluidPipette());
-
+        this.registerPacket(new PacketUpdateSkipQuest());
+        this.registerPacket(new PacketUpdateBookMarks());
         channel.registerMessage(0, CustomPacketBuffer.class,
                 (customPacketBuffer, buf) -> {
                     buf.writeBytes(customPacketBuffer);

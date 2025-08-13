@@ -25,8 +25,8 @@ public class GuiQuantumStorage<T extends ContainerQuantumStorage> extends GuiIU<
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         this.drawForeground(poseStack, mouseX, mouseY);
         new AdvArea(this, 5, 30, 170, 54).withTooltip(ModUtils
-                .getString(this.container.base.qe.storage) + "/" + ModUtils
-                .getString(this.container.base.qe.capacity) + " " +
+                .getString(this.container.base.qe.buffer.storage) + "/" + ModUtils
+                .getString(this.container.base.qe.buffer.capacity) + " " +
                 "QE").drawForeground(poseStack, mouseX, mouseY);
     }
 

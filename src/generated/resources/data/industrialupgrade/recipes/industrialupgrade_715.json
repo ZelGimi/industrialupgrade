@@ -1,5 +1,5 @@
 {
-  "type": "industrialupgrade:shaped_recipe",
+  "type": "minecraft:crafting_shaped",
   "key": {
     "C": {
       "item": "industrialupgrade:wiring/copper1"

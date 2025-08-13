@@ -1,5 +1,5 @@
 {
-  "type": "industrialupgrade:shapeless_recipe",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "industrialupgrade:blockresource/uranium_block"

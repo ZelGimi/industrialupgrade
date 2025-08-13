@@ -79,12 +79,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.denfop.api.Recipes.inputFactory;
+import static com.denfop.items.ItemVeinSensor.dataColors;
 import static com.denfop.render.base.RenderType.LEASH;
 import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
@@ -132,6 +130,9 @@ public class TickHandler {
 
     public int getOreColor(BlockState state) {
         Block block = state.getBlock();
+        if (dataColors.containsKey(state)){
+            return dataColors.get(state);
+        }
         if (block == Blocks.IRON_ORE) {
             return ModUtils.convertRGBcolorToInt(156, 156, 156);
         } else if (block == Blocks.GOLD_ORE || block == Blocks.NETHER_GOLD_ORE) {

@@ -2,7 +2,7 @@ package com.denfop.network;
 
 import com.denfop.IUCore;
 import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.recipe.*;
 import com.denfop.api.vein.Vein;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -242,6 +243,7 @@ public class DecoderHandler {
                 return is.readBoolean();
             case Byte:
                 return is.readByte();
+
             case Character:
                 return is.readChar();
             case ChunkPos:
@@ -296,6 +298,8 @@ public class DecoderHandler {
                 ItemStack ret1 = new ItemStack(item, size);
                 ret1.setTag(nbt);
                 return ret1;
+            case tuple:
+                return  new Tuple<>(decode(is),decode(is));
             case Long:
                 return is.readLong();
             case NBTTagCompound:

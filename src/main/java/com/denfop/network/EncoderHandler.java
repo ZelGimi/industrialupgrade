@@ -20,6 +20,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
@@ -198,6 +199,11 @@ public class EncoderHandler {
                 for (i = 0; i < len; ++i) {
                     encode(os, Array.get(o, i), anyTypeMismatch);
                 }
+                break;
+            case tuple:
+                Tuple<?,?> tuple = ( Tuple<?,?>) o;
+                encode(os,tuple.getA());
+                encode(os,tuple.getB());
                 break;
             case Block:
                 encode(os, Registry.BLOCK.getKey((Block) o), false);
