@@ -259,7 +259,13 @@ public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<Containe
                         isOil = true;
                     }
                 } else {
-                    name_vein = Localization.translate("iu.fluidneft");
+                    int variety = this.container.base.vein.getMeta() / 3;
+                    int type = this.container.base.vein.getMeta() % 3;
+                    String varietyString = variety == 0 ? "iu.sweet_oil" : "iu.sour_oil";
+                    String typeString = type == 0 ? "iu.light_oil" : type == 1 ? "iu.medium_oil" : "iu.heavy_oil";
+                    name_vein = Localization.translate(varietyString) + " " + Localization.translate(
+                            typeString)+" "+ Localization.translate(new ItemStack(IUItem.oilblock.getItem()).getDescriptionId());
+
                 }
                 new AdvArea(this, 20, 54, 68, 72).withTooltip(name_vein + " " + col + (isOil ? "mb" : "") + "/" + colmax + (
                         isOil

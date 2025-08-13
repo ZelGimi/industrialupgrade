@@ -1,6 +1,7 @@
 package com.denfop.tiles.transport.tiles;
 
 
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.sytem.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.network.DecoderHandler;
@@ -52,7 +53,20 @@ public class TileEntityNightPipe extends TileEntityMultiCable implements IConduc
         super.readFromNBT(nbt);
         this.cableType = NightType.values[nbt.getByte("cableType") & 255];
     }
+    Map<EnergyType, ConductorInfo> conductorInfoMap = new HashMap<>();
 
+    @Override
+    public ConductorInfo getInfo(EnergyType energyType) {
+        if (conductorInfoMap.isEmpty()) {
+            if (getEnergies() == null || getEnergies().isEmpty()) {
+                conductorInfoMap.put(getEnergyType(), new ConductorInfo(pos, this, getEnergyType()));
+            } else {
+                for (EnergyType e : getEnergies())
+                    conductorInfoMap.put(e, new ConductorInfo(pos, this, e));
+            }
+        }
+        return conductorInfoMap.get(energyType);
+    }
     public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
         nbt.putByte("cableType", (byte) this.cableType.ordinal());

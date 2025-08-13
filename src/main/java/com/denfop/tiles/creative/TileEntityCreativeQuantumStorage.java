@@ -17,7 +17,7 @@ public class TileEntityCreativeQuantumStorage extends TileEntityQuantumStorage {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.qe.storage = this.qe.capacity;
+        this.qe.buffer.storage = this.qe.buffer.capacity;
     }
 
     @Override

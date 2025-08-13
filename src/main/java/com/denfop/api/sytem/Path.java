@@ -1,12 +1,16 @@
 package com.denfop.api.sytem;
 
+import com.denfop.api.energy.ConductorInfo;
 import net.minecraft.core.Direction;
+
+import java.util.ArrayList;
 
 public class Path {
 
 
     final ISink target;
     final Direction targetDirection;
+    public ArrayList<ConductorInfo> conductorList = new ArrayList<>();
 
     Path(ISink sink, Direction facing) {
         this.target = sink;

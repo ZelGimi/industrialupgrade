@@ -189,14 +189,22 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                 blockPosList.remove(pos1);
                 if (need) {
                     FluidState fluidState = level.getFluidState(pos2);
-                    if (meta1 < 16) {
-                        setBlockState1(level, pos2, IUItem.blockdeposits.getBlock(BlockDeposits.Type.getFromID(meta1)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
-                    } else {
-                        if (meta1 < 32) {
-                            setBlockState1(level, pos2, IUItem.blockdeposits1.getBlock(BlockDeposits1.Type.getFromID(meta1 - 16)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                    if (veinType.getDeposits() == null) {
+                        if (meta1 < 16) {
+                            setBlockState1(level, pos2, IUItem.blockdeposits.getBlock(BlockDeposits.Type.getFromID(meta1)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         } else {
-                            setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            if (meta1 < 32) {
+                                setBlockState1(level, pos2, IUItem.blockdeposits1.getBlock(BlockDeposits1.Type.getFromID(meta1 - 16)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            } else {
+                                setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            }
                         }
+                    }else{
+                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                            setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                        else
+                            setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
+
                     }
 
                     ii++;
@@ -447,16 +455,23 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                 blockPosList.remove(pos1);
                 if (need) {
                     FluidState fluidState = level.getFluidState(pos2);
-                    if (meta1 < 16) {
-                        setBlockState1(level, pos2, IUItem.blockdeposits.getBlock(BlockDeposits.Type.getFromID(meta1)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
-                    } else {
-                        if (meta1 < 32) {
-                            setBlockState1(level, pos2, IUItem.blockdeposits1.getBlock(BlockDeposits1.Type.getFromID(meta1 - 16)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                    if (veinType.getDeposits() == null) {
+                        if (meta1 < 16) {
+                            setBlockState1(level, pos2, IUItem.blockdeposits.getBlock(BlockDeposits.Type.getFromID(meta1)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         } else {
-                            setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            if (meta1 < 32) {
+                                setBlockState1(level, pos2, IUItem.blockdeposits1.getBlock(BlockDeposits1.Type.getFromID(meta1 - 16)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            } else {
+                                setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            }
                         }
-                    }
+                    }else{
+                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                            setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                        else
+                            setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
 
+                    }
                     ii++;
                 }
             }
@@ -610,14 +625,22 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                 blockPosList.remove(pos1);
                 if (need) {
                     FluidState fluidState = level.getFluidState(pos2);
-                    if (meta1 < 16) {
-                        setBlockState1(level, pos2, IUItem.blockdeposits.getBlock(BlockDeposits.Type.getFromID(meta1)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
-                    } else {
-                        if (meta1 < 32) {
-                            setBlockState1(level, pos2, IUItem.blockdeposits1.getBlock(BlockDeposits1.Type.getFromID(meta1 - 16)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                    if (veinType.getDeposits() == null) {
+                        if (meta1 < 16) {
+                            setBlockState1(level, pos2, IUItem.blockdeposits.getBlock(BlockDeposits.Type.getFromID(meta1)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         } else {
-                            setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            if (meta1 < 32) {
+                                setBlockState1(level, pos2, IUItem.blockdeposits1.getBlock(BlockDeposits1.Type.getFromID(meta1 - 16)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            } else {
+                                setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                            }
                         }
+                    }else{
+                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                            setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                        else
+                            setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
+
                     }
 
                     ii++;

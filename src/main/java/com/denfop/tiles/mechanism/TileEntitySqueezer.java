@@ -132,10 +132,10 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
                 new ItemStack(Items.PUMPKIN_SEEDS),
                 new FluidStack(FluidName.fluidseedoil.getInstance().get(), 35)
         );
-       /* addRecipe(
-                new ItemStack(IUItem.crops),
+       addRecipe(
+                new ItemStack(IUItem.crops.getStack(0)),
                 new FluidStack(FluidName.fluidseedoil.getInstance().get(), 50)
-        );*/
+        );
     }
 
     public List<AABB> getAabbs(boolean forCollision) {

@@ -66,6 +66,8 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.steam_info"));
         tooltip.add(Localization.translate("iu.steam_info1"));
+        tooltip.add(Localization.translate("iu.steam_pressure_converter.info"));
+        tooltip.add(Localization.translate("iu.pressure_steam.info"));
     }
 
     @Override
@@ -195,15 +197,15 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (pressure.storage > maxpressure) {
-            pressure.storage = maxpressure;
+        if (pressure.buffer.storage > maxpressure) {
+            pressure.buffer.storage = maxpressure;
         }
         if (this.work) {
             if (this.getWorld().getGameTime() % 40 == 0 && maxpressure > 0) {
                 if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= maxpressure && this.pressure.getEnergy() + 1 <= this.pressure.getCapacity()) {
                     this.pressure.addEnergy(1);
-                    if (pressure.storage > maxpressure) {
-                        pressure.storage = maxpressure;
+                    if (pressure.buffer.storage > maxpressure) {
+                        pressure.buffer.storage = maxpressure;
                     }
                     this.fluidTank.drain(maxpressure, IFluidHandler.FluidAction.EXECUTE);
                     this.setActive(true);

@@ -35,9 +35,11 @@ public class EventAutoQuests {
 
         Map<String, List<String>> map = GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID());
         if (map == null) return;
-
-        GuideTab guideTab = guideTabs.get(tabIndex);
-        List<Quest> quests = GuideBookCore.instance.getQuests(tabIndex);
+        if (tabIndex >= guideTabs.size()) {
+            tabIndex = 0;
+        }
+        GuideTab guideTab = guideTabs.get(tabIndex%guideTabs.size());
+        List<Quest> quests = GuideBookCore.instance.getQuests(tabIndex%guideTabs.size());
 
         if (questIndex >= quests.size()) {
             questIndex = 0;

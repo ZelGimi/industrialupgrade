@@ -2,6 +2,7 @@ package com.denfop;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.agriculture.CropInit;
+import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gasvein.GasVeinSystem;
@@ -198,7 +199,7 @@ public class IUCore {
     static List<String> stringList = new ArrayList<>();
     static boolean change = false;
     static boolean register = false;
-    static boolean register1 = false;
+    public static boolean register1 = false;
     public final ModContainer modContainer;
     boolean reg = false;
     List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
@@ -462,9 +463,19 @@ public class IUCore {
 
         EnumTypeMachines.writeSound();
     }
-
+    public static Map<Item, ICrop> cropMap = new HashMap<>();
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
+        cropMap.put(Items.WHEAT_SEEDS,CropInit.wheat_seed);
+        cropMap.put(Items.SUGAR_CANE,CropInit.reed_seed);
+        cropMap.put(Items.POTATO,CropInit.potato);
+        cropMap.put(Items.CARROT,CropInit.carrot);
+        cropMap.put(Items.MELON_SEEDS,CropInit.melon);
+        cropMap.put(Items.PUMPKIN_SEEDS,CropInit.pumpkin);
+        cropMap.put(Items.MELON,CropInit.melon);
+        cropMap.put(Items.PUMPKIN,CropInit.pumpkin);
+        cropMap.put(Items.BEETROOT,CropInit.beet);
+        cropMap.put(Items.NETHER_WART,CropInit.nether_wart);
         proxy.postInit();
         new GuideBookCore();
         GuideBookCore.init();

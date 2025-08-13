@@ -293,7 +293,8 @@ public abstract class TileEntityBlock extends BlockEntity {
     }
 
     public void tick() {
-
+        if (this.isRemoved())
+            return;
         if (this.getLevel().isClientSide) {
             this.updateEntityClient();
         } else {

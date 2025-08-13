@@ -1,5 +1,9 @@
 package com.denfop.api.energy;
 
+import com.denfop.api.cool.ICoolConductor;
+import com.denfop.api.heat.IHeatConductor;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.IConductor;
 import net.minecraft.core.BlockPos;
 
 public class ConductorInfo {
@@ -14,7 +18,18 @@ public class ConductorInfo {
         this.breakdownEnergy = energyConductor.getConductorBreakdownEnergy();
         this.pos = pos;
     }
-
+    public ConductorInfo(BlockPos pos, IConductor energyConductor, EnergyType energyType){
+        this.breakdownEnergy = energyConductor.getConductorBreakdownEnergy(energyType);
+        this.pos=pos;
+    }
+    public ConductorInfo(BlockPos pos, ICoolConductor energyConductor){
+        this.breakdownEnergy = energyConductor.getConductorBreakdownCold();
+        this.pos=pos;
+    }
+    public ConductorInfo(BlockPos pos, IHeatConductor energyConductor){
+        this.breakdownEnergy = energyConductor.getConductorBreakdownHeat();
+        this.pos=pos;
+    }
 
     public void addEnergy(byte tick, double energy) {
         if (tick != this.tick) {

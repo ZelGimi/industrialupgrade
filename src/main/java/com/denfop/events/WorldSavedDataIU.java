@@ -49,8 +49,9 @@ public class WorldSavedDataIU extends SavedData {
 
     public WorldSavedDataIU() {
         super();
-    }
+        this.readNBT(new CompoundTag(),IUCore.registry == null ? IUCore.registryAccess : IUCore.registry);
 
+    }
 
     public WorldSavedDataIU(String name) {
         super();
@@ -144,10 +145,11 @@ public class WorldSavedDataIU extends SavedData {
 
     public void readNBT(CompoundTag compound, HolderLookup.Provider lookupProvider) {
         SpaceNet.instance.getFakeSpaceSystem().unload();
+        if (shellClusterChuncks == null)
+            shellClusterChuncks = new HashMap<>();
+        shellClusterChuncks.clear();
         if (compound.contains("shells")) {
-            if (shellClusterChuncks == null)
-                shellClusterChuncks = new HashMap<>();
-            shellClusterChuncks.clear();
+
             loadShellClusterChunks(compound.getCompound("shells"));
         }
         if (compound.contains("fakePlayers")) {

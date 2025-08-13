@@ -489,7 +489,17 @@ public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<Containe
             case UP    -> pose.mulPose(Axis.XP.rotationDegrees(-90));
             case DOWN  -> pose.mulPose(Axis.XP.rotationDegrees(90));
         };
+        float texW = 42 - 29;
+        float texH = 142 - 120;
+
         pose.scale(0.3f,0.3f,1f);
+
+        switch (direction.getOpposite()) {
+            case NORTH ->      pose.translate(-texW ,  -texH  , 0);
+            case SOUTH ->      pose.translate(0,  -texH   , 0);
+            case WEST  -> pose.translate(-texW , -texH  , 0);
+            case EAST  -> pose.translate(-texW /2, -texH /2 , 0);
+        };
         bindTexture( ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_space_icons.png"));
         drawTexturedModalRect(poseStack, 0, 0, 29, 120, 42-29, 142-120);
         pose.popPose();

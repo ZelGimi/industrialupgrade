@@ -188,12 +188,12 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.coef = (int) Math.max(Math.ceil(this.cold.storage / 16), 1);
+        this.coef = (int) Math.max(Math.ceil(this.cold.buffer.storage / 16), 1);
     }
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.cold.allow || work) {
+        if (this.cold.buffer.allow || work) {
             if (this.energy.getEnergy() >= 30 * this.coef && this.cold.getEnergy() < this.cold.getCapacity()) {
                 this.cold.addEnergy(1);
                 this.energy.useEnergy(30 * this.coef);

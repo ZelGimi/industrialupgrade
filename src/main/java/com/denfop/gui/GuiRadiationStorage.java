@@ -25,8 +25,8 @@ public class GuiRadiationStorage<T extends ContainerRadiationStorage> extends Gu
         super.drawForegroundLayer(poseStack, mouseX, mouseY);
         this.drawForeground(poseStack, mouseX, mouseY);
         new AdvArea(this, 5, 31, 170, 55).withTooltip(ModUtils
-                .getString(this.container.base.radiation.storage) + "/" + ModUtils
-                .getString(this.container.base.radiation.capacity) + " " +
+                .getString(this.container.base.radiation.buffer.storage) + "/" + ModUtils
+                .getString(this.container.base.radiation.buffer.capacity) + " " +
                 "☢").drawForeground(poseStack, mouseX, mouseY);
     }
 

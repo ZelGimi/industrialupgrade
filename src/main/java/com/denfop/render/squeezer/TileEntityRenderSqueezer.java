@@ -50,8 +50,8 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
         FluidStack fluidStack = tank.getFluid();
 
         if (!fluidStack.isEmpty()) {
-            final float scale = 1.45f * (tank.getFluidAmount()) * 1F / tank.getCapacity();
-
+            float scale = 1.45f * (tank.getFluidAmount()) * 1F / tank.getCapacity();
+            scale = Math.min(scale,1.45f);
             poseStack.pushPose();
             if (tile.facing == 4) {
                 poseStack.translate(0.07 + 0.12, 0.18, 0.6 + 0.08);

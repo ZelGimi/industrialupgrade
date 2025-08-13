@@ -14,6 +14,7 @@ import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWindGenerator;
 import com.denfop.gui.GuiCore;
@@ -41,6 +42,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -83,6 +85,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     private boolean work = true;
     private int time;
     private boolean can_work = true;
+    private ComponentVisibleArea visible;
 
     public TileWindGenerator(EnumLevelGenerators levelGenerators, IMultiTileBlock block, BlockPos pos, BlockState state) {
         super(block, pos, state);
@@ -99,6 +102,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         this.addition_efficient = 0;
         this.addition_strength = 0;
         this.tick = 0;
+        visible = this.addComponent(new ComponentVisibleArea(this));
 
     }
 
@@ -410,6 +414,14 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     @Override
     public void onLoaded() {
         super.onLoaded();
+        this.visible.aabb = new AABB(
+                this.getBlockPos().getX() - 8,
+                this.getBlockPos().getY() - 8,
+                this.getBlockPos().getZ() - 8,
+                this.getBlockPos().getX() + 8+ 1,
+                this.getBlockPos().getY() + 8+ 1,
+                this.getBlockPos().getZ() + 8 + 1
+        );
         if (this.getWorld().isClientSide) {
             return;
         }

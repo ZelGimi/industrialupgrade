@@ -127,7 +127,7 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item.GraviTool";
+            this.nameItem = "item.gravitool";
         }
 
         return this.nameItem;

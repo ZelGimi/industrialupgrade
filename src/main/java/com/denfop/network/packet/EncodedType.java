@@ -4,6 +4,7 @@ package com.denfop.network.packet;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.componets.AbstractComponent;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -44,6 +45,7 @@ public enum EncodedType {
     FluidStack(net.neoforged.neoforge.fluids.FluidStack.class),
     FluidTank(net.neoforged.neoforge.fluids.capability.templates.FluidTank.class),
     InvSlot(com.denfop.invslot.InvSlot.class),
+    tuple(Tuple.class),
     DataComponentPatch(net.minecraft.core.component.DataComponentPatch.class),
     //    FAKE_PLANET(FakePlanet.class),
     //   FAKE_SATELLITE(FakeSatellite.class),

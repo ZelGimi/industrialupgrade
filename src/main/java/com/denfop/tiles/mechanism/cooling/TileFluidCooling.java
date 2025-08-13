@@ -227,7 +227,7 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
                 this.outputSlot.add(output1.getValue());
             }
         }
-        if (this.cold.allow || work) {
+        if (this.cold.buffer.allow || work) {
             if (!this.tank.getFluid().isEmpty() && this.tank.getFluidAmount() >= coef && this.cold.getEnergy() < this.cold.getCapacity()) {
                 this.cold.addEnergy(1);
                 this.tank.drain(coef, IFluidHandler.FluidAction.EXECUTE);

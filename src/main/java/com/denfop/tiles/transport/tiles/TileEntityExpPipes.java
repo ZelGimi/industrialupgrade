@@ -1,5 +1,6 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.sytem.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.network.DecoderHandler;
@@ -47,7 +48,20 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
     public int getHashCodeSource() {
         return hashCodeSource;
     }
+    Map<EnergyType, ConductorInfo> conductorInfoMap = new HashMap<>();
 
+    @Override
+    public ConductorInfo getInfo(EnergyType energyType) {
+        if (conductorInfoMap.isEmpty()) {
+            if (getEnergies() == null || getEnergies().isEmpty()) {
+                conductorInfoMap.put(getEnergyType(), new ConductorInfo(pos, this, getEnergyType()));
+            } else {
+                for (EnergyType e : getEnergies())
+                    conductorInfoMap.put(e, new ConductorInfo(pos, this, e));
+            }
+        }
+        return conductorInfoMap.get(energyType);
+    }
     @Override
     public void setHashCodeSource(final int hashCode) {
         hashCodeSource = hashCode;

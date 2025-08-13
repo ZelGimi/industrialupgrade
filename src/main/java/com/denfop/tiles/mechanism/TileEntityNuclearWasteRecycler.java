@@ -76,7 +76,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
                 new ArrayList<>(ModUtils.noFacings),
                 Arrays.asList(Direction.values()),
                 0,
-                EnergyNetGlobal.instance.getTierFromPower(14), false
+                EnergyNetGlobal.instance.getTierFromPower(14)
         )));
         Recipes.recipes.addInitRecipes(this);
     }

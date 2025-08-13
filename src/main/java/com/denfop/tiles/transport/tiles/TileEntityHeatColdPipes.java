@@ -7,6 +7,7 @@ import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.heat.*;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
@@ -52,6 +53,20 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         this.cableType = cableType;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
+        this.conductorCool = new ConductorInfo(pos, (ICoolConductor) this);
+        this.conductorHeat = new ConductorInfo(pos,(IHeatConductor) this);
+    }
+    private final ConductorInfo conductorHeat;
+
+    @Override
+    public ConductorInfo getHeatConductor() {
+        return conductorHeat;
+    }
+    private final ConductorInfo conductorCool;
+
+    @Override
+    public ConductorInfo getCoolConductor() {
+        return conductorCool;
     }
 
     @Override

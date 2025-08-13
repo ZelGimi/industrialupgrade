@@ -32,6 +32,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
 import java.util.Set;
@@ -211,6 +213,11 @@ public class ItemIronHammer extends ItemToolIU {
         return mineableBlocks.contains(state) ? this.getTier().getSpeed() : 1.0F;
     }
 
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
+        return ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(toolAction) || ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
+    }
     public boolean onDestroyed(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof Player player)) {
             return false;
@@ -233,7 +240,10 @@ public class ItemIronHammer extends ItemToolIU {
                 return false;
             }
 
-            if (world.destroyBlock(pos, true, entity)) {
+            if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+
 
                 List<ItemEntity> items = world.getEntitiesOfClass(
                         ItemEntity.class,
@@ -253,8 +263,10 @@ public class ItemIronHammer extends ItemToolIU {
             }
 
         } else {
-            if (world.destroyBlock(pos, true, player)) {
-                block.playerDestroy(world, player, pos, state, null, stack);
+            if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+
             }
 
         }

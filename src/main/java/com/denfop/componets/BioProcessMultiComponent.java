@@ -175,13 +175,13 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
                 if (this.multimachine.getHeat() != null) {
                     if (output.getRecipe().output.metadata.getShort("minHeat") == 0 || output.getRecipe().output.metadata.getShort(
                             "minHeat") > this.heat.getEnergy()) {
-                        if (!(this).heat.need) {
-                            (this).heat.need = true;
+                        if (!(this).heat.buffer.need) {
+                            (this).heat.buffer.need = true;
                         }
                         return;
 
-                    } else if ((this).heat.need) {
-                        (this).heat.need = false;
+                    } else if ((this).heat.buffer.need) {
+                        (this).heat.buffer.need = false;
                     }
                 }
                 if (this.progress[i] == 0) {

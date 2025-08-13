@@ -165,7 +165,9 @@ public class Register {
     public static DeferredRegister<PoiType> POI_TYPE = DeferredRegister.create(Registries.POINT_OF_INTEREST_TYPE, IUCore.MODID);
     public static DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(Registries.VILLAGER_PROFESSION, IUCore.MODID);
     public static DeferredHolder<RecipeSerializer<?>, IndustrialShapelessRecipeSerializer> RECIPE_SERIALIZER_SHAPELESS;
-    private static ItemStackInventory invent;
+    public static ItemStackInventory invent;
+    public static DeferredHolder<RecipeSerializer<?>, SmelterSerializer> RECIPE_SERIALIZER_SMELTERY_RECIPE;
+    public static DeferredHolder<RecipeType<?>, RecipeType<Recipe<?>>> SMELTERY_RECIPE;
 
     public static void register() {
         ITEMS.register(IUCore.context);
@@ -223,6 +225,8 @@ public class Register {
         COLONY_RECIPE = RECIPE_TYPE.register("colony_resource_add", () -> new RecipeType<>() {
         });
         RECIPE_SERIALIZER_COLONY_RECIPE = RECIPE_SERIALIZER.register("colony_resource_add", ColonySerializer::new);
+        SMELTERY_RECIPE = RECIPE_TYPE.register("smeltery", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_SMELTERY_RECIPE = RECIPE_SERIALIZER.register("smeltery", () -> new SmelterSerializer());
 
         TABS.register("iutab",
                 () -> IUCore.IUTab);

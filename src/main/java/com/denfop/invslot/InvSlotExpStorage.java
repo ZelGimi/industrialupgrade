@@ -29,7 +29,7 @@ public class InvSlotExpStorage extends InvSlot implements ITypeSlot {
         if (this.isEmpty()) {
             this.base1.energy.setCapacity(2000000000);
             if (this.base1.energy.getEnergy() > 2000000000) {
-                this.base1.energy.storage = 2000000000;
+                this.base1.energy.buffer.storage = 2000000000;
             }
         }
         return content;

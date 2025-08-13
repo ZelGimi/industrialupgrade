@@ -44,7 +44,7 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
                 Arrays.stream(Direction.values()).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
                 Collections.singletonList(this.getFacing()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
-                EnergyNetGlobal.instance.getTierFromPower(14), false
+                EnergyNetGlobal.instance.getTierFromPower(14)
         )));
         this.enumTypeStyle = enumTypeStyle;
     }

@@ -9,6 +9,7 @@ import com.denfop.api.windsystem.WindSystem;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -20,45 +21,27 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
 
-public class AirPollutionComponent extends AbstractComponent implements IPollutionMechanism {
+public class AirPollutionComponent extends AbstractComponent  {
 
-    private double pollution;
+
+    private final PollutionMechanism pollution;
     private double default_pollution;
-    private ChunkPos chunkPos;
+
     private double percent = 1;
 
     public AirPollutionComponent(final TileEntityInventory parent, double pollution) {
         super(parent);
-        this.pollution = pollution;
+        this.pollution = new PollutionMechanism(new ChunkPos(parent.pos));
         this.default_pollution = pollution;
     }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void spawnCustomPollutionParticle(Level world, double x, double y, double z, double windSpeed) {
-        if (world != null) {
-            Vec3 windDirection = WindSystem.windSystem.getWindSide().getDirectionVector();
-
-
-            double motionX = windDirection.x * windSpeed * 0.5;
-            double motionY = 0.01D;
-            double motionZ = windDirection.z * windSpeed * 0.5;
-
-            world.addParticle(
-                    ParticleTypes.SMOKE,
-                    x, y, z,
-                    motionX, motionY, motionZ
-            );
-        }
-    }
-
     public static void spawnAirPollutionDirected(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
@@ -95,6 +78,8 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
             }
         }
     }
+
+
 
     @Override
     public CompoundTag writeToNbt() {
@@ -172,8 +157,8 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
-        buffer.writeDouble(this.pollution);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16,player.registryAccess());
+        buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
         buffer.flip();
@@ -182,7 +167,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer buffer = super.updateComponent();
-        buffer.writeDouble(this.pollution);
+        buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
         return buffer;
@@ -190,7 +175,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
-        this.pollution = is.readDouble();
+        this.pollution.pollution = is.readDouble();
         this.default_pollution = is.readDouble();
         this.percent = is.readDouble();
 
@@ -201,18 +186,12 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
         return true;
     }
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void updateEntityClient() {
-        super.updateEntityClient();
-
-    }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.parent.getWorld().getGameTime() % 20 == 0 && this.parent.getActive()) {
-            spawnAirPollutionDirected(parent.getWorld(), parent.getPos(), parent.getWorld().random);
+            spawnAirPollutionDirected(parent.getWorld(),parent.getPos(),parent.getWorld().random);
         }
         if (this.parent.getActive()) {
             this.setPollution(this.default_pollution * this.percent);
@@ -226,7 +205,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            NeoForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this));
+            NeoForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), pollution));
 
 
         }
@@ -241,35 +220,14 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     public void onUnloaded() {
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            NeoForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this));
+            NeoForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), pollution));
 
 
         }
     }
 
-    @Override
-    public ChunkPos getChunkPos() {
-        if (this.chunkPos == null) {
-            chunkPos = new ChunkPos(this.getParent().getBlockPos());
-        }
-        return chunkPos;
-    }
 
-    @Override
-    public double getPollution() {
-        return pollution;
-    }
 
-    public void setPollution(double pollution) {
-        if (this.pollution != pollution * percent) {
-            if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-                NeoForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this));
-                this.pollution = pollution * percent;
-                NeoForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this));
-
-            }
-        }
-    }
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
@@ -280,6 +238,17 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
                     default_pollution
             ) + Localization.translate("iu" +
                     ".pollution.air.info1"));
+        }
+    }
+
+    public void setPollution(double pollution) {
+        if (this.pollution.pollution != pollution * percent) {
+            if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
+                NeoForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this.pollution));
+                this.pollution.pollution = pollution * percent;
+                NeoForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this.pollution));
+
+            }
         }
     }
 

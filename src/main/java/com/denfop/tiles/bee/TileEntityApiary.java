@@ -27,6 +27,7 @@ import com.denfop.container.ContainerApiary;
 import com.denfop.container.ContainerBase;
 import com.denfop.damagesource.IUDamageSource;
 import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.datagen.DamageTypes;
 import com.denfop.entity.SmallBee;
 import com.denfop.gui.GuiApiary;
 import com.denfop.gui.GuiCore;
@@ -409,18 +410,20 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         this.deathTask = customPacketBuffer.readByte();
         this.illTask = customPacketBuffer.readByte();
         this.queen = BeeNetwork.instance.getBee(customPacketBuffer.readInt()).copy();
-        int size = customPacketBuffer.readInt();
-        for (int i = 0; i < size; i++) {
-            double chance = customPacketBuffer.readDouble();
-            ICrop crop = CropNetwork.instance.getCrop(customPacketBuffer.readInt());
-            queen.addPercentProduct(crop, chance);
-        }
+        if (customPacketBuffer.readBoolean()) {
+            int size = customPacketBuffer.readInt();
+            for (int i = 0; i < size; i++) {
+                double chance = customPacketBuffer.readDouble();
+                ICrop crop = CropNetwork.instance.getCrop(customPacketBuffer.readInt());
+                queen.addPercentProduct(crop, chance);
+            }
 
-        try {
-            this.stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
-            this.genome = new Genome(stack);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            try {
+                this.stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+                this.genome = new Genome(stack);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -448,6 +451,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         } else {
             buffer.writeInt(0);
         }
+        buffer.writeBoolean(queen != null);
         buffer.writeInt(queen.getProduct().size());
         for (int i = 0; i < queen.getProduct().size(); i++) {
             Product product = queen.getProduct().get(i);
@@ -1841,7 +1845,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 for (Bee bee : attackBeeList) {
                     if (!bee.isIll()) {
                         if (WorldBaseGen.random.nextInt(100) < 20) {
-                            key.hurt(IUDamageSource.bee, 1);
+                            key.hurt(key.damageSources().source(DamageTypes.beeObject), 1);
                         }
                     }
                 }

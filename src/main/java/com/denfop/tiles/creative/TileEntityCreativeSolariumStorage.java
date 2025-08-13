@@ -22,7 +22,7 @@ public class TileEntityCreativeSolariumStorage extends TileEntitySolariumStorage
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.se.storage = this.se.capacity;
+        this.se.buffer.storage = this.se.buffer.capacity;
     }
 
     @Override

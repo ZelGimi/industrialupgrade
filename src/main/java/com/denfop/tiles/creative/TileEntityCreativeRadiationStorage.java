@@ -22,7 +22,7 @@ public class TileEntityCreativeRadiationStorage extends TileEntityRadiationStora
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.radiation.storage = this.radiation.capacity;
+        this.radiation.buffer.storage = this.radiation.buffer.capacity;
     }
 
     @Override

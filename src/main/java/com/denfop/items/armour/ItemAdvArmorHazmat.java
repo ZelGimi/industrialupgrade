@@ -3,6 +3,7 @@ package com.denfop.items.armour;
 import com.denfop.Constants;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.damagesource.IUDamageSource;
+import com.denfop.datagen.DamageTypes;
 import com.denfop.register.Register;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -71,7 +72,7 @@ public class ItemAdvArmorHazmat extends ItemArmorUtility implements IHazmatLike,
     }
 
     public static boolean hazmatAbsorbs(DamageSource source) {
-        return source.is(DamageTypeTags.IS_FIRE) && source == IUDamageSource.radiation;
+        return source.is(DamageTypeTags.IS_FIRE) || source.is(DamageTypes.radiationObject);
     }
 
     protected String getOrCreateDescriptionId() {

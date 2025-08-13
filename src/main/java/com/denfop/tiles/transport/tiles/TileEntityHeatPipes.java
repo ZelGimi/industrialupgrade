@@ -1,6 +1,7 @@
 package com.denfop.tiles.transport.tiles;
 
 import com.denfop.Localization;
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.heat.*;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
@@ -42,6 +43,13 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         super(cableType, tileBlock, pos, state);
         this.cableType = cableType;
         this.addedToEnergyNet = false;
+        this.conductorHeat = new ConductorInfo(pos,(IHeatConductor) this);
+    }
+    private final ConductorInfo conductorHeat;
+
+    @Override
+    public ConductorInfo getHeatConductor() {
+        return conductorHeat;
     }
 
     @Override

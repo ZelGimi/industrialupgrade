@@ -7,6 +7,7 @@ import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.network.DecoderHandler;
@@ -31,6 +32,7 @@ import java.util.*;
 public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolConductor {
 
 
+
     public boolean addedToEnergyNet;
     protected CoolType cableType;
     int hashCodeSource;
@@ -46,6 +48,13 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         this.cableType = cableType;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
+        this.conductorCool = new ConductorInfo(pos,this);
+    }
+    private final ConductorInfo conductorCool;
+
+    @Override
+    public ConductorInfo getCoolConductor() {
+        return conductorCool;
     }
 
     @Override

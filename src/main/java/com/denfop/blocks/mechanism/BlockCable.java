@@ -49,7 +49,7 @@ public enum BlockCable implements IMultiTileBlock, IMultiBlockItem {
     ;
 
 
-    static String[] name = {"itemcable", "itemcableo", "itemgoldсable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
+    static String[] name = {"itemcable", "itemcableo", "itemgoldcable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
             "itemironcableii",
             "itemironcableiiii"
             , "itemglasscable"

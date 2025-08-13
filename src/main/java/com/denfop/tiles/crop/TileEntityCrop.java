@@ -1,6 +1,7 @@
 package com.denfop.tiles.crop;
 
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.agriculture.*;
 import com.denfop.api.agriculture.genetics.EnumGenetic;
@@ -89,7 +90,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     private Function render;
     private boolean humus;
     private boolean canGrow;
-
+    private double biomeCoef;
     public TileEntityCrop(BlockPos pos, BlockState state) {
         super(BlockCrop.crop, pos, state);
 
@@ -263,6 +264,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
     public void onLoaded() {
         super.onLoaded();
+        this.biome = this.getWorld().getBiome(pos).value();
         if (!this.getWorld().isClientSide) {
             this.chunkPos = new ChunkPos(pos);
             Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
@@ -278,7 +280,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             }
             this.chunkLevel = chunkLevel;
             this.chunk = this.getWorld().getChunk(pos);
-            this.biome = this.getWorld().getBiome(pos).value();
+
             this.cropMap.clear();
             for (Direction facing1 : ModUtils.horizontalFacings) {
                 final BlockPos pos1 = pos.offset(facing1.getNormal());
@@ -324,6 +326,8 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             crop.setGeneration(gen);
             this.genome = new Genome(this.cropItem);
             genome.loadCrop(crop);
+            this.biome = this.getWorld().getBiome(pos).value();
+            biomeCoef = crop.canGrowInBiome(biome,level) ? 1 : 0;
         }
 
         if (downState == null) {
@@ -1047,7 +1051,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     }
                     if (crop.getTick() < crop.getMaxTick()) {
                         int stage = crop.getStage();
-                        crop.addTick((int) (20 * crop.getGrowthSpeed() * (this.humus ? 1.25 : 1)));
+                        crop.addTick((int) (biomeCoef * 20 * crop.getGrowthSpeed() * (this.humus ? 1.25 : 1)));
                         boolean needUpdate = stage != crop.getStage();
                         if (needUpdate) {
                             this.setActive(crop.getName().toLowerCase() + "_" + this.crop.getStage());
@@ -1370,7 +1374,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
 
 
-        if (stack.getItem() instanceof ICropItem && !this.hasDouble && this.crop == null && CropNetwork.instance.canPlantCrop(
+        if ((stack.getItem() instanceof ICropItem || IUCore.cropMap.containsKey(stack.getItem())) && !this.hasDouble && this.crop == null && CropNetwork.instance.canPlantCrop(
                 stack,
                 level,
                 pos,
@@ -1380,6 +1384,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             plantNewCrop(stack);
             return true;
         }
+
 
 
         if (this.crop != null && this.crop.getTick() == this.crop.getMaxTick() && this.crop.getId() != 3) {
@@ -1435,13 +1440,25 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
 
     public void plantNewCrop(ItemStack stack) {
-        this.cropItem = stack.copy();
-        this.cropItem.setCount(1);
-        stack.shrink(1);
-        this.genome = new Genome(this.cropItem);
-        this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
-        this.genome.loadCrop(this.crop);
-        this.setActive(crop.getName().toLowerCase() + "_0");
+        if(IUCore.cropMap.containsKey(stack.getItem())){
+            this.cropItem = IUCore.cropMap.get(stack.getItem()).getStack().copy();
+            this.cropItem.setCount(1);
+            stack.shrink(1);
+            this.genome = new Genome(this.cropItem);
+            this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
+            this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            this.genome.loadCrop(this.crop);
+            this.setActive(crop.getName().toLowerCase() + "_0");
+        }else{
+            this.cropItem = stack.copy();
+            this.cropItem.setCount(1);
+            stack.shrink(1);
+            this.genome = new Genome(this.cropItem);
+            this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
+            this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            this.genome.loadCrop(this.crop);
+            this.setActive(crop.getName().toLowerCase() + "_0");
+        }
     }
 
 

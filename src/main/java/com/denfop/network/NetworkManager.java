@@ -119,6 +119,8 @@ public class NetworkManager {
         this.registerPacket(new PacketUpdateRelocator());
         this.registerPacket(new PacketDrainFluidPipette());
 
+        this.registerPacket(new PacketUpdateSkipQuest());
+        this.registerPacket(new PacketUpdateBookMarks());
         if (!reg) {
             reg = true;
             for (IPacket packet : packetMap.values()) {

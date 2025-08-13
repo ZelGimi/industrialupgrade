@@ -204,6 +204,145 @@ public class ReplicatorRecipe {
         add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 462), 3);
         add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 463), 3);
         add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 481), 6.5);
+
+        add(Blocks.DEEPSLATE, 0.010);
+        add(Blocks.COBBLED_DEEPSLATE, 0.010);
+        add(Blocks.POLISHED_DEEPSLATE, 0.012);
+        add(Blocks.DEEPSLATE_TILES, 0.015);
+        add(Blocks.DEEPSLATE_BRICKS, 0.015);
+        add(Blocks.CHISELED_DEEPSLATE, 0.015);
+
+
+
+
+
+        add(Items.AMETHYST_SHARD, 30.04);
+        add(Blocks.AMETHYST_BLOCK, 120.16);
+        add(Blocks.BUDDING_AMETHYST, 150);
+        add(Blocks.AMETHYST_CLUSTER, 90);
+        add(Blocks.LARGE_AMETHYST_BUD, 70);
+        add(Blocks.MEDIUM_AMETHYST_BUD, 50);
+        add(Blocks.SMALL_AMETHYST_BUD, 30);
+
+
+        add(Items.HONEYCOMB, 40.0);
+        add(Items.HONEY_BOTTLE, 60.0);
+        add(Blocks.HONEY_BLOCK, 240.0);
+        add(Blocks.HONEYCOMB_BLOCK, 160.0);
+
+        add(Blocks.CANDLE, 5.0);
+        add(Blocks.WHITE_CANDLE, 5.0);
+        add(Blocks.ORANGE_CANDLE, 5.0);
+        add(Blocks.MAGENTA_CANDLE, 5.0);
+        add(Blocks.LIGHT_BLUE_CANDLE, 5.0);
+        add(Blocks.YELLOW_CANDLE, 5.0);
+        add(Blocks.LIME_CANDLE, 5.0);
+        add(Blocks.PINK_CANDLE, 5.0);
+        add(Blocks.GRAY_CANDLE, 5.0);
+        add(Blocks.LIGHT_GRAY_CANDLE, 5.0);
+        add(Blocks.CYAN_CANDLE, 5.0);
+        add(Blocks.PURPLE_CANDLE, 5.0);
+        add(Blocks.BLUE_CANDLE, 5.0);
+        add(Blocks.BROWN_CANDLE, 5.0);
+        add(Blocks.GREEN_CANDLE, 5.0);
+        add(Blocks.RED_CANDLE, 5.0);
+        add(Blocks.BLACK_CANDLE, 5.0);
+
+
+        add(Blocks.AZALEA, 60.12);
+        add(Blocks.FLOWERING_AZALEA, 80.0);
+        add(Blocks.AZALEA_LEAVES, 5.0);
+        add(Blocks.FLOWERING_AZALEA_LEAVES, 7.0);
+        add(Blocks.SPORE_BLOSSOM, 100.0);
+        add(Blocks.MOSS_BLOCK, 15.0);
+        add(Blocks.MOSS_CARPET, 7.5);
+        add(Blocks.HANGING_ROOTS, 5.0);
+        add(Blocks.BIG_DRIPLEAF, 20.0);
+        add(Blocks.SMALL_DRIPLEAF, 15.0);
+        add(Blocks.CAVE_VINES, 10.0);
+        add(Items.GLOW_BERRIES, 25.0);
+
+
+        add(Blocks.POWDER_SNOW, 11.6);
+
+
+        add(Blocks.CALCITE, 30.0);
+        add(Blocks.SMOOTH_BASALT, 20.0);
+        add(Blocks.TUFF, 10.0);
+
+
+        add(Blocks.SCULK, 50.0);
+        add(Blocks.SCULK_CATALYST, 100.0);
+        add(Blocks.SCULK_SENSOR, 80.0);
+        add(Blocks.SCULK_SHRIEKER, 150.0);
+        add(Items.MUSIC_DISC_5, 500.0);
+        add(Items.MUSIC_DISC_OTHERSIDE, 500.0);
+        add(Items.MUSIC_DISC_PIGSTEP, 500.0);
+        add(Items.GOAT_HORN, 100.0);
+        add(Blocks.MANGROVE_LOG, 36.92);
+        add(Blocks.MANGROVE_PLANKS, 5.019);
+        add(Blocks.MANGROVE_ROOTS, 20.0);
+        add(Blocks.MUDDY_MANGROVE_ROOTS, 22.0);
+
+        add(Items.EXPERIENCE_BOTTLE, 450.0);
+        add(Blocks.SCULK_VEIN, 20.0);
+        add(Blocks.MUD, 0.148);
+        add(Blocks.PACKED_MUD, 0.3);
+        add(Blocks.MUD_BRICKS, 0.31);
+
+
+        add(Blocks.VERDANT_FROGLIGHT, 80.0);
+        add(Blocks.OCHRE_FROGLIGHT, 80.0);
+        add(Blocks.PEARLESCENT_FROGLIGHT, 80.0);
+
+
+        add(Items.OAK_CHEST_BOAT, 70.0);
+        add(Items.SPRUCE_CHEST_BOAT, 70.0);
+        add(Items.BIRCH_CHEST_BOAT, 70.0);
+        add(Items.JUNGLE_CHEST_BOAT, 70.0);
+        add(Items.ACACIA_CHEST_BOAT, 70.0);
+        add(Items.DARK_OAK_CHEST_BOAT, 70.0);
+        add(Items.MANGROVE_CHEST_BOAT, 70.0);
+
+
+
+
+
+
+
+
+        add(Blocks.STRIPPED_MANGROVE_LOG, 10.0);
+        add(Blocks.MANGROVE_WOOD, 10.0);
+        add(Blocks.STRIPPED_MANGROVE_WOOD, 10.0);
+        add(Blocks.MANGROVE_LEAVES, 1.0);
+        add(Blocks.MANGROVE_PROPAGULE, 5.0);
+        add(Blocks.MANGROVE_DOOR, 6.0);
+        add(Blocks.MANGROVE_TRAPDOOR, 6.0);
+        add(Blocks.MANGROVE_FENCE, 4.0);
+        add(Blocks.MANGROVE_FENCE_GATE, 4.0);
+        add(Blocks.MANGROVE_SLAB, 1.25);
+        add(Blocks.MANGROVE_STAIRS, 2.5);
+        add(Items.MANGROVE_BOAT, 20.0);
+
+
+        add(Blocks.MUD_BRICK_STAIRS, 3.0);
+        add(Blocks.MUD_BRICK_SLAB, 1.5);
+        add(Blocks.MUD_BRICK_WALL, 3.0);
+
+
+        add(Blocks.ROOTED_DIRT, 2.0);
+
+
+        add(Items.GLOW_ITEM_FRAME, 15.0);
+
+        add(Items.GLOW_INK_SAC, 20.0);
+
+        add(Blocks.REINFORCED_DEEPSLATE, 200.0);
+        add(Blocks.BLACKSTONE, 80.0);
+        add(Blocks.POLISHED_BLACKSTONE, 90.0);
+        add(Blocks.POLISHED_BLACKSTONE_BRICKS, 95.0);
+        add(Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS, 90.0);
+        add(Blocks.CHISELED_POLISHED_BLACKSTONE, 90.0);
     }
 
     public static double getInBuckets(ItemStack request) {

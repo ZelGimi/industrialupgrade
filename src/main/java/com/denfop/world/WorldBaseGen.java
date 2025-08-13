@@ -420,7 +420,7 @@ public class WorldBaseGen {
 
                 }
         ));
-        int id = 0;
+        id = 0;
         for (VeinType veinType : veinTypes) {
             if (veinType.getHeavyOre() != null) {
                 BlockState state = veinType.getHeavyOre().getBlock().defaultBlockState();
@@ -440,7 +440,7 @@ public class WorldBaseGen {
             }
         }
     }
-
+public static int id;
 
     @SubscribeEvent
     public void onWorldTick(LevelTickEvent.Post event) {

@@ -105,7 +105,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.coef = (int) Math.max(Math.ceil(this.heat.storage / 2000), 1);
+        this.coef = (int) Math.max(Math.ceil(this.heat.buffer.storage / 2000), 1);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
         if (temp >= this.maxtemperature) {
             return false;
         }
-        if (this.heat.allow || work) {
+        if (this.heat.buffer.allow || work) {
             if (this.hasFluid) {
                 if (this.getFluidTank().getFluidAmount() >= 1) {
                     this.heat.addEnergy(5);
