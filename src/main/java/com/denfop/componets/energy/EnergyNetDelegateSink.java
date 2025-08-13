@@ -1,28 +1,30 @@
-package com.denfop.componets;
+package com.denfop.componets.energy;
 
-import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergyEmitter;
+import com.denfop.api.energy.IEnergySink;
 import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.IMultiDual;
 import com.denfop.api.sytem.InfoTile;
+import com.denfop.componets.Energy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMultiDual {
-
+public class EnergyNetDelegateSink extends EnergyNetDelegate implements IEnergySink {
 
     int hashCodeSource;
+    List<Integer> energyTicks = new LinkedList<>();
 
-    List<Integer> energyTicks = new ArrayList<>();
 
-
-    EnergyNetDelegateMultiDual(Energy block) {
+    public EnergyNetDelegateSink(Energy block) {
         super(block);
+    }
+
+    public int getSinkTier() {
+        return buffer.sinkTier;
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
@@ -34,6 +36,11 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
         return false;
     }
 
+
+    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
     @Override
     public int getHashCodeSource() {
         return hashCodeSource;
@@ -42,11 +49,6 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
     @Override
     public void setHashCodeSource(final int hashCode) {
         hashCodeSource = hashCode;
-    }
-
-
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
-        return validReceivers;
     }
 
     @Override
@@ -64,49 +66,12 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
         return this.energyConductorMap;
     }
 
-    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
-        for (Direction facing1 : this.sourceDirections) {
-            if (facing1.ordinal() == dir.ordinal()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public @NotNull BlockPos getPos() {
-        return this.worldPosition;
-    }
-
     public double getDemandedEnergy() {
-        return !this.receivingDisabled && this.buffer.storage < buffer.capacity
-                ? buffer.capacity - this.buffer.storage
-                : 0.0D;
-    }
-
-    public double canExtractEnergy() {
-
-        return !this.sendingSidabled
-                ? this.getSourceEnergy()
-                : 0.0D;
-    }
-
-    public int getSinkTier() {
-        return buffer.sinkTier;
-    }
-
-    public int getSourceTier() {
-        return buffer.sourceTier;
+        return !this.receivingDisabled ? this.buffer.capacity - this.buffer.storage : 0;
     }
 
     public void receiveEnergy(double amount) {
-        this.buffer.storage = this.buffer.storage + amount;
-    }
-
-    public void extractEnergy(double amount) {
-        assert amount <= this.buffer.storage;
-
-        this.buffer.storage = this.buffer.storage - amount;
+        this.buffer.storage += amount;
     }
 
     @Override
@@ -135,12 +100,6 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
     }
 
     @Override
-    public boolean isSource() {
-        return !this.sendingSidabled;
-    }
-
-
-    @Override
     public void addTick(final double tick) {
         this.tick = tick;
     }
@@ -152,29 +111,12 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
 
     @Override
     public boolean isSink() {
-        return !this.receivingDisabled;
-    }
-
-
-    @Override
-    public double getPerEnergy1() {
-        return this.perenergy1;
+        return true;
     }
 
     @Override
-    public double getPastEnergy1() {
-        return this.pastEnergy1;
+    public @NotNull BlockPos getPos() {
+        return this.worldPosition;
     }
-
-    @Override
-    public void setPastEnergy1(final double pastEnergy) {
-        this.pastEnergy1 = pastEnergy;
-    }
-
-    @Override
-    public void addPerEnergy1(final double setEnergy) {
-        this.perenergy1 += setEnergy;
-    }
-
 
 }

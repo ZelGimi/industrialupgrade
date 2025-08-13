@@ -217,7 +217,7 @@ public class TileEntityStampMechanism extends TileElectricMachine implements
                 "forge:ingots/Redbrass"
         );
         addRecipe("stamp_exchanger", new ItemStack(IUItem.imp_heat_exchange.getItem()), new ItemStack(IUItem.adv_heat_exchange.getItem()),
-                new ItemStack(IUItem.crafting_elements.getStack(320), 4),
+                new ItemStack(IUItem.crafting_elements.getStack(320), 1),
                 "forge:ingots/Titanium",
                 "forge:plates/Germanium"
         );

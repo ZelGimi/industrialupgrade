@@ -478,6 +478,11 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
         ) {
             return DefaultDrop.Self;
         }
+        if (this == item_trash || this == fluid_trash
+                || this == energy_trash
+        ) {
+            return DefaultDrop.Self;
+        }
         if (rarity == EnumTypeCasing.BIO || rarity == EnumTypeCasing.STEAM) {
             return DefaultDrop.Self;
         }

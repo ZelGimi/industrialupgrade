@@ -32,6 +32,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -257,8 +258,8 @@ public class TileEnergySubstitute extends TileEntityInventory implements
                                         itemStackList.add(drops.get(0));
                                     }
                                     tile.onUnloaded();
-                                    conductor.removeConductor();
-                                    BlockPos pos = tile.getPos();
+                                this.getWorld().setBlock(tile.getPos(), Blocks.AIR.defaultBlockState(), 3);
+                                BlockPos pos = tile.getPos();
                                   ItemBlockTileEntity<?> itemBlockTileEntity = (ItemBlockTileEntity<?>) main_cableItem.getStack().getItem();
                                   if (itemBlockTileEntity.placeTeBlock(main_cableItem.getStack(),
                                             fakePlayer,

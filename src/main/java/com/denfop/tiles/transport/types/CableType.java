@@ -109,6 +109,15 @@ public enum CableType implements StringRepresentable, ICableItem {
         return texture;
     }
 
+    @Override
+    public double getCapacity() {
+        return capacity;
+    }
+
+    @Override
+    public double getLoss() {
+        return loss;
+    }
 
     @Override
     public String getSerializedName() {

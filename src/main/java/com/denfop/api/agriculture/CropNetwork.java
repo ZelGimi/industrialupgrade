@@ -1,5 +1,6 @@
 package com.denfop.api.agriculture;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.agriculture.genetics.GeneticsManager;
 import com.denfop.api.agriculture.genetics.Genome;
@@ -97,7 +98,7 @@ public class CropNetwork {
         if (stack.getItem() instanceof ICropItem) {
             return ((ICropItem) stack.getItem()).getCrop(stack.getDamageValue(), stack);
         } else {
-            return null;
+            return IUCore.cropMap.get(stack.getItem());
         }
     }
 
@@ -121,12 +122,9 @@ public class CropNetwork {
         if (crop == null) {
             return false;
         }
-        if (crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
+        return crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
                 .getSoil()
-                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore()) )|| (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))|| (crop.getSoil() == EnumSoil.REDSTONE && downBlock.getBlock() == Blocks.REDSTONE_ORE)) {
-            return crop.canGrowInBiome(biome,world);
-        }
-        return false;
+                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore())) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0)) || (crop.getSoil() == EnumSoil.REDSTONE && downBlock.getBlock() == Blocks.REDSTONE_ORE);
     }
 
     public void addCrop(ICrop cropBase) {
@@ -152,9 +150,7 @@ public class CropNetwork {
                     if ((day && crop.isSun()) || (!day && crop.isNight())) {
                         boolean rain = world.isRaining();
                         boolean thundering = world.isThundering();
-                        if ((rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering)) {
-                            return crop.canGrowInBiome(biome,world);
-                        }
+                        return (rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering);
                     }
                 }
             }
@@ -178,9 +174,7 @@ public class CropNetwork {
                     if ((day && crop.isSun()) || (!day && crop.isNight())) {
                         boolean rain = world.isRaining();
                         boolean thundering = world.isThundering();
-                        if ((rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering)) {
-                            return crop.canGrowInBiome(biome,world);
-                        }
+                        return (rain && crop.getWeatherResistance() >= 1) || (thundering && crop.getWeatherResistance() >= 2) || (!rain && !thundering);
                     }
                 }
             }

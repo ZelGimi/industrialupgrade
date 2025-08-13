@@ -126,7 +126,8 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
             Direction direction = blockhitresult.getDirection();
             BlockPos blockpos1 = blockpos.relative(direction);
             if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos1, direction, itemstack)) {
-                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY && fs.getFluidInTank(0).getAmount() >= 1000) {
+                BlockState state =fs.getFluidInTank(0).isEmpty() ? world.getBlockState(blockpos) :  world.getBlockState(blockpos1);
+                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY&&!state.liquid() && fs.getFluidInTank(0).getAmount() >= 1000) {
                     Fluid fluid = fs.getFluidInTank(0).getFluid();
                     boolean flag1 = world.getBlockState(blockpos).canBeReplaced();
                     BlockPos blockpos2 = flag1 && blockhitresult.getDirection() == Direction.UP ? blockpos : blockpos.offset(blockhitresult.getDirection().getNormal());
@@ -136,7 +137,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
                     }
 
                 } else {
-                    BlockState block = world.getBlockState(blockpos);
+                    BlockState block = state;
                     if (block.liquid()) {
                         FluidState fluidState = block.getBlock().getFluidState(block);
 
@@ -145,19 +146,9 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
                         }
 
                         FluidStack ret = new FluidStack(fluidState.getType(), 1000);
-                        ItemStack stack = new ItemStack(this);
-                        FluidHandlerFix.getFluidHandler(stack).fill(ret, IFluidHandler.FluidAction.EXECUTE);
+                        FluidHandlerFix.getFluidHandler(itemstack).fill(ret, IFluidHandler.FluidAction.EXECUTE);
 
-                        stack = stack.copy();
-                        if (!ModUtils.storeInventoryItem(stack, player, false)) {
-
-                            if (!world.isClientSide()) {
-                                ModUtils.dropAsEntity(world, player.blockPosition(), stack);
-                            }
-
-                        }
-                        world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 3);
-                        itemstack.shrink(1);
+                        world.setBlock(blockpos1, Blocks.AIR.defaultBlockState(), 3);
                         return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
                     }
                 }

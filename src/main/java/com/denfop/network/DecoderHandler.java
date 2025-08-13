@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -302,6 +303,8 @@ public class DecoderHandler {
                 }
 
                 return ret3;
+            case tuple:
+                return  new Tuple<>(decode(is),decode(is));
             case Item:
                 return BuiltInRegistries.ITEM.get((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case ItemStack:

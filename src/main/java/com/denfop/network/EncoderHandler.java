@@ -19,6 +19,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
@@ -337,6 +338,11 @@ public class EncoderHandler {
             case inputFluidStack:
                 IInputFluid inputFluid = (IInputFluid) o;
                 encode(os,  inputFluid.writeNBT());
+                break;
+            case tuple:
+                Tuple<?,?> tuple = ( Tuple<?,?>) o;
+                encode(os,tuple.getA());
+                encode(os,tuple.getB());
                 break;
             case BaseRecipe:
                 BaseMachineRecipe baseMachineRecipe = (BaseMachineRecipe) o;

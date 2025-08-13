@@ -27,17 +27,16 @@ import org.joml.Vector3f;
 import java.io.IOException;
 import java.util.List;
 
-public class SoilPollutionComponent extends AbstractComponent implements IPollutionMechanism {
+public class SoilPollutionComponent extends AbstractComponent   {
 
-    private double pollution;
+    private PollutionMechanism pollution;
     private double default_pollution;
     private ChunkPos chunkPos;
-
     private double percent = 1;
 
     public SoilPollutionComponent(final TileEntityInventory parent, double pollution) {
         super(parent);
-        this.pollution = pollution;
+        this.pollution = new PollutionMechanism(new ChunkPos(parent.pos));
         this.default_pollution = pollution;
     }
     @Override
@@ -156,7 +155,7 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
 
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            MinecraftForge.EVENT_BUS.post(new PollutionSoilLoadEvent(this.parent.getLevel(), this));
+            MinecraftForge.EVENT_BUS.post(new PollutionSoilLoadEvent(this.parent.getLevel(), pollution));
 
 
         }
@@ -165,7 +164,7 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
 
     public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
-        buffer.writeDouble(this.pollution);
+        buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
         buffer.flip();
@@ -174,7 +173,7 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
 
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer buffer = super.updateComponent();
-        buffer.writeDouble(this.pollution);
+        buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
         return buffer;
@@ -182,7 +181,7 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
-        this.pollution = is.readDouble();
+        this.pollution.pollution = is.readDouble();
         this.default_pollution = is.readDouble();
         this.percent = is.readDouble();
 
@@ -196,7 +195,7 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
     public void onUnloaded() {
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            MinecraftForge.EVENT_BUS.post(new PollutionSoilUnLoadEvent(this.parent.getLevel(), this));
+            MinecraftForge.EVENT_BUS.post(new PollutionSoilUnLoadEvent(this.parent.getLevel(), pollution));
 
 
         }
@@ -207,25 +206,14 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
         return true;
     }
 
-    @Override
-    public ChunkPos getChunkPos() {
-        if (this.chunkPos == null) {
-            chunkPos = new ChunkPos(this.getParent().getBlockPos());
-        }
-        return chunkPos;
-    }
 
-    @Override
-    public double getPollution() {
-        return pollution;
-    }
 
     public void setPollution(double pollution) {
-        if (this.pollution != pollution) {
+        if (this.pollution.pollution != pollution) {
             if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-                MinecraftForge.EVENT_BUS.post(new PollutionSoilUnLoadEvent(this.parent.getLevel(), this));
-                this.pollution = pollution * percent;
-                MinecraftForge.EVENT_BUS.post(new PollutionSoilLoadEvent(this.parent.getLevel(), this));
+                MinecraftForge.EVENT_BUS.post(new PollutionSoilUnLoadEvent(this.parent.getLevel(), this.pollution));
+                this.pollution.pollution = pollution * percent;
+                MinecraftForge.EVENT_BUS.post(new PollutionSoilLoadEvent(this.parent.getLevel(), this.pollution));
 
             }
         }

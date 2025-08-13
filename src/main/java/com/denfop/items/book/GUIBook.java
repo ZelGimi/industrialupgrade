@@ -8,13 +8,17 @@ import com.denfop.api.gui.ScrollDirection;
 import com.denfop.api.guidebook.*;
 import com.denfop.gui.GuiIU;
 import com.denfop.network.packet.PacketItemStackEvent;
+import com.denfop.network.packet.PacketUpdateBookMarks;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,6 +55,12 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
     private boolean hoverPU = false;
     private boolean hoverQG = false;
     private boolean hoverSQ = false;
+    private boolean bookMark = false;
+    private boolean hoverWiki = false;
+    private boolean hoverYoutube = false;
+    private boolean hoverDeveloper = false;
+    private int[] bookMarksSize = new int[2];
+    List<Tuple<Integer, Integer>> listBookMark = new LinkedList<>();
 
     public GUIBook(Player player, final ItemStack itemStack1, final ContainerBook containerBook) {
         super(containerBook);
@@ -66,7 +76,51 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             this.offsetX = decode[1];
             this.offsetY = decode[2];
         }
-        questList = GuideBookCore.instance.getQuests(0);
+        ListTag bookMark = nbt.getList("bookMark", 10);
+        for (int i = 0; i < bookMark.size(); i++) {
+            CompoundTag nbt1 = bookMark.getCompound(i);
+            listBookMark.add(new Tuple<>(nbt1.getInt("tab"), nbt1.getInt("id")));
+        }
+        bookMarksSize = calculateGrid(listBookMark.size());
+        questList = GuideBookCore.instance.getQuests(tab);
+    }
+
+    public void addBookMark(int tab, int id) {
+        listBookMark.add(new Tuple<>(tab, id));
+        CompoundTag nbt = ModUtils.nbt(container.base.itemStack1);
+        ListTag bookMark = new ListTag();
+        listBookMark.forEach(tuple -> {
+            CompoundTag nbt1 = new CompoundTag();
+            nbt1.putInt("tab", tuple.getA());
+            nbt1.putInt("id", tuple.getB());
+            bookMark.add(nbt1);
+        });
+        nbt.put("bookMark", bookMark);
+        bookMarksSize = calculateGrid(listBookMark.size());
+        new PacketUpdateBookMarks(nbt,this.player);
+    }
+
+    public void removeBookMark(int tab, int id) {
+        listBookMark.removeIf(bookMark -> bookMark.getA() == tab && bookMark.getB() == id);
+        CompoundTag nbt = ModUtils.nbt(container.base.itemStack1);
+        ListTag bookMark = new ListTag();
+        listBookMark.forEach(tuple -> {
+            CompoundTag nbt1 = new CompoundTag();
+            nbt1.putInt("tab", tuple.getA());
+            nbt1.putInt("id", tuple.getB());
+            bookMark.add(nbt1);
+        });
+        nbt.put("bookMark", bookMark);
+        new PacketUpdateBookMarks(nbt,this.player);
+        bookMarksSize = calculateGrid(listBookMark.size());
+    }
+
+    public boolean hasBookMark(int tab, int id) {
+        for (Tuple<Integer, Integer> tuple : listBookMark) {
+            if (tuple.getA() == tab && tuple.getB() == id)
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -135,6 +189,32 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
 
     boolean reset = false;
 
+    public int[] calculateGrid(int count) {
+        int bestRows = 1;
+        int bestCols = count;
+        int bestDiff = Integer.MAX_VALUE;
+
+        for (int rows = 1; rows <= count; rows++) {
+            int cols = (int) Math.ceil((double) count / rows);
+            int diff = Math.abs(rows - cols);
+
+            if (rows * cols >= count && diff < bestDiff) {
+                bestRows = rows;
+                bestCols = cols;
+                bestDiff = diff;
+            }
+        }
+
+        return new int[]{bestRows, bestCols};
+    }
+
+    @Override
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
+
+    }
+
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
         this.imageWidth = 255;
@@ -152,6 +232,10 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                     guideQuests.remove(guideQuest);
                 } else if (guideQuest.isComplete(player, tab)) {
                     guideQuest.complete(player, tab);
+                } else if (guideQuest.isSkip(player, tab)) {
+                    guideQuest.skip(player, tab);
+                } else if (guideQuest.isBookMark(player, tab)) {
+                    guideQuest.bookMark(this, tab);
                 }
                 return;
             }
@@ -167,12 +251,25 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 if (x >= dx && y >= y1 && x <= w + dx && y <= y1 + 27) {
                     tab = index;
                     reset = true;
+                    bookMark = false;
                     return;
                 }
             }
             y1 += 27;
         }
-
+        if (!bookMark) {
+            int dx = true ? 255 : 255;
+            int u = true ? 5 : 0;
+            int v = true ? 28 : 56;
+            int w = true ? 28 : 33;
+            y1 = 5;
+            if (x >= dx && y >= y1 && x <= w + dx && y <= y1 + 27) {
+                bookMark = true;
+                reset = true;
+                tab = 0;
+                return;
+            }
+        }
         if (hoverDiscord) {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/fqQPH6HKJV"));
@@ -183,6 +280,27 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         if (hoverGithub) {
             try {
                 Util.getPlatform().openUri(new URI("https://github.com/ZelGimi/industrialupgrade"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (hoverWiki) {
+            try {
+                Util.getPlatform().openUri(new URI("https://zelgimi.github.io/industrialupgrade/docs/intro"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (hoverDeveloper) {
+            try {
+                Util.getPlatform().openUri(new URI("https://zelgimi.github.io/industrialupgrade/docs/kubejs/"));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (hoverYoutube) {
+            try {
+                Util.getPlatform().openUri(new URI("https://www.youtube.com/watch?v=iyCaNkGM77k&list=PLHDBETKnEsdwcMxHDxI75eYkuthlqIjox&index=2"));
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
@@ -208,30 +326,62 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 throw new RuntimeException(e);
             }
         }
+        if (!bookMark) {
+            GuideTab guideTab = guideTabs.get(tab);
+            List<String> quests = map.get(guideTab.unLocalized);
+            int jj = 0;
+            for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
 
-        GuideTab guideTab = guideTabs.get(tab);
-        List<String> quests = map.get(guideTab.unLocalized);
-        for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
+                int centerX = 116 + offsetX;
+                int centerY = 73 + offsetY;
+                int xOffset = centerX + quest.x + (quest.shape == Shape.EPIC ? 2 : 3);
+                int yOffset = centerY + quest.y + (quest.shape == Shape.EPIC ? 2 : 3);
+                int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                int texH = texW;
+                boolean hasPrev = quest.hasPrev;
 
+                boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : false;
+                if (xOffset >= 8 && xOffset + texW <= 8 + 238 && yOffset >= 9 && yOffset + texH <= 9 + 176)
+                    if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
+                        if (this.guideQuests.contains(new GuideQuest(quest, tab, jj))) {
+                            this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
+                        } else if (guideQuests.size() <= 1) {
+                            this.guideQuests.add(new GuideQuest(quest, container.base.player, isUnlocked, tab, jj));
+                        }
+                    }
+                jj++;
+
+            }
+        } else {
             int centerX = 116 + offsetX;
             int centerY = 73 + offsetY;
-            int xOffset = centerX + quest.x + (quest.shape == Shape.EPIC ? 2 : 3);
-            int yOffset = centerY + quest.y + (quest.shape == Shape.EPIC ? 2 : 3);
-            int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
-            int texH = texW;
-            boolean hasPrev = quest.hasPrev;
 
-            boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : false;
+            for (int ii = 0; ii < listBookMark.size(); ii++) {
+                int row = ii / bookMarksSize[0];
+                int col = ii % (bookMarksSize[1]);
+                int x1 = centerX + col * 25;
+                 y1 = centerY + row * 25;
+                Tuple<Integer, Integer> tuple = listBookMark.get(ii);
 
-            if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
-                if (this.guideQuests.contains(new GuideQuest(quest))) {
-                    this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
-                } else if (guideQuests.size() <= 1) {
-                    this.guideQuests.add(new GuideQuest(quest, container.base.player, isUnlocked));
+                Quest quest = GuideBookCore.instance.getQuests(tuple.getA()).get(tuple.getB());
+                int xOffset = x1+ (quest.shape == Shape.EPIC ? 2 : 3);
+                int yOffset = y1 + (quest.shape == Shape.EPIC ? 2 : 3);
+                int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                int texH = texW;
+                GuideTab guideTab = guideTabs.get(tuple.getA());
+                List<String> quests = map.get(guideTab.unLocalized);
+                boolean hasPrev = quest.hasPrev;
+                boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : false;
+                if (xOffset >= 8 && xOffset + texW <= 8 + 238 && yOffset >= 9 && yOffset + texH <= 9 + 176){
+                    if (x >= xOffset && x <= xOffset + texW && y >= yOffset && y <= yOffset + texH) {
+                        if (this.guideQuests.contains(new GuideQuest(quest, tuple.getA(), tuple.getB()))) {
+                            this.guideQuests.removeIf(guideQuest -> guideQuest.getQuest().equals(quest));
+                        } else if (guideQuests.size() <= 1) {
+                            this.guideQuests.add(new GuideQuest(quest, container.base.player, isUnlocked, tuple.getA(), tuple.getB()));
+                        }
+                    }
                 }
             }
-
-
         }
     }
 
@@ -244,6 +394,7 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 return;
             }
         }
+        new Area(this,255, 5, 30, 27).withTooltip(Localization.translate("iu.quest.bookmark")).drawForeground(poseStack,par1,par2);
         List<GuideTab> guideTabs = GuideBookCore.instance.getGuideTabs();
         int y = 5;
         for (int index = 0; index < guideTabs.size(); index++) {
@@ -264,14 +415,31 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         }
         hoverDiscord = false;
         hoverGithub = false;
+
         hoverPU = false;
         hoverQG = false;
         hoverSQ = false;
+        hoverDeveloper = false;
+        hoverYoutube = false;
+        hoverWiki = false;
+        if (par1 >= 255 && par1 <= 255 + 30 && par2 >= 35 && par2 <= 35 + 27) {
+            hoverWiki = true;
+        }
+        if (par1 >= 255 && par1 <= 255 + 30 && par2 >= 65 && par2 <= 65 + 27) {
+            hoverDeveloper = true;
+        }
+        new Area(this,255,65,30,27).withTooltip(Localization.translate("iu.quest.developer")).drawForeground(poseStack,par1,par2);
+        new Area(this,255,35,30,27).withTooltip(Localization.translate("iu.quest.wiki")).drawForeground(poseStack,par1,par2);
+
         if (par1 >= 10 && par1 <= 10 + 27 && par2 >= -15 && par2 <= -15 + 17) {
             hoverDiscord = true;
         }
         if (par1 >= 50 && par1 <= 50 + 27 && par2 >= -15 && par2 <= -15 + 17) {
             hoverGithub = true;
+        }
+        new Area(this,90,-15,27,17).withTooltip(Localization.translate("iu.quest.youtube")).drawForeground(poseStack,par1,par2);
+        if (par1 >= 90 && par1 <= 90 + 27 && par2 >= -15 && par2 <= -15 + 17) {
+            hoverYoutube = true;
         }
         if (par1 >= 150 && par1 <= 150 + 27 && par2 >= -15 && par2 <= -15 + 17) {
             hoverPU = true;
@@ -285,18 +453,31 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
         int centerX = 116 + offsetX;
         int centerY = 73 + offsetY;
 
-
-        GuideTab guideTab = guideTabs.get(tab);
-        if (map != null) {
-            List<String> quests = map.get(guideTab.unLocalized);
-            if (par1 >= 8 && par2 >= 9 && par1 <= 238 + 9 && par2 <= 176 + 9) {
-                for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
-                    bindTexture(sprites);
-                    int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
-                    new Area(this, centerX + quest.x, centerY + quest.y, texW, texW).withTooltip(quest.getLocalizedName())
-                            .drawForeground(poseStack, par1, par2);
+        if (!bookMark) {
+            GuideTab guideTab = guideTabs.get(tab);
+            if (map != null) {
+                List<String> quests = map.get(guideTab.unLocalized);
+                if (par1 >= 8 && par2 >= 9 && par1 <= 238 + 9 && par2 <= 176 + 9) {
+                    for (Quest quest : GuideBookCore.instance.getQuests(tab)) {
+                        bindTexture(sprites);
+                        int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                        RenderSystem.setShaderColor(1, 1, 1, 1);
+                        new Area(this, centerX + quest.x, centerY + quest.y, texW, texW).withTooltip(quest.getLocalizedName())
+                                .drawForeground(poseStack, par1, par2);
+                    }
                 }
+            }
+        } else {
+            for (int i = 0; i < listBookMark.size(); i++) {
+                int row = i / bookMarksSize[0];
+                int col = i % (bookMarksSize[1]);
+                int x1 = centerX + col * 25;
+                int y1 = centerY + row * 25;
+                Tuple<Integer, Integer> tuple = listBookMark.get(i);
+                Quest quest = GuideBookCore.instance.getQuests(tuple.getA()).get(tuple.getB());
+                int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                new Area(this, x1, y1, texW, texW).withTooltip(quest.getLocalizedName())
+                        .drawForeground(poseStack, par1, par2);
             }
         }
     }
@@ -396,12 +577,12 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                         );
 
                     }
-                }else {
+                } else {
                     if (y - 1 > 0) {
                         drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY, lines);
                     } else {
 
-                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY ,
+                        drawVerticalLine(poseStack, x + startPosRender / 2 - 1, y + startPosRender, x, prevY,
                                 lines
                         );
 
@@ -588,6 +769,12 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
             drawTexturedModalRect(poseStack, this.guiLeft + 50, this.guiTop - 15 - 6, 229, 23, 27, 22);
 
         }
+        if (!hoverYoutube) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 90, this.guiTop - 15, 202, 117, 27, 17);
+        } else {
+            drawTexturedModalRect(poseStack, this.guiLeft + 90, this.guiTop - 15 - 6, 229, 111, 27, 22);
+
+        }
         if (!hoverPU) {
             drawTexturedModalRect(poseStack, this.guiLeft + 150, this.guiTop - 15, 202, 51, 27, 17);
         } else {
@@ -629,54 +816,55 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 new ItemImage(this, -33 + 9, y + 6, () -> guideTab.icon)
                         .drawBackground(poseStack, guiLeft, guiTop);
                 enableScissor(guiLeft + 8, guiTop + 9, guiLeft + 8 + 238, guiTop + 9 + 176);
+                if (!bookMark) {
+                    for (Quest quest : GuideBookCore.instance.getQuests(i)) {
+                        bindTexture(sprites);
 
-                for (Quest quest : GuideBookCore.instance.getQuests(i)) {
-                    bindTexture(sprites);
+                        boolean hasPrev = quest.hasPrev;
+                        boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : quests.contains(quest.unLocalizedName);
 
-                    boolean hasPrev = quest.hasPrev;
-                    boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : quests.contains(quest.unLocalizedName);
+                        int xOffset = guiLeft + centerX + quest.x + (quest.shape == Shape.EPIC ? 2 : 3);
+                        int yOffset = guiTop + centerY + quest.y + (quest.shape == Shape.EPIC ? 2 : 3);
 
-                    int xOffset = guiLeft + centerX + quest.x + (quest.shape == Shape.EPIC ? 2 : 3);
-                    int yOffset = guiTop + centerY + quest.y + (quest.shape == Shape.EPIC ? 2 : 3);
+                        int texX = 0;
+                        int texY = 0;
+                        int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                        int texH = texW;
 
-                    int texX = 0;
-                    int texY = 0;
-                    int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
-                    int texH = texW;
-
-                    if (hasPrev) {
-                        texY = isUnlocked ? 28 : 1;
-                        if (!quests.contains(quest.unLocalizedName)) {
-                            texY = 57;
+                        if (hasPrev) {
+                            texY = isUnlocked ? 28 : 1;
+                            if (!quests.contains(quest.unLocalizedName)) {
+                                texY = 57;
+                            }
+                        } else {
+                            texY = isUnlocked ? 1 : 57;
                         }
-                    } else {
-                        texY = isUnlocked ? 1 : 57;
+
+                        switch (quest.shape) {
+                            case DEFAULT:
+                                texX = 36;
+                                break;
+                            case UNIQUE:
+                                texX = 61;
+                                break;
+                            case EPIC:
+                                texX = 86;
+                                break;
+                        }
+
+                        drawTexturedModalRect(poseStack, xOffset, yOffset, texX, texY, texW, texH);
+
+                        if (hasPrev) {
+                            bindTexture(sprites_lines);
+                            renderLines(poseStack, quest, getLine(quest, quests, guideTab));
+                        }
+
+                        new ItemImage(this, centerX + quest.x + 7, centerY + quest.y + 7, () -> quest.icon)
+                                .drawBackground(poseStack, guiLeft, guiTop);
                     }
-
-                    switch (quest.shape) {
-                        case DEFAULT:
-                            texX = 36;
-                            break;
-                        case UNIQUE:
-                            texX = 61;
-                            break;
-                        case EPIC:
-                            texX = 86;
-                            break;
-                    }
-
-                    drawTexturedModalRect(poseStack, xOffset, yOffset, texX, texY, texW, texH);
-
-                    if (hasPrev) {
-                        bindTexture(sprites_lines);
-                        renderLines(poseStack, quest, getLine(quest, quests, guideTab));
-                    }
-
-                    new ItemImage(this, centerX + quest.x + 7, centerY + quest.y + 7, () -> quest.icon)
-                            .drawBackground(poseStack, guiLeft, guiTop);
                 }
-
                 disableScissor();
+
             } else {
 
                 int dx = hasQuests ? -28 : -33;
@@ -690,7 +878,18 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
 
             y += 27;
         }
+        bindTexture(sprites);
+        drawTexturedModalRect(poseStack, guiLeft+255, guiTop+5, 140, 1, 26, 27);
+        if (bookMark)
+            drawTexturedModalRect(poseStack, guiLeft+255, guiTop+5, 171, 1, 30, 27);
 
+        drawTexturedModalRect(poseStack, guiLeft+255, guiTop+35, 140, 57, 26, 27);
+        if (hoverWiki)
+            drawTexturedModalRect(poseStack, guiLeft+255, guiTop+35, 171, 57, 30, 27);
+
+        drawTexturedModalRect(poseStack, guiLeft+255, guiTop+65, 140, 85, 30, 27);
+        if (hoverDeveloper)
+            drawTexturedModalRect(poseStack, guiLeft+255, guiTop+65, 171, 85, 30, 27);
 
         PoseStack posestack = RenderSystem.getModelViewStack();
         if (map != null) {
@@ -708,6 +907,48 @@ public class GUIBook<T extends ContainerBook> extends GuiIU<ContainerBook> {
                 poseStack.pose().popPose();
             }
         }
+        if (bookMark) {
+            enableScissor(guiLeft + 8, guiTop + 9, guiLeft + 8 + 238, guiTop + 9 + 176);
+            for (int i = 0; i < listBookMark.size(); i++) {
+                int row = i / bookMarksSize[0];
+                int col = i % (bookMarksSize[1]);
+                x1 = guiLeft + centerX + col * 25;
+                y1 = guiTop + centerY + row * 25;
+                bindTexture(sprites);
+                Tuple<Integer, Integer> tuple = listBookMark.get(i);
+                Quest quest = GuideBookCore.instance.getQuests(tuple.getA()).get(tuple.getB());
+                boolean hasPrev = quest.hasPrev;
+                List<String> quests = map.get(GuideBookCore.instance.getGuideTabs().get(tuple.getA()).unLocalized);
+                boolean isUnlocked = hasPrev ? quests.contains(quest.prevName) : quests.contains(quest.unLocalizedName);
+
+                int texX = 0;
+                int texY = 0;
+                int texW = (quest.shape == Shape.EPIC) ? 26 : 24;
+                int texH = texW;
+
+                if (hasPrev) {
+                    texY = isUnlocked ? 28 : 1;
+                    if (!quests.contains(quest.unLocalizedName)) {
+                        texY = 57;
+                    }
+                } else {
+                    texY = isUnlocked ? 1 : 57;
+                }
+
+                texX = switch (quest.shape) {
+                    case DEFAULT -> 36;
+                    case UNIQUE -> 61;
+                    case EPIC -> 86;
+                };
+
+                drawTexturedModalRect(poseStack, x1, y1, texX, texY, texW, texH);
+
+                new ItemImage(this, x1 - guiLeft + 4, y1 - guiTop + 4, () -> quest.icon)
+                        .drawBackground(poseStack, guiLeft, guiTop);
+            }
+            disableScissor();
+        }
+
     }
 
     private Lines getLine(Quest quest, List<String> quests, GuideTab guideTab) {

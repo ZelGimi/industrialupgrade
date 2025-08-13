@@ -1,8 +1,10 @@
-package com.denfop.componets;
+package com.denfop.componets.energy;
 
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.sytem.InfoTile;
+import com.denfop.componets.BufferEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +20,7 @@ public abstract class EnergyNetDelegate  implements IEnergyTile {
     private final boolean clientSide;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
-    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
+    public Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
     List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     public double tick;
     protected double pastEnergy;
@@ -29,8 +31,8 @@ public abstract class EnergyNetDelegate  implements IEnergyTile {
     public double limit_amount = 0;
 
     public EnergyNetDelegate(Energy block) {
-        this.worldPosition = block.parent.pos;
-        this.clientSide = block.parent.getLevel().isClientSide;
+        this.worldPosition = block.getParent().pos;
+        this.clientSide = block.getParent().getLevel().isClientSide;
         sinkDirections = block.sinkDirections;
         sourceDirections = block.sourceDirections;
         this.buffer = block.buffer;

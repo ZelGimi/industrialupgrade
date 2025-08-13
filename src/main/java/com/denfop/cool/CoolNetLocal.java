@@ -1,6 +1,7 @@
 package com.denfop.cool;
 
 import com.denfop.api.cool.*;
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,7 @@ public class CoolNetLocal {
     public void addTile(ICoolTile tile1) {
 
 
-        this.addTileEntity(getTileFromICool(tile1).getBlockPos(), tile1);
+        this.addTileEntity(tile1.getPos(), tile1);
 
 
     }
@@ -189,9 +190,9 @@ public class CoolNetLocal {
                 transmit = true;
 
                 if (adding > CoolPath.min) {
-                    for (ICoolConductor CoolConductor : CoolPath.conductors) {
-                        if (CoolConductor.getConductorBreakdownCold() < adding) {
-                            CoolConductor.removeConductor();
+                    for (ConductorInfo CoolConductor : CoolPath.conductors) {
+                        if (CoolConductor.getBreakdownEnergy() < adding) {
+                            ((ICoolConductor)this.getTileEntity(CoolConductor.getPos())).removeConductor();
                         } else {
                             break;
                         }
@@ -239,9 +240,9 @@ public class CoolNetLocal {
             }
             CoolSink.receivedCold(adding);
             if (adding > CoolPath.min) {
-                for (ICoolConductor CoolConductor : CoolPath.conductors) {
-                    if (CoolConductor.getConductorBreakdownCold() < adding) {
-                        CoolConductor.removeConductor();
+                for (ConductorInfo CoolConductor : CoolPath.conductors) {
+                    if (CoolConductor.getBreakdownEnergy() < adding) {
+                        ((ICoolConductor)this.getTileEntity(CoolConductor.getPos())).removeConductor();
                     }
                 }
             }
@@ -310,7 +311,7 @@ public class CoolNetLocal {
             while (cable != null) {
 
                 final ICoolConductor energyConductor = cable.getConductor();
-                energyPath.conductors.add(energyConductor);
+                energyPath.conductors.add(energyConductor.getCoolConductor());
                 if (energyConductor.getHashCodeSource() != id1) {
                     energyConductor.setHashCodeSource(id1);
                     set.add(energyConductor);

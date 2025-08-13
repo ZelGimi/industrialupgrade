@@ -51,6 +51,6 @@ public class ItemBucket extends BucketItem implements IItemTab {
             this.nameItem = pathBuilder.toString();
         }
 
-        return "item.forge.bucketFilled."+fluidName.getName().toLowerCase();
+        return "item.forge.bucketfilled."+fluidName.getName().toLowerCase();
     }
 }

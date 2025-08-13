@@ -1,6 +1,7 @@
 package com.denfop.world.vein;
 
 import com.denfop.blocks.IMineral;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class VeinType {
     private final int deposits_meta;
     private final int meta;
     private TypeVein vein;
+    BlockState deposits = null;
     public static Map<Integer, VeinType> veinTypeMap = new HashMap<>();
     private int id;
     public static int maxId = 0;
@@ -34,6 +36,21 @@ public class VeinType {
 
     public int getId() {
         return id;
+    }
+    public VeinType(BlockState deposits, TypeVein vein, List<ChanceOre> ores) {
+        this.heavyOre = null;
+        this.vein = vein;
+        this.meta = 0;
+        this.deposits = deposits;
+        this.deposits_meta = meta;
+        this.ores =ores;
+        this.id = maxId;
+        veinTypeMap.put(id,this);
+        maxId++;
+    }
+
+    public BlockState getDeposits() {
+        return deposits;
     }
 
     public VeinType(IMineral heavyOre, int meta, TypeVein vein, ChanceOre... ores) {

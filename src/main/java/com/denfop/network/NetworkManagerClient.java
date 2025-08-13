@@ -40,7 +40,7 @@ public class NetworkManagerClient extends NetworkManager {
     }
 
     public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
-        Minecraft.getInstance().getConnection().getConnection().send(makePacket(NetworkDirection.PLAY_TO_SERVER, buffer));
+        Minecraft.getInstance().player.connection.send(makePacket(NetworkDirection.PLAY_TO_SERVER, buffer));
     }
     public void onPacketData(CustomPacketBuffer is,  byte type) {
         Player player = Minecraft.getInstance().player;

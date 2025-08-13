@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 import static com.denfop.utils.ModUtils.inChanceOre;
 import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
 import static com.denfop.world.vein.VeinType.veinTypeMap;
@@ -86,9 +87,12 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         }
         return map;
     }
-
+    public static     Map<BlockState,Integer> dataColors = new HashMap<>();
     public static int getOreColor(BlockState state) {
         Block block = state.getBlock();
+        if (dataColors.containsKey(state)){
+            return dataColors.get(state);
+        }
         if (block == Blocks.IRON_ORE) {
             return ModUtils.convertRGBcolorToInt(156, 156, 156);
         } else if (block == Blocks.GOLD_ORE) {
@@ -417,6 +421,8 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         tooltip.add(Component.translatable("iu.scanner_ore.info4"));
         tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7")+ KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
                 "iu.changemode_rcm")));
+
+        tooltip.add(Component.translatable("iu.vein_sensor.info8"));
         if (!nbt.getString("type").isEmpty()) {
             String s = nbt.getString("type");
             if (!s.equals("oil") && !s.equals("gas")) {
@@ -466,8 +472,8 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
 
                         ChunkPos chunkPos1 = new ChunkPos(BlockPos.containing(player.position()));
                         Set<ChunkPos> chunkPosList = new HashSet<>();
-                        for (int x = -8; x < 9; x++)
-                            for (int z = -8; z < 9; z++) {
+                        for (int x = -16; x < 17; x++)
+                            for (int z = -16; z < 17; z++) {
                                 chunkPosList.add(new ChunkPos(chunkPos1.x + x, chunkPos1.z + z));
                             }
                         for (ChunkPos chunkPos : chunkPosList) {

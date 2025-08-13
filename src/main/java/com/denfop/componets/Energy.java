@@ -3,7 +3,7 @@ package com.denfop.componets;
 import com.denfop.api.energy.*;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.componets.energy.*;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotDischarge;
@@ -17,11 +17,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
@@ -456,7 +454,7 @@ public class Energy extends AbstractComponent {
 
             assert !this.parent.getLevel().isClientSide;
             delegate.energyConductorMap.clear();
-            delegate.validReceivers.clear();
+            delegate.getValidReceivers().clear();
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
@@ -484,6 +482,7 @@ public class Energy extends AbstractComponent {
             this.delegate.sourceDirections = new HashSet<>(sourceDirections);
             this.delegate.sinkDirections = new HashSet<>(sinkDirections);
             delegate.energyConductorMap.clear();
+            delegate.getValidReceivers().clear();
             assert !this.parent.getLevel().isClientSide;
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }

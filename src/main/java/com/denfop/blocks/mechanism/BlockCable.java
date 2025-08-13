@@ -55,7 +55,7 @@ public enum BlockCable implements IMultiTileBlock, IMultiBlockItem {
     private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
 
     ;
-  static   String[] name = {"itemcable", "itemcableo", "itemgoldсable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
+  static   String[] name = {"itemcable", "itemcableo", "itemgoldcable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
             "itemironcableii",
             "itemironcableiiii"
             , "itemglasscable"

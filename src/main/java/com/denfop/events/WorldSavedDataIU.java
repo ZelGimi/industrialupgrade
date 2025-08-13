@@ -47,7 +47,8 @@ public class WorldSavedDataIU extends SavedData {
     private CompoundTag tagCompound = new CompoundTag();
 
     public WorldSavedDataIU() {
-        super();
+        this(new CompoundTag());
+
     }
 
     public WorldSavedDataIU(String name) {
@@ -184,8 +185,12 @@ public class WorldSavedDataIU extends SavedData {
 
     public WorldSavedDataIU(@Nonnull CompoundTag compound) {
 
+        shellClusterChuncks.clear();
+        if (shellClusterChuncks == null)
+            shellClusterChuncks = new HashMap<>();
+        if (volcano != null)
+            volcano = null;
         if (compound.contains("shells")) {
-            shellClusterChuncks.clear();
             loadShellClusterChunks(compound.getCompound("shells"));
         }
 

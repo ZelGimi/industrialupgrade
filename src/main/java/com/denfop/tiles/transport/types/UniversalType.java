@@ -79,6 +79,14 @@ public enum UniversalType implements ISubEnum, ICableItem {
         return thickness;
     }
 
+    public double getLoss() {
+        return loss;
+    }
+
+    public double getCapacity() {
+        return capacity;
+    }
+
     @Override
     public ResourceLocation getRecourse() {
         return texture;

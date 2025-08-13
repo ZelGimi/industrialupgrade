@@ -1,23 +1,16 @@
-package com.denfop.integration.jei.reactorschemes;
+package com.denfop.integration.jei.reactorschemes.fluid.simple;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.blocks.mechanism.BlockSimpleMachine;
-import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerMultiMachine;
-import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.multimechanism.simple.TileRecycler;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -32,14 +25,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class ReactorSchemesCategory extends GuiIU implements IRecipeCategory<ReactorSchemesHandler> {
+public class ReactorSchemesFluidSimpleCategory extends GuiIU implements IRecipeCategory<ReactorSchemesFluidSimpleHandler> {
 
     private final IGuiHelper guiHelper;
     private IDrawableStatic bg;
@@ -48,7 +40,7 @@ public class ReactorSchemesCategory extends GuiIU implements IRecipeCategory<Rea
     private int energy = 0;
     JeiInform jeiInform;
 
-    public ReactorSchemesCategory(
+    public ReactorSchemesFluidSimpleCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
         super(new ContainerMultiMachine(Minecraft.getInstance().player,
@@ -57,9 +49,9 @@ public class ReactorSchemesCategory extends GuiIU implements IRecipeCategory<Rea
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.guiHelper=guiHelper;
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
-                        ".png"), 3, 3, 140,
-                80
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor" +
+                        ".png"), 37, 14, 143 - 37,
+                122
         );
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
@@ -70,7 +62,7 @@ public class ReactorSchemesCategory extends GuiIU implements IRecipeCategory<Rea
     }
 
     @Override
-    public RecipeType<ReactorSchemesHandler> getRecipeType() {
+    public RecipeType<ReactorSchemesFluidSimpleHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
 
@@ -88,19 +80,7 @@ public class ReactorSchemesCategory extends GuiIU implements IRecipeCategory<Rea
     }
 
     @Override
-    public void draw(ReactorSchemesHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        IDrawableStatic bg1 = null;
-       switch (recipe.getReactors()){
-           case FS -> {
-               bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor" +
-                               ".png"), 37, 14, 143 - 37,
-                       122
-               );
-               break;
-           }
-       }
-       if (bg != null)
-           bg.draw(stack,0,0);
+    public void draw(ReactorSchemesFluidSimpleHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         String nameReactor1 = Localization.translate("multiblock." + recipe.getReactors().getNameReactor().toLowerCase());
         draw(stack,nameReactor1,-5,-20, ModUtils.convertRGBAcolorToInt(0,0,0));
     }
@@ -136,18 +116,13 @@ public class ReactorSchemesCategory extends GuiIU implements IRecipeCategory<Rea
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ReactorSchemesHandler recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, ReactorSchemesFluidSimpleHandler recipe, IFocusGroup focuses) {
 
         final List<ItemStack> inputs =Arrays.asList(convertPatternToLayout(recipe.getPattern(),recipe.getInput(),recipe.getReactors().getWidth(),recipe.getReactors().getHeight()));
-        switch (recipe.getReactors()){
-            case FS -> {
-                int i = 0;
-                for (; i < inputs.size(); i++) {
-                    if (!inputs.get(i).isEmpty())
-                    builder.addSlot(RecipeIngredientRole.INPUT,60-37 + (i%recipe.getReactors().getWidth())*18 , 47-14+ (i/recipe.getReactors().getHeight())*18).addItemStack(inputs.get(i));
-
-                }
-            }
+        int i = 0;
+        for (; i < inputs.size(); i++) {
+            if (!inputs.get(i).isEmpty())
+                builder.addSlot(RecipeIngredientRole.INPUT,60-37 + (i%recipe.getReactors().getWidth())*18 , 47-14+ (i/recipe.getReactors().getHeight())*18).addItemStack(inputs.get(i));
 
         }
       }

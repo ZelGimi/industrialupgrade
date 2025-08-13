@@ -408,7 +408,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         this.deathTask = customPacketBuffer.readByte();
         this.illTask = customPacketBuffer.readByte();
         this.queen = BeeNetwork.instance.getBee(customPacketBuffer.readInt()).copy();
-
+        if (customPacketBuffer.readBoolean()) {
         int size = customPacketBuffer.readInt();
         for (int i = 0; i < size; i++) {
             double chance = customPacketBuffer.readDouble();
@@ -421,6 +421,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             this.genome = new Genome(stack);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
         }
     }
 
@@ -448,6 +449,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         } else {
             buffer.writeInt(0);
         }
+        buffer.writeBoolean(queen != null);
         buffer.writeInt(queen.getProduct().size());
         for (int i = 0; i < queen.getProduct().size(); i++) {
             Product product = queen.getProduct().get(i);

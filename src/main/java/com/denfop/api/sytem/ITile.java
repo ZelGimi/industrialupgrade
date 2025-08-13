@@ -12,8 +12,6 @@ public interface ITile {
 
     BlockPos getPos();
 
-    BlockEntity getTile();
-
     long getIdNetwork();
 
     void setId(long id);

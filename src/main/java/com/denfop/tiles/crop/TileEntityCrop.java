@@ -2,6 +2,7 @@
 package com.denfop.tiles.crop;
 
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.agriculture.*;
 import com.denfop.api.agriculture.genetics.EnumGenetic;
@@ -86,6 +87,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     private Function render;
     private boolean humus;
     private boolean canGrow;
+    private double biomeCoef = 1;
 
     public TileEntityCrop(BlockPos pos,BlockState state) {
         super(BlockCrop.crop, pos,state);
@@ -321,6 +323,8 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             crop.setGeneration(gen);
             this.genome = new Genome(this.cropItem);
             genome.loadCrop(crop);
+            this.biome = this.getWorld().getBiome(pos).value();
+            biomeCoef = crop.canGrowInBiome(biome,level) ? 1 : 0.5;
         }
         this.humus = downBlock == IUItem.humus.getBlock(0);
         this.level.setBlock(pos.below(), downState,3);
@@ -1032,7 +1036,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     }
                     if (crop.getTick() < crop.getMaxTick()) {
                         int stage = crop.getStage();
-                        crop.addTick((int) (20 * crop.getGrowthSpeed() * (this.humus ? 1.25 : 1)));
+                        crop.addTick((int) (biomeCoef*20 * crop.getGrowthSpeed() * (this.humus ? 1.25 : 1)));
                         boolean needUpdate = stage != crop.getStage();
                         if (needUpdate) {
                             this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
@@ -1193,6 +1197,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 this.cropItem = combinedGenome.getStack();
                 newCrop.setStack(cropItem);
                 this.crop = newCrop;
+                this.biomeCoef = crop.canGrowInBiome(biome,level) ? 1 : 0.5;
                 this.genome = combinedGenome;
                 this.genome.loadCrop(this.crop);
                 this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
@@ -1355,7 +1360,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
 
 
-        if (stack.getItem() instanceof ICropItem && !this.hasDouble && this.crop == null && CropNetwork.instance.canPlantCrop(
+        if ((stack.getItem() instanceof ICropItem || IUCore.cropMap.containsKey(stack.getItem())) && !this.hasDouble && this.crop == null && CropNetwork.instance.canPlantCrop(
                 stack,
                 level,
                 pos,
@@ -1423,13 +1428,25 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
 
     public void plantNewCrop(ItemStack stack) {
-        this.cropItem = stack.copy();
-        this.cropItem.setCount(1);
-        stack.shrink(1);
-        this.genome = new Genome(this.cropItem);
-        this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
-        this.genome.loadCrop(this.crop);
-        this.setActive(crop.getName().toLowerCase()+"_0");
+        if(IUCore.cropMap.containsKey(stack.getItem())){
+            this.cropItem = IUCore.cropMap.get(stack.getItem()).getStack().copy();
+            this.cropItem.setCount(1);
+            stack.shrink(1);
+            this.genome = new Genome(this.cropItem);
+            this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
+            this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            this.genome.loadCrop(this.crop);
+            this.setActive(crop.getName().toLowerCase() + "_0");
+        }else{
+            this.cropItem = stack.copy();
+            this.cropItem.setCount(1);
+            stack.shrink(1);
+            this.genome = new Genome(this.cropItem);
+            this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
+            this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            this.genome.loadCrop(this.crop);
+            this.setActive(crop.getName().toLowerCase() + "_0");
+        }
     }
 
 

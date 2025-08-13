@@ -1,6 +1,8 @@
 package com.denfop.api.sytem;
 
 
+import com.denfop.api.energy.ConductorInfo;
+
 import java.util.List;
 
 public interface IConductor extends IEmitter, IAcceptor {
@@ -19,4 +21,5 @@ public interface IConductor extends IEmitter, IAcceptor {
 
     List<EnergyType> getEnergies();
 
+    ConductorInfo getInfo(EnergyType energyType);
 }

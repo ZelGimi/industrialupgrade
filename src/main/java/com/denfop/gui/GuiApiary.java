@@ -113,34 +113,38 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-        List<GeneticTraits> values = this.container.base.getGenome().getGeneticTraitsMap().values().stream().toList();
-        maxIndexGenome = values.size();
-        List<Product> products = this.container.base.getQueen().getProduct();
-        maxIndexAdditionProducts = products.size();
-        if (maxIndexGenome == 0) {
-            this.addElement(new Area(this, 174, 4, 20, 4 + 8 + 16 * (4)).withTooltip(() -> Localization.translate("iu.apiary_genome_descriptions")));
+        if (this.container.base.getQueen() == null)
+            return;
+        if (this.container.base.getGenome() != null) {
+            List<GeneticTraits> values = this.container.base.getGenome().getGeneticTraitsMap().values().stream().toList();
+            maxIndexGenome = values.size();
+            List<Product> products = this.container.base.getQueen().getProduct();
+            maxIndexAdditionProducts = products.size();
+            if (maxIndexGenome == 0) {
+                this.addElement(new Area(this, 174, 4, 20, 4 + 8 + 16 * (4)).withTooltip(() -> Localization.translate("iu.apiary_genome_descriptions")));
 
-        } else {
-            int j = 0;
-            for (int i = indexGenome; i < Math.min((indexGenome) + 3, maxIndexGenome); i++, j++) {
-                int finalI = i;
-                this.addElement(new Area(this, 176, 8 + 16 * (j), 16, 16).withTooltip(() ->Localization.translate("iu.info.bee_genome_"+ values.get(finalI).name().toLowerCase())));
+            } else {
+                int j = 0;
+                for (int i = indexGenome; i < Math.min((indexGenome) + 3, maxIndexGenome); i++, j++) {
+                    int finalI = i;
+                    this.addElement(new Area(this, 176, 8 + 16 * (j), 16, 16).withTooltip(() -> Localization.translate("iu.info.bee_genome_" + values.get(finalI).name().toLowerCase())));
+
+                }
 
             }
 
-        }
+            if (maxIndexAdditionProducts == 0) {
+                this.addElement(new Area(this, 174, (int) (4 + 16 * (0 + 3.5)), 20, 4 + 8 + 16 * (4)).withTooltip(() -> Localization.translate("iu.apiary_additional_product_descriptions")));
 
-        if (maxIndexAdditionProducts == 0) {
-            this.addElement(new Area(this, 174, (int) (4 + 16 * (0 + 3.5)), 20, 4 + 8 + 16 * (4)).withTooltip(() -> Localization.translate("iu.apiary_additional_product_descriptions")));
+            } else {
+                int j = 0;
+                for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+                    Product product = products.get(i);
 
-        } else {
-            int j = 0;
-            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
-                Product product = products.get(i);
-
-                this.addElement(new Area(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> product.getCrop().getDrop().get(0).getDisplayName().getString()+"\n"+Localization.translate("iu.space_chance")+" " +ModUtils.getString( product.getChance()/3)+"%"));
+                    this.addElement(new Area(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> product.getCrop().getDrop().get(0).getDisplayName().getString() + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(product.getChance() / 3) + "%"));
 
 
+                }
             }
         }
         handleUpgradeTooltip(par1, par2);
@@ -154,25 +158,29 @@ public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary>
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        List<GeneticTraits> values = this.container.base.getGenome().getGeneticTraitsMap().values().stream().toList();
-        maxIndexGenome = values.size();
-        int j = 0;
-        for (int i = indexGenome; i < Math.min((indexGenome) + 3, maxIndexGenome); i++, j++) {
-            GeneticTraits geneticTraits = values.get(i);
-            RenderSystem.enableBlend();
-            poseStack.renderItem(new ItemStack(IUItem.genome_bee.getStack(geneticTraits.ordinal()), 1), 176 + this.guiLeft(), 8 + 16 * (j) + this.guiTop());
-            RenderSystem.disableBlend();
+        if (this.container.base.getQueen() == null)
+            return;
+        if (this.container.base.getGenome() != null) {
+            List<GeneticTraits> values = this.container.base.getGenome().getGeneticTraitsMap().values().stream().toList();
+            maxIndexGenome = values.size();
+            int j = 0;
+            for (int i = indexGenome; i < Math.min((indexGenome) + 3, maxIndexGenome); i++, j++) {
+                GeneticTraits geneticTraits = values.get(i);
+                RenderSystem.enableBlend();
+                poseStack.renderItem(new ItemStack(IUItem.genome_bee.getStack(geneticTraits.ordinal()), 1), 176 + this.guiLeft(), 8 + 16 * (j) + this.guiTop());
+                RenderSystem.disableBlend();
 
-        }
-        j = 0;
-        List<Product> products = this.container.base.getQueen().getProduct();
-        maxIndexAdditionProducts = products.size();
-        for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
-            Product product = products.get(i);
-            RenderSystem.enableBlend();
-            poseStack.renderItem(product.getCrop().getDrop().get(0), 176 + this.guiLeft(), (int) (8 + 16 * (j + 3.5) + this.guiTop()));
-            RenderSystem.disableBlend();
+            }
+            j = 0;
+            List<Product> products = this.container.base.getQueen().getProduct();
+            maxIndexAdditionProducts = products.size();
+            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+                Product product = products.get(i);
+                RenderSystem.enableBlend();
+                poseStack.renderItem(product.getCrop().getDrop().get(0), 176 + this.guiLeft(), (int) (8 + 16 * (j + 3.5) + this.guiTop()));
+                RenderSystem.disableBlend();
 
+            }
         }
         bindTexture();
         switch (this.container.base.task) {

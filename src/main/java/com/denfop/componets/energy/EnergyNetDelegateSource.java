@@ -1,9 +1,11 @@
-package com.denfop.componets;
+package com.denfop.componets.energy;
 
 import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergySource;
 import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.sytem.InfoTile;
+import com.denfop.componets.BufferEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -466,13 +466,13 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 if (this.multimachine.getHeat() != null) {
                     if (output.getRecipe().output.metadata.getShort("minHeat") == 0 || output.getRecipe().output.metadata.getShort(
                             "minHeat") > this.heat.getEnergy()) {
-                        if (!(this).heat.need) {
-                            (this).heat.need = true;
+                        if (!(this).heat.buffer.need) {
+                            (this).heat.buffer.need = true;
                         }
                         return;
 
-                    } else if ((this).heat.need) {
-                        (this).heat.need = false;
+                    } else if ((this).heat.buffer.need) {
+                        (this).heat.buffer.need = false;
                     }
                 }
                 if (output != null && this.modulesize) {
@@ -484,8 +484,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 }
             }
             if (this.cold.upgrade) {
-                if (this.cold.storage > 0) {
-                    this.cold.storage = 0;
+                if (this.cold.buffer.storage > 0) {
+                    this.cold.buffer.storage = 0;
                 }
 
             }

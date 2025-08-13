@@ -1,6 +1,7 @@
 package com.denfop.tiles.transport.tiles;
 
 
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.sytem.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.network.DecoderHandler;
@@ -11,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -36,7 +36,20 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
         super(cableType, tileBlock, pos, state);
         this.cableType = cableType;
     }
+    Map<EnergyType, ConductorInfo> conductorInfoMap = new HashMap<>();
 
+    @Override
+    public ConductorInfo getInfo(EnergyType energyType) {
+        if (conductorInfoMap.isEmpty()) {
+            if (getEnergies() == null || getEnergies().isEmpty()) {
+                conductorInfoMap.put(getEnergyType(), new ConductorInfo(pos, this, getEnergyType()));
+            } else {
+                for (EnergyType e : getEnergies())
+                    conductorInfoMap.put(e, new ConductorInfo(pos, this, e));
+            }
+        }
+        return conductorInfoMap.get(energyType);
+    }
 
     @Override
     public InfoCable getCable(EnergyType type) {
@@ -262,12 +275,6 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    @Override
-    public BlockEntity getTile() {
-        return this;
     }
 
 

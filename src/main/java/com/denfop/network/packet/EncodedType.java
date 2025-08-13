@@ -4,6 +4,7 @@ package com.denfop.network.packet;
 import com.denfop.api.recipe.*;
 import com.denfop.componets.AbstractComponent;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -31,6 +32,7 @@ public enum EncodedType {
     ItemStack(net.minecraft.world.item.ItemStack.class),
     World(Level.class, false),
     NBTTagCompound(CompoundTag.class),
+    tuple(Tuple.class),
     ResourceLocation(net.minecraft.resources.ResourceLocation.class),
     GameProfile(com.mojang.authlib.GameProfile.class),
     Potion(net.minecraft.world.item.alchemy.Potion.class),

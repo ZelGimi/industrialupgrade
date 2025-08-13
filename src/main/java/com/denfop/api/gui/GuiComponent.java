@@ -139,10 +139,10 @@ public class GuiComponent extends GuiElement<GuiComponent> {
         }
         if (this.component.getComponent() instanceof PressureComponent) {
             PressureComponent pressureComponent = (PressureComponent) this.component.getComponent();
-            this.gui_iu.drawString(poseStack, String.valueOf(pressureComponent.storage), this.x + 2, this.y + 2,
+            this.gui_iu.drawString(poseStack, String.valueOf(pressureComponent.buffer.storage), this.x + 2, this.y + 2,
                     4210752
             );
-            if (mouseX >= this.x - 2 && mouseX <= this.x + 4 + this.gui_iu.getStringWidth(String.valueOf(pressureComponent.storage)) && mouseY >= this.y + 2 && mouseY <= this.y + 10) {
+            if (mouseX >= this.x - 2 && mouseX <= this.x + 4 + this.gui_iu.getStringWidth(String.valueOf(pressureComponent.buffer.storage)) && mouseY >= this.y + 2 && mouseY <= this.y + 10) {
                 List<String> lines = this.getToolTip();
 
                 String tooltip = this.component.getText(this);

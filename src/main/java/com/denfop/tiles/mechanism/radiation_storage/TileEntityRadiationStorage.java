@@ -40,7 +40,7 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
                 Arrays.asList(Direction.values()),
                 Arrays.asList(Direction.values()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
-                EnergyNetGlobal.instance.getTierFromPower(14), false
+                EnergyNetGlobal.instance.getTierFromPower(14)
         )));
         this.enumTypeStyle = enumTypeStyle;
     }

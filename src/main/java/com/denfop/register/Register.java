@@ -159,6 +159,8 @@ public class Register {
     public static DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(Registries.VILLAGER_PROFESSION, IUCore.MODID);
     public static RegistryObject<IndustrialShapelessRecipeSerializer> RECIPE_SERIALIZER_SHAPELESS_RECIPE;
     public static RegistryObject<IndustrialShapedRecipeSerializer> RECIPE_SERIALIZER_SHAPED_RECIPE;
+    public static RegistryObject<SmelterSerializer> RECIPE_SERIALIZER_SMELTERY_RECIPE;
+    public static RegistryObject<RecipeType<Recipe<?>>> SMELTERY_RECIPE;
 
     public static void register() {
         ITEMS.register(IUCore.context.getModEventBus());
@@ -205,6 +207,9 @@ public class Register {
         RECIPE_SERIALIZER_ASTEROID_RECIPE = RECIPE_SERIALIZER.register("asteroid_add", AsteroidSerializer::new);
         COLONY_RECIPE = RECIPE_TYPE.register("colony_resource_add", () -> new RecipeType<>() {});
         RECIPE_SERIALIZER_COLONY_RECIPE = RECIPE_SERIALIZER.register("colony_resource_add", ColonySerializer::new);
+
+        SMELTERY_RECIPE = RECIPE_TYPE.register("smeltery", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_SMELTERY_RECIPE = RECIPE_SERIALIZER.register("smeltery", () -> new SmelterSerializer());
         TABS.register("iutab",
                 () -> IUCore.IUTab);
         TABS.register("moduletab",

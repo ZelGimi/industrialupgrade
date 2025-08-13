@@ -68,7 +68,7 @@ public class Component<T> {
             } else if (this.component instanceof ComponentSteamEnergy) {
                 ComponentSteamEnergy component = (ComponentSteamEnergy) this.component;
 
-                if (component != null && component.storage >= 1) {
+                if (component != null && component.buffer.storage >= 1) {
                     FluidStack fs = new FluidStack(FluidName.fluidsteam.getInstance().get(), 1);
                     int fluidX = guiComponent.x + 1;
                     int fluidY = guiComponent.y + 1;
@@ -94,7 +94,7 @@ public class Component<T> {
             } else if (this.component instanceof ComponentBioFuelEnergy) {
                 ComponentBioFuelEnergy component = (ComponentBioFuelEnergy) this.component;
 
-                if (component != null && component.storage >= 1) {
+                if (component != null && component.buffer.storage >= 1) {
                     FluidStack fs = new FluidStack(FluidName.fluidbiomass.getInstance().get(), 1);
                     int fluidX = guiComponent.x + 1;
                     int fluidY = guiComponent.y + 1;
@@ -119,7 +119,7 @@ public class Component<T> {
                 }
             } else if (this.component instanceof ComponentBaseEnergy) {
                 ComponentBaseEnergy component = (ComponentBaseEnergy) this.component;
-                double fillratio = component.storage / component.capacity;
+                double fillratio = component.buffer.storage / component.buffer.capacity;
                 if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
@@ -147,7 +147,7 @@ public class Component<T> {
                 }
             } else if (this.component instanceof CoolComponent) {
                 CoolComponent component = (CoolComponent) this.component;
-                double fillratio = component.storage / component.capacity;
+                double fillratio = component.buffer.storage / component.buffer.capacity;
                 if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
@@ -175,7 +175,7 @@ public class Component<T> {
                 }
             } else if (this.component instanceof HeatComponent) {
                 HeatComponent component = (HeatComponent) this.component;
-                double fillratio = component.storage / component.capacity;
+                double fillratio = component.buffer.storage / component.buffer.capacity;
                 if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
@@ -330,7 +330,7 @@ public class Component<T> {
                     ModUtils.getString(component
                             .getEnergy()) + "°C" + "/" + ModUtils.getString(component.getCapacity()) + "°C";
             if (component.delegate instanceof IHeatSink) {
-                if (component.need) {
+                if (component.buffer.need) {
                     text += "\n" + Localization.translate("iu.need_heat");
                 }
             }

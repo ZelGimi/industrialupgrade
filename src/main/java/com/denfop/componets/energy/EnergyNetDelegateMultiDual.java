@@ -1,26 +1,28 @@
-package com.denfop.componets;
+package com.denfop.componets.energy;
 
-import com.denfop.api.energy.IDual;
 import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergyEmitter;
 import com.denfop.api.energy.IEnergyTile;
+import com.denfop.api.energy.IMultiDual;
 import com.denfop.api.sytem.InfoTile;
+import com.denfop.componets.Energy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
+public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMultiDual {
 
 
     int hashCodeSource;
-    List<Integer> energyTicks = new LinkedList<>();
+
+    List<Integer> energyTicks = new ArrayList<>();
 
 
-    EnergyNetDelegateDual(Energy block) {
+    public EnergyNetDelegateMultiDual(Energy block) {
         super(block);
     }
 
@@ -32,7 +34,6 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
         }
         return false;
     }
-
 
     @Override
     public int getHashCodeSource() {
@@ -47,20 +48,6 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
 
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
         return validReceivers;
-    }
-
-    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
-        for (Direction facing1 : this.sourceDirections) {
-            if (facing1.ordinal() == dir.ordinal()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public @NotNull BlockPos getPos() {
-        return this.worldPosition;
     }
 
     @Override
@@ -78,9 +65,23 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
         return this.energyConductorMap;
     }
 
+    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+        for (Direction facing1 : this.sourceDirections) {
+            if (facing1.ordinal() == dir.ordinal()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public @NotNull BlockPos getPos() {
+        return this.worldPosition;
+    }
+
     public double getDemandedEnergy() {
-        return !this.receivingDisabled && this.buffer.storage < this.buffer.capacity
-                ? this.buffer.capacity - this.buffer.storage
+        return !this.receivingDisabled && this.buffer.storage < buffer.capacity
+                ? buffer.capacity - this.buffer.storage
                 : 0.0D;
     }
 
@@ -103,17 +104,16 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
         this.buffer.storage = this.buffer.storage + amount;
     }
 
-    @Override
-    public List<Integer> getEnergyTickList() {
-        return energyTicks;
-    }
-
     public void extractEnergy(double amount) {
         assert amount <= this.buffer.storage;
 
         this.buffer.storage = this.buffer.storage - amount;
     }
 
+    @Override
+    public List<Integer> getEnergyTickList() {
+        return energyTicks;
+    }
 
     @Override
     public double getPerEnergy() {

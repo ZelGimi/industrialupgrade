@@ -20,7 +20,7 @@ public class TileEntityPhoCombRecycler extends TileMultiMachine {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.cold.storage = 0;
+        this.cold.buffer.storage = 0;
     }
     public void initiate(int soundEvent) {
         if (this.getWorld().getGameTime() % 40 == 0) {

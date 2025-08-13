@@ -1,6 +1,8 @@
 package com.denfop.api.sytem;
 
 
+import com.denfop.api.energy.ConductorInfo;
+import com.denfop.api.energy.IEnergyConductor;
 import com.denfop.api.energy.NodeStats;
 import com.denfop.api.energy.SystemTick;
 import com.denfop.world.WorldBaseGen;
@@ -173,6 +175,9 @@ public class LocalNet implements ILocalNet {
                     amount -= energyProvided;
                     amount = Math.max(0, amount);
                 }
+                for (ConductorInfo energyConductor : energyPath.conductorList) {
+                    energyConductor.addEnergy((byte) this.tick, energyProvided);
+                }
             }
         }
 
@@ -233,6 +238,10 @@ public class LocalNet implements ILocalNet {
     public double getTotalEmitted(final ITile tileEntity) {
         double ret = 0.0;
         int col = 0;
+        if (tileEntity instanceof IConductor) {
+            ret = Math.max(((IConductor) tileEntity).getInfo(energyType).getEnergy(this.tick), ret);
+            return ret;
+        }
         if (tileEntity instanceof ISource) {
             ISource advEnergySource = (ISource) tileEntity;
             if (!(advEnergySource instanceof IDual) && advEnergySource.isSource()) {
@@ -251,6 +260,10 @@ public class LocalNet implements ILocalNet {
 
     public double getTotalAccepted(final ITile tileEntity) {
         double ret = 0.0;
+        if (tileEntity instanceof IConductor) {
+            ret = Math.max(((IConductor) tileEntity).getInfo(energyType).getEnergy(this.tick), ret);
+            return ret;
+        }
         if (tileEntity instanceof ISink) {
             ISink advEnergySink = (ISink) tileEntity;
             if (advEnergySink.isSink()) {
@@ -332,6 +345,7 @@ public class LocalNet implements ILocalNet {
         LinkedList<IConductor> set = new LinkedList<>();
         while (!tileEntitiesToCheck.isEmpty()) {
             final ITile currentTileEntity = tileEntitiesToCheck.pop();
+
             final List<InfoTile<ITile>> validReceivers = this.getValidReceivers(currentTileEntity);
             InfoCable cable = null;
             if (currentTileEntity instanceof IConductor) {
@@ -358,6 +372,7 @@ public class LocalNet implements ILocalNet {
         energyPaths = new ArrayList<>(energyPaths);
         for (Path energyPath : energyPaths) {
             ITile tileEntity = energyPath.target;
+            List<ConductorInfo> pathConductorsList = new LinkedList<>();
             energyPath.target.getEnergyTickList().add(tick.getSource());
             Direction energyBlockLink = energyPath.targetDirection;
             tileEntity = tileEntity.getTiles(energyType).get(energyBlockLink);
@@ -368,6 +383,7 @@ public class LocalNet implements ILocalNet {
 
             while (cable != null) {
                 final IConductor energyConductor = cable.getConductor();
+                pathConductorsList.add(energyConductor.getInfo(energyType));
                 if (energyConductor.getHashCodeSource() != id1) {
                     energyConductor.setHashCodeSource(id1);
                     set.add(energyConductor);
@@ -377,8 +393,9 @@ public class LocalNet implements ILocalNet {
                     break;
                 }
             }
-
+            energyPath.conductorList = new ArrayList<>(pathConductorsList);
         }
+
         return new Tuple<>(energyPaths, set);
     }
 

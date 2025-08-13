@@ -15,6 +15,7 @@ import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.client.ComponentClientEffectRender;
+import com.denfop.componets.client.ComponentVisibleArea;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBaseWaterGenerator;
@@ -44,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -63,6 +65,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     public final Energy energy;
     public final InvSlotWaterRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
+    private final ComponentVisibleArea visible;
     public InvSlotWaterRotor slot;
     public double generation = 0;
     public boolean need_repair;
@@ -108,6 +111,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         this.tick = 0;
         this.biome = 1;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.WATER_GENERATOR);
+        visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
     private int getDamageTimeFromWind() {
@@ -507,6 +511,14 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     @Override
     public void onLoaded() {
         super.onLoaded();
+        this.visible.aabb = new AABB(
+                this.getBlockPos().getX() - 8,
+                this.getBlockPos().getY() - 8,
+                this.getBlockPos().getZ() - 8,
+                this.getBlockPos().getX() + 8+ 1,
+                this.getBlockPos().getY() + 8+ 1,
+                this.getBlockPos().getZ() + 8 + 1
+        );
         this.timers = WindSystem.windSystem.getTime();
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();

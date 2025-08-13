@@ -26,6 +26,7 @@ public class GuideBookCore {
 
     public static GuideBookCore instance;
     public static Map<UUID, Map<String,List<String>>> uuidGuideMap = new HashMap<>();
+    public boolean hoverBookMark = false;
     List<GuideTab> guideTabs = new ArrayList<>();
     public GuideBookCore() {
         if (instance == null) {
@@ -102,6 +103,9 @@ public class GuideBookCore {
         Quest.Builder.create().name("pipette").tab(guideTab).icon(ItemStackHelper.fromData(IUItem.pipette)).shape(Shape.DEFAULT).description(
                 "pipette").position(-35,
                 70).build();
+        Quest.Builder.create().name("fluid_item_pipe").tab(guideTab).icon(ItemStackHelper.fromData(IUItem.item_pipes)).shape(Shape.DEFAULT).description(
+                "fluid_item_pipe").position(-35,
+                105).build();
         Quest.Builder.create().name("recipe_schedule").tab(guideTab).icon(ItemStackHelper.fromData(IUItem.recipe_schedule)).shape(Shape.DEFAULT).description(
                 "recipe_schedule").position(-0,
                 70).build();
@@ -111,7 +115,18 @@ public class GuideBookCore {
         Quest.Builder.create().name("reactor_logic").tab(guideTab).icon(ItemStackHelper.fromData(IUItem.quad_mox_fuel_rod)).shape(Shape.DEFAULT).description(
                 "reactor_logic").position(70,
                 70).build();
-
+        Quest.Builder.create().name("fluid_reactor").tab(guideTab).icon(getBlockStack(BlockWaterReactors.water_controller)).shape(Shape.DEFAULT).description(
+                "fluid_reactor").position(105,
+                0).build();
+        Quest.Builder.create().name("graphite_reactor").tab(guideTab).icon(getBlockStack(BlocksGraphiteReactors.graphite_adv_controller)).shape(Shape.DEFAULT).description(
+                "graphite_reactor").position(105,
+                35).build();
+        Quest.Builder.create().name("gas_reactor").tab(guideTab).icon(getBlockStack(BlockGasReactor.gas_controller)).shape(Shape.DEFAULT).description(
+                "gas_reactor").position(105,
+                70).build();
+        Quest.Builder.create().name("heat_reactor").tab(guideTab).icon(getBlockStack(BlockHeatReactor.heat_controller)).shape(Shape.DEFAULT).description(
+                "heat_reactor").position(105,
+                105).build();
         Quest.Builder.create().name("space").tab(guideTab).icon(getBlockStack(BlockBaseMachine3.research_table_space)).shape(Shape.DEFAULT).description(
                 "space").position(-0,
                 105).build();
@@ -591,17 +606,18 @@ public class GuideBookCore {
                 "advancedElectricTab");
         Quest.Builder.create().name("imp_alloy_smelter").itemStack(getBlockStack(BlockBaseMachine3.imp_alloy_smelter)).localizationItem().noDescription().tab(advancedElectricTab)
                 .position(0, 0).build();
-        Quest.Builder.create().name("relocator").itemStack(ItemStackHelper.fromData(IUItem.relocator)).localizationItem().noDescription().tab(advancedElectricTab)
-                .prev("imp_alloy_smelter") .position(40, -80).build();
+
         Quest.Builder.create().name("graviTool").itemStack(ItemStackHelper.fromData(IUItem.GraviTool)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("imp_alloy_smelter") .position(40, -40).build();
+        Quest.Builder.create().name("relocator").itemStack(ItemStackHelper.fromData(IUItem.relocator)).localizationItem().noDescription().tab(advancedElectricTab)
+                .prev("graviTool") .position(40, -80).build();
         Quest.Builder.create().name("cooling").itemStack(getBlockStack(BlockBaseMachine3.cooling)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("imp_alloy_smelter") .position(40, 0).build();
         Quest.Builder.create().name("antiairpollution1").itemStack(ItemStackHelper.fromData(IUItem.antiairpollution1)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("cooling") .position(0, 40).build();
         Quest.Builder.create().name("antisoilpollution1").itemStack(ItemStackHelper.fromData(IUItem.antisoilpollution1)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("cooling") .position(80, 40).build();
-        Quest.Builder.create().name("substitute").itemStack(getBlockStack(BlockBaseMachine3.cooling)).localizationItem().noDescription().tab(advancedElectricTab)
+        Quest.Builder.create().name("substitute").itemStack(getBlockStack(BlockBaseMachine3.substitute)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("cooling") .position(80, 0).build();
         Quest.Builder.create().name("energy_remover").itemStack(getBlockStack(BlockBaseMachine3.energy_remover)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("substitute") .position(80, -40).build();

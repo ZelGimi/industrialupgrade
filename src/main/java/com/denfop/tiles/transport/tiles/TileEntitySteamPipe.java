@@ -1,6 +1,8 @@
 package com.denfop.tiles.transport.tiles;
 
 
+import com.denfop.Localization;
+import com.denfop.api.energy.ConductorInfo;
 import com.denfop.api.sytem.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.network.DecoderHandler;
@@ -12,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -38,6 +40,11 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         this.cableType = cableType;
     }
 
+    @Override
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.steam_pipe.info"));
+    }
 
     public long getIdNetwork() {
         return this.id;
@@ -244,6 +251,21 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         return null;
     }
 
+    Map<EnergyType, ConductorInfo> conductorInfoMap = new HashMap<>();
+
+    @Override
+    public ConductorInfo getInfo(EnergyType energyType) {
+        if (conductorInfoMap.isEmpty()) {
+            if (getEnergies() == null || getEnergies().isEmpty()) {
+                conductorInfoMap.put(getEnergyType(), new ConductorInfo(pos, this, getEnergyType()));
+            } else {
+                for (EnergyType e : getEnergies())
+                    conductorInfoMap.put(e, new ConductorInfo(pos, this, e));
+            }
+        }
+        return conductorInfoMap.get(energyType);
+    }
+
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -265,12 +287,6 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    @Override
-    public BlockEntity getTile() {
-        return this;
     }
 
 

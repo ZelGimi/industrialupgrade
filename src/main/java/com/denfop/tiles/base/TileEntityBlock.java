@@ -282,7 +282,8 @@ public abstract class TileEntityBlock extends BlockEntity {
     public static Map<ResourceKey<Level>, List<ChunkPos>> updates = new ConcurrentHashMap<>();
 
     public void tick() {
-
+        if (this.isRemoved())
+            return;
         if (this.getLevel().isClientSide) {
             this.updateEntityClient();
         } else {

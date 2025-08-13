@@ -230,7 +230,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
                 }
             }
         }
-        if ((this.cold.allow || work) && time > 0) {
+        if ((this.cold.buffer.allow || work) && time > 0) {
             if (this.cold.getEnergy() < this.cold.getCapacity()) {
                 this.cold.addEnergy(1);
                 this.time--;

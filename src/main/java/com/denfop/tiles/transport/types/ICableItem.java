@@ -13,4 +13,12 @@ public interface ICableItem {
 
     ResourceLocation getRecourse();
 
+    default  double getLoss() {
+        return 0;
+    }
+
+    default double getCapacity() {
+        return Integer.MAX_VALUE;
+    }
+
 }

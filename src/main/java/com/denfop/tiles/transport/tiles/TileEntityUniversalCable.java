@@ -81,9 +81,36 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     public TileEntityUniversalCable(UniversalType cableType, IMultiTileBlock block, BlockPos pos, BlockState state) {
         super(cableType, block, pos, state);
         this.cableType = cableType;
-        this.conductor = new ConductorInfo(pos,this);
+        this.conductor = new ConductorInfo(pos, (IEnergyConductor) this);
+        this.conductorCool = new ConductorInfo(pos, (ICoolConductor) this);
+        this.conductorHeat = new ConductorInfo(pos,(IHeatConductor) this);
     }
+    private final ConductorInfo conductorHeat;
 
+    @Override
+    public ConductorInfo getHeatConductor() {
+        return conductorHeat;
+    }
+    private final ConductorInfo conductorCool;
+
+    @Override
+    public ConductorInfo getCoolConductor() {
+        return conductorCool;
+    }
+    Map<EnergyType, ConductorInfo> conductorInfoMap = new HashMap<>();
+
+    @Override
+    public ConductorInfo getInfo(EnergyType energyType) {
+        if (conductorInfoMap.isEmpty()) {
+            if (getEnergies() == null || getEnergies().isEmpty()) {
+                conductorInfoMap.put(getEnergyType(), new ConductorInfo(pos, this, getEnergyType()));
+            } else {
+                for (EnergyType e : getEnergies())
+                    conductorInfoMap.put(e, new ConductorInfo(pos, this, e));
+            }
+        }
+        return conductorInfoMap.get(energyType);
+    }
     @Override
     public void addInformation(ItemStack stack, List<String> info) {
         UniversalType type = cableType;

@@ -58,7 +58,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                 List<String> stringList = new ArrayList<>();
                 stringList.add(ModUtils.getString(component
                         .getEnergy()) + "°C" + "/" + ModUtils.getString(component.getCapacity()) + "°C");
-                if (component.need) {
+                if (component.buffer.need) {
                     stringList.add(Localization.translate("iu.need_heat"));
                 }
                 return stringList;

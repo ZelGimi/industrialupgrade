@@ -392,6 +392,7 @@ public class EnergyNetLocal {
     public double getTotalEnergyEmitted(final IEnergyTile tileEntity) {
         double ret = 0.0;
         int col = 0;
+
         if (tileEntity instanceof IEnergyConductor) {
             ret = Math.max(((IEnergyConductor) tileEntity).getInfo().getEnergy(this.tick), ret);
             return ret;

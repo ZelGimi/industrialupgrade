@@ -29,6 +29,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -197,7 +198,10 @@ public class ItemIronHammer extends ItemToolIU {
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         return mineableBlocks.contains(state) ? this.speed : 1.0F;
     }
-
+    @Override
+    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+        return ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
+    }
     public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof Player player)) {
             return false;
@@ -220,7 +224,9 @@ public class ItemIronHammer extends ItemToolIU {
                 return false;
             }
 
-            if (world.destroyBlock(pos, true, entity)) {
+            if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
 
                 List<ItemEntity> items = world.getEntitiesOfClass(
                         ItemEntity.class,
