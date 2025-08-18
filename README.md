@@ -1,71 +1,39 @@
-![IU Banner](https://i.postimg.cc/GtYsm8qk/unknown-3-2-2.png)
-<a align="center"> [![Discord](https://img.shields.io/discord/473459266959835147?color=f3f2f4&label=Discord&logo=Discord&logoColor=f3f2f4&style=for-the-badge)](https://discord.gg/fqQPH6HKJV)[![CurseForge name](https://cf.way2muchnoise.eu/title/372007.svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade)[![CurseForge download](http://cf.way2muchnoise.eu/372007.svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade)![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)[![GitHub license](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)</a>
-
-<h1 align="center">  <img src=https://i.postimg.cc/YqkLNxRF/Industrial-Upgrade.gif width="64" height="64" alt="Solar panel blue"> <img src=https://i.postimg.cc/jS6tX16b/industrial-26-06-2022-1-1.png alt="Mod name"> <img src=https://i.postimg.cc/tCMyRqsg/Industrial-Upgrade.gif width="64" height="64" alt="Solar panel green"> </h1>
-<div align="center"> <img src=https://i.postimg.cc/qRN5qtj7/Description-26-06-2022.png alt="Description"> </div>
-
- **Industrial Upgrade is a global addon with different and interesting things that diversify not only IC2 itself, but also your survival.** 
-<div align="center">   - There was little accent on the panel (15 main and 11 additional). Each panel has its own level of pollution, dependence on the phases of the sun and moon, and has many modules for pumping! </div>
-<div align="center"> - Added 9 rotors and 10  different fuel rods so that the player can develop not only in the solar energy branch, but also in wind and nuclear energy</div>
-<div align="center">- The mod adds 46 new types of ores (90 ores in total).</div>
-<div align="center">- Added 6 sets of armour, 5 different helmets, 20 tools and 6 types of backpacks. You can also paint them!</div>
-<div align="center">- The main aspect of the mod is the mechanisms, about 144 mechanisms have been added!</div>
-<div align="center">- The modular system in fashion is very extensive, it concerns not only panels, but also energy storage, mechanisms and the improvement of armour and tools in fashion!</div>
-
-
- ***The mod not only extends its uniqueness to the main mod, but adds integrations to different mods, the list may differ in different MC versions!***
-<div align="center"> <img src=https://i.postimg.cc/bNfqX8wn/Integration-26-06-2022.png alt="Integration"> </img> </div>
-
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/avaritia-1-10"> <img src=https://i.postimg.cc/vmrjyzvw/Avaritia-26-06-2022.png width="280" height="82" alt="Avaritia"></a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/botania"><img src=https://i.postimg.cc/5NrDSjtT/Botania-26-06-2022.png width="280" height="82" alt="Botania"></a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/compact-solars"> <img src=https://i.postimg.cc/3NRbgHQ3/Compact-Solars-26-06-2022.png width="280" height="82" alt="Compact Solars"> </a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/crafttweaker"><img src=https://i.postimg.cc/HsnfMbTb/Craft-Tweaker-26-06-2022.png width="280" height="82" alt="CraftTweaker"> </a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/draconic-evolution"><img src=https://i.postimg.cc/XNHPnX9q/Draconic-Evolution-26-06-2022.png width="280" height="82" alt="Draconic Evolution"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/electro-magic-tools"> <img src=https://i.postimg.cc/9FDn0VBp/Electro-Magic-Tools-26-06-2022.png width="280" height="82" alt="Electro Magic Tools"></a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/ex-nihilo-creatio"> <img src=https://i.postimg.cc/C1JQBxtv/Ex-Nihilo-26-06-2022.png width="280" height="82" alt="ExNihilo Creatio"> </a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/forestry"><img src=https://i.postimg.cc/nznWhDdj/Forestry-26-06-2022.png width="280" height="82" alt="Forestry"></a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/minefactory-reloaded"><img src=https://i.postimg.cc/NfZPrVJw/Mine-Factory-Reloaded-26-06-2022.png width="280" height="82" alt="MineFactory Reloaded"></a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/jei"><img src=https://i.postimg.cc/hGWwNwT0/NEI-jei-26-06-2022.png width="280" height="82" alt="JEI"> </a> </div>
-<div align="center"> <a href="https://www.curseforge.com/minecraft/mc-mods/pams-harvestcraft"><img src=https://i.postimg.cc/hvBGCg0R/Pams-26-06-2022.png width="280" height="82" alt="Pams HarverstCraft"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/thaumcraft"> <img src=https://i.postimg.cc/nrPS2wnB/Thaumcraft-26-06-2022.png width="280" height="82" alt="Thaumcraft"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/thaumic-tinkerer"> <img src=https://i.postimg.cc/xTdQ9c8F/Thaum-Tinker-26-06-2022.png width="280" height="82" alt="Thaumic Tinkerer"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/waila"> <img src=https://i.postimg.cc/Sxz3Tq2s/Waila-26-06-2022.png width="280" height="82" alt="Waila"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/wireless-industry"> <img src=https://i.postimg.cc/4x7yWKQ9/Wireless-industry-26-06-2022.png  width="572" height="108" alt="Wireless Industry"> </a> </div>
-
-
-
-
-<br>
-<br>
-<div align="center"> <img src=https://i.postimg.cc/CMvNbDQH/ADDONS-26-06-2022.png width="413" height="111" alt="Addons"> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/power-utilities-remastered"> <img src=https://i.postimg.cc/MKLCx5hv/Power-Utilities-26-06-2022-1.png width="497" height="102" alt="Power Utilities"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods//quantum-generators"> <img src=https://i.postimg.cc/VsrTgnSw/Quantum-Generators-26-06-2022-1.png width="497" height="102" alt="Quantum Generators"> </a> </div>
-<div align="center"><a href="https://www.curseforge.com/minecraft/mc-mods/simply-quarries"> <img src=https://i.postimg.cc/25tGL97Z/Simply-Quirries-26-06-2022.png width="497" height="102" alt="Simple Quarries"> </a> </div>
-
-
- **It is forbidden to upload the mod on different sites (for example, a link to download the mod not from the official site (curseforge))** 
-
-<div align="center"> <img src=https://i.postimg.cc/V64kJz44/Second-Poster-26-06-2022.png alt="Second Poster"> </div>
-<img src=https://i.postimg.cc/1XvJz6xv/iu.png” alt="Second banner">
-
-<div align="center"> <img src=https://i.postimg.cc/3J1dkCfY/Permissions-26-06-2022.png alt="Permissions"> </div>
-
-
-<h4 align="center">1. You are free to redistribute this mod, but you are required to credit the download source as 'CurseForge' or 'Modrinth' if you provide a link or information about the mod. </h4>
-
-<h4 align="center">2. You can freely use, modify and distribute this mod, but to create a complete analogue without the author's nickname, you must obtain written permission from the author of the mod. </h4>
-
-<h4 align="center">3. You can add mod to your modpacks. </h4>
-
-<h4 align="center">4. You can change textures in this mod.</h4>
-
-<h4 align="center">5. You have the permission to modify the source code of the mod with permission from the author.</h4>
-
-<h4 align="center">6. For violations of the permissions to use the mod, I have every right to force you to remove the mod</h4>
-
-
-<div align="center"> <img src=https://i.postimg.cc/j5YsgL3M/Note-26-06-2022.png alt="Note"> </div>
-
-<h4 align="center">These permissions work on all versions of the mod.
-</h4>
-<h4 align="center"> <font color="#d09508">  An analogue is the mod in which parts of this mod are clearly visible, namely: functionality (more than 50% similar to the sources), graphical interface, block texture.  If all three points are violated, then it is considered that you have made a complete analogue. </h4>
+![Industrial Upgrade is a comprehensive technology mod that transforms your Minecraft survival experience — from simple tools and early automation to massive factories and complex infrastructure. It greatly increases the challenge and depth of gameplay, extending your survival journey and rewarding careful planning. Perfect for players who enjoy building intricate systems, mastering advanced technologies, and reimagining the legacy of IndustrialCraft² in a fresh, refined form.](https://i.postimg.cc/BvjBhjXS/preview-01.png) ![The mod features its own ore generation system, covering both custom and vanilla ores, arranged in veins. Each vein contains specific ores with defined spawn chances. On a player’s first login, they receive a special tablet — the “Ore Scanner” — which can be used to detect nearby ores.](https://i.postimg.cc/y6mXr4YZ/preview-02.png) ![The mod features three main eras: 
+-Primitive 
+-Steam 
+-Electric 
+-Basic](https://i.postimg.cc/RhdtCmNp/preview-03.png) ![ -Improved
+-Advanced
+-Perfect
+-Photonic](https://i.postimg.cc/7Pn0n3m1/preview-04.png) ![The mod also includes a convenient guide that allows you to progress through it from start to finish.](https://i.postimg.cc/J47J6s2f/preview-05.png) ![The mod features a wide variety of energy types:
+Coal Industry
+Redstone Industry
+Oil Industry
+-Gasoline
+-Diesel](https://i.postimg.cc/XqsZSgzT/preview-06.png) ![Steam Industry
+Steam Turbine
+Steam Generator
+Reactor Industry
+Liquid Reactor
+Gas Reactor
+Graphite Reactor
+High-Temperature Reactor
+Solar Industry
+Assembly Mini Panel
+Solar Panel
+Wind Industry
+Water Industry
+Thermal Industry
+Gas Power](https://i.postimg.cc/KvYk7dKF/preview-07.png) ![The mod introduces space, but not in the style of the legendary Galacticraft. Instead, it is implemented as an exploration system where you can establish colonies, manage them, and develop their population to extract various ores and liquids.](https://i.postimg.cc/ncws307m/preview-08.png) ![Space map](https://i.postimg.cc/wMDkznp7/preview-09.png) ![Planet information](https://i.postimg.cc/VLcRgsqM/preview-10.png) ![Colony system](https://i.postimg.cc/vZ0tGWpL/preview-11.png) ![The mod adds over 80 different crops that can interact with each other and with bees (from the mod). This allows you to obtain resources by cultivating plants. Crops can be improved through crossbreeding two or more species, or by using genetic technologies to create the perfect variant.](https://i.postimg.cc/3wWCNkhM/preview-12.png) ![Crop and bee](https://i.postimg.cc/2yN40TZm/preview-13.png) ![The mod adds 5 types of bees, each tied to specific biomes. Their mechanics differ greatly from vanilla. Bees are now divided into 4 types: gatherer, builder, healer, and defender — each performing its own unique role. Over time, they can mutate and also accelerate crop growth.
+With prolonged crop growth acceleration, bees can produce additional loot besides honey and royal jelly.](https://i.postimg.cc/9f4ZVsPC/preview-14.png) ![The mod offers a wide variety of armor — from basic to energy-powered (nano-spectral). You can also fly using a jetpack and charge your items via an energy backpack. Additionally, armor can be used to protect against volcanic gases and radioactivity.](https://i.postimg.cc/DZLG4sYN/preview-15.png) ![Credits,License
+Source Code: AGPLv3
+Textures & Assets: CC BY-NC-ND 
+Required & Core Add-ons
+Power Utilities — energy conversion
+Simply Quarry — automated quarries
+Quantum Generators — generates quantum energy
+You are free to use this mod in modpacks.
+It is recommended to share your feedback about the mod on GitHub or Discord.
+Please also report bugs, crashes, and dupes on GitHub or Discord.
+The mod positions itself as the spiritual successor of IC2 and may only resemble it in basic mechanics common to all tech mods.
+The mod author is not part of the IC2 Dev team and has no affiliation with them.](https://i.postimg.cc/L6HPhJky/preview-16.png)
