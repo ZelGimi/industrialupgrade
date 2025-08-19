@@ -27,6 +27,7 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.KeyboardIU;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;
@@ -110,10 +111,10 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+        if (!Keyboard.isKeyDown(InputConstants.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
-        if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+        if (Keyboard.isKeyDown(InputConstants.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.matter_work_info") + (int) this.energycost);
         }
 

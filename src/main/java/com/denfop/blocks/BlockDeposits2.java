@@ -114,7 +114,7 @@ public class BlockDeposits2<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 

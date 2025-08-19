@@ -71,7 +71,7 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public  int getMetaFromState(BlockState state) {
         return state.getValue(stateProperty).getId();
     }
 

@@ -70,7 +70,7 @@ public class BlockTropicalRubWood<T extends Enum<T> & ISubEnum> extends BlockCor
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public   int getMetaFromState(BlockState state) {
         return state.getValue(stateProperty).getId();
     }
 

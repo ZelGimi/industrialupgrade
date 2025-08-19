@@ -1,4 +1,4 @@
-// 1.20.1	2025-08-09T23:11:54.0969418	Recipes
+// 1.20.1	2025-08-15T00:20:07.9784992	Recipes
 d3afc9f527c33225dfecdeea7186653c6747b5a2 data/industrialupgrade/advancements/recipes/misc/furnace_0.json
 36f6915ba4848bcb7d1f4f75e6de01b4203e1ac4 data/industrialupgrade/advancements/recipes/misc/furnace_1.json
 ad408492000364fafdec4a4f4463fe99ca726b9a data/industrialupgrade/advancements/recipes/misc/furnace_10.json
@@ -4906,7 +4906,7 @@ fd9f56dc6462d59193cc104d5a91d631a74bea33 data/industrialupgrade/recipes/industri
 94cbaa355a135038a918386f180d0047c5851fde data/industrialupgrade/recipes/industrialupgrade_67.json
 f01e07d4f90f8d3e4443eee27d5a4fa90de8130e data/industrialupgrade/recipes/industrialupgrade_670.json
 ccd3c7db1821880eabea17e8bed50916752eaa22 data/industrialupgrade/recipes/industrialupgrade_671.json
-3a01e33ceae5a42073f9a1e3ef100c50ad0a70c1 data/industrialupgrade/recipes/industrialupgrade_672.json
+7567523d62c0efeb4755d7a2c2fc8cf4c5f4d1d1 data/industrialupgrade/recipes/industrialupgrade_672.json
 b168ee229176f6dc8b3722d4ba0530d2a8e8cafe data/industrialupgrade/recipes/industrialupgrade_673.json
 e04162a7cf525eab45e3f64cfaae1dd4af265ed4 data/industrialupgrade/recipes/industrialupgrade_674.json
 a80c76c815122d307edd2f738d7752562ab54bff data/industrialupgrade/recipes/industrialupgrade_675.json

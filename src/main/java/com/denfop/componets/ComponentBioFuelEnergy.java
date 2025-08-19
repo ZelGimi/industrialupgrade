@@ -58,7 +58,21 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     public static ComponentBioFuelEnergy asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
+    @Override
+    public boolean isServer() {
+        return true;
+    }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())){
+            fluidTank.fill(new FluidStack(FluidName.fluidbiomass.getInstance().get(),  (int)this.buffer.storage-fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
+        }
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())){
+            fluidTank.drain(fluidTank.getFluid().getAmount()- (int)this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
+        }
+    }
     public static ComponentBioFuelEnergy asBasicSink(TileEntityInventory parent, double capacity, int tier) {
         return new ComponentBioFuelEnergy(EnergyType.BIOFUEL, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }

@@ -1,0 +1,8 @@
+{
+  "type": "forge:add_features",
+  "biomes": "modvein:digging_biome",
+  "features": [
+    "industrialupgrade:vein_placed"
+  ],
+  "step": "top_layer_modification"
+}

@@ -94,6 +94,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
     }
 
+    public static boolean hasWeed = true;
     public ItemStack getCropItem() {
         return cropItem;
     }
@@ -1016,7 +1017,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                         int chanceWeed = 100 - crop.getChanceWeed() - (5 * (crop.getSizeSeed() - 1));
                         work = true;
                         if (chanceWeed > 0) {
-                            if (this.getWorld().getGameTime() % 400 == 0 && tickPest == 0 &&
+                            if (this.getWorld().getGameTime() % 400 == 0 && hasWeed && tickPest == 0 &&
                                     WorldBaseGen.random.nextInt(100) < chanceWeed && WorldBaseGen.random.nextInt(100) == 0) {
                                 this.crop = CropInit.weed_seed.copy();
                                 pestUse = 0;
@@ -1050,7 +1051,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
         if (this
                 .getWorld()
-                .getGameTime() % 400 == 0 && tickPest == 0 && this.crop == null && !hasDouble && WorldBaseGen.random.nextInt(200) == 0) {
+                .getGameTime() % 400 == 0  && hasWeed&& tickPest == 0 && this.crop == null && !hasDouble && WorldBaseGen.random.nextInt(200) == 0) {
             this.crop = CropInit.weed_seed.copy();
             pestUse = 0;
             this.cropItem = CropInit.weed_seed.getStack();
@@ -1067,7 +1068,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             if (crops.size() < 2) {
                 if (this
                         .getWorld()
-                        .getGameTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
+                        .getGameTime() % 400 == 0 && hasWeed && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
                     this.hasDouble = false;
                     this.crop = CropInit.weed_seed.copy();
                     pestUse = 0;
@@ -1207,7 +1208,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             if (!can) {
                 if (this
                         .getWorld()
-                        .getGameTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
+                        .getGameTime() % 400 == 0 && hasWeed && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
                     this.hasDouble = false;
                     this.crop = CropInit.weed_seed.copy();
                     pestUse = 0;
@@ -1412,7 +1413,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     private void handlePestResistance() {
         int resistance = this.crop.getPestResistance();
         boolean pestResistance = WorldBaseGen.random.nextInt(100) < (100 - resistance);
-        if (!pestResistance) {
+        if (!pestResistance && hasWeed) {
             this.crop = CropInit.weed_seed.copy();
             this.pestUse = 0;
             this.cropItem = CropInit.weed_seed.getStack();

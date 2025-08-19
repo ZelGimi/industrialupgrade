@@ -26,7 +26,7 @@ public class BlockSpaceCobbleStone1<T extends Enum<T> & ISubEnum> extends BlockC
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 

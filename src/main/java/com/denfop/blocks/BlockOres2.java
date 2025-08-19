@@ -37,7 +37,7 @@ public class BlockOres2<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 

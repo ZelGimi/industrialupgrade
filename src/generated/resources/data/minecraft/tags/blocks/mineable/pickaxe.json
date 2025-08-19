@@ -57,6 +57,7 @@
     "industrialupgrade:compressor/compressor",
     "industrialupgrade:primal_fluid_integrator/primal_fluid_integrator",
     "industrialupgrade:primal_pump/primal_pump",
+    "industrialupgrade:refractory_furnace/refractory_furnace",
     "industrialupgrade:macerator/macerator",
     "industrialupgrade:cokeoven/coke_oven_main",
     "industrialupgrade:cokeoven/coke_oven_input",

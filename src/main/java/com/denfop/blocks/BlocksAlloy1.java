@@ -27,7 +27,7 @@ public class BlocksAlloy1<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public   int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 

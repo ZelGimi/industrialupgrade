@@ -39,7 +39,7 @@ public class BlockSpace3<T extends Enum<T> & ISubEnum> extends BlockCore<T> impl
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public   int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 

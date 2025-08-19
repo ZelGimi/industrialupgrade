@@ -44,6 +44,7 @@ import com.denfop.render.rolling.RenderItemRolling;
 import com.denfop.render.sintezator.TileEntitySintezatorRenderer;
 import com.denfop.render.squeezer.TileEntityRenderSqueezer;
 import com.denfop.render.steam.SteamTankBoilerRenderer;
+import com.denfop.render.steam.TileEntityRenderSteamCreativeStorage;
 import com.denfop.render.steam.TileEntityRenderSteamStorage;
 import com.denfop.render.steam_turbine_tank.TileEntityRenderSteamTurbineTank;
 import com.denfop.render.streak.EventSpectralSuitEffect;
@@ -53,6 +54,7 @@ import com.denfop.render.transport.TileEntityCableRenderer;
 import com.denfop.render.water.WaterGeneratorRenderer;
 import com.denfop.render.windgenerator.KineticGeneratorRenderer;
 import com.denfop.tiles.base.*;
+import com.denfop.tiles.creative.TileEntityCreativeSteamStorage;
 import com.denfop.tiles.mechanism.*;
 import com.denfop.tiles.mechanism.steam.TileSteamStorage;
 import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamTankBoiler;
@@ -283,7 +285,7 @@ public class ClientProxy extends CommonProxy {
         BlockEntityRenderers.register((BlockEntityType<? extends TileBaseWaterGenerator>) IUItem.basemachine2.getBlock(BlockBaseMachine3.imp_water_generator).getValue().getBlockType(), WaterGeneratorRenderer::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileBaseWaterGenerator>) IUItem.basemachine2.getBlock(BlockBaseMachine3.per_water_generator).getValue().getBlockType(), WaterGeneratorRenderer::new);
 
-        BlockEntityRenderers.register((BlockEntityType<? extends TileSteamStorage>) IUItem.creativeBlock.getBlock(BlockCreativeBlocks.creative_steam_storage).getValue().getBlockType(), TileEntityRenderSteamStorage::new);
+        BlockEntityRenderers.register((BlockEntityType<? extends TileEntityCreativeSteamStorage>) IUItem.creativeBlock.getBlock(BlockCreativeBlocks.creative_steam_storage).getValue().getBlockType(), TileEntityRenderSteamCreativeStorage::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileEntityLiquedTank>) IUItem.creativeBlock.getBlock(BlockCreativeBlocks.creative_tank_storage).getValue().getBlockType(), TileEntityTankRender::new);
         BlockEntityRenderers.register((BlockEntityType<? extends TileEntityAutoLatexCollector>) IUItem.basemachine2.getBlock(BlockBaseMachine3.auto_latex_collector).getValue().getBlockType(), TileEntityRenderAutoLatexCollector::new);
 

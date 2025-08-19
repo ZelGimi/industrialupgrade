@@ -451,7 +451,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
             return InteractionResultHolder.success(player.getItemInHand(hand));
         } else {
 
-            if (!world.isClientSide && world.dimension() == Level.OVERWORLD) {
+            if (!world.isClientSide) {
                 if (IUCore.keyboard.isChangeKeyDown(player)) {
                     final CompoundTag nbt = ModUtils.nbt(stack);
                     final List<Integer> list1 = Arrays.stream(nbt.getIntArray("list"))

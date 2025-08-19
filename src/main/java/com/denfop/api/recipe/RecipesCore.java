@@ -431,7 +431,10 @@ public class RecipesCore implements IRecipes {
 
         for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
             if (!recipe.require()) {
-
+                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()){
+                    if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid()))
+                        continue;
+                }
                 int[] col = new int[size];
                 int[] col1 = new int[size];
                 List<Integer> lst = new ArrayList<>();
@@ -469,7 +472,10 @@ public class RecipesCore implements IRecipes {
                 }
             } else {
                 List<IInputItemStack> recipeInputList = baseMachineRecipe.input.getInputs();
-
+                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()){
+                    if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid()))
+                        continue;
+                }
                 boolean need = true;
                 for (int i = 0; i < size; i++) {
                     if (!recipeInputList.get(i).matches(list.get(i))) {

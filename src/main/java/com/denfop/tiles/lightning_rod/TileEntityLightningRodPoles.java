@@ -22,7 +22,7 @@ public class TileEntityLightningRodPoles extends TileEntityMultiBlockElement imp
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.lightning_rod.getBlock();
+        return IUItem.lightning_rod.getBlock(getTeBlock());
     }
 
 

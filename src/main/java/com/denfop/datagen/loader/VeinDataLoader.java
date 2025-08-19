@@ -49,7 +49,9 @@ public class VeinDataLoader extends SimpleJsonResourceReloadListener {
                     int chance = GsonHelper.getAsInt(obj, "chance", 100);
                     inputs.add(new ChanceOre(BuiltInRegistries.BLOCK.get(new ResourceLocation(id)).defaultBlockState(), chance,0));
                 }
+
                 JsonArray colorsArray = GsonHelper.getAsJsonArray(json, "colors");
+
                 for (JsonElement e : colorsArray) {
                     JsonObject obj = e.getAsJsonObject();
                     String id = GsonHelper.getAsString(obj, "id");

@@ -62,7 +62,7 @@ public class BlockBasaltHeavyOre<T extends Enum<T> & ISubEnum> extends BlockCore
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public  int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 

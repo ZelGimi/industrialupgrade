@@ -129,7 +129,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
         return List.of(ItemStack.EMPTY);
     }
 
-    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -138,7 +138,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     }
 
 
-    abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
+   public abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
 
-    abstract <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element);
+    public abstract <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element);
 }

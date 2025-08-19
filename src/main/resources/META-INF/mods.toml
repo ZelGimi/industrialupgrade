@@ -3,7 +3,7 @@ loaderVersion="[43,)"
 license="All Rights Reserved"
 [[mods]] 
 modId="industrialupgrade"
-version="3.3.1.11" #mandatory
+version="3.3.1.14" #mandatory
 displayName="Industrial Upgrade" #mandatory
 credits=""
 authors="Denfop"

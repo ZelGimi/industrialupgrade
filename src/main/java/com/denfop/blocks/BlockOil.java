@@ -27,7 +27,7 @@ public class BlockOil<T extends Enum<T> & ISubEnum> extends BlockCore<T> impleme
     }
 
     @Override
-    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
