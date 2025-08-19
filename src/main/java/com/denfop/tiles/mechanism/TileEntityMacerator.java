@@ -333,12 +333,13 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
 
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-
+        this.durability = nbttagcompound.getInt("durability");
 
     }
 
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
+        nbttagcompound.putInt("durability",durability);
         return nbttagcompound;
     }
 

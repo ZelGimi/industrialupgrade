@@ -30,7 +30,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
     private final float power;
     private final int level;
     private final double radiation;
-    double[] p = new double[]{5.0D, 20D, 60D, 200D};
+    double[] p = new double[]{5.0D, 20D, 60D, 200D,500D,1300D};
 
     public ItemBaseRod(int cells, int heat, float power, int level) {
         super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1).setNoRepair(), 1);

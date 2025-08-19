@@ -35,37 +35,39 @@ public class EventAutoQuests {
 
         Map<String, List<String>> map = GuideBookCore.uuidGuideMap.get(event.player.getUUID());
         if (map == null) return;
-        if (tabIndex >= guideTabs.size()) {
-            tabIndex = 0;
-        }
-        GuideTab guideTab = guideTabs.get(tabIndex%guideTabs.size());
-        List<Quest> quests = GuideBookCore.instance.getQuests(tabIndex%guideTabs.size());
+       try {
+           if (tabIndex >= guideTabs.size()) {
+               tabIndex = 0;
+           }
+           GuideTab guideTab = guideTabs.get(tabIndex % guideTabs.size());
+           List<Quest> quests = GuideBookCore.instance.getQuests(tabIndex % guideTabs.size());
 
-        if (questIndex >= quests.size()) {
-            questIndex = 0;
-            tabIndex++;
-            if (tabIndex >= guideTabs.size()) {
-                tabIndex = 0;
-            }
-            return;
-        }
+           if (questIndex >= quests.size()) {
+               questIndex = 0;
+               tabIndex++;
+               if (tabIndex >= guideTabs.size()) {
+                   tabIndex = 0;
+               }
+               return;
+           }
 
-        int processed = 0;
-        while (questIndex < quests.size() && processed < QUESTS_PER_TICK) {
-            Quest quest = quests.get(questIndex% quests.size());
-            questIndex++;
-            List<ItemStack> stacks = mergeStacks(quest.itemStacks);
+           int processed = 0;
+           while (questIndex < quests.size() && processed < QUESTS_PER_TICK) {
+               Quest quest = quests.get(questIndex % quests.size());
+               questIndex++;
+               List<ItemStack> stacks = mergeStacks(quest.itemStacks);
 
-            boolean hasPrev = quest.hasPrev;
-            List<String> completedQuests = map.get(guideTab.unLocalized);
-            boolean isUnlocked = hasPrev && completedQuests.contains(quest.prevName);
-            if (!stacks.isEmpty())
-                if (isComplete(event.player, tabIndex, isUnlocked, stacks, quest)) {
-                    complete(event.player, tabIndex, quest);
-                }
+               boolean hasPrev = quest.hasPrev;
+               List<String> completedQuests = map.get(guideTab.unLocalized);
+               boolean isUnlocked = hasPrev && completedQuests.contains(quest.prevName);
+               if (!stacks.isEmpty())
+                   if (isComplete(event.player, tabIndex, isUnlocked, stacks, quest)) {
+                       complete(event.player, tabIndex, quest);
+                   }
 
-            processed++;
-        }
+               processed++;
+           }
+       }catch ( Exception e){};
     }
 
     private List<ItemStack> mergeStacks(List<ItemStack> input) {

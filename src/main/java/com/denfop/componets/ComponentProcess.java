@@ -278,6 +278,10 @@ public class ComponentProcess extends AbstractComponent {
         } else {
             size = 1;
         }
+        if (this.parent.getLevel().getGameTime() % 20 == 0)
+            if (this.updateTick.getRecipeOutput() != null && this.hasTank && this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null && !this.invSlotRecipes.getTank().isEmpty() && !this.invSlotRecipes.getTank().getFluid().isFluidEqual(this.updateTick.getRecipeOutput().getRecipe().input.getFluid())) {
+                getOutput();
+            }
         updateRecipe();
         energyConsume *= size;
         if (this.updateTick.getRecipeOutput() != null && this.energy.canUseEnergy(energyConsume) && !this.invSlotRecipes.isEmpty() && canAddItemStack() && checkRecipe() && checkExp(

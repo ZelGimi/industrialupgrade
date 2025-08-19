@@ -32,6 +32,7 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -420,7 +421,7 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
 
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+        if (!Keyboard.isKeyDown(InputConstants.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         } else {
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +

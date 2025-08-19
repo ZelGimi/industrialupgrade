@@ -3,20 +3,22 @@ package com.denfop;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.blocks.ItemBlockCore;
 import com.denfop.mixin.access.DeferredRegisterAccessor;
+import com.denfop.register.Register;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
-
-import static com.denfop.register.Register.BLOCKS;
-import static com.denfop.register.Register.ITEMS;
 
 public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends ItemBlockCore> {
     private final Map<T, RegistryObject<E>> block = new ConcurrentHashMap<>();
@@ -24,7 +26,12 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
     private final T[] collections;
     Map<T, RegistryObject<F>> registryObjectList = new ConcurrentHashMap<>();
 
+    public static List<RegistryObject<?>> objects = new LinkedList<>();
+    public static List<RegistryObject<?>> objectsBlock = new LinkedList<>();
     public DataBlock(Class<T> typeClass, Class<E> blockClass, Class<F> itemClass) {
+        this(typeClass,blockClass,itemClass,Register.BLOCKS,Register.ITEMS,Constants.MOD_ID);
+    }
+    public DataBlock(Class<T> typeClass, Class<E> blockClass, Class<F> itemClass, DeferredRegister<Block> BLOCKS, DeferredRegister<Item> ITEMS,String id) {
         T[] collections = typeClass.getEnumConstants();
         T element = collections[0];
         this.collections = collections;
@@ -42,19 +49,19 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
                         }
                     };
 
-                    final ResourceLocation key = new ResourceLocation(IUCore.MODID, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
+                    final ResourceLocation key = new ResourceLocation(id, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
 
-                    RegistryObject<E> ret = RegistryObject.create(key, BLOCKS.getRegistryKey(), IUCore.MODID);
-
+                    RegistryObject<E> ret = RegistryObject.create(key, BLOCKS.getRegistryKey(), id);
+                    objectsBlock.add((RegistryObject<Block>) ret);
                     var entries = ((DeferredRegisterAccessor) BLOCKS).getEntries();
                     if (entries.putIfAbsent(ret, supplier) != null) {
                         throw new IllegalArgumentException("Duplicate registration " + type.getMainPath());
                     }
                     this.block.put(type, ret);
                     if (!type.registerOnlyBlock())
-                        registerBlockItem(type, ret, itemClass);
+                        registerBlockItem(type, ret, itemClass,ITEMS,id);
                     else
-                        registerBlockItem(type, ret, itemClass);
+                        registerBlockItem(type, ret, itemClass,ITEMS,id);
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -63,7 +70,7 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
         }
     }
 
-    private void registerBlockItem(T type, RegistryObject<E> block, Class<F> itemClass) {
+    private void registerBlockItem(T type, RegistryObject<E> block, Class<F> itemClass, DeferredRegister<Item> ITEMS, String id) {
         int indexMax = 0;
         if (!type.register())
             return;
@@ -77,11 +84,12 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
                 }
             };
 
-            final ResourceLocation key = new ResourceLocation(IUCore.MODID, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
+            final ResourceLocation key = new ResourceLocation(id, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
             if (indexMax < type.getId())
                 indexMax = type.getId();
 
-            RegistryObject<F> ret = RegistryObject.create(key, ITEMS.getRegistryKey(), IUCore.MODID);
+            RegistryObject<F> ret = RegistryObject.create(key, ITEMS.getRegistryKey(),id);
+            objects.add(ret);
             var entries = ((DeferredRegisterAccessor) ITEMS).getEntries();
             if (entries.putIfAbsent(ret, supplier) != null) {
                 throw new IllegalArgumentException("Duplicate registration " + type);

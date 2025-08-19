@@ -42,7 +42,21 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     ) {
         super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier);
     }
+    @Override
+    public boolean isServer() {
+        return true;
+    }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())){
+            fluidTank.fill(new FluidStack(FluidName.fluidbiomass.getInstance().get(),  (int)this.buffer.storage-fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
+        }
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())){
+            fluidTank.drain(fluidTank.getFluid().getAmount()- (int)this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
+        }
+    }
     public ComponentBioFuelEnergy(
             EnergyType type, TileEntityInventory parent,
             double capacity,

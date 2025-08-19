@@ -340,9 +340,8 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     player.setItemInHand(hand, stack.getItem().getCraftingRemainingItem(stack));
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                     this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
-                    if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
+                    if (this.inputSlotA.isEmpty()) {
                         this.output = null;
-
                     }
                     if (!level.isClientSide) {
                         if (!this.inputSlotA.get(0).isEmpty()) {

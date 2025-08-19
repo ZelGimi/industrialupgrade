@@ -130,7 +130,8 @@ public class WorldSavedDataIU extends SavedData {
     public WorldSavedDataIU(@Nonnull CompoundTag compound) {
         if (shellClusterChuncks == null)
             shellClusterChuncks = new HashMap<>();
-        shellClusterChuncks.clear();
+        if (shellClusterChuncks != null)
+            shellClusterChuncks.clear();
         if (compound.contains("shells")) {
             loadShellClusterChunks(compound.getCompound("shells"));
         }
