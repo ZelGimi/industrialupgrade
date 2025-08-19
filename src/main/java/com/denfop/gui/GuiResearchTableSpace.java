@@ -755,7 +755,6 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
                 bindTexture(back1);
                 drawTexturedModalRect(poseStack, guiLeft + 30 + 175 / 2 - 102 / 2, guiTop + 210, 0, 105, 102, 20);
                 RenderSystem.disableBlend();
-                drawString(poseStack, guiLeft + 30 + 175 / 2 - 102 / 2 + 102 / 2 - getStringWidth(Localization.translate("iu.space.open")) / 2, 210 + 3, Localization.translate("iu.space.open"), 0xFFFFFFFF);
             }
         }
     }
@@ -1492,7 +1491,23 @@ public class GuiResearchTableSpace<T extends ContainerResearchTableSpace> extend
             if (focusedPlanet != null && par1 >= 30 + 175 / 2 - 102 / 2 && par1 <= 30 + 175 / 2 - 102 / 2 + 102 && par2 >= 210 && par2 <= 210 + 22) {
                 hoverOpen = true;
             }
+            if (focusedPlanet != null) {
+                EnumLevels level = EnumLevels.NONE;
 
+                if (focusedPlanet instanceof IPlanet) {
+                    level = ((IPlanet) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof ISatellite) {
+                    level = ((ISatellite) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof IAsteroid) {
+                    level = ((IAsteroid) focusedPlanet).getLevels();
+                }
+                if (container.base.level != null && container.base.level.ordinal() >= level.ordinal() && level != EnumLevels.NONE && container.base.level != EnumLevels.NONE) {
+
+                    drawCenteredText(poseStack,Localization.translate("iu.space.open"),  30 + 175 / 2, 210 + 5,0, 1, 0xFFFFFFFF);
+                }
+            }
         } else if (mode == 2) {
             if (defaultResearchGuis.isEmpty()) {
                 hoverBack = false;

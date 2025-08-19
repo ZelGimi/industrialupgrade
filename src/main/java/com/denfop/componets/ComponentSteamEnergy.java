@@ -99,6 +99,22 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     }
 
     @Override
+    public boolean isServer() {
+        return true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())){
+            fluidTank.fill(new FluidStack(FluidName.fluidsteam.getInstance().get(),  (int)this.buffer.storage-fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
+        }
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())){
+            fluidTank.drain(fluidTank.getFluid().getAmount()- (int)this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
+        }
+    }
+
+    @Override
     public double addEnergy(final double amount) {
         super.addEnergy(amount);
         if (fluidTank.getFluid().isEmpty() && amount >= 1) {

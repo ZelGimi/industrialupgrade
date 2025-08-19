@@ -3,12 +3,14 @@ package com.denfop;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.blocks.ItemBlockCore;
 import com.denfop.mixin.access.DeferredRegisterAccessor;
+import com.denfop.register.Register;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -18,9 +20,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import static com.denfop.register.Register.BLOCKS;
-import static com.denfop.register.Register.ITEMS;
-
 public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends ItemBlockCore> {
     public static List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
     public static List<DeferredHolder<Block, ?>> objectsBlock = new ArrayList<>();
@@ -28,8 +27,10 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
     private final Map<Integer, T> elementsMeta = new ConcurrentHashMap<>();
     private final T[] collections;
     Map<T, DeferredHolder<Item, F>> registryObjectList = new ConcurrentHashMap<>();
-
     public DataBlock(Class<T> typeClass, Class<E> blockClass, Class<F> itemClass) {
+        this(typeClass,blockClass,itemClass, Register.BLOCKS,Register.ITEMS,Constants.MOD_ID);
+    }
+    public DataBlock(Class<T> typeClass, Class<E> blockClass, Class<F> itemClass, DeferredRegister<Block> BLOCKS, DeferredRegister<Item> ITEMS, String modId) {
         T[] collections = typeClass.getEnumConstants();
         T element = collections[0];
         this.collections = collections;
@@ -47,7 +48,7 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
                         }
                     };
 
-                    final ResourceLocation key = ResourceLocation.tryBuild(IUCore.MODID, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
+                    final ResourceLocation key = ResourceLocation.tryBuild(modId, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
                     DeferredHolder<Block, E> ret = DeferredHolder.create(BLOCKS.getRegistryKey(), key);
                     objectsBlock.add(ret);
                     var entries = ((DeferredRegisterAccessor) BLOCKS).getEntries();
@@ -56,9 +57,9 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
                     }
                     this.block.put(type, ret);
                     if (!type.registerOnlyBlock())
-                        registerBlockItem(type, ret, itemClass);
+                        registerBlockItem(type, ret, itemClass,ITEMS,modId);
                     else
-                        registerBlockItem(type, ret, itemClass);
+                        registerBlockItem(type, ret, itemClass,ITEMS,modId);
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -67,7 +68,9 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
         }
     }
 
-    private void registerBlockItem(T type, DeferredHolder<Block, E> block, Class<F> itemClass) {
+
+
+    private void registerBlockItem(T type, DeferredHolder<Block, E> block, Class<F> itemClass, DeferredRegister<Item> ITEMS, String modId) {
         int indexMax = 0;
         if (!type.register())
             return;
@@ -81,7 +84,7 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
                 }
             };
 
-            final ResourceLocation key = ResourceLocation.tryBuild(IUCore.MODID, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
+            final ResourceLocation key = ResourceLocation.tryBuild(modId, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
             if (indexMax < type.getId())
                 indexMax = type.getId();
 

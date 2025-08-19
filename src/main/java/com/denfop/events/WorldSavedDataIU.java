@@ -49,7 +49,7 @@ public class WorldSavedDataIU extends SavedData {
 
     public WorldSavedDataIU() {
         super();
-        this.readNBT(new CompoundTag(),IUCore.registry == null ? IUCore.registryAccess : IUCore.registry);
+        this.readNBT(new CompoundTag(), IUCore.registry == null ? IUCore.registryAccess : IUCore.registry);
 
     }
 
@@ -147,7 +147,8 @@ public class WorldSavedDataIU extends SavedData {
         SpaceNet.instance.getFakeSpaceSystem().unload();
         if (shellClusterChuncks == null)
             shellClusterChuncks = new HashMap<>();
-        shellClusterChuncks.clear();
+        if (shellClusterChuncks != null)
+            shellClusterChuncks.clear();
         if (compound.contains("shells")) {
 
             loadShellClusterChunks(compound.getCompound("shells"));

@@ -453,7 +453,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
             stack.set(DataComponentsInit.LIST_INTEGER, new ArrayList<>());
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }else {
-        if (!world.isClientSide && world.dimension() == Level.OVERWORLD) {
+        if (!world.isClientSide) {
             if (IUCore.keyboard.isChangeKeyDown(player)) {
                 final List<Integer> list1 =  stack.getOrDefault(DataComponentsInit.LIST_INTEGER, new ArrayList<>());
                 if (!list1.isEmpty()) {

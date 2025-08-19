@@ -894,9 +894,9 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
 
             tileX += tileWidth;
         }
-
-
-        BufferUploader.drawWithShader(buffer.buildOrThrow());
+        try {
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
+        }catch (Exception e){};
     }
 
     public void drawItem(GuiGraphics graphics, int x, int y, ItemStack itemStack) {

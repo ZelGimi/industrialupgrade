@@ -126,15 +126,14 @@ public enum BlockRefractoryFurnace implements IMultiTileBlock {
     @Override
     @Nonnull
     public HarvestTool getHarvestTool() {
-        return HarvestTool.Wrench;
+        return HarvestTool.Pickaxe;
     }
 
     @Override
     @Nonnull
     public DefaultDrop getDefaultDrop() {
-        return DefaultDrop.Machine;
+        return DefaultDrop.Self;
     }
-
     @Override
     public boolean allowWrenchRotating() {
         return true;
