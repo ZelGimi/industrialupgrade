@@ -16,8 +16,6 @@ public interface ITransportTile<T, E> {
 
     List<InfoTile<ITransportTile>> getValidReceivers();
 
-    BlockEntity getTileEntity();
-
     long getIdNetwork();
 
     void setId(long id);

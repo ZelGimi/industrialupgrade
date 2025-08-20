@@ -459,7 +459,7 @@ public class TransportNetLocal {
 
         return emitter.getValidReceivers();
     }
-
+    public int tickUpdate = 0;
     public void onTickEnd() {
         if (!sourceToUpdateList.isEmpty()) {
             for (ITransportSource source : sourceToUpdateList) {
@@ -473,14 +473,30 @@ public class TransportNetLocal {
             }
             delete.clear();
         }
+        if (tickUpdate == 0){
+            tickUpdate = WorldBaseGen.random.nextInt(20*20)+400;
+        }
+        if (this.world.getGameTime() % tickUpdate == 0){
+            tickUpdate = WorldBaseGen.random.nextInt(20*20)+400;
+            for (ITransportTile tile : new ArrayList<>(this.chunkCoordinatesITransportTileMap.values())){
+                if (!(tile instanceof ITransportConductor<?,?>)){
+                    this.removeTile(tile);
+                    this.addTile(new TransportFluidItemSinkSource(this.world.getBlockEntity(tile.getPos()),tile.getPos()));
+                }
+            }
+        }
         try {
             for (TransportTick<ITransportSource, Path> tick : this.senderPath) {
-                if (tick.getSource().getValidReceivers().isEmpty() || tick.getSource().getTiles().isEmpty() || tick
-                        .getSource()
-                        .getTileEntity()
-                        .isRemoved()) {
+                if (tick.getSource().getValidReceivers().isEmpty() || tick.getSource().getTiles().isEmpty()) {
                     delete.add(tick.getSource());
                     continue;
+                }
+                if (this.world.getGameTime() % 40L == 0L) {
+                    BlockEntity entity = world.getBlockEntity(tick.getSource().getPos());
+                    if(entity == null || entity.isRemoved()){
+                        delete.add(tick.getSource());
+                        continue;
+                    }
                 }
                 if (this.world.getGameTime() % 2L == 0L) {
                     if (tick.getSource().isItem()) {

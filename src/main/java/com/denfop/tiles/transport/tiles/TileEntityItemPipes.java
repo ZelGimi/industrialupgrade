@@ -193,11 +193,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         return validReceivers;
     }
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return this;
-    }
-
     public void AddTile(ITransportTile tile, final Direction facing1) {
         if (!this.getWorld().isClientSide) {
             if (!this.energyConductorMap.containsKey(facing1) && ((isOutput() || isInput()) || (!isOutput() && !isInput() && tile instanceof ITransportConductor))) {

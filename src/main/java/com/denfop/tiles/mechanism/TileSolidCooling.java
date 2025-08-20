@@ -219,7 +219,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if ((this.cold.buffer.allow || work) && time > 0) {
+        if ((this.cold.buffer.allow || work) && time >= 0) {
             if (!this.slot.isEmpty()) {
                 for (Map.Entry<ItemStack, Integer> entry : timerItem.entrySet()) {
                     if (entry.getKey().is(this.slot.get(0).getItem())) {
