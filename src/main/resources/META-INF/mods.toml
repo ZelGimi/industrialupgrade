@@ -1,9 +1,9 @@
 modLoader="javafml"
 loaderVersion="[43,)"
-license="All Rights Reserved"
+license="AGPL"
 [[mods]] 
 modId="industrialupgrade"
-version="3.3.1.14" #mandatory
+version="3.3.1.15" #mandatory
 displayName="Industrial Upgrade" #mandatory
 credits=""
 authors="Denfop"

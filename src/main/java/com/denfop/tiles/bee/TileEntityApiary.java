@@ -420,7 +420,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             this.stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
             this.genome = new Genome(stack);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+
         }
         }
     }
@@ -459,7 +459,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         try {
             EncoderHandler.encode(buffer, this.stack);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+
         }
         return buffer;
     }

@@ -15,7 +15,7 @@ import java.util.*;
 public class TransportFluidItemSinkSource implements ITransportSource, ITransportSink {
 
     private final BlockPos pos;
-    private final BlockEntity parent;
+    private final boolean isClientSide;
     Map<Direction, ItemFluidHandler> handlerMap = new HashMap<>();
     Map<Direction, Integer> slotsMap = new HashMap<>();
     Map<Direction, List<Integer>> limitsMap = new HashMap<>();
@@ -36,7 +36,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
             BlockPos pos
     ) {
         int slots1;
-        this.parent = parent;
+        this.isClientSide = parent.getLevel().isClientSide;
         this.pos = pos;
         boolean isItem = false;
         boolean isFluid = false;
@@ -85,7 +85,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     public void RemoveTile(ITransportTile tile, final Direction facing1) {
-        if (!this.parent.getLevel().isClientSide) {
+        if (!isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<ITransportTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
@@ -128,13 +128,8 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         return validReceivers;
     }
 
-    @Override
-    public BlockEntity getTileEntity() {
-        return parent;
-    }
-
     public void AddTile(ITransportTile tile, final Direction facing1) {
-        if (!this.parent.getLevel().isClientSide) {
+        if (!isClientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
