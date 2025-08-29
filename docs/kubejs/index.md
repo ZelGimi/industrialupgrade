@@ -341,8 +341,7 @@ If you add a new machine in your mod and register it under name `"my_custom_mach
     { "type": "item", "id": "minecraft:gold_ingot", "amount": 1 }
   ],
   "params": {
-    "heat":     3000,
-    "unstable": true
+   
   }
 }
 ```
@@ -370,8 +369,7 @@ If you add a new machine in your mod and register it under name `"my_custom_mach
     { "type": "fluid", "id": "industrialupgrade:oil_waste", "amount": 500  }
   ],
   "params": {
-    "pressure":  150.5,
-    "requires":  "high_temperature"
+   
   }
 }
 ```
@@ -380,39 +378,8 @@ If you add a new machine in your mod and register it under name `"my_custom_mach
 * **Outputs:** 2500 mB of `clean_oil` + 500 mB of `oil_waste`.
 * **Note:** Pure fluid recipe must include `isFluidRecipe: true`.
 
-### 4.4. Mixed Alloy Smelter (Items + Fluid → Fluid + Items)
 
-```json
-{
-  "type": "industrialupgrade:universal_recipe",
-  "recipe_type": "alloy_smelter",
-  "isFluidRecipe": true,
-  "inputs": [
-    { "type": "item",  "id": "minecraft:iron_ingot", "amount": 2 },
-    { "type": "item",  "id": "minecraft:gold_ingot", "amount": 1 },
-    { "type": "fluid", "id": "industrialupgrade:molten_copper", "amount": 1000 }
-  ],
-  "outputs": [
-    { "type": "fluid", "id": "industrialupgrade:molten_brass", "amount": 1500 },
-    { "type": "item",  "id": "industrialupgrade:brass_nugget", "amount": 4 }
-  ],
-  "params": {
-    "temperature": 1600,
-    "time":        200,
-    "note":        "pressurized_alloy"
-  }
-}
-```
 
-* **Inputs:** 2× iron ingots, 1× gold ingot, and 1000 mB molten copper.
-* **Outputs:** 1500 mB molten brass + 4× brass nuggets.
-* **Parameters:**
-
-    * `temperature = 1600` (required smelting heat).
-    * `time = 200` (processing duration).
-    * `note = "pressurized_alloy"` (custom string for machine logic).
-
----
 
 ## 5. Tips & Best Practices
 
