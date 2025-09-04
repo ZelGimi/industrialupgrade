@@ -1,18 +1,18 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
-import com.denfop.audio.SoundHandler;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.network.packet.PacketStopSoundPlayer;
+import com.denfop.sound.EnumSound;
+import com.denfop.sound.SoundHandler;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
@@ -54,7 +54,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgradeItem, IProperties {
+public class ItemQuantumSaber extends TieredItem implements EnergyItem, UpgradeItem, IProperties {
     public static int ticker = 0;
     public final int maxCharge;
     public final int transferLimit;
@@ -69,7 +69,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
             int maxCharge,
             int transferLimit, int tier, int activedamage1, int damage
     ) {
-        super(Tiers.DIAMOND,  new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
+        super(Tiers.DIAMOND, new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
         this.soundTicker = 0;
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
@@ -80,6 +80,20 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
         runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list));
 
     }
+
+    private static boolean isActive(ItemStack stack) {
+        CompoundTag nbt = ModUtils.nbt(stack);
+        return isActive(nbt);
+    }
+
+    private static boolean isActive(CompoundTag nbt) {
+        return nbt.getBoolean("active");
+    }
+
+    private static void setActive(CompoundTag nbt, boolean active) {
+        nbt.putBoolean("active", active);
+    }
+
     public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         return !pPlayer.isCreative();
     }
@@ -92,6 +106,7 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
             return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && !pState.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
         }
     }
+
     public boolean isCorrectToolForDrops(BlockState pBlock) {
         return pBlock.is(Blocks.COBWEB);
     }
@@ -100,9 +115,8 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
      * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
      */
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? getAttributeModifiers(EquipmentSlot.MAINHAND,new ItemStack(this)) : super.getDefaultAttributeModifiers(pEquipmentSlot);
+        return pEquipmentSlot == EquipmentSlot.MAINHAND ? getAttributeModifiers(EquipmentSlot.MAINHAND, new ItemStack(this)) : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
-
 
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
@@ -120,18 +134,6 @@ public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgrad
         }
 
         return this.nameItem;
-    }
-    private static boolean isActive(ItemStack stack) {
-        CompoundTag nbt = ModUtils.nbt(stack);
-        return isActive(nbt);
-    }
-
-    private static boolean isActive(CompoundTag nbt) {
-        return nbt.getBoolean("active");
-    }
-
-    private static void setActive(CompoundTag nbt, boolean active) {
-        nbt.putBoolean("active", active);
     }
 
     @Override

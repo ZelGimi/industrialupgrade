@@ -1,7 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -9,8 +8,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -18,10 +15,10 @@ import java.util.List;
 public class SmelteryRecipe implements Recipe<Container> {
     private final ResourceLocation id;
     private final String recipeType;
-    private final  List<FluidStack> inputs;
+    private final List<FluidStack> inputs;
     private final ItemStack stack;
 
-    public SmelteryRecipe(ResourceLocation id,String recipeType, List<FluidStack> fluidStacks, ItemStack stack) {
+    public SmelteryRecipe(ResourceLocation id, String recipeType, List<FluidStack> fluidStacks, ItemStack stack) {
         this.id = id;
         this.recipeType = recipeType;
         this.inputs = fluidStacks;
@@ -37,7 +34,6 @@ public class SmelteryRecipe implements Recipe<Container> {
     public ItemStack assemble(Container pContainer) {
         return ItemStack.EMPTY;
     }
-
 
 
     @Override
@@ -56,7 +52,7 @@ public class SmelteryRecipe implements Recipe<Container> {
         return id;
     }
 
-    public  List<FluidStack> getInputs() {
+    public List<FluidStack> getInputs() {
         return inputs;
     }
 
@@ -67,7 +63,6 @@ public class SmelteryRecipe implements Recipe<Container> {
     public String getRecipeType() {
         return recipeType;
     }
-
 
 
     @Override

@@ -17,7 +17,6 @@ import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 
 import java.util.HashMap;
@@ -290,7 +289,7 @@ public class GeneratorVolcano {
                                     } else {
                                         final boolean remove = blockPosList.remove(pos);
                                         if (!remove) {
-                                            setBlockState1(world, pos,FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(), 3);
+                                            setBlockState1(world, pos, FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(), 3);
                                         }
                                     }
                                 } else {
@@ -321,7 +320,7 @@ public class GeneratorVolcano {
             this.rand = WorldBaseGen.random;
             this.end = false;
             this.chunkPos = new ChunkPos(position2);
-            this.chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.EMPTY, false);
+            this.chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
             this.baseHeight = 80 + rand.nextInt(30);
             this.baseRadius = 35 + rand.nextInt(20);
             this.protrusionChance = 0.05;
@@ -341,12 +340,12 @@ public class GeneratorVolcano {
                 initBasaltsOres();
             }
 
-            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(),position2.getZ());
+            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(), position2.getZ());
             BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
 
             this.position = checkPos.above(maxbaseHeight / 2);
-            if (position.getY() > 60)
-                position = position.below(position.getY()-60);
+            if (position.getY() >= 40)
+                position = position.below(position.getY() - 40);
             this.y = 0;
             this.end = false;
         }

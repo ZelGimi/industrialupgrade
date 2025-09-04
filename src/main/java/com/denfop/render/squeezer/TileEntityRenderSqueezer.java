@@ -1,7 +1,7 @@
 package com.denfop.render.squeezer;
 
+import com.denfop.blockentity.mechanism.BlockEntitySqueezer;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntitySqueezer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntitySqueezer> {
+public class TileEntityRenderSqueezer implements BlockEntityRenderer<BlockEntitySqueezer> {
     private final BlockEntityRendererProvider.Context contex;
 
     public TileEntityRenderSqueezer(BlockEntityRendererProvider.Context p_173636_) {
@@ -19,7 +19,7 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
     }
 
     @Override
-    public void render(TileEntitySqueezer tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntitySqueezer tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         ItemStack itemStack = tile.inputSlotA.get(0);
         ItemRenderer itemRenderer = contex.getItemRenderer();

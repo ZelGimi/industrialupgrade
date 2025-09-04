@@ -35,7 +35,7 @@ public class PacketUpdateCompleteQuest implements IPacket {
         String quest = customPacketBuffer.readString();
         if (entityPlayer.getUUID().equals(uuid)) {
 
-            ExperienceUtils.addPlayerXP(entityPlayer,20);
+            ExperienceUtils.addPlayerXP(entityPlayer, 20);
             GuideBookCore.instance.remove(uuid, tab, quest);
         }
     }

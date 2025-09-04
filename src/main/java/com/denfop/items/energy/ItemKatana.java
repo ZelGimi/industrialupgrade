@@ -1,20 +1,16 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.network.packet.PacketSoundPlayer;
-import com.denfop.utils.ElectricItemManager;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.ModUtils;
+import com.denfop.utils.*;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.Util;
@@ -52,7 +48,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem, IProperties {
+public class ItemKatana extends DiggerItem implements EnergyItem, UpgradeItem, IProperties {
     public final int maxCharge;
     public final int transferLimit;
     public final int tier;
@@ -61,7 +57,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
     private String nameItem;
 
     public ItemKatana() {
-        super(1, 2, Tiers.DIAMOND,  new TagKey<>(Registry.BLOCK_REGISTRY,new ResourceLocation("","block")), new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
+        super(1, 2, Tiers.DIAMOND, new TagKey<>(Registry.BLOCK_REGISTRY, new ResourceLocation("", "block")), new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
         this.soundTicker = 0;
         this.maxCharge = 500000;
         this.transferLimit = 5000;
@@ -70,6 +66,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
         IUCore.proxy.addProperties(this);
         runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list));
     }
+
     public boolean isBarVisible(final ItemStack stack) {
         return true;
     }
@@ -88,6 +85,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
                 1.0
         ));
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -105,6 +103,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
 
         return this.nameItem;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {

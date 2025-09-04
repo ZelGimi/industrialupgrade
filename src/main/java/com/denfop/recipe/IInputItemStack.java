@@ -16,7 +16,9 @@ public interface IInputItemStack {
     int getAmount();
 
     List<ItemStack> getInputs();
+
     CompoundTag writeNBT();
+
     boolean hasTag();
 
     TagKey<Item> getTag();

@@ -1,12 +1,12 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.BlockEntityTesseract;
+import com.denfop.blockentity.mechanism.BlockEntitySafe;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileEntityTesseract;
-import com.denfop.tiles.mechanism.TileEntitySafe;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +29,7 @@ public class ComponentPrivate extends AbstractComponent {
     private final List<UUID> playersUUID = new ArrayList<>();
     boolean activate = false;
 
-    public ComponentPrivate(final TileEntityInventory parent) {
+    public ComponentPrivate(final BlockEntityInventory parent) {
         super(parent);
     }
 
@@ -43,11 +43,12 @@ public class ComponentPrivate extends AbstractComponent {
 
         return null;
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.playersUUID.isEmpty()){
-            playersUUID.add( UUID.randomUUID());
+        if (this.playersUUID.isEmpty()) {
+            playersUUID.add(UUID.randomUUID());
         }
     }
 
@@ -55,6 +56,7 @@ public class ComponentPrivate extends AbstractComponent {
     public boolean isServer() {
         return true;
     }
+
     @Override
     public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         super.onBlockActivated(player, hand);
@@ -113,8 +115,8 @@ public class ComponentPrivate extends AbstractComponent {
     @Override
     public boolean canUsePurifier(final Player player) {
         return
-              !(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe) &&
-                this.activate && (this.players.contains(
+                !(this.parent instanceof BlockEntityTesseract || parent instanceof BlockEntitySafe) &&
+                        this.activate && (this.players.contains(
                         player.getName().getString()) || player.isCreative());
     }
 
@@ -133,9 +135,9 @@ public class ComponentPrivate extends AbstractComponent {
     public List<ItemStack> getDrops() {
         final List<ItemStack> ret = super.getDrops();
         if (this.activate) {
-             if (!(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe)) {
-            ret.add(new ItemStack(IUItem.module7.getItemFromMeta(0)));
-              }
+            if (!(this.parent instanceof BlockEntityTesseract || parent instanceof BlockEntitySafe)) {
+                ret.add(new ItemStack(IUItem.module7.getItemFromMeta(0)));
+            }
         }
         return ret;
     }

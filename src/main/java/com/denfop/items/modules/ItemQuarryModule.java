@@ -1,9 +1,9 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;

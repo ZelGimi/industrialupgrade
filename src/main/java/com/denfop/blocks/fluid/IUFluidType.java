@@ -25,6 +25,7 @@ public class IUFluidType extends FluidType {
     public int getLightLevel() {
         return fluidName != null && fluidName == FluidName.fluidpahoehoe_lava ? 15 : super.getLightLevel();
     }
+
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {

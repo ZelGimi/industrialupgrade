@@ -54,7 +54,7 @@ public class ItemBlockCore<T extends Enum<T> & ISubEnum> extends BlockItem {
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
-            String targetString = "industrialupgrade."+getElement().getMainPath()+".";
+            String targetString = "industrialupgrade." + getElement().getMainPath() + ".";
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);

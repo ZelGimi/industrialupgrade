@@ -1,17 +1,24 @@
 package com.denfop;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropInit;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.cool.CoolNet;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.crop.Crop;
+import com.denfop.api.crop.CropInit;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
 import com.denfop.api.guidebook.GuideBookCore;
-import com.denfop.api.heat.HeatNet;
+import com.denfop.api.item.upgrade.BaseUpgradeSystem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
 import com.denfop.api.multiblock.MultiBlockSystem;
+import com.denfop.api.otherenergies.common.EnergyBase;
+import com.denfop.api.otherenergies.cool.CoolNet;
+import com.denfop.api.otherenergies.cool.CoolNetGlobal;
+import com.denfop.api.otherenergies.heat.HeatNet;
+import com.denfop.api.otherenergies.heat.HeatNetGlobal;
+import com.denfop.api.otherenergies.pressure.PressureNet;
+import com.denfop.api.otherenergies.pressure.PressureNetGlobal;
+import com.denfop.api.otherenergies.transport.TransportNetGlobal;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.pressure.PressureNet;
-import com.denfop.api.radiationsystem.RadiationSystem;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.recipe.*;
 import com.denfop.api.solar.SolarEnergySystem;
 import com.denfop.api.space.BaseSpaceSystem;
@@ -20,23 +27,24 @@ import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.tesseract.TesseractSystem;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.transport.TransportNetGlobal;
-import com.denfop.api.upgrade.BaseUpgradeSystem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.vein.VeinSystem;
+import com.denfop.api.vein.common.VeinSystem;
+import com.denfop.api.vein.gas.GasVeinSystem;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
+import com.denfop.blockentity.base.IManufacturerBlock;
+import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
+import com.denfop.blockentity.mechanism.BlockEntitySolidCooling;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
+import com.denfop.blockentity.mechanism.quarry.QuarryItem;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;
-import com.denfop.cool.CoolNetGlobal;
+import com.denfop.config.ModConfig;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.datagen.itemtag.ItemTagProvider;
 import com.denfop.entity.SmallBee;
 import com.denfop.events.*;
-import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.one_probe.RegisterProvider;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.energy.EntityAdvArrow;
@@ -49,7 +57,6 @@ import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
 import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
 import com.denfop.network.packet.PacketUpdateRelocator;
-import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.ClientProxy;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.recipe.IInputHandler;
@@ -59,17 +66,9 @@ import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.tabs.TabCore;
-import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.mechanism.EnumTypeMachines;
-import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import com.denfop.tiles.mechanism.TileSolidCooling;
-import com.denfop.tiles.mechanism.quarry.QuarryItem;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.utils.*;
 import com.denfop.villager.TradingSystem;
 import com.denfop.world.WorldBaseGen;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -87,7 +86,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.*;
@@ -114,13 +112,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 import static com.denfop.api.Recipes.inputFactory;
@@ -174,6 +169,7 @@ public class IUCore {
 
     public static final List<ItemStack> get_polisher = new ArrayList<>();
     public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
+    public static final Map<String, LootTable> lootTables = new HashMap<>();
     public static Sides<NetworkManager> network;
     public static Random random = new Random();
     public static RandomSource randomSource = new LegacyRandomSource(random.nextLong());
@@ -181,11 +177,12 @@ public class IUCore {
     public static FMLJavaModLoadingContext context;
     public static List<Runnable> runnableListAfterRegisterItem = new ArrayList<>();
     public static boolean update = false;
+    public static IUCore instance;
+    public static Map<Item, Crop> cropMap = new HashMap<>();
     static List<String> stringList = new ArrayList<>();
     static boolean change = false;
     static boolean register = false;
     static boolean register1 = false;
-    public static IUCore instance;
 
     static {
         proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
@@ -228,16 +225,60 @@ public class IUCore {
         MinecraftForge.EVENT_BUS.register(this);
 
     }
+
+    public static void addrecipe(
+            ItemStack stack,
+            double matter,
+            double sunmatter,
+            double aquamatter,
+            double nethermatter,
+            double nightmatter,
+            double earthmatter,
+            double endmatter,
+            double aermatter
+    ) {
+        CompoundTag nbt = new CompoundTag();
+        double[] quantitysolid = {Precision.round(matter, 2),
+                Precision.round(sunmatter, 2), Precision.round(aquamatter, 2),
+                Precision.round(nethermatter, 2), Precision.round(nightmatter, 2),
+                Precision.round(earthmatter, 2),
+                Precision.round(endmatter, 2), Precision.round(aermatter, 2)};
+        for (int i = 0; i < quantitysolid.length; i++) {
+            ModUtils.SetDoubleWithoutItem(nbt, ("quantitysolid_" + i), quantitysolid[i]);
+        }
+        final IInputHandler input = inputFactory;
+        if (stack.isEmpty()) {
+            return;
+        }
+        List<TagKey<Item>> list1 = stack.getItem().builtInRegistryHolder().tags().toList();
+        if (list1.isEmpty()) {
+            Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(new Input(input.getInput(stack)), new RecipeOutput(
+                    nbt,
+                    stack
+            )));
+        } else {
+            Recipes.recipes.addRecipe(
+                    "converter",
+                    new BaseMachineRecipe(new Input(input.getInput(list1)), new RecipeOutput(
+                            nbt,
+                            stack
+                    ))
+            );
+        }
+
+    }
+
     @SubscribeEvent
     public void onAttributeCreate(EntityAttributeCreationEvent event) {
         event.put(IUItem.entity_bee.get(), SmallBee.createAttributes().build());
     }
+
     public void registerData(Level level) {
         if (!register1) {
             register1 = true;
             ListInformationUtils.init();
-            List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
-            for (IMultiTileBlock tileBlock : tiles)
+            List<MultiBlockEntity> tiles = TileBlockCreator.instance.getAllTiles();
+            for (MultiBlockEntity tileBlock : tiles)
 
                 if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
                     if (!mechanism_info1.containsKey(tileBlock)) {
@@ -431,50 +472,6 @@ public class IUCore {
         }
     }
 
-    public static void addrecipe(
-            ItemStack stack,
-            double matter,
-            double sunmatter,
-            double aquamatter,
-            double nethermatter,
-            double nightmatter,
-            double earthmatter,
-            double endmatter,
-            double aermatter
-    ) {
-        CompoundTag nbt = new CompoundTag();
-        double[] quantitysolid = {Precision.round(matter, 2),
-                Precision.round(sunmatter, 2), Precision.round(aquamatter, 2),
-                Precision.round(nethermatter, 2), Precision.round(nightmatter, 2),
-                Precision.round(earthmatter, 2),
-                Precision.round(endmatter, 2), Precision.round(aermatter, 2)};
-        for (int i = 0; i < quantitysolid.length; i++) {
-            ModUtils.SetDoubleWithoutItem(nbt, ("quantitysolid_" + i), quantitysolid[i]);
-        }
-        final IInputHandler input = inputFactory;
-        if (stack.isEmpty()) {
-            return;
-        }
-        List<TagKey<Item>> list1 = stack.getItem().builtInRegistryHolder().tags().toList();
-        if (list1.isEmpty()) {
-            Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(new Input(input.getInput(stack)), new RecipeOutput(
-                    nbt,
-                    stack
-            )));
-        } else {
-            Recipes.recipes.addRecipe(
-                    "converter",
-                    new BaseMachineRecipe(new Input(input.getInput(list1)), new RecipeOutput(
-                            nbt,
-                            stack
-                    ))
-            );
-        }
-
-    }
-
-    public static final Map<String, LootTable> lootTables = new HashMap<>();
-
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
@@ -507,7 +504,6 @@ public class IUCore {
         }
     }
 
-
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.getEntity().getLevel().isClientSide()) {
@@ -533,19 +529,19 @@ public class IUCore {
 
         EnumTypeMachines.writeSound();
     }
-    public static Map<Item, ICrop> cropMap = new HashMap<>();
+
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
-        cropMap.put(Items.WHEAT_SEEDS,CropInit.wheat_seed);
-        cropMap.put(Items.SUGAR_CANE,CropInit.reed_seed);
-        cropMap.put(Items.POTATO,CropInit.potato);
-        cropMap.put(Items.CARROT,CropInit.carrot);
-        cropMap.put(Items.MELON_SEEDS,CropInit.melon);
-        cropMap.put(Items.PUMPKIN_SEEDS,CropInit.pumpkin);
-        cropMap.put(Items.MELON,CropInit.melon);
-        cropMap.put(Items.PUMPKIN,CropInit.pumpkin);
-        cropMap.put(Items.BEETROOT,CropInit.beet);
-        cropMap.put(Items.NETHER_WART,CropInit.nether_wart);
+        cropMap.put(Items.WHEAT_SEEDS, CropInit.wheat_seed);
+        cropMap.put(Items.SUGAR_CANE, CropInit.reed_seed);
+        cropMap.put(Items.POTATO, CropInit.potato);
+        cropMap.put(Items.CARROT, CropInit.carrot);
+        cropMap.put(Items.MELON_SEEDS, CropInit.melon);
+        cropMap.put(Items.PUMPKIN_SEEDS, CropInit.pumpkin);
+        cropMap.put(Items.MELON, CropInit.melon);
+        cropMap.put(Items.PUMPKIN, CropInit.pumpkin);
+        cropMap.put(Items.BEETROOT, CropInit.beet);
+        cropMap.put(Items.NETHER_WART, CropInit.nether_wart);
         proxy.postInit();
         new GuideBookCore();
         GuideBookCore.init();
@@ -553,7 +549,7 @@ public class IUCore {
             Item item = iItemTag.getItem();
             String[] stringTags = iItemTag.getTags();
             for (String stringTag : stringTags) {
-                ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag),k -> new ArrayList<>()).add(new ItemStack(item));
+                ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag), k -> new ArrayList<>()).add(new ItemStack(item));
             }
         }
         addIngot("Lithium", IUItem.crafting_elements.getStack(447));
@@ -564,7 +560,7 @@ public class IUCore {
         addPlate("Bor", IUItem.crafting_elements.getStack(451));
         addPlate("Beryllium", IUItem.crafting_elements.getStack(452));
         addPlateDense("Beryllium", IUItem.crafting_elements.getStack(452));
-        if ( IUItem.machine == null)
+        if (IUItem.machine == null)
             Register.writeItems();
         addCustom("machineBlock", IUItem.machine.getItem());
         addCustom("machineBlockCasing", IUItem.machine.getItem());
@@ -597,8 +593,8 @@ public class IUCore {
         addGem("coal", Items.COAL);
         addGem("quarts", Items.QUARTZ);
         addCustomMinecraft("wool", Blocks.WHITE_WOOL.asItem());
-        addCustom("string",Items.STRING);
-        addCustomMinecraft("saplings",Blocks.OAK_SAPLING.asItem());
+        addCustom("string", Items.STRING);
+        addCustomMinecraft("saplings", Blocks.OAK_SAPLING.asItem());
         addRawMaterials("gold", Items.GOLD_INGOT);
         addRawMaterials("iron", Items.IRON_INGOT);
         addRawMaterials("copper", Items.COPPER_INGOT);
@@ -606,38 +602,42 @@ public class IUCore {
         addStorageBlocks("iron", Blocks.IRON_BLOCK.asItem());
         addStorageBlocks("copper", Blocks.COPPER_BLOCK.asItem());
         addStorageBlocks("coal", Blocks.COAL_BLOCK.asItem());
-        addCustomMinecraft("leaves",Blocks.OAK_LEAVES.asItem());
+        addCustomMinecraft("leaves", Blocks.OAK_LEAVES.asItem());
         addStorageBlocks("lapis", Blocks.LAPIS_BLOCK.asItem());
         fluidToLevel.put(FluidName.fluidhydrazine.getInstance().get(), 1);
         fluidToLevel.put(FluidName.fluiddimethylhydrazine.getInstance().get(), 2);
         fluidToLevel.put(FluidName.fluiddecane.getInstance().get(), 3);
         fluidToLevel.put(FluidName.fluidxenon.getInstance().get(), 4);
     }
+
     public void addRawMaterials(String tag, Item item) {
         String[] stringTags = new String[]{"forge:raw_materials/" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new  ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
+
     public void addStorageBlocks(String tag, Item item) {
         String[] stringTags = new String[]{"forge:storage_blocks/" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new  ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
+
     public void addCustomMinecraft(String tag, Item item) {
         String[] stringTags = new String[]{"minecraft:" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new  ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
+
     public void addCustom(String tag, Item item) {
         String[] stringTags = new String[]{"forge:" + tag};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -645,7 +645,7 @@ public class IUCore {
     public void addPlate(String tag, Item item) {
         String[] stringTags = new String[]{"forge:plates/" + tag, "forge:plates"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -653,7 +653,7 @@ public class IUCore {
     public void addPlateDense(String tag, Item item) {
         String[] stringTags = new String[]{"forge:platedense/" + tag, "forge:platedense"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -661,7 +661,7 @@ public class IUCore {
     public void addIngot(String tag, Item item) {
         String[] stringTags = new String[]{"forge:ingots/" + tag, "forge:ingots"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -669,7 +669,7 @@ public class IUCore {
     public void addDust(String tag, Item item) {
         String[] stringTags = new String[]{"forge:dusts/" + tag, "forge:dusts"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -677,7 +677,7 @@ public class IUCore {
     public void addCasing(String tag, Item item) {
         String[] stringTags = new String[]{"forge:casings/" + tag, "forge:casings"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent( new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
@@ -685,11 +685,10 @@ public class IUCore {
     public void addGem(String tag, Item item) {
         String[] stringTags = new String[]{"forge:gems/" + tag, "forge:gems"};
         for (String stringTag : stringTags) {
-            ItemTagProvider.mapItems.computeIfAbsent( new ResourceLocation(stringTag.toLowerCase()),k -> new ArrayList<>()).add(new ItemStack(item));
+            ItemTagProvider.mapItems.computeIfAbsent(new ResourceLocation(stringTag.toLowerCase()), k -> new ArrayList<>()).add(new ItemStack(item));
 
         }
     }
-
 
 
     @SubscribeEvent
@@ -990,18 +989,19 @@ public class IUCore {
         if (event.getEntity().getLevel().isClientSide) {
             return;
         }
-        if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())){
-            GuideBookCore.instance.load(event.getEntity().getUUID(),event.getEntity());
+        if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())) {
+            GuideBookCore.instance.load(event.getEntity().getUUID(), event.getEntity());
             event.getEntity().addItem(new ItemStack(IUItem.book.getItem()));
             event.getEntity().addItem(new ItemStack(IUItem.veinsencor.getStack(0)));
-        }else{
+        } else {
             GuideBookCore.instance.loadOrThrow(event.getEntity().getUUID());
-            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()),event.getEntity());
+            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()), event.getEntity());
         }
 
         new PacketUpdateRelocator(event.getEntity());
 
     }
+
     @SubscribeEvent
     public void onServerStarting(ServerStartedEvent event) {
         registerData(event.getServer().overworld());
@@ -1020,8 +1020,8 @@ public class IUCore {
             ReplicatorRecipe.init();
             CentrifugeRecipe.init();
             MetalFormerRecipe.init();
-            TileEntityPalletGenerator.init();
-            TileSolidCooling.init();
+            BlockEntityPalletGenerator.init();
+            BlockEntitySolidCooling.init();
             SpaceInit.jsonInit();
             BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
             IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
@@ -1092,7 +1092,6 @@ public class IUCore {
                     }
                 }
             }
-
 
 
         }

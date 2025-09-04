@@ -2,50 +2,50 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.reactors.graphite.capacitor.BlockEntityAdvCapacitor;
+import com.denfop.blockentity.reactors.graphite.capacitor.BlockEntityImpCapacitor;
+import com.denfop.blockentity.reactors.graphite.capacitor.BlockEntityPerCapacitor;
+import com.denfop.blockentity.reactors.graphite.capacitor.BlockEntitySimpleCapacitor;
+import com.denfop.blockentity.reactors.graphite.casing.BlockEntityAdvCasing;
+import com.denfop.blockentity.reactors.graphite.casing.BlockEntityImpCasing;
+import com.denfop.blockentity.reactors.graphite.casing.BlockEntityPerCasing;
+import com.denfop.blockentity.reactors.graphite.casing.BlockEntitySimpleCasing;
+import com.denfop.blockentity.reactors.graphite.chamber.BlockEntityAdvChamber;
+import com.denfop.blockentity.reactors.graphite.chamber.BlockEntityImpChamber;
+import com.denfop.blockentity.reactors.graphite.chamber.BlockEntityPerChamber;
+import com.denfop.blockentity.reactors.graphite.chamber.BlockEntitySimpleChamber;
+import com.denfop.blockentity.reactors.graphite.controller.BlockEntityAdvController;
+import com.denfop.blockentity.reactors.graphite.controller.BlockEntityImpController;
+import com.denfop.blockentity.reactors.graphite.controller.BlockEntityPerController;
+import com.denfop.blockentity.reactors.graphite.controller.BlockEntitySimpleController;
+import com.denfop.blockentity.reactors.graphite.cooling.BlockEntityAdvCooling;
+import com.denfop.blockentity.reactors.graphite.cooling.BlockEntityImpCooling;
+import com.denfop.blockentity.reactors.graphite.cooling.BlockEntityPerCooling;
+import com.denfop.blockentity.reactors.graphite.cooling.BlockEntitySimpleCooling;
+import com.denfop.blockentity.reactors.graphite.exchanger.BlockEntityAdvExchanger;
+import com.denfop.blockentity.reactors.graphite.exchanger.BlockEntityImpExchanger;
+import com.denfop.blockentity.reactors.graphite.exchanger.BlockEntityPerExchanger;
+import com.denfop.blockentity.reactors.graphite.exchanger.BlockEntitySimpleExchanger;
+import com.denfop.blockentity.reactors.graphite.graphite_controller.BlockEntityAdvGraphiteController;
+import com.denfop.blockentity.reactors.graphite.graphite_controller.BlockEntityImpGraphiteController;
+import com.denfop.blockentity.reactors.graphite.graphite_controller.BlockEntityPerGraphiteController;
+import com.denfop.blockentity.reactors.graphite.graphite_controller.BlockEntitySimpleGraphiteController;
+import com.denfop.blockentity.reactors.graphite.reactor.BlockEntityAdvReactor;
+import com.denfop.blockentity.reactors.graphite.reactor.BlockEntityImpReactor;
+import com.denfop.blockentity.reactors.graphite.reactor.BlockEntityPerReactor;
+import com.denfop.blockentity.reactors.graphite.reactor.BlockEntitySimpleReactor;
+import com.denfop.blockentity.reactors.graphite.socket.BlockEntityAdvSocket;
+import com.denfop.blockentity.reactors.graphite.socket.BlockEntityImpSocket;
+import com.denfop.blockentity.reactors.graphite.socket.BlockEntityPerSocket;
+import com.denfop.blockentity.reactors.graphite.socket.BlockEntitySimpleSocket;
+import com.denfop.blockentity.reactors.graphite.tank.BlockEntityAdvTank;
+import com.denfop.blockentity.reactors.graphite.tank.BlockEntityImpTank;
+import com.denfop.blockentity.reactors.graphite.tank.BlockEntityPerTank;
+import com.denfop.blockentity.reactors.graphite.tank.BlockEntitySimpleTank;
 import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.blocks.state.HarvestTool;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.reactors.graphite.capacitor.TileEntityAdvCapacitor;
-import com.denfop.tiles.reactors.graphite.capacitor.TileEntityImpCapacitor;
-import com.denfop.tiles.reactors.graphite.capacitor.TileEntityPerCapacitor;
-import com.denfop.tiles.reactors.graphite.capacitor.TileEntitySimpleCapacitor;
-import com.denfop.tiles.reactors.graphite.casing.TileEntityAdvCasing;
-import com.denfop.tiles.reactors.graphite.casing.TileEntityImpCasing;
-import com.denfop.tiles.reactors.graphite.casing.TileEntityPerCasing;
-import com.denfop.tiles.reactors.graphite.casing.TileEntitySimpleCasing;
-import com.denfop.tiles.reactors.graphite.chamber.TileEntityAdvChamber;
-import com.denfop.tiles.reactors.graphite.chamber.TileEntityImpChamber;
-import com.denfop.tiles.reactors.graphite.chamber.TileEntityPerChamber;
-import com.denfop.tiles.reactors.graphite.chamber.TileEntitySimpleChamber;
-import com.denfop.tiles.reactors.graphite.controller.TileEntityAdvController;
-import com.denfop.tiles.reactors.graphite.controller.TileEntityImpController;
-import com.denfop.tiles.reactors.graphite.controller.TileEntityPerController;
-import com.denfop.tiles.reactors.graphite.controller.TileEntitySimpleController;
-import com.denfop.tiles.reactors.graphite.cooling.TileEntityAdvCooling;
-import com.denfop.tiles.reactors.graphite.cooling.TileEntityImpCooling;
-import com.denfop.tiles.reactors.graphite.cooling.TileEntityPerCooling;
-import com.denfop.tiles.reactors.graphite.cooling.TileEntitySimpleCooling;
-import com.denfop.tiles.reactors.graphite.exchanger.TileEntityAdvExchanger;
-import com.denfop.tiles.reactors.graphite.exchanger.TileEntityImpExchanger;
-import com.denfop.tiles.reactors.graphite.exchanger.TileEntityPerExchanger;
-import com.denfop.tiles.reactors.graphite.exchanger.TileEntitySimpleExchanger;
-import com.denfop.tiles.reactors.graphite.graphite_controller.TileEntityAdvGraphiteController;
-import com.denfop.tiles.reactors.graphite.graphite_controller.TileEntityImpGraphiteController;
-import com.denfop.tiles.reactors.graphite.graphite_controller.TileEntityPerGraphiteController;
-import com.denfop.tiles.reactors.graphite.graphite_controller.TileEntitySimpleGraphiteController;
-import com.denfop.tiles.reactors.graphite.reactor.TileEntityAdvReactor;
-import com.denfop.tiles.reactors.graphite.reactor.TileEntityImpReactor;
-import com.denfop.tiles.reactors.graphite.reactor.TileEntityPerReactor;
-import com.denfop.tiles.reactors.graphite.reactor.TileEntitySimpleReactor;
-import com.denfop.tiles.reactors.graphite.socket.TileEntityAdvSocket;
-import com.denfop.tiles.reactors.graphite.socket.TileEntityImpSocket;
-import com.denfop.tiles.reactors.graphite.socket.TileEntityPerSocket;
-import com.denfop.tiles.reactors.graphite.socket.TileEntitySimpleSocket;
-import com.denfop.tiles.reactors.graphite.tank.TileEntityAdvTank;
-import com.denfop.tiles.reactors.graphite.tank.TileEntityImpTank;
-import com.denfop.tiles.reactors.graphite.tank.TileEntityPerTank;
-import com.denfop.tiles.reactors.graphite.tank.TileEntitySimpleTank;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,70 +61,70 @@ import net.minecraftforge.registries.RegistryObject;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlocksGraphiteReactors implements IMultiTileBlock {
+public enum BlocksGraphiteReactors implements MultiBlockEntity {
 
 
-    graphite_controller(TileEntitySimpleController.class, 0),
-    graphite_adv_controller(TileEntityAdvController.class, 1),
-    graphite_imp_controller(TileEntityImpController.class, 2),
-    graphite_per_controller(TileEntityPerController.class, 3),
-    graphite_graphite_controller(TileEntitySimpleGraphiteController.class, 4),
-    graphite_adv_graphite_controller(TileEntityAdvGraphiteController.class, 5),
-    graphite_imp_graphite_controller(TileEntityImpGraphiteController.class, 6),
-    graphite_per_graphite_controller(TileEntityPerGraphiteController.class, 7),
-    graphite_exchanger(TileEntitySimpleExchanger.class, 8),
-    graphite_adv_exchanger(TileEntityAdvExchanger.class, 9),
-    graphite_imp_exchanger(TileEntityImpExchanger.class, 10),
-    graphite_per_exchanger(TileEntityPerExchanger.class, 11),
-    graphite_chamber(TileEntitySimpleChamber.class, 12),
-    graphite_adv_chamber(TileEntityAdvChamber.class, 13),
-    graphite_imp_chamber(TileEntityImpChamber.class, 14),
-    graphite_per_chamber(TileEntityPerChamber.class, 15),
-    graphite_tank(TileEntitySimpleTank.class, 16),
-    graphite_adv_tank(TileEntityAdvTank.class, 17),
-    graphite_imp_tank(TileEntityImpTank.class, 18),
-    graphite_per_tank(TileEntityPerTank.class, 19),
-    graphite_reactor(TileEntitySimpleReactor.class, 20),
-    graphite_adv_reactor(TileEntityAdvReactor.class, 21),
-    graphite_imp_reactor(TileEntityImpReactor.class, 22),
-    graphite_per_reactor(TileEntityPerReactor.class, 23),
-    graphite_casing(TileEntitySimpleCasing.class, 24),
-    graphite_adv_casing(TileEntityAdvCasing.class, 25),
-    graphite_imp_casing(TileEntityImpCasing.class, 26),
-    graphite_per_casing(TileEntityPerCasing.class, 27),
-    graphite_capacitor(TileEntitySimpleCapacitor.class, 28),
-    graphite_adv_capacitor(TileEntityAdvCapacitor.class, 29),
-    graphite_imp_capacitor(TileEntityImpCapacitor.class, 30),
-    graphite_per_capacitor(TileEntityPerCapacitor.class, 31),
-    graphite_socket(TileEntitySimpleSocket.class, 32),
-    graphite_adv_socket(TileEntityAdvSocket.class, 33),
-    graphite_imp_socket(TileEntityImpSocket.class, 34),
-    graphite_per_socket(TileEntityPerSocket.class, 35),
-    graphite_cooling(TileEntitySimpleCooling.class, 36),
-    graphite_adv_cooling(TileEntityAdvCooling.class, 37),
-    graphite_imp_cooling(TileEntityImpCooling.class, 38),
-    graphite_per_cooling(TileEntityPerCooling.class, 39),
+    graphite_controller(BlockEntitySimpleController.class, 0),
+    graphite_adv_controller(BlockEntityAdvController.class, 1),
+    graphite_imp_controller(BlockEntityImpController.class, 2),
+    graphite_per_controller(BlockEntityPerController.class, 3),
+    graphite_graphite_controller(BlockEntitySimpleGraphiteController.class, 4),
+    graphite_adv_graphite_controller(BlockEntityAdvGraphiteController.class, 5),
+    graphite_imp_graphite_controller(BlockEntityImpGraphiteController.class, 6),
+    graphite_per_graphite_controller(BlockEntityPerGraphiteController.class, 7),
+    graphite_exchanger(BlockEntitySimpleExchanger.class, 8),
+    graphite_adv_exchanger(BlockEntityAdvExchanger.class, 9),
+    graphite_imp_exchanger(BlockEntityImpExchanger.class, 10),
+    graphite_per_exchanger(BlockEntityPerExchanger.class, 11),
+    graphite_chamber(BlockEntitySimpleChamber.class, 12),
+    graphite_adv_chamber(BlockEntityAdvChamber.class, 13),
+    graphite_imp_chamber(BlockEntityImpChamber.class, 14),
+    graphite_per_chamber(BlockEntityPerChamber.class, 15),
+    graphite_tank(BlockEntitySimpleTank.class, 16),
+    graphite_adv_tank(BlockEntityAdvTank.class, 17),
+    graphite_imp_tank(BlockEntityImpTank.class, 18),
+    graphite_per_tank(BlockEntityPerTank.class, 19),
+    graphite_reactor(BlockEntitySimpleReactor.class, 20),
+    graphite_adv_reactor(BlockEntityAdvReactor.class, 21),
+    graphite_imp_reactor(BlockEntityImpReactor.class, 22),
+    graphite_per_reactor(BlockEntityPerReactor.class, 23),
+    graphite_casing(BlockEntitySimpleCasing.class, 24),
+    graphite_adv_casing(BlockEntityAdvCasing.class, 25),
+    graphite_imp_casing(BlockEntityImpCasing.class, 26),
+    graphite_per_casing(BlockEntityPerCasing.class, 27),
+    graphite_capacitor(BlockEntitySimpleCapacitor.class, 28),
+    graphite_adv_capacitor(BlockEntityAdvCapacitor.class, 29),
+    graphite_imp_capacitor(BlockEntityImpCapacitor.class, 30),
+    graphite_per_capacitor(BlockEntityPerCapacitor.class, 31),
+    graphite_socket(BlockEntitySimpleSocket.class, 32),
+    graphite_adv_socket(BlockEntityAdvSocket.class, 33),
+    graphite_imp_socket(BlockEntityImpSocket.class, 34),
+    graphite_per_socket(BlockEntityPerSocket.class, 35),
+    graphite_cooling(BlockEntitySimpleCooling.class, 36),
+    graphite_adv_cooling(BlockEntityAdvCooling.class, 37),
+    graphite_imp_cooling(BlockEntityImpCooling.class, 38),
+    graphite_per_cooling(BlockEntityPerCooling.class, 39),
     ;
 
 
-    private final Class<? extends TileEntityBlock> teClass;
+    private final Class<? extends BlockEntityBase> teClass;
     private final int itemMeta;
     private final Rarity rarity;
     int idBlock;
-    private TileEntityBlock dummyTe;
+    private BlockEntityBase dummyTe;
     private BlockState defaultState;
-    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+    private RegistryObject<BlockEntityType<? extends BlockEntityBase>> blockType;
 
     ;
 
-    BlocksGraphiteReactors(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
+    BlocksGraphiteReactors(final Class<? extends BlockEntityBase> teClass, final int itemMeta) {
         this(teClass, itemMeta, Rarity.UNCOMMON);
 
     }
 
     ;
 
-    BlocksGraphiteReactors(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final Rarity rarity) {
+    BlocksGraphiteReactors(final Class<? extends BlockEntityBase> teClass, final int itemMeta, final Rarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
         this.rarity = rarity;
@@ -157,7 +157,7 @@ public enum BlocksGraphiteReactors implements IMultiTileBlock {
         }
         if (this.getTeClass() != null) {
             try {
-                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+                this.dummyTe = (BlockEntityBase) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
             } catch (Exception e) {
 
             }
@@ -170,12 +170,12 @@ public enum BlocksGraphiteReactors implements IMultiTileBlock {
     }
 
     @Override
-    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+    public void setType(RegistryObject<BlockEntityType<? extends BlockEntityBase>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 
     @Override
-    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+    public BlockEntityType<? extends BlockEntityBase> getBlockType() {
         return this.blockType.get();
     }
 
@@ -202,7 +202,7 @@ public enum BlocksGraphiteReactors implements IMultiTileBlock {
     }
 
     @Override
-    public Class<? extends TileEntityBlock> getTeClass() {
+    public Class<? extends BlockEntityBase> getTeClass() {
         return this.teClass;
     }
 
@@ -241,12 +241,12 @@ public enum BlocksGraphiteReactors implements IMultiTileBlock {
     }
 
     @Override
-    public TileEntityBlock getDummyTe() {
+    public BlockEntityBase getDummyTe() {
         return this.dummyTe;
     }
 
     @Override
-    public String[] getMultiModels(final IMultiTileBlock teBlock) {
-        return IMultiTileBlock.super.getMultiModels(teBlock);
+    public String[] getMultiModels(final MultiBlockEntity teBlock) {
+        return MultiBlockEntity.super.getMultiModels(teBlock);
     }
 }

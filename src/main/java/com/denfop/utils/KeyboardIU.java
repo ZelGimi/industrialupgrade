@@ -28,6 +28,7 @@ public class KeyboardIU implements IKeyboard {
     public boolean isJumpKeyDown(Player player) {
         return this.get(player, Key.JUMP);
     }
+
     public boolean isAltKeyDown(Player player) {
         return this.get(player, Key.ALT);
     }

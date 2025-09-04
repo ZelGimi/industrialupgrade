@@ -1,6 +1,10 @@
 package com.denfop.componets.system;
 
-import com.denfop.api.sytem.*;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.api.otherenergies.common.interfaces.Acceptor;
+import com.denfop.api.otherenergies.common.interfaces.Emitter;
+import com.denfop.api.otherenergies.common.interfaces.Tile;
 import com.denfop.componets.BufferEnergy;
 import com.denfop.componets.ComponentBaseEnergy;
 import net.minecraft.core.BlockPos;
@@ -9,22 +13,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
-public class EnergyNetDelegate implements ITile {
+public class EnergyNetDelegate implements Tile {
     public final BufferEnergy buffer;
     public final BlockPos worldPosition;
+    private final boolean clientSide;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    private final boolean clientSide;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public double tick1;
     public double tick;
-    public Map<Direction, ITile> energyConductorMap = new HashMap<>();
-    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+    public Map<Direction, Tile> energyConductorMap = new HashMap<>();
+    public int hashCodeSource;
     protected double pastEnergy;
     protected double perenergy;
     protected double pastEnergy1;
     protected double perenergy1;
+    List<InfoTile<Tile>> validReceivers = new LinkedList<>();
     private long id;
 
     public EnergyNetDelegate(ComponentBaseEnergy block) {
@@ -34,10 +39,10 @@ public class EnergyNetDelegate implements ITile {
         sourceDirections = block.sourceDirections;
         this.buffer = block.buffer;
     }
+
     public double getSourceEnergy() {
         return this.buffer.storage;
     }
-    public int hashCodeSource;
 
     @Override
     public BlockPos getPos() {
@@ -49,7 +54,7 @@ public class EnergyNetDelegate implements ITile {
         return null;
     }
 
-    public boolean acceptsFrom(IEmitter var1, Direction var2) {
+    public boolean acceptsFrom(Emitter var1, Direction var2) {
         for (Direction facing1 : this.sinkDirections) {
             if (facing1.ordinal() == var2.ordinal()) {
                 return true;
@@ -57,9 +62,11 @@ public class EnergyNetDelegate implements ITile {
         }
         return false;
     }
-    public boolean emitsTo(IAcceptor receiver, Direction dir) {
+
+    public boolean emitsTo(Acceptor receiver, Direction dir) {
         return this.sourceDirections.contains(dir);
     }
+
     public long getIdNetwork() {
         return this.id;
     }
@@ -76,15 +83,16 @@ public class EnergyNetDelegate implements ITile {
         this.sourceDirections = sourceDirections;
     }
 
-    public Map<Direction, ITile> getTiles(EnergyType energyType) {
+    public Map<Direction, Tile> getTiles(EnergyType energyType) {
         return energyConductorMap;
     }
-    public void RemoveTile(EnergyType energyType,ITile tile, final Direction facing1) {
+
+    public void RemoveTile(EnergyType energyType, Tile tile, final Direction facing1) {
         if (!clientSide) {
             this.energyConductorMap.remove(facing1);
-            final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
+            final Iterator<InfoTile<Tile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
-                InfoTile<ITile> tileInfoTile = iter.next();
+                InfoTile<Tile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
                     break;
@@ -92,6 +100,7 @@ public class EnergyNetDelegate implements ITile {
             }
         }
     }
+
     @Override
     public int getHashCodeSource() {
         return hashCodeSource;
@@ -101,11 +110,12 @@ public class EnergyNetDelegate implements ITile {
     public void setHashCodeSource(final int hashCode) {
         hashCodeSource = hashCode;
     }
-    public List<InfoTile<ITile>> getValidReceivers(EnergyType energyType) {
+
+    public List<InfoTile<Tile>> getValidReceivers(EnergyType energyType) {
         return validReceivers;
     }
 
-    public void AddTile(EnergyType energyType,ITile tile, final Direction facing1) {
+    public void AddTile(EnergyType energyType, Tile tile, final Direction facing1) {
         if (!this.clientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);

@@ -1,17 +1,17 @@
 package com.denfop.componets;
 
-import com.denfop.api.audio.EnumTypeAudio;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.recipe.IMultiUpdateTick;
-import com.denfop.api.recipe.InvSlotBioMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryBioMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.sound.EnumTypeAudio;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.EnumMultiMachine;
+import com.denfop.blockentity.base.IBioMachine;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.EnumMultiMachine;
-import com.denfop.tiles.base.IBioMachine;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,8 +26,8 @@ import java.util.List;
 
 public class BioProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
-    public final InvSlotBioMultiRecipes inputSlots;
-    public final InvSlotOutput outputSlot;
+    public final InventoryBioMultiRecipes inputSlots;
+    public final InventoryOutput outputSlot;
     public final HeatComponent heat;
     public final boolean isCentrifuge;
     private final ComponentBioFuelEnergy bioFuel;
@@ -46,16 +46,16 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
     private int[] col;
 
     public BioProcessMultiComponent(final IBioMachine parent, final EnumMultiMachine enumMultiMachine) {
-        super((TileEntityBlock) parent);
+        super((BlockEntityBase) parent);
         this.multimachine = parent;
-        this.inputSlots = new InvSlotBioMultiRecipes(
-                (TileEntityInventory) parent,
+        this.inputSlots = new InventoryBioMultiRecipes(
+                (BlockEntityInventory) parent,
                 enumMultiMachine.type.recipe,
                 this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(
-                (IAdvInventory<?>) parent,
+        this.outputSlot = new InventoryOutput(
+                (CustomWorldContainer) parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
         this.enumMultiMachine = enumMultiMachine;
@@ -69,11 +69,12 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
         this.defaultOperationLength = this.operationChange = this.operationLength =
                 Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.bioFuel = ((TileEntityBlock) parent).getComp(ComponentBioFuelEnergy.class);
-        this.heat = ((TileEntityBlock) parent).getComp(HeatComponent.class);
+        this.bioFuel = ((BlockEntityBase) parent).getComp(ComponentBioFuelEnergy.class);
+        this.heat = ((BlockEntityBase) parent).getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
 
     }
+
     @Override
     public boolean isClient() {
         return true;
@@ -94,6 +95,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
             );
         }
     }
+
     @Override
     public void onLoaded() {
         super.onLoaded();

@@ -1,10 +1,10 @@
 package com.denfop.items.panel;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.solar.IBatteryItem;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

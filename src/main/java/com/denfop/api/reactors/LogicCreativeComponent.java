@@ -1,6 +1,6 @@
 package com.denfop.api.reactors;
 
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import com.denfop.items.reactors.ItemComponentVent;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,8 +39,8 @@ public class LogicCreativeComponent {
         this.count = 0;
         this.reactor = reactor;
         this.componentVent = this.stack.getItem() instanceof ItemComponentVent;
-        if (stack.getItem() instanceof IDamageItem) {
-            this.maxDamage = ((IDamageItem) stack.getItem()).getMaxCustomDamage(stack);
+        if (stack.getItem() instanceof DamageItem) {
+            this.maxDamage = ((DamageItem) stack.getItem()).getMaxCustomDamage(stack);
         }
         this.damageItem = this.maxDamage;
     }
@@ -163,7 +163,7 @@ public class LogicCreativeComponent {
             if (damageItem > maxDamage) {
                 damageItem = maxDamage;
             }
-            ((IDamageItem) stack.getItem()).setCustomDamage(stack, maxDamage - damageItem);
+            ((DamageItem) stack.getItem()).setCustomDamage(stack, maxDamage - damageItem);
         }
         if (this.getItem().getType() == EnumTypeComponent.COOLANT_ROD) {
             double heat = reactor.getHeat();

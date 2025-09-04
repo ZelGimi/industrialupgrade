@@ -9,10 +9,11 @@ public class ItemBlockTexGlass extends ItemBlockCore<BlockTexGlass.Type> {
     public ItemBlockTexGlass(BlockCore p_40565_, BlockTexGlass.Type element) {
         super(p_40565_, element, new Properties().tab(IUCore.RecourseTab));
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.glass";
+            this.nameItem = "iu.glass";
         }
 
         return this.nameItem;

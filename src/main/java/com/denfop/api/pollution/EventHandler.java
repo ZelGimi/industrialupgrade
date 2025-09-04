@@ -1,6 +1,10 @@
 package com.denfop.api.pollution;
 
 
+import com.denfop.api.pollution.air.PollutionAirLoadEvent;
+import com.denfop.api.pollution.air.PollutionAirUnLoadEvent;
+import com.denfop.api.pollution.soil.PollutionSoilLoadEvent;
+import com.denfop.api.pollution.soil.PollutionSoilUnLoadEvent;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

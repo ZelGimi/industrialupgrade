@@ -30,7 +30,7 @@ public class FluidHandler {
         this.flowing = Register.FLUIDS.register(fluidName.getName().toLowerCase() + "_flowing",
                 () -> new IUFluid(this.properties, false));
         Material steam = ((MaterialInvoker) new Material.Builder(MaterialColor.COLOR_GRAY).liquid()).getNotSolidBlocking().replaceable().build();
-        RegistryObject<Item> bucket = ITEMS.register("bucket/" + fluidName.name().toLowerCase().replace("fluid",""), () -> new ItemBucket(source,fluidName));
+        RegistryObject<Item> bucket = ITEMS.register("bucket/" + fluidName.name().toLowerCase().replace("fluid", ""), () -> new ItemBucket(source, fluidName));
         RegistryObject<LiquidBlock> blockRegistryObject = BLOCKS.register("fluid/" + fluidName.name().toLowerCase(), () -> new BlockFluidIU(source, BlockBehaviour.Properties.of(steam)));
         this.liquedBlock = blockRegistryObject;
         this.properties = new ForgeFlowingFluid.Properties(() -> this.fluidType, this.source, this.flowing).slopeFindDistance(2).levelDecreasePerBlock(2).bucket(bucket).block(blockRegistryObject);

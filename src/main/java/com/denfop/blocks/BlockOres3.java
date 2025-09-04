@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -35,6 +35,7 @@ public class BlockOres3<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
         BlockTagsProvider.list.add(this);
 
     }
+
     @Override
     public Block getBlock() {
         return this;

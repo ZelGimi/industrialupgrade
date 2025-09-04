@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "industrialupgrade:baseblockingot/platium"
+      "item": "industrialupgrade:baseblockingot/platinum"
     }
   ],
   "result": {
     "count": 9,
-    "item": "industrialupgrade:itemingots/platium_ingot"
+    "item": "industrialupgrade:itemingots/platinum_ingot"
   }
 }

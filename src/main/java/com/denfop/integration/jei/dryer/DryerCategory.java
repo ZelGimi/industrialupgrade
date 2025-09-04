@@ -1,21 +1,24 @@
 package com.denfop.integration.jei.dryer;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockDryer;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.TankWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityElectricDryer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockDryerEntity;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerDryer;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuDryer;
+import com.denfop.containermenu.slot.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityElectricDryer;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -33,11 +36,11 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler> {
+public class DryerCategory extends ScreenMain implements IRecipeCategory<DryerHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerDryer container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuDryer container1;
+    private final ScreenWidget progress_bar;
     private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
@@ -45,25 +48,25 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler
     public DryerCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityElectricDryer) BlockBaseMachine3.electric_dryer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityElectricDryer) BlockBaseMachine3Entity.electric_dryer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
         this.componentList.clear();
-        this.container1 = (ContainerDryer) this.getContainer();
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
+        this.container1 = (ContainerMenuDryer) this.getContainer();
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(new ComponentProgress(this.container1.base, 1, (short) 100))
         );
         this.componentList.add(slots);
         this.componentList.add(progress_bar);
-        this.addElement(TankGauge.createNormal(this, 43, 21,
-                ((TileEntityElectricDryer) BlockBaseMachine3.electric_dryer.getDummyTe()).fluidTank1
+        this.addWidget(TankWidget.createNormal(this, 43, 21,
+                ((BlockEntityElectricDryer) BlockBaseMachine3Entity.electric_dryer.getDummyTe()).fluidTank1
         ));
 
 
@@ -77,7 +80,7 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockDryer.dryer).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockDryerEntity.dryer).getDescriptionId());
     }
 
 
@@ -99,24 +102,23 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerHandler
             progress = 0;
         }
         bindTexture(getTexture());
-        this.slots.drawBackground( stack,65, -65);
-        progress_bar.renderBar( stack,0, 0, xScale);
+        this.slots.drawBackground(stack, 65, -65);
+        progress_bar.renderBar(stack, 0, 0, xScale);
 
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack,this.guiLeft, this.guiTop);
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DryerHandler recipes, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotOutput.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryOutput.class);
         final List<FluidStack> inputs = Collections.singletonList(recipes.getInput());
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT,slots1.get(0).getJeiX() + 65, slots1.get(0).getJeiY() - 65).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, slots1.get(0).getJeiX() + 65, slots1.get(0).getJeiY() - 65).addItemStack(recipes.getOutput());
 
-        builder.addSlot(RecipeIngredientRole.INPUT,47, 25).setFluidRenderer(1000,true,12,47).addFluidStack(inputs.get(0).getFluid(),inputs.get(0).getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 47, 25).setFluidRenderer(1000, true, 12, 47).addFluidStack(inputs.get(0).getFluid(), inputs.get(0).getAmount());
     }
-
 
 
     protected ResourceLocation getTexture() {

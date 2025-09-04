@@ -1,10 +1,10 @@
 package com.denfop.network;
 
 import com.denfop.IUCore;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.recipe.*;
-import com.denfop.api.vein.Vein;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.vein.common.VeinBase;
+import com.denfop.inventory.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
 import com.denfop.utils.ModUtils;
@@ -266,7 +266,7 @@ public class DecoderHandler {
             case FluidStack:
                 FluidStack ret2 = new FluidStack((Fluid) decode(is, EncodedType.Fluid), is.readInt());
                 if (!ret2.isEmpty())
-                ret2.setTag((CompoundTag) decode(is));
+                    ret2.setTag((CompoundTag) decode(is));
                 return ret2;
             case FluidTank:
                 FluidStack fluidStack = (FluidStack) decode(is);
@@ -279,7 +279,7 @@ public class DecoderHandler {
                 return is.readInt();
             case InvSlot:
                 ItemStack[] contents = (ItemStack[]) decode(is, EncodedType.Array);
-                InvSlot ret3 = new InvSlot(contents.length);
+                Inventory ret3 = new Inventory(contents.length);
 
                 for (i = 0; i < contents.length; ++i) {
                     ret3.set(i, contents[i]);
@@ -299,7 +299,7 @@ public class DecoderHandler {
                 ret1.setTag(nbt);
                 return ret1;
             case tuple:
-                return  new Tuple<>(decode(is),decode(is));
+                return new Tuple<>(decode(is), decode(is));
             case Long:
                 return is.readLong();
             case NBTTagCompound:
@@ -328,9 +328,9 @@ public class DecoderHandler {
             case Vec3:
                 return new Vector3d(is.readDouble(), is.readDouble(), is.readDouble());
             case DataOre:
-                return new com.denfop.tiles.base.DataOre(is);
+                return new com.denfop.blockentity.base.DataOre(is);
             case Vein:
-                return new Vein(is);
+                return new VeinBase(is);
             case RecipeInfo:
                 return new RecipeInfo(is);
             case Radiation:

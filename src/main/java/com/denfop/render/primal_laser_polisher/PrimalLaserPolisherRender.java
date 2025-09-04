@@ -1,6 +1,6 @@
 package com.denfop.render.primal_laser_polisher;
 
-import com.denfop.tiles.mechanism.TileEntityPrimalLaserPolisher;
+import com.denfop.blockentity.mechanism.BlockEntityPrimalLaserPolisher;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
 
-public class PrimalLaserPolisherRender implements BlockEntityRenderer<TileEntityPrimalLaserPolisher> {
+public class PrimalLaserPolisherRender implements BlockEntityRenderer<BlockEntityPrimalLaserPolisher> {
     private final BlockEntityRendererProvider.Context contex;
 
     public PrimalLaserPolisherRender(BlockEntityRendererProvider.Context p_173636_) {
@@ -16,7 +16,7 @@ public class PrimalLaserPolisherRender implements BlockEntityRenderer<TileEntity
     }
 
     @Override
-    public void render(TileEntityPrimalLaserPolisher tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalLaserPolisher tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         ItemStack itemstack = tile.inputSlotA.get(0);
         final ItemStack itemstack1 = tile.outputSlot.get(0);

@@ -2,13 +2,13 @@ package com.denfop.integration.jei.genobs;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntitySingleFluidAdapter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenObsCategory extends GuiIU implements IRecipeCategory<GenObsHandler> {
+public class GenObsCategory extends ScreenMain implements IRecipeCategory<GenObsHandler> {
 
     private final JeiInform jeiInform;
 
@@ -34,7 +34,7 @@ public class GenObsCategory extends GuiIU implements IRecipeCategory<GenObsHandl
     public GenObsCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntitySingleFluidAdapter) BlockBaseMachine3Entity.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiobsidiangenerator" +
@@ -70,14 +70,14 @@ public class GenObsCategory extends GuiIU implements IRecipeCategory<GenObsHandl
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,83, 35, 177, 41, xScale, 19);
+        drawTexturedModalRect(stack, 83, 35, 177, 41, xScale, 19);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenObsHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 42, 20).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getInput().getFluid(),recipe.getInput().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 65, 20).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getInput1().getFluid(),recipe.getInput1().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  121, 35).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 42, 20).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput().getFluid(), recipe.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 65, 20).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput1().getFluid(), recipe.getInput1().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 121, 35).addItemStack(recipe.getOutput());
     }
 
     @Override

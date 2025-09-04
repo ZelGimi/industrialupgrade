@@ -32,9 +32,10 @@ public class Recipes {
     public static void registerRecipe(Consumer<FinishedRecipe> consumer, RecipeBuilder recipe, String id) {
         try {
             recipe.save(consumer, id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(recipe);
-        };
+        }
+        ;
     }
 
     static void loadRecipes() {

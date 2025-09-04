@@ -1,8 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class BaseEnergyItem extends Item implements IEnergyItem {
+public class BaseEnergyItem extends Item implements EnergyItem {
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;
@@ -36,7 +36,7 @@ public class BaseEnergyItem extends Item implements IEnergyItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

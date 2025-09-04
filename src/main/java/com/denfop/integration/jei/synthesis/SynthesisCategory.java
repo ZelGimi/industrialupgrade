@@ -2,13 +2,13 @@ package com.denfop.integration.jei.synthesis;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityStampMechanism;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityStampMechanism;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,17 +24,17 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SynthesisCategory extends GuiIU implements IRecipeCategory<SynthesisHandler> {
+public class SynthesisCategory extends ScreenMain implements IRecipeCategory<SynthesisHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
 
     public SynthesisCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityStampMechanism) BlockBaseMachine3Entity.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guisynthesis" +
@@ -91,13 +91,12 @@ public class SynthesisCategory extends GuiIU implements IRecipeCategory<Synthesi
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SynthesisHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,20,31).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,56,31).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,108,31).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 20, 31).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 56, 31).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 108, 31).addItemStack(recipe.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
-
 
 
     protected ResourceLocation getTexture() {

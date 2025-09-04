@@ -52,7 +52,7 @@ public class GenHeliumHandler {
 
     public static void initRecipes() {
 
-        addRecipe(1000000, new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000));
+        addRecipe(1000000, new FluidStack(FluidName.fluidhelium.getInstance().get(), 1000));
 
 
     }

@@ -28,6 +28,7 @@ public class RubberLeaves extends LeavesBlock {
     public RubberLeaves() {
         super(Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((S, W, P, E) -> E == EntityType.OCELOT || E == EntityType.PARROT).isSuffocating((K, V, E) -> false).isViewBlocking((K, V, E) -> false));
     }
+
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 30;
     }
@@ -35,12 +36,14 @@ public class RubberLeaves extends LeavesBlock {
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 60;
     }
+
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.tick(pState, pLevel, pPos, pRandom);
-        spawnFallingLeavesParticles(pLevel,pPos,this);
-        pLevel.scheduleTick(pPos, this, pRandom.nextInt(200)+100);
+        spawnFallingLeavesParticles(pLevel, pPos, this);
+        pLevel.scheduleTick(pPos, this, pRandom.nextInt(200) + 100);
     }
+
     @OnlyIn(Dist.CLIENT)
     public RenderType getType() {
         return Minecraft.useFancyGraphics() ? RenderType.cutoutMipped() : RenderType.solid();

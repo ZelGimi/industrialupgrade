@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
 import com.denfop.Constants;
-import com.denfop.DataBlock;
-import com.denfop.DataMultiBlock;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.dataregistry.DataMultiBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
@@ -94,6 +94,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
 
         return drops;
     }
+
     public List<ItemStack> getDropsSilk(
             @Nonnull final Level world,
             @Nonnull final BlockPos pos,
@@ -128,7 +129,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
         return List.of(ItemStack.EMPTY);
     }
 
-      int getMetaFromState(BlockState state) {
+    int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -142,7 +143,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     }
 
 
-    public  abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
+    public abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
 
     public abstract <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element);
 }

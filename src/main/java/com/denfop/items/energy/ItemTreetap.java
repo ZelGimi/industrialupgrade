@@ -2,12 +2,12 @@ package com.denfop.items.energy;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockRubWood;
 import com.denfop.blocks.BlockSwampRubWood;
 import com.denfop.blocks.BlockTropicalRubWood;
+import com.denfop.sound.EnumSound;
 import com.denfop.utils.DamageHandler;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,12 +31,6 @@ public class ItemTreetap extends Item {
 
     public ItemTreetap() {
         super(new Properties().tab(IUCore.EnergyTab).durability(16).defaultDurability(0).setNoRepair());
-    }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.treetap.info")));
     }
 
     public static boolean attemptExtract(
@@ -172,6 +166,12 @@ public class ItemTreetap extends Item {
                 new ItemStack(IUItem.rawLatex.getItem(), quantity)
         );
         world.addFreshEntity(itemEntity);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.treetap.info")));
     }
 
     protected String getOrCreateDescriptionId() {

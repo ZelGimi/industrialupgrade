@@ -33,8 +33,8 @@ public class RubberSapling extends SaplingBlock {
         if (pState.getValue(STAGE) == 0) {
             pLevel.setBlock(pPos, pState.cycle(STAGE), 4);
         } else {
-            ((RubTreeFeature)RUB_TREE_GENERATOR.get()).placeInstantly(pLevel, pLevel.getChunkSource().getGenerator(),  pState, pRandom,pPos);
-          }
+            ((RubTreeFeature) RUB_TREE_GENERATOR.get()).placeInstantly(pLevel, pLevel.getChunkSource().getGenerator(), pState, pRandom, pPos);
+        }
 
     }
 }

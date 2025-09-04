@@ -10,9 +10,10 @@ public class ItemPickaxe extends PickaxeItem {
     private String nameItem;
 
     public ItemPickaxe(String name) {
-        super(IUTiers.RUBY, 1, -2.8F,new Properties().tab(IUCore.EnergyTab).stacksTo(1));
-        this.name=name;
+        super(IUTiers.RUBY, 1, -2.8F, new Properties().tab(IUCore.EnergyTab).stacksTo(1));
+        this.name = name;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -25,7 +26,7 @@ public class ItemPickaxe extends PickaxeItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+name;
+            this.nameItem = "item." + name;
         }
 
         return this.nameItem;

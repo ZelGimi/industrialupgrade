@@ -7,19 +7,19 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
-public class Genome implements IGenome {
+public class Genome implements GenomeBase {
 
-    private ItemStack stack;
     Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>();
+    private ItemStack stack;
 
     public Genome(ItemStack stack) {
         final CompoundTag nbt1 = ModUtils.nbt(stack);
-        if (!nbt1.contains("genome")){
+        if (!nbt1.contains("genome")) {
             final CompoundTag nbt = new CompoundTag();
-            nbt1.put("genome",nbt);
+            nbt1.put("genome", nbt);
         }
 
-        CompoundTag  nbt = nbt1.getCompound("genome");
+        CompoundTag nbt = nbt1.getCompound("genome");
         ListTag tagList = nbt.getList("genomeList", 10);
         for (int i = 0; i < tagList.size(); ++i) {
             CompoundTag genomeNbt = tagList.getCompound(i);
@@ -27,21 +27,19 @@ public class Genome implements IGenome {
             GeneticTraits geneticTraits = GeneticTraits.values()[meta];
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
         }
-        this.stack=stack;
+        this.stack = stack;
+    }
+
+    public Genome(Map<EnumGenetic, GeneticTraits> geneticTraitsMap) {
+        this.geneticTraitsMap = new HashMap<>(geneticTraitsMap);
     }
 
     public Map<EnumGenetic, GeneticTraits> getGeneticTraitsMap() {
         return geneticTraitsMap;
     }
 
-
-
     public ItemStack getStack() {
         return stack;
-    }
-
-    public Genome(Map<EnumGenetic, GeneticTraits> geneticTraitsMap) {
-        this.geneticTraitsMap = new HashMap<>(geneticTraitsMap);
     }
 
     @Override
@@ -74,18 +72,21 @@ public class Genome implements IGenome {
             writeNBT(ModUtils.nbt(stack));
         }
     }
+
     public void addGenome(GeneticTraits geneticTraits) {
         if (!geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
             writeNBT(ModUtils.nbt(stack));
         }
     }
+
     public void removeGenome(GeneticTraits geneticTraits, ItemStack stack) {
         if (geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.remove(geneticTraits.getGenetic(), geneticTraits);
             writeNBT(ModUtils.nbt(stack));
         }
     }
+
     public GeneticTraits removeGenome(EnumGenetic genetic, ItemStack stack) {
         if (geneticTraitsMap.containsKey(genetic)) {
             final GeneticTraits value = geneticTraitsMap.remove(genetic);
@@ -94,6 +95,7 @@ public class Genome implements IGenome {
         }
         return null;
     }
+
     public CompoundTag writeNBT(CompoundTag nbtTagCompound) {
         ListTag genomeNBT = new ListTag();
         for (GeneticTraits geneticTraits : geneticTraitsMap.values()) {
@@ -103,7 +105,7 @@ public class Genome implements IGenome {
         }
         CompoundTag nbt = nbtTagCompound.getCompound("genome");
         nbt.put("genomeList", genomeNBT);
-        nbtTagCompound.put("genome",nbt);
+        nbtTagCompound.put("genome", nbt);
         return nbtTagCompound;
     }
 
@@ -116,15 +118,16 @@ public class Genome implements IGenome {
     public <T> T getLevelGenome(final EnumGenetic genome, Class<T> tClass) {
         return geneticTraitsMap.get(genome).getValue(tClass);
     }
+
     public GeneticTraits getGenome(final EnumGenetic genome) {
         return geneticTraitsMap.get(genome);
     }
+
     public Genome copy() {
         Genome genome = new Genome(this.geneticTraitsMap);
         genome.stack = this.stack.copy();
         return genome;
     }
-
 
 
 }

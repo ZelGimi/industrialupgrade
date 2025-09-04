@@ -1,6 +1,6 @@
 package com.denfop.api.bee;
 
-import com.denfop.api.agriculture.ICrop;
+import com.denfop.api.crop.Crop;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -13,15 +13,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class BeeBase implements IBee {
+public class BeeBase implements Bee {
 
     private final int weatherResistance;
     private final int maxSwarm;
-    private final ICrop cropFlower;
-    private List<IBee> unCompatibleBees;
-    private boolean sun;
-    private boolean night;
-    private int chance;
+    private final Crop cropFlower;
     private final int id;
     private final List<ResourceKey<Biome>> biomes = new ArrayList<>();
     private final int offspring;
@@ -31,18 +27,22 @@ public class BeeBase implements IBee {
     private final int tickBirthRate;
     private final List<Product> products = new ArrayList<>();
     private final String name;
+    private List<Bee> unCompatibleBees;
+    private boolean sun;
+    private boolean night;
+    private int chance;
 
     public BeeBase(
             String name, int id, int maxSwarm,
             int tickBirthRate, int tickLifecycles, AABB sizeTerritory, int offspring,
-            int chance,  boolean sun, boolean night, ICrop cropFlower,
-            List<IBee> unCompatibleBees, int defaultWeatherResistance, double maxMortalityRate
+            int chance, boolean sun, boolean night, Crop cropFlower,
+            List<Bee> unCompatibleBees, int defaultWeatherResistance, double maxMortalityRate
     ) {
         this.name = name;
         this.maxSwarm = maxSwarm;
         this.chance = chance;
         this.id = id;
-        this.maxMortalityRate=maxMortalityRate;
+        this.maxMortalityRate = maxMortalityRate;
         this.weatherResistance = defaultWeatherResistance;
         this.tickBirthRate = tickBirthRate;
         this.tickLifecycles = tickLifecycles;
@@ -59,7 +59,6 @@ public class BeeBase implements IBee {
     public int getMaxSwarm() {
         return maxSwarm;
     }
-
 
 
     @Override
@@ -80,23 +79,26 @@ public class BeeBase implements IBee {
                 weatherResistance,
                 maxMortalityRate
         );
-        for ( ResourceKey<Biome>  biome : biomes)
-        bee.addBiome(biome);
+        for (ResourceKey<Biome> biome : biomes)
+            bee.addBiome(biome);
         return bee;
     }
 
 
     @Override
-    public ICrop getCropFlower() {
+    public Crop getCropFlower() {
         return cropFlower;
     }
 
 
-
+    @Override
+    public List<Bee> getUnCompatibleBees() {
+        return unCompatibleBees;
+    }
 
     @Override
-    public List<IBee> getUnCompatibleBees() {
-        return unCompatibleBees;
+    public void setUnCompatibleBees(final List<Bee> bees) {
+        this.unCompatibleBees = bees;
     }
 
     @Override
@@ -104,23 +106,15 @@ public class BeeBase implements IBee {
         return sun;
     }
 
-
     @Override
     public boolean isNight() {
         return night;
     }
 
-
     @Override
     public int getWeatherResistance() {
         return weatherResistance;
     }
-    @Override
-    public void setUnCompatibleBees(final List<IBee> bees) {
-        this.unCompatibleBees = bees;
-    }
-
-
 
     @Override
     public int getChance() {
@@ -140,27 +134,27 @@ public class BeeBase implements IBee {
 
 
     @Override
-    public List< ResourceKey<Biome> > getBiomes() {
+    public List<ResourceKey<Biome>> getBiomes() {
         return biomes;
     }
 
 
-
     @Override
-    public boolean canWorkInBiome( ResourceKey<Biome>  biomeName) {
+    public boolean canWorkInBiome(ResourceKey<Biome> biomeName) {
         return biomes.contains(biomeName);
     }
-    public boolean canWorkInBiome(Biome  biomeName, Level level) {
+
+    public boolean canWorkInBiome(Biome biomeName, Level level) {
         ResourceKey<Biome> biomeKey = level.registryAccess()
                 .registryOrThrow(Registry.BIOME_REGISTRY)
                 .getResourceKey(biomeName).get();
         return biomes.contains(biomeKey);
     }
+
     @Override
-    public void addBiome( ResourceKey<Biome>  biomeName) {
+    public void addBiome(ResourceKey<Biome> biomeName) {
         biomes.add(biomeName);
     }
-
 
 
     @Override
@@ -186,7 +180,7 @@ public class BeeBase implements IBee {
         return maxMortalityRate;
     }
 
-     @Override
+    @Override
     public int getTickBirthRate() {
         return tickBirthRate;
     }
@@ -197,7 +191,7 @@ public class BeeBase implements IBee {
     }
 
     @Override
-    public void addPercentProduct(ICrop crop, double percent) {
+    public void addPercentProduct(Crop crop, double percent) {
 
         Product target = null;
         for (Product product : products) {
@@ -268,7 +262,6 @@ public class BeeBase implements IBee {
     public String getName() {
         return name;
     }
-
 
 
     @Override

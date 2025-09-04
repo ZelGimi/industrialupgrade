@@ -26,8 +26,8 @@ public class PartRecipe {
 
     public void encode(CustomPacketBuffer customPacketBuffer) {
         try {
-            EncoderHandler.encode(customPacketBuffer,index);
-            EncoderHandler.encode(customPacketBuffer,input.writeNBT());
+            EncoderHandler.encode(customPacketBuffer, index);
+            EncoderHandler.encode(customPacketBuffer, input.writeNBT());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

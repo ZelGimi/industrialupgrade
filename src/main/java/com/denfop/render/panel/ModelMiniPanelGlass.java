@@ -33,16 +33,90 @@ public class ModelMiniPanelGlass<T extends Entity> extends EntityModel<T> {
         int texOffX = 0;
         int textOffY = 0;
         switch (number) {
-            case 0: texWidth = 5; texHeight = 5; x = 0; z = 0; dx = 5; dz = 5; break;
-            case 1: texWidth = 6; texHeight = 5; x = 5; z = 0; dx = 6; dz = 5; texOffX = 1; break;
-            case 2: texWidth = 5; texHeight = 5; x = 11; z = 0; dx = 5; dz = 5; break;
-            case 3: texWidth = 5; texHeight = 6; x = 0; z = 5; dx = 5; dz = 6; texOffX = 9; break;
-            case 4: texWidth = 6; texHeight = 6; x = 5; z = 5; dx = 6; dz = 6; break;
-            case 5: texWidth = 5; texHeight = 6; x = 11; z = 5; dx = 5; dz = 6; texOffX = 9; break;
-            case 6: texWidth = 5; texHeight = 5; x = 0; z = 11; dx = 5; dz = 5; break;
-            case 7: texWidth = 6; texHeight = 5; x = 5; z = 11; dx = 6; dz = 5;texOffX = 1; break;
-            case 8: texWidth = 5; texHeight = 5; x = 11; z = 11; dx = 5; dz = 5; break;
-            default: texWidth = 16; texHeight = 16; x = 0; z = 0; dx = 16; dz = 16; break;
+            case 0:
+                texWidth = 5;
+                texHeight = 5;
+                x = 0;
+                z = 0;
+                dx = 5;
+                dz = 5;
+                break;
+            case 1:
+                texWidth = 6;
+                texHeight = 5;
+                x = 5;
+                z = 0;
+                dx = 6;
+                dz = 5;
+                texOffX = 1;
+                break;
+            case 2:
+                texWidth = 5;
+                texHeight = 5;
+                x = 11;
+                z = 0;
+                dx = 5;
+                dz = 5;
+                break;
+            case 3:
+                texWidth = 5;
+                texHeight = 6;
+                x = 0;
+                z = 5;
+                dx = 5;
+                dz = 6;
+                texOffX = 9;
+                break;
+            case 4:
+                texWidth = 6;
+                texHeight = 6;
+                x = 5;
+                z = 5;
+                dx = 6;
+                dz = 6;
+                break;
+            case 5:
+                texWidth = 5;
+                texHeight = 6;
+                x = 11;
+                z = 5;
+                dx = 5;
+                dz = 6;
+                texOffX = 9;
+                break;
+            case 6:
+                texWidth = 5;
+                texHeight = 5;
+                x = 0;
+                z = 11;
+                dx = 5;
+                dz = 5;
+                break;
+            case 7:
+                texWidth = 6;
+                texHeight = 5;
+                x = 5;
+                z = 11;
+                dx = 6;
+                dz = 5;
+                texOffX = 1;
+                break;
+            case 8:
+                texWidth = 5;
+                texHeight = 5;
+                x = 11;
+                z = 11;
+                dx = 5;
+                dz = 5;
+                break;
+            default:
+                texWidth = 16;
+                texHeight = 16;
+                x = 0;
+                z = 0;
+                dx = 16;
+                dz = 16;
+                break;
         }
 
         root.addOrReplaceChild("glass",

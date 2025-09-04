@@ -1,0 +1,45 @@
+package com.denfop.api.widget;
+
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
+
+public class ItemStackTooltipWidget extends ScreenWidget {
+
+    private final Supplier<ItemStack> itemSupplier;
+    private final String text;
+
+    public ItemStackTooltipWidget(ScreenIndustrialUpgrade<?> gui, int x, int y, Supplier<ItemStack> itemSupplier, String text) {
+        super(gui, x, y, 16, 16);
+        this.itemSupplier = itemSupplier;
+        this.text = text;
+    }
+
+    public void drawBackground(PoseStack poseStack, int mouseX, int mouseY) {
+        super.drawBackground(poseStack, mouseX, mouseY);
+        ItemStack stack = this.itemSupplier.get();
+        if (!ModUtils.isEmpty(stack)) {
+            this.gui.drawItemStack(this.x, this.y, stack);
+        }
+
+    }
+
+    public void drawForeground(PoseStack poseStack, int mouseX, int mouseY) {
+        if (this.contains(mouseX, mouseY)) {
+            ItemStack stack = this.itemSupplier.get();
+            if (!ModUtils.isEmpty(stack)) {
+                String[] lines = text.split("\n");
+                List<String> stringList = new ArrayList<>(Arrays.asList(lines));
+                this.gui.drawTooltipOnlyName(poseStack, mouseX, mouseY, stack, stringList);
+            }
+        }
+
+    }
+
+}

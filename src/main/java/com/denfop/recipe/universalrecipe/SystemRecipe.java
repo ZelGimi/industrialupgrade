@@ -1,7 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -15,10 +14,10 @@ import java.util.List;
 public class SystemRecipe implements Recipe<Container> {
     private final ResourceLocation id;
     private final String recipeType;
-    private final  List<ItemStack> inputs;
+    private final List<ItemStack> inputs;
     private final String typeOperation;
 
-    public SystemRecipe(ResourceLocation id, String recipeType,  List<ItemStack> inputs, String typeOperation) {
+    public SystemRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
         this.id = id;
         this.recipeType = recipeType;
         this.inputs = inputs;
@@ -34,7 +33,6 @@ public class SystemRecipe implements Recipe<Container> {
     public ItemStack assemble(Container pContainer) {
         return ItemStack.EMPTY;
     }
-
 
 
     @Override
@@ -53,7 +51,7 @@ public class SystemRecipe implements Recipe<Container> {
         return id;
     }
 
-    public  List<ItemStack> getInputs() {
+    public List<ItemStack> getInputs() {
         return inputs;
     }
 
@@ -62,11 +60,9 @@ public class SystemRecipe implements Recipe<Container> {
     }
 
 
-
     public String getRecipeType() {
         return recipeType;
     }
-
 
 
     @Override

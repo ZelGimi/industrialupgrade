@@ -1,10 +1,10 @@
 package com.denfop.render.oilquarry;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.vein.Type;
+import com.denfop.api.vein.common.Type;
+import com.denfop.blockentity.base.BlockEntityQuarryVein;
 import com.denfop.blocks.FluidName;
-import com.denfop.tiles.base.TileQuarryVein;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
@@ -21,7 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
+public class QuarryOilRenderer implements BlockEntityRenderer<BlockEntityQuarryVein> {
 
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
@@ -32,7 +32,7 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
     }
 
     @Override
-    public void render(TileQuarryVein tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
+    public void render(BlockEntityQuarryVein tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
 
         if (tile.vein == null || !tile.vein.get()) return;
@@ -94,13 +94,13 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
                 if (tile.vein.getType() != Type.GAS) {
                     itextcomponent =
                             Component.literal(Localization.translate(varietyString) + " " + Localization.translate(
-                                    typeString)).append(Component.literal(" "+stack));
+                                    typeString)).append(Component.literal(" " + stack));
                 } else {
-                    itextcomponent =  Component.literal(
+                    itextcomponent = Component.literal(
                             stack);
                 }
             } else {
-                itextcomponent =  Component.literal(
+                itextcomponent = Component.literal(
                         stack);
 
 

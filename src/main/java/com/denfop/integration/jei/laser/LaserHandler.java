@@ -23,10 +23,6 @@ public class LaserHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<LaserHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -37,7 +33,7 @@ public class LaserHandler {
     public static LaserHandler addRecipe(
             ItemStack input, ItemStack output,
             BaseMachineRecipe container) {
-        LaserHandler recipe = new LaserHandler(input, output,container);
+        LaserHandler recipe = new LaserHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -61,13 +57,16 @@ public class LaserHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("laser")) {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0),container
+                    container.getOutput().items.get(0), container
             );
 
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

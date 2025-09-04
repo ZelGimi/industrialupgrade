@@ -2,10 +2,10 @@ package com.denfop.items.energy;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.items.CapabilityFluidHandlerItem;
 import com.denfop.items.ItemFluidContainer;
+import com.denfop.utils.Localization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -40,14 +40,14 @@ public class ItemSprayer extends ItemFluidContainer {
         if (target == Target.Any) {
             return world.getBlockState(pos).getMaterial().isReplaceable();
         } else {
-           return false;
+            return false;
         }
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
-        list.add(Component.literal(Localization.translate( "iu.sprayer.info")));
+        list.add(Component.literal(Localization.translate("iu.sprayer.info")));
     }
 
     @Override

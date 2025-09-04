@@ -2,32 +2,19 @@ package com.denfop.events;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropInit;
-import com.denfop.api.guidebook.GuideBookCore;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.RecipeInputStack;
-import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrade.UpgradeItemInform;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.api.upgrades.IUpgradeItem;
-import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.api.item.upgrade.UpgradeItemInform;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
+import com.denfop.api.upgrades.BlockEntityUpgrade;
+import com.denfop.api.upgrades.EnumBlockEntityUpgrade;
+import com.denfop.api.upgrades.UpgradeItem;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.energy.instruments.EnumOperations;
 import com.denfop.items.energy.instruments.ItemEnergyInstruments;
 import com.denfop.mixin.invoker.ParticleInvoker;
-import com.denfop.recipe.IInputHandler;
-import com.denfop.recipes.PotionRecipes;
-import com.denfop.register.RegisterOreDictionary;
-import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -43,21 +30,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -79,12 +56,12 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
-import static com.denfop.api.Recipes.inputFactory;
 import static com.denfop.items.ItemVeinSensor.dataColors;
 import static com.denfop.render.base.RenderType.LEASH;
-import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 public class TickHandler {
     final int latitudeSegments = 4;
@@ -106,8 +83,8 @@ public class TickHandler {
     double[][] z2 = new double[latitudeSegments][longitudeSegments];
     double[][] z3 = new double[latitudeSegments][longitudeSegments];
     double[][] z4 = new double[latitudeSegments][longitudeSegments];
-    Set<UpgradableProperty> set = EnumSet.of(UpgradableProperty.FluidExtract, UpgradableProperty.FluidInput,
-            UpgradableProperty.ItemInput, UpgradableProperty.ItemExtract);
+    Set<EnumBlockEntityUpgrade> set = EnumSet.of(EnumBlockEntityUpgrade.FluidExtract, EnumBlockEntityUpgrade.FluidInput,
+            EnumBlockEntityUpgrade.ItemInput, EnumBlockEntityUpgrade.ItemExtract);
 
     public TickHandler() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -130,7 +107,7 @@ public class TickHandler {
 
     public int getOreColor(BlockState state) {
         Block block = state.getBlock();
-        if (dataColors.containsKey(state)){
+        if (dataColors.containsKey(state)) {
             return dataColors.get(state);
         }
         if (block == Blocks.IRON_ORE) {
@@ -145,7 +122,7 @@ public class TickHandler {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
         } else if (block == Blocks.COAL_ORE) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        }else if (block == Blocks.COPPER_ORE) {
+        } else if (block == Blocks.COPPER_ORE) {
             return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.EMERALD_ORE) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
@@ -447,7 +424,7 @@ public class TickHandler {
 
         if (player == null || mc.level == null) return;
 
-        if (!(player.getMainHandItem().getItem() instanceof IUpgradeItem upgradeItem)) return;
+        if (!(player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem)) return;
         if (!upgradeItem.isSuitableFor(player.getMainHandItem(), set)) {
             return;
         }
@@ -460,7 +437,7 @@ public class TickHandler {
         }
         Direction facing = getDirection(player.getMainHandItem());
         BlockEntity tile = player.getLevel().getBlockEntity(ray.getBlockPos());
-        if (!(tile instanceof IUpgradableBlock)) {
+        if (!(tile instanceof BlockEntityUpgrade)) {
             return;
         }
         PoseStack poseStack = event.getPoseStack();
@@ -813,9 +790,10 @@ public class TickHandler {
         }
 
     }
+
     @SubscribeEvent
-    public void initData(TickEvent.LevelTickEvent event){
-        if (event.level.isClientSide && event.phase == TickEvent.Phase.END){
+    public void initData(TickEvent.LevelTickEvent event) {
+        if (event.level.isClientSide && event.phase == TickEvent.Phase.END) {
             IUCore.instance.registerData(event.level);
         }
     }

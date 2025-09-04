@@ -2,13 +2,13 @@ package com.denfop.integration.jei.worldcollector.nether;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityEnchanterBooks;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,16 +24,17 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class NetherCategory extends GuiIU implements IRecipeCategory<NetherHandler> {
+public class NetherCategory extends ScreenMain implements IRecipeCategory<NetherHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public NetherCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityEnchanterBooks) BlockBaseMachine3Entity.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
@@ -51,7 +52,7 @@ public class NetherCategory extends GuiIU implements IRecipeCategory<NetherHandl
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 37).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 37).getDescriptionId());
     }
 
 
@@ -75,13 +76,13 @@ public class NetherCategory extends GuiIU implements IRecipeCategory<NetherHandl
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,
+        drawTexturedModalRect(stack,
                 25 + 1, 12 + 51 - energylevel, 179, 2 + 51 - energylevel,
                 5, energylevel
         );
 
 
-        drawTexturedModalRect( stack,+66 - 5, +34 - 5, 177, 60, xScale, 18);
+        drawTexturedModalRect(stack, +66 - 5, +34 - 5, 177, 60, xScale, 18);
         drawSplitString(stack,
                 Localization.translate("iu.need_info") + recipe.getNeed() + Localization.translate("iu.need_info_matter"),
                 79,
@@ -93,8 +94,8 @@ public class NetherCategory extends GuiIU implements IRecipeCategory<NetherHandl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, NetherHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,39,19).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,105,30).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 39, 19).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 30).addItemStack(recipe.getOutput());
     }
 
     protected ResourceLocation getTexture() {

@@ -1,20 +1,20 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.BlockEntityMultiMachine;
+import com.denfop.blockentity.base.IManufacturerBlock;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
-import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileMultiMachine;
+import com.denfop.sound.EnumSound;
+import com.denfop.utils.ElectricItem;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
+public class ItemPurifier extends BaseEnergyItem implements UpgradeItem {
     public ItemPurifier(double maxCharge, double transferLimit, int tier) {
         super(maxCharge, transferLimit, 1);
 
@@ -53,7 +53,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.purifier.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.purifier.info")));
     }
 
     protected String getOrCreateDescriptionId() {
@@ -68,11 +68,12 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public List<EnumInfoUpgradeModules> getUpgradeModules() {
         return EnumUpgrades.PURIFIER.list;
     }
@@ -102,14 +103,14 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
         }
 
         BlockEntity tile = world.getBlockEntity(pos);
-        if (!(tile instanceof TileEntityInventory) && !(tile instanceof IManufacturerBlock)) {
+        if (!(tile instanceof BlockEntityInventory) && !(tile instanceof IManufacturerBlock)) {
             return InteractionResult.PASS;
         }
 
         double coef = 1.0 - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, itemstack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, itemstack).number * 0.25 : 0);
 
-        if (tile instanceof TileEntityBlock base) {
+        if (tile instanceof BlockEntityBase base) {
             double energy = 10000;
             if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PURIFIER, itemstack)) {
                 energy = 0;
@@ -125,7 +126,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
             }
         }
 
-        if (tile instanceof TileMultiMachine base) {
+        if (tile instanceof BlockEntityMultiMachine base) {
             if (!ElectricItem.manager.canUse(itemstack, 500 * coef)) {
                 return InteractionResult.PASS;
             }
@@ -153,7 +154,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                     module_separate = new ItemStack(IUItem.module_separate.getItem());
                 }
                 if (base.solartype != null) {
-                    panel = new ItemStack(IUItem.module6.getStack( base.solartype.meta), 1);
+                    panel = new ItemStack(IUItem.module6.getStack(base.solartype.meta), 1);
                 }
                 if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), ItemStack.EMPTY);
@@ -206,7 +207,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
                     base.multi_process.shrinkModule(1);
                 }
                 if (base.solartype != null) {
-                    stack_list.add(new ItemStack(IUItem.module6.getStack( base.solartype.meta), 1));
+                    stack_list.add(new ItemStack(IUItem.module6.getStack(base.solartype.meta), 1));
                     base.solartype = null;
                 }
                 if (base.multi_process.modulestorage) {
@@ -228,7 +229,7 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
 
                 }
                 for (ItemStack stack : stack_list) {
-                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(),stack);
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
                     if (!player.getLevel().isClientSide) {
                         item.setPickUpDelay(0);
                         world.addFreshEntity(item);
@@ -258,8 +259,6 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
 
         return InteractionResult.PASS;
     }
-
-
 
 
     private void dropUpgrade(Level world, Player player, IManufacturerBlock base) {

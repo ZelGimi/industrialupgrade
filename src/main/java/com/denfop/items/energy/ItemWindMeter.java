@@ -1,10 +1,10 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.items.BaseEnergyItem;
+import com.denfop.utils.ElectricItem;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,7 @@ public class ItemWindMeter extends BaseEnergyItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.wind_meter.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.wind_meter.info")));
     }
 
     @Override
@@ -58,6 +58,7 @@ public class ItemWindMeter extends BaseEnergyItem {
 
         return InteractionResultHolder.success(stack);
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -70,7 +71,7 @@ public class ItemWindMeter extends BaseEnergyItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

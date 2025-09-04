@@ -2,9 +2,11 @@ package com.denfop;
 
 
 import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.mechanism.*;
+import com.denfop.dataregistry.*;
 import com.denfop.entity.EntityNuclearBombPrimed;
 import com.denfop.entity.SmallBee;
 import com.denfop.items.ItemUpgradeModule;
@@ -35,7 +37,6 @@ import com.denfop.items.space.*;
 import com.denfop.items.upgradekit.ItemUpgradeKit;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -432,14 +433,14 @@ public class IUItem {
     public static DataBlock<BlockPrecious.Type, BlockPrecious, ItemBlockPrecious> preciousblock;
     public static DataBlock<BlockBasaltHeavyOre.Type, BlockBasaltHeavyOre, ItemBlockBasaltHeavyOre> basaltheavyore;
     public static DataBlock<BlockBasaltHeavyOre1.Type, BlockBasaltHeavyOre1, ItemBlockBasaltHeavyOre1> basaltheavyore1;
-    public static DataBlockEntity<BlockCombinerSolid> combinersolidmatter;
+    public static DataBlockEntity<BlockCombinerSolidEntity> combinersolidmatter;
     public static List<String> list1 = new LinkedList<>();
     public static DataSimpleItem<IUItemBase, ResourceLocation> antiairpollution;
     public static DataSimpleItem<IUItemBase, ResourceLocation> antiairpollution1;
     public static DataSimpleItem<IUItemBase, ResourceLocation> antisoilpollution;
     public static DataSimpleItem<IUItemBase, ResourceLocation> antisoilpollution1;
     public static DataSimpleItem<ItemRecipeSchedule, ResourceLocation> recipe_schedule;
-    public static DataBlockEntity<BlockAdvRefiner> oiladvrefiner;
+    public static DataBlockEntity<BlockAdvRefinerEntity> oiladvrefiner;
     public static DataSimpleItem<ItemLeadBox, ResourceLocation> leadbox;
     public static DataSimpleItem<Item, ResourceLocation> nether_star_ingot;
     public static DataSimpleItem<Item, ResourceLocation> wolframite;
@@ -447,7 +448,7 @@ public class IUItem {
     public static ItemStack circuitPhotonic;
     public static ItemStack circuitSpectral;
     public static ItemStack cirsuitQuantum;
-    public static DataBlockEntity<BlockBaseMachine> machines;
+    public static DataBlockEntity<BlockBaseMachineEntity> machines;
     public static ItemNuclearResource UranFuel;
     public static ItemNuclearResource Plutonium;
     public static ItemNuclearResource smallPlutonium;
@@ -455,8 +456,8 @@ public class IUItem {
     public static ItemNuclearResource mox;
     public static ItemNuclearResource Uran235;
     public static ItemNuclearResource smallUran235;
-    public static DataBlockEntity<BlockBaseMachine1> basemachine;
-    public static DataBlockEntity<BlockAdvSolarEnergy> adv_se_generator;
+    public static DataBlockEntity<BlockBaseMachine1Entity> basemachine;
+    public static DataBlockEntity<BlockAdvSolarEnergyEntity> adv_se_generator;
     public static DataSimpleItem<Item, ResourceLocation> wax_stick;
     public static DataSimpleItem<Item, ResourceLocation> royal_jelly;
     public static DataSimpleItem<Item, ResourceLocation> beeswax;
@@ -494,44 +495,44 @@ public class IUItem {
     public static DataSimpleItem<Item, ResourceLocation> fertilizer;
     public static DataSimpleItem<Item, ResourceLocation> raw_apatite;
     public static DataSimpleItem<Item, ResourceLocation> apatite_cube;
-    public static DataBlockEntity<BlockBaseMachine2> basemachine1;
-    public static DataBlockEntity<BlockAnvil> anvil;
+    public static DataBlockEntity<BlockBaseMachine2Entity> basemachine1;
+    public static DataBlockEntity<BlockAnvilEntity> anvil;
     public static DataItem<ItemPlate.Types, ItemPlate> plate;
-    public static DataBlockEntity<BlockMolecular> blockmolecular;
-    public static DataBlockEntity<BlockChargepadStorage> chargepadelectricblock;
-    public static DataBlockEntity<BlockEnergyStorage> electricblock;
+    public static DataBlockEntity<BlockMolecularEntity> blockmolecular;
+    public static DataBlockEntity<BlockChargepadStorageEntity> chargepadelectricblock;
+    public static DataBlockEntity<BlockEnergyStorageEntity> electricblock;
     public static Map<ItemStack, EnumSolarPanels> map3 = new HashMap<>();
     public static List<ItemStack> upgrades_panels = new ArrayList<>();
     public static DataItem<ItemModuleTypePanel.Types, ItemModuleTypePanel> module6;
     public static DataItem<ItemModuleType.Types, ItemModuleType> module5;
-    public static DataBlockEntity<BlockSolarPanels> blockpanel;
-    public static DataBlockEntity<BlockMoreMachine> machines_base;
-    public static DataBlockEntity<BlockSimpleMachine> simplemachine;
-    public static DataBlockEntity<BlockMoreMachine1> machines_base1;
-    public static DataBlockEntity<BlockMoreMachine2> machines_base2;
-    public static DataBlockEntity<BlockMoreMachine3> machines_base3;
+    public static DataBlockEntity<BlockSolarPanelsEntity> blockpanel;
+    public static DataBlockEntity<BlockMoreMachineEntity> machines_base;
+    public static DataBlockEntity<BlockSimpleMachineEntity> simplemachine;
+    public static DataBlockEntity<BlockMoreMachine1Entity> machines_base1;
+    public static DataBlockEntity<BlockMoreMachine2Entity> machines_base2;
+    public static DataBlockEntity<BlockMoreMachine3Entity> machines_base3;
     public static DataBlockEntity<BlocksPhotonicMachine> pho_machine;
     public static DataItem<ItemVerySmallDust.Types, ItemVerySmallDust> verysmalldust;
     public static DataItem<ItemAlloysGear.Types, ItemAlloysGear> alloygear;
-    public static DataBlockEntity<BlockBlastFurnace> blastfurnace;
-    public static DataBlockEntity<BlockMiniSmeltery> mini_smeltery;
-    public static DataBlockEntity<BlockPetrolQuarry> oilgetter;
-    public static DataBlockEntity<BlockPrimalFluidHeater> primalFluidHeater;
-    public static DataBlockEntity<BlockElectronicsAssembler> electronics_assembler;
-    public static DataBlockEntity<BlockGasChamber> gasChamber;
-    public static DataBlockEntity<BlockImpSolarEnergy> imp_se_generator;
-    public static DataBlockEntity<BlockSolarEnergy> blockSE;
-    public static DataBlockEntity<BlockSqueezer> squeezer;
+    public static DataBlockEntity<BlockBlastFurnaceEntity> blastfurnace;
+    public static DataBlockEntity<BlockMiniSmelteryEntity> mini_smeltery;
+    public static DataBlockEntity<BlockPetrolQuarryEntity> oilgetter;
+    public static DataBlockEntity<BlockPrimalFluidHeaterEntity> primalFluidHeater;
+    public static DataBlockEntity<BlockElectronicsAssemblerEntity> electronics_assembler;
+    public static DataBlockEntity<BlockGasChamberEntity> gasChamber;
+    public static DataBlockEntity<BlockImpSolarEnergyEntity> imp_se_generator;
+    public static DataBlockEntity<BlockSolarEnergyEntity> blockSE;
+    public static DataBlockEntity<BlockSqueezerEntity> squeezer;
     public static DataSimpleItem<ItemToolCrafting, ResourceLocation> solderingIron;
-    public static DataBlockEntity<BlockSolderingMechanism> solderingMechanism;
-    public static DataBlockEntity<BlockSolidMatter> solidmatter;
-    public static DataBlockEntity<BlockPrimalProgrammingTable> programming_table;
+    public static DataBlockEntity<BlockSolderingMechanismEntity> solderingMechanism;
+    public static DataBlockEntity<BlockSolidMatterEntity> solidmatter;
+    public static DataBlockEntity<BlockPrimalProgrammingTableEntity> programming_table;
     public static DataSimpleItem<ItemToolCrafting, ResourceLocation> laser;
-    public static DataBlockEntity<BlockPrimalLaserPolisher> primalPolisher;
-    public static DataBlockEntity<BlockTank> tank;
-    public static DataBlockEntity<BlockDryer> dryer;
-    public static DataBlockEntity<BlockPrimalSiliconCrystalHandler> primalSiliconCrystal;
-    public static DataBlockEntity<BlockCompressor> blockCompressor;
+    public static DataBlockEntity<BlockPrimalLaserPolisherEntity> primalPolisher;
+    public static DataBlockEntity<BlockTankEntity> tank;
+    public static DataBlockEntity<BlockDryerEntity> dryer;
+    public static DataBlockEntity<BlockPrimalSiliconCrystalHandlerEntity> primalSiliconCrystal;
+    public static DataBlockEntity<BlockCompressorEntity> blockCompressor;
     public static DataSimpleItem<ItemBaseRod, ResourceLocation> uranium_fuel_rod;
     public static DataSimpleItem<ItemBaseRod, ResourceLocation> dual_uranium_fuel_rod;
     public static DataSimpleItem<ItemBaseRod, ResourceLocation> quad_uranium_fuel_rod;
@@ -708,7 +709,7 @@ public class IUItem {
     public static DataSimpleItem<ItemWindRotor, ResourceLocation> adronrotor;
     public static DataSimpleItem<ItemWindRotor, ResourceLocation> ultramarinerotor;
     public static DataItem<ItemVeinSensor.Types, ItemVeinSensor> veinsencor;
-    public static DataBlockEntity<BlockCable> cable;
+    public static DataBlockEntity<BlockCableEntity> cable;
     public static ItemStack copperCableItem;
     public static ItemStack insulatedTinCableItem;
     public static ItemStack tinCableItem;
@@ -718,35 +719,35 @@ public class IUItem {
     public static ItemStack goldCableItem;
     public static ItemStack glassFiberCableItem;
     public static ItemStack insulatedCopperCableItem;
-    public static DataBlockEntity<BlockCoolPipe> coolpipes;
-    public static DataBlockEntity<BlockPipe> pipes;
-    public static DataBlockEntity<BlockHeatColdPipe> heatcold_pipes;
-    public static DataBlockEntity<BlockSolariumCable> scable;
-    public static DataBlockEntity<BlockQuantumCable> qcable;
-    public static DataBlockEntity<BlockAmpereCable> amperepipes;
-    public static DataBlockEntity<BlockSteamPipe> steamPipe;
-    public static DataBlockEntity<BlockBioPipe> biopipes;
-    public static DataBlockEntity<BlockNightCable> nightpipes;
-    public static DataBlockEntity<BlockRadPipe> radcable_item;
-    public static DataBlockEntity<BlockExpCable> expcable;
-    public static DataBlockEntity<BlockUniversalCable> universal_cable;
-    public static DataBlockEntity<BlockTransportPipe> item_pipes;
-    public static DataBlockEntity<BlockBarrel> barrel;
+    public static DataBlockEntity<BlockCoolPipeEntity> coolpipes;
+    public static DataBlockEntity<BlockPipeEntity> pipes;
+    public static DataBlockEntity<BlockHeatColdPipeEntity> heatcold_pipes;
+    public static DataBlockEntity<BlockSolariumCableEntity> scable;
+    public static DataBlockEntity<BlockQuantumCableEntity> qcable;
+    public static DataBlockEntity<BlockAmpereCableEntity> amperepipes;
+    public static DataBlockEntity<BlockSteamPipeEntity> steamPipe;
+    public static DataBlockEntity<BlockBioPipeEntity> biopipes;
+    public static DataBlockEntity<BlockNightCableEntity> nightpipes;
+    public static DataBlockEntity<BlockRadPipeEntity> radcable_item;
+    public static DataBlockEntity<BlockExpCableEntity> expcable;
+    public static DataBlockEntity<BlockUniversalCableEntity> universal_cable;
+    public static DataBlockEntity<BlockTransportPipeEntity> item_pipes;
+    public static DataBlockEntity<BlockBarrelEntity> barrel;
     public static Set<Map.Entry<ItemStack, BaseMachineRecipe>> machineRecipe;
     public static List<String> name_alloys;
     public static List<String> name_mineral;
     public static List<String> name_mineral1;
-    public static DataBlockEntity<BlockConverterMatter> convertersolidmatter;
-    public static DataBlockEntity<BlockPrimalFluidIntegrator> fluidIntegrator;
-    public static DataBlockEntity<BlockSunnariumMaker> sunnariummaker;
-    public static DataBlockEntity<BlockSunnariumPanelMaker> sunnariumpanelmaker;
-    public static DataBlockEntity<BlockPrimalPump> primal_pump;
+    public static DataBlockEntity<BlockConverterMatterEntity> convertersolidmatter;
+    public static DataBlockEntity<BlockPrimalFluidIntegratorEntity> fluidIntegrator;
+    public static DataBlockEntity<BlockSunnariumMakerEntity> sunnariummaker;
+    public static DataBlockEntity<BlockSunnariumPanelMakerEntity> sunnariumpanelmaker;
+    public static DataBlockEntity<BlockPrimalPumpEntity> primal_pump;
     public static DataBlock<BlockOil.Type, BlockOil, ItemBlockOil> oilblock;
     public static DataBlock<BlockGas.Type, BlockGas, ItemBlockGas> gasBlock;
-    public static DataBlockEntity<BlockQuarryVein> oilquarry;
-    public static DataBlockEntity<BlockRefractoryFurnace> refractoryFurnace;
-    public static DataBlockEntity<BlockUpgradeBlock> upgradeblock;
-    public static DataBlockEntity<BlockRefiner> oilrefiner;
+    public static DataBlockEntity<BlockQuarryVeinEntity> oilquarry;
+    public static DataBlockEntity<BlockRefractoryFurnaceEntity> refractoryFurnace;
+    public static DataBlockEntity<BlockUpgradeBlockEntity> upgradeblock;
+    public static DataBlockEntity<BlockRefinerEntity> oilrefiner;
     public static ItemStack module3;
     public static ItemStack module1;
     public static ItemStack module2;
@@ -767,7 +768,7 @@ public class IUItem {
     public static ItemStack phase_module2;
     public static DataItem<ItemEntityModule.Types, ItemEntityModule> entitymodules;
     public static DataSimpleItem<ItemPurifier, ResourceLocation> purifier;
-    public static DataBlockEntity<BlockDoubleMolecularTransfomer> blockdoublemolecular;
+    public static DataBlockEntity<BlockDoubleMolecularTransfomerEntity> blockdoublemolecular;
     public static DataSimpleItem<ItemEnergyInstruments, ResourceLocation> nanodrill;
     public static DataSimpleItem<ItemEnergyInstruments, ResourceLocation> quantumdrill;
     public static DataSimpleItem<ItemEnergyInstruments, ResourceLocation> spectraldrill;
@@ -775,40 +776,40 @@ public class IUItem {
     public static Set<Map.Entry<ItemStack, BaseMachineRecipe>> fluidMatterRecipe;
     public static DataBlock<BlockHumus.Type, BlockHumus, ItemBlockHumus> humus;
     public static DataBlock<BlockNuclearBomb.Type, BlockNuclearBomb, ItemBlockNuclearBomb> nuclear_bomb;
-    public static DataBlockEntity<BlockCrop> crop;
+    public static DataBlockEntity<BlockCropEntity> crop;
     public static DataItem<ItemJarBees.Types, ItemJarBees> jarBees;
-    public static DataBlockEntity<BlockApiary> apiary;
+    public static DataBlockEntity<BlockApiaryEntity> apiary;
     public static DataItem<ItemCrops.Types, ItemCrops> crops;
     public static DataItem<ItemBeeGenome.Types, ItemBeeGenome> genome_bee;
     public static DataItem<ItemCropGenome.Types, ItemCropGenome> genome_crop;
     public static DataSimpleItem<ItemBeeAnalyzer, ResourceLocation> bee_analyzer;
     public static DataSimpleItem<ItemAgriculturalAnalyzer, ResourceLocation> agricultural_analyzer;
-    public static DataBlockEntity<BlockHive> hive;
-    public static DataBlockEntity<BlockTransformer> tranformer;
-    public static DataBlockEntity<BlockMacerator> blockMacerator;
-    public static DataBlockEntity<BlockAdminPanel> blockadmin;
-    public static DataBlockEntity<BlockChemicalPlant> chemicalPlant;
-    public static DataBlockEntity<BlockPrimalWireInsulator> blockwireinsulator;
-    public static DataBlockEntity<BlockCokeOven> cokeoven;
-    public static DataBlockEntity<BlockAdvCokeOven> adv_cokeoven;
-    public static DataBlockEntity<BlockCyclotron> cyclotron;
-    public static DataBlockEntity<BlockStrongAnvil> strong_anvil;
-    public static DataBlockEntity<BlockSintezator> blocksintezator;
-    public static DataBlockEntity<BlockEarthQuarry> earthQuarry;
-    public static DataBlockEntity<BlockGeothermalPump> geothermalpump;
-    public static DataBlockEntity<BlockGasTurbine> gasTurbine;
-    public static DataBlockEntity<BlockGasWell> gas_well;
-    public static DataBlockEntity<BlockSmeltery> smeltery;
-    public static DataBlockEntity<BlockLightningRod> lightning_rod;
-    public static DataBlockEntity<BlockSteamBoiler> steam_boiler;
-    public static DataBlockEntity<BlockWindTurbine> windTurbine;
-    public static DataBlockEntity<BlockHydroTurbine> hydroTurbine;
-    public static DataBlockEntity<BlockSteamTurbine> steam_turbine;
-    public static DataBlockEntity<BlockWaterReactors> water_reactors_component;
-    public static DataBlockEntity<BlockGasReactor> gas_reactor;
-    public static DataBlockEntity<BlockHeatReactor> heat_reactor;
+    public static DataBlockEntity<BlockHiveEntity> hive;
+    public static DataBlockEntity<BlockTransformerEntity> tranformer;
+    public static DataBlockEntity<BlockMaceratorEntity> blockMacerator;
+    public static DataBlockEntity<BlockAdminPanelEntity> blockadmin;
+    public static DataBlockEntity<BlockChemicalPlantEntity> chemicalPlant;
+    public static DataBlockEntity<BlockPrimalWireInsulatorEntity> blockwireinsulator;
+    public static DataBlockEntity<BlockCokeOvenEntity> cokeoven;
+    public static DataBlockEntity<BlockAdvCokeOvenEntity> adv_cokeoven;
+    public static DataBlockEntity<BlockCyclotronEntity> cyclotron;
+    public static DataBlockEntity<BlockStrongAnvilEntity> strong_anvil;
+    public static DataBlockEntity<BlockSintezatorEntity> blocksintezator;
+    public static DataBlockEntity<BlockEarthQuarryEntity> earthQuarry;
+    public static DataBlockEntity<BlockGeothermalPumpEntity> geothermalpump;
+    public static DataBlockEntity<BlockGasTurbineEntity> gasTurbine;
+    public static DataBlockEntity<BlockGasWellEntity> gas_well;
+    public static DataBlockEntity<BlockSmelteryEntity> smeltery;
+    public static DataBlockEntity<BlockLightningRodEntity> lightning_rod;
+    public static DataBlockEntity<BlockSteamBoilerEntity> steam_boiler;
+    public static DataBlockEntity<BlockWindTurbineEntity> windTurbine;
+    public static DataBlockEntity<BlockHydroTurbineEntity> hydroTurbine;
+    public static DataBlockEntity<BlockSteamTurbineEntity> steam_turbine;
+    public static DataBlockEntity<BlockWaterReactorsEntity> water_reactors_component;
+    public static DataBlockEntity<BlockGasReactorEntity> gas_reactor;
+    public static DataBlockEntity<BlockHeatReactorEntity> heat_reactor;
     public static DataBlockEntity<BlocksGraphiteReactors> graphite_reactor;
-    public static DataBlockEntity<BlockBaseMachine3> basemachine2;
+    public static DataBlockEntity<BlockBaseMachine3Entity> basemachine2;
     public static ItemStack module8;
     public static ItemStack FluidCell;
     public static DataSimpleItem<ItemCapacitor, ResourceLocation> simple_capacitor_item;
@@ -834,7 +835,7 @@ public class IUItem {
     public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBattery;
     public static DataSimpleItem<ItemCreativeTomeResearchSpace, ResourceLocation> creativeTomeResearch;
     public static DataSimpleItem<ItemCreativeBattery, ResourceLocation> creativeBatteryWireless;
-    public static DataBlockEntity<BlockCreativeBlocks> creativeBlock;
+    public static DataBlockEntity<BlockCreativeBlocksEntity> creativeBlock;
     public static RegistryObject<EntityType<SmallBee>> entity_bee;
     public static DataBlock<BlockRaws.Type, BlockRaws, ItemBlockRaws> rawsBlock;
     public static DataSimpleItem<ItemPipette, ResourceLocation> pipette;
@@ -851,18 +852,18 @@ public class IUItem {
 
         name_mineral.add("mikhail");//0
         name_mineral.add("aluminium");//1
-        name_mineral.add("vanady");//2
-        name_mineral.add("wolfram");//3
+        name_mineral.add("vanadium");//2
+        name_mineral.add("tungsten");//3
         name_mineral.add("invar");//4
         name_mineral.add("caravky");//5
         name_mineral.add("cobalt");//6
         name_mineral.add("magnesium");//7
         name_mineral.add("nickel");//8
-        name_mineral.add("platium");//9
+        name_mineral.add("platinum");//9
         name_mineral.add("titanium");//10
         name_mineral.add("chromium");//11
         name_mineral.add("spinel");//12
-        name_mineral.add("electrium");//13
+        name_mineral.add("electrum");//13
         name_mineral.add("silver");//14
         name_mineral.add("zinc");//15
         name_mineral.add("manganese");//0 ore1
@@ -871,12 +872,12 @@ public class IUItem {
         //
         name_mineral1.add("mikhail");//0
         name_mineral1.add("aluminium");//1
-        name_mineral1.add("vanady");//2
-        name_mineral1.add("wolfram");//3
+        name_mineral1.add("vanadium");//2
+        name_mineral1.add("tungsten");//3
         name_mineral1.add("cobalt");//4
         name_mineral1.add("magnesium");//5
         name_mineral1.add("nickel");//6
-        name_mineral1.add("platium");//7
+        name_mineral1.add("platinum");//7
         name_mineral1.add("titanium");//8
         name_mineral1.add("chromium");//9
         name_mineral1.add("spinel");//10

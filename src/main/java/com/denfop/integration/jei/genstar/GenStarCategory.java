@@ -2,13 +2,13 @@ package com.denfop.integration.jei.genstar;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityNuclearWasteRecycler;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityNuclearWasteRecycler;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenStarCategory extends GuiIU implements IRecipeCategory<GenStarHandler> {
+public class GenStarCategory extends ScreenMain implements IRecipeCategory<GenStarHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -33,8 +33,8 @@ public class GenStarCategory extends GuiIU implements IRecipeCategory<GenStarHan
     public GenStarCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        super(((BlockEntityNuclearWasteRecycler) BlockBaseMachine3Entity.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiWitherMaker".toLowerCase() +
                         ".png"), 3, 3, 147,
@@ -46,7 +46,7 @@ public class GenStarCategory extends GuiIU implements IRecipeCategory<GenStarHan
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine, 1, 13).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine, 1, 13).getDescriptionId());
     }
 
 
@@ -72,25 +72,24 @@ public class GenStarCategory extends GuiIU implements IRecipeCategory<GenStarHan
         }
 
 
-     bindTexture(getTexture());
+        bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,+74, +32, 177, 0, xScale, 18);
+        drawTexturedModalRect(stack, +74, +32, 177, 0, xScale, 18);
 
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenStarHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,5,24).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,23,24).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT,41,24).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT,5,42).addItemStack(recipe.getInput3());
-        builder.addSlot(RecipeIngredientRole.INPUT,23,42).addItemStack(recipe.getInput4());
-        builder.addSlot(RecipeIngredientRole.INPUT,41,42).addItemStack(recipe.getInput5());
-        builder.addSlot(RecipeIngredientRole.INPUT,23,60).addItemStack(recipe.getInput6());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,117,33).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 24).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 24).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 41, 24).addItemStack(recipe.getInput2());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 42).addItemStack(recipe.getInput3());
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 42).addItemStack(recipe.getInput4());
+        builder.addSlot(RecipeIngredientRole.INPUT, 41, 42).addItemStack(recipe.getInput5());
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 60).addItemStack(recipe.getInput6());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 117, 33).addItemStack(recipe.getOutput());
     }
-
 
 
     protected ResourceLocation getTexture() {

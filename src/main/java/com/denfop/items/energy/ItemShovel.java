@@ -10,9 +10,10 @@ public class ItemShovel extends ShovelItem {
     private String nameItem;
 
     public ItemShovel(String name) {
-        super(IUTiers.RUBY, 1.5F, -3.0F,new Properties().tab(IUCore.EnergyTab).stacksTo(1));
-        this.name=name;
+        super(IUTiers.RUBY, 1.5F, -3.0F, new Properties().tab(IUCore.EnergyTab).stacksTo(1));
+        this.name = name;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -25,7 +26,7 @@ public class ItemShovel extends ShovelItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+name;
+            this.nameItem = "item." + name;
         }
 
         return this.nameItem;

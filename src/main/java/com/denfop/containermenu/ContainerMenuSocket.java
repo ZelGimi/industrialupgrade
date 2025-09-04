@@ -1,0 +1,26 @@
+package com.denfop.containermenu;
+
+import com.denfop.blockentity.mechanism.BlockEntitySocketFactory;
+import com.denfop.containermenu.slot.SlotInvSlot;
+import net.minecraft.world.entity.player.Player;
+
+public class ContainerMenuSocket extends ContainerMenuFullInv<BlockEntitySocketFactory> {
+
+    public ContainerMenuSocket(BlockEntitySocketFactory var1, Player var11) {
+        super(var11, var1);
+        for (int i = 0; i < 2; i++) {
+            this.addSlotToContainer(new SlotInvSlot(var1.inputSlotA, i, 40 + i * 18, 17));
+        }
+        for (int i = 2; i < 4; i++) {
+            this.addSlotToContainer(new SlotInvSlot(var1.inputSlotA, i, 22 + (i - 2) * 18, 35));
+        }
+        for (int i = 4; i < 6; i++) {
+            this.addSlotToContainer(new SlotInvSlot(var1.inputSlotA, i, 40 + (i - 4) * 18, 53));
+        }
+        this.addSlotToContainer(new SlotInvSlot(var1.outputSlot, 0, 120, 35));
+        for (int i = 0; i < 4; i++) {
+            addSlotToContainer(new SlotInvSlot(var1.upgradeSlot, i, 152, 8 + i * 18));
+        }
+    }
+
+}

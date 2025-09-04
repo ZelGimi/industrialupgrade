@@ -1,12 +1,12 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
+import com.denfop.potion.IUPotion;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -18,8 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
@@ -37,8 +34,6 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL;
 
 public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
 
@@ -76,7 +71,7 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
 
         List<Player> players = world.getEntitiesOfClass(Player.class, axisAlignedBB);
         for (Player player : players) {
-            boolean canAffect = !IHazmatLike.hasCompleteHazmat(player);
+            boolean canAffect = !HazmatLike.hasCompleteHazmat(player);
             if (canAffect) {
                 player.addEffect(new MobEffectInstance(IUPotion.radiation, 400, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 0));
@@ -116,9 +111,9 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         } else if (meta == 2) {
             return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(19), 1 + getDrop(fortune)));
         } else if (meta == 3) {
-            return super.getDrops(world, pos,state,fortune);
+            return super.getDrops(world, pos, state, fortune);
         }
-        return super.getDrops(world, pos,state,fortune);
+        return super.getDrops(world, pos, state, fortune);
     }
 
     private int getDrop(int fortune) {

@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "industrialupgrade:baseblockingot/vanady"
+      "item": "industrialupgrade:baseblockingot/vanadium"
     }
   ],
   "result": {
     "count": 9,
-    "item": "industrialupgrade:itemingots/vanady_ingot"
+    "item": "industrialupgrade:itemingots/vanadium_ingot"
   }
 }

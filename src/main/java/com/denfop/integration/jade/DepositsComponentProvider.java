@@ -11,15 +11,15 @@ import snownee.jade.api.config.IPluginConfig;
 
 import java.util.List;
 
-public class DepositsComponentProvider  implements IBlockComponentProvider {
+public class DepositsComponentProvider implements IBlockComponentProvider {
     public static final DepositsComponentProvider INSTANCE = new DepositsComponentProvider();
-
 
 
     @Override
     public ResourceLocation getUid() {
         return new ResourceLocation(Constants.MOD_ID, "deposists_provider_blockentity");
     }
+
     @Override
     public boolean isRequired() {
         return true;

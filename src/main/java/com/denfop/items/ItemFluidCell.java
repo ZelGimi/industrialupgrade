@@ -1,12 +1,11 @@
 package com.denfop.items;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -121,7 +120,7 @@ public class ItemFluidCell extends ItemFluidContainer {
         ItemStack itemstack = player.getItemInHand(hand);
         IFluidHandlerItem fs = itemstack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse(null);
         if (fs == null)
-            fs = (IFluidHandlerItem) initCapabilities(itemstack,itemstack.getOrCreateTag());
+            fs = (IFluidHandlerItem) initCapabilities(itemstack, itemstack.getOrCreateTag());
         BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, fs.getFluidInTank(0).getFluid() == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         if (blockhitresult.getType() == HitResult.Type.MISS) {
             return InteractionResultHolder.pass(itemstack);

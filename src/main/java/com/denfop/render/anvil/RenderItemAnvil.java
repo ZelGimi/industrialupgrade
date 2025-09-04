@@ -1,7 +1,7 @@
 package com.denfop.render.anvil;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.base.TileEntityAnvil;
+import com.denfop.blockentity.base.BlockEntityAnvil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType.FIXED;
 import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType.GROUND;
 
-public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
+public class RenderItemAnvil implements BlockEntityRenderer<BlockEntityAnvil> {
 
 
     private final ItemRenderer itemRenderer;
@@ -28,6 +28,7 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
     public RenderItemAnvil(BlockEntityRendererProvider.Context p_173636_) {
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
+
     private int transformModelCount(PoseStack poseStack, float partialTicks
     ) {
 
@@ -43,27 +44,28 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
         rotation = (prevRotation + (rotation - prevRotation) * (partialTicks)) % 360;
 
         prevRotation = rotation;
-        rotation +=2F;
+        rotation += 2F;
 
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
 
 
         return modelCount;
     }
+
     public void renderItem(ItemStack itemStack, Level level, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
 
-        BakedModel bakedModel = this.itemRenderer.getModel(itemStack,level,null,0);
+        BakedModel bakedModel = this.itemRenderer.getModel(itemStack, level, null, 0);
         RandomSource random = level.random;
         if (bakedModel != null) {
             boolean isGui3d = bakedModel.isGui3d();
 
             poseStack.pushPose();
-            poseStack.translate(0,2,0);
+            poseStack.translate(0, 2, 0);
 
-            int count =transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
+            int count = transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
 
             for (int i = 0; i < 1; ++i) {
                 poseStack.pushPose();
@@ -83,28 +85,29 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
                     }
                 }
 
-                BakedModel transformedModel =net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                BakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
                         bakedModel,
                         GROUND,
                         false
                 );
-                this.itemRenderer .render(itemStack,FIXED, false, poseStack, buffer, light, overlay, transformedModel);
+                this.itemRenderer.render(itemStack, FIXED, false, poseStack, buffer, light, overlay, transformedModel);
                 poseStack.popPose();
             }
 
             poseStack.popPose();
         }
     }
+
     @Override
-    public void render(TileEntityAnvil tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityAnvil tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         ItemStack itemStack = tile.inputSlotA.get(0);
         poseStack.pushPose();
-        if (!tile.active.isEmpty()){
-            if (this.stack == null){
+        if (!tile.active.isEmpty()) {
+            if (this.stack == null) {
                 this.stack = new ItemStack(IUItem.iuingot.getStack(10));
             }
-            renderItem(stack,tile.getLevel(),poseStack,buffer,combinedLight,combinedOverlay);
+            renderItem(stack, tile.getLevel(), poseStack, buffer, combinedLight, combinedOverlay);
         }
         poseStack.popPose();
         if (!itemStack.isEmpty()) {
@@ -128,7 +131,7 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
             poseStack.popPose();
         }
 
-         ItemStack outputStack = tile.outputSlot.get(0);
+        ItemStack outputStack = tile.outputSlot.get(0);
         if (!outputStack.isEmpty()) {
             poseStack.pushPose();
 

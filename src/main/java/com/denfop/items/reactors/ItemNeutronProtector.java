@@ -1,10 +1,10 @@
 package com.denfop.items.reactors;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -33,6 +33,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem {
         p_41423_.add(Component.literal(Localization.translate("reactor.component_level1")));
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -45,7 +46,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -83,7 +84,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem {
 
     @Override
     public double getHeatRemovePercent(final IAdvReactor reactor) {
-        return 1-0.05*level;
+        return 1 - 0.05 * level;
     }
 
     @Override

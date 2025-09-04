@@ -3,8 +3,8 @@ package com.denfop.events.client;
 import com.denfop.Constants;
 import com.denfop.api.space.*;
 import com.denfop.api.space.fakebody.IFakeBody;
-import com.denfop.gui.GuiCore;
-import com.denfop.tiles.mechanism.TileEntityHologramSpace;
+import com.denfop.blockentity.mechanism.TileEntityHologramSpace;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix3f;
@@ -99,9 +99,9 @@ public class SolarSystemRenderer {
                 color = 1;
             }
             if (color != 0)
-            p_109623_.vertex(matrix,x, y, z).color(0, color, 0, 1f).normal(matrix3f,1,0,0).endVertex();
+                p_109623_.vertex(matrix, x, y, z).color(0, color, 0, 1f).normal(matrix3f, 1, 0, 0).endVertex();
             else
-                p_109623_.vertex(matrix,x, y, z).color(0, 0, 0.65f, 1f).normal(matrix3f,1,0,0).endVertex();
+                p_109623_.vertex(matrix, x, y, z).color(0, 0, 0.65f, 1f).normal(matrix3f, 1, 0, 0).endVertex();
 
         }
 
@@ -123,7 +123,7 @@ public class SolarSystemRenderer {
             float centerY,
             int steps
     ) {
-      
+
         float centerX = (x1 + x2) / 2.0F;
         float centerZ = (z1 + z2) / 2.0F;
 
@@ -159,29 +159,29 @@ public class SolarSystemRenderer {
         poseStack.translate(x, y, z);
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(rotationAngle));
-       RenderSystem.setShaderColor(1, 1, 1, 1);
-        GuiCore.bindTexture(texture);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        ScreenIndustrialUpgrade.bindTexture(texture);
         Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder buffer = tessellator.getBuilder();
 
-        renderCube(poseStack,buffer, radius);
+        renderCube(poseStack, buffer, radius);
         poseStack.popPose();
     }
 
     private void renderRings(PoseStack poseStack, RenderLevelStageEvent event, float radius, ResourceLocation texture, float x, float y, float z, boolean isSaturn) {
         poseStack.pushPose();
         poseStack.translate(x, y, z);
-        GuiCore.bindTexture(texture);
+        ScreenIndustrialUpgrade.bindTexture(texture);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         if (!isSaturn) {
-            poseStack.mulPose(new Vector3f(1.0F, 1.0F, 0.0F).rotationDegrees (180));
-            poseStack.scale(0.35f,0.35f,0.35f);
-        }else{
-            poseStack.scale(0.8f,0.8f,0.8f);
+            poseStack.mulPose(new Vector3f(1.0F, 1.0F, 0.0F).rotationDegrees(180));
+            poseStack.scale(0.35f, 0.35f, 0.35f);
+        } else {
+            poseStack.scale(0.8f, 0.8f, 0.8f);
         }
         buffer.begin(VertexFormat.Mode.TRIANGLE_STRIP, POSITION_TEX);
-        renderRing(poseStack,buffer, radius);
+        renderRing(poseStack, buffer, radius);
         tessellator.end();
 
         poseStack.popPose();
@@ -199,40 +199,40 @@ public class SolarSystemRenderer {
         buffer.begin(VertexFormat.Mode.QUADS, POSITION_TEX);
 
 
-        buffer.vertex(matrix,-halfSize, -halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, halfSize, -halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, -halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, halfSize, -halfSize).uv(0.0F, 1.0F).endVertex();
 
         // Back face
-        buffer.vertex(matrix,-halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, -halfSize, halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, -halfSize, halfSize).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
 
         // Left face
-        buffer.vertex(matrix,-halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
 
         // Right face
-        buffer.vertex(matrix,halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix,halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, halfSize, -halfSize, halfSize).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, halfSize, -halfSize).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
 
         // Top face
-        buffer.vertex(matrix,-halfSize, halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
 
         // Bottom face
-        buffer.vertex(matrix,-halfSize, -halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix,halfSize, -halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix,-halfSize, -halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, -halfSize, -halfSize).uv(0.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, -halfSize, -halfSize).uv(1.0F, 0.0F).endVertex();
+        buffer.vertex(matrix, halfSize, -halfSize, halfSize).uv(1.0F, 1.0F).endVertex();
+        buffer.vertex(matrix, -halfSize, -halfSize, halfSize).uv(0.0F, 1.0F).endVertex();
 
         Tesselator.getInstance().end();
         RenderSystem.enableCull();
@@ -251,12 +251,12 @@ public class SolarSystemRenderer {
             // Outer ring vertices
             float xOuter = (float) (outerRadius * Math.cos(theta));
             float zOuter = (float) (outerRadius * Math.sin(theta));
-            buffer.vertex(matrix,xOuter, 0.0F, zOuter).uv((float) i / segments, 0.0F).endVertex();
+            buffer.vertex(matrix, xOuter, 0.0F, zOuter).uv((float) i / segments, 0.0F).endVertex();
 
             // Inner ring vertices
             float xInner = (float) (innerRadius * Math.cos(theta));
             float zInner = (float) (innerRadius * Math.sin(theta));
-            buffer.vertex(matrix,xInner, 0.0F, zInner).uv((float) i / segments, 1.0F).endVertex();
+            buffer.vertex(matrix, xInner, 0.0F, zInner).uv((float) i / segments, 1.0F).endVertex();
         }
     }
 
@@ -283,10 +283,10 @@ public class SolarSystemRenderer {
         if (!writeData) {
             writeDataInfo();
         }
-       RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         for (IFakeBody fakeBody : te.fakeBodyList) {
             if (fakeBody.getTimerTo().canWork()) {
-                renderParabolicTrajectory(poseStack,event,
+                renderParabolicTrajectory(poseStack, event,
                         time,
                         SpaceInit.earth,
                         fakeBody.getBody(),
@@ -294,7 +294,7 @@ public class SolarSystemRenderer {
                         fakeBody.getRover().getItemStack()
                 );
             } else {
-                renderParabolicTrajectory(poseStack,event,
+                renderParabolicTrajectory(poseStack, event,
                         time,
                         fakeBody.getBody(),
                         SpaceInit.earth,
@@ -303,22 +303,22 @@ public class SolarSystemRenderer {
                 );
             }
         }
-        renderPlanet(poseStack,event,(float) star.getSize(), star.getLocation(), (float) star.getRotationTimeX(time), 0.5F,
+        renderPlanet(poseStack, event, (float) star.getSize(), star.getLocation(), (float) star.getRotationTimeX(time), 0.5F,
                 (float) star.getRotationTimeZ(time), (float) star.getRotation(time), star.getRotationAngle()
         );
 
         this.planets.forEach(planets -> {
-            renderPlanet(poseStack,event,(float) planets.getSize(), planets.getLocation(), (float) planets.getRotationTimeX(time), 0.5F,
+            renderPlanet(poseStack, event, (float) planets.getSize(), planets.getLocation(), (float) planets.getRotationTimeX(time), 0.5F,
                     (float) planets.getRotationTimeZ(time), (float) planets.getRotation(time), planets.getRotationAngle()
             );
             if (planets.getRing() != null) {
-                renderRings(poseStack,event,(float) planets.getSize(), SATURN_RING_TEXTURE, (float) planets.getRotationTimeX(time), 0.5F,
+                renderRings(poseStack, event, (float) planets.getSize(), SATURN_RING_TEXTURE, (float) planets.getRotationTimeX(time), 0.5F,
                         (float) planets.getRotationTimeZ(time), planets.getRing() == EnumRing.HORIZONTAL
                 );
             }
         });
         this.satellites.forEach(planets -> {
-                    renderPlanet(poseStack,event,(float) planets.getSize(), planets.getLocation(), (float) planets.getRotationTimeX(time), 0.5F,
+                    renderPlanet(poseStack, event, (float) planets.getSize(), planets.getLocation(), (float) planets.getRotationTimeX(time), 0.5F,
                             (float) planets.getRotationTimeZ(time), (float) planets.getRotation(time), planets.getRotationAngle()
                     );
                 }
@@ -334,7 +334,7 @@ public class SolarSystemRenderer {
                 float z = miniAsteroid.getX() * (float) Math.sin(currentAngle);
 
 
-                renderAsteroid(poseStack,event,miniAsteroid.getSize(), x, 0.5f, z, miniAsteroid.getRotationSpeed(),asteroids);
+                renderAsteroid(poseStack, event, miniAsteroid.getSize(), x, 0.5f, z, miniAsteroid.getRotationSpeed(), asteroids);
             });
         });
         poseStack.popPose();
@@ -344,7 +344,7 @@ public class SolarSystemRenderer {
         poseStack.pushPose();
         poseStack.translate(x, y, z);
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotationSpeed));
-        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f,1);
+        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
         renderPlanet(poseStack, event, size, asteroid.getLocation(), 0, 0, 0, 0, 0);
         poseStack.popPose();

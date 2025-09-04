@@ -2,19 +2,19 @@ package com.denfop.integration.jei.modularator;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityModuleMachine;
+import com.denfop.blocks.mechanism.BlockBaseMachineEntity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerModuleMachine;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuModuleMachine;
+import com.denfop.containermenu.slot.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileModuleMachine;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -30,16 +30,16 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ModulatorCategory1 extends GuiIU implements IRecipeCategory<ModulatorHandler> {
+public class ModulatorCategory1 extends ScreenMain implements IRecipeCategory<ModulatorHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerModuleMachine container1;
+    private final ContainerMenuModuleMachine container1;
     private final JeiInform jeiInform;
 
     public ModulatorCategory1(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileModuleMachine) BlockBaseMachine.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityModuleMachine) BlockBaseMachineEntity.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 174,
                 91
@@ -47,10 +47,10 @@ public class ModulatorCategory1 extends GuiIU implements IRecipeCategory<Modulat
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
         );
-        this.container1 = (ContainerModuleMachine) this.getContainer();
+        this.container1 = (ContainerMenuModuleMachine) this.getContainer();
         this.componentList.add(slots);
     }
 
@@ -70,14 +70,15 @@ public class ModulatorCategory1 extends GuiIU implements IRecipeCategory<Modulat
 
     @Override
     public void draw(ModulatorHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        this.slots.drawBackground(stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
     }
+
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ModulatorHandler recipe, IFocusGroup focuses) {
 
         final List<SlotInvSlot> slots1 = container1.getSlots();
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(ItemStackHelper.fromData(IUItem.module9, 1, 12));
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(1).getJeiX(), slots1.get(1).getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(ItemStackHelper.fromData(IUItem.module9, 1, 12));
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(1).getJeiX(), slots1.get(1).getJeiY()).addItemStack(recipe.getOutput());
 
 
     }

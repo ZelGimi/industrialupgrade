@@ -1,8 +1,8 @@
 package com.denfop.items.reactors;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.reactors.graphite.IExchangerItem;
+import com.denfop.blockentity.reactors.graphite.IExchangerItem;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -25,6 +25,7 @@ public class ItemExchanger extends ItemDamage implements IExchangerItem {
         this.level = level;
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -37,11 +38,12 @@ public class ItemExchanger extends ItemDamage implements IExchangerItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.iu_"+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu.iu_" + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     @Override
     public double getPercent() {
         return percent;
@@ -62,6 +64,7 @@ public class ItemExchanger extends ItemDamage implements IExchangerItem {
 
 
     }
+
     @Override
     public boolean damageItem(final ItemStack stack, final int damage) {
         return applyCustomDamage(stack, damage, null);

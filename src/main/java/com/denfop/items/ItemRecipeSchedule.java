@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemRecipeSchedule extends Item implements IProperties{
+public class ItemRecipeSchedule extends Item implements IProperties {
 
     private final String name;
 
@@ -30,6 +30,7 @@ public class ItemRecipeSchedule extends Item implements IProperties{
         super(new Properties().tab(IUCore.ItemTab).stacksTo(1).setNoRepair());
         this.name = "recipe_schedule";
     }
+
     @Override
     public void appendHoverText(
             ItemStack stack,
@@ -57,6 +58,7 @@ public class ItemRecipeSchedule extends Item implements IProperties{
             }
         }
     }
+
     @Override
     public String[] properties() {
         return new String[]{"mode"};

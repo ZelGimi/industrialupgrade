@@ -1,9 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.Localization;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +43,7 @@ import static com.denfop.IUCore.fluidCellTab;
 
 public class ItemReinforcedFluidCell extends ItemFluidContainer {
     public ItemReinforcedFluidCell() {
-        super(new Properties().setNoRepair().stacksTo(1).tab(fluidCellTab),10000);
+        super(new Properties().setNoRepair().stacksTo(1).tab(fluidCellTab), 10000);
     }
 
     public boolean canfill(Fluid fluid) {
@@ -97,7 +96,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer {
 
             @Override
             public @NotNull FluidStack drain(FluidStack resource, FluidAction doDrain) {
-                if (resource == FluidStack.EMPTY ) {
+                if (resource == FluidStack.EMPTY) {
                     return FluidStack.EMPTY;
                 }
                 return super.drain(resource, doDrain);
@@ -117,7 +116,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer {
         ItemStack itemstack = player.getItemInHand(hand);
         IFluidHandlerItem fs = itemstack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse(null);
         if (fs == null)
-            fs = (IFluidHandlerItem) initCapabilities(itemstack,itemstack.getOrCreateTag());
+            fs = (IFluidHandlerItem) initCapabilities(itemstack, itemstack.getOrCreateTag());
         BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, fs.getFluidInTank(0).getFluid() == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         if (blockhitresult.getType() == HitResult.Type.MISS) {
             return InteractionResultHolder.pass(itemstack);
@@ -128,8 +127,8 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer {
             Direction direction = blockhitresult.getDirection();
             BlockPos blockpos1 = blockpos.relative(direction);
             if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos1, direction, itemstack)) {
-                BlockState state =fs.getFluidInTank(0).isEmpty() ? world.getBlockState(blockpos) :  world.getBlockState(blockpos1);
-                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY&&!state.getMaterial().isLiquid() && fs.getFluidInTank(0).getAmount() >= 1000) {
+                BlockState state = fs.getFluidInTank(0).isEmpty() ? world.getBlockState(blockpos) : world.getBlockState(blockpos1);
+                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY && !state.getMaterial().isLiquid() && fs.getFluidInTank(0).getAmount() >= 1000) {
                     Fluid fluid = fs.getFluidInTank(0).getFluid();
                     boolean flag1 = world.getBlockState(blockpos).canBeReplaced(Fluids.EMPTY);
                     BlockPos blockpos2 = flag1 && blockhitresult.getDirection() == Direction.UP ? blockpos : blockpos.offset(blockhitresult.getDirection().getNormal());
@@ -139,7 +138,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer {
                     }
 
                 } else {
-                    BlockState block =state;
+                    BlockState block = state;
                     if (block.getMaterial().isLiquid()) {
                         FluidState fluidState = block.getBlock().getFluidState(block);
 
@@ -206,7 +205,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer {
                         );
                     }
                 } else {
-                    if (!worldIn.isClientSide && ( flag1) && !iblockstate.getMaterial().isLiquid()) {
+                    if (!worldIn.isClientSide && (flag1) && !iblockstate.getMaterial().isLiquid()) {
                         worldIn.destroyBlock(posIn, true);
                     }
 

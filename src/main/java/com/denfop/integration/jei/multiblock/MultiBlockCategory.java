@@ -1,13 +1,13 @@
 package com.denfop.integration.jei.multiblock;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
 import com.denfop.api.multiblock.MultiBlockStructure;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityMoonSpotter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBlockHandler> {
+public class MultiBlockCategory extends ScreenMain implements IRecipeCategory<MultiBlockHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -34,7 +34,7 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     public MultiBlockCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityMoonSpotter) BlockBaseMachine3.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityMoonSpotter) BlockBaseMachine3Entity.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
@@ -52,7 +52,6 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -63,23 +62,24 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     @Override
     public void draw(MultiBlockHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
         String name1 = Localization.translate("multiblock.jei1");
-        Minecraft   minecraft= Minecraft.getInstance();
+        Minecraft minecraft = Minecraft.getInstance();
         int xCenter = 140 / 2;
         int maxWidth = 140 - 20;
         int color = 4210752;
 
-        renderTextCentered(stack,minecraft, name1, xCenter, 25, maxWidth, color);
+        renderTextCentered(stack, minecraft, name1, xCenter, 25, maxWidth, color);
         int y = 2;
 
-        renderTextCentered(stack,minecraft, Localization.translate("multiblock.jei2"), xCenter, (57 + y * 25), maxWidth,
+        renderTextCentered(stack, minecraft, Localization.translate("multiblock.jei2"), xCenter, (57 + y * 25), maxWidth,
                 color
         );
 
-        renderTextCentered(stack,minecraft, Localization.translate("multiblock.jei3"), xCenter, (10 + y * 25) + 90, maxWidth,
+        renderTextCentered(stack, minecraft, Localization.translate("multiblock.jei3"), xCenter, (10 + y * 25) + 90, maxWidth,
                 color
         );
     }
-    public void renderTextCentered( PoseStack stack,@Nonnull Minecraft minecraft, String text, int xCenter, int y, int maxWidth, int color) {
+
+    public void renderTextCentered(PoseStack stack, @Nonnull Minecraft minecraft, String text, int xCenter, int y, int maxWidth, int color) {
         Font fontRenderer = minecraft.font;
 
 
@@ -114,15 +114,14 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
         for (int i = 0; i < structure.itemStackList.size(); i++) {
             int x = 5 + (i % 6) * 20;
             int y = 45 + (i / 6) * 19;
-            builder.addSlot(RecipeIngredientRole.INPUT,x,y).addItemStack(structure.itemStackList.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, x, y).addItemStack(structure.itemStackList.get(i));
 
         }
         double y = 2;
 
-        builder.addSlot(RecipeIngredientRole.INPUT,61, (int) (5 + 27 + y * 23)).addItemStack(structure.itemStackList.get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 61, (int) (5 + 27 + y * 23)).addItemStack(structure.itemStackList.get(0));
 
     }
-
 
 
     protected ResourceLocation getTexture() {

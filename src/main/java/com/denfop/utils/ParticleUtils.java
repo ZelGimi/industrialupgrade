@@ -44,13 +44,14 @@ public class ParticleUtils {
             server.sendParticles(ParticleTypes.ASH, x, y, z, 1, 0.02, 0.01, 0.02, 0.001);
         }
     }
+
     public static void spawnFallingLeavesParticles(Level level, BlockPos pos, Block leavesBlock) {
         if (!(level instanceof ServerLevel server)) return;
         RandomSource random = level.getRandom();
 
 
         double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5);
-        double y = pos.getY() ;
+        double y = pos.getY();
         double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5);
 
 
@@ -62,7 +63,7 @@ public class ParticleUtils {
         BlockState state = leavesBlock.defaultBlockState();
         BlockParticleOption particle = new BlockParticleOption(ParticleTypes.BLOCK, state);
 
-        server.sendParticles(particle, x, y, z, 1, dx, dy , dz, 0);
+        server.sendParticles(particle, x, y, z, 1, dx, dy, dz, 0);
 
     }
 
@@ -90,6 +91,7 @@ public class ParticleUtils {
                     x, y + 0.1, z, 2, 0.03, 0.01, 0.03, 0.001);
         }
     }
+
     public static void showFlames(ServerLevel level, BlockPos pos, Direction facing) {
         if (level.random.nextInt(8) == 0) {
             double x = pos.getX() + ((facing.getStepX() * 1.04 + 1.0) / 2.0);
@@ -166,6 +168,7 @@ public class ParticleUtils {
             server.sendParticles(ParticleTypes.ASH, x, y + 0.05, z, 1, 0.01, 0.01, 0.01, 0.001);
         }
     }
+
     public static void spawnScrapCollectorParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
@@ -195,6 +198,7 @@ public class ParticleUtils {
         if (random.nextFloat() < 0.1f)
             server.sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y + 0.1, z, 1, 0.01, 0.01, 0.01, 0.002);
     }
+
     public static void spawnFarmParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
@@ -363,7 +367,6 @@ public class ParticleUtils {
         server.sendParticles(ParticleTypes.ASH, x, y, z, 5, 0.1, 0.01, 0.1, 0.002);
 
 
-
         if (random.nextFloat() < 0.3f) {
             server.sendParticles(new DustParticleOptions(new Vector3f(0.9f, 0.6f, 0.2f), 0.6f),
                     x, y + 0.1, z, 2, 0.03, 0.01, 0.03, 0.001);
@@ -393,9 +396,6 @@ public class ParticleUtils {
         if (random.nextFloat() < 0.3f) {
             server.sendParticles(ParticleTypes.END_ROD, x, y + 0.1, z, 1, 0.01, 0.01, 0.01, 0.001);
         }
-
-
-
 
 
         if (random.nextFloat() < 0.2f) {
@@ -602,6 +602,7 @@ public class ParticleUtils {
                     1, 0.05, 0.1, 0.05, 0.01);
         }
     }
+
     public static void spawnLavaGeneratorParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -626,9 +627,8 @@ public class ParticleUtils {
         double z = pos.getZ() + 0.5;
 
         if (random.nextFloat() < 0.7f) {
-            server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,Blocks.STONE.defaultBlockState()), x, y, z, 2, 0.05, 0.0, 0.05, 0.1);
+            server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.STONE.defaultBlockState()), x, y, z, 2, 0.05, 0.0, 0.05, 0.1);
         }
-
 
 
         if (random.nextFloat() < 0.3f) {
@@ -636,11 +636,12 @@ public class ParticleUtils {
                     x, y, z, 1, 0.02, 0.01, 0.02, 0.001);
         }
     }
+
     public static void spawnFermenterParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
-        double x = pos.getX()  + random.nextDouble();
-        double y = pos.getY() + 0.5 +  random.nextDouble() / 2;
-        double z = pos.getZ()   + random.nextDouble();
+        double x = pos.getX() + random.nextDouble();
+        double y = pos.getY() + 0.5 + random.nextDouble() / 2;
+        double z = pos.getZ() + random.nextDouble();
 
         if (random.nextFloat() < 0.7f) {
             server.sendParticles(ParticleTypes.BUBBLE, x, y, z, 2, 0.05, 0.0, 0.05, 0.01);
@@ -651,17 +652,17 @@ public class ParticleUtils {
         }
 
 
-
         if (random.nextFloat() < 0.3f) {
             server.sendParticles(new DustParticleOptions(new Vector3f(0.8f, 0.9f, 0.1f), 0.7f),
                     x, y, z, 2, 0.02, 0.01, 0.02, 0.001);
         }
     }
+
     public static void spawnApiaryParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
-        double x = pos.getX()  + random.nextDouble();
-        double y = pos.getY() + 0.5 +  random.nextDouble() / 2;
-        double z = pos.getZ()   + random.nextDouble();
+        double x = pos.getX() + random.nextDouble();
+        double y = pos.getY() + 0.5 + random.nextDouble() / 2;
+        double z = pos.getZ() + random.nextDouble();
 
         if (random.nextFloat() < 0.6f) {
             server.sendParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 2, 0.04, 0.01, 0.04, 0.001);
@@ -699,6 +700,7 @@ public class ParticleUtils {
                     x, y, z, 1, 0.02, 0.01, 0.02, 0.002);
         }
     }
+
     public static void spawnMagneticCatcherParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -715,6 +717,7 @@ public class ParticleUtils {
                     x, y + 0.2, z, 1, 0.01, 0.01, 0.01, 0.001);
         }
     }
+
     public static void spawnMagneticGeneratorParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -734,6 +737,7 @@ public class ParticleUtils {
             server.sendParticles(ParticleTypes.ENCHANT, x, y + 0.15, z, 1, 0.05, 0.01, 0.05, 0.001);
         }
     }
+
     public static void spawnFishingMachineParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -752,6 +756,7 @@ public class ParticleUtils {
             server.sendParticles(ParticleTypes.FISHING, x, y + 0.2, z, 1, 0.01, 0.01, 0.01, 0.001);
         }
     }
+
     public static void spawnHydrogenGeneratorParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -771,6 +776,7 @@ public class ParticleUtils {
                     x, y + 0.1, z, 2, 0.03, 0.01, 0.03, 0.0008);
         }
     }
+
     public static void spawnObsidianGeneratorParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -793,6 +799,7 @@ public class ParticleUtils {
             server.sendParticles(ParticleTypes.CLOUD, x, y + 0.2, z, 1, 0.04, 0.01, 0.04, 0.001);
         }
     }
+
     public static void spawnHeliumGeneratorParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
         double x = pos.getX() + 0.5;
@@ -816,6 +823,7 @@ public class ParticleUtils {
             server.sendParticles(ParticleTypes.CLOUD, x, y + 0.1, z, 1, 0.03, 0.01, 0.03, 0.0003);
         }
     }
+
     public static void spawnPlasticParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
@@ -841,6 +849,7 @@ public class ParticleUtils {
                     x, y, z, 2, 0.01, 0.01, 0.01, 0.001);
         }
     }
+
     public static void spawnElectrolyzerParticles(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 

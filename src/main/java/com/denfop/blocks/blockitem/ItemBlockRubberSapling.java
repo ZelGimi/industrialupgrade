@@ -15,7 +15,7 @@ public class ItemBlockRubberSapling extends BlockItem {
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.sapling";
+            this.nameItem = "iu.sapling";
         }
 
         return this.nameItem;

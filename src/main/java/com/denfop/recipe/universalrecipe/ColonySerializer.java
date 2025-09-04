@@ -1,11 +1,7 @@
 package com.denfop.recipe.universalrecipe;
 
-import com.denfop.IUItem;
-import com.denfop.api.space.BaseResource;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.rovers.enums.EnumTypeRovers;
-import com.denfop.blocks.FluidName;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputFluidStack;
 import com.denfop.recipe.InputItemStack;
@@ -25,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.denfop.api.space.SpaceInit.*;
+import static com.denfop.api.space.SpaceInit.regColonyBaseResource;
 
 public class ColonySerializer implements RecipeSerializer<ColonyRecipe> {
     public static final ColonySerializer INSTANCE = new ColonySerializer();
@@ -71,11 +67,11 @@ public class ColonySerializer implements RecipeSerializer<ColonyRecipe> {
         IBody body = SpaceNet.instance.getBodyFromName(bodyName.toLowerCase());
         for (IInputItemStack itemStack : input) {
             if (itemStack instanceof InputItemStack)
-                regColonyBaseResource.add(() ->    SpaceNet.instance.getColonieNet().addItemStack(body, (short) level, ((InputItemStack) itemStack).input));
+                regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(body, (short) level, ((InputItemStack) itemStack).input));
             if (itemStack instanceof InputFluidStack)
-                regColonyBaseResource.add(() ->   SpaceNet.instance.getColonieNet().addFluidStack(body, (short) level, ((InputFluidStack) itemStack).getFluid()));
+                regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addFluidStack(body, (short) level, ((InputFluidStack) itemStack).getFluid()));
             if (itemStack instanceof InputOreDict)
-                regColonyBaseResource.add(() ->  SpaceNet.instance.getColonieNet().addItemStack(body, (short) level, ((InputOreDict) itemStack).getInputs().get(0)));
+                regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(body, (short) level, ((InputOreDict) itemStack).getInputs().get(0)));
 
         }
 

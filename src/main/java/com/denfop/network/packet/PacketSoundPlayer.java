@@ -1,7 +1,7 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.audio.EnumSound;
+import com.denfop.sound.EnumSound;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 

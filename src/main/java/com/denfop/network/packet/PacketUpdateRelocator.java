@@ -4,22 +4,20 @@ import com.denfop.IUCore;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
-public class PacketUpdateRelocator implements IPacket{
-    public PacketUpdateRelocator(){
+public class PacketUpdateRelocator implements IPacket {
+    public PacketUpdateRelocator() {
 
     }
 
     public PacketUpdateRelocator(Player player) {
-        if (player instanceof ServerPlayer serverPlayer){
+        if (player instanceof ServerPlayer serverPlayer) {
             CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
             Map<ResourceKey<Level>, Map<UUID, List<Point>>> map = RelocatorNetwork.instance.getWorldDataPoints();
             Map<ResourceKey<Level>, List<Point>> playerData = new HashMap<>();
@@ -41,7 +39,7 @@ public class PacketUpdateRelocator implements IPacket{
                     point.writeToBuffer(customPacketBuffer);
                 }
             }
-            IUCore.network.getServer().sendPacket(customPacketBuffer,serverPlayer);
+            IUCore.network.getServer().sendPacket(customPacketBuffer, serverPlayer);
         }
     }
 
@@ -63,7 +61,7 @@ public class PacketUpdateRelocator implements IPacket{
             for (int j = 0; j < pointsCount; j++) {
                 points.add(new Point(customPacketBuffer));
             }
-            RelocatorNetwork.instance.addPoints(entityPlayer,levelKey, points);
+            RelocatorNetwork.instance.addPoints(entityPlayer, levelKey, points);
         }
 
     }

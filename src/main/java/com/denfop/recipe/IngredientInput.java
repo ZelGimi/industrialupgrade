@@ -35,6 +35,7 @@ public class IngredientInput extends Ingredient {
         }
         return this.items;
     }
+
     public Ingredient getInput() {
         if (!input.getInputs().isEmpty() && input.getInputs().get(0).hasTag()) {
             if (input.getInputs().size() == 1) {
@@ -52,6 +53,7 @@ public class IngredientInput extends Ingredient {
             }
         }
     }
+
     public JsonElement toJson() {
 
         JsonArray jsonarray = new JsonArray();
@@ -80,6 +82,7 @@ public class IngredientInput extends Ingredient {
         }
         return this.list;
     }
+
     @Override
     public boolean isSimple() {
         return false;

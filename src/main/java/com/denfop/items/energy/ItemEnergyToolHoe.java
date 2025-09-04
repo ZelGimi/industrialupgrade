@@ -1,6 +1,6 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
+import com.denfop.utils.ElectricItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;

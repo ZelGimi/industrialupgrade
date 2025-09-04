@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -47,7 +48,18 @@ public class TickHandlerIU {
             event.setAmount(damageAmount);
         }
     }
-
+    @SubscribeEvent
+    public void hurt(LivingDamageEvent event) {
+        if (event.getEntity() instanceof LivingEntity) {
+            NonNullList<ItemStack> armorList = NonNullList.withSize(4, ItemStack.EMPTY);
+            armorList.set(0, (event.getEntity().getItemBySlot(EquipmentSlot.FEET)));
+            armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
+            armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
+            armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
+            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getAmount());
+            event.setAmount(damageAmount);
+        }
+    }
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.LevelTickEvent event) {

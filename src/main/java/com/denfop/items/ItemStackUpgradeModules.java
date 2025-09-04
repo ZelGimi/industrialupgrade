@@ -1,11 +1,11 @@
 package com.denfop.items;
 
 import com.denfop.IUItem;
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerUpgrade;
-import com.denfop.gui.GUIUpgrade;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuUpgrade;
+import com.denfop.inventory.Inventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -64,8 +64,8 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
         }
     }
 
-    public ContainerBase<ItemStackUpgradeModules> getGuiContainer(Player player) {
-        return new ContainerUpgrade(this, player);
+    public ContainerMenuBase<ItemStackUpgradeModules> getGuiContainer(Player player) {
+        return new ContainerMenuUpgrade(this, player);
     }
 
     public ItemStack getItem(int slot) {
@@ -188,26 +188,21 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
         if (this.itemStack1.is(IUItem.ejectorUpgrade.getItem()) || this.itemStack1.is(IUItem.pullingUpgrade.getItem())) {
-            return new GUIUpgrade((ContainerUpgrade) isAdmin, itemStack1);
+            return new ScreenUpgrade((ContainerMenuUpgrade) isAdmin, itemStack1);
         } else {
-            return new GUIUpgrade((ContainerUpgrade) isAdmin, itemStack1);
+            return new ScreenUpgrade((ContainerMenuUpgrade) isAdmin, itemStack1);
         }
     }
 
     @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
-
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
     }
 
     @Override
-    public int getBaseIndex(final InvSlot var1) {
+    public int getBaseIndex(final Inventory var1) {
         return 0;
     }
 

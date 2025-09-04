@@ -1,10 +1,10 @@
 package com.denfop.items;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerVeinSensor;
-import com.denfop.gui.GuiCore;
-import com.denfop.gui.GuiVeinSensor;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuVeinSensor;
+import com.denfop.inventory.Inventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenVeinSensor;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
 import net.minecraft.world.entity.player.Player;
@@ -46,28 +46,23 @@ public class ItemStackVeinSensor extends ItemStackInventory {
     }
 
 
-    public ContainerBase<ItemStackVeinSensor> getGuiContainer(Player player) {
-        return new ContainerVeinSensor(player, this);
+    public ContainerMenuBase<ItemStackVeinSensor> getGuiContainer(Player player) {
+        return new ContainerMenuVeinSensor(player, this);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
-        return new GuiVeinSensor((ContainerVeinSensor) isAdmin, itemStack1);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
+        return new ScreenVeinSensor((ContainerMenuVeinSensor) isAdmin, itemStack1);
     }
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
     }
 
     @Override
-    public int getBaseIndex(final InvSlot var1) {
+    public int getBaseIndex(final Inventory var1) {
         return 0;
     }
 

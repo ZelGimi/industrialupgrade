@@ -29,10 +29,6 @@ public class ElectronicsHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<ElectronicsHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -44,7 +40,7 @@ public class ElectronicsHandler {
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
             ItemStack input4, ItemStack output,
             BaseMachineRecipe container) {
-        ElectronicsHandler recipe = new ElectronicsHandler(input, input1, input2, input3, input4, output,container);
+        ElectronicsHandler recipe = new ElectronicsHandler(input, input1, input2, input3, input4, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -72,13 +68,16 @@ public class ElectronicsHandler {
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.input.getInputs().get(4).getInputs().get(0),
-                    container.getOutput().items.get(0),container
+                    container.getOutput().items.get(0), container
             );
 
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() {
         return input;
@@ -107,6 +106,7 @@ public class ElectronicsHandler {
     public boolean matchesInput(ItemStack is) {
         return true;
     }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3, input4);
     }

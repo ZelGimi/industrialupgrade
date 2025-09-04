@@ -1,12 +1,12 @@
 package com.denfop.events;
 
 import com.denfop.Constants;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.api.radiationsystem.EnumLevelRadiation;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.audio.EnumSound;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.api.pollution.radiation.EnumLevelRadiation;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.items.ItemCraftingElements;
+import com.denfop.sound.EnumSound;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,7 @@ public class ClientTickHandler {
     private static boolean shouldDisplayRadiationInfo(LocalPlayer player) {
         ItemStack stack = player.getMainHandItem();
         boolean isHoldingGeigerCounter = stack.getItem() instanceof ItemCraftingElements<?> && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 40;
-        boolean isWearingHazmat = IHazmatLike.hasCompleteHazmat(player);
+        boolean isWearingHazmat = HazmatLike.hasCompleteHazmat(player);
         return isHoldingGeigerCounter || isWearingHazmat;
     }
 
@@ -64,7 +64,6 @@ public class ClientTickHandler {
             }
         }
     }
-
 
 
     private static ResourceLocation getRadiationLevelTexture(Radiation radiation, long worldTime) {

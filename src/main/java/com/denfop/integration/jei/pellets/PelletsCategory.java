@@ -1,15 +1,15 @@
 package com.denfop.integration.jei.pellets;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.container.ContainerMultiMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityOreWashing;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockMoreMachine3Entity;
+import com.denfop.containermenu.ContainerMenuMultiMachine;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileOreWashing;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHandler> {
+public class PelletsCategory extends ScreenMain implements IRecipeCategory<PelletsHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -33,8 +33,8 @@ public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHan
     public PelletsCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getInstance().player,
-                ((TileOreWashing) BlockMoreMachine3.orewashing.getDummyTe()), 1, true
+        super(new ContainerMenuMultiMachine(Minecraft.getInstance().player,
+                ((BlockEntityOreWashing) BlockMoreMachine3Entity.orewashing.getDummyTe()), 1, true
         ));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
@@ -49,7 +49,7 @@ public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHan
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.pallet_generator).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.pallet_generator).getDescriptionId());
     }
 
 
@@ -61,15 +61,15 @@ public class PelletsCategory extends GuiIU implements IRecipeCategory<PelletsHan
 
     @Override
     public void draw(PelletsHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-      bindTexture(getTexture());
+        bindTexture(getTexture());
         for (int x = 30; x <= 86 - 18; x += 18) {
             for (int y = 18; y <= 36; y += 18) {
-                this.drawTexturedModalRect( stack,0 + x, 0 + y, 179, 30, 18, 18);
+                this.drawTexturedModalRect(stack, 0 + x, 0 + y, 179, 30, 18, 18);
             }
         }
         final double num = 20000 / Math.ceil(recipe.getInput());
 
-     drawSplitString(stack,
+        drawSplitString(stack,
                 String.format("%.2f☢ -> 50 EF", num),
                 90,
                 30,

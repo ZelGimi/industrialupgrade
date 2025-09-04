@@ -48,11 +48,11 @@ public interface IRecipes {
 
     MachineRecipe getRecipeMachineOutput(String name, boolean adjustInput, ItemStack... stacks);
 
-    boolean needContinue(MachineRecipe recipe, InvSlotRecipes slot);
+    boolean needContinue(MachineRecipe recipe, InventoryRecipes slot);
 
     BaseMachineRecipe getRecipeOutputFromInstruments(String name, boolean adjustInput, ItemStack... stacks);
 
-    boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot, final FluidTank tank);
+    boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot, final FluidTank tank);
 
     BaseMachineRecipe getRecipeOutput(
             final IBaseRecipe recipe,
@@ -101,7 +101,8 @@ public interface IRecipes {
     void addRemoveRecipe(String name, ItemStack stack);
 
     void addFluidRemoveRecipe(String name, FluidStack stack);
-    void addFluidRemoveRecipe(String name, FluidStack stack,boolean allRemove);
+
+    void addFluidRemoveRecipe(String name, FluidStack stack, boolean allRemove);
 
     void removeAllRecipesFromList();
 

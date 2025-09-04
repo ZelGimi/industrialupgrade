@@ -9,10 +9,11 @@ public class ItemBlockHumus extends ItemBlockCore<BlockHumus.Type> {
     public ItemBlockHumus(BlockCore p_40565_, BlockHumus.Type element) {
         super(p_40565_, element, new Properties().tab(IUCore.RecourseTab));
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.humus_block.name";
+            this.nameItem = "iu.humus_block.name";
         }
 
         return this.nameItem;

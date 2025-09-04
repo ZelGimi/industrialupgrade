@@ -1,9 +1,9 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.HeatComponent;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -27,11 +27,13 @@ public class ItemsHeatSensor extends Item {
     public ItemsHeatSensor() {
         super(new Item.Properties().tab(IUCore.EnergyTab).stacksTo(1).setNoRepair());
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.heat_sensor.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.heat_sensor.info")));
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -59,9 +61,9 @@ public class ItemsHeatSensor extends Item {
         InteractionHand hand = p_41427_.getHand();
         if (!world.isClientSide) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
-            if (tileEntity instanceof TileEntityInventory) {
-                TileEntityInventory tileEntityInventory = (TileEntityInventory) tileEntity;
-                HeatComponent component = tileEntityInventory.getComp(HeatComponent.class);
+            if (tileEntity instanceof BlockEntityInventory) {
+                BlockEntityInventory blockEntityInventory = (BlockEntityInventory) tileEntity;
+                HeatComponent component = blockEntityInventory.getComp(HeatComponent.class);
                 if (component == null) {
                     return InteractionResult.PASS;
                 }

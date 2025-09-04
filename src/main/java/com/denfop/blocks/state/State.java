@@ -1,16 +1,16 @@
 package com.denfop.blocks.state;
 
 
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
 
 import java.util.Objects;
 
 public class State implements Comparable<State> {
 
-    public final IMultiTileBlock teBlock;
+    public final MultiBlockEntity teBlock;
     public final String state;
 
-    public State(IMultiTileBlock teBlock, String state) {
+    public State(MultiBlockEntity teBlock, String state) {
         this.teBlock = teBlock;
         this.state = state;
     }

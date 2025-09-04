@@ -1,12 +1,11 @@
 package com.denfop.api.guidebook;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,7 +23,6 @@ public class Quest {
     public Shape prevShape;
     public ItemStack icon;
     public boolean hasPrev = false;
-    private String localizedName;
     public String unLocalizedName;
     public Shape shape;
     public TypeQuest typeQuest;
@@ -32,11 +30,12 @@ public class Quest {
     public List<ItemStack> itemStacks;
     public List<FluidStack> fluidStacks;
     public String prevName;
-    private String localizedDescription;
     public int prevX;
     public int prevY;
     public int x;
     public int y;
+    private String localizedName;
+    private String localizedDescription;
 
     private Quest(
             int x, int y, String unLocalizedName, String unLocalizedDescription, Shape shape, TypeQuest typeQuest,
@@ -50,12 +49,12 @@ public class Quest {
         this.y = y;
         this.unLocalizedName = unLocalizedName;
         this.localizedName = unLocalizedName;
-        this.localizedDescription =unLocalizedDescription;
+        this.localizedDescription = unLocalizedDescription;
         if (noDescription)
             this.localizedDescription = "";
         this.shape = shape;
         this.typeQuest = typeQuest;
-        this.itemInform=itemInform;
+        this.itemInform = itemInform;
         this.fluidStacks = Collections.unmodifiableList(fluidStacks);
         this.itemStacks = Collections.unmodifiableList(itemStacks);
         this.typeObject = typeObject;
@@ -93,7 +92,7 @@ public class Quest {
 
     public String getLocalizedDescription() {
         if (itemInform && IUCore.network.getClient() != null) {
-            return  getLocalization(this.icon);
+            return getLocalization(this.icon);
         }
         return Localization.translate(localizedDescription);
     }
@@ -112,12 +111,12 @@ public class Quest {
 
     public final static class Builder {
 
+        List<ItemStack> itemStacks = new ArrayList<>();
+        List<FluidStack> fluidStacks = new ArrayList<>();
         private String unLocalizedName = "";
         private Shape shape = Shape.DEFAULT;
         private TypeQuest typeQuest = TypeQuest.DETECT;
         private TypeObject typeObject = TypeObject.FLUID_ITEM;
-        List<ItemStack> itemStacks = new ArrayList<>();
-        List<FluidStack> fluidStacks = new ArrayList<>();
         private GuideTab guideTab = GuideBookCore.instance.guideTabs.get(0);
         private String unLocalizedDescription = "";
         private String prev = "";
@@ -146,10 +145,12 @@ public class Quest {
             this.localizationItem = true;
             return this;
         }
+
         public Builder noDescription() {
             this.noDescription = true;
             return this;
         }
+
         public Builder useItemInform() {
             this.itemInform = true;
             return this;
@@ -251,7 +252,7 @@ public class Quest {
                     fluidStacks,
                     guideTab,
                     prev,
-                    icon, localizationItem, itemInform,noDescription
+                    icon, localizationItem, itemInform, noDescription
             );
         }
 

@@ -1,28 +1,28 @@
 package com.denfop.componets.system;
 
-import com.denfop.api.sytem.IAcceptor;
-import com.denfop.api.sytem.IDual;
-import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ISource;
+import com.denfop.api.otherenergies.common.interfaces.Acceptor;
+import com.denfop.api.otherenergies.common.interfaces.Dual;
+import com.denfop.api.otherenergies.common.interfaces.Emitter;
+import com.denfop.api.otherenergies.common.interfaces.Source;
 import com.denfop.componets.ComponentBaseEnergy;
 import net.minecraft.core.Direction;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
-    List<ISource> systemTicks = new LinkedList<>();
+public class EnergyNetDelegateDual extends EnergyNetDelegate implements Dual {
+    List<Source> systemTicks = new LinkedList<>();
 
 
     public EnergyNetDelegateDual(ComponentBaseEnergy baseEnergy) {
         super(baseEnergy);
     }
 
-    public boolean acceptsFrom(IEmitter emitter, Direction dir) {
+    public boolean acceptsFrom(Emitter emitter, Direction dir) {
         return this.sinkDirections.contains(dir);
     }
 
-    public boolean emitsTo(IAcceptor receiver, Direction dir) {
+    public boolean emitsTo(Acceptor receiver, Direction dir) {
         return this.sourceDirections.contains(dir);
     }
 
@@ -85,7 +85,7 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
     public void extractEnergy(double amount) {
         assert amount <= this.buffer.storage;
 
-        this.buffer.storage-=amount;
+        this.buffer.storage -= amount;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
     }
 
     @Override
-    public List<ISource> getEnergyTickList() {
+    public List<Source> getEnergyTickList() {
         return systemTicks;
     }
 

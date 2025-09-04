@@ -1,8 +1,8 @@
 package com.denfop.render.panel;
 
 import com.denfop.Constants;
-import com.denfop.gui.GuiCore;
-import com.denfop.tiles.panels.entity.TileSolarPanel;
+import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -16,28 +16,29 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileEntitySolarPanelRender implements BlockEntityRenderer<TileSolarPanel> {
+public class TileEntitySolarPanelRender implements BlockEntityRenderer<BlockEntitySolarPanel> {
 
-    private final BlockEntityRendererProvider.Context contex;
-    private float rotation = 0;
-    private float prevRotation = 0;
-
-    public TileEntitySolarPanelRender(BlockEntityRendererProvider.Context context) {
-        this.contex = context;
-    }
     public static final ResourceLocation texture = new ResourceLocation(
             Constants.TEXTURES,
             "textures/models/pollution.png"
     );
+    private final BlockEntityRendererProvider.Context contex;
+    private float rotation = 0;
+    private float prevRotation = 0;
     private Map<BlockPos, DataPollution> entries = new HashMap<>();
+
+    public TileEntitySolarPanelRender(BlockEntityRendererProvider.Context context) {
+        this.contex = context;
+    }
+
     @Override
-    public void render(TileSolarPanel te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
+    public void render(BlockEntitySolarPanel te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
         if (!te.canRender()) {
             return;
         }
         poseStack.pushPose();
-        GuiCore.bindTexture(texture);
+        ScreenIndustrialUpgrade.bindTexture(texture);
         DataPollution dataPollution = entries.get(te.getBlockPos());
         if (dataPollution == null) {
             dataPollution = new DataPollution(te.timer.getIndexWork(), new PollutionModel(
@@ -58,8 +59,8 @@ public class TileEntitySolarPanelRender implements BlockEntityRenderer<TileSolar
             ));
         }
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutout(texture));
-        RenderSystem.setShaderColor(1,1,1,1);
-        dataPollution.getModel().renderToBuffer(poseStack,consumer,packedLight,packedOverlay,1,1,1,1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        dataPollution.getModel().renderToBuffer(poseStack, consumer, packedLight, packedOverlay, 1, 1, 1, 1);
         poseStack.popPose();
     }
 }

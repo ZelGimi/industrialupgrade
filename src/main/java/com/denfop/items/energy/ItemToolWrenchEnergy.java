@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemToolWrenchEnergy extends ItemToolWrench implements IEnergyItem {
+public class ItemToolWrenchEnergy extends ItemToolWrench implements EnergyItem {
 
 
     public boolean canTakeDamage(ItemStack stack, int amount) {
@@ -38,11 +38,12 @@ public class ItemToolWrenchEnergy extends ItemToolWrench implements IEnergyItem 
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public int getBarWidth(ItemStack stack) {
 
         return 13 - (int) (13.0F * Math.min(

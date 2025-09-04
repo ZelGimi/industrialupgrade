@@ -2,7 +2,7 @@ package com.denfop.render.compressor;
 
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.TileEntityCompressor;
+import com.denfop.blockentity.mechanism.BlockEntityCompressor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
@@ -18,13 +18,16 @@ import net.minecraft.world.level.Level;
 import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType.FIXED;
 import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType.GROUND;
 
-public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntityCompressor> {
+public class TileEntityRenderCompressor implements BlockEntityRenderer<BlockEntityCompressor> {
     private final BlockEntityRendererProvider.Context contex;
     private ItemStack stack;
+    private float rotation;
+    private float prevRotation;
 
     public TileEntityRenderCompressor(BlockEntityRendererProvider.Context p_173636_) {
         this.contex = p_173636_;
     }
+
     private int transformModelCount(PoseStack poseStack, float partialTicks
     ) {
 
@@ -40,29 +43,28 @@ public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntit
         rotation = (prevRotation + (rotation - prevRotation) * (partialTicks)) % 360;
 
         prevRotation = rotation;
-        rotation +=2F;
+        rotation += 2F;
 
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
 
 
         return modelCount;
     }
-    private float rotation;
-    private float prevRotation;
+
     public void renderItem(ItemStack itemStack, Level level, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
 
-        BakedModel bakedModel = this.contex.getItemRenderer().getModel(itemStack,level,null,0);
+        BakedModel bakedModel = this.contex.getItemRenderer().getModel(itemStack, level, null, 0);
         RandomSource random = level.random;
         if (bakedModel != null) {
             boolean isGui3d = bakedModel.isGui3d();
 
             poseStack.pushPose();
-            poseStack.translate(0,2,0);
+            poseStack.translate(0, 2, 0);
 
-            int count =transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
+            int count = transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
 
             for (int i = 0; i < 1; ++i) {
                 poseStack.pushPose();
@@ -82,20 +84,21 @@ public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntit
                     }
                 }
 
-                BakedModel transformedModel =net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                BakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
                         bakedModel,
                         GROUND,
                         false
                 );
-                contex.getItemRenderer().render(itemStack,FIXED, false, poseStack, buffer, light, overlay, transformedModel);
+                contex.getItemRenderer().render(itemStack, FIXED, false, poseStack, buffer, light, overlay, transformedModel);
                 poseStack.popPose();
             }
 
             poseStack.popPose();
         }
     }
+
     @Override
-    public void render(TileEntityCompressor te, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityCompressor te, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         ItemStack itemstack = te.outputSlot.get(0);
         if (!itemstack.isEmpty()) {
@@ -116,11 +119,11 @@ public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntit
             poseStack.popPose();
         }
         poseStack.pushPose();
-        if (te.durability == 0){
-            if (this.stack == null){
+        if (te.durability == 0) {
+            if (this.stack == null) {
                 this.stack = new ItemStack(IUItem.crafting_elements.getStack(76));
             }
-            renderItem(stack,te.getLevel(),poseStack,bufferSource,packedLight,combinedOverlay);
+            renderItem(stack, te.getLevel(), poseStack, bufferSource, packedLight, combinedOverlay);
         }
         poseStack.popPose();
         itemstack = te.inputSlotA.get(0);

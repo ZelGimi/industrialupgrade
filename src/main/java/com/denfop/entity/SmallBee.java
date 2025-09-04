@@ -1,9 +1,9 @@
 package com.denfop.entity;
 
-import com.denfop.api.bee.IBee;
+import com.denfop.api.bee.Bee;
+import com.denfop.blockentity.bee.BlockEntityApiary;
+import com.denfop.blockentity.crop.TileEntityCrop;
 import com.denfop.mixin.access.BeeAccessor;
-import com.denfop.tiles.bee.TileEntityApiary;
-import com.denfop.tiles.crop.TileEntityCrop;
 import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -16,31 +16,33 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.AirRandomPos;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class SmallBee extends Bee {
+public class SmallBee extends net.minecraft.world.entity.animal.Bee {
+    public Bee bee;
+    List<TileEntityCrop> crops;
+    boolean can = true;
     private BlockPos hivePos;
     private boolean hasCustomNectar = false;
-    List<TileEntityCrop> crops;
 
-    public SmallBee(EntityType<? extends Bee> type, Level level) {
+    public SmallBee(EntityType<? extends net.minecraft.world.entity.animal.Bee> type, Level level) {
         super(type, level);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.FLYING_SPEED, (double) 0.6F).add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.ATTACK_DAMAGE, 2.0D).add(Attributes.FOLLOW_RANGE, 48.0D);
     }
 
     public void setCrops(List<TileEntityCrop> crops) {
         this.crops = crops;
     }
-    public void setBee(IBee bee) {
+
+    public void setBee(Bee bee) {
         this.bee = bee;
-    }
-    public IBee bee;
-    public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.FLYING_SPEED, (double) 0.6F).add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.ATTACK_DAMAGE, 2.0D).add(Attributes.FOLLOW_RANGE, 48.0D);
     }
 
     @Override
@@ -51,33 +53,34 @@ public class SmallBee extends Bee {
         this.goalSelector.addGoal(6, new ReturnToHiveGoal(this));
     }
 
-    public void setCustomHive(BlockPos pos) {
-        this.hivePos = pos;
-    }
-
     public boolean hasCustomNectar() {
         return hasCustomNectar;
     }
-    boolean can = true;
+
     @Override
     public void tick() {
         super.tick();
-        if (can){
-            if (bee == null){
-                this.hivePos = new BlockPos((int) this.position().x,(int)this.position().y,(int)this.position().z);
-                if (this.getLevel().getBlockEntity(hivePos) instanceof TileEntityApiary apiary){
+        if (can) {
+            if (bee == null) {
+                this.hivePos = new BlockPos((int) this.position().x, (int) this.position().y, (int) this.position().z);
+                if (this.getLevel().getBlockEntity(hivePos) instanceof BlockEntityApiary apiary) {
                     this.bee = apiary.getQueen();
                 }
             }
             can = false;
         }
     }
+
     public void setHasCustomNectar(boolean value) {
         this.hasCustomNectar = value;
     }
 
     public BlockPos getCustomHive() {
         return hivePos;
+    }
+
+    public void setCustomHive(BlockPos pos) {
+        this.hivePos = pos;
     }
 
     @Override
@@ -195,7 +198,7 @@ class CollectCustomNectarGoal extends Goal {
     public boolean canUse() {
         if (bee.crops == null) return true;
         if (bee.hasCustomNectar()) return false;
-        if (bee.crops.isEmpty()){
+        if (bee.crops.isEmpty()) {
             bee.discard();
             return false;
         }
@@ -219,7 +222,7 @@ class CollectCustomNectarGoal extends Goal {
             bee.discard();
             return;
         }
-        if (cropTarget != null &&bee.position().distanceTo(Vec3.atCenterOf(cropTarget)) < 1.5D) {
+        if (cropTarget != null && bee.position().distanceTo(Vec3.atCenterOf(cropTarget)) < 1.5D) {
             if (!bee.getLevel().isClientSide()) {
                 ((ServerLevel) bee.getLevel()).sendParticles(
                         new DustParticleOptions(new Vector3f(1.0f, 0.8f, 0.2f), 1.0f),

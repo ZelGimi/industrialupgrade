@@ -1,14 +1,13 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -62,7 +61,7 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
     public enum Type implements ISubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
+        vanadium(2),
         tungsten(3),
         cobalt(4),
         magnesium(5),
@@ -126,7 +125,7 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
 
         @Nonnull
         public String getName() {
-            return "raw_"+this.name;
+            return "raw_" + this.name;
         }
 
         @Override

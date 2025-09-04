@@ -1,6 +1,6 @@
 package com.denfop.api.energy;
 
-import com.denfop.api.sytem.IConductor;
+import com.denfop.api.otherenergies.common.interfaces.Conductor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Objects;
 public class SystemTick<T, E> {
 
     private final T source;
-    LinkedList<IConductor> conductors = new LinkedList<>();
+    LinkedList<Conductor> conductors = new LinkedList<>();
     private List<E> energyPaths;
 
     public SystemTick(T source, List<E> list) {
@@ -18,11 +18,11 @@ public class SystemTick<T, E> {
 
     }
 
-    public LinkedList<IConductor> getConductors() {
+    public LinkedList<Conductor> getConductors() {
         return conductors;
     }
 
-    public void setConductors(final LinkedList<IConductor> conductors) {
+    public void setConductors(final LinkedList<Conductor> conductors) {
         this.conductors = conductors;
     }
 

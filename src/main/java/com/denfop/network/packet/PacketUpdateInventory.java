@@ -1,8 +1,8 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerBase;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuBase;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,15 +18,15 @@ public class PacketUpdateInventory implements IPacket {
     }
 
 
-    public PacketUpdateInventory(ContainerBase<IAdvInventory> tContainerBase, ServerPlayer player) {
+    public PacketUpdateInventory(ContainerMenuBase<CustomWorldContainer> tContainerMenuBase, ServerPlayer player) {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
         packetBuffer.writeByte(this.getId());
-        List<Slot> slots = tContainerBase.slots.stream().filter(slot -> slot.container == player.getInventory()).toList();
+        List<Slot> slots = tContainerMenuBase.slots.stream().filter(slot -> slot.container == player.getInventory()).toList();
         packetBuffer.writeShort(slots.size());
         for (int i = 0; i < slots.size(); i++) {
             packetBuffer.writeBoolean(slots.get(i).hasItem());
-            if (tContainerBase.slots.get(i).hasItem())
-                packetBuffer.writeItem(tContainerBase.slots.get(i).getItem());
+            if (tContainerMenuBase.slots.get(i).hasItem())
+                packetBuffer.writeItem(tContainerMenuBase.slots.get(i).getItem());
         }
         packetBuffer.flip();
         IUCore.network.getServer().sendPacket(packetBuffer, player);
@@ -45,9 +45,9 @@ public class PacketUpdateInventory implements IPacket {
         if (menu != null)
             for (int i = 0; i < size; i++) {
                 boolean hasItem = is.readBoolean();
-                if (hasItem){
+                if (hasItem) {
                     menu.getSlot(i).set(is.readItem());
-                }else{
+                } else {
                     menu.getSlot(i).set(ItemStack.EMPTY);
                 }
                 entityPlayer.containerMenu.broadcastChanges();

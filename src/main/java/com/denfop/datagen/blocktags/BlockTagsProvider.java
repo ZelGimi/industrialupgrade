@@ -23,10 +23,12 @@ public class BlockTagsProvider extends net.minecraft.data.tags.BlockTagsProvider
     public BlockTagsProvider(DataGenerator gen, @Nullable ExistingFileHelper existingFileHelper) {
         this(gen, Constants.MOD_ID, existingFileHelper);
     }
+
     public BlockTagsProvider(DataGenerator gen, String modid, @Nullable ExistingFileHelper existingFileHelper) {
         super(gen, modid, existingFileHelper);
         this.key = modid;
     }
+
     @Override
     protected void addTags() {
         for (IBlockTag tag : list) {

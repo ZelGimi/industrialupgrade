@@ -367,13 +367,14 @@ public class Colony implements IColony {
                 toDelete = 120;
                 this.tick = 0;
             }
-            if (this.level < 100 && this.tick == 10) {
-                this.tick = 0;
-                this.experience += this.workers;
-                if (this.experience >= this.getMaxExperience()) {
-                    this.level++;
-                    this.experience = 0;
-                }
+
+        }
+        if (this.level < 100 && this.tick == 10) {
+            this.tick = 0;
+            this.experience += this.workers;
+            if (this.experience >= this.getMaxExperience()) {
+                this.level++;
+                this.experience = 0;
             }
         }
         tick++;
@@ -525,7 +526,6 @@ public class Colony implements IColony {
             if (this.needWorkers > 0) {
                 this.enumProblemsList.add(EnumProblems.WORKERS);
             }
-            return;
         }
         entertainment = 0;
         protection = 0;

@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:nugget/wolfram"
+      "item": "industrialupgrade:nugget/tungsten"
     }
   },
   "pattern": [
@@ -11,6 +11,6 @@
     "AAA"
   ],
   "result": {
-    "item": "industrialupgrade:itemingots/wolfram_ingot"
+    "item": "industrialupgrade:itemingots/tungsten_ingot"
   }
 }

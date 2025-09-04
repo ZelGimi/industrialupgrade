@@ -11,6 +11,7 @@ public class TabCore extends CreativeModeTab {
 
     private final int type;
     private final String name1;
+    Component name = null;
 
     public TabCore(int type, String name) {
         super(name.toLowerCase());
@@ -31,17 +32,17 @@ public class TabCore extends CreativeModeTab {
             case 7 -> new ItemStack(IUItem.machinekit.getStack(3), 1);
             case 9 -> new ItemStack(IUItem.crafting_elements.getItemFromMeta(21));
             case 10 -> new ItemStack(IUItem.water_reactors_component.getItem(8), 1);
-            case 11->new ItemStack(IUItem.crops.getStack(0));
-            case 12-> new ItemStack(IUItem.jarBees.getStack(0));
-            case 13-> new ItemStack(IUItem.genome_crop.getStack(0));
-            case 14-> new ItemStack(IUItem.rocket.getItem());
-            case 15-> new ItemStack(IUItem.fluidCell.getItem());
+            case 11 -> new ItemStack(IUItem.crops.getStack(0));
+            case 12 -> new ItemStack(IUItem.jarBees.getStack(0));
+            case 13 -> new ItemStack(IUItem.genome_crop.getStack(0));
+            case 14 -> new ItemStack(IUItem.rocket.getItem());
+            case 15 -> new ItemStack(IUItem.fluidCell.getItem());
             default -> new ItemStack(Blocks.COBBLESTONE);
         };
     }
-    Component name = null;
+
     public Component getDisplayName() {
-        if (name == null){
+        if (name == null) {
             this.name = Component.translatable("itemGroup." + name1);
         }
         return name;

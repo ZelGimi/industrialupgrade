@@ -56,12 +56,12 @@ public class InputHandler implements IInputHandler {
             return this.getInput(new ItemStack((Item) var1));
         if (var1 instanceof TagKey)
             return this.getInput((TagKey<Item>) var1);
-        if (var1 instanceof Ingredient){
+        if (var1 instanceof Ingredient) {
             Ingredient ingredient = (Ingredient) var1;
-            if (((IngredientAccessor)ingredient).getValues()[0] instanceof Ingredient.TagValue){
-                Ingredient.TagValue tagValue = (Ingredient.TagValue) ((IngredientAccessor)ingredient).getValues()[0];
+            if (((IngredientAccessor) ingredient).getValues()[0] instanceof Ingredient.TagValue) {
+                Ingredient.TagValue tagValue = (Ingredient.TagValue) ((IngredientAccessor) ingredient).getValues()[0];
                 return this.getInput(((TagValueAccessor) tagValue).getTag());
-            }else {
+            } else {
                 return this.getInput(ingredient.getItems());
             }
         }

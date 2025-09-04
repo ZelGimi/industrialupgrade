@@ -1,11 +1,11 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
 import com.denfop.items.reactors.IRadioactiveItemType;
+import com.denfop.potion.IUPotion;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -22,7 +22,7 @@ public class ItemNuclearResource<T extends Enum<T> & ISubEnum> extends ItemMain<
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
         if (entity instanceof LivingEntity) {
             LivingEntity entityLiving = (LivingEntity) entity;
-            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+            if (!HazmatLike.hasCompleteHazmat(entityLiving)) {
                 IUPotion.radiation.applyEffect(entityLiving, ((Types) getElement()).getRadiationDuration());
             }
         }

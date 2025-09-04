@@ -2,7 +2,7 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.tiles.mechanism.TileGenerationMicrochip;
+import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
 import com.quantumgenerators.QGCore;
 
 public class RecipeQuantumGenerators {
@@ -16,7 +16,7 @@ public class RecipeQuantumGenerators {
                 8
         ),
                 Character.valueOf('C'), ItemStackHelper.fromData(IUItem.advQuantumtool), Character.valueOf('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral,9)});
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9)});
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(QGCore.qg, 1, 1), new Object[]{" B ", "BAB", " B ",
 
                 Character.valueOf('A'), ItemStackHelper.fromData(QGCore.qg, 1, 0), Character.valueOf('B'), ItemStackHelper.fromData(IUItem.core, 1, 9)});
@@ -32,5 +32,6 @@ public class RecipeQuantumGenerators {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(QGCore.qg, 1, 5), new Object[]{" B ", "BAB", " B ",
 
                 Character.valueOf('A'), ItemStackHelper.fromData(QGCore.qg, 1, 4), Character.valueOf('B'), ItemStackHelper.fromData(IUItem.core, 1, 13)});
+
     }
 }

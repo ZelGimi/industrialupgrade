@@ -1,10 +1,10 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.brewage.EnumBeerVariety;
 import com.denfop.api.brewage.EnumTimeVariety;
 import com.denfop.api.brewage.EnumWaterVariety;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.Util;
@@ -173,8 +173,6 @@ public class ItemBooze extends Item implements IProperties {
 
         return new ItemStack(this);
     }
-
-
 
 
     @Override

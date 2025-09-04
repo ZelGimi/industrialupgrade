@@ -24,7 +24,7 @@ public class ItemCanister extends ItemFluidContainer {
 
 
     public boolean canfill(Fluid fluid) {
-        return fluid == FluidName.fluidmotoroil.getInstance().get() || fluid == FluidName.fluidsteam_oil.getInstance().get() ;
+        return fluid == FluidName.fluidmotoroil.getInstance().get() || fluid == FluidName.fluidsteam_oil.getInstance().get();
     }
 
 

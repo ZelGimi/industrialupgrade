@@ -1,19 +1,19 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.audio.EnumTypeAudio;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.recipe.IMultiUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotSteamMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventorySteamMultiRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.sound.EnumTypeAudio;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.EnumMultiMachine;
+import com.denfop.blockentity.base.ISteamMechanism;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
 import com.denfop.blocks.FluidName;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.EnumMultiMachine;
-import com.denfop.tiles.base.ISteamMechanism;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.utils.Timer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -29,8 +29,8 @@ import java.util.List;
 
 public class SteamProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
-    public final InvSlotSteamMultiRecipes inputSlots;
-    public final InvSlotOutput outputSlot;
+    public final InventorySteamMultiRecipes inputSlots;
+    public final InventoryOutput outputSlot;
     private final ComponentSteamEnergy steam;
     private final PressureComponent pressure;
     private final ISteamMechanism multimachine;
@@ -48,17 +48,18 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
     private int[] col;
     private Timer timer1 = new Timer(0, 0, 0);
     private Timer timer = null;
+
     public SteamProcessMultiComponent(final ISteamMechanism parent, final EnumMultiMachine enumMultiMachine) {
-        super((TileEntityBlock) parent);
+        super((BlockEntityBase) parent);
         this.multimachine = parent;
-        this.inputSlots = new InvSlotSteamMultiRecipes(
-                (TileEntityInventory) parent,
+        this.inputSlots = new InventorySteamMultiRecipes(
+                (BlockEntityInventory) parent,
                 enumMultiMachine.type.recipe,
                 (IMultiUpdateTick) this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(
-                (IAdvInventory<?>) parent,
+        this.outputSlot = new InventoryOutput(
+                (CustomWorldContainer) parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
         this.enumMultiMachine = enumMultiMachine;
@@ -72,8 +73,8 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
         this.defaultOperationLength = this.operationChange = this.operationLength =
                 Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.steam = ((TileEntityBlock) parent).getComp(ComponentSteamEnergy.class);
-        this.pressure = ((TileEntityBlock) parent).getComp(PressureComponent.class);
+        this.steam = ((BlockEntityBase) parent).getComp(ComponentSteamEnergy.class);
+        this.pressure = ((BlockEntityBase) parent).getComp(PressureComponent.class);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
             this.getsOutputs();
         }
     }
+
     @Override
     public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);

@@ -1,10 +1,10 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.bee.FrameAttributeLevel;
+import com.denfop.blockentity.bee.FrameItem;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.tiles.bee.FrameAttributeLevel;
-import com.denfop.tiles.bee.IFrameItem;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IFrameItem {
+public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements FrameItem {
     public ItemFrame(T element) {
         super(new Item.Properties().tab(IUCore.ItemTab).stacksTo(1), element);
     }

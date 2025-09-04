@@ -3,7 +3,6 @@ package com.denfop.recipe;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -21,10 +20,10 @@ import java.util.Objects;
 
 public class InputOreDict implements IInputItemStack {
 
-    public int amount;
     public final Integer meta;
     private final TagKey<Item> tag;
     private final List<ItemStack> ores;
+    public int amount;
 
     public InputOreDict(String input) {
         this(input.toLowerCase(), 1);
@@ -33,6 +32,7 @@ public class InputOreDict implements IInputItemStack {
     public InputOreDict(String input, int amount) {
         this(input.toLowerCase(), amount, 0);
     }
+
     public InputOreDict(CompoundTag tagCompound) {
         this.amount = tagCompound.getInt("Amount");
 
@@ -48,28 +48,7 @@ public class InputOreDict implements IInputItemStack {
             ores.add(ItemStack.of(list.getCompound(i)));
         }
     }
-    @Override
-    public CompoundTag writeNBT() {
-        CompoundTag tagCompound = new CompoundTag();
-        tagCompound.putByte("id", (byte) 1);
-        tagCompound.putInt("Amount", amount);
 
-        if (meta != null) {
-            tagCompound.putInt("Meta", meta);
-        }
-
-        if (tag != null) {
-            tagCompound.putString("ItemTag", tag.location().toString());
-        }
-
-        ListTag list = new ListTag();
-        for (ItemStack stack : ores) {
-            list.add(stack.save(new CompoundTag()));
-        }
-        tagCompound.put("Ores", list);
-
-        return tagCompound;
-    }
     public InputOreDict(String input, int amount, Integer meta) {
         ResourceLocation input1 = new ResourceLocation(input.toLowerCase());
         this.amount = amount;
@@ -94,14 +73,6 @@ public class InputOreDict implements IInputItemStack {
         }
     }
 
-    @Override
-    public void growAmount(final int col) {
-        amount += col;
-        for (ItemStack stack : getOres()) {
-            stack.setCount(this.getAmount());
-        }
-    }
-
     public InputOreDict(int amount, TagKey<Item> tag) {
         this.amount = amount;
         this.meta = 0;
@@ -122,6 +93,37 @@ public class InputOreDict implements IInputItemStack {
         stack = stack.copy();
         stack.setCount(col);
         return stack;
+    }
+
+    @Override
+    public CompoundTag writeNBT() {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putByte("id", (byte) 1);
+        tagCompound.putInt("Amount", amount);
+
+        if (meta != null) {
+            tagCompound.putInt("Meta", meta);
+        }
+
+        if (tag != null) {
+            tagCompound.putString("ItemTag", tag.location().toString());
+        }
+
+        ListTag list = new ListTag();
+        for (ItemStack stack : ores) {
+            list.add(stack.save(new CompoundTag()));
+        }
+        tagCompound.put("Ores", list);
+
+        return tagCompound;
+    }
+
+    @Override
+    public void growAmount(final int col) {
+        amount += col;
+        for (ItemStack stack : getOres()) {
+            stack.setCount(this.getAmount());
+        }
     }
 
     public boolean matches(ItemStack subject) {

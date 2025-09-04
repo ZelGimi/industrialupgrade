@@ -1,24 +1,22 @@
 package com.denfop.items.energy.instruments;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.LevelInstruments;
+import com.denfop.api.item.upgrade.UpgradeItemInform;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.UpgradeWithBlackList;
+import com.denfop.api.item.upgrade.event.EventItemBlackListLoad;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.api.upgrade.ILevelInstruments;
-import com.denfop.api.upgrade.IUpgradeWithBlackList;
-import com.denfop.api.upgrade.UpgradeItemInform;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemBlackListLoad;
-import com.denfop.audio.EnumSound;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.IProperties;
 import com.denfop.items.energy.ItemStackUpgradeItem;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.sound.EnumSound;
 import com.denfop.utils.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
@@ -68,8 +66,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemStackInventory, IUpgradeWithBlackList,
-        ILevelInstruments, IProperties {
+public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStackInventory, UpgradeWithBlackList,
+        LevelInstruments, IProperties {
 
     private final String name;
     private final int transferLimit;
@@ -123,7 +121,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
 
     @Override
     public int getMaxLevel(final ItemStack stack) {
-        int maxLevel = ILevelInstruments.super.getMaxLevel(stack);
+        int maxLevel = LevelInstruments.super.getMaxLevel(stack);
         if (maxLevel == Integer.MAX_VALUE) {
             return maxLevel;
         }
@@ -331,7 +329,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                 IUCore.proxy.messagePlayer(
                         player,
                         ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                                + operation.getTextFormatting() +  Localization.translate(operation.getName_mode())
+                                + operation.getTextFormatting() + Localization.translate(operation.getName_mode())
                 );
             }
             switch (operation) {
@@ -370,11 +368,12 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public int readToolMode(ItemStack itemstack) {
         CompoundTag nbt = ModUtils.nbt(itemstack);
         int toolMode = nbt.getInt("toolMode");
@@ -1096,7 +1095,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        Direction direction = getPlayerPOVHitResult(world,player, ClipContext.Fluid.NONE).getDirection();
+        Direction direction = getPlayerPOVHitResult(world, player, ClipContext.Fluid.NONE).getDirection();
         switch (direction.ordinal()) {
 
             case 0:
@@ -1511,7 +1510,7 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
     }
 
     @Override
-    public IAdvInventory getInventory(final Player player, final ItemStack stack) {
+    public CustomWorldContainer getInventory(final Player player, final ItemStack stack) {
         return new ItemStackUpgradeItem(player, stack);
     }
 

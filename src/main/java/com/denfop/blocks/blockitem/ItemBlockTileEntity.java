@@ -1,9 +1,9 @@
 package com.denfop.blocks.blockitem;
 
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.base.FakePlayerSpawner;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.ItemBlockCore;
-import com.denfop.tiles.base.FakePlayerSpawner;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends ItemBlockCore<T> {
+public class ItemBlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends ItemBlockCore<T> {
     public final ResourceLocation identifier;
 
     public ItemBlockTileEntity(BlockTileEntity<T> p_40565_, T element, ResourceLocation identifier) {
@@ -49,7 +49,7 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack p_40572_, @Nullable Level p_40573_, List<Component> p_40574_, TooltipFlag p_40575_) {
-        IMultiTileBlock block = this.getTeBlock(p_40572_);
+        MultiBlockEntity block = this.getTeBlock(p_40572_);
         if (block != null && block.getDummyTe() != null) {
             List<String> stringList = new LinkedList<>();
             block.getDummyTe().addInformation(p_40572_, stringList);
@@ -59,9 +59,9 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
 
     }
 
-    public IMultiTileBlock getTeBlock(ItemStack stack) {
+    public MultiBlockEntity getTeBlock(ItemStack stack) {
         return stack == null ? null : (!((BlockTileEntity) this.getBlock()).teInfo.getIdMap().isEmpty()) ?
-                (IMultiTileBlock) ((BlockTileEntity) this.getBlock()).getValue() : null;
+                (MultiBlockEntity) ((BlockTileEntity) this.getBlock()).getValue() : null;
     }
 
     @Nullable
@@ -71,9 +71,9 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
         Level level = pContext.getLevel();
         BlockState blockstate = level.getBlockState(blockpos);
         Block block = this.getBlock();
-        IMultiTileBlock iMultiTileBlock =  getTeBlock(pContext.getItemInHand());
+        MultiBlockEntity multiBlockEntity = getTeBlock(pContext.getItemInHand());
         Direction direction = pContext.getClickedFace();
-        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(),blockpos,level,direction,pContext.getPlayer()))
+        if (!multiBlockEntity.getDummyTe().canPlace(multiBlockEntity.getDummyTe(), blockpos, level, direction, pContext.getPlayer()))
             return null;
         return super.updatePlacementContext(pContext);
     }
@@ -82,14 +82,16 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
     @Override
     protected BlockState getPlacementState(BlockPlaceContext p_40613_) {
         BlockState blockstate = this.getBlock().getStateForPlacement(p_40613_);
-        return blockstate != null && this.canPlace(p_40613_, blockstate)  ? blockstate : null;
+        return blockstate != null && this.canPlace(p_40613_, blockstate) ? blockstate : null;
 
     }
+
     protected boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
         Player player = pContext.getPlayer();
         CollisionContext collisioncontext = player == null ? CollisionContext.empty() : CollisionContext.of(player);
-        return (!this.mustSurvive()  || pContext.replacingClickedOnBlock() || pState.canSurvive(pContext.getLevel(), pContext.getClickedPos())) && pContext.getLevel().isUnobstructed(pState, pContext.getClickedPos(), collisioncontext);
+        return (!this.mustSurvive() || pContext.replacingClickedOnBlock() || pState.canSurvive(pContext.getLevel(), pContext.getClickedPos())) && pContext.getLevel().isUnobstructed(pState, pContext.getClickedPos(), collisioncontext);
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("industrialupgrade", Registry.ITEM.getKey(this)));
@@ -102,8 +104,8 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem =  "industrialupgrade." +pathBuilder.toString();
-            if (this.getElement().hasUniqueName()){
+            this.nameItem = "industrialupgrade." + pathBuilder.toString();
+            if (this.getElement().hasUniqueName()) {
                 this.nameItem = this.getElement().getUniqueName();
             }
         }

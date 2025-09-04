@@ -1,10 +1,10 @@
 package com.denfop.items.upgradekit;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -58,8 +58,8 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
             ItemStack output = ItemStack.of(outputNBT);
 
             BlockEntity tileEntity = world.getBlockEntity(pos);
-            if (tileEntity instanceof TileEntityBlock tileEntityBlock) {
-                if (tileEntityBlock.getPickBlock(player, null).is(input.getItem())) {
+            if (tileEntity instanceof BlockEntityBase blockEntityBase) {
+                if (blockEntityBase.getPickBlock(player, null).is(input.getItem())) {
                     Block outputBlock = ((ItemBlockTileEntity) output.getItem()).getBlock();
 
                     BlockState state = world.getBlockState(pos);

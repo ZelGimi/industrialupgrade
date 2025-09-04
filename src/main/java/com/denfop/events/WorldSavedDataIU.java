@@ -1,22 +1,22 @@
 package com.denfop.events;
 
 import com.denfop.IUCore;
-import com.denfop.api.gasvein.GasVein;
-import com.denfop.api.gasvein.GasVeinSystem;
 import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.*;
-import com.denfop.api.vein.Vein;
-import com.denfop.api.vein.VeinSystem;
+import com.denfop.api.vein.common.VeinBase;
+import com.denfop.api.vein.common.VeinSystem;
+import com.denfop.api.vein.gas.GasBaseVein;
+import com.denfop.api.vein.gas.GasVeinSystem;
+import com.denfop.blockentity.quarry_earth.BlockEntityEarthQuarryController;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.render.streak.PlayerStreakInfo;
-import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
 import com.denfop.world.vein.noise.ShellCluster;
@@ -24,7 +24,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -34,8 +33,8 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static com.denfop.api.guidebook.GuideBookCore.uuidGuideMap;
 import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
@@ -51,82 +50,11 @@ public class WorldSavedDataIU extends SavedData {
         this(new CompoundTag());
 
     }
+
     public WorldSavedDataIU(String name) {
         super();
     }
-    public static void loadShellClusterChunks(CompoundTag tag) {
-        Map<Integer, Map<Integer, Tuple<Color, Integer>>> result = new HashMap<>();
-        ShellCluster cluster = new ShellCluster();
-        cluster.point = new com.denfop.world.vein.noise.Point( tag.getCompound("volcano").getInt("x"), tag.getCompound("volcano").getInt("z"));
-        volcano =cluster;
-        ListTag outerList = tag.getList("shellClusterChunks", 10);
 
-        for (int i = 0; i < outerList.size(); i++) {
-            CompoundTag outerTag = outerList.getCompound(i);
-            int outerKey = outerTag.getInt("outer");
-
-            Map<Integer, Tuple<Color, Integer>> innerMap = new HashMap<>();
-            ListTag innerList = outerTag.getList("innerList", 10);
-
-            for (int j = 0; j < innerList.size(); j++) {
-                CompoundTag innerTag = innerList.getCompound(j);
-                int innerKey = innerTag.getInt("inner");
-
-                int r = innerTag.getInt("r");
-                int g = innerTag.getInt("g");
-                int b = innerTag.getInt("b");
-                int a = innerTag.getInt("a");
-                int value = innerTag.getInt("value");
-
-                Color color = new Color(r, g, b, a);
-                innerMap.put(innerKey, new Tuple<>(color, value));
-            }
-
-            result.put(outerKey, innerMap);
-        }
-        shellClusterChuncks = result;
-
-    }
-
-    public static CompoundTag saveShellClusterChunks() {
-        CompoundTag tag = new CompoundTag();
-        ListTag outerList = new ListTag();
-        CompoundTag volcanoTag = new CompoundTag();
-        if (volcano != null) {
-            volcanoTag.putInt("x", volcano.point.x);
-            volcanoTag.putInt("z", volcano.point.y);
-            tag.put("volcano", volcanoTag);
-        }
-        for (Map.Entry<Integer, Map<Integer, Tuple<Color, Integer>>> outer : shellClusterChuncks.entrySet()) {
-            int outerKey = outer.getKey();
-            CompoundTag outerTag = new CompoundTag();
-            outerTag.putInt("outer", outerKey);
-
-            ListTag innerList = new ListTag();
-            for (Map.Entry<Integer, Tuple<Color, Integer>> inner : outer.getValue().entrySet()) {
-                int innerKey = inner.getKey();
-                Tuple<Color, Integer> tuple = inner.getValue();
-                Color color = tuple.getA();
-                int number = tuple.getB();
-
-                CompoundTag innerTag = new CompoundTag();
-                innerTag.putInt("inner", innerKey);
-                innerTag.putInt("r", color.getRed());
-                innerTag.putInt("g", color.getGreen());
-                innerTag.putInt("b", color.getBlue());
-                innerTag.putInt("a", color.getAlpha());
-                innerTag.putInt("value", number);
-
-                innerList.add(innerTag);
-            }
-
-            outerTag.put("innerList", innerList);
-            outerList.add(outerTag);
-        }
-
-        tag.put("shellClusterChunks", outerList);
-        return tag;
-    }
     public WorldSavedDataIU(@Nonnull CompoundTag compound) {
         if (shellClusterChuncks == null)
             shellClusterChuncks = new HashMap<>();
@@ -223,14 +151,14 @@ public class WorldSavedDataIU extends SavedData {
             PollutionManager.pollutionManager.loadData(pollutionTag);
         }
 
-          TileEntityEarthQuarryController.chunkPos.clear();
+        BlockEntityEarthQuarryController.chunkPos.clear();
         if (compound.contains("earth_quarry")) {
             ListTag earthQuarryList = compound.getList("earth_quarry", 10);
             for (int i = 0; i < earthQuarryList.size(); i++) {
                 CompoundTag chunkTag = earthQuarryList.getCompound(i);
                 int x = chunkTag.getInt("x");
                 int z = chunkTag.getInt("z");
-                TileEntityEarthQuarryController.chunkPos.add(new ChunkPos(x, z));
+                BlockEntityEarthQuarryController.chunkPos.add(new ChunkPos(x, z));
             }
         }
 
@@ -343,6 +271,80 @@ public class WorldSavedDataIU extends SavedData {
         uuidGuideMap = mapData;
     }
 
+    public static void loadShellClusterChunks(CompoundTag tag) {
+        Map<Integer, Map<Integer, Tuple<Color, Integer>>> result = new HashMap<>();
+        ShellCluster cluster = new ShellCluster();
+        cluster.point = new com.denfop.world.vein.noise.Point(tag.getCompound("volcano").getInt("x"), tag.getCompound("volcano").getInt("z"));
+        volcano = cluster;
+        ListTag outerList = tag.getList("shellClusterChunks", 10);
+
+        for (int i = 0; i < outerList.size(); i++) {
+            CompoundTag outerTag = outerList.getCompound(i);
+            int outerKey = outerTag.getInt("outer");
+
+            Map<Integer, Tuple<Color, Integer>> innerMap = new HashMap<>();
+            ListTag innerList = outerTag.getList("innerList", 10);
+
+            for (int j = 0; j < innerList.size(); j++) {
+                CompoundTag innerTag = innerList.getCompound(j);
+                int innerKey = innerTag.getInt("inner");
+
+                int r = innerTag.getInt("r");
+                int g = innerTag.getInt("g");
+                int b = innerTag.getInt("b");
+                int a = innerTag.getInt("a");
+                int value = innerTag.getInt("value");
+
+                Color color = new Color(r, g, b, a);
+                innerMap.put(innerKey, new Tuple<>(color, value));
+            }
+
+            result.put(outerKey, innerMap);
+        }
+        shellClusterChuncks = result;
+
+    }
+
+    public static CompoundTag saveShellClusterChunks() {
+        CompoundTag tag = new CompoundTag();
+        ListTag outerList = new ListTag();
+        CompoundTag volcanoTag = new CompoundTag();
+        if (volcano != null) {
+            volcanoTag.putInt("x", volcano.point.x);
+            volcanoTag.putInt("z", volcano.point.y);
+            tag.put("volcano", volcanoTag);
+        }
+        for (Map.Entry<Integer, Map<Integer, Tuple<Color, Integer>>> outer : shellClusterChuncks.entrySet()) {
+            int outerKey = outer.getKey();
+            CompoundTag outerTag = new CompoundTag();
+            outerTag.putInt("outer", outerKey);
+
+            ListTag innerList = new ListTag();
+            for (Map.Entry<Integer, Tuple<Color, Integer>> inner : outer.getValue().entrySet()) {
+                int innerKey = inner.getKey();
+                Tuple<Color, Integer> tuple = inner.getValue();
+                Color color = tuple.getA();
+                int number = tuple.getB();
+
+                CompoundTag innerTag = new CompoundTag();
+                innerTag.putInt("inner", innerKey);
+                innerTag.putInt("r", color.getRed());
+                innerTag.putInt("g", color.getGreen());
+                innerTag.putInt("b", color.getBlue());
+                innerTag.putInt("a", color.getAlpha());
+                innerTag.putInt("value", number);
+
+                innerList.add(innerTag);
+            }
+
+            outerTag.put("innerList", innerList);
+            outerList.add(outerTag);
+        }
+
+        tag.put("shellClusterChunks", outerList);
+        return tag;
+    }
+
     public Level getWorld() {
         return world;
     }
@@ -397,7 +399,7 @@ public class WorldSavedDataIU extends SavedData {
         compound.put("fakePlayers", fakePlayersList);
 
         ListTag veinsList = new ListTag();
-        for (Vein vein : VeinSystem.system.getVeinsList()) {
+        for (VeinBase vein : VeinSystem.system.getVeinsList()) {
             veinsList.add(vein.writeTag());
         }
         compound.put("veins", veinsList);
@@ -441,7 +443,7 @@ public class WorldSavedDataIU extends SavedData {
         compound.put("pollution", PollutionManager.pollutionManager.writeCompound());
 
         ListTag earthQuarryList = new ListTag();
-        for (ChunkPos chunkPos : TileEntityEarthQuarryController.chunkPos) {
+        for (ChunkPos chunkPos : BlockEntityEarthQuarryController.chunkPos) {
             CompoundTag chunkTag = new CompoundTag();
             chunkTag.putInt("x", chunkPos.x);
             chunkTag.putInt("z", chunkPos.z);
@@ -460,7 +462,7 @@ public class WorldSavedDataIU extends SavedData {
         compound.put("gen_gas", gasMapList);
 
         ListTag gasVeinsList = new ListTag();
-        for (GasVein gasVein : GasVeinSystem.system.getVeinsList()) {
+        for (GasBaseVein gasVein : GasVeinSystem.system.getVeinsList()) {
             gasVeinsList.add(gasVein.writeTag());
         }
         compound.put("gasvein", gasVeinsList);
@@ -494,26 +496,26 @@ public class WorldSavedDataIU extends SavedData {
         relocatorTag.put("worldUUID", worldListTag);
         compound.put("relocator", relocatorTag);
         final Map<UUID, Map<String, List<String>>> mapData = uuidGuideMap;
-        if (!mapData.isEmpty()){
+        if (!mapData.isEmpty()) {
             CompoundTag data = new CompoundTag();
             ListTag list = new ListTag();
-            for (Map.Entry<UUID, Map<String, List<String>>> entry : mapData.entrySet()){
+            for (Map.Entry<UUID, Map<String, List<String>>> entry : mapData.entrySet()) {
                 CompoundTag data1 = new CompoundTag();
-                data1.putUUID("uuid",entry.getKey());
+                data1.putUUID("uuid", entry.getKey());
                 ListTag list1 = new ListTag();
                 Map<String, List<String>> mapQuest = entry.getValue();
-                for (Map.Entry<String, List<String>> quest : mapQuest.entrySet()){
+                for (Map.Entry<String, List<String>> quest : mapQuest.entrySet()) {
                     CompoundTag data2 = new CompoundTag();
-                    data2.putString("tab",quest.getKey());
+                    data2.putString("tab", quest.getKey());
                     ListTag list2 = new ListTag();
                     quest.getValue().forEach(name -> list2.add(StringTag.valueOf(name)));
-                    data2.put("list",list2);
+                    data2.put("list", list2);
                     list1.add(data2);
                 }
-                data1.put("list",list1);
+                data1.put("list", list1);
                 list.add(data1);
             }
-            data.put("list",list);
+            data.put("list", list);
             compound.put("guide_book", data);
         }
         compound.put("shells", saveShellClusterChunks());

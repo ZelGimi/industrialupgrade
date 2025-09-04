@@ -1,16 +1,16 @@
 package com.denfop.network;
 
 
-import com.denfop.api.radiationsystem.Radiation;
+import com.denfop.api.pollution.radiation.Radiation;
 import com.denfop.api.recipe.RecipeInfo;
-import com.denfop.api.vein.Vein;
+import com.denfop.api.vein.common.VeinBase;
+import com.denfop.blockentity.base.DataOre;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.inventory.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
 import com.denfop.network.packet.INetworkObject;
-import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.math.Vector3d;
@@ -201,9 +201,9 @@ public class EncoderHandler {
                 }
                 break;
             case tuple:
-                Tuple<?,?> tuple = ( Tuple<?,?>) o;
-                encode(os,tuple.getA());
-                encode(os,tuple.getB());
+                Tuple<?, ?> tuple = (Tuple<?, ?>) o;
+                encode(os, tuple.getA());
+                encode(os, tuple.getB());
                 break;
             case Block:
                 encode(os, Registry.BLOCK.getKey((Block) o), false);
@@ -258,12 +258,12 @@ public class EncoderHandler {
             case FluidStack:
                 FluidStack fs = (FluidStack) o;
                 if (!fs.isEmpty())
-                encode(os, fs.getFluid(), false);
+                    encode(os, fs.getFluid(), false);
                 else
                     encode(os, Fluids.EMPTY, false);
                 os.writeInt(fs.getAmount());
                 if (!fs.isEmpty())
-                encode(os, fs.getTag(), true);
+                    encode(os, fs.getTag(), true);
                 break;
             case FluidTank:
                 FluidTank tank = (FluidTank) o;
@@ -279,7 +279,7 @@ public class EncoderHandler {
                 os.writeInt((Integer) o);
                 break;
             case InvSlot:
-                InvSlot slot = (InvSlot) o;
+                Inventory slot = (Inventory) o;
                 ItemStack[] contents = new ItemStack[slot.size()];
 
                 for (i = 0; i < slot.size(); ++i) {
@@ -354,7 +354,7 @@ public class EncoderHandler {
                 os.writeResourceKey(((Level) o).dimension());
                 break;
             case Vein:
-                Vein vein = (Vein) o;
+                VeinBase vein = (VeinBase) o;
                 os.writeBytes(vein.writePacket());
                 break;
             case RecipeInfo:

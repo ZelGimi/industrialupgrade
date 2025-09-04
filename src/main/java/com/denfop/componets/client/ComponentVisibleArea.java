@@ -1,12 +1,11 @@
 package com.denfop.componets.client;
 
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.events.client.GlobalRenderManager;
-import com.denfop.events.client.SolarSystemRenderer;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.render.base.RenderType;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -20,7 +19,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -33,7 +31,7 @@ public class ComponentVisibleArea extends AbstractComponent {
     public AABB aabb;
     private boolean visible;
 
-    public ComponentVisibleArea(TileEntityBlock parent) {
+    public ComponentVisibleArea(BlockEntityBase parent) {
         super(parent);
     }
 
@@ -46,7 +44,7 @@ public class ComponentVisibleArea extends AbstractComponent {
     @Override
     public CompoundTag writeToNbt() {
         CompoundTag tag = super.writeToNbt();
-        tag.putBoolean("visible",visible);
+        tag.putBoolean("visible", visible);
         return tag;
     }
 
@@ -89,6 +87,7 @@ public class ComponentVisibleArea extends AbstractComponent {
             GlobalRenderManager.addRender(parent.getWorld(), parent.getPos(), createFunction(this));
         }
     }
+
     @OnlyIn(Dist.CLIENT)
     private Function<RenderLevelStageEvent, Void> createFunction(ComponentVisibleArea componentVisibleArea) {
         Function<RenderLevelStageEvent, Void> function = event -> {
@@ -115,17 +114,17 @@ public class ComponentVisibleArea extends AbstractComponent {
             Matrix3f matrix3f = poseStack.last().normal();
             int f = (int) aabb.minX;
             int f1 = (int) aabb.minY;
-            int f2 =(int)  aabb.minZ;
-            int f3 =(int)  aabb.maxX;
+            int f2 = (int) aabb.minZ;
+            int f3 = (int) aabb.maxX;
             int f4 = (int) aabb.maxY;
-            int f5= (int) aabb.maxZ;
+            int f5 = (int) aabb.maxZ;
             float x1 = (float) aabb.minX;
             float y1 = (float) aabb.minY;
             float z1 = (float) aabb.minZ;
             float x2 = (float) aabb.maxX;
             float y2 = (float) aabb.maxY;
             float z2 = (float) aabb.maxZ;
-            float red = 0f, green = 124/255f, blue = 170/255f, alpha = 0.5f;
+            float red = 0f, green = 124 / 255f, blue = 170 / 255f, alpha = 0.5f;
 
             buffer.vertex(matrix, x1, y1, z1).color(red, green, blue, alpha).endVertex();
             buffer.vertex(matrix, x2, y1, z1).color(red, green, blue, alpha).endVertex();
@@ -178,7 +177,7 @@ public class ComponentVisibleArea extends AbstractComponent {
             red = 0f;
             green = 124 / 255f;
             blue = 255f / 255f;
-            alpha =1f;
+            alpha = 1f;
             Matrix4f matrix4f = poseStack.last().pose();
             p_109623_.vertex(matrix4f, f, f1, f2).color(red, green, blue, alpha).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
             p_109623_.vertex(matrix4f, f3, f1, f2).color(red, green, blue, alpha).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
@@ -221,7 +220,7 @@ public class ComponentVisibleArea extends AbstractComponent {
             red = 0f;
             green = 124 / 255f;
             blue = 255f / 255f;
-            alpha =1f;
+            alpha = 1f;
             matrix4f = poseStack.last().pose();
             p_109623_.vertex(matrix4f, f, f1, f2).color(red, green, blue, alpha).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
             p_109623_.vertex(matrix4f, f3, f1, f2).color(red, green, blue, alpha).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();

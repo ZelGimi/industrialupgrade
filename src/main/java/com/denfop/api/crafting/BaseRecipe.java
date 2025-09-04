@@ -1,7 +1,6 @@
 package com.denfop.api.crafting;
 
 import com.denfop.api.Recipes;
-import com.denfop.items.ItemCraftingElements;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -11,14 +10,15 @@ import com.denfop.recipe.InputItemStack;
 import com.denfop.recipe.InputOreDict;
 import com.denfop.register.Register;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
 import java.io.IOException;
@@ -148,6 +148,22 @@ public class BaseRecipe extends ShapedRecipe {
         this.id = Recipes.registerRecipe(this);
     }
 
+    public static BaseRecipe create(ResourceLocation id, CustomPacketBuffer customPacketBuffer) {
+        try {
+            String group = (String) DecoderHandler.decode(customPacketBuffer);
+            ItemStack output = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+            List<String> args = (List<String>) DecoderHandler.decode(customPacketBuffer);
+            RecipeGrid grid = new RecipeGrid(args);
+            List<PartRecipe> partRecipes = new ArrayList<>();
+            int size = (int) customPacketBuffer.readInt();
+            for (int i = 0; i < size; i++) {
+                partRecipes.add(new PartRecipe((String) DecoderHandler.decode(customPacketBuffer), InputItemStack.create((CompoundTag) DecoderHandler.decode(customPacketBuffer))));
+            }
+            return new BaseRecipe(id, group, output, grid, partRecipes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public NonNullList<IInputItemStack> getListInput() {
         return listInput;
@@ -183,7 +199,6 @@ public class BaseRecipe extends ShapedRecipe {
         return this.output.copy();
     }
 
-
     @Override
     public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
         return 3 == p_43999_ && p_44000_ == 3;
@@ -193,7 +208,6 @@ public class BaseRecipe extends ShapedRecipe {
     public ItemStack getResultItem() {
         return this.output.copy();
     }
-
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer p_44004_) {
@@ -213,20 +227,15 @@ public class BaseRecipe extends ShapedRecipe {
         return ingredients;
     }
 
-
-
-
     @Override
     public RecipeSerializer<?> getSerializer() {
         return Register.RECIPE_SERIALIZER_SHAPED_RECIPE.get();
     }
 
-
     @Override
     public RecipeType<?> getType() {
         return RecipeType.CRAFTING;
     }
-
 
     @Override
     public int getRecipeWidth() {
@@ -237,7 +246,6 @@ public class BaseRecipe extends ShapedRecipe {
     public int getRecipeHeight() {
         return 3;
     }
-
 
     public ItemStack matches(final CraftingContainer inv) {
         int width = (int) Math.sqrt(inv.getContainerSize());
@@ -256,8 +264,8 @@ public class BaseRecipe extends ShapedRecipe {
                     if (this.inputIndex[this.index][this.inputIndexCraftingTable[i]] == 0 && offer.isEmpty()) {
                         continue;
                     }
-                    if (this.input[this.index][this.inputIndexCraftingTable[i]] instanceof InputOreDict && this.input[this.index][this.inputIndexCraftingTable[i]].hasTag() &&  this.input[this.index][this.inputIndexCraftingTable[i]].getInputs().isEmpty())
-                        this.input[this.index][this.inputIndexCraftingTable[i]] = new InputOreDict(this.input[this.index][this.inputIndexCraftingTable[i]].getTag(),this.input[this.index][this.inputIndexCraftingTable[i]].getAmount());
+                    if (this.input[this.index][this.inputIndexCraftingTable[i]] instanceof InputOreDict && this.input[this.index][this.inputIndexCraftingTable[i]].hasTag() && this.input[this.index][this.inputIndexCraftingTable[i]].getInputs().isEmpty())
+                        this.input[this.index][this.inputIndexCraftingTable[i]] = new InputOreDict(this.input[this.index][this.inputIndexCraftingTable[i]].getTag(), this.input[this.index][this.inputIndexCraftingTable[i]].getAmount());
 
                     if (!this.input[this.index][this.inputIndexCraftingTable[i]].matches(offer)) {
                         return ItemStack.EMPTY;
@@ -285,8 +293,8 @@ public class BaseRecipe extends ShapedRecipe {
                     if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                         continue;
                     }
-                    if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() &&  input[j][i].getInputs().isEmpty())
-                        input[j][i] = new InputOreDict(this.input[j][i].getTag(),this.input[j][i].getAmount());
+                    if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                        input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
                     if (!this.input[j][i].matches(offer)) {
                         has = false;
                         break;
@@ -307,8 +315,8 @@ public class BaseRecipe extends ShapedRecipe {
                     if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                         continue;
                     }
-                    if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() &&  input[j][i].getInputs().isEmpty())
-                        input[j][i] = new InputOreDict(this.input[j][i].getTag(),this.input[j][i].getAmount());
+                    if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                        input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
                     if (!this.input[j][i].matches(offer)) {
                         return ItemStack.EMPTY;
                     }
@@ -317,7 +325,6 @@ public class BaseRecipe extends ShapedRecipe {
         }
         return this.output.copy();
     }
-
 
     public void toNetwork(FriendlyByteBuf buf) {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer(buf);
@@ -328,23 +335,6 @@ public class BaseRecipe extends ShapedRecipe {
             packetBuffer.writeInt(partRecipe.size());
             for (PartRecipe part : partRecipe)
                 part.encode(packetBuffer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static BaseRecipe create(ResourceLocation id, CustomPacketBuffer customPacketBuffer) {
-        try {
-            String group = (String) DecoderHandler.decode(customPacketBuffer);
-            ItemStack output = (ItemStack) DecoderHandler.decode(customPacketBuffer);
-            List<String> args = (List<String>) DecoderHandler.decode(customPacketBuffer);
-            RecipeGrid grid = new RecipeGrid(args);
-            List<PartRecipe> partRecipes = new ArrayList<>();
-            int size = (int) customPacketBuffer.readInt();
-            for (int i = 0; i < size; i++) {
-                partRecipes.add(new PartRecipe((String) DecoderHandler.decode(customPacketBuffer), InputItemStack.create((CompoundTag) DecoderHandler.decode(customPacketBuffer))));
-            }
-            return new BaseRecipe(id, group, output, grid, partRecipes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

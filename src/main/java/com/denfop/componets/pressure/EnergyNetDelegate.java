@@ -1,11 +1,9 @@
 package com.denfop.componets.pressure;
 
-import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.pressure.IPressureAcceptor;
-import com.denfop.api.pressure.IPressureEmitter;
-import com.denfop.api.pressure.IPressureTile;
-import com.denfop.api.sytem.ITile;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.api.otherenergies.pressure.IPressureAcceptor;
+import com.denfop.api.otherenergies.pressure.IPressureEmitter;
+import com.denfop.api.otherenergies.pressure.IPressureTile;
 import com.denfop.componets.BufferEnergy;
 import com.denfop.componets.PressureComponent;
 import net.minecraft.core.BlockPos;
@@ -15,19 +13,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class EnergyNetDelegate  implements IPressureTile {
+public class EnergyNetDelegate implements IPressureTile {
     public final BufferEnergy buffer;
     public final BlockPos worldPosition;
+    private final boolean clientSide;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    private final boolean clientSide;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public double tick;
     public Map<Direction, IPressureTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IPressureTile>> validReceivers = new LinkedList<>();
     protected double pastEnergy;
     protected double perenergy;
+    List<InfoTile<IPressureTile>> validReceivers = new LinkedList<>();
     private long id;
     private int hashCodeSource;
 
@@ -38,15 +36,19 @@ public class EnergyNetDelegate  implements IPressureTile {
         sourceDirections = block.sourceDirections;
         this.buffer = block.buffer;
     }
+
     public long getIdNetwork() {
         return this.id;
     }
+
     public boolean acceptsPressureFrom(IPressureEmitter emitter, Direction dir) {
         return this.sinkDirections.contains(dir);
     }
+
     public boolean emitsPressureTo(IPressureAcceptor receiver, Direction dir) {
         return this.sourceDirections.contains(dir);
     }
+
     @Override
     public @NotNull BlockPos getPos() {
         return worldPosition;
@@ -65,7 +67,7 @@ public class EnergyNetDelegate  implements IPressureTile {
         return energyConductorMap;
     }
 
-    public void RemoveTile( IPressureTile tile, final Direction facing1) {
+    public void RemoveTile(IPressureTile tile, final Direction facing1) {
         if (!clientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IPressureTile>> iter = validReceivers.iterator();

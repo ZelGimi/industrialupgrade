@@ -28,7 +28,6 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.fml.ModList;
 
 import java.util.*;
 
@@ -45,10 +44,10 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
 
 
     public boolean placeInstantly(ServerLevel pLevel, ChunkGenerator generator, BlockState pState, RandomSource pRandom, BlockPos pPos) {
-        int i =pRandom.nextInt(5) + pRandom.nextInt(4) + pRandom.nextInt(2);
-        WorldGenLevel worldIn =pLevel;
+        int i = pRandom.nextInt(5) + pRandom.nextInt(4) + pRandom.nextInt(2);
+        WorldGenLevel worldIn = pLevel;
         BlockPos position = pPos;
-        RandomSource rand =pRandom;
+        RandomSource rand = pRandom;
         if (i <= 3) {
             i = 4;
         }
@@ -300,6 +299,7 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
     }
+
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
 
@@ -322,20 +322,19 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         rubberTrees = 0;
 
-            for (Holder<Biome> biome : biomes) {
-                if (biome != null) {
-                    if (biome.is(Tags.Biomes.IS_SWAMP)) {
-                        rubberTrees += WorldBaseGen.random.nextInt(10) + 2;
-                    }
-                    if (biome.is(BiomeTags.IS_JUNGLE)) {
-                        rubberTrees += WorldBaseGen.random.nextInt(15) + 5;
-                    }
-                    if (biome.is(BiomeTags.IS_FOREST)) {
-                        rubberTrees += WorldBaseGen.random.nextInt(5) + 1;
-                    }
+        for (Holder<Biome> biome : biomes) {
+            if (biome != null) {
+                if (biome.is(Tags.Biomes.IS_SWAMP)) {
+                    rubberTrees += WorldBaseGen.random.nextInt(10) + 2;
+                }
+                if (biome.is(BiomeTags.IS_JUNGLE)) {
+                    rubberTrees += WorldBaseGen.random.nextInt(15) + 5;
+                }
+                if (biome.is(BiomeTags.IS_FOREST)) {
+                    rubberTrees += WorldBaseGen.random.nextInt(5) + 1;
                 }
             }
-
+        }
 
 
         rubberTrees = Math.round((float) rubberTrees * 2);

@@ -1,7 +1,7 @@
 package com.denfop.items.reactors;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -36,6 +36,7 @@ public class ItemsFan extends ItemDamage {
 
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -48,11 +49,12 @@ public class ItemsFan extends ItemDamage {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public int getLevel() {
         return level;
     }

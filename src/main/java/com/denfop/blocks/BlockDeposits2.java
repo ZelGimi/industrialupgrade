@@ -1,14 +1,14 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.items.energy.ItemHammer;
+import com.denfop.utils.Localization;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
@@ -60,20 +60,25 @@ public class BlockDeposits2<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape Deposits = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
+    Map<Integer, List<String>> mapInf = new HashMap<>();
 
     public BlockDeposits2(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of(Material.STONE).destroyTime(3f).noOcclusion().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
         BlockTagsProvider.list.add(this);
     }
-    Map<Integer, List<String>> mapInf = new HashMap<>();
+
+    public static boolean isFree(BlockState p_53242_) {
+        Material material = p_53242_.getMaterial();
+        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || material.isLiquid() || material.isReplaceable();
+    }
 
     @Override
     public List<String> getInformationFromMeta() {
         int meta = this.getElement().getId();
         List<String> inf = mapInf.get(meta);
         if (inf == null) {
-            final VeinType vein = WorldBaseGen.veinTypes.get(32 +meta);
+            final VeinType vein = WorldBaseGen.veinTypes.get(32 + meta);
             List<String> stringList = new ArrayList<>();
             final String s = Localization.translate("deposists.jei1") + (vein.getHeavyOre() != null ?
                     new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
@@ -109,10 +114,6 @@ public class BlockDeposits2<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
             return inf;
         }
     }
-    public static boolean isFree(BlockState p_53242_) {
-        Material material = p_53242_.getMaterial();
-        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || material.isLiquid() || material.isReplaceable();
-    }
 
     @Override
     int getMetaFromState(BlockState state) {
@@ -141,17 +142,18 @@ public class BlockDeposits2<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
             return new ItemStack(vein.getHeavyOre().getBlock(), 1);
         }
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
         ItemStack tool = p_60538_.getParameter(TOOL);
         BlockPos pos = new BlockPos(p_60538_.getParameter(ORIGIN));
         List<ItemStack> drops = NonNullList.create();
-        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool),tool);
+        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool), tool);
         return drops;
     }
 
     public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune, ItemStack tool) {
-        List<ItemStack>   drops = new ArrayList<>();
+        List<ItemStack> drops = new ArrayList<>();
         if (tool.getItem() instanceof ItemHammer) {
             final int meta = getMetaFromState(state);
             final VeinType vein = WorldBaseGen.veinTypes.get(32 + meta);
@@ -175,7 +177,7 @@ public class BlockDeposits2<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
                     }
                     List<ItemStack> stacks = new ArrayList<>();
                     for (int i = 0; i < col.length; i++) {
-                        final RandomSource rand =world.random;
+                        final RandomSource rand = world.random;
                         if ((rand.nextInt(100) < col[i])) {
                             stacks.add(output.getRecipe().output.items.get(i));
                         }
@@ -204,6 +206,7 @@ public class BlockDeposits2<T extends Enum<T> & ISubEnum> extends BlockCore<T> i
         }
         return drops;
     }
+
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         final int meta = getMetaFromState(state);

@@ -1,6 +1,6 @@
 package com.denfop.render.transport;
 
-import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
+import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemStack;
 
-public class TileEntityCableRenderer implements BlockEntityRenderer<TileEntityMultiCable> {
+public class TileEntityCableRenderer implements BlockEntityRenderer<BlockEntityMultiCable> {
 
     private final BlockEntityRendererProvider.Context context;
 
@@ -19,7 +19,7 @@ public class TileEntityCableRenderer implements BlockEntityRenderer<TileEntityMu
     }
 
     @Override
-    public void render(TileEntityMultiCable te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    public void render(BlockEntityMultiCable te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         DataCable data = te.dataCable;
         if (data == null) {
             data = new DataCable(te.connectivity, ItemStack.EMPTY, null);

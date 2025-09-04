@@ -1,8 +1,8 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.DecoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +16,7 @@ public class PacketUpdateFieldContainerTile implements IPacket {
 
     }
 
-    public PacketUpdateFieldContainerTile(TileEntityBlock te, ServerPlayer player) {
+    public PacketUpdateFieldContainerTile(BlockEntityBase te, ServerPlayer player) {
         IUCore.network.getServer().addTileContainerToUpdate(te, player, te.writeContainerPacket());
     }
 
@@ -31,7 +31,7 @@ public class PacketUpdateFieldContainerTile implements IPacket {
             final CustomPacketBuffer buf = new CustomPacketBuffer();
             buf.writeBytes(is);
             if (te != null) {
-                ((TileEntityBlock) te).readContainerPacket(buf);
+                ((BlockEntityBase) te).readContainerPacket(buf);
             }
 
         }

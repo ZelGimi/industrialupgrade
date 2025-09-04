@@ -1,10 +1,10 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.network.DecoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +19,7 @@ public class PacketUpdateTile implements IPacket {
 
     }
 
-    public PacketUpdateTile(TileEntityBlock te) {
+    public PacketUpdateTile(BlockEntityBase te) {
 
         IUCore.network.getServer().addTileToUpdate(te);
 
@@ -30,7 +30,7 @@ public class PacketUpdateTile implements IPacket {
         IUCore.network.getServer().sendPacket(data, player);
     }
 
-    private static void apply(BlockPos pos, Class<? extends TileEntityBlock> teClass, Level world, byte[] is) {
+    private static void apply(BlockPos pos, Class<? extends BlockEntityBase> teClass, Level world, byte[] is) {
         if (world.isLoaded(pos)) {
             BlockEntity te = world.getBlockEntity(pos);
             if (teClass != null && (te == null || te.getClass() != teClass || te.isRemoved() || te.getLevel() != world)) {
@@ -50,7 +50,7 @@ public class PacketUpdateTile implements IPacket {
             }
             final CustomPacketBuffer buf = new CustomPacketBuffer();
             buf.writeBytes(is);
-            ((TileEntityBlock) te).readPacket(buf);
+            ((BlockEntityBase) te).readPacket(buf);
 
         }
     }
@@ -69,7 +69,7 @@ public class PacketUpdateTile implements IPacket {
             throw new RuntimeException(e);
         }
         int firstPart = is.readShort();
-        Class<? extends TileEntityBlock> teClass = ((IMultiTileBlock) TileBlockCreator.instance.get(firstPart).teInfo.getListBlock().get(0)).getTeClass();
+        Class<? extends BlockEntityBase> teClass = ((MultiBlockEntity) TileBlockCreator.instance.get(firstPart).teInfo.getListBlock().get(0)).getTeClass();
         byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(bytes);
         if (!(is.readerIndex() < is.writerIndex())) {

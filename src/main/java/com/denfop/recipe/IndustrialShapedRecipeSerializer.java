@@ -53,17 +53,14 @@ public class IndustrialShapedRecipeSerializer implements RecipeSerializer<BaseRe
         JsonObject resultJson = GsonHelper.getAsJsonObject(json, "result");
         ItemStack result = ShapedRecipe.itemStackFromJson(resultJson);
 
-        return new BaseRecipe(id,group,result, grid, partRecipes);
+        return new BaseRecipe(id, group, result, grid, partRecipes);
     }
-
-
-
 
 
     @Override
     public @Nullable BaseRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf pBuffer) {
 
-        return BaseRecipe.create(id,new CustomPacketBuffer(pBuffer));
+        return BaseRecipe.create(id, new CustomPacketBuffer(pBuffer));
     }
 
     @Override

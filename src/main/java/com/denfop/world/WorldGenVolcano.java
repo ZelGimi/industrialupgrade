@@ -27,7 +27,7 @@ public class WorldGenVolcano extends Feature<NoneFeatureConfiguration> {
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
         int y = p_159749_.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, p_159749_.origin().getX(), p_159749_.origin().getZ());
 
-        Holder<Biome> holder = p_159749_.level().getBiome(new BlockPos(p_159749_.origin().getX(),y,p_159749_.origin().getZ()));
+        Holder<Biome> holder = p_159749_.level().getBiome(new BlockPos(p_159749_.origin().getX(), y, p_159749_.origin().getZ()));
         if (holder.is(BiomeTags.IS_MOUNTAIN) || holder.is(BiomeTags.IS_HILL)) {
             ChunkPos pos = new ChunkPos(p_159749_.origin());
             if (volcano != null) {

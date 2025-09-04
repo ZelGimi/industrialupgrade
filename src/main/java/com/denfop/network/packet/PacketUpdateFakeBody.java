@@ -3,10 +3,10 @@ package com.denfop.network.packet;
 import com.denfop.IUCore;
 import com.denfop.api.space.fakebody.*;
 import com.denfop.api.space.research.api.IResearchTable;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.mechanism.BlockEntityResearchTableSpace;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +27,8 @@ public class PacketUpdateFakeBody implements IPacket {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
         packetBuffer.writeByte(getId());
         try {
-            EncoderHandler.encode(packetBuffer, ((TileEntityBlock)tileEntityResearchTableSpace).getWorld());
-            EncoderHandler.encode(packetBuffer, ((TileEntityBlock)tileEntityResearchTableSpace).getPos());
+            EncoderHandler.encode(packetBuffer, ((BlockEntityBase) tileEntityResearchTableSpace).getWorld());
+            EncoderHandler.encode(packetBuffer, ((BlockEntityBase) tileEntityResearchTableSpace).getPos());
             if (fakeBody instanceof IFakePlanet) {
                 packetBuffer.writeByte(0);
             }
@@ -62,27 +62,27 @@ public class PacketUpdateFakeBody implements IPacket {
             BlockPos pos = (BlockPos) DecoderHandler.decode(customPacketBuffer);
             byte id = customPacketBuffer.readByte();
             assert world != null;
-           if (entityPlayer.getLevel().dimension() == world.dimension()) {
+            if (entityPlayer.getLevel().dimension() == world.dimension()) {
                 BlockEntity tile = world.getBlockEntity(pos);
-                if (tile instanceof TileEntityResearchTableSpace) {
+                if (tile instanceof BlockEntityResearchTableSpace) {
 
                     if (id == 0) {
                         CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
                         FakePlanet fakePlanet = new FakePlanet(nbt);
-                        ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
+                        ((BlockEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
                     if (id == 1) {
                         CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
                         FakeSatellite fakePlanet = new FakeSatellite(nbt);
-                        ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
+                        ((BlockEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
                     if (id == 2) {
                         CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
                         FakeAsteroid fakePlanet = new FakeAsteroid(nbt);
-                        ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
+                        ((BlockEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
                     if (id == 3) {
-                        ((TileEntityResearchTableSpace) tile).fakeBody = null;
+                        ((BlockEntityResearchTableSpace) tile).fakeBody = null;
                     }
                 }
             }

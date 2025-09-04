@@ -26,7 +26,7 @@ public class ItemRawMetals<T extends Enum<T> & ISubEnum> extends ItemMain<T> imp
                 name = "tungsten";
                 break;
             case 2:
-                name = "vanady";
+                name = "vanadium";
                 break;
 
 

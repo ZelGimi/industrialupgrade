@@ -1,20 +1,16 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.PacketSoundPlayer;
-import com.denfop.utils.ElectricItemManager;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.ModUtils;
+import com.denfop.sound.EnumSound;
+import com.denfop.utils.*;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -48,7 +44,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem, IProperties {
+public class ItemEnergyBow extends BowItem implements EnergyItem, UpgradeItem, IProperties {
     static final int[] CHARGE = new int[]{1500, 750, 2000, 5000, 1000};
 
     static final String[] MODE = new String[]{"normal", "rapidfire", "spread", "sniper", "flame"};
@@ -116,7 +112,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     }
 
     public String[] properties() {
-        return new String[]{"pulling", "pull","mode"};
+        return new String[]{"pulling", "pull", "mode"};
     }
 
     @Nonnull
@@ -293,7 +289,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
     public float getItemProperty(ItemStack stack, ClientLevel world, LivingEntity entityIn, int p174679, String property) {
         if (property.equals("pulling"))
             return entityIn != null && entityIn.isUsingItem() && entityIn.getUseItem() == stack ? 1.0F : 0.0F;
-        if (property.equals("mode")){
+        if (property.equals("mode")) {
 
             final CompoundTag nbt = ModUtils.nbt(stack);
             if (nbt.getString("mode").isEmpty())
@@ -329,7 +325,7 @@ public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem,
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

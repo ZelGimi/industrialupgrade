@@ -1,8 +1,7 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.api.item.IVolcanoArmor;
+import com.denfop.api.item.armor.VolcanoArmor;
 import com.denfop.items.armour.material.ArmorMaterials;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -28,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcanoArmor, ISpecialArmor {
+public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements VolcanoArmor, ISpecialArmor {
 
     public ItemArmorVolcanoHazmat(String name, EquipmentSlot type) {
         super(ArmorMaterials.HAZMAT, name, type);
@@ -38,23 +37,7 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
         this.armorName = name;
 
     }
-    protected String getOrCreateDescriptionId() {
-        if (this.nameItem == null) {
-            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
-            String targetString = "industrialupgrade.";
-            String replacement = "";
-            if (replacement != null) {
-                int index = pathBuilder.indexOf(targetString);
-                while (index != -1) {
-                    pathBuilder.replace(index, index + targetString.length(), replacement);
-                    index = pathBuilder.indexOf(targetString, index + replacement.length());
-                }
-            }
-            this.nameItem ="iu."+ pathBuilder.toString().split("\\.")[2];
-        }
 
-        return this.nameItem;
-    }
     public static boolean hasCompleteHazmat(LivingEntity living) {
         Iterator<EquipmentSlot> var1 =
                 Arrays
@@ -64,7 +47,7 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
 
         EquipmentSlot slot;
         ItemStack stack;
-        IVolcanoArmor hazmat;
+        VolcanoArmor hazmat;
         do {
             if (!var1.hasNext()) {
                 return true;
@@ -72,11 +55,11 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
 
             slot = var1.next();
             stack = living.getItemBySlot(slot);
-            if (!(stack.getItem() instanceof IVolcanoArmor)) {
+            if (!(stack.getItem() instanceof VolcanoArmor)) {
                 return false;
             }
 
-            hazmat = (IVolcanoArmor) stack.getItem();
+            hazmat = (VolcanoArmor) stack.getItem();
             if (!hazmat.addsProtection(living, slot, stack)) {
                 return false;
             }
@@ -89,6 +72,23 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
         return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE;
     }
 
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
+    }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         int suffix1 = this.slot == EquipmentSlot.LEGS ? 2 : 1;

@@ -1,9 +1,9 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.IAdvReactor;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
@@ -32,7 +32,7 @@ public class ItemReactorData extends Item {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.reactor_sensor.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.reactor_sensor.info")));
     }
 
     protected String getOrCreateDescriptionId() {
@@ -52,6 +52,7 @@ public class ItemReactorData extends Item {
 
         return this.nameItem;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext p_41427_) {
         Level world = p_41427_.getLevel();
@@ -61,8 +62,8 @@ public class ItemReactorData extends Item {
         Player player = p_41427_.getPlayer();
         InteractionHand hand = p_41427_.getHand();
         BlockEntity tileEntity = world.getBlockEntity(p_41427_.getClickedPos());
-        if (tileEntity instanceof TileMultiBlockBase && tileEntity instanceof IAdvReactor) {
-            TileMultiBlockBase tileMultiBlockBase = (TileMultiBlockBase) tileEntity;
+        if (tileEntity instanceof BlockEntityMultiBlockBase && tileEntity instanceof IAdvReactor) {
+            BlockEntityMultiBlockBase tileMultiBlockBase = (BlockEntityMultiBlockBase) tileEntity;
             final CompoundTag nbt = ModUtils.nbt(player.getItemInHand(hand));
             nbt.putInt("x", tileMultiBlockBase.getBlockPos().getX());
             nbt.putInt("y", tileMultiBlockBase.getBlockPos().getY());

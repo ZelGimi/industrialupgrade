@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "tag": "forge:raw_materials/vanady"
+      "tag": "forge:raw_materials/vanadium"
     }
   },
   "pattern": [
@@ -11,6 +11,6 @@
     "AAA"
   ],
   "result": {
-    "item": "industrialupgrade:raw_block/raw_vanady"
+    "item": "industrialupgrade:raw_block/raw_vanadium"
   }
 }

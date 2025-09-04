@@ -20,9 +20,11 @@ public class ItemToolIU extends DiggerItem {
     public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties) {
         super(damage, speed, Tiers.IRON, p_204111_, properties);
     }
+
     public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties, Tier tier) {
         super(damage, speed, tier, p_204111_, properties);
     }
+
     @Override
     public boolean isEnchantable(ItemStack p_41456_) {
         return false;
@@ -45,7 +47,7 @@ public class ItemToolIU extends DiggerItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

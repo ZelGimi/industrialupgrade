@@ -24,6 +24,7 @@ public class IUItemBase extends Item {
     public IUItemBase(CreativeModeTab tabCore) {
         super(new Properties().tab(tabCore));
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         if (!player.getItemInHand(hand).is(IUItem.doublescrapBox.getItem())) {
@@ -44,6 +45,7 @@ public class IUItemBase extends Item {
         }
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));

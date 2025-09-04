@@ -1,11 +1,11 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.upgrades.IUpgradeItem;
-import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.upgrades.EnumBlockEntityUpgrade;
+import com.denfop.api.upgrades.UpgradeItem;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.container.ContainerUpgrade;
+import com.denfop.containermenu.ContainerMenuUpgrade;
 import com.denfop.items.bags.BagsDescription;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IUpgradeItem, IItemStackInventory, IUpdatableItemStackEvent {
+public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements UpgradeItem, IItemStackInventory, IUpdatableItemStackEvent {
     public ItemUpgradeModule(T element) {
         super(new Item.Properties().tab(IUCore.UpgradeTab), element);
     }
@@ -84,7 +84,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     }
 
     @Override
-    public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
+    public CustomWorldContainer getInventory(final Player var1, final ItemStack var2) {
         if (this.getElement().getId() < 11) {
             return null;
         } else {
@@ -123,8 +123,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
         if (nbt.getBoolean("open")) {
             int slotId = nbt.getInt("slot_inventory");
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
-                ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuUpgrade) {
+                ItemStackUpgradeModules toolbox = ((ContainerMenuUpgrade) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -145,8 +145,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
-            ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+        if (!player.level.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuUpgrade) {
+            ItemStackUpgradeModules toolbox = ((ContainerMenuUpgrade) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeContainer();
@@ -156,7 +156,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     }
 
     @Override
-    public boolean isSuitableFor(final ItemStack stack, final Set<UpgradableProperty> types) {
+    public boolean isSuitableFor(final ItemStack stack, final Set<EnumBlockEntityUpgrade> types) {
         Type type = getType(this.getElement().getId());
         if (type == null) {
             return false;
@@ -165,25 +165,25 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
             case overclocker:
             case Overclocker1:
             case Overclocker2:
-                return (types.contains(UpgradableProperty.Processing));
+                return (types.contains(EnumBlockEntityUpgrade.Processing));
             case transformer:
             case transformer1:
             case transformer_simple:
-                return types.contains(UpgradableProperty.Transformer);
+                return types.contains(EnumBlockEntityUpgrade.Transformer);
             case storage:
             case adv_storage:
             case imp_storage:
             case per_storage:
             case energy_storage:
-                return types.contains(UpgradableProperty.EnergyStorage);
+                return types.contains(EnumBlockEntityUpgrade.EnergyStorage);
             case ejector:
-                return types.contains(UpgradableProperty.ItemExtract);
+                return types.contains(EnumBlockEntityUpgrade.ItemExtract);
             case pulling:
-                return types.contains(UpgradableProperty.ItemInput);
+                return types.contains(EnumBlockEntityUpgrade.ItemInput);
             case fluid_ejector:
-                return types.contains(UpgradableProperty.FluidExtract);
+                return types.contains(EnumBlockEntityUpgrade.FluidExtract);
             case fluid_pulling:
-                return types.contains(UpgradableProperty.FluidInput);
+                return types.contains(EnumBlockEntityUpgrade.FluidInput);
 
         }
         return false;

@@ -1,14 +1,11 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.denfop.recipe.IInputItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 

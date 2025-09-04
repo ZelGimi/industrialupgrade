@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:nugget/electrium"
+      "item": "industrialupgrade:nugget/electrum"
     }
   },
   "pattern": [
@@ -11,6 +11,6 @@
     "AAA"
   ],
   "result": {
-    "item": "industrialupgrade:itemingots/electrium_ingot"
+    "item": "industrialupgrade:itemingots/electrum_ingot"
   }
 }

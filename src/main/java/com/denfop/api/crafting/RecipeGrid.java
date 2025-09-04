@@ -37,7 +37,7 @@ public class RecipeGrid {
         }
 
         this.charactersList = new ArrayList<>(characters);
-        
+
         for (int i = 0; i < 3; i++) {
             final StringBuilder stringBuilder = new StringBuilder(args.get(i));
             while (stringBuilder.length() < 3) {
@@ -241,7 +241,7 @@ public class RecipeGrid {
 
     public void encode(CustomPacketBuffer customPacketBuffer) {
         try {
-            EncoderHandler.encode(customPacketBuffer,args);
+            EncoderHandler.encode(customPacketBuffer, args);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

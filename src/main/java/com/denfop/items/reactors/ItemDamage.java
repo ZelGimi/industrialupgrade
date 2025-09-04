@@ -1,6 +1,6 @@
 package com.denfop.items.reactors;
 
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class ItemDamage extends Item implements IDamageItem {
+public class ItemDamage extends Item implements DamageItem {
 
 
     private final int maxDamageItem;
@@ -41,7 +41,7 @@ public class ItemDamage extends Item implements IDamageItem {
         return this.nameItem;
     }
 
-    public  int getMaxDamage(ItemStack stack){
+    public int getMaxDamage(ItemStack stack) {
         return getMaxCustomDamage(stack);
     }
 

@@ -1,10 +1,10 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -31,11 +31,13 @@ public class ItemDeplanner extends Item {
     public ItemDeplanner() {
         super(new Properties().tab(IUCore.EnergyTab).stacksTo(1).setNoRepair());
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.deplanner.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.deplanner.info")));
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -48,7 +50,7 @@ public class ItemDeplanner extends Item {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -63,8 +65,8 @@ public class ItemDeplanner extends Item {
 
         BlockEntity tile = world.getBlockEntity(pos);
 
-        if (tile instanceof IMainMultiBlock) {
-            IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
+        if (tile instanceof MainMultiBlock) {
+            MainMultiBlock mainMultiBlock = (MainMultiBlock) tile;
             List<ItemStack> itemStackList = new ArrayList<>();
 
             if (mainMultiBlock.isFull() && !world.isClientSide) {
@@ -78,7 +80,7 @@ public class ItemDeplanner extends Item {
                     }
 
 
-                    pos1 = switch (((TileMultiBlockBase) mainMultiBlock).getFacing()) {
+                    pos1 = switch (((BlockEntityMultiBlockBase) mainMultiBlock).getFacing()) {
                         case NORTH -> new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
                         case EAST ->
                                 new BlockPos(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
@@ -88,15 +90,15 @@ public class ItemDeplanner extends Item {
                                 new BlockPos(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                         default -> throw new IllegalStateException("Unexpected value: ");
                     };
-                    TileEntityBlock block = (TileEntityBlock) world.getBlockEntity(pos.offset(pos1));
-                    itemStackList.add(block.getPickBlock(null,null));
+                    BlockEntityBase block = (BlockEntityBase) world.getBlockEntity(pos.offset(pos1));
+                    itemStackList.add(block.getPickBlock(null, null));
                     world.removeBlockEntity(pos.offset(pos1));
                     world.setBlock(pos.offset(pos1), Blocks.AIR.defaultBlockState(), 3);
 
                 }
                 itemStackList.add(mainMultiBlock.getMultiBlockStucture().ItemStackMap.get(BlockPos.ZERO).copy());
 
-                ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
+                ((BlockEntityMultiBlockBase) mainMultiBlock).onUnloaded();
                 world.removeBlockEntity(pos);
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 

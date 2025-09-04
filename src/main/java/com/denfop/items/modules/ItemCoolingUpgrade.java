@@ -1,8 +1,8 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.api.cool.EnumCoolUpgrade;
-import com.denfop.api.cool.ICoolItem;
+import com.denfop.api.otherenergies.cool.EnumCoolUpgrade;
+import com.denfop.api.otherenergies.cool.ICoolItem;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.Item;

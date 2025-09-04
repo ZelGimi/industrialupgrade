@@ -1,8 +1,8 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,6 +22,7 @@ public class ItemBatterySU extends Item {
         this.capacity = capacity1;
         this.tier = tier1;
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
@@ -30,6 +31,7 @@ public class ItemBatterySU extends Item {
 
         return "" + this.nameItem;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
@@ -37,7 +39,7 @@ public class ItemBatterySU extends Item {
 
         for (int i = 0; i < 9 && energy > 0.0; ++i) {
             ItemStack target = player.getInventory().items.get(i);
-            if (!target.isEmpty() && target != stack && target.getItem() instanceof IEnergyItem) {
+            if (!target.isEmpty() && target != stack && target.getItem() instanceof EnergyItem) {
                 energy -= ElectricItem.manager.charge(target, energy, this.tier, true, false);
             }
         }

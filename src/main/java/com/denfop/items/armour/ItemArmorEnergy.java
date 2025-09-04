@@ -1,8 +1,8 @@
 package com.denfop.items.armour;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.items.armour.material.ArmorMaterials;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialArmor, IEnergyItem {
+public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialArmor, EnergyItem {
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;

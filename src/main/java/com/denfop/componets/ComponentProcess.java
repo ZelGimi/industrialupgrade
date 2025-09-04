@@ -1,16 +1,16 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.otherenergies.common.interfaces.Dual;
+import com.denfop.api.otherenergies.common.interfaces.Source;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.sytem.IDual;
-import com.denfop.api.sytem.ISource;
+import com.denfop.api.sound.AudioFixer;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.FluidName;
-import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.inventory.InventoryUpgrade;
 import com.denfop.utils.Timer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -29,10 +29,10 @@ public class ComponentProcess extends AbstractComponent {
     protected double energyConsume;
     protected int operationLength;
     protected ComponentProgress componentProgress;
-    protected InvSlotRecipes invSlotRecipes;
+    protected InventoryRecipes invSlotRecipes;
     protected int operationsPerTick;
     protected int tick;
-    protected InvSlotOutput outputSlot;
+    protected InventoryOutput outputSlot;
     protected IUpdateTick updateTick;
     protected boolean hasTank = false;
     protected boolean hasAudio = false;
@@ -52,7 +52,7 @@ public class ComponentProcess extends AbstractComponent {
     private Timer timer = null;
 
     public ComponentProcess(
-            final TileEntityInventory parent,
+            final BlockEntityInventory parent,
             int operationLength,
             double energyConsume
     ) {
@@ -63,7 +63,7 @@ public class ComponentProcess extends AbstractComponent {
 
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
 
         this.operationsPerTick = invSlotUpgrade.getOperationsPerTick1(this.defaultOperationLength);
         this.operationLength = invSlotUpgrade.getOperationLength1(this.defaultOperationLength);
@@ -87,7 +87,7 @@ public class ComponentProcess extends AbstractComponent {
         if (this.exp) {
             this.componentExp = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergyexperience");
         }
-        this.audoFix = this.getParent() instanceof IAudioFixer;
+        this.audoFix = this.getParent() instanceof AudioFixer;
         this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
     }
 
@@ -106,7 +106,7 @@ public class ComponentProcess extends AbstractComponent {
         return super.onBlockActivated(player, hand);
     }
 
-    public void setSlotOutput(final InvSlotOutput slotOutput) {
+    public void setSlotOutput(final InventoryOutput slotOutput) {
         this.outputSlot = slotOutput;
     }
 
@@ -134,7 +134,7 @@ public class ComponentProcess extends AbstractComponent {
         this.hasAudio = hasAudio;
     }
 
-    public void setInvSlotRecipes(final InvSlotRecipes invSlotRecipes) {
+    public void setInvSlotRecipes(final InventoryRecipes invSlotRecipes) {
         this.invSlotRecipes = invSlotRecipes;
         this.updateTick = invSlotRecipes.getTile();
 
@@ -178,7 +178,7 @@ public class ComponentProcess extends AbstractComponent {
         if (componentRad == null) {
             return true;
         }
-        if (componentRad.getDelegate() instanceof ISource && !(componentRad.getDelegate() instanceof IDual)) {
+        if (componentRad.getDelegate() instanceof Source && !(componentRad.getDelegate() instanceof Dual)) {
             return this.componentRad.getCapacity() - this.componentRad.getEnergy() >= 150;
         } else {
             if (this.updateTick.getRecipeOutput() == null) {
@@ -296,7 +296,7 @@ public class ComponentProcess extends AbstractComponent {
             if (this.componentProgress.getProgress() == 0 && this.hasAudio) {
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
                     if (this.audoFix) {
-                        ((IAudioFixer) this.getParent()).initiate(0);
+                        ((AudioFixer) this.getParent()).initiate(0);
                     }
                 }
             }
@@ -336,7 +336,7 @@ public class ComponentProcess extends AbstractComponent {
                 }
                 if (this.hasAudio) {
                     if (this.audoFix) {
-                        ((IAudioFixer) this.getParent()).initiate(2);
+                        ((AudioFixer) this.getParent()).initiate(2);
                     }
                 }
 
@@ -352,13 +352,13 @@ public class ComponentProcess extends AbstractComponent {
                 this.heatComponent = this.getParent().getComp(HeatComponent.class);
                 this.coldComponent = this.getParent().getComp(CoolComponent.class);
                 this.componentSE = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergysolarium");
-                this.audoFix = this.getParent() instanceof IAudioFixer;
+                this.audoFix = this.getParent() instanceof AudioFixer;
                 this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
 
             }
             if (this.componentProgress.getProgress() != 0 && this.getParent().getActive() && this.hasAudio) {
                 if (this.audoFix) {
-                    ((IAudioFixer) this.getParent()).initiate(1);
+                    ((AudioFixer) this.getParent()).initiate(1);
                 }
             }
             if (this.updateTick.getRecipeOutput() == null) {
@@ -537,7 +537,7 @@ public class ComponentProcess extends AbstractComponent {
         if (this.componentRad == null) {
             return;
         }
-        if (this.componentRad.delegate instanceof ISource) {
+        if (this.componentRad.delegate instanceof Source) {
             this.componentRad.addEnergy(150 * size);
             return;
         }
@@ -550,7 +550,7 @@ public class ComponentProcess extends AbstractComponent {
         if (this.componentRad == null) {
             return size;
         }
-        if (this.componentRad.delegate instanceof ISource) {
+        if (this.componentRad.delegate instanceof Source) {
             return (int) ((this.componentRad.getCapacity() - this.componentRad.getEnergy()) / 150);
         }
         final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInt("rad_amount");

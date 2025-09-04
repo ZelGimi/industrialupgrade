@@ -61,10 +61,12 @@ public class DepositsMolotHandler {
             }
         }
     }
+
     public List<ItemStack> getInputs() {
 
         return new ArrayList<>(machineRecipe.getRecipe().output.items);
     }
+
     public MachineRecipe getMachineRecipe() {
         return machineRecipe;
     }

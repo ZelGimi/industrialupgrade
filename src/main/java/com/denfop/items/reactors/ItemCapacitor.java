@@ -1,8 +1,8 @@
 package com.denfop.items.reactors;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.reactors.graphite.ICapacitorItem;
+import com.denfop.blockentity.reactors.graphite.ICapacitorItem;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -25,6 +25,7 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem {
         this.level = level;
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -37,11 +38,12 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.iu_"+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu.iu_" + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     @Override
     public double getPercent() {
         return percent;
@@ -54,7 +56,6 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem {
     }
 
 
-
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
@@ -65,6 +66,7 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem {
 
 
     }
+
     @Override
     public boolean damageItem(final ItemStack stack, final int damage) {
         return applyCustomDamage(stack, damage, null);

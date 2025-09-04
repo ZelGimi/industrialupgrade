@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.RandomSource;
@@ -12,8 +12,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -21,8 +19,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
@@ -61,7 +57,8 @@ public class BlockPreciousOre<T extends Enum<T> & ISubEnum> extends BlockCore<T>
     public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
         RandomSource rand = world.random;
 
-        List<ItemStack> list = new ArrayList<>();;
+        List<ItemStack> list = new ArrayList<>();
+        ;
         int count = quantityDropped(fortune, rand);
         for (int i = 0; i < count; i++) {
             if (this.getElement().getId() != 3) {
@@ -73,7 +70,6 @@ public class BlockPreciousOre<T extends Enum<T> & ISubEnum> extends BlockCore<T>
         }
         return list;
     }
-
 
 
     public int quantityDropped(int fortune, RandomSource random) {

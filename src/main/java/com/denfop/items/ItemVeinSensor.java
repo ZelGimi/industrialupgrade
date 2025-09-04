@@ -2,12 +2,12 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.blocks.*;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.utils.KeyboardClient;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
 import com.denfop.world.WorldBaseGen;
@@ -40,8 +40,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.denfop.utils.ModUtils.inChanceOre;
@@ -49,7 +49,45 @@ import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
 import static com.denfop.world.vein.VeinType.veinTypeMap;
 
 public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IUpdatableItemStackEvent,
-        IItemStackInventory,IProperties {
+        IItemStackInventory, IProperties {
+    public static final Map<String, Integer> ORE_INDEX_MAP = new HashMap<>();
+    public static Map<BlockState, Integer> dataColors = new HashMap<>();
+
+    static {
+        ORE_INDEX_MAP.put("magnetite", 0);
+        ORE_INDEX_MAP.put("calaverite", 1);
+        ORE_INDEX_MAP.put("galena", 2);
+        ORE_INDEX_MAP.put("nickelite", 3);
+        ORE_INDEX_MAP.put("pyrite", 4);
+        ORE_INDEX_MAP.put("quartzite", 5);
+        ORE_INDEX_MAP.put("uranite", 6);
+        ORE_INDEX_MAP.put("azurite", 7);
+        ORE_INDEX_MAP.put("rhodonite", 8);
+        ORE_INDEX_MAP.put("alfildit", 9);
+        ORE_INDEX_MAP.put("euxenite", 10);
+        ORE_INDEX_MAP.put("smithsonite", 11);
+        ORE_INDEX_MAP.put("ilmenite", 12);
+        ORE_INDEX_MAP.put("todorokite", 13);
+        ORE_INDEX_MAP.put("ferroaugite", 14);
+        ORE_INDEX_MAP.put("sheelite", 15);
+        ORE_INDEX_MAP.put("oil", 16);
+        ORE_INDEX_MAP.put("arsenopyrite", 17);
+        ORE_INDEX_MAP.put("braggite", 18);
+        ORE_INDEX_MAP.put("wolframite", 19);
+        ORE_INDEX_MAP.put("germanite", 20);
+        ORE_INDEX_MAP.put("coltan", 21);
+        ORE_INDEX_MAP.put("crocoite", 22);
+        ORE_INDEX_MAP.put("xenotime", 23);
+        ORE_INDEX_MAP.put("iridosmine", 24);
+        ORE_INDEX_MAP.put("theoprastite", 25);
+        ORE_INDEX_MAP.put("tetrahedrite", 26);
+        ORE_INDEX_MAP.put("fergusonite", 27);
+        ORE_INDEX_MAP.put("celestine", 28);
+        ORE_INDEX_MAP.put("zircon", 29);
+        ORE_INDEX_MAP.put("crystal", 30);
+        ORE_INDEX_MAP.put("gas", 31);
+    }
+
     public ItemVeinSensor(T element) {
         super(new Item.Properties().tab(IUCore.ItemTab).stacksTo(1), element);
         IUCore.proxy.addProperties(this);
@@ -60,7 +98,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         Map<Vector2, DataOres> map = new HashMap<>();
         for (int x = chunk.getPos().x * 16; x < chunk.getPos().x * 16 + 16; x++) {
             for (int z = chunk.getPos().z * 16; z < chunk.getPos().z * 16 + 16; z++) {
-                for (int y = 40; y < chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z); y++) {
+                for (int y = 0; y < chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z); y++) {
                     BlockState blockState = chunk.getBlockState(new BlockPos(x, y, z));
                     int color = getOreColor(blockState);
                     Vector2 vector2 = new Vector2(x, z);
@@ -84,18 +122,17 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         }
         return map;
     }
-    public static Map<BlockState,Integer> dataColors = new HashMap<>();
 
     public static int getOreColor(BlockState state) {
         Block block = state.getBlock();
-        if (dataColors.containsKey(state)){
+        if (dataColors.containsKey(state)) {
             return dataColors.get(state);
         }
         if (block == Blocks.IRON_ORE) {
             return ModUtils.convertRGBcolorToInt(156, 156, 156);
         } else if (block == Blocks.GOLD_ORE) {
             return 0xFFFFD700;
-        }else if (block == Blocks.COPPER_ORE) {
+        } else if (block == Blocks.COPPER_ORE) {
             return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.DIAMOND_ORE) {
             return 0xFF00FFFF;
@@ -331,7 +368,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         return 0xFFFFFFFF;
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         Map<Integer, Map<Vector2, DataOres>> map = new HashMap<>();
         ChunkPos pos = new ChunkPos(new BlockPos(player.getX(), player.getY(), player.getZ()));
         ChunkPos pos2 = new ChunkPos(pos.x - 4, pos.z - 4);
@@ -352,42 +389,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
 
     }
-    public static final Map<String, Integer> ORE_INDEX_MAP = new HashMap<>();
 
-    static {
-        ORE_INDEX_MAP.put("magnetite", 0);
-        ORE_INDEX_MAP.put("calaverite", 1);
-        ORE_INDEX_MAP.put("galena", 2);
-        ORE_INDEX_MAP.put("nickelite", 3);
-        ORE_INDEX_MAP.put("pyrite", 4);
-        ORE_INDEX_MAP.put("quartzite", 5);
-        ORE_INDEX_MAP.put("uranite", 6);
-        ORE_INDEX_MAP.put("azurite", 7);
-        ORE_INDEX_MAP.put("rhodonite", 8);
-        ORE_INDEX_MAP.put("alfildit", 9);
-        ORE_INDEX_MAP.put("euxenite", 10);
-        ORE_INDEX_MAP.put("smithsonite", 11);
-        ORE_INDEX_MAP.put("ilmenite", 12);
-        ORE_INDEX_MAP.put("todorokite", 13);
-        ORE_INDEX_MAP.put("ferroaugite", 14);
-        ORE_INDEX_MAP.put("sheelite", 15);
-        ORE_INDEX_MAP.put("oil", 16);
-        ORE_INDEX_MAP.put("arsenopyrite", 17);
-        ORE_INDEX_MAP.put("braggite", 18);
-        ORE_INDEX_MAP.put("wolframite", 19);
-        ORE_INDEX_MAP.put("germanite", 20);
-        ORE_INDEX_MAP.put("coltan", 21);
-        ORE_INDEX_MAP.put("crocoite", 22);
-        ORE_INDEX_MAP.put("xenotime", 23);
-        ORE_INDEX_MAP.put("iridosmine", 24);
-        ORE_INDEX_MAP.put("theoprastite", 25);
-        ORE_INDEX_MAP.put("tetrahedrite", 26);
-        ORE_INDEX_MAP.put("fergusonite", 27);
-        ORE_INDEX_MAP.put("celestine", 28);
-        ORE_INDEX_MAP.put("zircon", 29);
-        ORE_INDEX_MAP.put("crystal", 30);
-        ORE_INDEX_MAP.put("gas", 31);
-    }
     @Override
     public void updateEvent(final int event, final ItemStack stack) {
         final CompoundTag nbt = ModUtils.nbt(stack);
@@ -415,7 +417,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         tooltip.add(Component.translatable("iu.sensor.info"));
 
         tooltip.add(Component.translatable("iu.scanner_ore.info4"));
-        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7")+  KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
+        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7") + KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
                 "iu.changemode_rcm")));
 
         tooltip.add(Component.translatable("iu.vein_sensor.info8"));
@@ -441,11 +443,11 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     @Nonnull
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
-        if (player.isShiftKeyDown()){
+        if (player.isShiftKeyDown()) {
             final CompoundTag nbt = ModUtils.nbt(stack);
             nbt.putIntArray("list", new ArrayList<>());
             return InteractionResultHolder.success(player.getItemInHand(hand));
-        }else {
+        } else {
             if (IUCore.keyboard.isChangeKeyDown(player)) {
                 final CompoundTag nbt = ModUtils.nbt(stack);
                 final List<Integer> list1 = Arrays.stream(nbt.getIntArray("list"))
@@ -479,7 +481,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
                         if (tuple != null) {
 
                             VeinType veinType = veinTypeMap.get(tuple.getB());
-                            if (veinTypes.contains(veinType.getId())){
+                            if (veinTypes.contains(veinType.getId())) {
                                 final String s = Localization.translate("deposists.jei1") + (veinType.getHeavyOre() != null ?
                                         new ItemStack(veinType.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
                                         new ItemStack(veinType.getOres().get(0).getBlock().getBlock(), 1

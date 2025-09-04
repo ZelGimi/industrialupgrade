@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.genred;
 
 
-
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;

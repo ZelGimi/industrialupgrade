@@ -1,9 +1,9 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.CoolComponent;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -31,8 +31,9 @@ public class ItemsCoolingSensor extends Item {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.cool_sensor.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.cool_sensor.info")));
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -61,9 +62,9 @@ public class ItemsCoolingSensor extends Item {
         InteractionHand hand = p_41427_.getHand();
         if (!world.isClientSide) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
-            if (tileEntity instanceof TileEntityInventory) {
-                TileEntityInventory tileEntityInventory = (TileEntityInventory) tileEntity;
-                CoolComponent component = tileEntityInventory.getComp(CoolComponent.class);
+            if (tileEntity instanceof BlockEntityInventory) {
+                BlockEntityInventory blockEntityInventory = (BlockEntityInventory) tileEntity;
+                CoolComponent component = blockEntityInventory.getComp(CoolComponent.class);
                 if (component == null) {
                     return InteractionResult.PASS;
                 }

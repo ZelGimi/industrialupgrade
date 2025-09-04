@@ -1,7 +1,7 @@
 package com.denfop.componets;
 
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Timer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,7 +20,7 @@ public class ComponentTimer extends AbstractComponent {
     private int indexWork;
     private boolean canWork = true;
 
-    public ComponentTimer(TileEntityInventory inventory, Timer... timers) {
+    public ComponentTimer(BlockEntityInventory inventory, Timer... timers) {
         super(inventory);
         this.timers = Arrays.asList(timers);
         this.defaultTimers = new ArrayList<>();

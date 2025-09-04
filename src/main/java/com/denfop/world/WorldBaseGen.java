@@ -73,8 +73,6 @@ public class WorldBaseGen {
     );
     public static final RegistryObject<ConfiguredFeature<?, ?>> GEN_GAS = CONFIGURED_FEATURES.register("gen_gas",
             () -> new ConfiguredFeature<>(GEN_GAS_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-    public static final RegistryObject<ConfiguredFeature<?, ?>> GEN_HIVE = CONFIGURED_FEATURES.register("gen_hive",
-            () -> new ConfiguredFeature<>(GEN_HIVE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
     public static final RegistryObject<PlacedFeature> GEN_GAS_PLACER = PLACED_FEATURES.register(
             "gen_gas_placed",
             () -> new PlacedFeature(
@@ -86,6 +84,8 @@ public class WorldBaseGen {
                     )
             )
     );
+    public static final RegistryObject<ConfiguredFeature<?, ?>> GEN_HIVE = CONFIGURED_FEATURES.register("gen_hive",
+            () -> new ConfiguredFeature<>(GEN_HIVE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
     public static final RegistryObject<PlacedFeature> GEN_HIVE_PLACER = PLACED_FEATURES.register(
             "gen_hive_placed",
             () -> new PlacedFeature(
@@ -157,7 +157,9 @@ public class WorldBaseGen {
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
     public static Map<Integer, BlockState> blockStateMap = new HashMap<>();
-    public static    Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
+    public static Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
+    public static int id;
+
     public WorldBaseGen() {
         MinecraftForge.EVENT_BUS.register(this);
         WorldGenGas.registerFluid();
@@ -200,7 +202,7 @@ public class WorldBaseGen {
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(6)).get(), 6, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 60, 3),
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY, true), 60, 3),
                         new ChanceOre(IUItem.toriyore.getBlockState(0).setValue(BlockThoriumOre.BOOL_PROPERTY, true), 32, 0),
                         new ChanceOre(IUItem.radiationore.getBlockState(1).setValue(BOOL_PROPERTY, true), 4, 1),
                         new ChanceOre(IUItem.radiationore.getBlockState(0).setValue(BOOL_PROPERTY, true), 3, 0),
@@ -228,8 +230,8 @@ public class WorldBaseGen {
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(10)).get(), 10, TypeVein.SMALL,
                 new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 50, 8),
-                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 25, 3),
-                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY,true), 25, 0),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY, true), 25, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY, true), 25, 0),
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(11)).get(), 11, TypeVein.SMALL,
@@ -415,27 +417,27 @@ public class WorldBaseGen {
                 }
         ));
 
-         id = 0;
-        for (VeinType veinType : veinTypes){
-            if (veinType.getHeavyOre() != null){
+        id = 0;
+        for (VeinType veinType : veinTypes) {
+            if (veinType.getHeavyOre() != null) {
                 BlockState state = veinType.getHeavyOre().getBlock().defaultBlockState();
-                if (!idToblockStateMap.containsKey(state)){
-                    idToblockStateMap.put(state,id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state)) {
+                    idToblockStateMap.put(state, id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
-            for (ChanceOre chanceOre : veinType.getOres()){
+            for (ChanceOre chanceOre : veinType.getOres()) {
                 BlockState state = chanceOre.getBlock();
-                if (!idToblockStateMap.containsKey(state)){
-                    idToblockStateMap.put(state,id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state)) {
+                    idToblockStateMap.put(state, id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
         }
     }
-    public static  int id;
+
     @SubscribeEvent
     public void onWorldTick(TickEvent.LevelTickEvent event) {
         if (!event.level.isClientSide() && event.level.dimension() == Level.OVERWORLD) {

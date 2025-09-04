@@ -2,11 +2,11 @@ package com.denfop.items.modules;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;

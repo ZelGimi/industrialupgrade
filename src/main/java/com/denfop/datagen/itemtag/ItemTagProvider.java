@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class ItemTagProvider extends ItemTagsProvider {
     public static List<IItemTag> list = new ArrayList<>();
-    public static Map<ResourceLocation,List<ItemStack>> mapItems = new HashMap<>();
+    public static Map<ResourceLocation, List<ItemStack>> mapItems = new HashMap<>();
 
     public ItemTagProvider(DataGenerator gen, BlockTagsProvider blockTags, @Nullable ExistingFileHelper existingFileHelper) {
         super(gen, blockTags, Constants.MOD_ID, existingFileHelper);

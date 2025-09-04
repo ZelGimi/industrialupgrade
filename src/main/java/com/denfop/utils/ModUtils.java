@@ -2,14 +2,12 @@ package com.denfop.utils;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.radiationsystem.EnumCoefficient;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.invslot.InvSlot;
-import com.denfop.items.ItemFluidCell;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.quarry.QuarryItem;
+import com.denfop.api.pollution.radiation.EnumCoefficient;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.mechanism.quarry.QuarryItem;
+import com.denfop.inventory.Inventory;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
@@ -30,7 +28,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -127,7 +128,6 @@ public class ModUtils {
 
         return isLava ? ret / 10 : ret;
     }
-
 
 
     public static ItemStack get(Player player, InteractionHand hand) {
@@ -795,10 +795,11 @@ public class ModUtils {
         Color tmpColor = new Color(r / divColor, g / divColor, b / divColor);
         return tmpColor.getRGB();
     }
+
     public static int convertRGBAcolorToInt(int r, int g, int b) {
         return ((250 & 0xFF) << 24) |
                 ((r & 0xFF) << 16) |
-                ((g & 0xFF) << 8)  |
+                ((g & 0xFF) << 8) |
                 (b & 0xFF);
     }
 
@@ -1095,14 +1096,14 @@ public class ModUtils {
         return IUItem.fluidCell.getItem().getItemStack(fluid);
     }
 
-    public static void tick(InvSlotOutput slot, TileEntityBlock tile) {
+    public static void tick(InventoryOutput slot, BlockEntityBase tile) {
 
         for (Direction facing1 : facings) {
             BlockPos pos = tile.getBlockPos().offset(facing1.getNormal());
             final BlockEntity tile1 = tile.getWorld().getBlockEntity(pos);
-            if (tile1 instanceof TileEntityInventory) {
-                TileEntityInventory inventory = (TileEntityInventory) tile1;
-                for (InvSlot invSlot : inventory.getInputSlots()) {
+            if (tile1 instanceof BlockEntityInventory) {
+                BlockEntityInventory inventory = (BlockEntityInventory) tile1;
+                for (Inventory invSlot : inventory.getInputSlots()) {
                     if (invSlot.acceptAllOrIndex()) {
                         cycle2:
                         for (int j = 0; j < slot.size(); j++) {
@@ -1110,7 +1111,7 @@ public class ModUtils {
                             if (output.isEmpty()) {
                                 continue;
                             }
-                            if (invSlot.accepts(output, 0)) {
+                            if (invSlot.canPlaceItem(0, output)) {
                                 for (int jj = 0; jj < invSlot.size(); jj++) {
                                     if (output.isEmpty()) {
                                         continue cycle2;
@@ -1146,7 +1147,7 @@ public class ModUtils {
                                 ItemStack input = invSlot.get(j);
 
                                 if (input.isEmpty()) {
-                                    if (invSlot.accepts(output, j)) {
+                                    if (invSlot.canPlaceItem(j, output)) {
                                         if (invSlot.add(output)) {
                                             slot.set(jj, ItemStack.EMPTY);
                                             output = ItemStack.EMPTY;
@@ -1186,8 +1187,8 @@ public class ModUtils {
                             slot.set(j, ItemStack.EMPTY);
                             insertItem(handler, took, false, slots);
                         } else if (stack1 != took) {
-                            int count =  slot.get(j).getCount()-stack1.getCount();
-                            slot.get(j).shrink( count);
+                            int count = slot.get(j).getCount() - stack1.getCount();
+                            slot.get(j).shrink(count);
                             stack1.setCount(count);
                             insertItem(handler, stack1, false, slots);
                         }
@@ -1197,8 +1198,8 @@ public class ModUtils {
                             slot.set(j, ItemStack.EMPTY);
                             insertItem1(handler, took, false, slots);
                         } else if (stack1 != took) {
-                            int count =  slot.get(j).getCount()-stack1.getCount();
-                            slot.get(j).shrink( count);
+                            int count = slot.get(j).getCount() - stack1.getCount();
+                            slot.get(j).shrink(count);
                             stack1.setCount(count);
                             insertItem1(handler, stack1, false, slots);
                         }
@@ -1303,11 +1304,11 @@ public class ModUtils {
     public static FluidActionResult tryFillContainer(@NotNull ItemStack container, IFluidHandler fluidSource, int maxAmount, @org.jetbrains.annotations.Nullable Player player, boolean doFill) {
         ItemStack containerCopy = ItemHandlerHelper.copyStackWithSize(container, 1);
         IFluidHandlerItem containerFluidHandler = containerCopy.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse((IFluidHandlerItem) containerCopy.getItem().initCapabilities(containerCopy, containerCopy.getTag()));
-        for (int i = 0; i < fluidSource.getTanks();i++) {
-            FluidStack simulatedTransfer = tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, false,i);
+        for (int i = 0; i < fluidSource.getTanks(); i++) {
+            FluidStack simulatedTransfer = tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, false, i);
             if (!simulatedTransfer.isEmpty()) {
                 if (doFill) {
-                    tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, true,i);
+                    tryFluidTransfer(containerFluidHandler, fluidSource, maxAmount, true, i);
                     if (player != null) {
                         SoundEvent soundevent = simulatedTransfer.getFluid().getFluidType().getSound(simulatedTransfer, SoundActions.BUCKET_FILL);
                         player.level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -1487,13 +1488,14 @@ public class ModUtils {
         FluidStack stack = fluidSource.getFluidInTank(index).copy();
         if (stack.isEmpty())
             return FluidStack.EMPTY;
-        stack.setAmount(Math.min(stack.getAmount(),maxAmount));
+        stack.setAmount(Math.min(stack.getAmount(), maxAmount));
         FluidStack drainable = fluidSource.drain(stack, IFluidHandler.FluidAction.SIMULATE);
         if (!drainable.isEmpty()) {
             return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
         }
         return FluidStack.EMPTY;
     }
+
     @NotNull
     public static FluidStack tryFluidTransfer(IFluidHandler fluidDestination, IFluidHandler fluidSource, int maxAmount, boolean doTransfer) {
         FluidStack drainable = fluidSource.drain(maxAmount, IFluidHandler.FluidAction.SIMULATE);

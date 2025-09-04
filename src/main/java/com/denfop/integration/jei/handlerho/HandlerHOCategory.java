@@ -2,13 +2,13 @@ package com.denfop.integration.jei.handlerho;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.base.BlockEntityBaseHandlerHeavyOre;
+import com.denfop.blocks.mechanism.BlockBaseMachine1Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.base.TileBaseHandlerHeavyOre;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerHOHandler> {
+public class HandlerHOCategory extends ScreenMain implements IRecipeCategory<HandlerHOHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -33,8 +33,8 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
     public HandlerHOCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileBaseHandlerHeavyOre) BlockBaseMachine1.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        super(((BlockEntityBaseHandlerHeavyOre) BlockBaseMachine1Entity.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guihandlerho" +
@@ -75,14 +75,14 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
 
 
         for (int i = 0; i < size; i++) {
-          drawSplitString( stack,"" + recipe.nbt.getInt("input" + i) + "%", x, y, 140 - x, 4210752);
+            drawSplitString(stack, "" + recipe.nbt.getInt("input" + i) + "%", x, y, 140 - x, 4210752);
             y += 19;
         }
         Minecraft.getInstance().font.draw(stack, "" + temp + "°C", 62, 75, 4210752);
 
 
-     bindTexture(getTexture());
-        drawTexturedModalRect( stack,59, 34, 178, 34, xScale + 1, 14);
+        bindTexture(getTexture());
+        drawTexturedModalRect(stack, 59, 34, 178, 34, xScale + 1, 14);
 
     }
 
@@ -102,7 +102,6 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
                     .addItemStack(recipe.getOutput().get(i));
         }
     }
-
 
 
     protected ResourceLocation getTexture() {

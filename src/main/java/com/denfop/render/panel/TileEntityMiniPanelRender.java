@@ -3,7 +3,7 @@ package com.denfop.render.panel;
 import com.denfop.Constants;
 import com.denfop.api.solar.EnumTypeParts;
 import com.denfop.api.solar.ISolarItem;
-import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
+import com.denfop.blockentity.panels.entity.BlockEntityMiniPanels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntityMiniPanels> {
+public class TileEntityMiniPanelRender implements BlockEntityRenderer<BlockEntityMiniPanels> {
 
     private static final Map<Integer, ModelMiniPanelGlass> panelModels = new HashMap<>();
     private static final Map<Integer, BottomModel> bottomModels = new HashMap<>();
@@ -27,11 +27,12 @@ public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntity
     private static final ModelMiniPanelGlass bonusPanel = new ModelMiniPanelGlass(10);
     private static final BottomModel bonusBottom = new BottomModel(10);
 
-    public TileEntityMiniPanelRender(BlockEntityRendererProvider.Context context) {}
+    public TileEntityMiniPanelRender(BlockEntityRendererProvider.Context context) {
+    }
 
     @Override
     public void render(
-            TileEntityMiniPanels te,
+            BlockEntityMiniPanels te,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -53,20 +54,20 @@ public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntity
                 ResourceLocation glassTexture = ((ISolarItem) stack.getItem()).getResourceLocation(0);
 
                 VertexConsumer glassConsumer = bufferSource.getBuffer(RenderType.entitySolid(glassTexture));
-                model.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay,1,1,1,1);
+                model.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay, 1, 1, 1, 1);
 
                 VertexConsumer bottomConsumer = bufferSource.getBuffer(RenderType.entitySolid(bottomTextures));
-                model1.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay,1,1,1,1);
+                model1.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay, 1, 1, 1, 1);
             }
         } else {
             ItemStack stack = te.invSlotGlass.get(0);
             ResourceLocation glassTexture = ((ISolarItem) stack.getItem()).getResourceLocation(stack.getDamageValue());
 
             VertexConsumer glassConsumer = bufferSource.getBuffer(RenderType.entitySolid(glassTexture));
-            bonusPanel.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay,1,1,1,1);
+            bonusPanel.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay, 1, 1, 1, 1);
 
             VertexConsumer bottomConsumer = bufferSource.getBuffer(RenderType.entitySolid(bottomTextures));
-            bonusBottom.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay,1,1,1,1);
+            bonusBottom.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay, 1, 1, 1, 1);
         }
 
         poseStack.popPose();

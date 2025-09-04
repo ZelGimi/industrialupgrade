@@ -1,10 +1,10 @@
 package com.denfop.api.reactors;
 
-import com.denfop.api.multiblock.IMainMultiBlock;
+import com.denfop.api.multiblock.MainMultiBlock;
 import com.denfop.componets.Energy;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public interface IGasReactor extends IAdvReactor, IMainMultiBlock {
+public interface IGasReactor extends IAdvReactor, MainMultiBlock {
 
     int getTemperatureRefrigerator();
 

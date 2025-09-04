@@ -1,14 +1,14 @@
 package com.denfop.items.bags;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.container.ContainerBags;
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiBags;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.containermenu.ContainerMenuBags;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenBags;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -297,32 +297,27 @@ public class ItemStackBags extends ItemStackInventory {
         }
     }
 
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
     }
 
     @Override
-    public int getBaseIndex(final InvSlot var1) {
+    public int getBaseIndex(final Inventory var1) {
         return 0;
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerBags containerLeadBox = (ContainerBags) menu;
-        return new GuiBags(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuBags containerLeadBox = (ContainerMenuBags) menu;
+        return new ScreenBags(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerBags getGuiContainer(Player player) {
-        return new ContainerBags(player, this);
+    public ContainerMenuBags getGuiContainer(Player player) {
+        return new ContainerMenuBags(player, this);
     }
 
 

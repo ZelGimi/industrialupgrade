@@ -1,11 +1,11 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IVolcanoArmor;
+import com.denfop.api.item.armor.VolcanoArmor;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.potion.IUPotion;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -17,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -26,8 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
@@ -81,7 +77,7 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
         List<Player> players = level.getEntitiesOfClass(Player.class, axisAlignedBB);
 
         for (Player player : players) {
-            if (!IVolcanoArmor.hasCompleteHazmat(player)) {
+            if (!VolcanoArmor.hasCompleteHazmat(player)) {
                 player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
             }
         }

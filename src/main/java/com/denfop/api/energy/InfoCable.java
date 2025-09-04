@@ -1,14 +1,15 @@
 package com.denfop.api.energy;
 
+import com.denfop.api.energy.interfaces.EnergyConductor;
 import net.minecraft.core.Direction;
 
 public class InfoCable {
 
-    private final IEnergyConductor conductor;
+    private final EnergyConductor conductor;
     private final Direction facing;
     private final InfoCable cable;
 
-    public InfoCable(IEnergyConductor conductor, Direction facing, InfoCable cable) {
+    public InfoCable(EnergyConductor conductor, Direction facing, InfoCable cable) {
         this.conductor = conductor;
         this.facing = facing;
         this.cable = cable;
@@ -18,7 +19,7 @@ public class InfoCable {
         return facing;
     }
 
-    public IEnergyConductor getConductor() {
+    public EnergyConductor getConductor() {
         return conductor;
     }
 

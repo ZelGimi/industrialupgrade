@@ -11,8 +11,9 @@ public class ItemBlockDeposits2 extends ItemBlockCore<BlockDeposits2.Type> {
     public ItemBlockDeposits2(BlockCore p_40565_, BlockDeposits2.Type element) {
         super(p_40565_, element, new Properties().tab(IUCore.RecourseTab));
     }
+
     @Override
     public Component getName(ItemStack pStack) {
-        return getBlock().getCloneItemStack(null,null,null).getDisplayName();
+        return getBlock().getCloneItemStack(null, null, null).getDisplayName();
     }
 }

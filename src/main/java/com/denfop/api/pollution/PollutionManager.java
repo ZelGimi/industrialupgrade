@@ -1,11 +1,14 @@
 package com.denfop.api.pollution;
 
-import com.denfop.IUPotion;
-import com.denfop.ModConfig;
+import com.denfop.api.pollution.component.ChunkLevel;
+import com.denfop.api.pollution.component.LevelPollution;
+import com.denfop.api.pollution.utils.Vec2f;
 import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.EnumWindSide;
 import com.denfop.api.windsystem.IWindSystem;
 import com.denfop.api.windsystem.WindSystem;
+import com.denfop.config.ModConfig;
+import com.denfop.potion.IUPotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,8 +26,8 @@ public class PollutionManager {
     private final IWindSystem wind;
     private final Random random;
     Map<ChunkPos, ChunkLevel> pollutionAir = new HashMap<>();
-    Map<ChunkPos, List<IPollutionMechanism>> pollutionAirChunks = new HashMap<>();
-    Map<ChunkPos, List<IPollutionMechanism>> pollutionSoilChunks = new HashMap<>();
+    Map<ChunkPos, List<PollutionMechanism>> pollutionAirChunks = new HashMap<>();
+    Map<ChunkPos, List<PollutionMechanism>> pollutionSoilChunks = new HashMap<>();
     Map<ChunkPos, ChunkLevel> pollutionSoil = new HashMap<>();
 
     public PollutionManager() {
@@ -73,9 +76,9 @@ public class PollutionManager {
     }
 
 
-    public void addAirPollutionMechanism(IPollutionMechanism pollutionMechanism) {
+    public void addAirPollutionMechanism(PollutionMechanism pollutionMechanism) {
 
-        List<IPollutionMechanism> pollution = pollutionAirChunks.get(pollutionMechanism.getChunkPos());
+        List<PollutionMechanism> pollution = pollutionAirChunks.get(pollutionMechanism.getChunkPos());
         if (pollution == null) {
             pollution = new ArrayList<>();
             pollution.add(pollutionMechanism);
@@ -86,11 +89,11 @@ public class PollutionManager {
 
     }
 
-    public void removeAirPollutionMechanism(IPollutionMechanism pollutionMechanism) {
+    public void removeAirPollutionMechanism(PollutionMechanism pollutionMechanism) {
         if (pollutionMechanism == null) {
             return;
         }
-        final List<IPollutionMechanism> pollution = pollutionAirChunks.computeIfAbsent(
+        final List<PollutionMechanism> pollution = pollutionAirChunks.computeIfAbsent(
                 pollutionMechanism.getChunkPos(),
                 k -> new ArrayList<>()
         );
@@ -99,11 +102,11 @@ public class PollutionManager {
 
     }
 
-    public void removeSoilPollutionMechanism(IPollutionMechanism pollutionMechanism) {
+    public void removeSoilPollutionMechanism(PollutionMechanism pollutionMechanism) {
         if (pollutionMechanism == null) {
             return;
         }
-        List<IPollutionMechanism> pollution = pollutionSoilChunks.computeIfAbsent(
+        List<PollutionMechanism> pollution = pollutionSoilChunks.computeIfAbsent(
                 pollutionMechanism.getChunkPos(),
                 k -> new ArrayList<>()
         );
@@ -160,11 +163,11 @@ public class PollutionManager {
     }
 
 
-    public void addSoilPollutionMechanism(IPollutionMechanism pollutionMechanism) {
+    public void addSoilPollutionMechanism(PollutionMechanism pollutionMechanism) {
         if (pollutionMechanism == null) {
             return;
         }
-        List<IPollutionMechanism> pollution = pollutionSoilChunks.get(pollutionMechanism.getChunkPos());
+        List<PollutionMechanism> pollution = pollutionSoilChunks.get(pollutionMechanism.getChunkPos());
         if (pollution == null) {
             pollution = new ArrayList<>();
             pollution.add(pollutionMechanism);
@@ -261,31 +264,31 @@ public class PollutionManager {
                 }
             }
         if (ModConfig.COMMON.airPollution.get())
-            for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionAirChunks.entrySet()) {
+            for (Map.Entry<ChunkPos, List<PollutionMechanism>> entry : pollutionAirChunks.entrySet()) {
                 ChunkLevel chunkLevel = pollutionAir.get(entry.getKey());
                 if (chunkLevel == null) {
                     chunkLevel = new ChunkLevel(entry.getKey(), LevelPollution.VERY_LOW, 0);
-                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                    for (PollutionMechanism pollutionMechanism : entry.getValue()) {
                         chunkLevel.addPollution(pollutionMechanism.getPollution());
                     }
                     pollutionAir.put(chunkLevel.getPos(), chunkLevel);
                 } else {
-                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                    for (PollutionMechanism pollutionMechanism : entry.getValue()) {
                         chunkLevel.addPollution(pollutionMechanism.getPollution());
                     }
                 }
             }
         if (ModConfig.COMMON.soilPollution.get())
-            for (Map.Entry<ChunkPos, List<IPollutionMechanism>> entry : pollutionSoilChunks.entrySet()) {
+            for (Map.Entry<ChunkPos, List<PollutionMechanism>> entry : pollutionSoilChunks.entrySet()) {
                 ChunkLevel chunkLevel = pollutionSoil.get(entry.getKey());
                 if (chunkLevel == null) {
                     chunkLevel = new ChunkLevel(entry.getKey(), LevelPollution.VERY_LOW, 0);
-                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                    for (PollutionMechanism pollutionMechanism : entry.getValue()) {
                         chunkLevel.addPollution(pollutionMechanism.getPollution());
                     }
                     pollutionSoil.put(chunkLevel.getPos(), chunkLevel);
                 } else {
-                    for (IPollutionMechanism pollutionMechanism : entry.getValue()) {
+                    for (PollutionMechanism pollutionMechanism : entry.getValue()) {
                         chunkLevel.addPollution(pollutionMechanism.getPollution());
                     }
                 }

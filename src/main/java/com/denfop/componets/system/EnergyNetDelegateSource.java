@@ -1,12 +1,11 @@
 package com.denfop.componets.system;
 
-import com.denfop.api.sytem.IAcceptor;
-import com.denfop.api.sytem.ISource;
+import com.denfop.api.otherenergies.common.interfaces.Acceptor;
+import com.denfop.api.otherenergies.common.interfaces.Source;
 import com.denfop.componets.ComponentBaseEnergy;
 import net.minecraft.core.Direction;
 
-public class EnergyNetDelegateSource extends EnergyNetDelegate implements ISource {
-
+public class EnergyNetDelegateSource extends EnergyNetDelegate implements Source {
 
 
     public EnergyNetDelegateSource(ComponentBaseEnergy baseEnergy) {
@@ -17,13 +16,9 @@ public class EnergyNetDelegateSource extends EnergyNetDelegate implements ISourc
         return this.buffer.sourceTier;
     }
 
-    public boolean emitsTo(IAcceptor receiver, Direction dir) {
+    public boolean emitsTo(Acceptor receiver, Direction dir) {
         return this.sourceDirections.contains(dir);
     }
-
-
-
-
 
 
     public double canProvideEnergy() {
@@ -34,7 +29,7 @@ public class EnergyNetDelegateSource extends EnergyNetDelegate implements ISourc
 
     public void extractEnergy(double amount) {
         assert amount <= this.buffer.storage;
-        this.buffer.storage-=amount;
+        this.buffer.storage -= amount;
     }
 
     @Override
@@ -61,7 +56,6 @@ public class EnergyNetDelegateSource extends EnergyNetDelegate implements ISourc
     public boolean isSource() {
         return true;
     }
-
 
 
 }

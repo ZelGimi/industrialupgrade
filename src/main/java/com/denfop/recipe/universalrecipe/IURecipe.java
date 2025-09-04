@@ -2,7 +2,6 @@ package com.denfop.recipe.universalrecipe;
 
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -38,9 +37,8 @@ public class IURecipe implements Recipe<Container> {
     public ItemStack assemble(Container pContainer) {
         if (outputs == null)
             return ItemStack.EMPTY;
-        return  outputs.get(0);
+        return outputs.get(0);
     }
-
 
 
     @Override
@@ -52,7 +50,7 @@ public class IURecipe implements Recipe<Container> {
     public ItemStack getResultItem() {
         if (outputs == null)
             return ItemStack.EMPTY;
-        return  outputs.get(0);
+        return outputs.get(0);
     }
 
 

@@ -1,13 +1,12 @@
 package com.denfop.utils;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.mechanism.BlockMoreMachine;
-import com.denfop.blocks.mechanism.BlockMoreMachine1;
-import com.denfop.blocks.mechanism.BlockMoreMachine2;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.tiles.base.EnumMultiMachine;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.base.EnumMultiMachine;
+import com.denfop.blocks.mechanism.BlockMoreMachine1Entity;
+import com.denfop.blocks.mechanism.BlockMoreMachine2Entity;
+import com.denfop.blocks.mechanism.BlockMoreMachine3Entity;
+import com.denfop.blocks.mechanism.BlockMoreMachineEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,7 +23,7 @@ public class ListInformationUtils {
     public static final List<String> analyzeinform = new ArrayList<>();
     public static final List<String> quarryinform = new ArrayList<>();
     public static final List<String> mechanism_info = new ArrayList<>();
-    public static final Map<IMultiTileBlock, Component> mechanism_info1 = new HashMap<>();
+    public static final Map<MultiBlockEntity, Component> mechanism_info1 = new HashMap<>();
     public static final List<String> mechanism_info2 = new ArrayList<>();
     public static final List<String> limiter_info = new ArrayList<>();
     public static final List<String> cooling = new ArrayList<>();
@@ -46,16 +45,16 @@ public class ListInformationUtils {
     public static int index2 = 0;
 
     public static void init() {
-        for (int i = 0; i < BlockMoreMachine.values().length; i++) {
+        for (int i = 0; i < BlockMoreMachineEntity.values().length; i++) {
             mechanism_info.add(Localization.translate(new ItemStack(IUItem.machines_base.getItem(i), 1).getDescriptionId()));
         }
-        for (int i = 0; i < BlockMoreMachine1.values().length; i++) {
+        for (int i = 0; i < BlockMoreMachine1Entity.values().length; i++) {
             mechanism_info.add(Localization.translate(new ItemStack(IUItem.machines_base1.getItem(i), 1).getDescriptionId()));
         }
-        for (int i = 0; i < BlockMoreMachine2.values().length; i++) {
+        for (int i = 0; i < BlockMoreMachine2Entity.values().length; i++) {
             mechanism_info.add(Localization.translate(new ItemStack(IUItem.machines_base2.getItem(i), 1).getDescriptionId()));
         }
-        for (int i = 0; i < BlockMoreMachine3.values().length; i++) {
+        for (int i = 0; i < BlockMoreMachine3Entity.values().length; i++) {
             mechanism_info.add(Localization.translate(new ItemStack(IUItem.machines_base3.getItem(i)).getDescriptionId()));
         }
         //     mechanism_info1.add(Localization.translate(new ItemStack(IUItem.basemachine2, 1, 11).getUnlocalizedName()));

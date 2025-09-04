@@ -1,13 +1,13 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityElectricBlock;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.mechanism.BlockEntityAnalyzerChest;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.componets.Energy;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.base.TileElectricBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -92,8 +92,9 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
                 }
         }
     }
+
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack,UseOnContext context) {
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
@@ -103,11 +104,11 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
 
         if (this.getElement().getId() == 10) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof TileEntityInventory tile) {
+            if (be instanceof BlockEntityInventory tile) {
                 if (tile.getComp(Energy.class) != null) {
                     CompoundTag tag = stack.getOrCreateTag();
                     boolean charge = tag.getBoolean("change");
-                    if (tile instanceof TileElectricBlock && charge) {
+                    if (tile instanceof BlockEntityElectricBlock && charge) {
                         return InteractionResult.PASS;
                     }
 
@@ -119,7 +120,7 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
                     tag.putString("World", level.dimension().location().toString());
                     tag.putString("Name", Objects.requireNonNull(tile.getDisplayName()).getString());
                     return InteractionResult.SUCCESS;
-                } else if (tile instanceof TileEntityAnalyzerChest) {
+                } else if (tile instanceof BlockEntityAnalyzerChest) {
                     CompoundTag tag = stack.getOrCreateTag();
                     tag.putInt("Xcoord", tile.getBlockPos().getX());
                     tag.putInt("Ycoord", tile.getBlockPos().getY());

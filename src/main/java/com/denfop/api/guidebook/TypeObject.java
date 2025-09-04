@@ -6,9 +6,10 @@ public enum TypeObject {
     FLUID_ITEM;
 
     public boolean isItem() {
-      return   this == ITEM || this == FLUID_ITEM;
+        return this == ITEM || this == FLUID_ITEM;
     }
+
     public boolean isFluid() {
-        return   this == FLUID || this == FLUID_ITEM;
+        return this == FLUID || this == FLUID_ITEM;
     }
 }

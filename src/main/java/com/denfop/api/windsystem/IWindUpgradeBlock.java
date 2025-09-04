@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack;
 
 public interface IWindUpgradeBlock {
 
-    IWindRotor getRotor();
+    WindRotor getRotor();
 
     ItemStack getItemStack();
 

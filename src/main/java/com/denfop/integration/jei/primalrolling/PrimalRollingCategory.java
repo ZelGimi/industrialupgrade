@@ -2,13 +2,13 @@ package com.denfop.integration.jei.primalrolling;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityFluidIntegrator;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityFluidIntegrator;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<PrimalRollingHandler> {
+public class PrimalRollingCategory extends ScreenMain implements IRecipeCategory<PrimalRollingHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -32,7 +32,7 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
     public PrimalRollingCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityFluidIntegrator) BlockBaseMachine3Entity.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
@@ -49,9 +49,8 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.rolling_machine).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.rolling_machine).getDescriptionId());
     }
-
 
 
     @Nonnull
@@ -63,18 +62,18 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
 
     @Override
     public void draw(PrimalRollingHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        drawSplitString( stack,Localization.translate("iu.rolling.jei"), 5, 3,
+        drawSplitString(stack, Localization.translate("iu.rolling.jei"), 5, 3,
                 150 - 5, 4210752
         );
-        drawSplitString( stack,"+", 26, 31,
+        drawSplitString(stack, "+", 26, 31,
                 150 - 5, 4210752
         );
-      drawSplitString( stack,"->", 47, 31,
-              150 - 5, 4210752
+        drawSplitString(stack, "->", 47, 31,
+                150 - 5, 4210752
         );
-      drawSplitString( stack,Localization.translate("iu.rolling.jei1") + "." + Localization.translate(
+        drawSplitString(stack, Localization.translate("iu.rolling.jei1") + "." + Localization.translate(
                         "iu.rolling.jei2"), 5, 45,
-              150 - 5, 4210752
+                150 - 5, 4210752
         );
     }
 
@@ -85,7 +84,6 @@ public class PrimalRollingCategory extends GuiIU implements IRecipeCategory<Prim
         builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipe.getOutput());
 
     }
-
 
 
     protected ResourceLocation getTexture() {

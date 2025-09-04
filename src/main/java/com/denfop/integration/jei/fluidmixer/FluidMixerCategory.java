@@ -1,15 +1,15 @@
 package com.denfop.integration.jei.fluidmixer;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.api.widget.*;
+import com.denfop.blockentity.mechanism.BlockEntityOilRefiner;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockRefinerEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class FluidMixerCategory extends GuiIU implements IRecipeCategory<FluidMixerHandler> {
+public class FluidMixerCategory extends ScreenMain implements IRecipeCategory<FluidMixerHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -34,18 +34,18 @@ public class FluidMixerCategory extends GuiIU implements IRecipeCategory<FluidMi
     public FluidMixerCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-            this.jeiInform=jeiInform;
-            this.title = net.minecraft.network.chat.Component.literal(getTitles());
+        super(((BlockEntityOilRefiner) BlockRefinerEntity.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 170,
                 77
         );
         this.componentList.clear();
-        this.addElement(TankGauge.createNormal(this, 12, 20, ((TileOilRefiner) container.base).fluidTank1));
-        this.addElement(TankGauge.createNormal(this, 50, 20, ((TileOilRefiner) container.base).fluidTank2));
-        this.addElement(TankGauge.createNormal(this, 98, 20, ((TileOilRefiner) container.base).fluidTank2));
-        this.addElement(TankGauge.createNormal(this, 136, 20, ((TileOilRefiner) container.base).fluidTank2));
+        this.addWidget(TankWidget.createNormal(this, 12, 20, ((BlockEntityOilRefiner) container.base).fluidTank1));
+        this.addWidget(TankWidget.createNormal(this, 50, 20, ((BlockEntityOilRefiner) container.base).fluidTank2));
+        this.addWidget(TankWidget.createNormal(this, 98, 20, ((BlockEntityOilRefiner) container.base).fluidTank2));
+        this.addWidget(TankWidget.createNormal(this, 136, 20, ((BlockEntityOilRefiner) container.base).fluidTank2));
 
     }
 
@@ -57,9 +57,8 @@ public class FluidMixerCategory extends GuiIU implements IRecipeCategory<FluidMi
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate((JEICompat.getBlockStack(BlockBaseMachine3.fluid_mixer)).getDescriptionId());
+        return Localization.translate((JEICompat.getBlockStack(BlockBaseMachine3Entity.fluid_mixer)).getDescriptionId());
     }
-
 
 
     @Nonnull
@@ -70,26 +69,26 @@ public class FluidMixerCategory extends GuiIU implements IRecipeCategory<FluidMi
 
     @Override
     public void draw(FluidMixerHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        new GuiComponent(this, 78, 40, EnumTypeComponent.FLUID_PART1,
-                new Component<>(new ComponentEmpty())
-        ).drawBackground( stack, this.guiLeft, this.guiTop);
-        new GuiComponent(this, 35, 38, EnumTypeComponent.PLUS_BUTTON,
-                new Component<>(new ComponentEmpty())
-        ).drawBackground( stack, this.guiLeft, this.guiTop);
-        new GuiComponent(this, 121, 38, EnumTypeComponent.PLUS_BUTTON,
-                new Component<>(new ComponentEmpty())
-        ).drawBackground( stack, this.guiLeft, this.guiTop);
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack, this.guiLeft, this.guiTop);
+        new ScreenWidget(this, 78, 40, EnumTypeComponent.FLUID_PART1,
+                new WidgetDefault<>(new EmptyWidget())
+        ).drawBackground(stack, this.guiLeft, this.guiTop);
+        new ScreenWidget(this, 35, 38, EnumTypeComponent.PLUS_BUTTON,
+                new WidgetDefault<>(new EmptyWidget())
+        ).drawBackground(stack, this.guiLeft, this.guiTop);
+        new ScreenWidget(this, 121, 38, EnumTypeComponent.PLUS_BUTTON,
+                new WidgetDefault<>(new EmptyWidget())
+        ).drawBackground(stack, this.guiLeft, this.guiTop);
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FluidMixerHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 16, 24).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getInput().getFluid(),recipe.getInput().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 54, 24).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 102, 24).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutput1().getFluid(),recipe.getOutput1().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 140, 24).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutput2().getFluid(),recipe.getOutput2().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 16, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput().getFluid(), recipe.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 54, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 102, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput1().getFluid(), recipe.getOutput1().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 140, 24).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput2().getFluid(), recipe.getOutput2().getAmount());
 
     }
 

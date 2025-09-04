@@ -2,10 +2,10 @@ package com.denfop.items.upgradekit;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.tiles.panels.entity.TileSolarPanel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -50,7 +50,7 @@ public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<
         int meta = getElement().getId();
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof TileSolarPanel tile) {
+        if (blockEntity instanceof BlockEntitySolarPanel tile) {
             if (tile.getPanels() == null) {
                 return InteractionResult.PASS;
             }

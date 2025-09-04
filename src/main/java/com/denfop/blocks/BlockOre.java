@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -85,7 +85,7 @@ public class BlockOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> impleme
         mikhail(0),
         aluminium(1),
         vanadium(2),
-        wolfram(3),
+        tungsten(3),
         cobalt(4),
         magnesium(5),
         nickel(6),

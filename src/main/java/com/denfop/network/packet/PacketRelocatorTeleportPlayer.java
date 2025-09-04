@@ -1,9 +1,9 @@
 package com.denfop.network.packet;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
+import com.denfop.utils.ElectricItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 

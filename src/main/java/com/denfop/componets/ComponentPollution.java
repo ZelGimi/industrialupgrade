@@ -1,10 +1,10 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pollution.component.ChunkLevel;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +25,7 @@ public class ComponentPollution extends AbstractComponent {
 
     private double percent;
 
-    public ComponentPollution(final TileEntityInventory parent) {
+    public ComponentPollution(final BlockEntityInventory parent) {
         super(parent);
     }
 

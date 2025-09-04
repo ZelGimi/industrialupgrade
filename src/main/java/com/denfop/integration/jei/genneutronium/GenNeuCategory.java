@@ -2,13 +2,13 @@ package com.denfop.integration.jei.genneutronium;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntitySingleFluidAdapter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenNeuCategory extends GuiIU implements IRecipeCategory<GenNeuHandler> {
+public class GenNeuCategory extends ScreenMain implements IRecipeCategory<GenNeuHandler> {
 
     private final JeiInform jeiInform;
 
@@ -33,7 +33,7 @@ public class GenNeuCategory extends GuiIU implements IRecipeCategory<GenNeuHandl
     public GenNeuCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntitySingleFluidAdapter) BlockBaseMachine3Entity.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
@@ -61,7 +61,7 @@ public class GenNeuCategory extends GuiIU implements IRecipeCategory<GenNeuHandl
 
     @Override
     public void draw(GenNeuHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("cost.name") + " " + ModUtils.getString((double) recipe.getEnergy()) + "EF",
                 10,
                 30,
@@ -72,10 +72,9 @@ public class GenNeuCategory extends GuiIU implements IRecipeCategory<GenNeuHandl
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenNeuHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,95,21).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
 
     }
-
 
 
     protected ResourceLocation getTexture() {

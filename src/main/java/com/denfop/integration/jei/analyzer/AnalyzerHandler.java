@@ -40,7 +40,7 @@ public class AnalyzerHandler {
 
     public static void initRecipes() {
         for (BlockHeavyOre.Type type : BlockHeavyOre.Type.values()) {
-            addRecipe( ItemStackHelper.fromData(IUItem.heavyore, 1, type.getMetadata())
+            addRecipe(ItemStackHelper.fromData(IUItem.heavyore, 1, type.getMetadata())
             );
 
 

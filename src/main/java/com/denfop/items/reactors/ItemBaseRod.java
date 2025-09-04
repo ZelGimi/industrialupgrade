@@ -1,16 +1,18 @@
 package com.denfop.items.reactors;
 
+import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.Localization;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
+import com.denfop.potion.IUPotion;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -30,7 +32,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
     private final float power;
     private final int level;
     private final double radiation;
-    double[] p = new double[]{5.0D, 20D, 60D, 200D,500D,1300D};
+    double[] p = new double[]{5.0D, 20D, 60D, 200D, 500D, 1300D};
 
     public ItemBaseRod(int cells, int heat, float power, int level) {
         super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1).setNoRepair(), 1);
@@ -43,8 +45,10 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
 
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
-            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
-            String targetString = "industrialupgrade.";
+            ResourceLocation res = Registry.ITEM.getKey(this);
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", res));
+            String targetString = res.getNamespace() + ".";
+
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);
@@ -53,11 +57,12 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = res.getNamespace().startsWith(Constants.MOD_ID) ? "iu." + pathBuilder.toString().split("\\.")[2] : res.getNamespace() + "." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     public boolean isBarVisible(@Nonnull ItemStack stack) {
         return false;
     }
@@ -66,7 +71,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
         if (entity instanceof LivingEntity) {
             LivingEntity entityLiving = (LivingEntity) entity;
-            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+            if (!HazmatLike.hasCompleteHazmat(entityLiving)) {
                 IUPotion.radiation.applyEffect(entityLiving, this.getRadiationDuration());
             }
         }

@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "tag": "forge:casings/vanady"
+      "tag": "forge:casings/vanadium"
     },
     "B": {
       "tag": "forge:casings/cobalt"

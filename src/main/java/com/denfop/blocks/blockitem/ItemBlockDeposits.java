@@ -14,6 +14,6 @@ public class ItemBlockDeposits extends ItemBlockCore<BlockDeposits.Type> {
 
     @Override
     public Component getName(ItemStack pStack) {
-        return getBlock().getCloneItemStack(null,null,null).getDisplayName();
+        return getBlock().getCloneItemStack(null, null, null).getDisplayName();
     }
 }

@@ -1,11 +1,11 @@
 package com.denfop.items.crop;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerAgriculturalAnalyzer;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuAgriculturalAnalyzer;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
@@ -55,13 +55,13 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         return new ItemStackAgriculturalAnalyzer(player, stack, 1);
     }
 
@@ -89,8 +89,8 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
 
         if (nbt.getBoolean("open")) {
             int slotId = nbt.getInt("slot_inventory");
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerAgriculturalAnalyzer) {
-                ItemStackAgriculturalAnalyzer toolbox = ((ContainerAgriculturalAnalyzer) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuAgriculturalAnalyzer) {
+                ItemStackAgriculturalAnalyzer toolbox = ((ContainerMenuAgriculturalAnalyzer) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -103,11 +103,10 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
     }
 
 
-
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerAgriculturalAnalyzer) {
-            ItemStackAgriculturalAnalyzer toolbox = ((ContainerAgriculturalAnalyzer) player.containerMenu).base;
+        if (!player.level.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuAgriculturalAnalyzer) {
+            ItemStackAgriculturalAnalyzer toolbox = ((ContainerMenuAgriculturalAnalyzer) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeContainer();

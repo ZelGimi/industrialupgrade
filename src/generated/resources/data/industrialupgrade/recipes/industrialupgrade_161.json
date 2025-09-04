@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "tag": "forge:ingots/vanady"
+      "tag": "forge:ingots/vanadium"
     }
   },
   "pattern": [
@@ -11,6 +11,6 @@
     "AAA"
   ],
   "result": {
-    "item": "industrialupgrade:baseblockingot/vanady"
+    "item": "industrialupgrade:baseblockingot/vanadium"
   }
 }

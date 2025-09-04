@@ -1,18 +1,15 @@
 package com.denfop.items.creative;
 
 
-import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.Data;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -26,9 +23,8 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-public class ItemCreativeTomeResearchSpace extends Item   {
+public class ItemCreativeTomeResearchSpace extends Item {
     private String nameItem;
 
     public ItemCreativeTomeResearchSpace() {
@@ -58,6 +54,7 @@ public class ItemCreativeTomeResearchSpace extends Item   {
 
         return this.nameItem;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(
             @Nonnull final Level world,

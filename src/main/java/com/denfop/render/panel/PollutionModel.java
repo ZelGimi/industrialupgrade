@@ -66,6 +66,7 @@ public class PollutionModel<T extends Entity> extends EntityModel<T> {
     }
 
 }
+
 class ModelCord {
     private final int x;
     private final int z;

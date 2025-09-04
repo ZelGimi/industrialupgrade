@@ -1,14 +1,14 @@
 package com.denfop.integration.jei.gas_turbine;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockGasTurbine;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityOilRefiner;
+import com.denfop.blocks.mechanism.BlockGasTurbineEntity;
+import com.denfop.blocks.mechanism.BlockRefinerEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurbineHandler> {
+public class GasTurbineCategory extends ScreenMain implements IRecipeCategory<GasTurbineHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -32,8 +32,8 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
     public GasTurbineCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        super(((BlockEntityOilRefiner) BlockRefinerEntity.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
@@ -46,7 +46,7 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockGasTurbine.gas_turbine_controller).getDisplayName().getString();
+        return JEICompat.getBlockStack(BlockGasTurbineEntity.gas_turbine_controller).getDisplayName().getString();
     }
 
     @Override
@@ -62,27 +62,26 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
 
     @Override
     public void draw(GasTurbineHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-       drawSplitString(stack,
+        drawSplitString(stack,
                 Localization.translate("iu.windgenerator1"),
                 5,
                 30,
                 150 - 10,
                 4210752
         );
-      drawSplitString(stack,
+        drawSplitString(stack,
                 ModUtils.getString(recipe.getEnergy()),
                 5,
                 30 + 10,
-              150 - 10,
+                150 - 10,
                 4210752
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GasTurbineHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
     }
-
 
 
     protected ResourceLocation getTexture() {

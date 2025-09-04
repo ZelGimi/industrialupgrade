@@ -1,13 +1,13 @@
 package com.denfop.render.imp_refiner;
 
+import com.denfop.blockentity.mechanism.BlockEntityImpOilRefiner;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileImpOilRefiner;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
-public class TileEntityImpOilRefinerRender implements BlockEntityRenderer<TileImpOilRefiner> {
+public class TileEntityImpOilRefinerRender implements BlockEntityRenderer<BlockEntityImpOilRefiner> {
 
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
@@ -18,7 +18,7 @@ public class TileEntityImpOilRefinerRender implements BlockEntityRenderer<TileIm
     }
 
     @Override
-    public void render(TileImpOilRefiner tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
+    public void render(BlockEntityImpOilRefiner tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
         if (!tile.getFluidTank(0).getFluid().isEmpty()) {
             poseStack.pushPose();

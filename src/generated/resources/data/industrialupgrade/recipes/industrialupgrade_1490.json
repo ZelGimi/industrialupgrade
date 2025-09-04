@@ -8,7 +8,7 @@
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:itemcell/itemcell",
-      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidbenz\"}}"
+      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidgasoline\"}}"
     }
   },
   "pattern": [

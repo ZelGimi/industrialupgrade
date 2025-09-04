@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "industrialupgrade:baseblockingot/wolfram"
+      "item": "industrialupgrade:baseblockingot/tungsten"
     }
   ],
   "result": {
     "count": 9,
-    "item": "industrialupgrade:itemingots/wolfram_ingot"
+    "item": "industrialupgrade:itemingots/tungsten_ingot"
   }
 }

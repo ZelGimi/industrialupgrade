@@ -1,14 +1,14 @@
 package com.denfop.integration.jei.genmatter;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockSimpleMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntitySingleFluidAdapter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockSimpleMachineEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenMatterCategory extends GuiIU implements IRecipeCategory<GenMatterHandler> {
+public class GenMatterCategory extends ScreenMain implements IRecipeCategory<GenMatterHandler> {
     private final JeiInform jeiInform;
 
     private final IDrawableStatic bg;
@@ -32,7 +32,7 @@ public class GenMatterCategory extends GuiIU implements IRecipeCategory<GenMatte
     public GenMatterCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntitySingleFluidAdapter) BlockBaseMachine3Entity.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
@@ -49,7 +49,7 @@ public class GenMatterCategory extends GuiIU implements IRecipeCategory<GenMatte
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockSimpleMachine.generator_matter).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockSimpleMachineEntity.generator_matter).getDescriptionId());
     }
 
 
@@ -62,7 +62,7 @@ public class GenMatterCategory extends GuiIU implements IRecipeCategory<GenMatte
 
     @Override
     public void draw(GenMatterHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        drawSplitString( stack,
+        drawSplitString(stack,
                 Localization.translate("cost.name") + " " + ModUtils.getString((double) recipe.getEnergy()) + "EF",
                 10,
                 30,
@@ -73,7 +73,7 @@ public class GenMatterCategory extends GuiIU implements IRecipeCategory<GenMatte
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenMatterHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,95,21).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
 
     }
 

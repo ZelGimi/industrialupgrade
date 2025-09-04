@@ -1,16 +1,14 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.pollution.IPollutionMechanism;
-import com.denfop.api.pollution.PollutionSoilLoadEvent;
-import com.denfop.api.pollution.PollutionSoilUnLoadEvent;
+import com.denfop.api.pollution.soil.PollutionSoilLoadEvent;
+import com.denfop.api.pollution.soil.PollutionSoilUnLoadEvent;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Localization;
 import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,24 +19,39 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
 import java.util.List;
 
-public class SoilPollutionComponent extends AbstractComponent   {
+public class SoilPollutionComponent extends AbstractComponent {
 
     private PollutionMechanism pollution;
     private double default_pollution;
     private ChunkPos chunkPos;
     private double percent = 1;
 
-    public SoilPollutionComponent(final TileEntityInventory parent, double pollution) {
+    public SoilPollutionComponent(final BlockEntityInventory parent, double pollution) {
         super(parent);
         this.pollution = new PollutionMechanism(new ChunkPos(parent.pos));
         this.default_pollution = pollution;
     }
+
+    public static void spawnSoilPollution(Level level, BlockPos pos, RandomSource random) {
+        if (!(level instanceof ServerLevel server)) return;
+
+        double x = pos.getX() + 0.5;
+        double y = pos.getY() + 0.1;
+        double z = pos.getZ() + 0.5;
+
+
+        if (random.nextFloat() < 0.3f) {
+            Vector3f dirtyColor = new Vector3f(0.2f, 0.4f, 0.1f);
+            server.sendParticles(new DustParticleOptions(dirtyColor, 0.8f),
+                    x, y, z, 2, 0.02, 0.005, 0.02, 0.001);
+        }
+    }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -48,21 +61,6 @@ public class SoilPollutionComponent extends AbstractComponent   {
                     default_pollution
             ) + Localization.translate("iu" +
                     ".pollution.soil.info1"));
-        }
-    }
-    public static void spawnSoilPollution(Level level, BlockPos pos, RandomSource random) {
-        if (!(level instanceof ServerLevel server)) return;
-
-        double x = pos.getX() + 0.5;
-        double y = pos.getY() + 0.1;
-        double z = pos.getZ() + 0.5;
-
-
-
-        if (random.nextFloat() < 0.3f) {
-            Vector3f dirtyColor = new Vector3f(0.2f, 0.4f, 0.1f);
-            server.sendParticles(new DustParticleOptions(dirtyColor, 0.8f),
-                    x, y, z, 2, 0.02, 0.005, 0.02, 0.001);
         }
     }
 
@@ -141,7 +139,7 @@ public class SoilPollutionComponent extends AbstractComponent   {
 
         super.updateEntityServer();
         if (this.parent.getWorld().getGameTime() % 20 == 0 && this.parent.getActive()) {
-            spawnSoilPollution(parent.getWorld(),parent.getPos(),parent.getWorld().random);
+            spawnSoilPollution(parent.getWorld(), parent.getPos(), parent.getWorld().random);
         }
         if (this.parent.getActive()) {
             this.setPollution(this.default_pollution * percent);
@@ -205,7 +203,6 @@ public class SoilPollutionComponent extends AbstractComponent   {
     public boolean isServer() {
         return true;
     }
-
 
 
     public void setPollution(double pollution) {

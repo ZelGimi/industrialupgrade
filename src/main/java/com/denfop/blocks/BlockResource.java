@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -29,10 +29,11 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
 
     public BlockResource(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
-        super(Properties.of(Material.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+        super(element == Type.tempered_glass ? Properties.of(Material.GLASS).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops() :  Properties.of(Material.STONE).destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         BlockTagsProvider.list.add(this);
 
     }
+
     @Override
     public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
         if (this.getElement().getId() != 10)
@@ -44,6 +45,7 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
             return List.of(new ItemStack(IUItem.peat_balls.getItem(), count));
         }
     }
+
     @Override
     int getMetaFromState(BlockState state) {
         return getElement().getId();
@@ -63,14 +65,15 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     @Override
     public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         if (this.getElement().canAddToTab())
-        p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
+            p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
+
     public float getShadeBrightness(BlockState p_48731_, BlockGetter p_48732_, BlockPos p_48733_) {
         return this.getElement() == Type.tempered_glass ? 1.0F : super.getShadeBrightness(p_48731_, p_48732_, p_48733_);
     }
 
     public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
-        return this.getElement() == Type.tempered_glass ? true : super.propagatesSkylightDown(p_48740_,p_48741_,p_48742_);
+        return this.getElement() == Type.tempered_glass ? true : super.propagatesSkylightDown(p_48740_, p_48741_, p_48742_);
     }
 
     public boolean skipRendering(BlockState p_53972_, BlockState p_53973_, Direction p_53974_) {
@@ -148,6 +151,7 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         public int getLight() {
             return 0;
         }
+
         @Override
         public boolean canAddToTab() {
             return this != copper_block;

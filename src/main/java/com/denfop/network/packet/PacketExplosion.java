@@ -24,7 +24,7 @@ public class PacketExplosion implements IPacket {
         buffer.writeBoolean(flaming);
         buffer.writeBoolean(damage);
 
-        for (Player player : ((ExplosionAccessor)explosion).getLevel().players()) {
+        for (Player player : ((ExplosionAccessor) explosion).getLevel().players()) {
             if (!(player instanceof ServerPlayer)) continue;
 
 

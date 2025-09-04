@@ -164,7 +164,7 @@ public class RecipesFluidCore implements IFluidRecipes {
         }
         recipeRemoves.forEach(recipeRemove -> {
             if (recipeRemove.isRemoveAll())
-                Recipes.recipes.removeAllRecipe(recipeRemove.getNameRecipe(),  new RecipeOutput(null, recipeRemove.getStack()));
+                Recipes.recipes.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
             else
                 Recipes.recipes.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
 

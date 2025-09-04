@@ -1,17 +1,17 @@
 package com.denfop.items.bee;
 
 
-import com.denfop.api.bee.IBee;
+import com.denfop.api.bee.Bee;
 import com.denfop.api.bee.genetics.EnumGenetic;
 import com.denfop.api.bee.genetics.Genome;
-import com.denfop.api.pollution.LevelPollution;
-import com.denfop.api.radiationsystem.EnumLevelRadiation;
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerBeeAnalyzer;
-import com.denfop.gui.GuiBeeAnalyzer;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.pollution.component.LevelPollution;
+import com.denfop.api.pollution.radiation.EnumLevelRadiation;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuBeeAnalyzer;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenBeeAnalyzer;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -27,7 +27,7 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
     public final int inventorySize;
     public final ItemStack itemStack1;
     public Genome genome;
-    public IBee crop;
+    public Bee crop;
     public int weatherGenome = 0;
     public double pestGenome = 1;
     public double birthRateGenome = 1;
@@ -168,28 +168,23 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
         this.clear();
     }
 
-    public ContainerBeeAnalyzer getGuiContainer(Player player) {
-        return new ContainerBeeAnalyzer(player, this);
+    public ContainerMenuBeeAnalyzer getGuiContainer(Player player) {
+        return new ContainerMenuBeeAnalyzer(player, this);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
-        return new GuiBeeAnalyzer((ContainerBeeAnalyzer) isAdmin, itemStack1);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
+        return new ScreenBeeAnalyzer((ContainerMenuBeeAnalyzer) isAdmin, itemStack1);
     }
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
     }
 
     @Override
-    public int getBaseIndex(final InvSlot var1) {
+    public int getBaseIndex(final Inventory var1) {
         return 0;
     }
 
@@ -215,8 +210,6 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
     public boolean hasCustomName() {
         return false;
     }
-
-
 
 
 }

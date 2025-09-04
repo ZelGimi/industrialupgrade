@@ -2,22 +2,25 @@ package com.denfop.events;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.pollution.ChunkLevel;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeItemInform;
+import com.denfop.api.item.upgrade.UpgradeSystem;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.radiationsystem.RadiationSystem;
+import com.denfop.api.pollution.component.ChunkLevel;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeItemInform;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.container.ContainerBags;
-import com.denfop.container.ContainerLeadBox;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.lightning_rod.IController;
+import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
+import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
+import com.denfop.containermenu.ContainerMenuBags;
+import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.ItemBaseCircuit;
 import com.denfop.items.ItemCraftingElements;
@@ -33,21 +36,12 @@ import com.denfop.mixin.invoker.LevelInvoker;
 import com.denfop.network.WorldData;
 import com.denfop.network.packet.PacketColorPickerAllLoggIn;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.lightning_rod.IController;
-import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
-import com.denfop.utils.CapturedMobUtils;
-import com.denfop.utils.Keyboard;
-import com.denfop.utils.ListInformationUtils;
-import com.denfop.utils.ModUtils;
+import com.denfop.utils.*;
 import com.denfop.world.WorldBaseGen;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -62,20 +56,14 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -87,7 +75,6 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -95,7 +82,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-import static com.denfop.tiles.lightning_rod.TileEntityLightningRodController.controllerMap;
+import static com.denfop.blockentity.lightning_rod.BlockEntityLightningRodController.controllerMap;
 
 public class IUEventHandler {
     public static TagKey<Item> electrumTag = new TagKey<>(Registry.ITEM_REGISTRY, ResourceLocation.tryParse("forge:ingots/electrum"));
@@ -110,7 +97,7 @@ public class IUEventHandler {
 
     public static boolean getUpgradeItem(ItemStack stack) {
         Item item = stack.getItem();
-        return item instanceof IUpgradeItem;
+        return item instanceof UpgradeItem;
 
     }
 
@@ -160,8 +147,8 @@ public class IUEventHandler {
         if (stack.getItem() == IUItem.cutter.getItem()) {
 
             BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof TileEntityMultiCable) {
-                TileEntityMultiCable cable = (TileEntityMultiCable) tile;
+            if (tile instanceof BlockEntityMultiCable) {
+                BlockEntityMultiCable cable = (BlockEntityMultiCable) tile;
 
                 ItemStack drop = cable.getPickBlock(player, null);
                 if (!drop.isEmpty()) {
@@ -172,8 +159,8 @@ public class IUEventHandler {
             }
         } else if (!stack.isEmpty()) {
             BlockEntity tile = world.getBlockEntity(pos);
-            if (tile instanceof TileEntityBlock && player.isShiftKeyDown()) {
-                ((TileEntityBlock) tile).onSneakingActivated(player, event.getHand(), event.getFace(),
+            if (tile instanceof BlockEntityBase && player.isShiftKeyDown()) {
+                ((BlockEntityBase) tile).onSneakingActivated(player, event.getHand(), event.getFace(),
                         event.getHitVec().getLocation());
             }
         }
@@ -183,8 +170,8 @@ public class IUEventHandler {
     public void bagPickup(EntityItemPickupEvent event) {
         Player player = event.getEntity();
         try {
-            boolean isContainerBags = !(player.containerMenu instanceof ContainerBags);
-            boolean isContainerBox = !(player.containerMenu instanceof ContainerLeadBox);
+            boolean isContainerBags = !(player.containerMenu instanceof ContainerMenuBags);
+            boolean isContainerBox = !(player.containerMenu instanceof ContainerMenuLeadBox);
 
             if (isContainerBags) {
                 for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
@@ -411,7 +398,7 @@ public class IUEventHandler {
                     if (itemEntity.isRemoved()) {
                         continue;
                     }
-                   if (   itemEntity.isInWater()) {
+                    if (itemEntity.isInWater()) {
                         ItemEntity entityItem = (checkAndTransform(world, itemEntity));
                         if (entityItem != null) {
                             world.addFreshEntity(entityItem);
@@ -445,28 +432,28 @@ public class IUEventHandler {
         if (item == IUItem.charged_redstone.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("charged_redstone.info")));
         }
-        if (item == IUItem.recipe_schedule.getItem()){
+        if (item == IUItem.recipe_schedule.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.receptor.info")));
         }
-        if (item == IUItem.connect_item.getItem()){
+        if (item == IUItem.connect_item.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.configure_cable.info")));
         }
-        if (item == IUItem.crafting_elements.getStack(40)){
+        if (item == IUItem.crafting_elements.getStack(40)) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.dosimeter.info")));
         }
-        if (item == IUItem.crafting_elements.getStack(143)){
+        if (item == IUItem.crafting_elements.getStack(143)) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.schedule_reactor.info")));
         }
-        if (item == IUItem.veinsencor.getStack(0)){
+        if (item == IUItem.veinsencor.getStack(0)) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.scanner_info")));
         }
-        if (item == IUItem.efReader.getItem()){
+        if (item == IUItem.efReader.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.ef_meter.info")));
         }
-        if (item == IUItem.facadeItem.getItem()){
+        if (item == IUItem.facadeItem.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.facade_item.info")));
         }
-        if (item == IUItem.reactorData.getItem()){
+        if (item == IUItem.reactorData.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.reactor_data.info")));
         }
         if (stack.getItem() instanceof BlockItem) {
@@ -487,8 +474,7 @@ public class IUEventHandler {
         }
 
 
-
-        for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
+        for (Map.Entry<ItemStack, Double> entry : BlockEntityPalletGenerator.integerMap.entrySet()) {
             if (entry.getKey().is(stack.getItem())) {
                 event.getToolTip().add(Component.literal(Localization.translate("iu.pellets.info") + entry.getValue()));
                 event.getToolTip().add(Component.literal(Localization.translate("iu.pellets.info1")));
@@ -632,8 +618,8 @@ public class IUEventHandler {
                 event.getToolTip().add(Component.literal(Localization.translate("free_slot") + col + Localization.translate("free_slot1")));
                 if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     event.getToolTip().add(Component.literal(Localization.translate("iu.can_upgrade_item")));
-                    IUpgradeItem iUpgradeItem = (IUpgradeItem) stack.getItem();
-                    final List<String> list = UpgradeSystem.system.getAvailableUpgrade(iUpgradeItem, stack);
+                    UpgradeItem upgradeItem = (UpgradeItem) stack.getItem();
+                    final List<String> list = UpgradeSystem.system.getAvailableUpgrade(upgradeItem, stack);
                     list.forEach(s -> event.getToolTip().add(Component.literal(s)));
                 }
             } else {
@@ -667,9 +653,9 @@ public class IUEventHandler {
     @OnlyIn(Dist.CLIENT)
     public void addInfo(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        if ( IUItem.machineRecipe == null)
+        if (IUItem.machineRecipe == null)
             IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
-        if ( IUItem.fluidMatterRecipe == null)
+        if (IUItem.fluidMatterRecipe == null)
             IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
         try {
             if (tupleRecipe == null) {
@@ -823,7 +809,8 @@ public class IUEventHandler {
                     }
                 }
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     private ItemEntity checkAndTransform(Level world, ItemEntity entityItem) {

@@ -9,10 +9,11 @@ public class ItemBlockTropicalRubWood extends ItemBlockCore<BlockTropicalRubWood
     public ItemBlockTropicalRubWood(BlockCore p_40565_, BlockTropicalRubWood.RubberWoodState element) {
         super(p_40565_, element, new Properties().tab(IUCore.IUTab));
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.tropical_rubber_wood";
+            this.nameItem = "iu.tropical_rubber_wood";
         }
 
         return this.nameItem;

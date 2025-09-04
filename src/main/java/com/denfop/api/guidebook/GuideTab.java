@@ -1,6 +1,6 @@
 package com.denfop.api.guidebook;
 
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import net.minecraft.world.item.ItemStack;
 
 public class GuideTab {
@@ -10,11 +10,11 @@ public class GuideTab {
     public final String description;
     public final String unLocalized;
 
-    public GuideTab(String name, ItemStack icon, String description){
-        this.name = Localization.translate("iu.guidetab."+name);
+    public GuideTab(String name, ItemStack icon, String description) {
+        this.name = Localization.translate("iu.guidetab." + name);
         this.icon = icon;
-        this.unLocalized = "iu.guidetab."+name;
-        this.description = Localization.translate("iu.guide."+description);
+        this.unLocalized = "iu.guidetab." + name;
+        this.description = Localization.translate("iu.guide." + description);
         GuideBookCore.instance.addTab(this);
     }
 

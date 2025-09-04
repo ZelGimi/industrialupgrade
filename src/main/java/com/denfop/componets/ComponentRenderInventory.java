@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.invslot.InvSlot;
+import com.denfop.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,20 +8,20 @@ import java.util.List;
 public class ComponentRenderInventory {
 
     private final EnumTypeComponentSlot typeComponentSlot;
-    private final List<InvSlot> slotList;
-    private final List<InvSlot> blackSlotList;
+    private final List<Inventory> slotList;
+    private final List<Inventory> blackSlotList;
 
     public ComponentRenderInventory(
             EnumTypeComponentSlot typeComponentSlot,
-            List<InvSlot> slotList,
-            List<InvSlot> blackSlotList
+            List<Inventory> slotList,
+            List<Inventory> blackSlotList
     ) {
         this.typeComponentSlot = typeComponentSlot;
         this.slotList = slotList;
         this.blackSlotList = blackSlotList;
     }
 
-    public ComponentRenderInventory(EnumTypeComponentSlot typeComponentSlot, List<InvSlot> slotList) {
+    public ComponentRenderInventory(EnumTypeComponentSlot typeComponentSlot, List<Inventory> slotList) {
         this.typeComponentSlot = typeComponentSlot;
         this.slotList = slotList;
         this.blackSlotList = new ArrayList<>();
@@ -37,18 +37,18 @@ public class ComponentRenderInventory {
         return typeComponentSlot;
     }
 
-    public List<InvSlot> getSlotList() {
+    public List<Inventory> getSlotList() {
         return slotList;
     }
 
-    public List<InvSlot> getBlackSlotList() {
+    public List<Inventory> getBlackSlotList() {
         return blackSlotList;
     }
 
 
-    public boolean contains(InvSlot invSlot) {
-        for (InvSlot slot : getSlotList()){
-            if (slot == invSlot)
+    public boolean contains(Inventory inventory) {
+        for (Inventory slot : getSlotList()) {
+            if (slot == inventory)
                 return true;
         }
         return false;

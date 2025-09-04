@@ -1,9 +1,9 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IEnergyItem {
+public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements EnergyItem {
 
     public ItemArmorNightvisionGoggles() {
         super("nightvision", EquipmentSlot.HEAD);
@@ -40,6 +40,7 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IEn
     public int getBarColor(ItemStack stack) {
         return ModUtils.convertRGBcolorToInt(33, 91, 199);
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -52,7 +53,7 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IEn
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="iu."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

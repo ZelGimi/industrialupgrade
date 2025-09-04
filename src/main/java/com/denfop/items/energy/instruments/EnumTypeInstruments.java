@@ -1,6 +1,6 @@
 package com.denfop.items.energy.instruments;
 
-import com.denfop.api.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.EnumUpgrades;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;

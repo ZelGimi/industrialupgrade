@@ -1,17 +1,20 @@
 package com.denfop.integration.jei.refrigeratorfluids;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.TankWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.base.BlockEntityRefrigeratorFluids;
+import com.denfop.blockentity.mechanism.BlockEntityImpOilRefiner;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.container.ContainerImpOilRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuImpOilRefiner;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.base.TileEntityRefrigeratorFluids;
-import com.denfop.tiles.mechanism.TileImpOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -27,18 +30,19 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory<RefrigeratorFluidsHandler> {
+public class RefrigeratorFluidsCategory extends ScreenMain implements IRecipeCategory<RefrigeratorFluidsHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerImpOilRefiner container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuImpOilRefiner container1;
+    private final ScreenWidget progress_bar;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public RefrigeratorFluidsCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityImpOilRefiner) BlockBaseMachine3Entity.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -46,17 +50,17 @@ public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.container1 = (ContainerImpOilRefiner) this.getContainer();
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
+        this.container1 = (ContainerMenuImpOilRefiner) this.getContainer();
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(new ComponentProgress(this.container1.base, 1, (short) 100))
         );
         this.componentList.add(progress_bar);
-        this.addElement(TankGauge.createNormal(this, 40, 4,
-                ((TileEntityRefrigeratorFluids) BlockBaseMachine3.refrigerator_fluids.getDummyTe()).fluidTank1
+        this.addWidget(TankWidget.createNormal(this, 40, 4,
+                ((BlockEntityRefrigeratorFluids) BlockBaseMachine3Entity.refrigerator_fluids.getDummyTe()).fluidTank1
         ));
 
-        this.addElement(TankGauge.createNormal(this, 100, 4,
-                ((TileEntityRefrigeratorFluids) BlockBaseMachine3.refrigerator_fluids.getDummyTe()).fluidTank2
+        this.addWidget(TankWidget.createNormal(this, 100, 4,
+                ((BlockEntityRefrigeratorFluids) BlockBaseMachine3Entity.refrigerator_fluids.getDummyTe()).fluidTank2
         ));
 
     }
@@ -69,7 +73,7 @@ public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.refrigerator_fluids).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.refrigerator_fluids).getDescriptionId());
     }
 
 
@@ -90,19 +94,19 @@ public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory
         if (xScale >= 1) {
             progress = 0;
         }
-      bindTexture(getTexture());
+        bindTexture(getTexture());
 
-        progress_bar.renderBar( stack,0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
 
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground( stack,this.guiLeft, this.guiTop);
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RefrigeratorFluidsHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getInput().getFluid(),recipes.getInput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput().getFluid(),recipes.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipes.getInput().getFluid(), recipes.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipes.getOutput().getFluid(), recipes.getOutput().getAmount());
 
     }
 

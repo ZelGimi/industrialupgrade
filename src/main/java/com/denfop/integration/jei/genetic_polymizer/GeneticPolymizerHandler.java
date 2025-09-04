@@ -28,9 +28,6 @@ public class GeneticPolymizerHandler {
         this.input5 = input5;
         this.output = output;
     }
-    public List<ItemStack> getInputs() {
-        return Arrays.asList(input, input1, input3, input4, input5);
-    }
 
     public static List<GeneticPolymizerHandler> getRecipes() {
         if (recipes.isEmpty()) {
@@ -80,6 +77,9 @@ public class GeneticPolymizerHandler {
         }
     }
 
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input3, input4, input5);
+    }
 
     public ItemStack getInput() {
         return input;

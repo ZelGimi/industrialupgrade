@@ -1,8 +1,6 @@
 package com.denfop.integration.jei.vein;
 
 
-
-
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;

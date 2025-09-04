@@ -1,10 +1,10 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.Data;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -37,6 +37,7 @@ public class ItemTomeResearchSpace extends Item {
         tooltip.add(Component.literal(Localization.translate("iu.tome_research1")));
         tooltip.add(Component.literal(Localization.translate("iu.tome_research2")));
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -54,6 +55,7 @@ public class ItemTomeResearchSpace extends Item {
 
         return this.nameItem;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(
             @Nonnull final Level world,

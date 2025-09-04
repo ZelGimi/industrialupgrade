@@ -1,6 +1,6 @@
 package com.denfop.render.primal_silicon_crystal_handler;
 
-import com.denfop.tiles.mechanism.TileEntityPrimalSiliconCrystalHandler;
+import com.denfop.blockentity.mechanism.BlockEntityPrimalSiliconCrystalHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class PrimalSiliconCrystalHandlerRender implements BlockEntityRenderer<TileEntityPrimalSiliconCrystalHandler> {
+public class PrimalSiliconCrystalHandlerRender implements BlockEntityRenderer<BlockEntityPrimalSiliconCrystalHandler> {
     private final BlockEntityRendererProvider.Context contex;
 
     public PrimalSiliconCrystalHandlerRender(BlockEntityRendererProvider.Context p_173636_) {
@@ -19,7 +19,7 @@ public class PrimalSiliconCrystalHandlerRender implements BlockEntityRenderer<Ti
     }
 
     @Override
-    public void render(TileEntityPrimalSiliconCrystalHandler tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalSiliconCrystalHandler tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult
                 && tile.getBlockPos().equals(hitResult.getBlockPos())) {

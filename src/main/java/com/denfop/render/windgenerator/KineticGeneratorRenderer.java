@@ -1,8 +1,8 @@
 package com.denfop.render.windgenerator;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.api.windsystem.IWindRotor;
-import com.denfop.tiles.mechanism.wind.TileWindGenerator;
+import com.denfop.api.windsystem.WindRotor;
+import com.denfop.blockentity.mechanism.wind.BlockEntityWindGenerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KineticGeneratorRenderer implements BlockEntityRenderer<TileWindGenerator> {
+public class KineticGeneratorRenderer implements BlockEntityRenderer<BlockEntityWindGenerator> {
 
     private static final Map<Integer, RotorModel> rotorModels = new HashMap<>();
 
@@ -30,7 +30,7 @@ public class KineticGeneratorRenderer implements BlockEntityRenderer<TileWindGen
 
     @Override
     public void render(
-            TileWindGenerator tile,
+            BlockEntityWindGenerator tile,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -69,12 +69,12 @@ public class KineticGeneratorRenderer implements BlockEntityRenderer<TileWindGen
 
         if (windGen.getSpace()) {
             angle = windGen.getAngle();
-            IWindRotor rotor = tile.getRotor();
-            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0){
+            WindRotor rotor = tile.getRotor();
+            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0) {
                 angle = 0;
             }
             if (!Minecraft.getInstance().isPaused())
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(angle));
+                poseStack.mulPose(Vector3f.XP.rotationDegrees(angle));
         }
 
         poseStack.translate(-0.2F, 0.0F, 0.0F);
@@ -86,7 +86,7 @@ public class KineticGeneratorRenderer implements BlockEntityRenderer<TileWindGen
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileWindGenerator tile) {
+    public boolean shouldRenderOffScreen(BlockEntityWindGenerator tile) {
         return true;
     }
 }

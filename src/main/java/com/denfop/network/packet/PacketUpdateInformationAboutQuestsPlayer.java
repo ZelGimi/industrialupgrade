@@ -5,16 +5,13 @@ import com.denfop.api.guidebook.GuideBookCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-public class PacketUpdateInformationAboutQuestsPlayer implements IPacket{
-    public PacketUpdateInformationAboutQuestsPlayer(){
+public class PacketUpdateInformationAboutQuestsPlayer implements IPacket {
+    public PacketUpdateInformationAboutQuestsPlayer() {
 
     }
+
     public PacketUpdateInformationAboutQuestsPlayer(Map<String, List<String>> map, Player player) {
         final CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
@@ -30,6 +27,7 @@ public class PacketUpdateInformationAboutQuestsPlayer implements IPacket{
         }
         IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
     }
+
     @Override
     public byte getId() {
         return 70;
@@ -49,7 +47,7 @@ public class PacketUpdateInformationAboutQuestsPlayer implements IPacket{
             }
             map.put(key, list);
         }
-        GuideBookCore.instance.setData(uuid,map);
+        GuideBookCore.instance.setData(uuid, map);
     }
 
     @Override

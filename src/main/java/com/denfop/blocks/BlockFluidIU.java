@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
 import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.potion.IUPotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,7 +36,7 @@ public class BlockFluidIU extends LiquidBlock implements IFluidBlock {
 
     @Override
     public int getLightBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-       return this.getFluid().getFluidType().getLightLevel();
+        return this.getFluid().getFluidType().getLightLevel();
     }
 
     @Override
@@ -44,6 +44,7 @@ public class BlockFluidIU extends LiquidBlock implements IFluidBlock {
         if (p_49812_ == IUCore.IUTab)
             p_49813_.add(new ItemStack(this));
     }
+
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         super.entityInside(state, level, pos, entity);
@@ -53,13 +54,13 @@ public class BlockFluidIU extends LiquidBlock implements IFluidBlock {
         Fluid fluid = this.getFluid();
 
 
-        if (fluid == FluidName.fluidcoolant.getInstance().get() || fluid == FluidName.fluidazot.getInstance().get()) {
+        if (fluid == FluidName.fluidcoolant.getInstance().get() || fluid == FluidName.fluidnitrogen.getInstance().get()) {
             ((LivingEntity) entity).addEffect(new MobEffectInstance(IUPotion.frostbite, 200, 0));
         }
 
 
         if (!fluid.getFluidType().canDrownIn((LivingEntity) entity) && entity instanceof Player player) {
-            if (!IHazmatLike.hasCompleteHazmat(player)) {
+            if (!HazmatLike.hasCompleteHazmat(player)) {
                 player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
             }
         }

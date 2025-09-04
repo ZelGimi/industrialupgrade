@@ -2,10 +2,10 @@ package com.denfop.integration.jei.antiupgradeblock;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -24,11 +24,12 @@ public class AntiUpgradeBlockCategory extends Gui implements IRecipeCategory<Ant
     private final IDrawableStatic bg;
 
     JeiInform jeiInform;
+
     public AntiUpgradeBlockCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(Minecraft.getInstance(),Minecraft.getInstance().getItemRenderer());
-        this.jeiInform=jeiInform;
+        super(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer());
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiantiupgrade.png"), 3, 3, 140,
                 80
@@ -61,7 +62,7 @@ public class AntiUpgradeBlockCategory extends Gui implements IRecipeCategory<Ant
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AntiUpgradeBlockHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,102,31).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 102, 31).addItemStack(recipes.getInput());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 89, 59).addItemStack(recipes.getOutput());
 
     }

@@ -37,6 +37,20 @@ public class ItemFoodIU extends Item {
         this.name = name;
         this.path = "";
     }
+
+    public ItemFoodIU(String name, String path, int amount, float saturation) {
+        super(new Item.Properties()
+                .tab(IUCore.CropsTab)
+                .food(new FoodProperties.Builder()
+                        .nutrition(amount)
+                        .saturationMod(saturation)
+                        .build())
+        );
+
+        this.name = name;
+        this.path = path;
+    }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
@@ -49,22 +63,10 @@ public class ItemFoodIU extends Item {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[1]+".name";
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[1] + ".name";
         }
 
         return this.nameItem;
-    }
-    public ItemFoodIU(String name, String path, int amount, float saturation) {
-        super(new Item.Properties()
-                .tab(IUCore.CropsTab)
-                .food(new FoodProperties.Builder()
-                        .nutrition(amount)
-                        .saturationMod(saturation)
-                        .build())
-        );
-
-        this.name = name;
-        this.path = path;
     }
 
     @Override

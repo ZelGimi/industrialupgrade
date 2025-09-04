@@ -33,6 +33,7 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
             return new String[]{};
         return new String[]{"level"};
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         if (!player.getItemInHand(hand).is(IUItem.scrapBox.getItem())) {
@@ -53,6 +54,7 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
         }
 
     }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel world, LivingEntity entity, int p174679, String property) {

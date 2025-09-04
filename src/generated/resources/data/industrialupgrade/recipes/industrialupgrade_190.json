@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:nugget/platium"
+      "item": "industrialupgrade:nugget/platinum"
     }
   },
   "pattern": [
@@ -11,6 +11,6 @@
     "AAA"
   ],
   "result": {
-    "item": "industrialupgrade:itemingots/platium_ingot"
+    "item": "industrialupgrade:itemingots/platinum_ingot"
   }
 }

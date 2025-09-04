@@ -15,7 +15,7 @@ public class ItemBlockLeaves extends BlockItem {
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.leaves.rubber";
+            this.nameItem = "iu.leaves.rubber";
         }
 
         return this.nameItem;

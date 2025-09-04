@@ -2,22 +2,25 @@ package com.denfop.integration.jei.plasticcreator;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.TankWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityEnchanterBooks;
+import com.denfop.blockentity.mechanism.BlockEntityPlasticCreator;
+import com.denfop.blocks.mechanism.BlockBaseMachine2Entity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerEnchanterBooks;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuEnchanterBooks;
+import com.denfop.containermenu.slot.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
-import com.denfop.tiles.mechanism.TilePlasticCreator;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -35,19 +38,19 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlasticCreatorCategory extends GuiIU implements IRecipeCategory<PlasticCreatorHandler> {
+public class PlasticCreatorCategory extends ScreenMain implements IRecipeCategory<PlasticCreatorHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerEnchanterBooks container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuEnchanterBooks container1;
+    private final ScreenWidget progress_bar;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform jeiInform;
 
     public PlasticCreatorCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityEnchanterBooks) BlockBaseMachine3Entity.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -55,17 +58,17 @@ public class PlasticCreatorCategory extends GuiIU implements IRecipeCategory<Pla
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
-        this.container1 = (ContainerEnchanterBooks) this.getContainer();
+        this.container1 = (ContainerMenuEnchanterBooks) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
-        this.addElement(TankGauge.createNormal(this, 0, 4,
-                ((TilePlasticCreator) BlockBaseMachine2.plastic_creator.getDummyTe()).fluidTank
+        this.addWidget(TankWidget.createNormal(this, 0, 4,
+                ((BlockEntityPlasticCreator) BlockBaseMachine2Entity.plastic_creator.getDummyTe()).fluidTank
         ));
 
     }
@@ -98,8 +101,8 @@ public class PlasticCreatorCategory extends GuiIU implements IRecipeCategory<Pla
         this.slots.drawBackground(stack, 0, 0);
 
         progress_bar.renderBar(stack, 0, 0, xScale);
-      bindTexture(getTexture());
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        bindTexture(getTexture());
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
             element.drawBackground(stack, this.guiLeft, this.guiTop - 5);
         }
     }
@@ -112,15 +115,15 @@ public class PlasticCreatorCategory extends GuiIU implements IRecipeCategory<Pla
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PlasticCreatorHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,  9-5, 8-5).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getInput2().getFluid(),recipe.getInput2().getAmount());
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
-        final List<ItemStack> inputs = Arrays.asList(recipe.getInput(),recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 9 - 5, 8 - 5).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInput2().getFluid(), recipe.getInput2().getAmount());
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
+        final List<ItemStack> inputs = Arrays.asList(recipe.getInput(), recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());

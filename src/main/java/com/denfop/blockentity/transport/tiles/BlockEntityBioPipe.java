@@ -1,0 +1,298 @@
+package com.denfop.blockentity.transport.tiles;
+
+
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.energy.networking.ConductorInfo;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.api.otherenergies.common.InfoCable;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.api.otherenergies.common.event.EnergyEvent;
+import com.denfop.api.otherenergies.common.event.EnumTypeEvent;
+import com.denfop.api.otherenergies.common.interfaces.Acceptor;
+import com.denfop.api.otherenergies.common.interfaces.Conductor;
+import com.denfop.api.otherenergies.common.interfaces.Emitter;
+import com.denfop.api.otherenergies.common.interfaces.Tile;
+import com.denfop.blockentity.transport.types.BioType;
+import com.denfop.blockentity.transport.types.ICableItem;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
+
+import java.io.IOException;
+import java.util.*;
+
+
+public class BlockEntityBioPipe extends BlockEntityMultiCable implements Conductor {
+
+
+    public boolean addedToEnergyNet;
+    protected BioType cableType;
+    Map<Direction, Tile> energyConductorMap = new HashMap<>();
+    List<InfoTile<Tile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    boolean updateConnect = false;
+    Map<EnergyType, ConductorInfo> conductorInfoMap = new HashMap<>();
+    private boolean needUpdate;
+    private long id;
+    private InfoCable cable;
+
+    public BlockEntityBioPipe(BioType cableType, MultiBlockEntity tileBlock, BlockPos pos, BlockState state) {
+        super(cableType, tileBlock, pos, state);
+        this.cableType = cableType;
+    }
+
+    public ICableItem getCableItem() {
+        return cableType;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
+    }
+
+    public void readFromNBT(CompoundTag nbt) {
+        super.readFromNBT(nbt);
+        this.cableType = BioType.values[nbt.getByte("cableType") & 255];
+    }
+
+    @Override
+    public ConductorInfo getInfo(EnergyType energyType) {
+        if (conductorInfoMap.isEmpty()) {
+            if (getEnergies() == null || getEnergies().isEmpty()) {
+                conductorInfoMap.put(getEnergyType(), new ConductorInfo(pos, this, getEnergyType()));
+            } else {
+                for (EnergyType e : getEnergies())
+                    conductorInfoMap.put(e, new ConductorInfo(pos, this, e));
+            }
+        }
+        return conductorInfoMap.get(energyType);
+    }
+
+    public CompoundTag writeToNBT(CompoundTag nbt) {
+        super.writeToNBT(nbt);
+        nbt.putByte("cableType", (byte) this.cableType.ordinal());
+        return nbt;
+    }
+
+    @Override
+    public void RemoveTile(EnergyType type, Tile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<Tile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<Tile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+            updateConnect = true;
+        }
+    }
+
+    @Override
+    public void AddTile(EnergyType type, Tile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
+            if (!this.energyConductorMap.containsKey(facing1)) {
+                this.energyConductorMap.put(facing1, tile);
+                validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+            }
+            updateConnect = true;
+        }
+    }
+
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    @Override
+    public List<InfoTile<Tile>> getValidReceivers(EnergyType type) {
+        return validReceivers;
+    }
+
+    public Map<Direction, Tile> getTiles(EnergyType type) {
+        return energyConductorMap;
+    }
+
+    @Override
+    public void updateTileServer(final Player var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.BIOFUEL, this));
+        this.needUpdate = true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            this.energyConductorMap.clear();
+            validReceivers.clear();
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.BIOFUEL, this));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+        if (updateConnect) {
+            updateConnect = false;
+            this.updateConnectivity();
+        }
+    }
+
+    @Override
+    public InfoCable getCable(EnergyType type) {
+        return cable;
+    }
+
+    @Override
+    public void setCable(EnergyType type, final InfoCable cable) {
+        this.cable = cable;
+    }
+
+    public void onLoaded() {
+        super.onLoaded();
+        if (!this.getWorld().isClientSide && !this.addedToEnergyNet) {
+            this.energyConductorMap.clear();
+            this.validReceivers.clear();
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.BIOFUEL, this));
+            this.addedToEnergyNet = true;
+            this.updateConnectivity();
+
+        }
+
+    }
+
+    public void onUnloaded() {
+        if (!this.getWorld().isClientSide && this.addedToEnergyNet) {
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.BIOFUEL, this));
+            this.addedToEnergyNet = false;
+        }
+
+
+        super.onUnloaded();
+    }
+
+
+    public void onNeighborChange(BlockState neighbor, BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        if (!this.getWorld().isClientSide) {
+            this.updateConnectivity();
+        }
+
+    }
+
+
+    public void updateConnectivity() {
+        byte newConnectivity = 0;
+        Direction[] var4 = Direction.values();
+        final Map<Direction, Tile> map = this.energyConductorMap;
+        for (Direction dir : var4) {
+            newConnectivity = (byte) (newConnectivity << 1);
+            final Tile tile = map.get(dir);
+            if (dir != null && !getBlackList().contains(dir)) {
+                if (tile instanceof Acceptor && ((Acceptor) tile).acceptsFrom(
+                        this,
+                        dir.getOpposite()
+                ) || tile instanceof Emitter && ((Emitter) tile).emitsTo(
+                        this,
+                        dir.getOpposite()
+                )) {
+                    newConnectivity = (byte) (newConnectivity + 1);
+                }
+            }
+
+
+        }
+
+        setConnectivity(newConnectivity);
+        this.cableItem = cableType;
+    }
+
+
+    public boolean wrenchCanRemove(Player player) {
+        return false;
+    }
+
+    public boolean acceptsFrom(Emitter emitter, Direction direction) {
+        return (!getBlackList().contains(direction));
+    }
+
+    public boolean emitsTo(Acceptor receiver, Direction direction) {
+        return (!getBlackList().contains(direction));
+    }
+
+    public boolean canInteractWith() {
+
+        return true;
+    }
+
+    public double getConductorBreakdownEnergy(EnergyType type) {
+        return this.cableType.capacity + 1;
+    }
+
+
+    @Override
+    public EnergyType getEnergyType() {
+        return EnergyType.BIOFUEL;
+    }
+
+    @Override
+    public boolean hasEnergies() {
+        return false;
+    }
+
+    @Override
+    public List<EnergyType> getEnergies() {
+        return null;
+    }
+
+
+    public CustomPacketBuffer writePacket() {
+        final CustomPacketBuffer packet = super.writePacket();
+        try {
+            EncoderHandler.encode(packet, cableType);
+            EncoderHandler.encode(packet, connectivity);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
+    }
+
+    public void readPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        try {
+            cableType = BioType.values[(int) DecoderHandler.decode(customPacketBuffer)];
+            connectivity = (byte) DecoderHandler.decode(customPacketBuffer);
+            this.rerender();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public BlockEntity getTile() {
+        return this;
+    }
+
+
+}
