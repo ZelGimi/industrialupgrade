@@ -1,15 +1,13 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.pollution.IPollutionMechanism;
-import com.denfop.api.pollution.PollutionAirLoadEvent;
-import com.denfop.api.pollution.PollutionAirUnLoadEvent;
+import com.denfop.api.pollution.air.PollutionAirLoadEvent;
+import com.denfop.api.pollution.air.PollutionAirUnLoadEvent;
 import com.denfop.api.windsystem.WindSystem;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Localization;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -21,15 +19,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
-import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
 
-public class AirPollutionComponent extends AbstractComponent  {
+public class AirPollutionComponent extends AbstractComponent {
 
 
     private final PollutionMechanism pollution;
@@ -37,11 +33,12 @@ public class AirPollutionComponent extends AbstractComponent  {
 
     private double percent = 1;
 
-    public AirPollutionComponent(final TileEntityInventory parent, double pollution) {
+    public AirPollutionComponent(final BlockEntityInventory parent, double pollution) {
         super(parent);
         this.pollution = new PollutionMechanism(new ChunkPos(parent.pos));
         this.default_pollution = pollution;
     }
+
     public static void spawnAirPollutionDirected(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
@@ -78,7 +75,6 @@ public class AirPollutionComponent extends AbstractComponent  {
             }
         }
     }
-
 
 
     @Override
@@ -157,7 +153,7 @@ public class AirPollutionComponent extends AbstractComponent  {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16,player.registryAccess());
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.pollution.pollution);
         buffer.writeDouble(this.default_pollution);
         buffer.writeDouble(this.percent);
@@ -191,7 +187,7 @@ public class AirPollutionComponent extends AbstractComponent  {
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.parent.getWorld().getGameTime() % 20 == 0 && this.parent.getActive()) {
-            spawnAirPollutionDirected(parent.getWorld(),parent.getPos(),parent.getWorld().random);
+            spawnAirPollutionDirected(parent.getWorld(), parent.getPos(), parent.getWorld().random);
         }
         if (this.parent.getActive()) {
             this.setPollution(this.default_pollution * this.percent);
@@ -225,8 +221,6 @@ public class AirPollutionComponent extends AbstractComponent  {
 
         }
     }
-
-
 
 
     @Override

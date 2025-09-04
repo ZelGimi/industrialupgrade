@@ -44,7 +44,7 @@ public class GeoThermalHandler {
     public static void initRecipes() {
         addRecipe(
                 new FluidStack(FluidName.fluidhot_coolant.getInstance().get(), 3),
-                new FluidStack(FluidName.fluidneft.getInstance().get(), 1)
+                new FluidStack(FluidName.fluidpetroleum.getInstance().get(), 1)
         );
     }
 

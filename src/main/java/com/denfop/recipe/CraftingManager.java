@@ -1,11 +1,11 @@
 package com.denfop.recipe;
 
-import com.denfop.*;
 import com.denfop.api.Recipes;
 import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
+import com.denfop.dataregistry.*;
 import com.denfop.recipes.ItemStackHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

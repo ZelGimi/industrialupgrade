@@ -2,13 +2,13 @@ package com.denfop.integration.jei.sunnarium;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityStampMechanism;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityStampMechanism;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SunnariumCategory extends GuiIU implements IRecipeCategory<SunnariumHandler> {
+public class SunnariumCategory extends ScreenMain implements IRecipeCategory<SunnariumHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -33,7 +33,7 @@ public class SunnariumCategory extends GuiIU implements IRecipeCategory<Sunnariu
     public SunnariumCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityStampMechanism) BlockBaseMachine3Entity.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker".toLowerCase() +
                         ".png"), 3, 3, 140,

@@ -2,14 +2,14 @@ package com.denfop.integration.jei.vein;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
+import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> {
+public class VeinCategory extends ScreenMain implements IRecipeCategory<VeinHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -37,7 +37,7 @@ public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> 
     public VeinCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityUpgradeMachineFactory) BlockBaseMachine3Entity.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
                 150
         );
@@ -91,7 +91,7 @@ public class VeinCategory extends GuiIU implements IRecipeCategory<VeinHandler> 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, VeinHandler recipe, IFocusGroup focuses) {
         List<FluidStack> fluids = Arrays.asList(new FluidStack(
-                        FluidName.fluidneft.getInstance().get(),
+                        FluidName.fluidpetroleum.getInstance().get(),
                         1000
                 ), new FluidStack(FluidName.fluidgas.getInstance().get(), 1000)
                 , new FluidStack(FluidName.fluidsour_heavy_oil.getInstance().get(), 1000)

@@ -2,14 +2,14 @@ package com.denfop.items.bee;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
+import com.denfop.api.bee.Bee;
 import com.denfop.api.bee.BeeNetwork;
-import com.denfop.api.bee.IBee;
 import com.denfop.api.bee.genetics.Genome;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.IProperties;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
@@ -32,8 +32,8 @@ public class ItemJarBees<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
         IUCore.proxy.addProperties(this);
     }
 
-    public static IBee getBee(final ItemStack stack) {
-        IBee bee = BeeNetwork.instance.getBee(stack.getOrDefault(DataComponentsInit.BEE, 0));
+    public static Bee getBee(final ItemStack stack) {
+        Bee bee = BeeNetwork.instance.getBee(stack.getOrDefault(DataComponentsInit.BEE, 0));
         if (bee == null) {
             return null;
         }
@@ -72,7 +72,7 @@ public class ItemJarBees<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
             TooltipFlag flag
     ) {
         tooltip.add(Component.translatable("iu.use_bee_analyzer").append(Component.translatable(IUItem.bee_analyzer.getItem().getDescriptionId())));
-        IBee bee = getBee(stack);
+        Bee bee = getBee(stack);
         tooltip.add(Component.literal(Localization.translate("iu.bee_analyzer.main_crop") + " " + Localization.translate("crop." + bee
                 .getCropFlower()
                 .getName())));
@@ -80,8 +80,8 @@ public class ItemJarBees<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
 
 
         if (bee != null) {
-            List<IBee> unCompatibleBees = bee.getUnCompatibleBees();
-            for (IBee bee1 : unCompatibleBees) {
+            List<Bee> unCompatibleBees = bee.getUnCompatibleBees();
+            for (Bee bee1 : unCompatibleBees) {
                 tooltip.add(Component.translatable("bee_" + bee1.getName()));
             }
         }
@@ -100,7 +100,7 @@ public class ItemJarBees<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
     @Override
     public Component getName(ItemStack stack) {
         if (getBee(stack) != null) {
-            IBee crop = BeeNetwork.instance.getBee(stack.getOrDefault(DataComponentsInit.BEE, 0));
+            Bee crop = BeeNetwork.instance.getBee(stack.getOrDefault(DataComponentsInit.BEE, 0));
             return Component.translatable(super.getDescriptionId(stack))
                     .append(": ")
                     .append(Component.translatable("bee_" + crop.getName()));
@@ -125,7 +125,7 @@ public class ItemJarBees<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
 
     public ItemStack getBeeStack(final int meta) {
         ItemStack stack = getStackFromId(meta);
-        IBee bee = getBee(stack);
+        Bee bee = getBee(stack);
         stack.set(DataComponentsInit.SWARM, WorldBaseGen.random.nextInt(bee.getMaxSwarm() / 2) + 15);
         return stack;
     }

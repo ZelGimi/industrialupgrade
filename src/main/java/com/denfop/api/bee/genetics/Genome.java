@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
-public class Genome implements IGenome {
+public class Genome implements GenomeBase {
 
     Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>();
     private ItemStack stack;

@@ -1,13 +1,13 @@
 package com.denfop.events;
 
 import com.denfop.Constants;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.api.radiationsystem.EnumLevelRadiation;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.audio.EnumSound;
-import com.denfop.gui.GuiCore;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.api.pollution.radiation.EnumLevelRadiation;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.items.ItemCraftingElements;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.sound.EnumSound;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,14 +29,14 @@ public class ClientTickHandler {
             String radiationText = String.format("%.2f Sv", radiationLevel);
             pose.drawString(Minecraft.getInstance().font, radiationText, 40, 90, 0xFFFFFF);
 
-            GuiCore.bindTexture(0, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_dosimeter.png"));
+            ScreenIndustrialUpgrade.bindTexture(0, ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/gui_dosimeter.png"));
             guiGraphics.scale(0.4f, 0.4f, 0.4f);
-            pose.blit(GuiCore.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
+            pose.blit(ScreenIndustrialUpgrade.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
 
 
             ResourceLocation radiationTexture = getRadiationTexture(player);
-            GuiCore.bindTexture(radiationTexture);
-            pose.blit(GuiCore.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
+            ScreenIndustrialUpgrade.bindTexture(radiationTexture);
+            pose.blit(ScreenIndustrialUpgrade.currentTexture, 0, 10, 0, 0, 256, 256, 256, 256);
             guiGraphics.popPose();
         }
     }
@@ -44,7 +44,7 @@ public class ClientTickHandler {
     private static boolean shouldDisplayRadiationInfo(LocalPlayer player) {
         ItemStack stack = player.getMainHandItem();
         boolean isHoldingGeigerCounter = stack.getItem() instanceof ItemCraftingElements<?> && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 40;
-        boolean isWearingHazmat = IHazmatLike.hasCompleteHazmat(player);
+        boolean isWearingHazmat = HazmatLike.hasCompleteHazmat(player);
         return isHoldingGeigerCounter || isWearingHazmat;
     }
 

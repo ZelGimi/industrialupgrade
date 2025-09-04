@@ -1,11 +1,11 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
+import com.denfop.potion.IUPotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -80,7 +80,7 @@ public class BlockThoriumOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
 
         List<Player> players = world.getEntitiesOfClass(Player.class, axisAlignedBB);
         for (Player player : players) {
-            boolean canAffect = !IHazmatLike.hasCompleteHazmat(player);
+            boolean canAffect = !HazmatLike.hasCompleteHazmat(player);
             if (canAffect) {
                 player.addEffect(new MobEffectInstance(IUPotion.rad, 400, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 0));

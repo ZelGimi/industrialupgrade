@@ -1,12 +1,12 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.FakePlayerSpawner;
+import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.tiles.base.FakePlayerSpawner;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.tiles.panels.entity.TileSolarPanel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +30,7 @@ public class PacketChangeSolarPanel implements IPacket {
 
     }
 
-    public PacketChangeSolarPanel(EnumSolarPanels typePacket, TileSolarPanel tileEntityBlock) {
+    public PacketChangeSolarPanel(EnumSolarPanels typePacket, BlockEntitySolarPanel tileEntityBlock) {
         Level world = tileEntityBlock.getWorld();
         BlockPos pos = tileEntityBlock.getBlockPos();
         byte facing = tileEntityBlock.facing;
@@ -51,7 +51,7 @@ public class PacketChangeSolarPanel implements IPacket {
         UseOnContext context = new UseOnContext(fakePlayerSpawner, fakePlayerSpawner.getUsedItemHand(), new BlockHitResult(new Vec3(0, 0, 0),
                 Direction.values()[facing], pos, false));
         itemBlockTileEntity.useOn(context);
-        TileSolarPanel tileSolarPanel = (TileSolarPanel) world.getBlockEntity(pos);
+        BlockEntitySolarPanel tileSolarPanel = (BlockEntitySolarPanel) world.getBlockEntity(pos);
         if (tileSolarPanel != null) {
             tileSolarPanel.readFromNBT(tagCompound);
             if (!list.isEmpty()) {
@@ -93,7 +93,7 @@ public class PacketChangeSolarPanel implements IPacket {
         try {
             BlockPos pos = (BlockPos) DecoderHandler.decode(customPacketBuffer);
             CompoundTag tagCompound = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
-            TileSolarPanel tileSolarPanel = (TileSolarPanel) entityPlayer.level().getBlockEntity(pos);
+            BlockEntitySolarPanel tileSolarPanel = (BlockEntitySolarPanel) entityPlayer.level().getBlockEntity(pos);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

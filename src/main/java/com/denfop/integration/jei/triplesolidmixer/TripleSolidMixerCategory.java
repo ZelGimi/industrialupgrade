@@ -1,23 +1,23 @@
 package com.denfop.integration.jei.triplesolidmixer;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityTripleSolidMixer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerTripleSolidMixer;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuTripleSolidMixer;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityTripleSolidMixer;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -34,12 +34,12 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<TripleSolidMixerHandler> {
+public class TripleSolidMixerCategory extends ScreenMain implements IRecipeCategory<TripleSolidMixerHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerTripleSolidMixer container1;
-    private final GuiComponent progress_bar;
-    private final GuiComponent slots1;
+    private final ContainerMenuTripleSolidMixer container1;
+    private final ScreenWidget progress_bar;
+    private final ScreenWidget slots1;
     JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
@@ -47,7 +47,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
     public TripleSolidMixerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityTripleSolidMixer) BlockBaseMachine3.triple_solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityTripleSolidMixer) BlockBaseMachine3Entity.triple_solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -55,17 +55,17 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
-        this.slots1 = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
+        this.slots1 = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
         );
-        this.container1 = (ContainerTripleSolidMixer) this.getContainer();
+        this.container1 = (ContainerMenuTripleSolidMixer) this.getContainer();
         this.componentList.add(slots);
         this.componentList.add(slots1);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(new ComponentProgress(this.container1.base, 0, 100))
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(new ComponentProgress(this.container1.base, 0, 100))
         );
         this.componentList.add(progress_bar);
     }
@@ -78,7 +78,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.triple_solid_mixer).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.triple_solid_mixer).getDescriptionId());
     }
 
 
@@ -107,7 +107,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TripleSolidMixerHandler recipe, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = recipe.getInputs();
         final List<ItemStack> outputs = recipe.getOutputs();
         int i = 0;
@@ -116,7 +116,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
 
 
         }
-        final List<SlotInvSlot> outputSlot = container1.findClassSlots(InvSlotOutput.class);
+        final List<SlotInvSlot> outputSlot = container1.findClassSlots(InventoryOutput.class);
         i = 0;
         for (; i < outputSlot.size(); i++) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.get(i).getJeiX() - 8, outputSlot.get(i).getJeiY() - 10).addItemStack(outputs.get(i));

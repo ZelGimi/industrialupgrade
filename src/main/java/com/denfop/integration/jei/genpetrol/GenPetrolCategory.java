@@ -2,13 +2,13 @@ package com.denfop.integration.jei.genpetrol;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntitySingleFluidAdapter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenPetrolCategory extends GuiIU implements IRecipeCategory<GenPetrolHandler> {
+public class GenPetrolCategory extends ScreenMain implements IRecipeCategory<GenPetrolHandler> {
 
     private final JeiInform jeiInform;
 
@@ -34,7 +34,7 @@ public class GenPetrolCategory extends GuiIU implements IRecipeCategory<GenPetro
     public GenPetrolCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntitySingleFluidAdapter) BlockBaseMachine3Entity.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +

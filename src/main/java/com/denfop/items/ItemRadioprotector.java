@@ -1,9 +1,9 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.blocks.FluidName;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;

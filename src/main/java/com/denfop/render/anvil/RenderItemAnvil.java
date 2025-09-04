@@ -1,7 +1,7 @@
 package com.denfop.render.anvil;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.base.TileEntityAnvil;
+import com.denfop.blockentity.base.BlockEntityAnvil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.ClientHooks;
 import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
+public class RenderItemAnvil implements BlockEntityRenderer<BlockEntityAnvil> {
 
 
     private final ItemRenderer itemRenderer;
@@ -100,7 +100,7 @@ public class RenderItemAnvil implements BlockEntityRenderer<TileEntityAnvil> {
     }
 
     @Override
-    public void render(TileEntityAnvil tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityAnvil tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
         if (!tile.active.isEmpty()) {

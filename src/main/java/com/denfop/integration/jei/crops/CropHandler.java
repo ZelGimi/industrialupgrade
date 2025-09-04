@@ -1,8 +1,8 @@
 package com.denfop.integration.jei.crops;
 
 
-import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.agriculture.ICrop;
+import com.denfop.api.crop.CropNetwork;
+import com.denfop.api.crop.ICrop;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;

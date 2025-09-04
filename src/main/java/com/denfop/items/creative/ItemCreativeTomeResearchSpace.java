@@ -1,11 +1,11 @@
 package com.denfop.items.creative;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.Data;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -33,11 +33,13 @@ public class ItemCreativeTomeResearchSpace extends Item implements IItemTab {
         super(new Properties().stacksTo(1));
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag advanced) {
-        tooltip.add(Component.literal(Localization.translate("iu.tome_research1")));
-        tooltip.add(Component.literal(Localization.translate("iu.tome_research2")));
+    @Override
+    public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        p_41423_.add(Component.literal(Localization.translate("iu.tome_research1")));
+        p_41423_.add(Component.literal(Localization.translate("iu.tome_research2")));
     }
+
+
 
     @Override
     public CreativeModeTab getItemCategory() {

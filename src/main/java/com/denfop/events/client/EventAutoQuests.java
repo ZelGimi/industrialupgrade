@@ -67,7 +67,9 @@ public class EventAutoQuests {
 
                 processed++;
             }
-        }catch (Exception e){};
+        } catch (Exception e) {
+        }
+        ;
     }
 
     private List<ItemStack> mergeStacks(List<ItemStack> input) {

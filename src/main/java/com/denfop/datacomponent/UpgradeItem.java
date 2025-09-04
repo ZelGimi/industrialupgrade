@@ -1,7 +1,7 @@
 package com.denfop.datacomponent;
 
-import com.denfop.api.upgrade.UpgradeItemInform;
-import com.denfop.api.upgrade.UpgradeModificator;
+import com.denfop.api.item.upgrade.UpgradeItemInform;
+import com.denfop.api.item.upgrade.UpgradeModificator;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;

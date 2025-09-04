@@ -1,7 +1,7 @@
 package com.denfop.api.bee.genetics;
 
-import com.denfop.api.pollution.LevelPollution;
-import com.denfop.api.radiationsystem.EnumLevelRadiation;
+import com.denfop.api.pollution.component.LevelPollution;
+import com.denfop.api.pollution.radiation.EnumLevelRadiation;
 
 import java.util.ArrayList;
 import java.util.List;

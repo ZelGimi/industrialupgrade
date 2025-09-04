@@ -1,9 +1,9 @@
 package com.denfop.api.multiblock;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockElement;
+import com.denfop.utils.Localization;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -375,7 +375,7 @@ public class MultiBlockStructure {
         reportLaskBlock.put(name, report);
     }
 
-    public void markDirty(TileMultiBlockBase tileMultiBlockBase, boolean full) {
+    public void markDirty(BlockEntityMultiBlockBase tileMultiBlockBase, boolean full) {
         List<ChunkPos> passedChunk = new ArrayList<>();
         if (full) {
             for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
@@ -394,8 +394,8 @@ public class MultiBlockStructure {
                     default -> pos1;
                 };
                 BlockEntity tile = world.getBlockEntity(pos1);
-                if (tile instanceof TileEntityMultiBlockElement) {
-                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getBlockEntity(pos1);
+                if (tile instanceof BlockEntityMultiBlockElement) {
+                    BlockEntityMultiBlockElement te = (BlockEntityMultiBlockElement) world.getBlockEntity(pos1);
                     te.setMainMultiElement(tileMultiBlockBase);
                     ChunkPos chunkPos = new ChunkPos(pos1);
                     if (!passedChunk.contains(chunkPos)) {
@@ -426,8 +426,8 @@ public class MultiBlockStructure {
                         break;
                 }
                 BlockEntity tile = world.getBlockEntity(pos1);
-                if (tile instanceof TileEntityMultiBlockElement) {
-                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getBlockEntity(pos1);
+                if (tile instanceof BlockEntityMultiBlockElement) {
+                    BlockEntityMultiBlockElement te = (BlockEntityMultiBlockElement) world.getBlockEntity(pos1);
                     te.setMainMultiElement(null);
                     ChunkPos chunkPos = new ChunkPos(pos1);
                     if (!passedChunk.contains(chunkPos)) {

@@ -2,7 +2,7 @@ package com.denfop.render.streak;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.gui.GuiCore;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
@@ -198,7 +198,7 @@ public class EventSpectralSuitEffect {
                             }
 
                             Color color = new Color((float) red, (float) green, (float) blue, startAlpha);
-                            GuiCore.bindTexture(texture);
+                            ScreenIndustrialUpgrade.bindTexture(texture);
                             BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
 

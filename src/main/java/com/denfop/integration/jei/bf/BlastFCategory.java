@@ -2,13 +2,13 @@ package com.denfop.integration.jei.bf;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.Fluids;
-import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class BlastFCategory extends GuiIU implements IRecipeCategory<BlastFHandler> {
+public class BlastFCategory extends ScreenMain implements IRecipeCategory<BlastFHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -33,7 +33,7 @@ public class BlastFCategory extends GuiIU implements IRecipeCategory<BlastFHandl
     public BlastFCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        super(((BlockEntityLaserPolisher) BlockBaseMachine3Entity.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guiblastfurnace_jei" +
                         ".png"), 5, 5, 168,

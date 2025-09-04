@@ -18,6 +18,7 @@ public class VeinType {
     private final int meta;
     private TypeVein vein;
     private int id;
+    private BlockState deposits = null;
 
     public VeinType(IMineral heavyOre, int meta, int deposits_meta, TypeVein vein, ChanceOre... ores) {
         this.heavyOre = heavyOre;
@@ -40,22 +41,23 @@ public class VeinType {
         veinTypeMap.put(id, this);
         maxId++;
     }
+
     public VeinType(BlockState deposits, TypeVein vein, List<ChanceOre> ores) {
         this.heavyOre = null;
         this.vein = vein;
         this.meta = 0;
         this.deposits = deposits;
         this.deposits_meta = meta;
-        this.ores =ores;
+        this.ores = ores;
         this.id = maxId;
-        veinTypeMap.put(id,this);
+        veinTypeMap.put(id, this);
         maxId++;
     }
 
     public BlockState getDeposits() {
         return deposits;
     }
-    private BlockState deposits = null;
+
     public int getId() {
         return id;
     }

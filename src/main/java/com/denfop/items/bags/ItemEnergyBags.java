@@ -1,16 +1,13 @@
 package com.denfop.items.bags;
 
-import com.denfop.ElectricItem;
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.container.ContainerBags;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
+import com.denfop.containermenu.ContainerMenuBags;
 import com.denfop.datacomponent.ContainerItem;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
@@ -18,6 +15,9 @@ import com.denfop.items.IItemStackInventory;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.ElectricItem;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -47,7 +47,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemEnergyBags extends Item implements IItemStackInventory, IProperties, IUpdatableItemStackEvent, IItemTab, IUpgradeItem, IEnergyItem {
+public class ItemEnergyBags extends Item implements IItemStackInventory, IProperties, IUpdatableItemStackEvent, IItemTab, UpgradeItem, EnergyItem {
     private final int slots;
     private final int maxStorage;
     private final int getTransferLimit;
@@ -148,7 +148,7 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
         return getTransferLimit;
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         return new ItemStackBags(player, stack, this.slots);
     }
 
@@ -220,14 +220,14 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
 
         if (containerItem.open()) {
             int slotId = containerItem.slot_inventory();
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerBags) {
-                ItemStackBags toolbox = ((ContainerBags) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuBags) {
+                ItemStackBags toolbox = ((ContainerMenuBags) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
                     containerItem.updateOpen(stack, false);
                 }
-            } else if (!(player.containerMenu instanceof ContainerBags)) {
+            } else if (!(player.containerMenu instanceof ContainerMenuBags)) {
                 containerItem.updateOpen(stack, false);
             }
         }
@@ -238,8 +238,8 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IProper
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerBags) {
-            ItemStackBags toolbox = ((ContainerBags) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuBags) {
+            ItemStackBags toolbox = ((ContainerMenuBags) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeContainer();

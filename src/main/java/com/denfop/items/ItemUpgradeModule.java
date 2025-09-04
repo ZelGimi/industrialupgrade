@@ -1,11 +1,11 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.container.ContainerUpgrade;
+import com.denfop.containermenu.ContainerMenuUpgrade;
 import com.denfop.datacomponent.ContainerAdditionalItem;
 import com.denfop.datacomponent.ContainerItem;
 import com.denfop.datacomponent.DataComponentsInit;
@@ -88,7 +88,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     }
 
     @Override
-    public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
+    public CustomWorldContainer getInventory(final Player var1, final ItemStack var2) {
         if (this.getElement().getId() < 11) {
             return null;
         } else {
@@ -127,8 +127,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
         if (containerItem.open()) {
             int slotId = containerItem.slot_inventory();
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
-                ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuUpgrade) {
+                ItemStackUpgradeModules toolbox = ((ContainerMenuUpgrade) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -148,8 +148,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
-            ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuUpgrade) {
+            ItemStackUpgradeModules toolbox = ((ContainerMenuUpgrade) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeContainer();

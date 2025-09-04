@@ -1,15 +1,15 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.items.energy.ItemHammer;
+import com.denfop.utils.Localization;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;

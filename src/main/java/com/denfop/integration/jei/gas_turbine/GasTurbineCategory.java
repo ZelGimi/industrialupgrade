@@ -1,14 +1,14 @@
 package com.denfop.integration.jei.gas_turbine;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockGasTurbine;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityOilRefiner;
+import com.denfop.blocks.mechanism.BlockGasTurbineEntity;
+import com.denfop.blocks.mechanism.BlockRefinerEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurbineHandler> {
+public class GasTurbineCategory extends ScreenMain implements IRecipeCategory<GasTurbineHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -32,7 +32,7 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
     public GasTurbineCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityOilRefiner) BlockRefinerEntity.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
@@ -46,7 +46,7 @@ public class GasTurbineCategory extends GuiIU implements IRecipeCategory<GasTurb
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockGasTurbine.gas_turbine_controller).getDisplayName().getString();
+        return JEICompat.getBlockStack(BlockGasTurbineEntity.gas_turbine_controller).getDisplayName().getString();
     }
 
     @Override

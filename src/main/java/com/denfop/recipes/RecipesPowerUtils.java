@@ -2,13 +2,13 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.tiles.mechanism.TileGenerationMicrochip;
+import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
 import com.powerutils.PowerUtils;
 import net.minecraft.world.item.ItemStack;
 
 public class RecipesPowerUtils {
     public static void register() {
-        Recipes.recipe.addRecipe(new ItemStack(PowerUtils.module_ic.getItem()), new Object[]{
+       Recipes.recipe.addRecipe(new ItemStack(PowerUtils.module_ic.getItem()), new Object[]{
                 "ABA", "CDC", "ABA",
 
                 Character.valueOf('A'), IUItem.copperCableItem,
@@ -36,7 +36,7 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
+                Character.valueOf('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
                 Character.valueOf('C'), ItemStackHelper.fromData(PowerUtils.module_ic),
 
@@ -50,7 +50,7 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                Character.valueOf('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 Character.valueOf('C'), ItemStackHelper.fromData(PowerUtils.module_ic),
 
@@ -69,5 +69,6 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('D'),
                 ItemStackHelper.fromData(IUItem.core, 1, 3)});
+
     }
 }

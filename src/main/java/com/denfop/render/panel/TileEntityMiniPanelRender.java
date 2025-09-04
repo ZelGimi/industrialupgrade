@@ -3,7 +3,7 @@ package com.denfop.render.panel;
 import com.denfop.Constants;
 import com.denfop.api.solar.EnumTypeParts;
 import com.denfop.api.solar.ISolarItem;
-import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
+import com.denfop.blockentity.panels.entity.BlockEntityMiniPanels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntityMiniPanels> {
+public class TileEntityMiniPanelRender implements BlockEntityRenderer<BlockEntityMiniPanels> {
 
     private static final Map<Integer, ModelMiniPanelGlass> panelModels = new HashMap<>();
     private static final Map<Integer, BottomModel> bottomModels = new HashMap<>();
@@ -32,7 +32,7 @@ public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntity
 
     @Override
     public void render(
-            TileEntityMiniPanels te,
+            BlockEntityMiniPanels te,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource bufferSource,

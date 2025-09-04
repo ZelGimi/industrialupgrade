@@ -1,7 +1,7 @@
 package com.denfop.api.space.upgrades.info;
 
-import com.denfop.Localization;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

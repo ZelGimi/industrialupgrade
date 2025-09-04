@@ -3,11 +3,11 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "industrialupgrade:itemingots/wolfram_ingot"
+      "item": "industrialupgrade:itemingots/tungsten_ingot"
     }
   ],
   "result": {
     "count": 9,
-    "id": "industrialupgrade:nugget/wolfram"
+    "id": "industrialupgrade:nugget/tungsten"
   }
 }

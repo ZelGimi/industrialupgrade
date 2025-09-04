@@ -1,15 +1,16 @@
 package com.denfop.items.energy;
 
-import com.denfop.container.ContainerBase;
+import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.datacomponent.ContainerAdditionalItem;
 import com.denfop.datacomponent.DataComponentsInit;
-import com.denfop.gui.GuiCore;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.items.bags.BagsDescription;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -261,21 +262,18 @@ public class ItemStackMagnet extends ItemStackInventory {
         }
     }
 
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
-
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerMagnet containerLeadBox = (ContainerMagnet) menu;
-        return new GuiMagnet(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuMagnet containerLeadBox = (ContainerMenuMagnet) menu;
+        return new ScreenMagnet(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerMagnet getGuiContainer(Player player) {
-        return new ContainerMagnet(player, this);
+
+
+    public ContainerMenuMagnet getGuiContainer(Player player) {
+        return new ContainerMenuMagnet(player, this);
     }
 
 

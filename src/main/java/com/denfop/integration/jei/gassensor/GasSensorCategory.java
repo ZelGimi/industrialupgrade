@@ -2,12 +2,12 @@ package com.denfop.integration.jei.gassensor;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityOilRefiner;
+import com.denfop.blocks.mechanism.BlockRefinerEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSensorHandler> {
+public class GasSensorCategory extends ScreenMain implements IRecipeCategory<GasSensorHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -31,7 +31,7 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
     public GasSensorCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityOilRefiner) BlockRefinerEntity.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +

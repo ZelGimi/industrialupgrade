@@ -1,12 +1,12 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.IProperties;
+import com.denfop.utils.ElectricItem;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -123,7 +123,7 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
     private boolean chargeItems(Iterable<ItemStack> inventory, ItemStack battery) {
         boolean transferred = false;
         for (ItemStack stack : inventory) {
-            if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
+            if (!stack.isEmpty() && stack.getItem() instanceof EnergyItem && !(stack.getItem() instanceof ItemBattery)) {
                 double transfer = ElectricItem.manager.discharge(battery, 2.0D * this.transferLimit, Integer.MAX_VALUE, true, true, true);
                 if (transfer > 0) {
                     transfer = ElectricItem.manager.charge(stack, transfer, Integer.MAX_VALUE, true, false);
@@ -160,7 +160,7 @@ public class ItemBattery extends BaseEnergyItem implements IProperties {
 
                 for (int i = 0; i < 9; ++i) {
                     ItemStack target = player.getInventory().items.get(i);
-                    if (!target.isEmpty() && target.getItem() instanceof IEnergyItem && target != stack &&
+                    if (!target.isEmpty() && target.getItem() instanceof EnergyItem && target != stack &&
                             !(ElectricItem.manager.discharge(target, Double.POSITIVE_INFINITY, Integer.MAX_VALUE, true, true, true) > 0.0D)) {
                         double transfer = ElectricItem.manager.discharge(stack, 2.0D * this.transferLimit, Integer.MAX_VALUE, true, true, true);
                         if (transfer > 0.0D) {

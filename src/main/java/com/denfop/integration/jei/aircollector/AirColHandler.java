@@ -51,11 +51,11 @@ public class AirColHandler {
 
     public static void initRecipes() {
 
-        addRecipe(new FluidStack(FluidName.fluidazot.getInstance().get(), 6000),
+        addRecipe(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 6000),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance().get(),
+                        FluidName.fluidoxygen.getInstance().get(),
                         2000
-                ), new FluidStack(FluidName.fluidco2.getInstance().get(), 1000)
+                ), new FluidStack(FluidName.fluidcarbondioxide.getInstance().get(), 1000)
         );
 
 

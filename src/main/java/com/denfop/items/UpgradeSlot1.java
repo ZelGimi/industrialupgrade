@@ -1,6 +1,6 @@
 package com.denfop.items;
 
-import com.denfop.api.inv.VirtualSlot;
+import com.denfop.api.menu.VirtualSlot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -41,7 +41,7 @@ public class UpgradeSlot1 implements VirtualSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack, final int index) {
+    public boolean canPlaceItem(final int index, final ItemStack stack) {
         return true;
     }
 

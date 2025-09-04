@@ -51,7 +51,7 @@ public class OilPumpHandler {
 
     public static void initRecipes() {
 
-        addRecipe(new FluidStack(FluidName.fluidneft.getInstance().get(), 1000 + rand.nextInt(9001)));
+        addRecipe(new FluidStack(FluidName.fluidpetroleum.getInstance().get(), 1000 + rand.nextInt(9001)));
 
 
     }

@@ -2,7 +2,7 @@ package com.denfop.register.multiblock;
 
 import com.denfop.IUItem;
 import com.denfop.api.reactors.IFluidReactor;
-import com.denfop.tiles.reactors.water.*;
+import com.denfop.blockentity.reactors.water.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 

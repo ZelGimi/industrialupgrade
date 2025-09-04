@@ -1,7 +1,7 @@
 package com.denfop.api.solar;
 
+import com.denfop.blockentity.panels.entity.BlockEntityMiniPanels;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -116,20 +116,20 @@ public class SolarEnergySystem {
                             break;
                     }
                     final int[] indexes1 = indexes[index];
-                    List<TileEntityMiniPanels.EnumState> enumStateList = new ArrayList<>();
+                    List<BlockEntityMiniPanels.EnumState> enumStateList = new ArrayList<>();
                     for (int i : indexes1) {
                         final ItemStack stack = items.get(i);
                         if (stack == null || stack.isEmpty()) {
-                            enumStateList.add(TileEntityMiniPanels.EnumState.EMPTY);
+                            enumStateList.add(BlockEntityMiniPanels.EnumState.EMPTY);
                         } else {
                             int meta1 = ((ItemMain<?>) stack.getItem()).getElement().getId();
                             int differenceMeta = Math.abs(meta - meta1);
                             if (differenceMeta == 0) {
-                                enumStateList.add(TileEntityMiniPanels.EnumState.STABLE);
+                                enumStateList.add(BlockEntityMiniPanels.EnumState.STABLE);
                             } else if (differenceMeta == 1) {
-                                enumStateList.add(TileEntityMiniPanels.EnumState.NORMAL);
+                                enumStateList.add(BlockEntityMiniPanels.EnumState.NORMAL);
                             } else {
-                                enumStateList.add(TileEntityMiniPanels.EnumState.UNSTABLE);
+                                enumStateList.add(BlockEntityMiniPanels.EnumState.UNSTABLE);
                             }
                         }
                     }

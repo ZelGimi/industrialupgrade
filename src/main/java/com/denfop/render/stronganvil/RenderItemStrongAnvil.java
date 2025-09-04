@@ -1,6 +1,6 @@
 package com.denfop.render.stronganvil;
 
-import com.denfop.tiles.base.TileEntityStrongAnvil;
+import com.denfop.blockentity.base.BlockEntityStrongAnvil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStrongAnvil> {
+public class RenderItemStrongAnvil implements BlockEntityRenderer<BlockEntityStrongAnvil> {
 
 
     private final ItemRenderer itemRenderer;
@@ -22,7 +22,7 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
     }
 
     @Override
-    public void render(TileEntityStrongAnvil tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityStrongAnvil tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         ItemStack itemStack = tile.inputSlotA.get(0);
         if (!itemStack.isEmpty()) {

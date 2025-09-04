@@ -1,23 +1,23 @@
 package com.denfop.items.energy;
 
-import com.denfop.*;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.tile.IWrenchable;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
+import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.api.blockentity.Wrenchable;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.BlockEntityMultiMachine;
+import com.denfop.blockentity.base.IManufacturerBlock;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileMultiMachine;
-import com.denfop.utils.ElectricItemManager;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.ModUtils;
+import com.denfop.sound.EnumSound;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
@@ -60,9 +60,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.denfop.api.upgrade.EnumUpgrades.GRAVITOOL;
+import static com.denfop.api.item.upgrade.EnumUpgrades.GRAVITOOL;
 
-public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeItem, IProperties, IItemTab {
+public class ItemGraviTool extends TieredItem implements EnergyItem, UpgradeItem, IProperties, IItemTab {
     protected static final double ROTATE = 50.0D;
     protected static final double HOE = 50.0D;
     protected static final double TAP = 50.0D;
@@ -252,7 +252,7 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
                 return this.onTreeTapUse(stack, player, level, pos, hitResult.getDirection()) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             case PURIFIER:
                 BlockEntity tile = level.getBlockEntity(pos);
-                if (!(tile instanceof TileEntityInventory) && !(tile instanceof IManufacturerBlock)) {
+                if (!(tile instanceof BlockEntityInventory) && !(tile instanceof IManufacturerBlock)) {
                     return InteractionResult.PASS;
                 }
 
@@ -260,8 +260,8 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D
                         : 0);
 
-                if (tile instanceof TileEntityInventory) {
-                    TileEntityInventory base = (TileEntityInventory) tile;
+                if (tile instanceof BlockEntityInventory) {
+                    BlockEntityInventory base = (BlockEntityInventory) tile;
                     double energy = 10000;
 
                     if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PURIFIER, stack)) {
@@ -280,12 +280,12 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
                     }
                 }
 
-                if (tile instanceof TileMultiMachine) {
+                if (tile instanceof BlockEntityMultiMachine) {
                     if (!ElectricItem.manager.canUse(stack, 500 * coef)) {
                         return InteractionResult.PASS;
                     }
 
-                    TileMultiMachine base = (TileMultiMachine) tile;
+                    BlockEntityMultiMachine base = (BlockEntityMultiMachine) tile;
                     List<ItemStack> stackList = new ArrayList<>();
 
                     if (base.multi_process.quickly) {
@@ -419,8 +419,8 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
             return false;
         }
 
-        if (block instanceof IWrenchable) {
-            IWrenchable wrenchable = (IWrenchable) block;
+        if (block instanceof Wrenchable) {
+            Wrenchable wrenchable = (Wrenchable) block;
             Direction current = wrenchable.getFacing(world, pos);
             Direction newFacing;
 

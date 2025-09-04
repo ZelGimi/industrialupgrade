@@ -1,6 +1,6 @@
 package com.denfop.api.bee;
 
-import com.denfop.api.agriculture.ICrop;
+import com.denfop.api.crop.ICrop;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class BeeBase implements IBee {
+public class BeeBase implements Bee {
 
     private final int weatherResistance;
     private final int maxSwarm;
@@ -27,7 +27,7 @@ public class BeeBase implements IBee {
     private final int tickBirthRate;
     private final List<Product> products = new ArrayList<>();
     private final String name;
-    private List<IBee> unCompatibleBees;
+    private List<Bee> unCompatibleBees;
     private boolean sun;
     private boolean night;
     private int chance;
@@ -36,7 +36,7 @@ public class BeeBase implements IBee {
             String name, int id, int maxSwarm,
             int tickBirthRate, int tickLifecycles, AABB sizeTerritory, int offspring,
             int chance, boolean sun, boolean night, ICrop cropFlower,
-            List<IBee> unCompatibleBees, int defaultWeatherResistance, double maxMortalityRate
+            List<Bee> unCompatibleBees, int defaultWeatherResistance, double maxMortalityRate
     ) {
         this.name = name;
         this.maxSwarm = maxSwarm;
@@ -92,12 +92,12 @@ public class BeeBase implements IBee {
 
 
     @Override
-    public List<IBee> getUnCompatibleBees() {
+    public List<Bee> getUnCompatibleBees() {
         return unCompatibleBees;
     }
 
     @Override
-    public void setUnCompatibleBees(final List<IBee> bees) {
+    public void setUnCompatibleBees(final List<Bee> bees) {
         this.unCompatibleBees = bees;
     }
 

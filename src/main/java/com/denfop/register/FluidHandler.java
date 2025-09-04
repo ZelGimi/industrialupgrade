@@ -13,7 +13,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import static com.denfop.DataItem.objects;
+import static com.denfop.dataregistry.DataItem.objects;
 import static com.denfop.register.Register.BLOCKS;
 import static com.denfop.register.Register.ITEMS;
 

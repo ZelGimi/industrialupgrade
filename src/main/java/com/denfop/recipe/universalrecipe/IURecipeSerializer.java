@@ -47,7 +47,7 @@ public class IURecipeSerializer implements RecipeSerializer<IURecipe> {
 
         return builder.group(
                 Codec.STRING.fieldOf("recipe_type").forGetter(IURecipe::getRecipeType),
-                Codec.BOOL.fieldOf("isFluidRecipe").forGetter(IURecipe::isFluid),
+                Codec.BOOL.optionalFieldOf("isFluidRecipe",false).forGetter(IURecipe::isFluid),
                 Codec.list(singleInputCodec).fieldOf("inputs").forGetter(IURecipe::getInputs),
                 Codec.list(singleOutputCodec).fieldOf("outputs").forGetter(r -> Collections.singletonList(r.getOutputs())),
                 Codec.unboundedMap(Codec.STRING, Codec.either(Codec.STRING, Codec.DOUBLE))

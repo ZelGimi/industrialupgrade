@@ -1,7 +1,7 @@
 package com.denfop.villager;
 
 import com.denfop.IUItem;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -16,7 +16,7 @@ public class VillagerInit {
 
 
     public static final DeferredHolder<PoiType, PoiType> ENGINEER_POI = registerPoi("engineer", IUItem.programming_table.getObject(0));
-    public static final DeferredHolder<PoiType, PoiType> MECHANIC_POI = registerPoi("mechanic", IUItem.basemachine2.getObject(BlockBaseMachine3.generator_iu.getId()));
+    public static final DeferredHolder<PoiType, PoiType> MECHANIC_POI = registerPoi("mechanic", IUItem.basemachine2.getObject(BlockBaseMachine3Entity.generator_iu.getId()));
     public static final DeferredHolder<PoiType, PoiType> NUCLEAR_POI = registerPoi("nuclear", IUItem.basemachine.getObject(10));
     public static final DeferredHolder<PoiType, PoiType> METALLURG_POI = registerPoi("metallurg", IUItem.anvil.getObject(0));
     public static final DeferredHolder<PoiType, PoiType> CHEMIST_POI = registerPoi("chemist", IUItem.fluidIntegrator.getObject(0));

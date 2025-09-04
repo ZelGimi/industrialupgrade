@@ -20,6 +20,8 @@ public class PacketAddBuildingToColony implements IPacket {
 
     public PacketAddBuildingToColony(IColony colony, Player player) {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(player.registryAccess());
+        if (colony == null)
+            return;
         customPacketBuffer.writeByte(getId());
         try {
             EncoderHandler.encode(customPacketBuffer, colony.getFakePlayer());

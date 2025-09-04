@@ -1,7 +1,7 @@
 package com.denfop.integration.jei;
 
 import com.denfop.Constants;
-import com.denfop.gui.GuiIU;
+import com.denfop.screen.ScreenMain;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.denfop.integration.jei.JEICompat.informList;
 
-public class JeiInform<C extends GuiIU & IRecipeCategory<H>, H> {
+public class JeiInform<C extends ScreenMain & IRecipeCategory<H>, H> {
     public final RecipeType<H> recipeType;
     private final Class<C> categoryClass;
     private final Class<H> handlerClass;

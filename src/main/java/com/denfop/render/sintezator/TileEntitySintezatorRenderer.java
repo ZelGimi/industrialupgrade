@@ -1,6 +1,6 @@
 package com.denfop.render.sintezator;
 
-import com.denfop.tiles.base.TileSintezator;
+import com.denfop.blockentity.base.BlockEntitySintezator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileEntitySintezatorRenderer implements BlockEntityRenderer<TileSintezator> {
+public class TileEntitySintezatorRenderer implements BlockEntityRenderer<BlockEntitySintezator> {
 
     private final BlockRenderDispatcher blockRenderer;
     private final Map<BlockState, BakedModel> modelCache = new HashMap<>();
@@ -31,7 +31,7 @@ public class TileEntitySintezatorRenderer implements BlockEntityRenderer<TileSin
     }
 
     @Override
-    public void render(TileSintezator tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
+    public void render(BlockEntitySintezator tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
 
         for (int i = 0; i < 9; i++) {

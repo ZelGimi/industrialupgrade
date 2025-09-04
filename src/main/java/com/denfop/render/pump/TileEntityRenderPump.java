@@ -1,6 +1,6 @@
 package com.denfop.render.pump;
 
-import com.denfop.tiles.mechanism.TileEntityPrimalPump;
+import com.denfop.blockentity.mechanism.BlockEntityPrimalPump;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 
-public class TileEntityRenderPump implements BlockEntityRenderer<TileEntityPrimalPump> {
+public class TileEntityRenderPump implements BlockEntityRenderer<BlockEntityPrimalPump> {
 
 
     private final BlockEntityRendererProvider.Context contex;
@@ -21,7 +21,7 @@ public class TileEntityRenderPump implements BlockEntityRenderer<TileEntityPrima
     }
 
     @Override
-    public void render(TileEntityPrimalPump tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalPump tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult
                 && tile.getBlockPos().equals(hitResult.getBlockPos())) {

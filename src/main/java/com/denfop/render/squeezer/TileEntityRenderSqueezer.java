@@ -1,7 +1,7 @@
 package com.denfop.render.squeezer;
 
+import com.denfop.blockentity.mechanism.BlockEntitySqueezer;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntitySqueezer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,7 +14,7 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntitySqueezer> {
+public class TileEntityRenderSqueezer implements BlockEntityRenderer<BlockEntitySqueezer> {
     private final BlockEntityRendererProvider.Context contex;
 
     public TileEntityRenderSqueezer(BlockEntityRendererProvider.Context p_173636_) {
@@ -22,7 +22,7 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
     }
 
     @Override
-    public void render(TileEntitySqueezer tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntitySqueezer tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         ItemStack itemStack = tile.inputSlotA.get(0);
         ItemRenderer itemRenderer = contex.getItemRenderer();
@@ -51,7 +51,7 @@ public class TileEntityRenderSqueezer implements BlockEntityRenderer<TileEntityS
 
         if (!fluidStack.isEmpty()) {
             float scale = 1.45f * (tank.getFluidAmount()) * 1F / tank.getCapacity();
-            scale = Math.min(scale,1.45f);
+            scale = Math.min(scale, 1.45f);
             poseStack.pushPose();
             if (tile.facing == 4) {
                 poseStack.translate(0.07 + 0.12, 0.18, 0.6 + 0.08);

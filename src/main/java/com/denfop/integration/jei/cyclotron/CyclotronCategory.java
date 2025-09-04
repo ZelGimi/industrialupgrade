@@ -1,23 +1,23 @@
 package com.denfop.integration.jei.cyclotron;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockCyclotron;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockCyclotronEntity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuLaserPolisher;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -36,11 +36,11 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class CyclotronCategory extends GuiIU implements IRecipeCategory<CyclotronHandler> {
+public class CyclotronCategory extends ScreenMain implements IRecipeCategory<CyclotronHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerLaserPolisher container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuLaserPolisher container1;
+    private final ScreenWidget progress_bar;
     private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
@@ -48,7 +48,7 @@ public class CyclotronCategory extends GuiIU implements IRecipeCategory<Cyclotro
     public CyclotronCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        super(((BlockEntityLaserPolisher) BlockBaseMachine3Entity.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -56,13 +56,13 @@ public class CyclotronCategory extends GuiIU implements IRecipeCategory<Cyclotro
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
-        this.container1 = (ContainerLaserPolisher) this.getContainer();
+        this.container1 = (ContainerMenuLaserPolisher) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
     }
@@ -71,7 +71,7 @@ public class CyclotronCategory extends GuiIU implements IRecipeCategory<Cyclotro
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockCyclotron.cyclotron_controller).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockCyclotronEntity.cyclotron_controller).getDescriptionId());
     }
 
 
@@ -112,7 +112,7 @@ public class CyclotronCategory extends GuiIU implements IRecipeCategory<Cyclotro
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CyclotronHandler recipes, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
@@ -121,7 +121,7 @@ public class CyclotronCategory extends GuiIU implements IRecipeCategory<Cyclotro
 
         }
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
 
     }

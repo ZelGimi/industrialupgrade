@@ -2,14 +2,14 @@ package com.denfop.integration.jei.heavyanvil;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.BlockStrongAnvil;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.base.BlockEntityBaseHandlerHeavyOre;
+import com.denfop.blocks.BlockStrongAnvilEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine1Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.base.TileBaseHandlerHeavyOre;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class HeavyAnvilCategory extends GuiIU implements IRecipeCategory<HeavyAnvilHandler> {
+public class HeavyAnvilCategory extends ScreenMain implements IRecipeCategory<HeavyAnvilHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -33,7 +33,7 @@ public class HeavyAnvilCategory extends GuiIU implements IRecipeCategory<HeavyAn
     public HeavyAnvilCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileBaseHandlerHeavyOre) BlockBaseMachine1.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityBaseHandlerHeavyOre) BlockBaseMachine1Entity.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
@@ -45,7 +45,7 @@ public class HeavyAnvilCategory extends GuiIU implements IRecipeCategory<HeavyAn
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockStrongAnvil.block_strong_anvil).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockStrongAnvilEntity.block_strong_anvil).getDescriptionId());
     }
 
     @Override

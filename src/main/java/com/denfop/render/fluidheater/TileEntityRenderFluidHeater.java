@@ -1,6 +1,6 @@
 package com.denfop.render.fluidheater;
 
-import com.denfop.tiles.mechanism.TileEntityPrimalFluidHeater;
+import com.denfop.blockentity.mechanism.BlockEntityPrimalFluidHeater;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 
-public class TileEntityRenderFluidHeater implements BlockEntityRenderer<TileEntityPrimalFluidHeater> {
+public class TileEntityRenderFluidHeater implements BlockEntityRenderer<BlockEntityPrimalFluidHeater> {
 
 
     private final BlockEntityRendererProvider.Context contex;
@@ -21,7 +21,7 @@ public class TileEntityRenderFluidHeater implements BlockEntityRenderer<TileEnti
     }
 
     @Override
-    public void render(TileEntityPrimalFluidHeater tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalFluidHeater tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult
                 && tile.getBlockPos().equals(hitResult.getBlockPos())) {

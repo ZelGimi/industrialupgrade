@@ -2,10 +2,10 @@ package com.denfop.events;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.upgrade.UpgradeItemInform;
-import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.UpgradeItemInform;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -55,7 +55,9 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.denfop.items.ItemVeinSensor.dataColors;
 import static com.denfop.render.base.RenderType.LEASH;
@@ -102,7 +104,7 @@ public class TickHandler {
 
     public int getOreColor(BlockState state) {
         Block block = state.getBlock();
-        if (dataColors.containsKey(state)){
+        if (dataColors.containsKey(state)) {
             return dataColors.get(state);
         }
         if (block == Blocks.IRON_ORE) {
@@ -115,7 +117,7 @@ public class TickHandler {
             return ModUtils.convertRGBcolorToInt(30, 50, 173);
         } else if (block == Blocks.REDSTONE_ORE) {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
-        }else if (block == Blocks.COPPER_ORE) {
+        } else if (block == Blocks.COPPER_ORE) {
             return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.COAL_ORE) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);

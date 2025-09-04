@@ -1,22 +1,18 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.network.packet.PacketSoundPlayer;
-import com.denfop.utils.ElectricItemManager;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.ModUtils;
+import com.denfop.sound.EnumSound;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.*;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -47,7 +43,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemEnergyBow extends BowItem implements IEnergyItem, IUpgradeItem, IProperties, IItemTab {
+public class ItemEnergyBow extends BowItem implements EnergyItem, UpgradeItem, IProperties, IItemTab {
     static final int[] CHARGE = new int[]{1500, 750, 2000, 5000, 1000};
 
     static final String[] MODE = new String[]{"normal", "rapidfire", "spread", "sniper", "flame"};

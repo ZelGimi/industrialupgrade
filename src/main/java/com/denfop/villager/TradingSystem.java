@@ -1,8 +1,8 @@
 package com.denfop.villager;
 
 import com.denfop.IUItem;
+import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -151,8 +151,8 @@ public class TradingSystem {
             TradeBuilder.create().setEmeralds(64).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(21), 2)).build();
             TradeBuilder.create().setEmeralds(40).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(535), 1)).build();
             TradeBuilder.create().setEmeralds(40).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(552), 1)).build();
-            TradeBuilder.create().setEmeralds(64).addSecondStack(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(533), 2)).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)).build();
-            TradeBuilder.create().setEmeralds(64).addSecondStack(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(541), 2)).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)).build();
+            TradeBuilder.create().setEmeralds(64).addSecondStack(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(533), 2)).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)).build();
+            TradeBuilder.create().setEmeralds(64).addSecondStack(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(541), 2)).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)).build();
             TradeBuilder.create().setEmeralds(50).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(541), 1)).build();
             TradeBuilder.create().setEmeralds(30).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(583), 1)).build();
             TradeBuilder.create().setEmeralds(60).setLevel(5).setProfession(event.getProfession()).setMaxUse(4).setXp(50).setResult(ItemStackHelper.fromData(IUItem.crafting_elements.getStack(583), 2)).build();

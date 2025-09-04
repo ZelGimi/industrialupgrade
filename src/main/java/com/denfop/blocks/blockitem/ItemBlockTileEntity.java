@@ -1,9 +1,9 @@
 package com.denfop.blocks.blockitem;
 
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.base.FakePlayerSpawner;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.ItemBlockCore;
-import com.denfop.tiles.base.FakePlayerSpawner;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends ItemBlockCore<T> {
+public class ItemBlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends ItemBlockCore<T> {
     public final ResourceLocation identifier;
 
     public ItemBlockTileEntity(BlockTileEntity<T> p_40565_, T element, ResourceLocation identifier) {
@@ -43,7 +43,7 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
 
     @Override
     public void appendHoverText(ItemStack p_40572_, TooltipContext p_339655_, List<Component> p_40574_, TooltipFlag p_40575_) {
-        IMultiTileBlock block = this.getTeBlock(p_40572_);
+        MultiBlockEntity block = this.getTeBlock(p_40572_);
         if (block != null && block.getDummyTe() != null) {
             List<String> stringList = new LinkedList<>();
             block.getDummyTe().setLevel(p_339655_.level());
@@ -54,9 +54,9 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
     }
 
 
-    public IMultiTileBlock getTeBlock(ItemStack stack) {
+    public MultiBlockEntity getTeBlock(ItemStack stack) {
         return stack == null ? null : (!((BlockTileEntity) this.getBlock()).teInfo.getIdMap().isEmpty()) ?
-                (IMultiTileBlock) ((BlockTileEntity) this.getBlock()).getValue() : null;
+                (MultiBlockEntity) ((BlockTileEntity) this.getBlock()).getValue() : null;
     }
 
 
@@ -68,8 +68,8 @@ public class ItemBlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends It
         Block block = this.getBlock();
         Direction direction = pContext.getClickedFace();
 
-        IMultiTileBlock iMultiTileBlock = getTeBlock(pContext.getItemInHand());
-        if (!iMultiTileBlock.getDummyTe().canPlace(iMultiTileBlock.getDummyTe(), blockpos, level, direction, pContext.getPlayer()))
+        MultiBlockEntity multiBlockEntity = getTeBlock(pContext.getItemInHand());
+        if (!multiBlockEntity.getDummyTe().canPlace(multiBlockEntity.getDummyTe(), blockpos, level, direction, pContext.getPlayer()))
             return null;
         return super.updatePlacementContext(pContext);
     }

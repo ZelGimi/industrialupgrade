@@ -1,10 +1,10 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;

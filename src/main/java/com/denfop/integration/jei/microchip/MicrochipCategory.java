@@ -2,13 +2,13 @@ package com.denfop.integration.jei.microchip;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityMatterFactory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityMatterFactory;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MicrochipCategory extends GuiIU implements IRecipeCategory<MicrochipHandler> {
+public class MicrochipCategory extends ScreenMain implements IRecipeCategory<MicrochipHandler> {
 
     private final JeiInform jeiInform;
 
@@ -34,7 +34,7 @@ public class MicrochipCategory extends GuiIU implements IRecipeCategory<Microchi
     public MicrochipCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityMatterFactory) BlockBaseMachine3.matter_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityMatterFactory) BlockBaseMachine3Entity.matter_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GUICirsuit".toLowerCase() +
                         ".png"), 3, 3, 140,

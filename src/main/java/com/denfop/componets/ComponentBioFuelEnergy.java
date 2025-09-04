@@ -1,8 +1,8 @@
 package com.denfop.componets;
 
-import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.FluidName;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -17,12 +17,12 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
 
     FluidTank fluidTank;
 
-    public ComponentBioFuelEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
+    public ComponentBioFuelEnergy(EnergyType type, BlockEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public ComponentBioFuelEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -32,7 +32,7 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     }
 
     public ComponentBioFuelEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -42,23 +42,9 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     ) {
         super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier);
     }
-    @Override
-    public boolean isServer() {
-        return true;
-    }
 
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())){
-            fluidTank.fill(new FluidStack(FluidName.fluidbiomass.getInstance().get(),  (int)this.buffer.storage-fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
-        }
-        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())){
-            fluidTank.drain(fluidTank.getFluid().getAmount()- (int)this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
-        }
-    }
     public ComponentBioFuelEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             List<Direction> sinkDirections,
             List<Direction> sourceDirections,
@@ -69,20 +55,36 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
         super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier);
     }
 
-    public static ComponentBioFuelEnergy asBasicSink(TileEntityInventory parent, double capacity) {
+    public static ComponentBioFuelEnergy asBasicSink(BlockEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static ComponentBioFuelEnergy asBasicSink(TileEntityInventory parent, double capacity, int tier) {
+    public static ComponentBioFuelEnergy asBasicSink(BlockEntityInventory parent, double capacity, int tier) {
         return new ComponentBioFuelEnergy(EnergyType.BIOFUEL, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
-    public static ComponentBioFuelEnergy asBasicSource(TileEntityInventory parent, double capacity) {
+    public static ComponentBioFuelEnergy asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static ComponentBioFuelEnergy asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static ComponentBioFuelEnergy asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new ComponentBioFuelEnergy(EnergyType.BIOFUEL, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
+    }
+
+    @Override
+    public boolean isServer() {
+        return true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())) {
+            fluidTank.fill(new FluidStack(FluidName.fluidbiomass.getInstance().get(), (int) this.buffer.storage - fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
+        }
+        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())) {
+            fluidTank.drain(fluidTank.getFluid().getAmount() - (int) this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
+        }
     }
 
     @Override

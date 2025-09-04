@@ -1,7 +1,7 @@
 package com.denfop.datacomponent;
 
-import com.denfop.api.agriculture.genetics.EnumGenetic;
-import com.denfop.api.agriculture.genetics.GeneticTraits;
+import com.denfop.api.crop.genetics.EnumGenetic;
+import com.denfop.api.crop.genetics.GeneticTraits;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;

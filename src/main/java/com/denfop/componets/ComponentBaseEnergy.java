@@ -1,15 +1,17 @@
 package com.denfop.componets;
 
 
-import com.denfop.api.sytem.*;
+import com.denfop.api.otherenergies.common.EnergyEvent;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.api.otherenergies.common.EnumTypeEvent;
+import com.denfop.api.otherenergies.common.ITile;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.system.EnergyNetDelegate;
 import com.denfop.componets.system.EnergyNetDelegateDual;
 import com.denfop.componets.system.EnergyNetDelegateSink;
 import com.denfop.componets.system.EnergyNetDelegateSource;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.radiation_storage.TileEntityRadiationStorage;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,12 +22,15 @@ import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ComponentBaseEnergy extends AbstractComponent {
 
 
-
+    public final BufferEnergy buffer;
     private final EnergyType type;
     private final double defaultCapacity;
     public Set<Direction> sinkDirections;
@@ -33,14 +38,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public EnergyNetDelegate delegate;
     public boolean loaded;
 
-    public final BufferEnergy buffer;
-
-    public ComponentBaseEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
+    public ComponentBaseEnergy(EnergyType type, BlockEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public ComponentBaseEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -50,7 +53,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     public ComponentBaseEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -66,7 +69,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     public ComponentBaseEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             List<Direction> sinkDirections,
             List<Direction> sourceDirections,
@@ -81,6 +84,22 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
     }
 
+    public static ComponentBaseEnergy asBasicSink(EnergyType type, BlockEntityInventory parent, double capacity) {
+        return asBasicSink(type, parent, capacity, 1);
+    }
+
+    public static ComponentBaseEnergy asBasicSink(EnergyType type, BlockEntityInventory parent, double capacity, int tier) {
+        return new ComponentBaseEnergy(type, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
+    }
+
+    public static ComponentBaseEnergy asBasicSource(EnergyType type, BlockEntityInventory parent, double capacity) {
+        return asBasicSource(type, parent, capacity, 1);
+    }
+
+    public static ComponentBaseEnergy asBasicSource(EnergyType type, BlockEntityInventory parent, double capacity, int tier) {
+        return new ComponentBaseEnergy(type, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
+    }
+
     public void setReceivingEnabled(boolean enabled) {
         if (this.delegate != null) {
             this.delegate.receivingDisabled = !enabled;
@@ -93,22 +112,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
             this.delegate.sendingSidabled = !enabled;
         }
 
-    }
-
-    public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityInventory parent, double capacity) {
-        return asBasicSink(type, parent, capacity, 1);
-    }
-
-    public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityInventory parent, double capacity, int tier) {
-        return new ComponentBaseEnergy(type, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
-    }
-
-    public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityInventory parent, double capacity) {
-        return asBasicSource(type, parent, capacity, 1);
-    }
-
-    public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityInventory parent, double capacity, int tier) {
-        return new ComponentBaseEnergy(type, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
     public EnergyType getType() {
@@ -189,7 +192,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16,player.registryAccess());
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.buffer.capacity);
         buffer.writeDouble(this.buffer.storage);
         buffer.writeInt(this.buffer.sourceTier);
@@ -301,8 +304,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
 
-
-
     public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
 
         this.sinkDirections = sinkDirections;
@@ -335,23 +336,14 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
 
-
     public ITile getDelegate() {
         return this.delegate;
     }
 
 
-
     public double getFreeEnergy() {
         return this.buffer.capacity - this.buffer.storage;
     }
-
-
-
-
-
-
-
 
 
 }

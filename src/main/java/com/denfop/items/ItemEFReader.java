@@ -1,13 +1,13 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
 import com.denfop.datacomponent.DataComponentsInit;
-import com.denfop.gui.GUIEFReader;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
+import com.denfop.screen.ScreenEFReader;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -56,9 +56,9 @@ public class ItemEFReader extends Item implements IItemStackInventory, IUpdatabl
     @Override
     @OnlyIn(Dist.CLIENT)
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
-        if (Minecraft.getInstance().screen instanceof GUIEFReader) {
-            GUIEFReader guiefReader = (GUIEFReader) Minecraft.getInstance().screen;
-            guiefReader.readField(name, buffer);
+        if (Minecraft.getInstance().screen instanceof ScreenEFReader) {
+            ScreenEFReader screenEFReader = (ScreenEFReader) Minecraft.getInstance().screen;
+            screenEFReader.readField(name, buffer);
         }
     }
 
@@ -68,7 +68,7 @@ public class ItemEFReader extends Item implements IItemStackInventory, IUpdatabl
     }
 
     @Override
-    public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
+    public CustomWorldContainer getInventory(final Player var1, final ItemStack var2) {
         return new EFReaderInventory(var1, var2);
     }
 

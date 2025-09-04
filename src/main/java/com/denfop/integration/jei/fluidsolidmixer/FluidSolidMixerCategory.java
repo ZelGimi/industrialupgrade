@@ -1,18 +1,21 @@
 package com.denfop.integration.jei.fluidsolidmixer;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.TankWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityFluidIntegrator;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerFluidIntegrator;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuFluidIntegrator;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityFluidIntegrator;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -28,11 +31,11 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class FluidSolidMixerCategory extends GuiIU implements IRecipeCategory<FluidSolidMixerHandler> {
+public class FluidSolidMixerCategory extends ScreenMain implements IRecipeCategory<FluidSolidMixerHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerFluidIntegrator container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuFluidIntegrator container1;
+    private final ScreenWidget progress_bar;
     private final JeiInform jeiInform;
     private int progress;
 
@@ -40,7 +43,7 @@ public class FluidSolidMixerCategory extends GuiIU implements IRecipeCategory<Fl
     public FluidSolidMixerCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityFluidIntegrator) BlockBaseMachine3Entity.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
@@ -49,25 +52,25 @@ public class FluidSolidMixerCategory extends GuiIU implements IRecipeCategory<Fl
                 107
         );
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
 
-        this.container1 = (ContainerFluidIntegrator) this.getContainer();
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
+        this.container1 = (ContainerMenuFluidIntegrator) this.getContainer();
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(new ComponentProgress(this.container1.base, 1, (short) 100))
         );
         this.componentList.add(progress_bar);
-        this.addElement(TankGauge.createNormal(this, 10, 17, container1.base.fluidTank1));
-        this.addElement(TankGauge.createNormal(this, 46 + 71, 17, container1.base.fluidTank2));
-        this.addElement(TankGauge.createNormal(this, 46 + 71 - 28, 17, container1.base.fluidTank2));
+        this.addWidget(TankWidget.createNormal(this, 10, 17, container1.base.fluidTank1));
+        this.addWidget(TankWidget.createNormal(this, 46 + 71, 17, container1.base.fluidTank2));
+        this.addWidget(TankWidget.createNormal(this, 46 + 71 - 28, 17, container1.base.fluidTank2));
     }
 
 
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate((JEICompat.getBlockStack(BlockBaseMachine3.solid_fluid_mixer)).getDescriptionId());
+        return Localization.translate((JEICompat.getBlockStack(BlockBaseMachine3Entity.solid_fluid_mixer)).getDescriptionId());
     }
 
 
@@ -87,7 +90,7 @@ public class FluidSolidMixerCategory extends GuiIU implements IRecipeCategory<Fl
         this.slots.drawBackground(stack, -20, 0);
 
         progress_bar.renderBar(stack, -10, 10, xScale);
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
             element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
 

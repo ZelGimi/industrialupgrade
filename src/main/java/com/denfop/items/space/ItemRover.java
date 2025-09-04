@@ -1,9 +1,7 @@
 package com.denfop.items.space;
 
-import com.denfop.ElectricItem;
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.api.space.BaseSpaceSystem;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
@@ -14,6 +12,8 @@ import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
 import com.denfop.items.ItemFluidContainer;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnergyItem, IItemTab {
+public class ItemRover extends ItemFluidContainer implements IRoversItem, EnergyItem, IItemTab {
 
     private final EnumRoversLevel enumRoversLevel;
     private final EnumTypeRovers typeRovers;

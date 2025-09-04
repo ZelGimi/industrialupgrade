@@ -1,25 +1,27 @@
 package com.denfop.items.armour.special;
 
 
-import com.denfop.*;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
-import com.denfop.audio.SoundHandler;
+import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.armour.ISpecialArmor;
 import com.denfop.items.bags.BagsDescription;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.potion.IUPotion;
 import com.denfop.register.Register;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
+import com.denfop.sound.EnumSound;
+import com.denfop.sound.SoundHandler;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.*;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
@@ -64,8 +66,8 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 
-public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemStackInventory, IEnergyItem,
-        IUpgradeItem, IItemTab {
+public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemStackInventory, EnergyItem,
+        UpgradeItem, IItemTab {
 
     protected final Map<Holder<MobEffect>, Integer> potionRemovalCost = new IdentityHashMap<>();
     private final List<EnumCapability> listCapability;
@@ -142,7 +144,7 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
     }
 
     @Override
-    public IAdvInventory getInventory(final Player player, final ItemStack stack) {
+    public CustomWorldContainer getInventory(final Player player, final ItemStack stack) {
         if (this.getEquipmentSlot() == EquipmentSlot.LEGS)
             return new ItemStackLegsBags(player, stack);
         else

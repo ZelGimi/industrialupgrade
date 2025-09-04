@@ -1,6 +1,6 @@
 package com.denfop.blocks.state;
 
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.Property;
 
@@ -14,11 +14,11 @@ public class TypeProperty extends Property<State> {
 
 
     public final String resourceLocationName;
-    private final ConcurrentHashMap<IMultiTileBlock, StatesBlocks> mapStates;
+    private final ConcurrentHashMap<MultiBlockEntity, StatesBlocks> mapStates;
     public List<State> allowedValues;
     List<StatesBlocks> locationBlocks;
 
-    public TypeProperty(final ResourceLocation identifier, final IMultiTileBlock teBlock) {
+    public TypeProperty(final ResourceLocation identifier, final MultiBlockEntity teBlock) {
         super("type", State.class);
         this.resourceLocationName = identifier.toString();
         this.mapStates = new ConcurrentHashMap<>();
@@ -43,12 +43,12 @@ public class TypeProperty extends Property<State> {
         return this.locationBlocks;
     }
 
-    public State getState(IMultiTileBlock teBlock) {
+    public State getState(MultiBlockEntity teBlock) {
         return getState(teBlock, "");
     }
 
 
-    public State getState(IMultiTileBlock teBlock, String active) {
+    public State getState(MultiBlockEntity teBlock, String active) {
         StatesBlocks state = mapStates.get(teBlock);
         return state == null ? null : state.getState(active);
     }
@@ -90,7 +90,7 @@ public class TypeProperty extends Property<State> {
         public List<State> statesBlocks = new ArrayList<>();
 
 
-        public StatesBlocks(IMultiTileBlock block, String state, String[] multiModels) {
+        public StatesBlocks(MultiBlockEntity block, String state, String[] multiModels) {
             statesBlocks.add(new State(block, ""));
             if (state.equals("active")) {
                 statesBlocks.add(new State(block, state));
@@ -106,7 +106,7 @@ public class TypeProperty extends Property<State> {
         }
 
 
-        public IMultiTileBlock getBlock() {
+        public MultiBlockEntity getBlock() {
             return this.statesBlocks.get(0).teBlock;
         }
 

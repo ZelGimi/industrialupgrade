@@ -1,6 +1,10 @@
 package com.denfop.api.pollution;
 
 
+import com.denfop.api.pollution.air.PollutionAirLoadEvent;
+import com.denfop.api.pollution.air.PollutionAirUnLoadEvent;
+import com.denfop.api.pollution.soil.PollutionSoilLoadEvent;
+import com.denfop.api.pollution.soil.PollutionSoilUnLoadEvent;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;

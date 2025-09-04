@@ -1,9 +1,9 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityTeleporter;
 import com.denfop.datacomponent.DataComponentsInit;
-import com.denfop.tiles.base.TileEntityTeleporter;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -68,7 +68,7 @@ public class ItemFrequencyTransmitter extends Item implements IItemTab {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
 
-        if (!(blockEntity instanceof TileEntityTeleporter teleporter)) {
+        if (!(blockEntity instanceof BlockEntityTeleporter teleporter)) {
             return InteractionResult.PASS;
         }
 
@@ -87,7 +87,7 @@ public class ItemFrequencyTransmitter extends Item implements IItemTab {
             player.displayClientMessage(Component.translatable("Teleportation link unchanged."), true);
         } else {
             BlockEntity targetEntity = level.getBlockEntity(target);
-            if (targetEntity instanceof TileEntityTeleporter targetTeleporter) {
+            if (targetEntity instanceof BlockEntityTeleporter targetTeleporter) {
                 teleporter.setTarget(target);
                 targetTeleporter.setTarget(pos);
                 player.displayClientMessage(Component.translatable("Teleportation link established."), true);

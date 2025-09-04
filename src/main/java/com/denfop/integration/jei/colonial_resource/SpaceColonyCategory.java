@@ -1,12 +1,12 @@
 package com.denfop.integration.jei.colonial_resource;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceColonyHandler> {
+public class SpaceColonyCategory extends ScreenMain implements IRecipeCategory<SpaceColonyHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -29,7 +29,7 @@ public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceC
     public SpaceColonyCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        super(((BlockEntityLaserPolisher) BlockBaseMachine3Entity.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,

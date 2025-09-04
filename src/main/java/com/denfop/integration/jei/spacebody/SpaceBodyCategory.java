@@ -1,12 +1,12 @@
 package com.denfop.integration.jei.spacebody;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntitySolidMixer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntitySolidMixer;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBodyHandler> {
+public class SpaceBodyCategory extends ScreenMain implements IRecipeCategory<SpaceBodyHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -29,7 +29,7 @@ public class SpaceBodyCategory extends GuiIU implements IRecipeCategory<SpaceBod
     public SpaceBodyCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySolidMixer) BlockBaseMachine3.solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntitySolidMixer) BlockBaseMachine3Entity.solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +

@@ -1,10 +1,10 @@
 package com.denfop.blocks.blockitem;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.blocks.BlockCore;
 import com.denfop.blocks.BlockNuclearBomb;
 import com.denfop.blocks.ItemBlockCore;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;

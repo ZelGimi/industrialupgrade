@@ -1,16 +1,23 @@
 package com.denfop;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropInit;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.cool.CoolNet;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.crop.CropInit;
+import com.denfop.api.crop.ICrop;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
 import com.denfop.api.guidebook.GuideBookCore;
-import com.denfop.api.heat.HeatNet;
+import com.denfop.api.item.upgrade.BaseUpgradeBaseSystem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.otherenergies.common.EnergyBase;
+import com.denfop.api.otherenergies.cool.CoolNet;
+import com.denfop.api.otherenergies.cool.CoolNetGlobal;
+import com.denfop.api.otherenergies.heat.HeatNet;
+import com.denfop.api.otherenergies.heat.HeatNetGlobal;
+import com.denfop.api.otherenergies.pressure.PressureNet;
+import com.denfop.api.otherenergies.pressure.PressureNetGlobal;
+import com.denfop.api.otherenergies.transport.TransportNetGlobal;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.pressure.PressureNet;
-import com.denfop.api.radiationsystem.RadiationSystem;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.reactors.IReactorItem;
 import com.denfop.api.recipe.*;
 import com.denfop.api.solar.SolarEnergySystem;
@@ -20,29 +27,34 @@ import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.tesseract.TesseractSystem;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.transport.TransportNetGlobal;
-import com.denfop.api.upgrade.BaseUpgradeSystem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.vein.VeinSystem;
+import com.denfop.api.vein.common.VeinSystem;
+import com.denfop.api.vein.gas.GasVeinSystem;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.IManufacturerBlock;
+import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
+import com.denfop.blockentity.mechanism.BlockEntitySolidCooling;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
+import com.denfop.blockentity.mechanism.quarry.QuarryItem;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;
-import com.denfop.cool.CoolNetGlobal;
+import com.denfop.config.ModConfig;
 import com.denfop.datagen.*;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.datagen.itemtag.ItemTagProvider;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.dataregistry.DataBlockEntity;
+import com.denfop.dataregistry.DataItem;
 import com.denfop.entity.SmallBee;
 import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.events.WorldSavedDataIU;
-import com.denfop.heat.HeatNetGlobal;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.ItemFluidCapabilities;
 import com.denfop.items.energy.EntityAdvArrow;
@@ -51,11 +63,11 @@ import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
+import com.denfop.network.DistExecutor;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
 import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
 import com.denfop.network.packet.PacketUpdateRelocator;
-import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.ClientProxy;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.recipe.IInputHandler;
@@ -64,14 +76,8 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.render.streak.PlayerStreakInfo;
+import com.denfop.tabs.IItemTab;
 import com.denfop.tabs.TabCore;
-import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.EnumTypeMachines;
-import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import com.denfop.tiles.mechanism.TileSolidCooling;
-import com.denfop.tiles.mechanism.quarry.QuarryItem;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.utils.*;
 import com.denfop.villager.TradingSystem;
 import com.denfop.world.WorldBaseGen;
@@ -138,7 +144,6 @@ import java.util.concurrent.CompletableFuture;
 import static com.denfop.api.Recipes.inputFactory;
 import static com.denfop.api.space.BaseSpaceSystem.fluidToLevel;
 import static com.denfop.utils.ListInformationUtils.mechanism_info1;
-import static net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps.COMPOSTABLES;
 
 
 @Mod(IUCore.MODID)
@@ -196,13 +201,16 @@ public class IUCore {
     public static MinecraftServer serverInstance;
     public static RegistryAccess registry;
     public static RegistryAccess registryAccess = null;
+    public static boolean register1 = false;
+    public static Map<Item, ICrop> cropMap = new HashMap<>();
     static List<String> stringList = new ArrayList<>();
     static boolean change = false;
     static boolean register = false;
-    public static boolean register1 = false;
     public final ModContainer modContainer;
     boolean reg = false;
     List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
+    Map<Integer, List<IReactorItem>> levelsReactorItem = new HashMap<>();
+
     public IUCore(ModContainer container, IEventBus modEventBus) {
         context = modEventBus;
         modContainer = container;
@@ -302,18 +310,18 @@ public class IUCore {
             }
         }
         for (DeferredHolder<Block, ? extends BlockTileEntity> blockTileEntity : DataBlockEntity.objectsBlock1) {
-            TileEntityBlock dummyTe = ((IMultiTileBlock) blockTileEntity.get().item.getElement()).getDummyTe();
+            BlockEntityBase dummyTe = ((MultiBlockEntity) blockTileEntity.get().item.getElement()).getDummyTe();
             assert dummyTe != null;
             if (dummyTe == null)
-                ((IMultiTileBlock) blockTileEntity.get().item.getElement()).buildDummies();
-            dummyTe = ((IMultiTileBlock) blockTileEntity.get().item.getElement()).getDummyTe();
+                ((MultiBlockEntity) blockTileEntity.get().item.getElement()).buildDummies();
+            dummyTe = ((MultiBlockEntity) blockTileEntity.get().item.getElement()).getDummyTe();
             assert dummyTe != null;
             if (dummyTe.getCapability(Capabilities.ItemHandler.BLOCK, Direction.NORTH) != null) {
                 event.registerBlock(
                         Capabilities.ItemHandler.BLOCK,
                         (level, pos, state, be, side) -> {
                             BlockEntity blockEntity = level.getBlockEntity(pos);
-                            if (blockEntity instanceof TileEntityBlock block) {
+                            if (blockEntity instanceof BlockEntityBase block) {
                                 return block.getCapability(Capabilities.ItemHandler.BLOCK, side);
                             }
                             return null;
@@ -326,7 +334,7 @@ public class IUCore {
                         Capabilities.FluidHandler.BLOCK,
                         (level, pos, state, be, side) -> {
                             BlockEntity blockEntity = level.getBlockEntity(pos);
-                            if (blockEntity instanceof TileEntityBlock block) {
+                            if (blockEntity instanceof BlockEntityBase block) {
                                 return block.getCapability(Capabilities.FluidHandler.BLOCK, side);
                             }
                             return null;
@@ -339,7 +347,7 @@ public class IUCore {
                         Capabilities.EnergyStorage.BLOCK,
                         (level, pos, state, be, side) -> {
                             BlockEntity blockEntity = level.getBlockEntity(pos);
-                            if (blockEntity instanceof TileEntityBlock block) {
+                            if (blockEntity instanceof BlockEntityBase block) {
                                 return block.getCapability(Capabilities.EnergyStorage.BLOCK, side);
                             }
                             return null;
@@ -441,7 +449,7 @@ public class IUCore {
         }
 
     }
-    Map<Integer,List<IReactorItem>> levelsReactorItem = new HashMap<>();
+
     private void registerContent(RegisterEvent event) {
         if (Objects.equals(event.getRegistryKey(), Registries.ITEM)) {
 
@@ -463,19 +471,19 @@ public class IUCore {
 
         EnumTypeMachines.writeSound();
     }
-    public static Map<Item, ICrop> cropMap = new HashMap<>();
+
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
-        cropMap.put(Items.WHEAT_SEEDS,CropInit.wheat_seed);
-        cropMap.put(Items.SUGAR_CANE,CropInit.reed_seed);
-        cropMap.put(Items.POTATO,CropInit.potato);
-        cropMap.put(Items.CARROT,CropInit.carrot);
-        cropMap.put(Items.MELON_SEEDS,CropInit.melon);
-        cropMap.put(Items.PUMPKIN_SEEDS,CropInit.pumpkin);
-        cropMap.put(Items.MELON,CropInit.melon);
-        cropMap.put(Items.PUMPKIN,CropInit.pumpkin);
-        cropMap.put(Items.BEETROOT,CropInit.beet);
-        cropMap.put(Items.NETHER_WART,CropInit.nether_wart);
+        cropMap.put(Items.WHEAT_SEEDS, CropInit.wheat_seed);
+        cropMap.put(Items.SUGAR_CANE, CropInit.reed_seed);
+        cropMap.put(Items.POTATO, CropInit.potato);
+        cropMap.put(Items.CARROT, CropInit.carrot);
+        cropMap.put(Items.MELON_SEEDS, CropInit.melon);
+        cropMap.put(Items.PUMPKIN_SEEDS, CropInit.pumpkin);
+        cropMap.put(Items.MELON, CropInit.melon);
+        cropMap.put(Items.PUMPKIN, CropInit.pumpkin);
+        cropMap.put(Items.BEETROOT, CropInit.beet);
+        cropMap.put(Items.NETHER_WART, CropInit.nether_wart);
         proxy.postInit();
         new GuideBookCore();
         GuideBookCore.init();
@@ -860,7 +868,7 @@ public class IUCore {
         SpaceNet.instance = new BaseSpaceSystem();
         SpaceUpgradeSystem.system = new BaseSpaceUpgradeSystem();
         RelocatorNetwork.init();
-        UpgradeSystem.system = new BaseUpgradeSystem();
+        UpgradeSystem.system = new BaseUpgradeBaseSystem();
         new RotorUpgradeSystem();
         new com.denfop.api.water.upgrade.RotorUpgradeSystem();
         EnergyNetGlobal.initialize();
@@ -932,8 +940,8 @@ public class IUCore {
 
             register1 = true;
             ListInformationUtils.init();
-            List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
-            for (IMultiTileBlock tileBlock : tiles)
+            List<MultiBlockEntity> tiles = TileBlockCreator.instance.getAllTiles();
+            for (MultiBlockEntity tileBlock : tiles)
 
                 if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
                     if (!mechanism_info1.containsKey(tileBlock)) {
@@ -1141,8 +1149,8 @@ public class IUCore {
             ReplicatorRecipe.init();
             CentrifugeRecipe.init();
             MetalFormerRecipe.init();
-            TileEntityPalletGenerator.init();
-            TileSolidCooling.init();
+            BlockEntityPalletGenerator.init();
+            BlockEntitySolidCooling.init();
             SpaceInit.jsonInit();
             BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
             IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);

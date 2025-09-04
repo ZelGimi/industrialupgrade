@@ -1,16 +1,14 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.heat.event.HeatTileLoadEvent;
-import com.denfop.api.heat.event.HeatTileUnloadEvent;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.otherenergies.heat.IHeatTile;
+import com.denfop.api.otherenergies.heat.event.HeatTileLoadEvent;
+import com.denfop.api.otherenergies.heat.event.HeatTileUnloadEvent;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.heat.EnergyNetDelegate;
 import com.denfop.componets.heat.EnergyNetDelegateSink;
 import com.denfop.componets.heat.EnergyNetDelegateSource;
-import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +22,10 @@ import net.minecraft.world.level.biome.Biome;
 import net.neoforged.neoforge.common.NeoForge;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class HeatComponent extends AbstractComponent {
     public final BufferEnergy buffer;
@@ -39,12 +40,12 @@ public class HeatComponent extends AbstractComponent {
     Random rand = new Random();
     private double coef;
 
-    public HeatComponent(TileEntityInventory parent, double capacity) {
+    public HeatComponent(BlockEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public HeatComponent(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -54,7 +55,7 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public HeatComponent(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -67,23 +68,23 @@ public class HeatComponent extends AbstractComponent {
         this.sourceDirections = sourceDirections;
         this.world = parent.getLevel();
         this.defaultCapacity = capacity;
-        this.buffer = new BufferEnergy(0,capacity,sinkTier,sourceTier);
+        this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
         this.coef = 0;
     }
 
-    public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity) {
+    public static HeatComponent asBasicSink(BlockEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
+    public static HeatComponent asBasicSink(BlockEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
-    public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity) {
+    public static HeatComponent asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static HeatComponent asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
@@ -216,7 +217,7 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public void onContainerUpdate(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16,player.registryAccess());
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16, player.registryAccess());
         buffer.writeDouble(this.buffer.capacity);
         buffer.writeDouble(this.buffer.storage);
         buffer.writeBoolean(this.buffer.need);
@@ -334,7 +335,6 @@ public class HeatComponent extends AbstractComponent {
     }
 
 
-
     public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
 
         if (this.delegate != null) {
@@ -375,12 +375,6 @@ public class HeatComponent extends AbstractComponent {
     public IHeatTile getDelegate() {
         return this.delegate;
     }
-
-
-
-
-
-
 
 
 }

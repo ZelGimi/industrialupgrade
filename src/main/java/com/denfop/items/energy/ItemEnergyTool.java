@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 
-public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
+public abstract class ItemEnergyTool extends ItemToolIU implements EnergyItem {
     public final int operationEnergyCost;
     public int maxCharge;
     public int transferLimit;

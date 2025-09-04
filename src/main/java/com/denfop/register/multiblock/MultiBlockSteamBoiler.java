@@ -1,7 +1,7 @@
 package com.denfop.register.multiblock;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.steamboiler.*;
+import com.denfop.blockentity.mechanism.steamboiler.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 

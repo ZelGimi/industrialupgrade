@@ -1,14 +1,9 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -83,7 +78,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
 
             @Override
             public int fill(FluidStack resource, FluidAction doFill) {
-                if (resource.isEmpty() ) {
+                if (resource.isEmpty()) {
                     return 0;
                 }
                 return super.fill(resource, doFill);
@@ -126,8 +121,8 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
             Direction direction = blockhitresult.getDirection();
             BlockPos blockpos1 = blockpos.relative(direction);
             if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos1, direction, itemstack)) {
-                BlockState state =fs.getFluidInTank(0).isEmpty() ? world.getBlockState(blockpos) :  world.getBlockState(blockpos1);
-                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY&&!state.liquid() && fs.getFluidInTank(0).getAmount() >= 1000) {
+                BlockState state = fs.getFluidInTank(0).isEmpty() ? world.getBlockState(blockpos) : world.getBlockState(blockpos1);
+                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY && !state.liquid() && fs.getFluidInTank(0).getAmount() >= 1000) {
                     Fluid fluid = fs.getFluidInTank(0).getFluid();
                     boolean flag1 = world.getBlockState(blockpos).canBeReplaced();
                     BlockPos blockpos2 = flag1 && blockhitresult.getDirection() == Direction.UP ? blockpos : blockpos.offset(blockhitresult.getDirection().getNormal());

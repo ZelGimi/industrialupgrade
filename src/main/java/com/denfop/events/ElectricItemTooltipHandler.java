@@ -2,10 +2,10 @@ package com.denfop.events;
 
 
 import com.denfop.Constants;
-import com.denfop.ElectricItem;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.KeyboardIU;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -24,7 +24,7 @@ public class ElectricItemTooltipHandler {
     @SubscribeEvent
     public void drawTooltips(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem) {
+        if (!stack.isEmpty() && stack.getItem() instanceof EnergyItem) {
             String tooltip = ElectricItem.manager.getToolTip(stack);
             if (!tooltip.isEmpty()) {
                 event.getToolTip().add(Component.literal(tooltip));

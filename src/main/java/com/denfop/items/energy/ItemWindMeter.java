@@ -1,10 +1,10 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.items.BaseEnergyItem;
+import com.denfop.utils.ElectricItem;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;

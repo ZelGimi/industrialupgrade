@@ -2,7 +2,7 @@ package com.denfop.render.rocketpad;
 
 import com.denfop.IUItem;
 import com.denfop.api.space.rovers.api.IRoversItem;
-import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
+import com.denfop.blockentity.mechanism.BlockEntityRocketLaunchPad;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +21,7 @@ import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 public class RocketPadRender {
 
 
-    public static void render(TileEntityRocketLaunchPad te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
+    public static void render(BlockEntityRocketLaunchPad te, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         Minecraft mc = Minecraft.getInstance();
         ItemRenderer itemRenderer = mc.getItemRenderer();
 

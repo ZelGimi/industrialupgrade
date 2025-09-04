@@ -1,9 +1,9 @@
 package com.denfop.items.armour;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IEnergyItem {
+public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements EnergyItem {
 
     public ItemArmorNightvisionGoggles() {
         super("nightvision", Type.HELMET);

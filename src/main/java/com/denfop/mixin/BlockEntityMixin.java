@@ -1,6 +1,6 @@
 package com.denfop.mixin;
 
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.blockentity.base.BlockEntityBase;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,7 +19,7 @@ public abstract class BlockEntityMixin {
     private void onSaveWithFullMetadata(HolderLookup.Provider provider,
                                         CallbackInfoReturnable<CompoundTag> cir) {
         CompoundTag tag = cir.getReturnValue();
-        if ((Object) this instanceof TileEntityBlock myTile) {
+        if ((Object) this instanceof BlockEntityBase myTile) {
             myTile.writeToNBT(tag);
         }
     }

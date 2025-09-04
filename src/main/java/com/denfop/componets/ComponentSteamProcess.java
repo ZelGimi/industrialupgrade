@@ -1,13 +1,13 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.sound.AudioFixer;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.FluidName;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Timer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +27,10 @@ public class ComponentSteamProcess extends AbstractComponent {
     protected double energyConsume;
     protected int operationLength;
     protected ComponentProgress componentProgress;
-    protected InvSlotRecipes invSlotRecipes;
+    protected InventoryRecipes invSlotRecipes;
     protected int operationsPerTick;
     protected int tick;
-    protected InvSlotOutput outputSlot;
+    protected InventoryOutput outputSlot;
     protected IUpdateTick updateTick;
     protected boolean hasTank = false;
     protected boolean hasAudio = false;
@@ -43,7 +43,7 @@ public class ComponentSteamProcess extends AbstractComponent {
     private Timer timer = null;
 
     public ComponentSteamProcess(
-            final TileEntityInventory parent,
+            final BlockEntityInventory parent,
             int operationLength,
             double energyConsume, int pressure
     ) {
@@ -76,7 +76,7 @@ public class ComponentSteamProcess extends AbstractComponent {
         this.componentProgress = this.getParent().getComp("com.denfop.componets.ComponentProgress");
         this.advEnergy = this.getParent().getComp(ComponentSteamEnergy.class);
         this.pressureComponent = this.getParent().getComp(PressureComponent.class);
-        this.audoFix = this.getParent() instanceof IAudioFixer;
+        this.audoFix = this.getParent() instanceof AudioFixer;
         this.heatComponent = this.getParent().getComp(HeatComponent.class);
 
     }
@@ -96,7 +96,7 @@ public class ComponentSteamProcess extends AbstractComponent {
         return super.onBlockActivated(player, hand);
     }
 
-    public void setSlotOutput(final InvSlotOutput slotOutput) {
+    public void setSlotOutput(final InventoryOutput slotOutput) {
         this.outputSlot = slotOutput;
     }
 
@@ -124,7 +124,7 @@ public class ComponentSteamProcess extends AbstractComponent {
         this.hasAudio = hasAudio;
     }
 
-    public void setInvSlotRecipes(final InvSlotRecipes invSlotRecipes) {
+    public void setInvSlotRecipes(final InventoryRecipes invSlotRecipes) {
         this.invSlotRecipes = invSlotRecipes;
         this.updateTick = invSlotRecipes.getTile();
 
@@ -189,7 +189,7 @@ public class ComponentSteamProcess extends AbstractComponent {
             if (this.componentProgress.getProgress() == 0 && this.hasAudio) {
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
                     if (this.audoFix) {
-                        ((IAudioFixer) this.getParent()).initiate(0);
+                        ((AudioFixer) this.getParent()).initiate(0);
                     }
                 }
             }
@@ -214,7 +214,7 @@ public class ComponentSteamProcess extends AbstractComponent {
                 }
                 if (this.hasAudio) {
                     if (this.audoFix) {
-                        ((IAudioFixer) this.getParent()).initiate(2);
+                        ((AudioFixer) this.getParent()).initiate(2);
                     }
                 }
 
@@ -229,12 +229,12 @@ public class ComponentSteamProcess extends AbstractComponent {
                 this.componentProgress = this.getParent().getComp("com.denfop.componets.ComponentProgress");
                 this.advEnergy = this.getParent().getComp(ComponentSteamEnergy.class);
                 this.pressureComponent = this.getParent().getComp(PressureComponent.class);
-                this.audoFix = this.getParent() instanceof IAudioFixer;
+                this.audoFix = this.getParent() instanceof AudioFixer;
 
             }
             if (this.componentProgress.getProgress() != 0 && this.getParent().getActive() && this.hasAudio) {
                 if (this.audoFix) {
-                    ((IAudioFixer) this.getParent()).initiate(1);
+                    ((AudioFixer) this.getParent()).initiate(1);
                 }
             }
             if (this.updateTick.getRecipeOutput() == null) {

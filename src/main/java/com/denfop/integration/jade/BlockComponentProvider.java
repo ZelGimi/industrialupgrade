@@ -2,25 +2,25 @@ package com.denfop.integration.jade;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.bee.IBee;
-import com.denfop.api.cool.ICoolSource;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IEnergyConductor;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.NodeStats;
+import com.denfop.api.bee.Bee;
+import com.denfop.api.crop.ICrop;
+import com.denfop.api.energy.interfaces.EnergyConductor;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
+import com.denfop.api.energy.networking.NodeStats;
+import com.denfop.api.otherenergies.common.EnergyBase;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.api.otherenergies.common.IConductor;
+import com.denfop.api.otherenergies.common.ITile;
+import com.denfop.api.otherenergies.cool.ICoolSource;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.sytem.EnergyBase;
-import com.denfop.api.sytem.EnergyType;
-import com.denfop.api.sytem.IConductor;
-import com.denfop.api.sytem.ITile;
+import com.denfop.blockentity.base.*;
+import com.denfop.blockentity.bee.BlockEntityApiary;
+import com.denfop.blockentity.crop.TileEntityCrop;
+import com.denfop.blockentity.mechanism.*;
 import com.denfop.componets.*;
 import com.denfop.recipe.IInputItemStack;
-import com.denfop.tiles.base.*;
-import com.denfop.tiles.bee.TileEntityApiary;
-import com.denfop.tiles.crop.TileEntityCrop;
-import com.denfop.tiles.mechanism.*;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
@@ -158,9 +158,9 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
         Level level = accessor.getLevel();
         BlockEntity blockEntity = accessor.getBlockEntity();
         Player entityPlayer = accessor.getPlayer();
-        if (blockEntity instanceof TileEntityBlock) {
+        if (blockEntity instanceof BlockEntityBase) {
             ListTag listTag = new ListTag();
-            TileEntityBlock te = (TileEntityBlock) blockEntity;
+            BlockEntityBase te = (BlockEntityBase) blockEntity;
             if (te.wrenchCanRemove(entityPlayer)) {
                 encode(accessor.getLevel().registryAccess(), ChatFormatting.WHITE + Localization.translate("iu.wrench.info"), listTag);
             }
@@ -168,8 +168,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
             final ComponentProcess component1 = te.getComp(ComponentProcess.class);
 
             ProcessMultiComponent component2 = te.getComp(ProcessMultiComponent.class);
-            if (te instanceof TileEntityAnvil) {
-                TileEntityAnvil anvil = (TileEntityAnvil) te;
+            if (te instanceof BlockEntityAnvil) {
+                BlockEntityAnvil anvil = (BlockEntityAnvil) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -179,9 +179,9 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
             }
             Level world = level;
-            if (te instanceof IEnergyConductor) {
-                final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) te, level);
-                encode(accessor.getLevel().registryAccess(), new Progress((int) node.getEnergyOut(), (int) ((IEnergyConductor) te).getConductorBreakdownEnergy(), ("EF"), 33, 91, 199), listTag);
+            if (te instanceof EnergyConductor) {
+                final NodeStats node = EnergyNetGlobal.instance.getNodeStats((EnergyTile) te, level);
+                encode(accessor.getLevel().registryAccess(), new Progress((int) node.getEnergyOut(), (int) ((EnergyConductor) te).getConductorBreakdownEnergy(), ("EF"), 33, 91, 199), listTag);
             }
             if (te instanceof IConductor) {
                 IConductor conductor = (IConductor) te;
@@ -244,8 +244,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
                     }
                 }
             }
-            if (te instanceof TileEntityStrongAnvil) {
-                TileEntityStrongAnvil anvil = (TileEntityStrongAnvil) te;
+            if (te instanceof BlockEntityStrongAnvil) {
+                BlockEntityStrongAnvil anvil = (BlockEntityStrongAnvil) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -298,12 +298,12 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
                     }
                 }
             }
-            if (te instanceof TileEntityApiary) {
-                TileEntityApiary apiary = (TileEntityApiary) te;
+            if (te instanceof BlockEntityApiary) {
+                BlockEntityApiary apiary = (BlockEntityApiary) te;
 
                 if (apiary.getQueen() != null) {
 
-                    IBee queen = apiary.getQueen();
+                    Bee queen = apiary.getQueen();
                     encode(accessor.getLevel().registryAccess(), ChatFormatting.GOLD + Localization.translate("iu.crop.oneprobe.queen") + ChatFormatting.BOLD + queen.getName(), listTag);
                     encode(accessor.getLevel().registryAccess(), new Progress((int) apiary.food, (int) apiary.maxFood, " / " + (int) apiary.maxFood + " " + Localization.translate("iu.crop.oneprobe.honey"), 0xFFFFA500), listTag);
                     encode(accessor.getLevel().registryAccess(), new Progress((int) apiary.royalJelly, (int) apiary.maxJelly, " / " + (int) apiary.maxJelly + " " + Localization.translate(
@@ -350,8 +350,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
                 }
             }
-            if (te instanceof TileEntityCompressor) {
-                TileEntityCompressor anvil = (TileEntityCompressor) te;
+            if (te instanceof BlockEntityCompressor) {
+                BlockEntityCompressor anvil = (BlockEntityCompressor) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -360,8 +360,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
 
             }
-            if (te instanceof TileEntityMacerator) {
-                TileEntityMacerator anvil = (TileEntityMacerator) te;
+            if (te instanceof BlockEntityMacerator) {
+                BlockEntityMacerator anvil = (BlockEntityMacerator) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -370,8 +370,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
 
             }
-            if (te instanceof TileEntityPrimalWireInsulator) {
-                TileEntityPrimalWireInsulator anvil = (TileEntityPrimalWireInsulator) te;
+            if (te instanceof BlockEntityPrimalWireInsulator) {
+                BlockEntityPrimalWireInsulator anvil = (BlockEntityPrimalWireInsulator) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -379,8 +379,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
 
             }
-            if (te instanceof TileEntityRollingMachine) {
-                TileEntityRollingMachine anvil = (TileEntityRollingMachine) te;
+            if (te instanceof BlockEntityRollingMachine) {
+                BlockEntityRollingMachine anvil = (BlockEntityRollingMachine) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -388,8 +388,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
 
             }
-            if (te instanceof TileEntityPrimalLaserPolisher) {
-                TileEntityPrimalLaserPolisher anvil = (TileEntityPrimalLaserPolisher) te;
+            if (te instanceof BlockEntityPrimalLaserPolisher) {
+                BlockEntityPrimalLaserPolisher anvil = (BlockEntityPrimalLaserPolisher) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -397,8 +397,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
 
             }
-            if (te instanceof TileEntitySqueezer) {
-                TileEntitySqueezer anvil = (TileEntitySqueezer) te;
+            if (te instanceof BlockEntitySqueezer) {
+                BlockEntitySqueezer anvil = (BlockEntitySqueezer) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -406,8 +406,8 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
 
             }
-            if (te instanceof TileEntityDryer) {
-                TileEntityDryer anvil = (TileEntityDryer) te;
+            if (te instanceof BlockEntityDryer) {
+                BlockEntityDryer anvil = (BlockEntityDryer) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 encode(accessor.getLevel().registryAccess(), (ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString), listTag);
@@ -452,9 +452,9 @@ public class BlockComponentProvider implements IBlockComponentProvider, IServerD
 
                 encode(accessor.getLevel().registryAccess(), ChatFormatting.GREEN + Localization.translate("iu.probe.recipe.progress") + " " + percentage + "%", listTag);
             }
-            if (te instanceof TileEntityInventory) {
+            if (te instanceof BlockEntityInventory) {
                 List<String> stringList = new ArrayList<>();
-                ((TileEntityInventory) te).addInformation(((TileEntityInventory) te).getPickBlock(null, null), stringList
+                ((BlockEntityInventory) te).addInformation(((BlockEntityInventory) te).getPickBlock(null, null), stringList
                 );
                 for (String s : stringList) {
                     encode(accessor.getLevel().registryAccess(), s, listTag);

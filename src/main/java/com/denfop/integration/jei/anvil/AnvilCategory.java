@@ -2,14 +2,14 @@ package com.denfop.integration.jei.anvil;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.BlockAnvil;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.triple.heat.BlockEntityAdvAlloySmelter;
+import com.denfop.blocks.BlockAnvilEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine1Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler> {
+public class AnvilCategory extends ScreenMain implements IRecipeCategory<AnvilHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -33,7 +33,7 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
     public AnvilCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityAdvAlloySmelter) BlockBaseMachine1Entity.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
@@ -52,7 +52,7 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockAnvil.block_anvil).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockAnvilEntity.block_anvil).getDescriptionId());
     }
 
 

@@ -2,14 +2,14 @@ package com.denfop.integration.jei.genstone;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.gui.ItemStackImage;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.api.widget.ItemStackWidget;
+import com.denfop.blockentity.mechanism.BlockEntityNuclearWasteRecycler;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityNuclearWasteRecycler;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.Nonnull;
 
-public class GenStoneCategory extends GuiIU implements IRecipeCategory<GenStoneHandler> {
+public class GenStoneCategory extends ScreenMain implements IRecipeCategory<GenStoneHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -36,7 +36,7 @@ public class GenStoneCategory extends GuiIU implements IRecipeCategory<GenStoneH
     public GenStoneCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityNuclearWasteRecycler) BlockBaseMachine3Entity.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiGenStone".toLowerCase() +
@@ -74,7 +74,7 @@ public class GenStoneCategory extends GuiIU implements IRecipeCategory<GenStoneH
                 54 - 48, 33 + 14 - energylevel, 176,
                 14 - energylevel, 14, energylevel
         );
-        new ItemStackImage(this, 61, 25, () -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack, 0, 0);
+        new ItemStackWidget(this, 61, 25, () -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack, 0, 0);
     }
 
     @Override

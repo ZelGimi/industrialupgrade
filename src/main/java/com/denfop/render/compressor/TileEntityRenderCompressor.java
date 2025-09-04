@@ -2,7 +2,7 @@ package com.denfop.render.compressor;
 
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.TileEntityCompressor;
+import com.denfop.blockentity.mechanism.BlockEntityCompressor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.ClientHooks;
 import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntityCompressor> {
+public class TileEntityRenderCompressor implements BlockEntityRenderer<BlockEntityCompressor> {
     private final BlockEntityRendererProvider.Context contex;
     private ItemStack stack;
     private float rotation;
@@ -29,7 +29,7 @@ public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntit
     }
 
     @Override
-    public void render(TileEntityCompressor te, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityCompressor te, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         ItemStack itemstack = te.outputSlot.get(0);
         poseStack.pushPose();

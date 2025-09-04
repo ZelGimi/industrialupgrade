@@ -1,8 +1,8 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.DecoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +30,7 @@ public class PacketUpdateOvertimeTile implements IPacket {
             final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
             buf.writeBytes(is);
             if (te != null) {
-                ((TileEntityBlock) te).readUpdatePacket(buf);
+                ((BlockEntityBase) te).readUpdatePacket(buf);
             }
 
         }

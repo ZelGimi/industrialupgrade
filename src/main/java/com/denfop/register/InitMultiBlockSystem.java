@@ -7,11 +7,11 @@ import com.denfop.api.reactors.IFluidReactor;
 import com.denfop.api.reactors.IGasReactor;
 import com.denfop.api.reactors.IGraphiteReactor;
 import com.denfop.api.reactors.IHeatReactor;
+import com.denfop.blockentity.cokeoven.*;
+import com.denfop.blockentity.geothermalpump.IController;
+import com.denfop.blockentity.mechanism.blastfurnace.api.*;
+import com.denfop.blockentity.quarry_earth.IEarthQuarry;
 import com.denfop.register.multiblock.*;
-import com.denfop.tiles.cokeoven.*;
-import com.denfop.tiles.geothermalpump.IController;
-import com.denfop.tiles.mechanism.blastfurnace.api.*;
-import com.denfop.tiles.quarry_earth.IEarthQuarry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -67,7 +67,7 @@ public class InitMultiBlockSystem {
         advCokeOvenMultiBlock =
                 MultiBlockSystem.instance
                         .add("AdvCokeOven")
-                        .setMain(com.denfop.tiles.adv_cokeoven.IMain.class)
+                        .setMain(com.denfop.blockentity.adv_cokeoven.IMain.class)
                         .setHasActivatedItem(true)
                         .setIgnoreMetadata(true)
                         .setActivateItem(
@@ -147,22 +147,22 @@ public class InitMultiBlockSystem {
             }
         }
         advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos(),
-                com.denfop.tiles.adv_cokeoven.IMain.class,
+                com.denfop.blockentity.adv_cokeoven.IMain.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(0)),
                 Direction.NORTH
         );
-        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(0, 2, 1), com.denfop.tiles.adv_cokeoven.IInputItem.class,
+        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(0, 2, 1), com.denfop.blockentity.adv_cokeoven.IInputItem.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(1))
         );
-        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(0, 0, 2), com.denfop.tiles.adv_cokeoven.IInputFluid.class,
+        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(0, 0, 2), com.denfop.blockentity.adv_cokeoven.IInputFluid.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(4)), Direction.SOUTH
         );
-        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(-1, 0, 1), com.denfop.tiles.adv_cokeoven.IOutputFluid.class,
+        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(-1, 0, 1), com.denfop.blockentity.adv_cokeoven.IOutputFluid.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(3)), Direction.EAST
         );
 
 
-        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(1, 0, 1), com.denfop.tiles.adv_cokeoven.IHeat.class,
+        advCokeOvenMultiBlock.add(advCokeOvenMultiBlock.getPos().offset(1, 0, 1), com.denfop.blockentity.adv_cokeoven.IHeat.class,
                 new ItemStack(IUItem.adv_cokeoven.getItem(2)), Direction.WEST
         );
         pos1 = advCokeOvenMultiBlock.getPos().offset(0, 0, 1);
@@ -171,7 +171,7 @@ public class InitMultiBlockSystem {
                 for (int k = -1; k < 2; k++) {
                     advCokeOvenMultiBlock.add(
                             pos1.offset(i, j, k),
-                            com.denfop.tiles.adv_cokeoven.IPart.class,
+                            com.denfop.blockentity.adv_cokeoven.IPart.class,
                             new ItemStack(IUItem.adv_cokeoven.getItem(5))
                     );
                 }
@@ -181,14 +181,14 @@ public class InitMultiBlockSystem {
 
         ChemicalPlantMultiBlock = MultiBlockSystem.instance
                 .add("ChemicalPlantMultiBlock")
-                .setMain(com.denfop.tiles.chemicalplant.IController.class)
+                .setMain(com.denfop.blockentity.chemicalplant.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockChemicalPlant.init();
         CyclotronMultiBlock =
                 MultiBlockSystem.instance
                         .add("CyclotronMultiBlock")
-                        .setMain(com.denfop.tiles.cyclotron.IController.class)
+                        .setMain(com.denfop.blockentity.cyclotron.IController.class)
                         .setHasActivatedItem(false)
                         .setIgnoreMetadata(true);
 
@@ -210,49 +210,49 @@ public class InitMultiBlockSystem {
         MultiBlockGeothermalPump.init();
         GasTurbineMultiBlock = MultiBlockSystem.instance
                 .add("GasTurbineMultiBlock")
-                .setMain(com.denfop.tiles.gasturbine.IController.class)
+                .setMain(com.denfop.blockentity.gasturbine.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockGasTurbine.init();
         GasWellMultiBlock = MultiBlockSystem.instance
                 .add("GasWellMultiBlock")
-                .setMain(com.denfop.tiles.gaswell.IController.class)
+                .setMain(com.denfop.blockentity.gaswell.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockGasWell.init();
         SmelterMultiBlock = MultiBlockSystem.instance
                 .add("SmelterMultiBlock")
-                .setMain(com.denfop.tiles.smeltery.IController.class)
+                .setMain(com.denfop.blockentity.smeltery.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockSmelter.init();
         LightningRodMultiBlock = MultiBlockSystem.instance
                 .add("LightningRodMultiBlock")
-                .setMain(com.denfop.tiles.lightning_rod.IController.class)
+                .setMain(com.denfop.blockentity.lightning_rod.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockLightningRod.init();
         SteamBoilerMultiBlock = MultiBlockSystem.instance
                 .add("SteamBoilerMultiBlock")
-                .setMain(com.denfop.tiles.mechanism.steamboiler.IController.class)
+                .setMain(com.denfop.blockentity.mechanism.steamboiler.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockSteamBoiler.init();
         WindTurbineMultiBlock = MultiBlockSystem.instance
                 .add("WindTurbineMultiBlock")
-                .setMain(com.denfop.tiles.windturbine.IController.class)
+                .setMain(com.denfop.blockentity.windturbine.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockWindTurbine.init();
         HydroTurbineMultiBlock = MultiBlockSystem.instance
                 .add("HydroTurbineMultiBlock")
-                .setMain(com.denfop.tiles.hydroturbine.IController.class)
+                .setMain(com.denfop.blockentity.hydroturbine.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockHydroTurbine.init();
         SteamTurbineMultiBlock = MultiBlockSystem.instance
                 .add("SteamTurbineMultiBlock")
-                .setMain(com.denfop.tiles.mechanism.steamturbine.IController.class)
+                .setMain(com.denfop.blockentity.mechanism.steamturbine.IController.class)
                 .setHasActivatedItem(false)
                 .setIgnoreMetadata(true);
         MultiBlockSteamTurbine.init();

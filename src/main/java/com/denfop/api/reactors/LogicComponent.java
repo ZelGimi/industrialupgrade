@@ -1,6 +1,6 @@
 package com.denfop.api.reactors;
 
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import com.denfop.items.reactors.ItemComponentVent;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,7 +39,7 @@ public class LogicComponent {
         this.count = 0;
         this.reactor = reactor;
         this.componentVent = this.getItem() instanceof ItemComponentVent;
-        if (stack != null && stack.getItem() instanceof IDamageItem damageItem) {
+        if (stack != null && stack.getItem() instanceof DamageItem damageItem) {
             this.maxDamage = (damageItem).getMaxCustomDamage(stack);
             this.maxDamageItem = damageItem.getCustomDamage(stack);
         } else {

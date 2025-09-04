@@ -1,15 +1,15 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.sytem.InfoTile;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.blockentity.base.BlockEntityBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
 import java.util.*;
 
-public abstract class EnergyNetDelegate implements IEnergyTile {
+public abstract class EnergyNetDelegate implements EnergyTile {
     public final BufferEnergy buffer;
     public final BlockPos worldPosition;
     private final boolean clientSide;
@@ -24,8 +24,8 @@ public abstract class EnergyNetDelegate implements IEnergyTile {
     protected double perenergy;
     protected double pastEnergy1;
     protected double perenergy1;
-    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    Map<Direction, EnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<EnergyTile>> validReceivers = new LinkedList<>();
     private long id;
 
     public EnergyNetDelegate(Energy block) {
@@ -36,7 +36,7 @@ public abstract class EnergyNetDelegate implements IEnergyTile {
         this.buffer = block.buffer;
     }
 
-    public EnergyNetDelegate(TileEntityBlock block, Set<Direction> sourceDirection, BufferEnergy bufferEnergy) {
+    public EnergyNetDelegate(BlockEntityBase block, Set<Direction> sourceDirection, BufferEnergy bufferEnergy) {
         this.worldPosition = block.pos;
         this.clientSide = block.getLevel().isClientSide;
         sinkDirections = new HashSet<>();
@@ -69,16 +69,16 @@ public abstract class EnergyNetDelegate implements IEnergyTile {
         this.sourceDirections = sourceDirections;
     }
 
-    public Map<Direction, IEnergyTile> getConductors() {
+    public Map<Direction, EnergyTile> getConductors() {
         return energyConductorMap;
     }
 
-    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+    public void RemoveTile(EnergyTile tile, final Direction facing1) {
         if (!clientSide) {
             this.energyConductorMap.remove(facing1);
-            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            final Iterator<InfoTile<EnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
-                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                InfoTile<EnergyTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
                     break;
@@ -87,11 +87,11 @@ public abstract class EnergyNetDelegate implements IEnergyTile {
         }
     }
 
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+    public List<InfoTile<EnergyTile>> getValidReceivers() {
         return validReceivers;
     }
 
-    public void AddTile(IEnergyTile tile, final Direction facing1) {
+    public void AddTile(EnergyTile tile, final Direction facing1) {
         if (!this.clientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);

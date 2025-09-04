@@ -2,19 +2,19 @@ package com.denfop.integration.jei.privatizer;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityPrivatizer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerPrivatizer;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuPrivatizer;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TilePrivatizer;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -31,26 +31,26 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class PrivatizerCategory extends GuiIU implements IRecipeCategory<PrivatizerHandler> {
+public class PrivatizerCategory extends ScreenMain implements IRecipeCategory<PrivatizerHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerPrivatizer container1;
+    private final ContainerMenuPrivatizer container1;
     private final JeiInform jeiInform;
 
     public PrivatizerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TilePrivatizer) BlockBaseMachine3.privatizer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityPrivatizer) BlockBaseMachine3Entity.privatizer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 169,
                 75
         );
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
         );
-        this.container1 = (ContainerPrivatizer) this.getContainer();
+        this.container1 = (ContainerMenuPrivatizer) this.getContainer();
         this.componentList.add(slots);
     }
 

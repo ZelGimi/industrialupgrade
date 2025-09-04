@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
 import com.denfop.Constants;
-import com.denfop.DataBlock;
-import com.denfop.DataMultiBlock;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.dataregistry.DataMultiBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
@@ -89,10 +89,27 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
         List<ItemStack> drops = NonNullList.create();
         if (tool.isEmpty() && (p_60538_.getOptionalParameter(THIS_ENTITY) instanceof Player player))
             tool = player.getItemInHand(InteractionHand.MAIN_HAND);
+        if (EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), tool) != 0)
+            return this.getSilkDrops(p_60538_.getLevel(), pos, state);
         drops = getDrops(p_60538_.getLevel(), pos, state, EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), tool));
         return drops;
     }
 
+    public List<ItemStack> getSilkDrops(
+            @Nonnull final Level world,
+            @Nonnull final BlockPos pos,
+            @Nonnull final BlockState state
+    ) {
+        if (data != null) {
+            return List.of(new ItemStack(this.getData().getItem(getMetaFromState(state))));
+
+        }
+        if (multiData != null) {
+            return List.of(new ItemStack(this.getMultiData().getItem(getMetaFromState(state))));
+
+        }
+        return List.of(ItemStack.EMPTY);
+    }
 
     public List<ItemStack> getDrops(
             @Nonnull final Level world,
@@ -120,7 +137,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     }
 
 
-    public    abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
+    public abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
 
-   public abstract <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element);
+    public abstract <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element);
 }

@@ -1,10 +1,10 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import com.denfop.items.reactors.ItemDamage;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemChemistry extends ItemDamage implements IDamageItem, IItemTab {
+public class ItemChemistry extends ItemDamage implements DamageItem, IItemTab {
     private String nameItem;
 
     public ItemChemistry(int durability) {

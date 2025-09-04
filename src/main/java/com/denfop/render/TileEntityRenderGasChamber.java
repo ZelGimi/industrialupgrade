@@ -1,6 +1,6 @@
 package com.denfop.render;
 
-import com.denfop.tiles.mechanism.TileEntityPrimalGasChamber;
+import com.denfop.blockentity.mechanism.BlockEntityPrimalGasChamber;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 
-public class TileEntityRenderGasChamber implements BlockEntityRenderer<TileEntityPrimalGasChamber> {
+public class TileEntityRenderGasChamber implements BlockEntityRenderer<BlockEntityPrimalGasChamber> {
     private final BlockEntityRendererProvider.Context contex;
 
     public TileEntityRenderGasChamber(BlockEntityRendererProvider.Context p_173636_) {
@@ -20,7 +20,7 @@ public class TileEntityRenderGasChamber implements BlockEntityRenderer<TileEntit
     }
 
     @Override
-    public void render(TileEntityPrimalGasChamber tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalGasChamber tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         renderTanks(tile, poseStack, bufferSource, packedLight, combinedOverlay);
         if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult
@@ -56,7 +56,7 @@ public class TileEntityRenderGasChamber implements BlockEntityRenderer<TileEntit
         }
     }
 
-    private void renderTanks(TileEntityPrimalGasChamber tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
+    private void renderTanks(BlockEntityPrimalGasChamber tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         if (!tile.fluidTank1.getFluid().isEmpty() && tile.fluidTank1.getFluid().getFluid() != null & tile.fluidTank1
                 .getFluid()
                 .getFluid() != Fluids.EMPTY) {

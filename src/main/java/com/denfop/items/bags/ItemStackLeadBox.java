@@ -1,10 +1,10 @@
 package com.denfop.items.bags;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerLeadBox;
-import com.denfop.gui.GuiCore;
-import com.denfop.gui.GuiLeadBox;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenLeadBox;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -21,21 +21,16 @@ public class ItemStackLeadBox extends ItemStackInventory {
         this.itemStack1 = stack;
     }
 
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
-
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerLeadBox containerLeadBox = (ContainerLeadBox) menu;
-        return new GuiLeadBox(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuLeadBox containerLeadBox = (ContainerMenuLeadBox) menu;
+        return new ScreenLeadBox(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerLeadBox getGuiContainer(Player player) {
-        return new ContainerLeadBox(player, this);
+    public ContainerMenuLeadBox getGuiContainer(Player player) {
+        return new ContainerMenuLeadBox(player, this);
     }
 
 

@@ -2,13 +2,13 @@ package com.denfop.integration.jei.doublemolecular;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityImpOilRefiner;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileImpOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class DoubleMolecularTransformerCategory extends GuiIU implements IRecipeCategory<DoubleMolecularTransformerHandler> {
+public class DoubleMolecularTransformerCategory extends ScreenMain implements IRecipeCategory<DoubleMolecularTransformerHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -32,7 +32,7 @@ public class DoubleMolecularTransformerCategory extends GuiIU implements IRecipe
     public DoubleMolecularTransformerCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityImpOilRefiner) BlockBaseMachine3Entity.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew" +
                         ".png"), 10, 49, 216,
                 73

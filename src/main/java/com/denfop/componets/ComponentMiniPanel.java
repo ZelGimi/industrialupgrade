@@ -1,15 +1,15 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.IEnergySource;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.event.EnergyTileLoadEvent;
-import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
-import com.denfop.api.sytem.InfoTile;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.api.energy.event.load.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.unload.EnergyTileUnLoadEvent;
+import com.denfop.api.energy.interfaces.EnergyAcceptor;
+import com.denfop.api.energy.interfaces.EnergySource;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.panels.entity.BlockEntityMiniPanels;
+import com.denfop.inventory.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,18 +46,18 @@ public class ComponentMiniPanel extends AbstractComponent {
     protected double bonusCapacity;
     protected double bonusProdution;
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<EnergyTile>> validReceivers = new LinkedList<>();
+    Map<Direction, EnergyTile> energyConductorMap = new HashMap<>();
     private double prodution;
     private ChunkPos chunkPos;
 
-    public ComponentMiniPanel(TileEntityMiniPanels parent, double capacity) {
+    public ComponentMiniPanel(BlockEntityMiniPanels parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), 1);
     }
 
 
     public ComponentMiniPanel(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sourceDirections,
             int tier
@@ -66,7 +66,7 @@ public class ComponentMiniPanel extends AbstractComponent {
     }
 
     public ComponentMiniPanel(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sourceDirections,
             int sourceTier,
@@ -87,11 +87,11 @@ public class ComponentMiniPanel extends AbstractComponent {
         this.prodution = 0;
     }
 
-    public static ComponentMiniPanel asBasicSource(TileEntityInventory parent, double capacity) {
+    public static ComponentMiniPanel asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static ComponentMiniPanel asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static ComponentMiniPanel asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new ComponentMiniPanel(parent, capacity, ModUtils.allFacings, tier);
     }
 
@@ -120,7 +120,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         } else if (hasElement) {
             this.energyStorageMap.remove(srcPos);
         }
-        if (tile instanceof TileEntityInventory) {
+        if (tile instanceof BlockEntityInventory) {
             return;
         }
         if (tile == null) {
@@ -137,7 +137,7 @@ public class ComponentMiniPanel extends AbstractComponent {
                         (int) Math.min(Math.min(
                                 this.getEnergy() / 4,
                                 Integer.MAX_VALUE - 1
-                        ), ((IEnergySource) this.getDelegate()).canExtractEnergy() / 4),
+                        ), ((EnergySource) this.getDelegate()).canExtractEnergy() / 4),
                         false
                 ));
                 if (this.getEnergy() <= 0) {
@@ -163,7 +163,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         return ret;
     }
 
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+    public List<InfoTile<EnergyTile>> getValidReceivers() {
         return validReceivers;
     }
 
@@ -179,7 +179,7 @@ public class ComponentMiniPanel extends AbstractComponent {
                 if (hasElement) {
                     continue;
                 }
-                if (tile instanceof TileEntityInventory) {
+                if (tile instanceof BlockEntityInventory) {
                     continue;
                 }
                 if (tile == null) {
@@ -324,7 +324,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         return ret;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
 
     }
 
@@ -384,7 +384,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         return Collections.unmodifiableSet(this.sourceDirections);
     }
 
-    public IEnergyTile getDelegate() {
+    public EnergyTile getDelegate() {
         return this.delegate;
     }
 
@@ -392,12 +392,12 @@ public class ComponentMiniPanel extends AbstractComponent {
         return Math.min(this.storage, this.getProdution());
     }
 
-    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+    public void RemoveTile(EnergyTile tile, final Direction facing1) {
         if (!parent.getWorld().isClientSide) {
             this.energyConductorMap.remove(facing1);
-            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            final Iterator<InfoTile<EnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
-                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                InfoTile<EnergyTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
                     break;
@@ -406,18 +406,18 @@ public class ComponentMiniPanel extends AbstractComponent {
         }
     }
 
-    public void AddTile(IEnergyTile tile, final Direction facing1) {
+    public void AddTile(EnergyTile tile, final Direction facing1) {
         if (!parent.getWorld().isClientSide) {
             this.energyConductorMap.put(facing1, tile);
             validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
 
-    public Map<Direction, IEnergyTile> getTiles() {
+    public Map<Direction, EnergyTile> getTiles() {
         return energyConductorMap;
     }
 
-    private abstract class EnergyNetDelegate extends BlockEntity implements IEnergyTile {
+    private abstract class EnergyNetDelegate extends BlockEntity implements EnergyTile {
 
         private EnergyNetDelegate() {
             super(ComponentMiniPanel.this.parent.getType(), ComponentMiniPanel.this.parent.getBlockPos(), ComponentMiniPanel.this.parent.getBlockState());
@@ -425,7 +425,7 @@ public class ComponentMiniPanel extends AbstractComponent {
 
     }
 
-    private class EnergyNetDelegateSource extends ComponentMiniPanel.EnergyNetDelegate implements IEnergySource {
+    private class EnergyNetDelegateSource extends ComponentMiniPanel.EnergyNetDelegate implements EnergySource {
 
 
         int hashCodeSource;
@@ -454,11 +454,11 @@ public class ComponentMiniPanel extends AbstractComponent {
             this.id = id;
         }
 
-        public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        public List<InfoTile<EnergyTile>> getValidReceivers() {
             return validReceivers;
         }
 
-        public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+        public void RemoveTile(EnergyTile tile, final Direction facing1) {
             if (!parent.getWorld().isClientSide) {
                 ComponentMiniPanel.this.RemoveTile(tile, facing1);
 
@@ -466,13 +466,13 @@ public class ComponentMiniPanel extends AbstractComponent {
         }
 
 
-        public void AddTile(IEnergyTile tile, final Direction facing1) {
+        public void AddTile(EnergyTile tile, final Direction facing1) {
             if (!parent.getWorld().isClientSide) {
                 ComponentMiniPanel.this.AddTile(tile, facing1);
             }
         }
 
-        public Map<Direction, IEnergyTile> getTiles() {
+        public Map<Direction, EnergyTile> getTiles() {
             return ComponentMiniPanel.this.energyConductorMap;
         }
 
@@ -485,7 +485,7 @@ public class ComponentMiniPanel extends AbstractComponent {
             return ComponentMiniPanel.this.sourceTier;
         }
 
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+        public boolean emitsEnergyTo(EnergyAcceptor receiver, Direction dir) {
             return ComponentMiniPanel.this.sourceDirections.contains(dir);
         }
 

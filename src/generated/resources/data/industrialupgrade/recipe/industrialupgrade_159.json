@@ -3,11 +3,11 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "industrialupgrade:baseblockingot/vanady"
+      "item": "industrialupgrade:baseblockingot/vanadium"
     }
   ],
   "result": {
     "count": 9,
-    "id": "industrialupgrade:itemingots/vanady_ingot"
+    "id": "industrialupgrade:itemingots/vanadium_ingot"
   }
 }

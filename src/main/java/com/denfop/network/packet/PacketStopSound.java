@@ -1,8 +1,8 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.audio.SoundHandler;
 import com.denfop.network.NetworkManager;
+import com.denfop.sound.SoundHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

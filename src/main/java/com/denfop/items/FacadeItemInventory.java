@@ -1,7 +1,7 @@
 package com.denfop.items;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiCore;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -20,21 +20,15 @@ public class FacadeItemInventory extends ItemStackInventory {
     }
 
 
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
-
-
     @OnlyIn(Dist.CLIENT)
     @Override
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerFacadeItem containerLeadBox = (ContainerFacadeItem) menu;
-        return new GuiFacadeItem(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuFacadeItem containerLeadBox = (ContainerMenuFacadeItem) menu;
+        return new ScreenFacadeItem(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerFacadeItem getGuiContainer(Player player) {
-        return new ContainerFacadeItem(player, this);
+    public ContainerMenuFacadeItem getGuiContainer(Player player) {
+        return new ContainerMenuFacadeItem(player, this);
     }
 
 

@@ -1,7 +1,7 @@
 package com.denfop.network;
 
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.world.IWorldTickCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -18,11 +18,11 @@ public class WorldData {
             : null;
     public static Map<ResourceKey<Level>, WorldData> idxServer = new HashMap<>();
     public final Queue<IWorldTickCallback> singleUpdates = new LinkedList<>();
-    public final List<TileEntityBlock> listUpdateTile = new LinkedList<>();
-    public final Map<TileEntityBlock, List<CustomPacketBuffer>> mapUpdateField = new HashMap<>();
-    public final Map<TileEntityBlock, Map<Player, CustomPacketBuffer>> mapUpdateContainer = new HashMap<>();
+    public final List<BlockEntityBase> listUpdateTile = new LinkedList<>();
+    public final Map<BlockEntityBase, List<CustomPacketBuffer>> mapUpdateField = new HashMap<>();
+    public final Map<BlockEntityBase, Map<Player, CustomPacketBuffer>> mapUpdateContainer = new HashMap<>();
 
-    public final Map<BlockPos, TileEntityBlock> mapUpdateOvertimeField = new HashMap<>();
+    public final Map<BlockPos, BlockEntityBase> mapUpdateOvertimeField = new HashMap<>();
     private final Level world;
 
     public WorldData(Level world) {

@@ -1,12 +1,12 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;

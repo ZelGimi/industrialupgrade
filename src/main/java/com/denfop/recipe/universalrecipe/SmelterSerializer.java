@@ -5,15 +5,12 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.InputFluid;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.blockentity.smeltery.BlockEntitySmelteryController;
+import com.denfop.blockentity.smeltery.BlockEntitySmelteryFurnace;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputFluidStack;
 import com.denfop.recipe.InputItemStack;
 import com.denfop.recipe.InputOreDict;
-import com.denfop.tiles.smeltery.TileEntitySmelteryController;
-import com.denfop.tiles.smeltery.TileEntitySmelteryFurnace;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,7 +18,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -32,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
-    public static LinkedList<Integer> integers = new LinkedList<>();
     public static final MapCodec<SmelteryRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder -> {
 
         Codec<IInputItemStack> singleInputCodec = RecordCodecBuilder.create(inst -> inst.group(
@@ -43,7 +38,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
             if ("tag".equals(type))
                 return new InputOreDict(id.getNamespace() + ":" + id.getPath(), amt);
             if ("fluid".equals(type))
-                return  new InputFluidStack(new  FluidStack(BuiltInRegistries.FLUID.get(id), amt));
+                return new InputFluidStack(new FluidStack(BuiltInRegistries.FLUID.get(id), amt));
             return new InputItemStack(new ItemStack(BuiltInRegistries.ITEM.get(id), amt));
         }));
 
@@ -52,7 +47,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                 Codec.STRING.fieldOf("operation").forGetter(SmelteryRecipe::getRecipeType),
                 Codec.list(singleInputCodec).fieldOf("inputs").forGetter(SmelteryRecipe::getInput),
                 Codec.list(singleInputCodec).fieldOf("outputs").forGetter(SmelteryRecipe::getInput)
-                ).apply(builder, (operation, inputs, outputs) -> {
+        ).apply(builder, (operation, inputs, outputs) -> {
             if (!IUCore.register1) {
                 List<FluidStack> fluidStacksInput = new ArrayList<>();
                 List<ItemStack> itemStacksInput = new ArrayList<>();
@@ -75,7 +70,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         ItemStack stack = itemStacksInput.get(0);
                         FluidStack fluidStack = fluidStacksOutput.get(0);
                         if (stack != null && fluidStack != null)
-                            TileEntitySmelteryFurnace.addRecipe("", stack, fluidStack);
+                            BlockEntitySmelteryFurnace.addRecipe("", stack, fluidStack);
                         break;
                     case "castings_ingot":
                         stack = itemStacksOutput.get(0);
@@ -101,21 +96,22 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
 
 
                         List<FluidStack> list = fluidStacksInput;
-                        TileEntitySmelteryController.mapRecipes.put(list, fluidStack1);
+                        BlockEntitySmelteryController.mapRecipes.put(list, fluidStack1);
                         break;
                 }
 
                 return new SmelteryRecipe("", Collections.emptyList(), ItemStack.EMPTY);
-            }else{
+            } else {
                 return new SmelteryRecipe("", Collections.emptyList(), ItemStack.EMPTY);
             }
         });
     });
     public static final StreamCodec<RegistryFriendlyByteBuf, SmelteryRecipe> STREAM_CODEC = StreamCodec.of(SmelterSerializer::toNetwork, SmelterSerializer::fromNetwork);
+    public static LinkedList<Integer> integers = new LinkedList<>();
 
     private static SmelteryRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
 
-        return new SmelteryRecipe("", new ArrayList<>(),  ItemStack.EMPTY);
+        return new SmelteryRecipe("", new ArrayList<>(), ItemStack.EMPTY);
     }
 
     private static void toNetwork(RegistryFriendlyByteBuf p_320738_, SmelteryRecipe p_320586_) {

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "c:raw_materials/vanady"
+      "tag": "c:raw_materials/vanadium"
     }
   },
   "pattern": [
@@ -13,7 +13,7 @@
   ],
   "result": {
     "count": 1,
-    "id": "industrialupgrade:raw_block/raw_vanady"
+    "id": "industrialupgrade:raw_block/raw_vanadium"
   },
   "show_notification": false
 }

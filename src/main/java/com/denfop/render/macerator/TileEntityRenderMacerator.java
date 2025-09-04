@@ -1,7 +1,7 @@
 package com.denfop.render.macerator;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.TileEntityMacerator;
+import com.denfop.blockentity.mechanism.BlockEntityMacerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.ClientHooks;
 import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntityMacerator> {
+public class TileEntityRenderMacerator implements BlockEntityRenderer<BlockEntityMacerator> {
 
     private final BlockEntityRendererProvider.Context contex;
     private ItemStack stack;
@@ -30,7 +30,7 @@ public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntity
     }
 
     @Override
-    public void render(TileEntityMacerator tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityMacerator tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();

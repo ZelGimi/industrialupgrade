@@ -2,14 +2,14 @@ package com.denfop.integration.jei.gendiesel;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.container.ContainerMultiMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityGearMachine;
+import com.denfop.blocks.mechanism.BlockMoreMachine3Entity;
+import com.denfop.containermenu.ContainerMenuMultiMachine;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenDieselCategory extends GuiIU implements IRecipeCategory<GenDieselHandler> {
+public class GenDieselCategory extends ScreenMain implements IRecipeCategory<GenDieselHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -33,8 +33,8 @@ public class GenDieselCategory extends GuiIU implements IRecipeCategory<GenDiese
     public GenDieselCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getInstance().player,
-                ((TileGearMachine) BlockMoreMachine3.gearing.getDummyTe()), 1, true
+        super(new ContainerMenuMultiMachine(Minecraft.getInstance().player,
+                ((BlockEntityGearMachine) BlockMoreMachine3Entity.gearing.getDummyTe()), 1, true
         ));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());

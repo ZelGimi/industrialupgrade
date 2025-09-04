@@ -1,14 +1,14 @@
 package com.denfop.componets;
 
-import com.denfop.Localization;
-import com.denfop.api.audio.IAudioFixer;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.api.sound.AudioFixer;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.utils.Localization;
 
 public class ComponentSoundButton extends ComponentButton {
 
-    private final IAudioFixer audioFixer;
+    private final AudioFixer audioFixer;
 
-    public ComponentSoundButton(final TileEntityBlock entityBlock, final int event, IAudioFixer audioFixer) {
+    public ComponentSoundButton(final BlockEntityBase entityBlock, final int event, AudioFixer audioFixer) {
         super(entityBlock, event);
         this.audioFixer = audioFixer;
     }
@@ -26,7 +26,7 @@ public class ComponentSoundButton extends ComponentButton {
         }
     }
 
-    public IAudioFixer getAudioFixer() {
+    public AudioFixer getAudioFixer() {
         return audioFixer;
     }
 

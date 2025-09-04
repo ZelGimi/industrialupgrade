@@ -1,11 +1,11 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IVolcanoArmor;
+import com.denfop.api.item.armor.VolcanoArmor;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.potion.IUPotion;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -83,7 +83,7 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
         List<Player> players = level.getEntitiesOfClass(Player.class, axisAlignedBB);
 
         for (Player player : players) {
-            if (!IVolcanoArmor.hasCompleteHazmat(player)) {
+            if (!VolcanoArmor.hasCompleteHazmat(player)) {
                 player.addEffect(new MobEffectInstance(IUPotion.poison, 200, 0));
             }
         }

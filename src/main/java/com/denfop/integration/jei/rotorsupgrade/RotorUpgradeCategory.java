@@ -2,13 +2,13 @@ package com.denfop.integration.jei.rotorsupgrade;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityRodManufacturer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityRodManufacturer;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class RotorUpgradeCategory extends GuiIU implements IRecipeCategory<RotorUpgradeHandler> {
+public class RotorUpgradeCategory extends ScreenMain implements IRecipeCategory<RotorUpgradeHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -31,7 +31,7 @@ public class RotorUpgradeCategory extends GuiIU implements IRecipeCategory<Rotor
     public RotorUpgradeCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityRodManufacturer) BlockBaseMachine3.rods_manufacturer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityRodManufacturer) BlockBaseMachine3Entity.rods_manufacturer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei" +
                         ".png"), 5, 5, 140,
                 80

@@ -2,13 +2,13 @@ package com.denfop.proxy;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
 import com.denfop.api.space.SpaceInit;
-import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
+import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.items.IProperties;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.tiles.panels.entity.TileSolarPanel;
-import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -77,8 +77,8 @@ public class CommonProxy {
     }
 
     public void postInit() {
-        TileEntityMultiCable.list = null;
-        TileSolarPanel.list = null;
+        BlockEntityMultiCable.list = null;
+        BlockEntitySolarPanel.list = null;
 
 
     }

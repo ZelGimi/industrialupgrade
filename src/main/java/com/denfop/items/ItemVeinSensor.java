@@ -2,23 +2,21 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.blocks.*;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.datacomponent.VeinInfo;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.utils.KeyboardClient;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.VeinType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -42,9 +40,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
-
+import java.util.*;
 
 import static com.denfop.utils.ModUtils.inChanceOre;
 import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
@@ -53,6 +50,7 @@ import static com.denfop.world.vein.VeinType.veinTypeMap;
 public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IUpdatableItemStackEvent,
         IItemStackInventory, IProperties {
     public static final Map<String, Integer> ORE_INDEX_MAP = new HashMap<>();
+    public static Map<BlockState, Integer> dataColors = new HashMap<>();
 
     static {
         ORE_INDEX_MAP.put("magnetite", 0);
@@ -99,7 +97,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         Map<Vector2, DataOres> map = new HashMap<>();
         for (int x = chunk.getPos().x * 16; x < chunk.getPos().x * 16 + 16; x++) {
             for (int z = chunk.getPos().z * 16; z < chunk.getPos().z * 16 + 16; z++) {
-                for (int y = 40; y < chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z); y++) {
+                for (int y = 0; y < chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z); y++) {
                     BlockState blockState = chunk.getBlockState(new BlockPos(x, y, z));
                     int color = getOreColor(blockState);
                     Vector2 vector2 = new Vector2(x, z);
@@ -123,11 +121,10 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         }
         return map;
     }
-    public static Map<BlockState,Integer> dataColors = new HashMap<>();
 
     public static int getOreColor(BlockState state) {
         Block block = state.getBlock();
-        if (dataColors.containsKey(state)){
+        if (dataColors.containsKey(state)) {
             return dataColors.get(state);
         }
         if (block == Blocks.IRON_ORE) {
@@ -144,7 +141,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
         } else if (block == Blocks.EMERALD_ORE) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
-        }else if (block == Blocks.COPPER_ORE) {
+        } else if (block == Blocks.COPPER_ORE) {
             return ModUtils.convertRGBcolorToInt(255, 144, 0);
         } else if (block == Blocks.NETHER_QUARTZ_ORE) {
             return ModUtils.convertRGBcolorToInt(223, 223, 223);
@@ -375,7 +372,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         return IUCore.EnergyTab;
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         Map<Integer, Map<Vector2, DataOres>> map = new HashMap<>();
         ChunkPos pos = new ChunkPos(new BlockPos((int) player.getX(), (int) player.getY(), (int) player.getZ()));
         ChunkPos pos2 = new ChunkPos(pos.x - 4, pos.z - 4);
@@ -423,7 +420,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         tooltip.add(Component.translatable("iu.sensor.info"));
         tooltip.add(Component.translatable("iu.scanner_ore.info4"));
         tooltip.add(Component.translatable("iu.scanner_ore.info4"));
-        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7")+ KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
+        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7") + KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
                 "iu.changemode_rcm")));
         tooltip.add(Component.translatable("iu.vein_sensor.info8"));
         if (stack.has(DataComponentsInit.VEIN_INFO)) {
@@ -449,71 +446,71 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     @Nonnull
     public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
-        if (player.isShiftKeyDown()){
+        if (player.isShiftKeyDown()) {
             stack.set(DataComponentsInit.LIST_INTEGER, new ArrayList<>());
             return InteractionResultHolder.success(player.getItemInHand(hand));
-        }else {
-        if (!world.isClientSide) {
-            if (IUCore.keyboard.isChangeKeyDown(player)) {
-                final List<Integer> list1 =  stack.getOrDefault(DataComponentsInit.LIST_INTEGER, new ArrayList<>());
-                if (!list1.isEmpty()) {
-                    int meta = list1.get(0);
-                    BlockState state = WorldBaseGen.blockStateMap.get(meta);
-                    List<Integer> veinTypes = new LinkedList<>();
-                    for (VeinType vein : WorldBaseGen.veinTypes) {
-                        if ((vein.getHeavyOre() != null && vein.getHeavyOre().getStateMeta(vein.getMeta()) == state) || inChanceOre(
-                                vein,
-                                state
-                        )) {
-                            veinTypes.add(vein.getId());
+        } else {
+            if (!world.isClientSide) {
+                if (IUCore.keyboard.isChangeKeyDown(player)) {
+                    final List<Integer> list1 = stack.getOrDefault(DataComponentsInit.LIST_INTEGER, new ArrayList<>());
+                    if (!list1.isEmpty()) {
+                        int meta = list1.get(0);
+                        BlockState state = WorldBaseGen.blockStateMap.get(meta);
+                        List<Integer> veinTypes = new LinkedList<>();
+                        for (VeinType vein : WorldBaseGen.veinTypes) {
+                            if ((vein.getHeavyOre() != null && vein.getHeavyOre().getStateMeta(vein.getMeta()) == state) || inChanceOre(
+                                    vein,
+                                    state
+                            )) {
+                                veinTypes.add(vein.getId());
+                            }
                         }
-                    }
 
-                    ChunkPos chunkPos1 = new ChunkPos(BlockPos.containing(player.position()));
-                    Set<ChunkPos> chunkPosList = new HashSet<>();
-                    for (int x = -16; x < 17; x++)
-                        for (int z = -16; z < 17; z++) {
-                            chunkPosList.add(new ChunkPos(chunkPos1.x + x, chunkPos1.z + z));
-                        }
-                    for (ChunkPos chunkPos : chunkPosList) {
-                        Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.get(chunkPos.x % 256);
-                        if (tupleMap == null)
-                            continue;
-                        Tuple<Color, Integer> tuple = tupleMap.get(chunkPos.z % 256);
+                        ChunkPos chunkPos1 = new ChunkPos(BlockPos.containing(player.position()));
+                        Set<ChunkPos> chunkPosList = new HashSet<>();
+                        for (int x = -16; x < 17; x++)
+                            for (int z = -16; z < 17; z++) {
+                                chunkPosList.add(new ChunkPos(chunkPos1.x + x, chunkPos1.z + z));
+                            }
+                        for (ChunkPos chunkPos : chunkPosList) {
+                            Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.get(chunkPos.x % 256);
+                            if (tupleMap == null)
+                                continue;
+                            Tuple<Color, Integer> tuple = tupleMap.get(chunkPos.z % 256);
 
-                        if (tuple != null) {
+                            if (tuple != null) {
 
-                            VeinType veinType = veinTypeMap.get(tuple.getB());
-                            if (veinTypes.contains(veinType.getId())){
-                                final String s = Localization.translate("deposists.jei1") + (veinType.getHeavyOre() != null ?
-                                        new ItemStack(veinType.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
-                                        new ItemStack(veinType.getOres().get(0).getBlock().getBlock(), 1
-                                        ).getDisplayName().getString());
-                                IUCore.proxy.messagePlayer(
-                                        player,
-                                        Component.literal(
-                                                "X: " + (chunkPos.getMinBlockX() + 16) +
-                                                        ", Z: " + (chunkPos.getMinBlockZ() + 16) +
-                                                        " " + s
-                                        ).getString()
-                                );
+                                VeinType veinType = veinTypeMap.get(tuple.getB());
+                                if (veinTypes.contains(veinType.getId())) {
+                                    final String s = Localization.translate("deposists.jei1") + (veinType.getHeavyOre() != null ?
+                                            new ItemStack(veinType.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
+                                            new ItemStack(veinType.getOres().get(0).getBlock().getBlock(), 1
+                                            ).getDisplayName().getString());
+                                    IUCore.proxy.messagePlayer(
+                                            player,
+                                            Component.literal(
+                                                    "X: " + (chunkPos.getMinBlockX() + 16) +
+                                                            ", Z: " + (chunkPos.getMinBlockZ() + 16) +
+                                                            " " + s
+                                            ).getString()
+                                    );
+                                }
                             }
                         }
                     }
+                    return InteractionResultHolder.success(player.getItemInHand(hand));
                 }
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
+
+                growingBuffer.writeByte(1);
+
+                growingBuffer.flip();
+                player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
                 return InteractionResultHolder.success(player.getItemInHand(hand));
+
             }
-            CustomPacketBuffer growingBuffer = new CustomPacketBuffer(player.registryAccess());
-
-            growingBuffer.writeByte(1);
-
-            growingBuffer.flip();
-            player.openMenu(getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
-
-
-            return InteractionResultHolder.success(player.getItemInHand(hand));
-
-        }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }

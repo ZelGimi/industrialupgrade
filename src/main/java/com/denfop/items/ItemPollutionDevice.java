@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.pollution.ChunkLevel;
-import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pollution.component.ChunkLevel;
+import com.denfop.api.pollution.component.LevelPollution;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;

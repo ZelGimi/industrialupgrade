@@ -213,9 +213,6 @@ public class ReplicatorRecipe {
         add(Blocks.CHISELED_DEEPSLATE, 0.015);
 
 
-
-
-
         add(Items.AMETHYST_SHARD, 30.04);
         add(Blocks.AMETHYST_BLOCK, 120.16);
         add(Blocks.BUDDING_AMETHYST, 150);
@@ -303,12 +300,6 @@ public class ReplicatorRecipe {
         add(Items.ACACIA_CHEST_BOAT, 70.0);
         add(Items.DARK_OAK_CHEST_BOAT, 70.0);
         add(Items.MANGROVE_CHEST_BOAT, 70.0);
-
-
-
-
-
-
 
 
         add(Blocks.STRIPPED_MANGROVE_LOG, 10.0);

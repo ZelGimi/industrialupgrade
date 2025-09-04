@@ -422,9 +422,9 @@ public class RecipesCore implements IRecipes {
 
         for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
             if (!recipe.require()) {
-                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()){
-                   if (!FluidStack.isSameFluid(tank.getFluid(),baseMachineRecipe.input.getFluid()))
-                         continue;
+                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()) {
+                    if (!FluidStack.isSameFluid(tank.getFluid(), baseMachineRecipe.input.getFluid()))
+                        continue;
                 }
 
                 int[] col = new int[size];
@@ -464,8 +464,8 @@ public class RecipesCore implements IRecipes {
                 }
             } else {
                 List<IInputItemStack> recipeInputList = baseMachineRecipe.input.getInputs();
-                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()){
-                    if (!FluidStack.isSameFluid(tank.getFluid(),baseMachineRecipe.input.getFluid()))
+                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()) {
+                    if (!FluidStack.isSameFluid(tank.getFluid(), baseMachineRecipe.input.getFluid()))
                         continue;
                 }
                 boolean need = true;
@@ -966,7 +966,7 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
-    public boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot) {
+    public boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot) {
         if (recipe == null) {
             return false;
         }
@@ -988,7 +988,7 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
-    public boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot, final FluidTank tank) {
+    public boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot, final FluidTank tank) {
         if (recipe == null) {
             return false;
         }

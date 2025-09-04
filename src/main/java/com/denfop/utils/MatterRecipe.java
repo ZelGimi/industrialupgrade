@@ -1,6 +1,6 @@
 package com.denfop.utils;
 
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -52,7 +52,7 @@ public class MatterRecipe {
         if (left.getItem() != right.getItem()) {
             return false;
         }
-        if (left.getItem() instanceof IEnergyItem && right.getItem() instanceof IEnergyItem) {
+        if (left.getItem() instanceof EnergyItem && right.getItem() instanceof EnergyItem) {
             return true;
         }
 

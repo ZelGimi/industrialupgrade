@@ -1,7 +1,7 @@
 package com.denfop.api.guidebook;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;

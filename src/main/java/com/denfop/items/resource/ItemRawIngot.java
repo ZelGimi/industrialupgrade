@@ -32,7 +32,7 @@ public class ItemRawIngot<T extends Enum<T> & ISubEnum> extends ItemMain<T> impl
                 name = "tungsten";
                 break;
             case 2:
-                name = "vanady";
+                name = "vanadium";
                 break;
 
 

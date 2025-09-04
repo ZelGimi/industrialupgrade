@@ -2,7 +2,7 @@ package com.denfop.api.tesseract;
 
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.inventory.Inventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -24,6 +24,6 @@ public interface ITesseract {
 
     Fluids.InternalFluidTank getTank();
 
-    InvSlot getSlotItem();
+    Inventory getSlotItem();
 
 }

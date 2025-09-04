@@ -1,6 +1,6 @@
 package com.denfop.items.reactors;
 
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class ItemDamage extends Item implements IDamageItem {
+public class ItemDamage extends Item implements DamageItem {
 
 
     private final int maxDamageItem;

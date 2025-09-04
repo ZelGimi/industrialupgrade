@@ -2,12 +2,12 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
+import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
-import com.denfop.tiles.mechanism.TileGenerationMicrochip;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -80,14 +80,14 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 69), 'H', getBlockStack(BlockBaseMachine3.steam_macerator)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 69), 'H', getBlockStack(BlockBaseMachine3Entity.steam_macerator)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 1), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 63), 'H', getBlockStack(BlockBaseMachine3.steam_compressor)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 63), 'H', getBlockStack(BlockBaseMachine3Entity.steam_compressor)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 2), "B H", "DAE", " C ",
 
@@ -105,7 +105,7 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 159), 'H', getBlockStack(BlockBaseMachine3.steam_extractor)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 159), 'H', getBlockStack(BlockBaseMachine3Entity.steam_extractor)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 5), " B ", "DAE", " C ",
 
@@ -119,21 +119,21 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 165), 'H', getBlockStack(BlockBaseMachine3.rolling_machine)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 165), 'H', getBlockStack(BlockBaseMachine3Entity.rolling_machine)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base2, 1, 4), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 163), 'H', getBlockStack(BlockBaseMachine3.steam_extruder)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 163), 'H', getBlockStack(BlockBaseMachine3Entity.steam_extruder)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base2, 1, 8), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
-                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 132), 'H', getBlockStack(BlockBaseMachine3.steam_cutting)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 132), 'H', getBlockStack(BlockBaseMachine3Entity.steam_cutting)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base3, 1, 4), "B F", "DAE", " C ",
 
@@ -184,7 +184,7 @@ public class BasicRecipeTwo {
                 ('G'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154)
         );
 
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base, 1, 0), "A A",
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base, 1, 0), "A A",
                 "DBE", "ACA",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
@@ -194,7 +194,7 @@ public class BasicRecipeTwo {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 2),
                 ('B'), ItemStackHelper.fromData(IUItem.simplemachine, 1, 0)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 1),
                 "A A",
                 "DBE",
@@ -211,7 +211,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 0)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 2),
                 "A A",
                 "DBE",
@@ -351,7 +351,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.advBattery, 1)
         );
         Recipes.recipe.addShapelessRecipe(
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11), IUItem.machine
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 55), "DCD", "BAB", "CCC",
@@ -440,7 +440,7 @@ public class BasicRecipeTwo {
                 ('C'), IUItem.photoniy_ingot,
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 0), "CDC", "BAB", "   ",
 
@@ -451,7 +451,7 @@ public class BasicRecipeTwo {
                 ('C'), IUItem.photoniy_ingot,
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 5), "CDC", "BAB", "   ",
 
@@ -462,7 +462,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 92),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 3), " C ", "BAB", "   ",
 
@@ -473,7 +473,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 372),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 3), " B ", "BAB", "   ",
 
@@ -484,7 +484,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 372),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 4), " C ", "BAB", "   ",
 
@@ -495,7 +495,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 372),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 4), " C ", "BAB", " C ",
 
@@ -506,7 +506,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.item_pipes, 1, 0),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 5), " C ", "BAB", " C ",
 
@@ -517,7 +517,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.item_pipes, 1, 0),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 59), "BCB", "DAD", "ECE",
 
@@ -593,7 +593,7 @@ public class BasicRecipeTwo {
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 155),
 
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
                 ('E'), "c:plates/Caravky"
         );
@@ -629,7 +629,7 @@ public class BasicRecipeTwo {
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 398),
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
@@ -677,7 +677,7 @@ public class BasicRecipeTwo {
                 ('A'), PHOTON_SENSOR, ('B'), Blocks.GLASS,
                 ('C'), IUItem.FluidCell
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 6),
                 "A A",
                 "DBE",
@@ -694,7 +694,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.simplemachine, 1, 2)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 7),
                 "A A",
                 "DBE",
@@ -711,7 +711,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 6)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 8),
                 "A A",
                 "DBE",
@@ -728,7 +728,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 7)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 9),
                 "A A",
                 "DBE",
@@ -745,7 +745,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.simplemachine, 1, 3)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 10),
                 "A A",
                 "DBE",
@@ -762,7 +762,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 9)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 11),
                 "A A",
                 "DBE",
@@ -779,7 +779,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 10)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 3),
                 "A A",
                 "DBE",
@@ -796,7 +796,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.simplemachine, 1, 1)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 4),
                 "A A",
                 "DBE",
@@ -813,7 +813,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 3)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 5),
                 "A A",
                 "DBE",
@@ -830,7 +830,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base, 1, 4)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 0),
                 "A A",
                 "DBE",
@@ -847,7 +847,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.simplemachine, 1, 5)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 1),
                 "A A",
                 "DBE",
@@ -864,7 +864,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 0)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 2),
                 "A A",
                 "DBE",
@@ -881,7 +881,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 1)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 1),
                 "A A",
                 "DBE",
@@ -898,7 +898,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 0)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 2),
                 "A A",
                 "DBE",
@@ -915,7 +915,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 1)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 3),
                 "A A",
                 "DBE",
@@ -932,7 +932,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 2)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 5),
                 "A A",
                 "DBE",
@@ -949,7 +949,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 4)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 6),
                 "A A",
                 "DBE",
@@ -966,7 +966,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 5)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 7),
                 "A A",
                 "DBE",
@@ -983,7 +983,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 6)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 9),
                 "A A",
                 "DBE",
@@ -1000,7 +1000,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 8)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 10),
                 "A A",
                 "DBE",
@@ -1017,7 +1017,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 9)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 11),
                 "A A",
                 "DBE",
@@ -1034,7 +1034,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base2, 1, 10)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 17),
                 "A A",
                 "DBE",
@@ -1051,7 +1051,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 16)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 18),
                 "A A",
                 "DBE",
@@ -1068,7 +1068,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 17)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 19),
                 "A A",
                 "DBE",
@@ -1085,7 +1085,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 18)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 1),
                 "AGA",
                 "DBE",
@@ -1104,7 +1104,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 18)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 2),
                 "AGA",
                 "DBE",
@@ -1123,7 +1123,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 94)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 3),
                 "AGA",
                 "DBE",
@@ -1142,7 +1142,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 118)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 5),
                 "AGA",
                 "DBE",
@@ -1161,7 +1161,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 129)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 6),
                 "AGA",
                 "DBE",
@@ -1180,7 +1180,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 130)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 7),
                 "AGA",
                 "DBE",
@@ -1199,7 +1199,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 131)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 13),
                 "A A",
                 "DBE",
@@ -1216,7 +1216,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 12)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 14),
                 "A A",
                 "DBE",
@@ -1233,7 +1233,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 13)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 15),
                 "A A",
                 "DBE",
@@ -1250,7 +1250,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 14)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 9),
                 "AGA",
                 "DBE",
@@ -1269,7 +1269,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 6)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 10),
                 "AGA",
                 "DBE",
@@ -1288,7 +1288,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 83)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base3, 1, 11),
                 "AGA",
                 "DBE",
@@ -1307,7 +1307,7 @@ public class BasicRecipeTwo {
                 ('G'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 107)
         ), 2);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 3),
                 "A A",
                 "DBE",
@@ -1324,7 +1324,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 2)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 4),
                 "A A",
                 "DBE",
@@ -1341,7 +1341,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 3)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 5),
                 "A A",
                 "DBE",
@@ -1367,7 +1367,7 @@ public class BasicRecipeTwo {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 124),
                 ('B'), ItemStackHelper.fromData(IUItem.machines_base, 1, 2)
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 7),
                 "A A",
                 "DBE",
@@ -1384,7 +1384,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 6)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 8),
                 "A A",
                 "DBE",
@@ -1401,7 +1401,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 7)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 9),
                 "A A",
                 "DBE",
@@ -1865,7 +1865,7 @@ public class BasicRecipeTwo {
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44), ('E'),
                 IUItem.elemotor,
-                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 205), 'H', getBlockStack(BlockBaseMachine3.steam_handler_ore)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 205), 'H', getBlockStack(BlockBaseMachine3Entity.steam_handler_ore)
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 40), "BDB", " A ", "BEB",
@@ -1929,7 +1929,7 @@ public class BasicRecipeTwo {
 
                 ('E'), IUItem.advancedMachine,
 
-                ('D'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 ('C'), IUItem.elemotor,
 
@@ -1996,7 +1996,7 @@ public class BasicRecipeTwo {
 
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 121),
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2052,13 +2052,13 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.upgradeblock,
 
-                ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgradeblock), " E ", "CAD", " B ",
 
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 66),
 
-                ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2070,7 +2070,7 @@ public class BasicRecipeTwo {
 
                 ('D'),
                 ("c:plates/Alumel"),
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('A'), DEFAULT_SENSOR,
 
@@ -2183,11 +2183,11 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 236), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidbenz.getInstance().get())
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidgasoline.getInstance().get())
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 237), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidhyd.getInstance().get())
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidhydrogen.getInstance().get())
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 238),
@@ -2200,11 +2200,11 @@ public class BasicRecipeTwo {
                 ('B'),
                 IUItem.FluidCell,
                 ('C'),
-                "c:plates/vanady"
+                "c:plates/vanadium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 239), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluiddizel.getInstance().get())
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluiddiesel.getInstance().get())
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 240), "B B", "BAB", "B B",
 
@@ -2339,7 +2339,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 4), "   ", "CAD", " B ",
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ('B'), IUItem.elemotor,
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
@@ -2350,7 +2350,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 5), "   ", "CAD", " B ",
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ('B'), IUItem.elemotor,
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
@@ -2359,7 +2359,7 @@ public class BasicRecipeTwo {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 236)
         );
         Recipes.recipe.addRecipe(
-                getBlockStack(BlockBaseMachine3.pump_iu), " E ", "CAD", "B H",
+                getBlockStack(BlockBaseMachine3Entity.pump_iu), " E ", "CAD", "B H",
 
                 ('A'), IUItem.machine,
 
@@ -2370,16 +2370,16 @@ public class BasicRecipeTwo {
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154),
 
-                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 241), 'H', getBlockStack(BlockBaseMachine3.steam_pump)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 241), 'H', getBlockStack(BlockBaseMachine3Entity.steam_pump)
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.basemachine1, 1, 6),
                 "F F",
                 "CAE",
                 "FBF",
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.pump_iu),
+                getBlockStack(BlockBaseMachine3Entity.pump_iu),
                 ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
 
@@ -2391,7 +2391,7 @@ public class BasicRecipeTwo {
                 ('F'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.basemachine1, 1, 7),
                 "F F",
                 "CAE",
@@ -2414,7 +2414,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 9), "   ", "CAD", " B ",
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ('B'), IUItem.elemotor,
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
@@ -2447,7 +2447,7 @@ public class BasicRecipeTwo {
                         98
                 ), ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 33)
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.oiladvrefiner),
                 " A ",
                 " B ",
@@ -2504,7 +2504,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 12), "   ", "CAD", " B ",
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ('B'), IUItem.elemotor,
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
@@ -2515,7 +2515,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 14), "   ", "CAD", " B ",
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ('B'), IUItem.elemotor,
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
@@ -2534,25 +2534,25 @@ public class BasicRecipeTwo {
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154),
 
-                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 244), 'H', getBlockStack(BlockBaseMachine3.steam_electrolyzer)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 244), 'H', getBlockStack(BlockBaseMachine3Entity.steam_electrolyzer)
         );
 
 
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 10),
                 "BAB",
                 " D ",
                 "B B",
 
                 ('D'),
-                getBlockStack(BlockBaseMachine3.generator_iu),
+                getBlockStack(BlockBaseMachine3Entity.generator_iu),
                 ('A'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
 
                 ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 11),
                 "BAB",
                 " D ",
@@ -2567,7 +2567,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 12),
                 "BAB",
                 " D ",
@@ -2598,7 +2598,7 @@ public class BasicRecipeTwo {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
         Recipes.recipe.addRecipe(
-                getBlockStack(BlockBaseMachine3.geogenerator_iu), "   ", "ABC", "   ",
+                getBlockStack(BlockBaseMachine3Entity.geogenerator_iu), "   ", "ABC", "   ",
 
                 ('B'), IUItem.machine,
 
@@ -2606,14 +2606,14 @@ public class BasicRecipeTwo {
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 22)
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.basemachine, 1, 4),
                 "B B",
                 "ADC",
                 "B B",
 
                 ('D'),
-                getBlockStack(BlockBaseMachine3.geogenerator_iu),
+                getBlockStack(BlockBaseMachine3Entity.geogenerator_iu),
                 ('A'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
 
@@ -2623,7 +2623,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.basemachine, 1, 5),
                 "B B",
                 "ADC",
@@ -2641,7 +2641,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.basemachine, 1, 6),
                 "B B",
                 "ADC",
@@ -2678,9 +2678,9 @@ public class BasicRecipeTwo {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
         Recipes.recipe.addRecipe(
-                getBlockStack(BlockBaseMachine3.solar_iu), "ABA", "BDB", " E ",
+                getBlockStack(BlockBaseMachine3Entity.solar_iu), "ABA", "BDB", " E ",
 
-                ('E'), getBlockStack(BlockBaseMachine3.generator_iu), ('D'), ItemStackHelper.fromData(
+                ('E'), getBlockStack(BlockBaseMachine3Entity.generator_iu), ('D'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         37
@@ -2701,13 +2701,13 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockmolecular), "MXM", "ABA", "MXM",
                 ('M'), IUItem.advancedMachine,
                 ('X'), ItemStackHelper.fromData(IUItem.tranformer, 1, 10), ('A'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
                 ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 75)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockdoublemolecular), "BDB", "CAC", "BEB",
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('B'), IUItem.advancedMachine,
 
@@ -2735,7 +2735,7 @@ public class BasicRecipeTwo {
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 79),
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.solar_iu)
+                getBlockStack(BlockBaseMachine3Entity.solar_iu)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.adv_se_generator), "   ", "CAC", " B ",
 
@@ -2753,7 +2753,7 @@ public class BasicRecipeTwo {
                 ('C'),
                 ("c:doubleplate/Duralumin"),
                 ('E'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('D'), IUItem.imp_se_generator
         );
@@ -2836,9 +2836,9 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid(FluidName.fluidneft.getInstance().get()),
+                ModUtils.getCellFromFluid(FluidName.fluidpetroleum.getInstance().get()),
                 ('C'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
 
         Recipes.recipe.addRecipe(
@@ -2852,7 +2852,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ModUtils.getCellFromFluid(FluidName.fluidsour_light_oil.getInstance().get()),
                 ('C'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
@@ -2865,7 +2865,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ModUtils.getCellFromFluid(FluidName.fluidsour_medium_oil.getInstance().get()),
                 ('C'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
@@ -2878,7 +2878,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ModUtils.getCellFromFluid(FluidName.fluidsour_heavy_oil.getInstance().get()),
                 ('C'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
 
         Recipes.recipe.addRecipe(
@@ -2892,7 +2892,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ModUtils.getCellFromFluid(FluidName.fluidsweet_medium_oil.getInstance().get()),
                 ('C'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
 
         Recipes.recipe.addRecipe(
@@ -2906,7 +2906,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ModUtils.getCellFromFluid(FluidName.fluidsweet_heavy_oil.getInstance().get()),
                 ('C'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.oilgetter), " A ", " B ", " D ",
 
@@ -2923,9 +2923,9 @@ public class BasicRecipeTwo {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 75),
 
                 ('A'),
-                getBlockStack(BlockBaseMachine3.replicator_iu),
+                getBlockStack(BlockBaseMachine3Entity.replicator_iu),
                 ('C'),
-                getBlockStack(BlockBaseMachine3.scanner_iu),
+                getBlockStack(BlockBaseMachine3Entity.scanner_iu),
                 ('D'), IUItem.combinersolidmatter,
 
                 ('B'), IUItem.advancedMachine
@@ -2980,13 +2980,13 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.veinsencor, 1), " BC", "BDB", "BAB",
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
                 ('B'), "c:plates/Iron", ('C'), Items.REDSTONE, ('D'),
                 "c:plates/Chromium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 169), "CED", "ABA", "CFD",
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
                 ('B'), "c:plates/Iron",
 
@@ -2998,10 +2998,10 @@ public class BasicRecipeTwo {
                 ('E'), IUItem.advnanobox,
 
                 ('F'),
-                getBlockStack(BlockBaseMachine3.energy_controller)
+                getBlockStack(BlockBaseMachine3Entity.energy_controller)
         );
         Recipes.recipe.addShapelessRecipe(
-                getBlockStack(BlockBaseMachine3.limiter),
+                getBlockStack(BlockBaseMachine3Entity.limiter),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 169), IUItem.advancedMachine
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 261), " C ", "BAB", " D ",
@@ -3083,8 +3083,8 @@ public class BasicRecipeTwo {
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
         Recipes.recipe.addShapelessRecipe(
-                getBlockStack(BlockBaseMachine3.redstone_generator),
-                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 258), getBlockStack(BlockBaseMachine3.generator_iu)
+                getBlockStack(BlockBaseMachine3Entity.redstone_generator),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 258), getBlockStack(BlockBaseMachine3Entity.generator_iu)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 206), "ABA", "ACA", "ABA",
 
@@ -3106,7 +3106,7 @@ public class BasicRecipeTwo {
 
                 ('A'), IUItem.insulatedGoldCableItem,
 
-                ('D'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('C'),
                 ItemStackHelper.fromData(IUItem.advBattery, 1, 32767)
@@ -3117,7 +3117,7 @@ public class BasicRecipeTwo {
 
                 ('A'), IUItem.insulatedIronCableItem,
 
-                ('D'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
+                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
 
                 ('C'),
                 ItemStackHelper.fromData(IUItem.lapotron_crystal, 1, 32767)
@@ -3177,7 +3177,7 @@ public class BasicRecipeTwo {
                 ('C'),
                 "c:plates/Titanium",
                 ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 74), " E ", "ABD", " C ",
 
@@ -3283,7 +3283,7 @@ public class BasicRecipeTwo {
 
                 ('D'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('E'),
                 ("c:plates/Titanium"),
@@ -3294,7 +3294,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 250), "EDE", "BAB", "CCC",
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('D'), DEFAULT_SENSOR,
 
@@ -3305,21 +3305,21 @@ public class BasicRecipeTwo {
 
                 ('A'), ItemStackHelper.fromData(IUItem.core, 1, 7)
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 13), "C C", " B ",
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 13), "C C", " B ",
                 "CAC",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 257),
                 ('B'), ItemStackHelper.fromData(IUItem.machines, 1, 8),
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 14), "C C", " B "
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 14), "C C", " B "
                 , "CAC",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 253),
                 ('B'), ItemStackHelper.fromData(IUItem.machines, 1, 13),
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
+        BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 15),
                 "C C",
                 " B ",
@@ -3357,7 +3357,7 @@ public class BasicRecipeTwo {
                 ('B'),
                 ItemStackHelper.fromData(IUItem.spectraldrill, 1, 32767),
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 11)
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 11)
         );
         Recipes.recipe.addRecipe(
                 ModUtils.setSize(IUItem.glassFiberCableItem, 6), "AAA", "BCB", "AAA",
@@ -3380,7 +3380,7 @@ public class BasicRecipeTwo {
 
                 ('B'), IUItem.copperCableItem,
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
                 ('D'),
                 "c:casings/Iron",
@@ -3393,7 +3393,7 @@ public class BasicRecipeTwo {
 
                 ('B'), IUItem.copperCableItem,
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('D'),
                 "c:casings/Iron",
@@ -3426,7 +3426,7 @@ public class BasicRecipeTwo {
 
                 ('A'), "c:plates/Carbon",
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('D'), ItemStackHelper.fromData(IUItem.advBattery, 1),
 
@@ -3435,7 +3435,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addShapelessRecipe(
                 ItemStackHelper.fromData(IUItem.frequency_transmitter),
-                IUItem.insulatedCopperCableItem, TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
+                IUItem.insulatedCopperCableItem, BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
         Recipes.recipe.addRecipe(
                 ModUtils.setSize(IUItem.suBattery.getItemStack(), 5), " A ", " B ", " C ",
@@ -3449,7 +3449,7 @@ public class BasicRecipeTwo {
 
 
         Recipes.recipe.addRecipe(
-                getBlockStack(BlockBaseMachine3.pattern_storage_iu), "AAA", "CDC", " B ",
+                getBlockStack(BlockBaseMachine3Entity.pattern_storage_iu), "AAA", "CDC", " B ",
 
                 ('A'), IUItem.reinforcedStone,
 
@@ -3458,10 +3458,10 @@ public class BasicRecipeTwo {
                 ('D'), IUItem.advancedMachine,
 
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
-                getBlockStack(BlockBaseMachine3.teleporter_iu), " A ", " B ", "   ",
+                getBlockStack(BlockBaseMachine3Entity.teleporter_iu), " A ", " B ", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 268),
 
@@ -3469,7 +3469,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 268), "AEA", "CBC", "ADA",
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 ('C'), IUItem.glassFiberCableItem,
 
@@ -3481,7 +3481,7 @@ public class BasicRecipeTwo {
                 ('E'), IUItem.frequency_transmitter
         );
         Recipes.recipe.addRecipe(
-                getBlockStack(BlockBaseMachine3.canner_iu), "A D", "EBF", " C ",
+                getBlockStack(BlockBaseMachine3Entity.canner_iu), "A D", "EBF", " C ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 265),
 
@@ -3519,7 +3519,7 @@ public class BasicRecipeTwo {
                 ModUtils.getCellFromFluid(FluidName.fluidgas.getInstance().get())
         );
         Recipes.recipe.addShapelessRecipe(
-                getBlockStack(BlockBaseMachine3.gas_generator),
+                getBlockStack(BlockBaseMachine3Entity.gas_generator),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 263), IUItem.machine
         );
         Recipes.recipe.addShapelessRecipe(
@@ -3551,7 +3551,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.coolingsensor, 1), "CBC", "BDB", "BAB",
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
                 ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.coolpipes,
                         1,
@@ -3561,7 +3561,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.heatsensor, 1), "CBC", "BDB", "BAB",
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
                 ('B'), "c:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.pipes,
                         1,
@@ -3656,7 +3656,7 @@ public class BasicRecipeTwo {
 
                 ('A'), IUItem.rubber,
 
-                ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 ('C'), "c:plates/Carbon",
 
@@ -3673,7 +3673,7 @@ public class BasicRecipeTwo {
                 "CAC", "BAB", "A A", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
                 ('A'), "c:casings/Iron",
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
                 IUItem.lapotron_crystal
@@ -3681,14 +3681,14 @@ public class BasicRecipeTwo {
                 "ACA", "ABA", "ACA", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
                 ('A'), "c:dusts/Lapis",
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
                 IUItem.charging_re_battery
                 ,
                 "ABA", "B B", "ABA", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
         Recipes.recipe.addRecipe(
                 IUItem.advanced_charging_re_battery
@@ -3731,14 +3731,14 @@ public class BasicRecipeTwo {
                 ,
                 "BAB", "BCB", "B B", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "c:casings/Copper"
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "c:casings/Copper"
         );
         Recipes.recipe.addRecipe(
                 IUItem.batpack
                 ,
                 "BAB", "BCB", "B B", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "planks"
+                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "planks"
         );
         Recipes.recipe.addRecipe(IUItem.nanosaber
                 , "BA ", "BA ", "CDC", ('B'), Items.GLOWSTONE_DUST,
@@ -3896,7 +3896,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nightvision,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 ('C'),
                 IUItem.energy_crystal,
                 ('D'),
@@ -3910,7 +3910,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 Items.DIAMOND_CHESTPLATE,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 ('C'),
                 IUItem.energy_crystal,
                 ('D'),
@@ -3924,7 +3924,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 Items.DIAMOND_LEGGINGS,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 ('C'),
                 IUItem.energy_crystal,
                 ('D'),
@@ -3938,7 +3938,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 Items.DIAMOND_BOOTS,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 ('C'),
                 IUItem.energy_crystal,
                 ('D'),
@@ -4008,7 +4008,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.adv_nano_helmet,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4022,7 +4022,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.adv_nano_chestplate,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4036,7 +4036,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.adv_nano_leggings,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4050,7 +4050,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.adv_nano_boots,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4064,7 +4064,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.quantum_helmet,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4078,7 +4078,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.quantum_chestplate,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4092,7 +4092,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.quantum_leggings,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4106,7 +4106,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.quantum_boots,
                 ('B'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 ('C'),
                 IUItem.AdvlapotronCrystal,
                 ('D'),
@@ -4144,7 +4144,7 @@ public class BasicRecipeTwo {
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 415),
                 'C',
-                "c:plates/vanady"
+                "c:plates/vanadium"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 396),
@@ -4220,7 +4220,7 @@ public class BasicRecipeTwo {
                 'B',
                 IUItem.nanoBox,
                 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 'D',
                 "c:plateDense/Gold"
         );
@@ -4235,7 +4235,7 @@ public class BasicRecipeTwo {
                 'B',
                 IUItem.quantumtool,
                 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 'D',
                 "c:doubleplate/Osmium"
         );
@@ -4250,14 +4250,14 @@ public class BasicRecipeTwo {
                 'B',
                 IUItem.spectral_box,
                 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 'D',
                 "c:doubleplate/Osmium"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 428),
                 "BCB", "DAD", " ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 436), 'B', IUItem.nanoBox, 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
                 'D', "c:plateDense/Gold"
         );
 
@@ -4271,7 +4271,7 @@ public class BasicRecipeTwo {
                 'B',
                 IUItem.quantumtool,
                 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 'D',
                 "c:doubleplate/Osmium"
         );
@@ -4286,7 +4286,7 @@ public class BasicRecipeTwo {
                 'B',
                 IUItem.spectral_box,
                 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 'D',
                 "c:doubleplate/Osmium"
         );
@@ -4398,7 +4398,7 @@ public class BasicRecipeTwo {
         BasicRecipeThree.recipe();
     }
 
-    public static ItemStack getBlockStack(IMultiTileBlock block) {
+    public static ItemStack getBlockStack(MultiBlockEntity block) {
         return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
     }
 

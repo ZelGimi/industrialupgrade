@@ -4,8 +4,10 @@ import com.denfop.utils.ModUtils;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.TypeVein;
 import com.denfop.world.vein.VeinType;
-import com.google.gson.*;
-import net.minecraft.core.Registry;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -17,21 +19,28 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.denfop.items.ItemVeinSensor.dataColors;
 import static com.denfop.world.WorldBaseGen.*;
-import static com.denfop.world.WorldBaseGen.id;
 
 @EventBusSubscriber(modid = "industrialupgrade")
 public class VeinDataLoader extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new Gson();
 
 
-    public static  Map<ResourceLocation,VeinType> VEIN_DATA = new HashMap<>();
+    public static Map<ResourceLocation, VeinType> VEIN_DATA = new HashMap<>();
 
     public VeinDataLoader() {
         super(GSON, "vein");
+    }
+
+    @SubscribeEvent
+    public static void onAddReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new VeinDataLoader());
     }
 
     @Override
@@ -49,22 +58,22 @@ public class VeinDataLoader extends SimpleJsonResourceReloadListener {
                     JsonObject obj = e.getAsJsonObject();
                     String id = GsonHelper.getAsString(obj, "id");
                     int chance = GsonHelper.getAsInt(obj, "chance", 100);
-                    inputs.add(new ChanceOre(BuiltInRegistries.BLOCK.get( ResourceLocation.tryParse(id)).defaultBlockState(), chance,0));
+                    inputs.add(new ChanceOre(BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(id)).defaultBlockState(), chance, 0));
                 }
 
                 JsonArray colorsArray = GsonHelper.getAsJsonArray(json, "colors");
                 for (JsonElement e : colorsArray) {
                     JsonObject obj = e.getAsJsonObject();
                     String id = GsonHelper.getAsString(obj, "id");
-                    int color = GsonHelper.getAsInt(obj, "color", ModUtils.convertRGBAcolorToInt(255,255,255));
-                    dataColors.put(BuiltInRegistries.BLOCK.get( ResourceLocation.tryParse(id)).defaultBlockState(),color);
+                    int color = GsonHelper.getAsInt(obj, "color", ModUtils.convertRGBAcolorToInt(255, 255, 255));
+                    dataColors.put(BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(id)).defaultBlockState(), color);
                 }
                 List<BlockState> deposit = new ArrayList<>();
                 JsonArray depositArray = GsonHelper.getAsJsonArray(json, "deposit");
                 for (JsonElement e : depositArray) {
                     JsonObject obj = e.getAsJsonObject();
                     String id = GsonHelper.getAsString(obj, "id");
-                    deposit.add(BuiltInRegistries.BLOCK.get( ResourceLocation.tryParse(id)).defaultBlockState());
+                    deposit.add(BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(id)).defaultBlockState());
                 }
                 VeinType type = new VeinType(deposit.get(0), TypeVein.SMALL, inputs);
                 veinTypes.add(type);
@@ -74,26 +83,17 @@ public class VeinDataLoader extends SimpleJsonResourceReloadListener {
                 System.err.println("[VeinLoader] Error parsing file " + entry.getKey() + ": " + ex.getMessage());
             }
         }
-        for (VeinType veinType : VEIN_DATA.values()){
-            for (ChanceOre chanceOre : veinType.getOres()){
+        for (VeinType veinType : VEIN_DATA.values()) {
+            for (ChanceOre chanceOre : veinType.getOres()) {
                 BlockState state = chanceOre.getBlock();
-                if (!idToblockStateMap.containsKey(state)){
-                    idToblockStateMap.put(state,id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state)) {
+                    idToblockStateMap.put(state, id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
         }
         System.out.println("[VeinLoader] Vein files loaded: " + VEIN_DATA.size());
 
-    }
-
-
-
-
-
-    @SubscribeEvent
-    public static void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new VeinDataLoader());
     }
 }

@@ -1,9 +1,9 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Localization;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

@@ -1,13 +1,13 @@
 package com.denfop.items.crop;
 
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.agriculture.ICropItem;
-import com.denfop.api.agriculture.genetics.Genome;
-import com.denfop.container.ContainerAgriculturalAnalyzer;
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiAgriculturalAnalyzer;
-import com.denfop.gui.GuiCore;
+import com.denfop.api.crop.ICrop;
+import com.denfop.api.crop.ICropItem;
+import com.denfop.api.crop.genetics.Genome;
+import com.denfop.containermenu.ContainerMenuAgriculturalAnalyzer;
+import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenAgriculturalAnalyzer;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -32,18 +32,13 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
     }
 
 
-    public ContainerAgriculturalAnalyzer getGuiContainer(Player player) {
-        return new ContainerAgriculturalAnalyzer(player, this);
+    public ContainerMenuAgriculturalAnalyzer getGuiContainer(Player player) {
+        return new ContainerMenuAgriculturalAnalyzer(player, this);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
-        return new GuiAgriculturalAnalyzer((ContainerAgriculturalAnalyzer) isAdmin, itemStack1);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
+        return new ScreenAgriculturalAnalyzer((ContainerMenuAgriculturalAnalyzer) isAdmin, itemStack1);
     }
 
 

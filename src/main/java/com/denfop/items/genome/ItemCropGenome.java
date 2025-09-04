@@ -1,8 +1,8 @@
 package com.denfop.items.genome;
 
 import com.denfop.IUCore;
-import com.denfop.api.agriculture.genetics.GeneticTraits;
-import com.denfop.api.agriculture.genetics.IGenomeItem;
+import com.denfop.api.crop.genetics.GeneticTraits;
+import com.denfop.api.crop.genetics.IGenomeItem;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;

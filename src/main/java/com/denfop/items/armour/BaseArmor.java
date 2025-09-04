@@ -1,8 +1,8 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;

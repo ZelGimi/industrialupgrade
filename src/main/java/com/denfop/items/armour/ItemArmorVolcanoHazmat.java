@@ -1,7 +1,7 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.api.item.IVolcanoArmor;
+import com.denfop.api.item.armor.VolcanoArmor;
 import com.denfop.componets.Fluids;
 import com.denfop.register.Register;
 import net.minecraft.Util;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcanoArmor, ISpecialArmor {
+public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements VolcanoArmor, ISpecialArmor {
 
     public ItemArmorVolcanoHazmat(String name, Type type) {
         super(Register.HAZMAT, name, type);
@@ -51,7 +51,7 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
 
         EquipmentSlot slot;
         ItemStack stack;
-        IVolcanoArmor hazmat;
+        VolcanoArmor hazmat;
         do {
             if (!var1.hasNext()) {
                 return true;
@@ -59,11 +59,11 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
 
             slot = var1.next();
             stack = living.getItemBySlot(slot);
-            if (!(stack.getItem() instanceof IVolcanoArmor)) {
+            if (!(stack.getItem() instanceof VolcanoArmor)) {
                 return false;
             }
 
-            hazmat = (IVolcanoArmor) stack.getItem();
+            hazmat = (VolcanoArmor) stack.getItem();
             if (!hazmat.addsProtection(living, slot, stack)) {
                 return false;
             }

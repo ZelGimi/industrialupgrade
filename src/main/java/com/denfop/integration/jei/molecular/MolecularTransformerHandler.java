@@ -2,9 +2,9 @@ package com.denfop.integration.jei.molecular;
 
 
 import com.denfop.Constants;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.ItemStack;
 

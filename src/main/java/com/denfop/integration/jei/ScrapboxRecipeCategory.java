@@ -2,10 +2,10 @@ package com.denfop.integration.jei;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
-import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -20,7 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ScrapboxRecipeCategory extends GuiIU implements IRecipeCategory<ScrapboxRecipeHandler> {
+public class ScrapboxRecipeCategory extends ScreenMain implements IRecipeCategory<ScrapboxRecipeHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -28,7 +28,7 @@ public class ScrapboxRecipeCategory extends GuiIU implements IRecipeCategory<Scr
     public ScrapboxRecipeCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityUpgradeMachineFactory) BlockBaseMachine3Entity.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(
                 ResourceLocation.parse(Constants.MOD_ID + ":textures/gui/ScrapboxRecipes.png".toLowerCase()),
                 55,

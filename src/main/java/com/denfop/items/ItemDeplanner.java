@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -87,7 +87,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                     }
 
 
-                    pos1 = switch (((TileMultiBlockBase) mainMultiBlock).getFacing()) {
+                    pos1 = switch (((BlockEntityMultiBlockBase) mainMultiBlock).getFacing()) {
                         case NORTH -> new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
                         case EAST ->
                                 new BlockPos(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
@@ -97,7 +97,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                                 new BlockPos(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                         default -> throw new IllegalStateException("Unexpected value: ");
                     };
-                    TileEntityBlock block = (TileEntityBlock) world.getBlockEntity(pos.offset(pos1));
+                    BlockEntityBase block = (BlockEntityBase) world.getBlockEntity(pos.offset(pos1));
                     itemStackList.add(block.getPickBlock(null, null));
                     world.removeBlockEntity(pos.offset(pos1));
                     world.setBlock(pos.offset(pos1), Blocks.AIR.defaultBlockState(), 3);
@@ -105,7 +105,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                 }
                 itemStackList.add(mainMultiBlock.getMultiBlockStucture().ItemStackMap.get(BlockPos.ZERO).copy());
 
-                ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
+                ((BlockEntityMultiBlockBase) mainMultiBlock).onUnloaded();
                 world.removeBlockEntity(pos);
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 

@@ -1,13 +1,13 @@
 package com.denfop.render.advoilrefiner;
 
+import com.denfop.blockentity.mechanism.BlockEntityAdvOilRefiner;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileAdvOilRefiner;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
-public class TileEntityAdvOilRefinerRender implements BlockEntityRenderer<TileAdvOilRefiner> {
+public class TileEntityAdvOilRefinerRender implements BlockEntityRenderer<BlockEntityAdvOilRefiner> {
 
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
@@ -18,7 +18,7 @@ public class TileEntityAdvOilRefinerRender implements BlockEntityRenderer<TileAd
     }
 
     @Override
-    public void render(TileAdvOilRefiner tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
+    public void render(BlockEntityAdvOilRefiner tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
         if (!tile.getFluidTank(0).getFluid().isEmpty()) {
             poseStack.pushPose();

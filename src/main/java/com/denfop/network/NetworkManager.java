@@ -1,8 +1,8 @@
 package com.denfop.network;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.*;
-import com.denfop.tiles.base.TileEntityBlock;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -279,7 +279,7 @@ public class NetworkManager {
         }
     }
 
-    public void addTileContainerToUpdate(TileEntityBlock te, ServerPlayer player, CustomPacketBuffer packetBuffer) {
+    public void addTileContainerToUpdate(BlockEntityBase te, ServerPlayer player, CustomPacketBuffer packetBuffer) {
         if (te == null) {
             return;
         }
@@ -297,26 +297,26 @@ public class NetworkManager {
         map.put(player, packetBuffer);
     }
 
-    public void addTileToUpdate(TileEntityBlock te) {
+    public void addTileToUpdate(BlockEntityBase te) {
         if (te.hasLevel()) {
             WorldData worldData = WorldData.get(te.getLevel());
             worldData.listUpdateTile.add(te);
         }
     }
 
-    public void addTileToOvertimeUpdate(TileEntityBlock te) {
+    public void addTileToOvertimeUpdate(BlockEntityBase te) {
         WorldData worldData = WorldData.get(te.getLevel());
         if (!worldData.mapUpdateOvertimeField.containsKey(te.getBlockPos())) {
             worldData.mapUpdateOvertimeField.put(te.getBlockPos(), te);
         }
     }
 
-    public void removeTileToOvertimeUpdate(TileEntityBlock te) {
+    public void removeTileToOvertimeUpdate(BlockEntityBase te) {
         WorldData worldData = WorldData.get(te.getLevel());
         worldData.mapUpdateOvertimeField.remove(te.getBlockPos());
     }
 
-    public void addTileFieldToUpdate(TileEntityBlock te, CustomPacketBuffer packet) {
+    public void addTileFieldToUpdate(BlockEntityBase te, CustomPacketBuffer packet) {
         WorldData worldData = WorldData.get(te.getLevel());
         if (worldData.mapUpdateField.containsKey(te)) {
             worldData.mapUpdateField.get(te).add(packet);

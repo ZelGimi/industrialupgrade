@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:nugget/vanady"
+      "item": "industrialupgrade:nugget/vanadium"
     }
   },
   "pattern": [
@@ -13,7 +13,7 @@
   ],
   "result": {
     "count": 1,
-    "id": "industrialupgrade:itemingots/vanady_ingot"
+    "id": "industrialupgrade:itemingots/vanadium_ingot"
   },
   "show_notification": false
 }

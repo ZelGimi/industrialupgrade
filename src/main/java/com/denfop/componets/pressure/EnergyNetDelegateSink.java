@@ -1,18 +1,17 @@
 package com.denfop.componets.pressure;
 
-import com.denfop.api.pressure.IPressureEmitter;
-import com.denfop.api.pressure.IPressureSink;
-import com.denfop.api.pressure.IPressureSource;
+import com.denfop.api.otherenergies.pressure.IPressureEmitter;
+import com.denfop.api.otherenergies.pressure.IPressureSink;
+import com.denfop.api.otherenergies.pressure.IPressureSource;
 import com.denfop.componets.PressureComponent;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class EnergyNetDelegateSink extends EnergyNetDelegate implements IPressureSink {
+
+    List<IPressureSource> systemTicks = new LinkedList<>();
 
     public EnergyNetDelegateSink(PressureComponent block) {
         super(block);
@@ -35,22 +34,22 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements IPressur
         this.setPressureStored(amount);
 
     }
-    List<IPressureSource> systemTicks = new LinkedList<>();
 
     @Override
     public boolean needTemperature() {
         return this.buffer.need;
     }
+
     @Override
     public List<IPressureSource> getEnergyTickList() {
         return systemTicks;
     }
+
     public void setPressureStored(double amount) {
         if (this.buffer.storage < amount) {
             this.buffer.storage = amount;
         }
     }
-
 
 
 }

@@ -1,10 +1,10 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.CoolComponent;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -68,8 +68,8 @@ public class ItemsCoolingSensor extends Item implements IItemTab {
         InteractionHand hand = p_41427_.getHand();
         if (!world.isClientSide) {
             BlockEntity tileEntity = world.getBlockEntity(pos);
-            if (tileEntity instanceof TileEntityInventory) {
-                TileEntityInventory tileEntityInventory = (TileEntityInventory) tileEntity;
+            if (tileEntity instanceof BlockEntityInventory) {
+                BlockEntityInventory tileEntityInventory = (BlockEntityInventory) tileEntity;
                 CoolComponent component = tileEntityInventory.getComp(CoolComponent.class);
                 if (component == null) {
                     return InteractionResult.PASS;

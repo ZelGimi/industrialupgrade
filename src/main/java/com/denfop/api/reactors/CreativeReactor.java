@@ -1,7 +1,7 @@
 package com.denfop.api.reactors;
 
 import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.invslot.InvSlot;
+import com.denfop.inventory.Inventory;
 import com.denfop.utils.Timer;
 import net.minecraft.world.item.ItemStack;
 
@@ -10,7 +10,7 @@ public class CreativeReactor implements IAdvReactor {
     public static int[] graphite_capacitors = new int[]{1, 6, 8, 8};
     public static int[] heat_graphite = new int[]{1, 2, 4, 8};
     public static double[] graphite_capacitor = new double[]{0.02, 0.04, 0.08, 0.12};
-    private final InvSlot slot;
+    private final Inventory slot;
     public int level;
     public Timer timer = new Timer(9999, 0, 0);
     public Timer red_timer = new Timer(0, 2, 30);
@@ -23,7 +23,7 @@ public class CreativeReactor implements IAdvReactor {
     private EnumTypeSecurity security = EnumTypeSecurity.NONE;
     private int col;
 
-    public CreativeReactor(EnumReactors enumReactors, InvSlot slot) {
+    public CreativeReactor(EnumReactors enumReactors, Inventory slot) {
 
         if (enumReactors != null) {
             this.enumReactors = enumReactors;

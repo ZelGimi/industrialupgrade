@@ -32,7 +32,7 @@ public class ItemPurifiedCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<
                 name = "tungsten";
                 break;
             case 2:
-                name = "vanady";
+                name = "vanadium";
                 break;
 
 
@@ -44,7 +44,7 @@ public class ItemPurifiedCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<
         mikhail(0),
         aluminium(1),
         vanadium(2),
-        wolfram(3),
+        tungsten(3),
         cobalt(6),
         magnesium(7),
         nickel(8),

@@ -1,6 +1,6 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.entity.EntityNuclearBombPrimed;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

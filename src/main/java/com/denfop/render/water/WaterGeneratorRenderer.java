@@ -1,9 +1,9 @@
 package com.denfop.render.water;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.api.windsystem.IWindRotor;
+import com.denfop.api.windsystem.WindRotor;
+import com.denfop.blockentity.mechanism.water.BlockEntityBaseWaterGenerator;
 import com.denfop.render.windgenerator.RotorModel;
-import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWaterGenerator> {
+public class WaterGeneratorRenderer implements BlockEntityRenderer<BlockEntityBaseWaterGenerator> {
 
     private static final Map<Integer, RotorModel> rotorModels = new HashMap<>();
 
@@ -31,7 +31,7 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWater
 
     @Override
     public void render(
-            TileBaseWaterGenerator tile,
+            BlockEntityBaseWaterGenerator tile,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -71,7 +71,7 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWater
 
         if (windGen.getSpace()) {
             angle = windGen.getAngle();
-            IWindRotor rotor = tile.getRotor();
+            WindRotor rotor = tile.getRotor();
             if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0) {
                 angle = 0;
             }
@@ -88,7 +88,7 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWater
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileBaseWaterGenerator tile) {
+    public boolean shouldRenderOffScreen(BlockEntityBaseWaterGenerator tile) {
         return true;
     }
 }

@@ -1,11 +1,11 @@
 package com.denfop.items.reactors;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,7 @@ public class ItemReactorCapacitor extends ItemDamage implements IReactorItem, II
     private final int heat_to_damage;
 
     public ItemReactorCapacitor(final int maxDamage, int level, int heat_to_damage) {
-        super(new Item.Properties().stacksTo(1), maxDamage*2);
+        super(new Item.Properties().stacksTo(1), maxDamage * 2);
         this.level = level;
         this.heat_to_damage = heat_to_damage;
     }

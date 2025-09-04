@@ -1,20 +1,11 @@
 package com.denfop.componets.heat;
 
-import com.denfop.api.heat.IHeatEmitter;
-import com.denfop.api.heat.IHeatSink;
-import com.denfop.api.heat.IHeatSource;
-import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.otherenergies.heat.IHeatSink;
+import com.denfop.api.otherenergies.heat.IHeatSource;
 import com.denfop.componets.HeatComponent;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class EnergyNetDelegateSink extends EnergyNetDelegate implements IHeatSink {
 
@@ -24,8 +15,6 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements IHeatSin
     public EnergyNetDelegateSink(HeatComponent block) {
         super(block);
     }
-
-
 
 
     @Override
@@ -38,9 +27,6 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements IHeatSin
 
         return this.buffer.capacity;
     }
-
-
-
 
 
     public void receivedHeat(double amount) {

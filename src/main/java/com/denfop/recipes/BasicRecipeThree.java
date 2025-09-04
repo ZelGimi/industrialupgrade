@@ -2,12 +2,12 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.BlockAnvil;
-import com.denfop.blocks.BlockStrongAnvil;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
+import com.denfop.blocks.BlockAnvilEntity;
+import com.denfop.blocks.BlockStrongAnvilEntity;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.*;
-import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +25,7 @@ public class BasicRecipeThree {
     public static Item PER_SENSOR;
     public static Item PHOTON_SENSOR;
 
-    public static ItemStack getBlockStack(IMultiTileBlock block) {
+    public static ItemStack getBlockStack(MultiBlockEntity block) {
         return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
     }
 
@@ -39,14 +39,14 @@ public class BasicRecipeThree {
         PER_SENSOR = IUItem.crafting_elements.getItemFromMeta(24);
 
         PHOTON_SENSOR = IUItem.crafting_elements.getItemFromMeta(620);
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_controller), " C ", "DBD", "   ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmelteryEntity.smeltery_controller), " C ", "DBD", "   ",
 
-                ('A'), ItemStackHelper.fromData(Items.COMPARATOR), ('B'), getBlockStack(BlockSmeltery.smeltery_casing), 'C',
+                ('A'), ItemStackHelper.fromData(Items.COMPARATOR), ('B'), getBlockStack(BlockSmelteryEntity.smeltery_casing), 'C',
                 Blocks.REDSTONE_BLOCK, 'D', ItemStackHelper.fromData(Items.REPEATER)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_casting), " C ", "CBC", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmelteryEntity.smeltery_casting), " C ", "CBC", " C ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmeltery.smeltery_furnace), 'C',
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmelteryEntity.smeltery_furnace), 'C',
                 "c:plates/Thallium", 'D', "c:plates/Strontium"
         );
 
@@ -391,7 +391,7 @@ public class BasicRecipeThree {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.heat_reactor, 1, 16),
                 "CBC", "DAD", "FEF", 'A', ItemStackHelper.fromData(IUItem.heat_reactor, 1, 24), 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 385), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356), 'D',
-                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414), 'E', getBlockStack(BlockBaseMachine3.cooling), 'F',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414), 'E', getBlockStack(BlockBaseMachine3Entity.cooling), 'F',
                 "c:plates/Beryllium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.heat_reactor, 1, 17),
@@ -532,7 +532,7 @@ public class BasicRecipeThree {
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gas_reactor, 1, 4),
                 "E F", "CAC", "DBD", 'A', ItemStackHelper.fromData(IUItem.gas_reactor, 1, 12),
-                'B', getBlockStack(BlockBaseMachine3.cooling),
+                'B', getBlockStack(BlockBaseMachine3Entity.cooling),
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'D', "c:plates/Bor", 'E', IUItem.coolingsensor, 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 385)
         );
@@ -576,7 +576,7 @@ public class BasicRecipeThree {
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gas_reactor, 1, 16),
                 "EFE", "CAC", "DBD", 'A', ItemStackHelper.fromData(IUItem.gas_reactor, 1, 12),
-                'B', getBlockStack(BlockSimpleMachine.compressor_iu),
+                'B', getBlockStack(BlockSimpleMachineEntity.compressor_iu),
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'D', "c:plates/Bor", 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 322), 'E', "c:plates/Cadmium"
         );
@@ -599,7 +599,7 @@ public class BasicRecipeThree {
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gas_reactor, 1, 20),
                 "EFE", "CAC", "DBD", 'A', ItemStackHelper.fromData(IUItem.gas_reactor, 1, 12),
-                'B', getBlockStack(BlockBaseMachine3.fluid_cooling),
+                'B', getBlockStack(BlockBaseMachine3Entity.fluid_cooling),
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 320), 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 326), 'E',
                 "c:plates/Carbon"
@@ -638,7 +638,7 @@ public class BasicRecipeThree {
                 'E',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 342),
                 'G',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gas_reactor, 1, 25),
                 "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.gas_reactor, 1, 24), 'B',
@@ -919,7 +919,7 @@ public class BasicRecipeThree {
                 'E',
                 "c:plates/Steel",
                 'F',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.graphite_reactor, 1, 29),
                 "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.graphite_reactor, 1, 28), 'B',
@@ -963,7 +963,7 @@ public class BasicRecipeThree {
                 ItemStackHelper.fromData(IUItem.coolingsensor, 1), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356), 'D',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414), 'E',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 324), 'F',
-                getBlockStack(BlockBaseMachine3.cooling), 'G',
+                getBlockStack(BlockBaseMachine3Entity.cooling), 'G',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 321)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.graphite_reactor, 1, 37),
@@ -984,13 +984,13 @@ public class BasicRecipeThree {
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.planner, 1),
                 "AAA", "CBC", " D ", 'A', "c:plates/Alcled", 'B',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
                 , 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373), 'D', "c:plates/Gold"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.deplanner, 1),
                 "AAA", "CBC", " D ", 'A', "c:plates/YttriumAluminiumGarnet", 'B',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
                 , 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373), 'D', "c:plates/Palladium"
         );
 
@@ -1006,7 +1006,7 @@ public class BasicRecipeThree {
                 ItemStackHelper.fromData(IUItem.basemachine2, 1, 2)
                 , 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 60), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27), 'E',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 155), 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402), 'G',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9)
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 4), "ADA", "CBC", "ADA",
 
@@ -1187,28 +1187,28 @@ public class BasicRecipeThree {
 
                 ('A'), "c:plates/Invar", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 496)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_casing), "AA ", "AA ", "   ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmelteryEntity.smeltery_casing), "AA ", "AA ", "   ",
 
                 ('A'), new ItemStack(IUItem.crafting_elements.getStack(772)), ('B'), ItemStackHelper.fromData(Blocks.BRICKS)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_tank), " C ", "DAD", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmelteryEntity.smeltery_tank), " C ", "DAD", " B ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmeltery.smeltery_casing), 'C',
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmelteryEntity.smeltery_casing), 'C',
                 "c:plates/Polonium", 'D', "c:plates/Barium"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_fuel_tank), " C ", "ABA", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmelteryEntity.smeltery_fuel_tank), " C ", "ABA", " D ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmeltery.smeltery_casing), 'C',
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmelteryEntity.smeltery_casing), 'C',
                 Items.LAVA_BUCKET, 'D', "c:plates/Strontium"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockSmeltery.smeltery_furnace), " C ", " B ", "   ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockSmelteryEntity.smeltery_furnace), " C ", " B ", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmeltery.smeltery_casing), 'C',
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 185), ('B'), getBlockStack(BlockSmelteryEntity.smeltery_casing), 'C',
                 Blocks.FURNACE, 'D', "c:plates/Strontium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 601), "B B", "BAB", "BBB",
 
-                'B', "c:plates/Electrum", 'A', getBlockStack(BlockBaseMachine3.oak_tank)
+                'B', "c:plates/Electrum", 'A', getBlockStack(BlockBaseMachine3Entity.oak_tank)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 578), "B B", "BAB", "BAB",
 
@@ -1355,7 +1355,7 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.corewater, 1, 7), "DCD", "ABA", "DCD",
 
-                ('D'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('C'), ItemStackHelper.fromData(IUItem.compressIridiumplate),
 
@@ -1369,7 +1369,7 @@ public class BasicRecipeThree {
 
                 ('D'), ItemStackHelper.fromData(IUItem.excitednucleus, 1, 5),
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('A'), ItemStackHelper.fromData(IUItem.quantumtool),
 
@@ -1392,7 +1392,7 @@ public class BasicRecipeThree {
 
                 ('A'), IUItem.iridiumPlate,
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
 
                 ('B'),
                 ItemStackHelper.fromData(IUItem.water_photon
@@ -1411,14 +1411,14 @@ public class BasicRecipeThree {
 
                 ('A'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
                 ('B'), ItemStackHelper.fromData(IUItem.water_barionrotor
                         .getItem(), 1, 32767)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.corewater, 1, 13), "ECE", "CBC", "ACA",
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 11),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 11),
 
                 ('A'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
@@ -1468,15 +1468,15 @@ public class BasicRecipeThree {
 
                 'B', "c:plates/Thallium", 'A', "c:plates/Hafnium", 'C', "c:plates/Zinc", 'D', "c:dusts/Redstone"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockPrimalWireInsulator.primal_wire_insulator), "C C", "ACA", "BAB",
+        Recipes.recipe.addRecipe(getBlockStack(BlockPrimalWireInsulatorEntity.primal_wire_insulator), "C C", "ACA", "BAB",
 
                 'B', "logs", 'A', "planks", 'C', "c:plates/Iron"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockStrongAnvil.block_strong_anvil), "CCC", "ADA", "   ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockStrongAnvilEntity.block_strong_anvil), "CCC", "ADA", "   ",
 
-                'A', "c:plates/Silver", 'C', "c:storage_blocks/Iridium", 'D', getBlockStack(BlockAnvil.block_anvil)
+                'A', "c:plates/Silver", 'C', "c:storage_blocks/Iridium", 'D', getBlockStack(BlockAnvilEntity.block_anvil)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockMiniSmeltery.mini_smeltery),
+        Recipes.recipe.addRecipe(getBlockStack(BlockMiniSmelteryEntity.mini_smeltery),
                 "ACA",
                 "EDE",
                 "BBB",
@@ -1484,29 +1484,29 @@ public class BasicRecipeThree {
                 'A',
                 "c:gears/Ferromanganese",
                 'B',
-                getBlockStack(BlockSmeltery.smeltery_casing),
+                getBlockStack(BlockSmelteryEntity.smeltery_casing),
                 'C',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         496
                 ),
                 'D',
-                getBlockStack(BlockBaseMachine3.oak_tank),
+                getBlockStack(BlockBaseMachine3Entity.oak_tank),
                 'E',
                 "c:plates/Iridium"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockRefractoryFurnace.refractory_furnace), "ACA", "EDE", "EBE",
+        Recipes.recipe.addRecipe(getBlockStack(BlockRefractoryFurnaceEntity.refractory_furnace), "ACA", "EDE", "EBE",
 
                 'A', "c:gears/Invar", 'B', "c:storage_blocks/Tungsten", 'C', Blocks.FURNACE,
                 'D',
-                getBlockStack(BlockBaseMachine3.steel_tank), 'E', "c:plates/Steel"
+                getBlockStack(BlockBaseMachine3Entity.steel_tank), 'E', "c:plates/Steel"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_storage), " A ", "ABA", " A ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_storage), " A ", "ABA", " A ",
 
                 'A', "c:casings/Aluminumbronze", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         601
                 )
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_crystal_charge), "AED", " B ", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_crystal_charge), "AED", " B ", " C ",
 
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         123
@@ -1516,7 +1516,7 @@ public class BasicRecipeThree {
                         601
                 ), 'C', ItemStackHelper.fromData(IUItem.blockResource, 1, 12), 'E', IUItem.charged_redstone
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_fluid_heater), "AED", " B ", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_fluid_heater), "AED", " B ", " C ",
 
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         123
@@ -1526,7 +1526,7 @@ public class BasicRecipeThree {
                         601
                 ), 'C', ItemStackHelper.fromData(IUItem.blockResource, 1, 12), 'E', IUItem.primalFluidHeater
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_wire_insulator),
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_wire_insulator),
                 "AED",
                 " B ",
                 " C ",
@@ -1540,7 +1540,7 @@ public class BasicRecipeThree {
                         32
                 ),
                 'B',
-                getBlockStack(BlockPrimalWireInsulator.primal_wire_insulator),
+                getBlockStack(BlockPrimalWireInsulatorEntity.primal_wire_insulator),
                 'C',
                 ItemStackHelper.fromData(IUItem.blockResource, 1, 12),
                 'E',
@@ -1549,32 +1549,32 @@ public class BasicRecipeThree {
                 )
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_rolling), "AED", " B ", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_rolling), "AED", " B ", " C ",
 
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         123
                 ), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         32
-                ), 'B', getBlockStack(BlockStrongAnvil.block_strong_anvil), 'C', ItemStackHelper.fromData(IUItem.blockResource, 1, 12), 'E',
+                ), 'B', getBlockStack(BlockStrongAnvilEntity.block_strong_anvil), 'C', ItemStackHelper.fromData(IUItem.blockResource, 1, 12), 'E',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         165
                 )
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_quarry), "AED", "BCB", "   ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_quarry), "AED", "BCB", "   ",
 
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         123
                 ), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         32
-                ), 'B', getBlockStack(BlockBaseMachine3.quarry_pipe), 'C', ItemStackHelper.fromData(IUItem.blockResource, 1, 12), 'E',
+                ), 'B', getBlockStack(BlockBaseMachine3Entity.quarry_pipe), 'C', ItemStackHelper.fromData(IUItem.blockResource, 1, 12), 'E',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         158
                 )
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.adv_steam_quarry), "ACA", " B ", "A A",
-                'B', getBlockStack(BlockBaseMachine3.steam_quarry), 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.adv_steam_quarry), "ACA", " B ", "A A",
+                'B', getBlockStack(BlockBaseMachine3Entity.steam_quarry), 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         138
                 ), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         256
@@ -1582,13 +1582,13 @@ public class BasicRecipeThree {
 
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockBaseMachine3.quarry_pipe), 16), "A A", "A A", "A A",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockBaseMachine3Entity.quarry_pipe), 16), "A A", "A A", "A A",
                 'A', "c:plates/Iron"
 
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockBaseMachine3.steam_bio_generator), 1), " D ", "BCB", " A ",
-                'A', ItemStackHelper.fromData(IUItem.blockResource, 1, 14), 'C', getBlockStack(BlockBaseMachine3.steam_peat_generator), 'B',
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockBaseMachine3Entity.steam_bio_generator), 1), " D ", "BCB", " A ",
+                'A', ItemStackHelper.fromData(IUItem.blockResource, 1, 14), 'C', getBlockStack(BlockBaseMachine3Entity.steam_peat_generator), 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         295
                 ), 'D',
@@ -1598,26 +1598,26 @@ public class BasicRecipeThree {
 
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoiler.steam_boiler_casing), 1), "CAC", "ABA", "CAC",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoilerEntity.steam_boiler_casing), 1), "CAC", "ABA", "CAC",
                 'A', "c:casings/Steel", 'C', "c:casings/Aluminumbronze", 'B', "c:storage_blocks/Iridium"
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoiler.steam_boiler_tank), 1), " B ", " A ", " C ",
-                'A', getBlockStack(BlockSteamBoiler.steam_boiler_casing), 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoilerEntity.steam_boiler_tank), 1), " B ", " A ", " C ",
+                'A', getBlockStack(BlockSteamBoilerEntity.steam_boiler_casing), 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         601
                 ), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         154
                 )
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoiler.steam_boiler_heater), 1), " B ", " A ", " C ",
-                'A', getBlockStack(BlockSteamBoiler.steam_boiler_casing), 'B',
-                getBlockStack(BlockPrimalFluidHeater.primal_fluid_heater), 'C', "c:gears/Invar"
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoilerEntity.steam_boiler_heater), 1), " B ", " A ", " C ",
+                'A', getBlockStack(BlockSteamBoilerEntity.steam_boiler_casing), 'B',
+                getBlockStack(BlockPrimalFluidHeaterEntity.primal_fluid_heater), 'C', "c:gears/Invar"
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoiler.steam_boiler_heat_exchanger), 1),
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoilerEntity.steam_boiler_heat_exchanger), 1),
                 " B ",
                 "CAC",
                 " B ",
                 'A',
-                getBlockStack(BlockSteamBoiler.steam_boiler_casing),
+                getBlockStack(BlockSteamBoilerEntity.steam_boiler_casing),
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         356
@@ -1625,14 +1625,14 @@ public class BasicRecipeThree {
                 'C',
                 "c:gears/Invar"
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoiler.steam_boiler_controller), 1),
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamBoilerEntity.steam_boiler_controller), 1),
                 "CBC",
                 "DAD",
                 "   ",
                 'A',
-                getBlockStack(BlockSteamBoiler.steam_boiler_casing),
+                getBlockStack(BlockSteamBoilerEntity.steam_boiler_casing),
                 'B',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
                 'C',
                 "c:plates/Osmium",
                 'D',
@@ -1814,7 +1814,7 @@ public class BasicRecipeThree {
                 "CAE",
                 "BCC",
                 'A',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
                 'B',
                 ItemStackHelper.fromData(IUItem.cable, 1, 11),
                 'C',
@@ -1826,12 +1826,12 @@ public class BasicRecipeThree {
 
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 763), "BDD", "CAE", "BCC",
-                'A', TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4), 'B', ItemStackHelper.fromData(IUItem.cable, 1, 11),
+                'A', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4), 'B', ItemStackHelper.fromData(IUItem.cable, 1, 11),
                 'C', ItemStackHelper.fromData(IUItem.graphene_wire), 'D', "c:plates/Nitenol", 'E', "c:plates/Alumel"
 
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 751), "BDD", "CAE", "BCC",
-                'A', TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6), 'B', ItemStackHelper.fromData(IUItem.cable, 1, 11),
+                'A', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6), 'B', ItemStackHelper.fromData(IUItem.cable, 1, 11),
                 'C', ItemStackHelper.fromData(IUItem.graphene_wire), 'D', ItemStackHelper.fromData(IUItem.plate, 1, 50), 'E', "c:plates/Vitalium"
 
         );
@@ -1840,7 +1840,7 @@ public class BasicRecipeThree {
                 "CAE",
                 "BCC",
                 'A',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
                 'B',
                 ItemStackHelper.fromData(IUItem.cable, 1, 11),
                 'C',
@@ -1981,99 +1981,99 @@ public class BasicRecipeThree {
                 'A', "c:plates/Hafnium", 'B', "c:plates/Alcled", 'C', "c:plates/AluminiumSilicon"
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbine.wind_turbine_casing_1), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_1), " B ", "BAB", " B ",
                 'A', Blocks.BRICKS, 'B'
                 , "c:plates/StainlessSteel"
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockWindTurbine.wind_turbine_casing_2), 4), "A  ", "AA ", "AAA",
-                'A', getBlockStack(BlockWindTurbine.wind_turbine_casing_1)
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_2), 4), "A  ", "AA ", "AAA",
+                'A', getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_1)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbine.wind_turbine_casing_3), "   ", "BAB", "   ",
-                'A', getBlockStack(BlockWindTurbine.wind_turbine_casing_1), 'B'
-                , getBlockStack(BlockWindTurbine.wind_turbine_casing_2)
+        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_3), "   ", "BAB", "   ",
+                'A', getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_1), 'B'
+                , getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_2)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbine.wind_turbine_controller), "DCD", "BAB", " E ",
-                'A', getBlockStack(BlockWindTurbine.wind_turbine_casing_1), 'B'
-                , "c:plates/Nimonic", 'C', TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), 'D',
-                "c:plates/Nitenol", 'E', getBlockStack(BlockBaseMachine3.per_wind_generator)
+        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbineEntity.wind_turbine_controller), "DCD", "BAB", " E ",
+                'A', getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_1), 'B'
+                , "c:plates/Nimonic", 'C', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), 'D',
+                "c:plates/Nitenol", 'E', getBlockStack(BlockBaseMachine3Entity.per_wind_generator)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbine.wind_turbine_socket), "DCD", "BAB", " E ",
-                'A', getBlockStack(BlockWindTurbine.wind_turbine_casing_1), 'B'
+        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbineEntity.wind_turbine_socket), "DCD", "BAB", " E ",
+                'A', getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_1), 'B'
                 , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 596), 'D',
                 IUItem.plastic_plate, 'E', "c:plates/SuperalloyHaynes"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbine.wind_turbine_stabilizer), "DCD", "BAB", " E ",
-                'A', getBlockStack(BlockWindTurbine.wind_turbine_casing_1), 'B'
+        Recipes.recipe.addRecipe(getBlockStack(BlockWindTurbineEntity.wind_turbine_stabilizer), "DCD", "BAB", " E ",
+                'A', getBlockStack(BlockWindTurbineEntity.wind_turbine_casing_1), 'B'
                 , ItemStackHelper.fromData(IUItem.electronic_stabilizers), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 599), 'D',
                 IUItem.photoniy_ingot, 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 594)
         );
 
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbine.hydro_turbine_casing_1), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_1), " B ", "BAB", " B ",
                 'A', Blocks.BRICKS, 'B'
                 , "c:plates/Inconel"
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockHydroTurbine.hydro_turbine_casing_2), 4),
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_2), 4),
                 "A  ",
                 "AA ",
                 "AAA",
                 'A',
-                getBlockStack(BlockHydroTurbine.hydro_turbine_casing_1)
+                getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_1)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbine.hydro_turbine_casing_3), "   ", "BAB", "   ",
-                'A', getBlockStack(BlockHydroTurbine.hydro_turbine_casing_1), 'B'
-                , getBlockStack(BlockHydroTurbine.hydro_turbine_casing_2)
+        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_3), "   ", "BAB", "   ",
+                'A', getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_1), 'B'
+                , getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_2)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbine.hydro_turbine_controller), "DCD", "BAB", " E ",
-                'A', getBlockStack(BlockHydroTurbine.hydro_turbine_casing_1), 'B'
-                , "c:plates/Nimonic", 'C', TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), 'D',
-                "c:plates/Nitenol", 'E', getBlockStack(BlockBaseMachine3.per_water_generator)
+        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbineEntity.hydro_turbine_controller), "DCD", "BAB", " E ",
+                'A', getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_1), 'B'
+                , "c:plates/Nimonic", 'C', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), 'D',
+                "c:plates/Nitenol", 'E', getBlockStack(BlockBaseMachine3Entity.per_water_generator)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbine.hydro_turbine_socket), "DCD", "BAB", " E ",
-                'A', getBlockStack(BlockHydroTurbine.hydro_turbine_casing_1), 'B'
+        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbineEntity.hydro_turbine_socket), "DCD", "BAB", " E ",
+                'A', getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_1), 'B'
                 , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 596), 'D',
                 IUItem.plastic_plate, 'E', "c:plates/SuperalloyHaynes"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbine.hydro_turbine_stabilizer), "DCD", "BAB", " E ",
-                'A', getBlockStack(BlockHydroTurbine.hydro_turbine_casing_1), 'B'
+        Recipes.recipe.addRecipe(getBlockStack(BlockHydroTurbineEntity.hydro_turbine_stabilizer), "DCD", "BAB", " E ",
+                'A', getBlockStack(BlockHydroTurbineEntity.hydro_turbine_casing_1), 'B'
                 , ItemStackHelper.fromData(IUItem.electronic_stabilizers), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 599), 'D',
                 IUItem.photoniy_ingot, 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 594)
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBarrel.barrel), "ABA", "ABC", "ABA",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBarrelEntity.barrel), "ABA", "ABC", "ABA",
                 'A', "logs", 'B'
                 , "planks", 'C', Blocks.STONE_BUTTON
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockApiary.apiary), "AAA", "B B", "AAA",
+        Recipes.recipe.addRecipe(getBlockStack(BlockApiaryEntity.apiary), "AAA", "B B", "AAA",
                 'A', "slabs", 'B'
                 , IUItem.rubWood.getItem(0)
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_casing), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_casing), " B ", "BAB", " B ",
                 'A', Blocks.BRICKS, 'B'
                 , ItemStackHelper.fromData(IUItem.casing, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_airbearings), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_airbearings), " B ", "BAB", " B ",
                 'B', ItemStackHelper.fromData(IUItem.windrod, 1, 2), 'A'
-                , getBlockStack(BlockGasTurbine.gas_turbine_casing)
+                , getBlockStack(BlockGasTurbineEntity.gas_turbine_casing)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_tank), "DBC", " A ", "   ",
-                'A', getBlockStack(BlockGasTurbine.gas_turbine_casing), 'B'
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_tank), "DBC", " A ", "   ",
+                'A', getBlockStack(BlockGasTurbineEntity.gas_turbine_casing), 'B'
                 , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154),
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 263)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_socket), "CDC", "BAB", "   ",
-                'A', getBlockStack(BlockGasTurbine.gas_turbine_casing), 'B'
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_socket), "CDC", "BAB", "   ",
+                'A', getBlockStack(BlockGasTurbineEntity.gas_turbine_casing), 'B'
                 , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 582),
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 574)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_blower), " A ", " B ", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_blower), " A ", " B ", " C ",
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 112), 'B'
-                , getBlockStack(BlockGasTurbine.gas_turbine_casing), 'C', ItemStackHelper.fromData(IUItem.plate, 1, 50)
+                , getBlockStack(BlockGasTurbineEntity.gas_turbine_casing), 'C', ItemStackHelper.fromData(IUItem.plate, 1, 50)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_recuperator), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_recuperator), " B ", "BAB", " B ",
                 'B', ItemStackHelper.fromData(IUItem.water_rod, 1, 2), 'A'
-                , getBlockStack(BlockGasTurbine.gas_turbine_casing)
+                , getBlockStack(BlockGasTurbineEntity.gas_turbine_casing)
         );
         Recipes.recipe.addRecipe(IUItem.net, "ABA", "AAA", " A ",
                 'B', "wool", 'A'
@@ -2081,80 +2081,80 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(IUItem.agricultural_analyzer, "BBB", "CAC", "   ",
                 'B', "c:plates/Iron", 'A'
-                , TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), 'C', IUItem.crops
+                , BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), 'C', IUItem.crops
         );
         Recipes.recipe.addRecipe(IUItem.bee_analyzer, "BBB", "CAC", "   ",
                 'B', "c:plates/Iron", 'A'
-                , TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), 'C', IUItem.jarBees
+                , BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), 'C', IUItem.jarBees
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbine.gas_turbine_controller), "EAE", "CBC", " D ",
-                'A', TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), 'B'
-                , getBlockStack(BlockGasTurbine.gas_turbine_casing), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 585)
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_controller), "EAE", "CBC", " D ",
+                'A', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), 'B'
+                , getBlockStack(BlockGasTurbineEntity.gas_turbine_casing), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 585)
                 , 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 589), 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 397)
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_casing), " C ", "BAB", " C ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_casing), " C ", "BAB", " C ",
                 'A', Blocks.BRICKS, 'B'
                 , ItemStackHelper.fromData(IUItem.casing, 1, 49), 'C', "c:plates/Vanadoalumite"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_transport),
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_transport),
                 "BDB", "DAD", "BDB", 'B', ItemStackHelper.fromData(IUItem.item_pipes, 1, 27), 'D', ItemStackHelper.fromData(IUItem.item_pipes, 1, 28),
                 'A',
-                getBlockStack(BlockGasWell.gas_well_casing)
+                getBlockStack(BlockGasWellEntity.gas_well_casing)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_drill),
-                " E ", "DAD", "CBC", 'B', ItemStackHelper.fromData(IUItem.oilquarry), 'A', getBlockStack(BlockGasWell.gas_well_casing)
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_drill),
+                " E ", "DAD", "CBC", 'B', ItemStackHelper.fromData(IUItem.oilquarry), 'A', getBlockStack(BlockGasWellEntity.gas_well_casing)
                 , 'C'
                 , "c:plates/Titanium", 'D', "c:plates/Steel", 'E', "c:plates/Iridium"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_analyzer),
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_analyzer),
                 "DBD",
                 "EAE",
                 " C ",
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 226),
                 'A',
-                getBlockStack(BlockGasWell.gas_well_casing)
+                getBlockStack(BlockGasWellEntity.gas_well_casing)
                 ,
                 'C'
                 ,
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
                 'D',
                 "c:gears/Osmium",
                 'E',
                 "c:plates/Carbon"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_controller),
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_controller),
                 "DBD",
                 " A ",
                 " C ",
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42),
                 'A',
-                getBlockStack(BlockGasWell.gas_well_casing)
+                getBlockStack(BlockGasWellEntity.gas_well_casing)
                 ,
                 'C'
                 ,
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
                 'D',
                 "c:rods/Zinc"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_socket),
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_socket),
                 "DBD",
                 " A ",
                 " C ",
                 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 592),
                 'A',
-                getBlockStack(BlockGasWell.gas_well_casing)
+                getBlockStack(BlockGasWellEntity.gas_well_casing)
                 ,
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 614),
                 'D',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_tank),
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWellEntity.gas_well_tank),
                 " E ", "DAD", "CBC", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 43), 'A',
-                getBlockStack(BlockGasWell.gas_well_casing)
+                getBlockStack(BlockGasWellEntity.gas_well_casing)
                 , 'C'
                 , "c:plates/Gold", 'D', "c:plates/Tin", 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27)
         );
@@ -2333,7 +2333,7 @@ public class BasicRecipeThree {
                 'A', DEFAULT_SENSOR, 'C', "c:plates/Obsidian", 'B', "c:gears/AluminiumSilicon", 'D', "c:plates/Osmiridium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 681), "CBC", "DAD", "EBE",
-                'A', DEFAULT_SENSOR, 'C', "c:plates/vanady", 'B', "c:plates/Mikhail", 'D', "c:plates/Vitalium", 'E', "c:plates/Chromium"
+                'A', DEFAULT_SENSOR, 'C', "c:plates/vanadium", 'B', "c:plates/Mikhail", 'D', "c:plates/Vitalium", 'E', "c:plates/Chromium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 683),
                 "CBC",
@@ -2383,25 +2383,25 @@ public class BasicRecipeThree {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 689), "CBC", "DAD", "   ",
                 'A', DEFAULT_SENSOR, 'C', "c:gears/Barium", 'B', IUItem.fertilizer, 'D', "c:plates/Steel"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.electric_wire_insulator), " A ", "BC ", " D ",
-                'A', getBlockStack(BlockBaseMachine3.steam_wire_insulator), 'C', IUItem.machine, 'B',
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.electric_wire_insulator), " A ", "BC ", " D ",
+                'A', getBlockStack(BlockBaseMachine3Entity.steam_wire_insulator), 'C', IUItem.machine, 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47), 'D',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 276)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.crystal_charge), " A ", "BC ", " D ",
-                'A', getBlockStack(BlockBaseMachine3.steam_crystal_charge), 'C', IUItem.machine, 'B',
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.crystal_charge), " A ", "BC ", " D ",
+                'A', getBlockStack(BlockBaseMachine3Entity.steam_crystal_charge), 'C', IUItem.machine, 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44), 'D',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 276)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.ampere_generator), " A ", " C ", " D ",
-                'A', getBlockStack(BlockBaseMachine3.steam_ampere_generator), 'C', IUItem.machine, 'B',
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.ampere_generator), " A ", " C ", " D ",
+                'A', getBlockStack(BlockBaseMachine3Entity.steam_ampere_generator), 'C', IUItem.machine, 'B',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44), 'D',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 276)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.electric_refractory_furnace), " A ", "BCE", " D ",
-                'A', getBlockStack(BlockBaseMachine3.steam_ampere_generator), 'C', IUItem.machine, 'B',
-                getBlockStack(BlockMiniSmeltery.mini_smeltery), 'D',
-                IUItem.motors_with_improved_bearings_, 'E', getBlockStack(BlockRefractoryFurnace.refractory_furnace)
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.electric_refractory_furnace), " A ", "BCE", " D ",
+                'A', getBlockStack(BlockBaseMachine3Entity.steam_ampere_generator), 'C', IUItem.machine, 'B',
+                getBlockStack(BlockMiniSmelteryEntity.mini_smeltery), 'D',
+                IUItem.motors_with_improved_bearings_, 'E', getBlockStack(BlockRefractoryFurnaceEntity.refractory_furnace)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 6), "BBB", "CAC", "BBB",
 
@@ -2581,7 +2581,7 @@ public class BasicRecipeThree {
                 ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.chicken_farm), " C ", " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.chicken_farm), " C ", " A ", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2589,7 +2589,7 @@ public class BasicRecipeThree {
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 665)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.sheep_farm), " C ", " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.sheep_farm), " C ", " A ", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2597,7 +2597,7 @@ public class BasicRecipeThree {
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 670)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.cow_farm), " C ", " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.cow_farm), " C ", " A ", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2605,7 +2605,7 @@ public class BasicRecipeThree {
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 664)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.pig_farm), " C ", " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.pig_farm), " C ", " A ", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2613,7 +2613,7 @@ public class BasicRecipeThree {
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 675)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.sapling_gardener), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.sapling_gardener), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2623,7 +2623,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 674)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.tree_breaker), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.tree_breaker), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2633,7 +2633,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 674)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.cactus_farm), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.cactus_farm), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2643,7 +2643,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 672)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.electric_brewing), " D ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.electric_brewing), " D ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2655,7 +2655,7 @@ public class BasicRecipeThree {
 
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.sawmill), "   ", "DAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.sawmill), "   ", "DAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2667,7 +2667,7 @@ public class BasicRecipeThree {
 
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.gen_addition_stone), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.gen_addition_stone), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2677,7 +2677,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.plant_fertilizer), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.plant_fertilizer), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2687,7 +2687,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 61)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.plant_collector), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.plant_collector), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2697,7 +2697,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 243)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.plant_gardener), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.plant_gardener), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2707,7 +2707,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 672)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.field_cleaner), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.field_cleaner), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2717,7 +2717,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 672)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.weeder), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.weeder), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2727,7 +2727,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 64)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.field_cleaner), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.field_cleaner), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2737,7 +2737,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 672)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.apothecary_bee), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.apothecary_bee), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2747,7 +2747,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 656)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.collector_product_bee), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.collector_product_bee), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2757,7 +2757,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 667)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.incubator), "H D", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.incubator), "H D", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2769,7 +2769,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.insulator), "H D", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.insulator), "H D", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2781,7 +2781,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.rna_collector), "H D", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.rna_collector), "H D", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2793,7 +2793,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.mutatron), " D ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.mutatron), " D ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2804,7 +2804,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 676),
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.reverse_transcriptor), " D ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.reverse_transcriptor), " D ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2815,7 +2815,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 685),
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.genetic_stabilizer), "H D", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.genetic_stabilizer), "H D", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2827,7 +2827,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.centrifuge), "   ", "CAH", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.centrifuge), "   ", "CAH", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2839,7 +2839,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.genetic_replicator), "H D", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.genetic_replicator), "H D", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2851,7 +2851,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 676)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.inoculator), " D ", "CAH", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.inoculator), " D ", "CAH", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2862,7 +2862,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 676)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.genome_extractor), "H D", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.genome_extractor), "H D", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2874,7 +2874,7 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 676)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.genetic_polymerizer), "HFD", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.genetic_polymerizer), "HFD", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2887,7 +2887,7 @@ public class BasicRecipeThree {
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 676),
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.genetic_transposer), "HFD", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.genetic_transposer), "HFD", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2902,7 +2902,7 @@ public class BasicRecipeThree {
         );
 
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.shield), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.shield), "   ", "CAE", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2912,7 +2912,7 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 439)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.hologram_space), " C ", " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.hologram_space), " C ", " A ", " B ",
 
                 ('A'), IUItem.machine,
 
@@ -2920,7 +2920,7 @@ public class BasicRecipeThree {
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 657)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.upgrade_rover), " H ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.upgrade_rover), " H ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2932,7 +2932,7 @@ public class BasicRecipeThree {
 
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.research_table_space), " H ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.research_table_space), " H ", "CAE", " B ",
 
                 ('A'), IUItem.rubWood.getItem(0),
 
@@ -2944,7 +2944,7 @@ public class BasicRecipeThree {
 
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.probe_assembler), " H ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.probe_assembler), " H ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2956,7 +2956,7 @@ public class BasicRecipeThree {
 
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.rocket_assembler), " H ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.rocket_assembler), " H ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2968,7 +2968,7 @@ public class BasicRecipeThree {
 
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.satellite_assembler), " H ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.satellite_assembler), " H ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2980,7 +2980,7 @@ public class BasicRecipeThree {
 
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.rover_assembler), " H ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.rover_assembler), " H ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -2992,7 +2992,7 @@ public class BasicRecipeThree {
 
                 ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.rocket_launch_pad), "   ", "CAE", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.rocket_launch_pad), "   ", "CAE", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
@@ -3322,7 +3322,7 @@ public class BasicRecipeThree {
                 ('B'), "c:plates/Duralumin"
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_macerator), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_macerator), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3334,7 +3334,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 69)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_gearing), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_gearing), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3346,7 +3346,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 218)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_extractor), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_extractor), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3358,7 +3358,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 159)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_compressor), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_compressor), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3370,7 +3370,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 63)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_extruder), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_extruder), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3382,7 +3382,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 163)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_cutting), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_cutting), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3394,7 +3394,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 132)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_rolling), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_rolling), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3406,7 +3406,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 165)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_furnace), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_furnace), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3418,7 +3418,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 219)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_orewashing), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_orewashing), " E ", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3430,7 +3430,7 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 34)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_centrifuge), "E H", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_centrifuge), "E H", "BAC", " D ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 14),
 
@@ -3444,9 +3444,9 @@ public class BasicRecipeThree {
 
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.single_multi_crop), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.single_multi_crop), " E ", "BAC", " D ",
 
-                ('A'), getBlockStack(BlockMoreMachine3.farmer),
+                ('A'), getBlockStack(BlockMoreMachine3Entity.farmer),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
@@ -3456,9 +3456,9 @@ public class BasicRecipeThree {
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 689)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.dual_multi_crop), "B B", "FAC", "BDB",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.dual_multi_crop), "B B", "FAC", "BDB",
 
-                ('A'), getBlockStack(BlockBaseMachine3.single_multi_crop),
+                ('A'), getBlockStack(BlockBaseMachine3Entity.single_multi_crop),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
 
@@ -3469,9 +3469,9 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.triple_multi_crop), "BEB", "FAC", "BDB",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.triple_multi_crop), "BEB", "FAC", "BDB",
 
-                ('A'), getBlockStack(BlockBaseMachine3.dual_multi_crop),
+                ('A'), getBlockStack(BlockBaseMachine3Entity.dual_multi_crop),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
 
@@ -3483,9 +3483,9 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.quad_multi_crop), "B B", "FAC", "BDB",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.quad_multi_crop), "B B", "FAC", "BDB",
 
-                ('A'), getBlockStack(BlockBaseMachine3.triple_multi_crop),
+                ('A'), getBlockStack(BlockBaseMachine3Entity.triple_multi_crop),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
 
@@ -3496,7 +3496,7 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_casing_glass), 5), "ABA", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing_glass), 5), "ABA", "BAB",
                 "ABA",
 
                 ('A'), IUItem.glass,
@@ -3505,7 +3505,7 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_casing), 2), "AB ", "BA ",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing), 2), "AB ", "BA ",
                 "   ",
 
                 ('A'), "c:plates/Tungsten",
@@ -3514,17 +3514,17 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_rod), 1), "   ", "AAA",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_rod), 1), "   ", "AAA",
                 "   ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing)
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing)
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_socket), 1), "CDC", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_socket), 1), "CDC", "BAB",
                 "EFE",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
@@ -3538,12 +3538,12 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_controller_rod), 1), "CDC", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_controller_rod), 1), "CDC", "BAB",
                 "EFE",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
-                ('B'), getBlockStack(BlockSteamTurbine.steam_turbine_rod),
+                ('B'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_rod),
 
                 ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 581),
 
@@ -3551,15 +3551,15 @@ public class BasicRecipeThree {
 
                 ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 479),
 
-                ('F'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
+                ('F'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
 
 
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_controller), 1), "CDC", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_controller), 1), "CDC", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
 
@@ -3567,16 +3567,16 @@ public class BasicRecipeThree {
 
                 ('D'), "c:plates/Neodymium",
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
 
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 581)
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_adv_controller), 1), "CDC", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_controller), 1), "CDC", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_controller),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_controller),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 426),
 
@@ -3584,16 +3584,16 @@ public class BasicRecipeThree {
 
                 ('D'), "c:plates/MolybdenumSteel",
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 579)
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_imp_controller), 1), "CDC", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_controller), 1), "CDC", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_adv_controller),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_controller),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373),
 
@@ -3601,16 +3601,16 @@ public class BasicRecipeThree {
 
                 ('D'), "c:plates/Draconid",
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
 
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 563)
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_per_controller), 1), "CDC", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_per_controller), 1), "CDC", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_imp_controller),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_controller),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
@@ -3618,16 +3618,16 @@ public class BasicRecipeThree {
 
                 ('D'), "c:plates/Woods",
 
-                ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 585)
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_tank), 1), "C D", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_tank), 1), "C D", "BAB",
                 " ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 367),
 
@@ -3637,10 +3637,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_adv_tank), 1), "C D", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_tank), 1), "C D", "BAB",
                 " ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_tank),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_tank),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 415),
 
@@ -3650,10 +3650,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_imp_tank), 1), "C D", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_tank), 1), "C D", "BAB",
                 " ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_adv_tank),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_tank),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 380),
 
@@ -3663,10 +3663,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_per_tank), 1), "C D", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_per_tank), 1), "C D", "BAB",
                 " ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_imp_tank),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_tank),
 
                 ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 396),
 
@@ -3675,10 +3675,10 @@ public class BasicRecipeThree {
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 107)
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_coolant), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_coolant), 1), "DCD", "BAB",
                 " E ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
                 ('B'), "c:plates/Neodymium",
 
@@ -3686,14 +3686,14 @@ public class BasicRecipeThree {
 
                 ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356),
 
-                ('E'), getBlockStack(BlockBaseMachine3.fluid_cooling)
+                ('E'), getBlockStack(BlockBaseMachine3Entity.fluid_cooling)
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_adv_coolant), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_coolant), 1), "DCD", "BAB",
                 " E ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_coolant),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_coolant),
 
                 ('B'), "c:plates/MolybdenumSteel",
 
@@ -3705,10 +3705,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_imp_coolant), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_coolant), 1), "DCD", "BAB",
                 " E ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_adv_coolant),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_coolant),
 
                 ('B'), "c:plates/Draconid",
 
@@ -3720,10 +3720,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_per_coolant), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_per_coolant), 1), "DCD", "BAB",
                 " E ",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_imp_coolant),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_coolant),
 
                 ('B'), "c:plates/Woods",
 
@@ -3735,10 +3735,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_pressure), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_pressure), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
                 ('B'), "c:plates/Neodymium",
 
@@ -3752,10 +3752,10 @@ public class BasicRecipeThree {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_adv_pressure), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_pressure), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_pressure),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_pressure),
 
                 ('B'), "c:plates/MolybdenumSteel",
 

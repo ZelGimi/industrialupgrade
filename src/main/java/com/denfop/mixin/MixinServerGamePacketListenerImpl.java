@@ -1,6 +1,6 @@
 package com.denfop.mixin;
 
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -67,7 +67,7 @@ public abstract class MixinServerGamePacketListenerImpl {
                 Vec3 vec32 = vec3.subtract(vec31);
                 double d0 = 1.0000001D;
                 BlockEntity blockEntity = this.player.level().getBlockEntity(blockpos);
-                if (blockEntity instanceof TileEntityBlock base) {
+                if (blockEntity instanceof BlockEntityBase base) {
                     AABB aabb = base.getAabb(false);
                     if (aabb.maxX > 1 || aabb.maxY > 1 && aabb.maxZ > 1)
                         if ((Math.abs(vec32.x()) > 1 || Math.abs(vec32.y()) > 1 || Math.abs(vec32.z()) > 1) && Math.abs(vec32.x()) <= aabb.maxX && Math.abs(vec32.y()) <= aabb.maxY && Math.abs(vec32.z()) <= aabb.maxZ) {

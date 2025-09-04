@@ -1,6 +1,6 @@
 package com.denfop.items.energy;
 
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;

@@ -1,7 +1,7 @@
 package com.denfop.render.base;
 
 import com.denfop.Constants;
-import com.denfop.api.bee.IBee;
+import com.denfop.api.bee.Bee;
 import com.denfop.entity.SmallBee;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.BeeModel;
@@ -16,10 +16,11 @@ public class SmallBeeRenderer extends MobRenderer<SmallBee, BeeModel<SmallBee>> 
     private static final ResourceLocation ANGRY_NECTAR_BEE_TEXTURE = ResourceLocation.parse("textures/entity/bee/bee_angry_nectar.png");
     private static final ResourceLocation BEE_TEXTURE = ResourceLocation.parse("textures/entity/bee/bee.png");
     private static final ResourceLocation NECTAR_BEE_TEXTURE = ResourceLocation.parse("textures/entity/bee/bee_nectar.png");
-    private static final ResourceLocation[] BEE_TEXTURES = new ResourceLocation[5];
-    private static final ResourceLocation[] NECTAR_BEE_TEXTURES = new ResourceLocation[5];
-    private static final ResourceLocation[] ANGRY_BEE_TEXTURES = new ResourceLocation[5];
-    private static final ResourceLocation[] ANGRY_NECTAR_BEE_TEXTURES = new ResourceLocation[5];
+    private static final ResourceLocation[] BEE_TEXTURES = new ResourceLocation[6];
+    private static final ResourceLocation[] NECTAR_BEE_TEXTURES = new ResourceLocation[6];
+    private static final ResourceLocation[] ANGRY_BEE_TEXTURES = new ResourceLocation[6];
+    private static final ResourceLocation[] ANGRY_NECTAR_BEE_TEXTURES = new ResourceLocation[6];
+
     public SmallBeeRenderer(EntityRendererProvider.Context p_173931_) {
         super(p_173931_, new BeeModel<>(p_173931_.bakeLayer(ModelLayers.BEE)), 0.4F);
     }
@@ -33,7 +34,7 @@ public class SmallBeeRenderer extends MobRenderer<SmallBee, BeeModel<SmallBee>> 
     }
 
     public ResourceLocation getTextureLocation(SmallBee pEntity) {
-        IBee bee = pEntity.bee;
+        Bee bee = pEntity.bee;
         if (bee != null) {
             String name = bee.getName();
             int id = bee.getId();

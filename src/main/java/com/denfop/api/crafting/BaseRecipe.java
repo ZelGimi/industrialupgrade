@@ -282,7 +282,7 @@ public class BaseRecipe implements CraftingRecipe {
             inv = new CraftingInputIndustrial(3, 1, List.of(inv.getItem(0), ItemStack.EMPTY, ItemStack.EMPTY));
         }
         if (height == 2 && width == 2) {
-            inv = new CraftingInputIndustrial(3, 2, List.of(inv.getItem(0),inv.getItem(1), ItemStack.EMPTY,inv.getItem(2),inv.getItem(3), ItemStack.EMPTY));
+            inv = new CraftingInputIndustrial(3, 2, List.of(inv.getItem(0), inv.getItem(1), ItemStack.EMPTY, inv.getItem(2), inv.getItem(3), ItemStack.EMPTY));
         }
         if (height == 1 && width == 2) {
             inv = new CraftingInputIndustrial(3, 1, List.of(inv.getItem(0), inv.getItem(1), ItemStack.EMPTY));
@@ -414,8 +414,8 @@ public class BaseRecipe implements CraftingRecipe {
                                 if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                                     continue;
                                 }
-                                if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() &&  input[j][i].getInputs().isEmpty())
-                                    input[j][i] = new InputOreDict(this.input[j][i].getTag(),this.input[j][i].getAmount());
+                                if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                                    input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
 
                                 if (!this.input[j][i].matches(offer)) {
                                     has = false;
@@ -440,8 +440,8 @@ public class BaseRecipe implements CraftingRecipe {
                                 if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                                     continue;
                                 }
-                                if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() &&  input[j][i].getInputs().isEmpty())
-                                    input[j][i] = new InputOreDict(this.input[j][i].getTag(),this.input[j][i].getAmount());
+                                if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                                    input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
 
                                 if (!this.input[j][i].matches(offer)) {
                                     has = false;
@@ -471,8 +471,8 @@ public class BaseRecipe implements CraftingRecipe {
                             if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                                 continue;
                             }
-                            if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() &&  input[j][i].getInputs().isEmpty())
-                                input[j][i] = new InputOreDict(this.input[j][i].getTag(),this.input[j][i].getAmount());
+                            if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                                input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
 
                             if (!this.input[j][i].matches(offer)) {
                                 has = false;
@@ -494,8 +494,8 @@ public class BaseRecipe implements CraftingRecipe {
                             if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                                 continue;
                             }
-                            if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() &&  input[j][i].getInputs().isEmpty())
-                                input[j][i] = new InputOreDict(this.input[j][i].getTag(),this.input[j][i].getAmount());
+                            if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                                input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
 
                             if (!this.input[j][i].matches(offer)) {
                                 return ItemStack.EMPTY;

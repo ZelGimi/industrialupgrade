@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +60,7 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
     public enum Type implements ISubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
+        vanadium(2),
         tungsten(3),
         cobalt(4),
         magnesium(5),

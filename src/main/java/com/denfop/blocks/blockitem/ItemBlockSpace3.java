@@ -20,6 +20,6 @@ public class ItemBlockSpace3 extends ItemBlockCore<BlockSpace3.Type> implements 
     @Override
     public String[] getTags() {
         String name = getElement().getName().split("_")[1];
-        return new String[]{"c:ores/" + name.replace("vanadium", "vanady"), "c:ores"};
+        return new String[]{"c:ores/" + name, "c:ores"};
     }
 }

@@ -1,22 +1,22 @@
 package com.denfop.events;
 
 import com.denfop.IUCore;
-import com.denfop.api.gasvein.GasVein;
-import com.denfop.api.gasvein.GasVeinSystem;
 import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.*;
-import com.denfop.api.vein.Vein;
-import com.denfop.api.vein.VeinSystem;
+import com.denfop.api.vein.common.VeinBase;
+import com.denfop.api.vein.common.VeinSystem;
+import com.denfop.api.vein.gas.GasVeinBase;
+import com.denfop.api.vein.gas.GasVeinSystem;
+import com.denfop.blockentity.quarry_earth.BlockEntityEarthQuarryController;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.render.streak.PlayerStreakInfo;
-import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
 import com.denfop.world.vein.noise.ShellCluster;
@@ -239,14 +239,14 @@ public class WorldSavedDataIU extends SavedData {
             PollutionManager.pollutionManager.loadData(pollutionTag);
         }
 
-        TileEntityEarthQuarryController.chunkPos.clear();
+        BlockEntityEarthQuarryController.chunkPos.clear();
         if (compound.contains("earth_quarry")) {
             ListTag earthQuarryList = compound.getList("earth_quarry", 10);
             for (int i = 0; i < earthQuarryList.size(); i++) {
                 CompoundTag chunkTag = earthQuarryList.getCompound(i);
                 int x = chunkTag.getInt("x");
                 int z = chunkTag.getInt("z");
-                TileEntityEarthQuarryController.chunkPos.add(new ChunkPos(x, z));
+                BlockEntityEarthQuarryController.chunkPos.add(new ChunkPos(x, z));
             }
         }
 
@@ -413,7 +413,7 @@ public class WorldSavedDataIU extends SavedData {
         compound.put("fakePlayers", fakePlayersList);
 
         ListTag veinsList = new ListTag();
-        for (Vein vein : VeinSystem.system.getVeinsList()) {
+        for (VeinBase vein : VeinSystem.system.getVeinsList()) {
             veinsList.add(vein.writeTag());
         }
         compound.put("veins", veinsList);
@@ -457,7 +457,7 @@ public class WorldSavedDataIU extends SavedData {
         compound.put("pollution", PollutionManager.pollutionManager.writeCompound());
 
         ListTag earthQuarryList = new ListTag();
-        for (ChunkPos chunkPos : TileEntityEarthQuarryController.chunkPos) {
+        for (ChunkPos chunkPos : BlockEntityEarthQuarryController.chunkPos) {
             CompoundTag chunkTag = new CompoundTag();
             chunkTag.putInt("x", chunkPos.x);
             chunkTag.putInt("z", chunkPos.z);
@@ -476,7 +476,7 @@ public class WorldSavedDataIU extends SavedData {
         compound.put("gen_gas", gasMapList);
 
         ListTag gasVeinsList = new ListTag();
-        for (GasVein gasVein : GasVeinSystem.system.getVeinsList()) {
+        for (GasVeinBase gasVein : GasVeinSystem.system.getVeinsList()) {
             gasVeinsList.add(gasVein.writeTag());
         }
         compound.put("gasvein", gasVeinsList);

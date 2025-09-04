@@ -20,7 +20,7 @@ import net.neoforged.neoforge.common.Tags;
 public class WorldGenOil extends Feature<NoneFeatureConfiguration> {
 
 
-    final FluidName[] fluids = new FluidName[]{FluidName.fluidneft, FluidName.fluidsweet_medium_oil,
+    final FluidName[] fluids = new FluidName[]{FluidName.fluidpetroleum, FluidName.fluidsweet_medium_oil,
             FluidName.fluidsweet_heavy_oil, FluidName.fluidsour_light_oil, FluidName.fluidsour_medium_oil,
             FluidName.fluidsour_heavy_oil};
     private BlockState spreadBlock;

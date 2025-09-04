@@ -1,15 +1,15 @@
 package com.denfop.integration.jei.genbio;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.container.ContainerMultiMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityGearMachine;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockMoreMachine3Entity;
+import com.denfop.containermenu.ContainerMenuMultiMachine;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -25,7 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenBioCategory extends GuiIU implements IRecipeCategory<GenBioHandler> {
+public class GenBioCategory extends ScreenMain implements IRecipeCategory<GenBioHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -33,8 +33,8 @@ public class GenBioCategory extends GuiIU implements IRecipeCategory<GenBioHandl
     public GenBioCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getInstance().player,
-                ((TileGearMachine) BlockMoreMachine3.gearing.getDummyTe()), 1, true
+        super(new ContainerMenuMultiMachine(Minecraft.getInstance().player,
+                ((BlockEntityGearMachine) BlockMoreMachine3Entity.gearing.getDummyTe()), 1, true
         ));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
@@ -53,7 +53,7 @@ public class GenBioCategory extends GuiIU implements IRecipeCategory<GenBioHandl
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockBaseMachine3.gen_bio).getDisplayName().getString();
+        return JEICompat.getBlockStack(BlockBaseMachine3Entity.gen_bio).getDisplayName().getString();
     }
 
 

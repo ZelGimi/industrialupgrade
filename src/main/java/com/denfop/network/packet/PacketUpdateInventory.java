@@ -1,8 +1,8 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerBase;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,16 +23,16 @@ public class PacketUpdateInventory implements IPacket {
 
     }
 
-    public PacketUpdateInventory(ContainerBase<IAdvInventory> tContainerBase, ServerPlayer player) {
+    public PacketUpdateInventory(ContainerMenuBase<CustomWorldContainer> tContainerMenuBase, ServerPlayer player) {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer(player.registryAccess());
         packetBuffer.writeByte(this.getId());
-        List<Slot> slots = tContainerBase.slots.stream().filter(slot -> slot.container == player.getInventory()).toList();
+        List<Slot> slots = tContainerMenuBase.slots.stream().filter(slot -> slot.container == player.getInventory()).toList();
         packetBuffer.writeShort(slots.size());
         for (int i = 0; i < slots.size(); i++) {
             packetBuffer.writeBoolean(slots.get(i).hasItem());
-            if (tContainerBase.slots.get(i).hasItem()) {
+            if (tContainerMenuBase.slots.get(i).hasItem()) {
                 try {
-                    EncoderHandler.encode(packetBuffer, tContainerBase.slots.get(i).getItem());
+                    EncoderHandler.encode(packetBuffer, tContainerMenuBase.slots.get(i).getItem());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

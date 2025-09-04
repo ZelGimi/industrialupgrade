@@ -1,7 +1,7 @@
 package com.denfop.api.steam;
 
 
-import com.denfop.tiles.mechanism.steamturbine.IRod;
+import com.denfop.blockentity.mechanism.steamturbine.IRod;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
@@ -61,7 +61,7 @@ public class Steam {
                 }
                 for (IExchanger exchanger : steam.getExchanger()) {
                     if (!exchanger.getSlot().isEmpty()) {
-                        this.steam.removeHeat(exchanger.getPower()*6);
+                        this.steam.removeHeat(exchanger.getPower() * 6);
                     }
                 }
             } else {

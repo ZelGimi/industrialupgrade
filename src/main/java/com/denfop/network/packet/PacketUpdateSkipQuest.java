@@ -2,7 +2,6 @@ package com.denfop.network.packet;
 
 import com.denfop.IUCore;
 import com.denfop.api.guidebook.GuideBookCore;
-import com.denfop.utils.ExperienceUtils;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
@@ -23,8 +22,9 @@ public class PacketUpdateSkipQuest implements IPacket {
         customPacketBuffer.writeString(tab);
         customPacketBuffer.writeString(quest);
         this.buffer = customPacketBuffer;
-        IUCore.network.getClient().sendPacket(this,customPacketBuffer);
+        IUCore.network.getClient().sendPacket(this, customPacketBuffer);
     }
+
     public CustomPacketBuffer getPacketBuffer() {
         return buffer;
     }
@@ -33,6 +33,7 @@ public class PacketUpdateSkipQuest implements IPacket {
     public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
         buffer = customPacketBuffer;
     }
+
     @Override
     public byte getId() {
         return 72;

@@ -1,10 +1,10 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.*;
 import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.Keyboard;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;

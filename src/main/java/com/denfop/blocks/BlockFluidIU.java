@@ -1,7 +1,7 @@
 package com.denfop.blocks;
 
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.potion.IUPotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -28,13 +28,13 @@ public class BlockFluidIU extends LiquidBlock {
         Fluid fluid = this.fluid.getSource();
 
 
-        if (fluid == FluidName.fluidcoolant.getInstance().get() || fluid == FluidName.fluidazot.getInstance().get()) {
+        if (fluid == FluidName.fluidcoolant.getInstance().get() || fluid == FluidName.fluidnitrogen.getInstance().get()) {
             ((LivingEntity) entity).addEffect(new MobEffectInstance(IUPotion.frost, 200, 0));
         }
 
 
         if (!fluid.getFluidType().canDrownIn((LivingEntity) entity) && entity instanceof Player player) {
-            if (!IHazmatLike.hasCompleteHazmat(player)) {
+            if (!HazmatLike.hasCompleteHazmat(player)) {
                 player.addEffect(new MobEffectInstance(IUPotion.poison, 200, 0));
             }
         }

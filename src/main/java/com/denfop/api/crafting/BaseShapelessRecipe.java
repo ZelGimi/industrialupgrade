@@ -92,10 +92,10 @@ public class BaseShapelessRecipe implements CraftingRecipe {
 
     public ItemStack matches(final CraftingInput inv) {
 
-        for (int i = 0; i < recipeInputList.size();i++) {
+        for (int i = 0; i < recipeInputList.size(); i++) {
             IInputItemStack input = this.recipeInputList.get(i);
-            if (input instanceof InputOreDict &&input .hasTag() &&  input .getInputs().isEmpty())
-                recipeInputList.set(i,new InputOreDict(input .getTag(),input .getAmount()));
+            if (input instanceof InputOreDict && input.hasTag() && input.getInputs().isEmpty())
+                recipeInputList.set(i, new InputOreDict(input.getTag(), input.getAmount()));
         }
         List<IInputItemStack> recipeInputList1 = new ArrayList<>(recipeInputList);
         for (int i = 0; i < inv.size(); i++) {

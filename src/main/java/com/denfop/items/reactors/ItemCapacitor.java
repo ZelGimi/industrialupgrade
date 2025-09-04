@@ -1,9 +1,9 @@
 package com.denfop.items.reactors;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.reactors.graphite.ICapacitorItem;
+import com.denfop.blockentity.reactors.graphite.ICapacitorItem;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;

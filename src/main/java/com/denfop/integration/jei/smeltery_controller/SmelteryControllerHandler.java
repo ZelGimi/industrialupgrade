@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.denfop.tiles.smeltery.TileEntitySmelteryController.mapRecipes;
+import static com.denfop.blockentity.smeltery.BlockEntitySmelteryController.mapRecipes;
 
 public class SmelteryControllerHandler {
 

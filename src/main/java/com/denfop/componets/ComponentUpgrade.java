@@ -1,7 +1,7 @@
 package com.denfop.componets;
 
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ public class ComponentUpgrade extends AbstractComponent {
     private final List<TypeUpgrade> listActiveUpgrade = new ArrayList<>();
     private boolean change = true;
 
-    public ComponentUpgrade(final TileEntityInventory parent, TypeUpgrade... typeUpgrades) {
+    public ComponentUpgrade(final BlockEntityInventory parent, TypeUpgrade... typeUpgrades) {
         super(parent);
         this.listUpgrade = Arrays.asList(typeUpgrades);
     }

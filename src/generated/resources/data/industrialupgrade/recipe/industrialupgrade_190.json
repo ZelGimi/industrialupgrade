@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:nugget/platium"
+      "item": "industrialupgrade:nugget/platinum"
     }
   },
   "pattern": [
@@ -13,7 +13,7 @@
   ],
   "result": {
     "count": 1,
-    "id": "industrialupgrade:itemingots/platium_ingot"
+    "id": "industrialupgrade:itemingots/platinum_ingot"
   },
   "show_notification": false
 }

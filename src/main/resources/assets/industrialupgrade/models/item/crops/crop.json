@@ -164,13 +164,13 @@
       }
     },
     {
-      "model": "industrialupgrade:item/smalldust/vanady",
+      "model": "industrialupgrade:item/smalldust/vanadium",
       "predicate": {
         "id": 27
       }
     },
     {
-      "model": "industrialupgrade:item/smalldust/wolfram",
+      "model": "industrialupgrade:item/smalldust/tungsten",
       "predicate": {
         "id": 28
       }

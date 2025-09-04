@@ -1,18 +1,16 @@
 package com.denfop.effects;
 
-import com.denfop.tiles.base.TileEntityAnvil;
+import com.denfop.blockentity.base.BlockEntityAnvil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.data.ModelData;
 
 @OnlyIn(Dist.CLIENT)
 public class BreakingItemParticle extends TextureSheetParticle {
@@ -77,8 +75,8 @@ public class BreakingItemParticle extends TextureSheetParticle {
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
             BlockEntity block = pLevel.getBlockEntity(new BlockPos((int) pX, (int) (pY - 1), (int) pZ));
             ItemStack stack = ItemStack.EMPTY;
-            if (block instanceof TileEntityAnvil)
-                stack = ((TileEntityAnvil) block).inputSlotA.get(0);
+            if (block instanceof BlockEntityAnvil)
+                stack = ((BlockEntityAnvil) block).inputSlotA.get(0);
             return new BreakingItemParticle(pLevel, pX, pY, pZ, stack);
         }
     }

@@ -1,6 +1,6 @@
 package com.denfop.api.bee;
 
-import com.denfop.api.agriculture.ICrop;
+import com.denfop.api.crop.ICrop;
 
 import java.util.Objects;
 

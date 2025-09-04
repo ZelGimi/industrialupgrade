@@ -1,9 +1,9 @@
 package com.denfop.entity;
 
-import com.denfop.api.bee.IBee;
+import com.denfop.api.bee.Bee;
+import com.denfop.blockentity.bee.BlockEntityApiary;
+import com.denfop.blockentity.crop.TileEntityCrop;
 import com.denfop.mixin.access.BeeAccessor;
-import com.denfop.tiles.bee.TileEntityApiary;
-import com.denfop.tiles.crop.TileEntityCrop;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.AirRandomPos;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -25,14 +24,14 @@ import org.joml.Vector3f;
 import java.util.EnumSet;
 import java.util.List;
 
-public class SmallBee extends Bee {
-    public IBee bee;
+public class SmallBee extends net.minecraft.world.entity.animal.Bee {
+    public Bee bee;
     List<TileEntityCrop> crops;
     boolean can = true;
     private BlockPos hivePos;
     private boolean hasCustomNectar = false;
 
-    public SmallBee(EntityType<? extends Bee> type, Level level) {
+    public SmallBee(EntityType<? extends net.minecraft.world.entity.animal.Bee> type, Level level) {
         super(type, level);
     }
 
@@ -44,7 +43,7 @@ public class SmallBee extends Bee {
         this.crops = crops;
     }
 
-    public void setBee(IBee bee) {
+    public void setBee(Bee bee) {
         this.bee = bee;
     }
 
@@ -96,7 +95,7 @@ public class SmallBee extends Bee {
         if (can) {
             if (bee == null) {
                 this.hivePos = new BlockPos((int) this.position().x, (int) this.position().y, (int) this.position().z);
-                if (this.level().getBlockEntity(hivePos) instanceof TileEntityApiary apiary) {
+                if (this.level().getBlockEntity(hivePos) instanceof BlockEntityApiary apiary) {
                     this.bee = apiary.getQueen();
                 }
             }

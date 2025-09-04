@@ -1,0 +1,180 @@
+package com.denfop.blocks.mechanism;
+
+import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.item.MultiBlockItem;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.transport.tiles.coolpipe.*;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
+import com.denfop.utils.ModUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.registries.DeferredHolder;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
+
+;
+
+public enum BlockCoolPipeEntity implements MultiBlockEntity, MultiBlockItem {
+
+    cool(BlockEntityCoolPipe.class, 0),
+    cool1(BlockEntityCool1Pipe.class, 1),
+    cool2(BlockEntityCool2Pipe.class, 2),
+    cool3(BlockEntityCool3Pipe.class, 3),
+    cool4(BlockEntityCool4Pipe.class, 4),
+
+    ;
+
+
+    static String[] name = {"itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4",};
+    private final Class<? extends BlockEntityBase> teClass;
+    private final int itemMeta;
+    int idBlock;
+    private BlockEntityBase dummyTe;
+    private BlockState defaultState;
+
+    ;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends BlockEntityBase>> blockType;
+
+    ;
+
+    BlockCoolPipeEntity(final Class<? extends BlockEntityBase> teClass, final int itemMeta) {
+        this.teClass = teClass;
+        this.itemMeta = itemMeta;
+
+
+    }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    public void buildDummies() {
+        final ModContainer mc = IUCore.instance.modContainer;
+        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
+            throw new IllegalAccessError("Don't mess with this please.");
+        }
+        if (this.teClass != null) {
+            try {
+                this.dummyTe = (BlockEntityBase) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    @Override
+    public BlockEntityType<? extends BlockEntityBase> getBlockType() {
+        return this.blockType.get();
+    }
+
+    @Override
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
+    }
+
+    @Override
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends BlockEntityBase>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+    @Override
+    public boolean hasUniqueName() {
+        return true;
+    }
+
+    @Override
+    public String getUniqueName() {
+        return "iu." + "cold." + name[this.itemMeta];
+    }
+
+    @Override
+    public MapColor getMaterial() {
+        return CABLE;
+    }
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
+
+
+    @Override
+    public String getMainPath() {
+        return "wiring";
+    }
+
+    @Override
+    public int getId() {
+        return this.itemMeta;
+    }
+
+
+    @Override
+    public boolean hasItem() {
+        return true;
+    }
+
+    @Override
+    public Class<? extends BlockEntityBase> getTeClass() {
+        return this.teClass;
+    }
+
+    @Override
+    public boolean hasActive() {
+        return false;
+    }
+
+    @Override
+    @Nonnull
+    public Set<Direction> getSupportedFacings() {
+        return ModUtils.horizontalFacings;
+    }
+
+    @Override
+    public float getHardness() {
+        return 0.5f;
+    }
+
+    @Override
+    @Nonnull
+    public HarvestTool getHarvestTool() {
+        return HarvestTool.None;
+    }
+
+    @Override
+    @Nonnull
+    public DefaultDrop getDefaultDrop() {
+        return DefaultDrop.Self;
+    }
+
+    @Override
+    public boolean allowWrenchRotating() {
+        return true;
+    }
+
+    @Override
+    public BlockEntityBase getDummyTe() {
+        return this.dummyTe;
+    }
+
+
+    @Override
+    public boolean hasUniqueRender(ItemStack var1) {
+        return true;
+    }
+
+
+}

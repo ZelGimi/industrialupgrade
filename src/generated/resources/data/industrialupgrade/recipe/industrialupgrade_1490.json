@@ -10,7 +10,7 @@
       "components": {
         "industrialupgrade:fluid": {
           "amount": 1000,
-          "id": "industrialupgrade:iufluidbenz"
+          "id": "industrialupgrade:iufluidgasoline"
         },
         "minecraft:attribute_modifiers": {
           "modifiers": []

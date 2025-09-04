@@ -1,12 +1,12 @@
 package com.denfop.integration.jei.quantummolecular;
 
 import com.denfop.Constants;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.screen.ScreenMain;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class QuantumMolecularCategory extends GuiIU implements IRecipeCategory<QuantumMolecularHandler> {
+public class QuantumMolecularCategory extends ScreenMain implements IRecipeCategory<QuantumMolecularHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -30,7 +30,7 @@ public class QuantumMolecularCategory extends GuiIU implements IRecipeCategory<Q
     public QuantumMolecularCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        super(((BlockEntityLaserPolisher) BlockBaseMachine3Entity.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew" +
@@ -43,7 +43,7 @@ public class QuantumMolecularCategory extends GuiIU implements IRecipeCategory<Q
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockBaseMachine3.quantum_transformer).getDisplayName().getString();
+        return JEICompat.getBlockStack(BlockBaseMachine3Entity.quantum_transformer).getDisplayName().getString();
     }
 
     @Override

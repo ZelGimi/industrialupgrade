@@ -1,9 +1,9 @@
 package com.denfop.items.energy;
 
-import com.denfop.Localization;
 import com.denfop.datagen.itemtag.ItemTagProvider;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.utils.ExperienceUtils;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.RetraceDiggingUtils;
 import net.minecraft.core.BlockPos;
@@ -216,10 +216,12 @@ public class ItemSteelHammer extends ItemToolIU {
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         return mineableBlocks.contains(state) ? this.getTier().getSpeed() : 1.0F;
     }
+
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
         return ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(toolAction) || ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
     }
+
     public boolean onDestroyed(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof Player player)) {
             return false;
@@ -270,7 +272,7 @@ public class ItemSteelHammer extends ItemToolIU {
                 block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
             }
 
-            }
+        }
 
         return true;
     }

@@ -1,14 +1,14 @@
 package com.denfop.items.relocator;
 
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerLeadBox;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.datacomponent.ContainerItem;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.bags.ItemStackLeadBox;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -67,8 +67,8 @@ public class ItemRelocator extends BaseEnergyItem implements IItemStackInventory
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
-            ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuLeadBox) {
+            ItemStackLeadBox toolbox = ((ContainerMenuLeadBox) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeContainer();
@@ -100,7 +100,7 @@ public class ItemRelocator extends BaseEnergyItem implements IItemStackInventory
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         return new ItemStackRelocator(player, stack);
     }
 

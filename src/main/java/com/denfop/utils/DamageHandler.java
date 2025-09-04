@@ -1,7 +1,7 @@
 package com.denfop.utils;
 
 
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -17,15 +17,15 @@ public class DamageHandler {
         if (item == ItemStack.EMPTY.getItem()) {
             return 0;
         } else {
-            return item instanceof IDamageItem ? stack.getDamageValue() : stack.getDamageValue();
+            return item instanceof DamageItem ? stack.getDamageValue() : stack.getDamageValue();
         }
     }
 
     public static void setDamage(ItemStack stack, int damage) {
         Item item = stack.getItem();
         if (item != ItemStack.EMPTY.getItem()) {
-            if (item instanceof IDamageItem) {
-                ((IDamageItem) item).setCustomDamage(stack, damage);
+            if (item instanceof DamageItem) {
+                ((DamageItem) item).setCustomDamage(stack, damage);
             } else {
                 stack.setDamageValue(damage);
             }
@@ -38,8 +38,8 @@ public class DamageHandler {
         if (item == ItemStack.EMPTY.getItem()) {
             return 0;
         } else {
-            return item instanceof IDamageItem
-                    ? ((IDamageItem) item).getMaxCustomDamage(stack)
+            return item instanceof DamageItem
+                    ? ((DamageItem) item).getMaxCustomDamage(stack)
                     : stack.getMaxDamage();
         }
     }
@@ -48,8 +48,8 @@ public class DamageHandler {
         Item item = stack.getItem();
         if (item == ItemStack.EMPTY.getItem()) {
             return false;
-        } else if (item instanceof IDamageItem) {
-            return ((IDamageItem) item).applyCustomDamage(stack, damage, src);
+        } else if (item instanceof DamageItem) {
+            return ((DamageItem) item).applyCustomDamage(stack, damage, src);
         } else
             stack.hurtAndBreak(damage, src, EquipmentSlot.MAINHAND);
         return false;

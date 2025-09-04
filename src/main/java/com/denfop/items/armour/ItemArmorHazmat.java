@@ -1,8 +1,7 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.damagesource.IUDamageSource;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.datagen.DamageTypes;
 import com.denfop.register.Register;
 import net.minecraft.Util;
@@ -33,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, ISpecialArmor {
+public class ItemArmorHazmat extends ItemArmorUtility implements HazmatLike, ISpecialArmor {
 
     public ItemArmorHazmat(String name, Type type) {
         super(Register.HAZMAT, name, type);
@@ -53,7 +52,7 @@ public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, IS
 
         EquipmentSlot slot;
         ItemStack stack;
-        IHazmatLike hazmat;
+        HazmatLike hazmat;
         do {
             if (!var1.hasNext()) {
                 return true;
@@ -61,11 +60,11 @@ public class ItemArmorHazmat extends ItemArmorUtility implements IHazmatLike, IS
 
             slot = var1.next();
             stack = living.getItemBySlot(slot);
-            if (!(stack.getItem() instanceof IHazmatLike)) {
+            if (!(stack.getItem() instanceof HazmatLike)) {
                 return false;
             }
 
-            hazmat = (IHazmatLike) stack.getItem();
+            hazmat = (HazmatLike) stack.getItem();
             if (!hazmat.addsProtection(living, slot, stack)) {
                 return false;
             }

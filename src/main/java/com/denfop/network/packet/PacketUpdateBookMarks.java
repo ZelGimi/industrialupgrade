@@ -4,10 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,6 +35,7 @@ public class PacketUpdateBookMarks implements IPacket {
         this.buffer = buffer;
         IUCore.network.getClient().sendPacket(this, buffer);
     }
+
     public CustomPacketBuffer getPacketBuffer() {
         return buffer;
     }
@@ -45,14 +44,17 @@ public class PacketUpdateBookMarks implements IPacket {
     public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
         buffer = customPacketBuffer;
     }
+
     @Override
     public byte getId() {
         return 74;
     }
+
     @SuppressWarnings("unchecked")
-    private <T> void setData(ItemStack stack, DataComponentType<T> key,  Optional<?> value) {
+    private <T> void setData(ItemStack stack, DataComponentType<T> key, Optional<?> value) {
         stack.set(key, (T) value.get());
     }
+
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
         if (!entityPlayer.getName().getString().equals(customPacketBuffer.readString())) {
@@ -63,7 +65,7 @@ public class PacketUpdateBookMarks implements IPacket {
             DataComponentPatch tag = (DataComponentPatch) DecoderHandler.decode(customPacketBuffer);
             for (Map.Entry<DataComponentType<?>, Optional<?>> entry : tag.entrySet()) {
                 if (entry.getKey() == DataComponentsInit.BOOKMARK)
-                setData(stack, entry.getKey(), entry.getValue());
+                    setData(stack, entry.getKey(), entry.getValue());
             }
 
 

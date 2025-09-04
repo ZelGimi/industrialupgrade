@@ -1,14 +1,14 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemToolWrenchEnergy extends ItemToolWrench implements IEnergyItem {
+public class ItemToolWrenchEnergy extends ItemToolWrench implements EnergyItem {
 
 
     public boolean canTakeDamage(ItemStack stack, int amount) {

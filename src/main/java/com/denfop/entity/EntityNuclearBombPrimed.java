@@ -2,10 +2,10 @@ package com.denfop.entity;
 
 
 import com.denfop.IUItem;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.api.radiationsystem.EnumLevelRadiation;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.api.pollution.radiation.EnumLevelRadiation;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
+import com.denfop.potion.IUPotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -121,7 +121,7 @@ public class EntityNuclearBombPrimed extends Entity {
 
     private boolean hasRadiationSuit(Player player) {
 
-        return IHazmatLike.hasCompleteHazmat(player, EnumLevelRadiation.LOW);
+        return HazmatLike.hasCompleteHazmat(player, EnumLevelRadiation.LOW);
     }
 
     @Override

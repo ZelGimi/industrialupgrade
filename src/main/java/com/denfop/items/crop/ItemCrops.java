@@ -2,10 +2,10 @@ package com.denfop.items.crop;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.agriculture.ICropItem;
-import com.denfop.api.agriculture.genetics.Genome;
+import com.denfop.api.crop.CropNetwork;
+import com.denfop.api.crop.ICrop;
+import com.denfop.api.crop.ICropItem;
+import com.denfop.api.crop.genetics.Genome;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.IProperties;

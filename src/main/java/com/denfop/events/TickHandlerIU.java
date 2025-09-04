@@ -43,10 +43,9 @@ public class TickHandlerIU {
             armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
             armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
             armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
-            if (ISpecialArmor.hasCompleteArmor(event.getEntity())) {
-                float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getOriginalDamage());
-                event.setNewDamage(damageAmount);
-            }
+            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getOriginalDamage());
+            damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), damageAmount);
+            event.setNewDamage(damageAmount);
         }
     }
 

@@ -2,13 +2,13 @@ package com.denfop.integration.jei.worldcollector.crystallize;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityEnchanterBooks;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class CrystallizeCategory extends GuiIU implements IRecipeCategory<CrystallizeHandler> {
+public class CrystallizeCategory extends ScreenMain implements IRecipeCategory<CrystallizeHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -34,7 +34,7 @@ public class CrystallizeCategory extends GuiIU implements IRecipeCategory<Crysta
     public CrystallizeCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityEnchanterBooks) BlockBaseMachine3Entity.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());

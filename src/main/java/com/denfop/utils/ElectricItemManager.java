@@ -1,8 +1,6 @@
 package com.denfop.utils;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.item.IElectricItemManager;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.datacomponent.DataComponentsInit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -10,13 +8,13 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class ElectricItemManager implements IElectricItemManager {
+public class ElectricItemManager implements com.denfop.api.item.energy.ElectricItemManager {
 
     public ElectricItemManager() {
     }
 
     public static ItemStack getCharged(Item item, double charge) {
-        if (!(item instanceof IEnergyItem)) {
+        if (!(item instanceof EnergyItem)) {
             throw new IllegalArgumentException("no electric item");
         } else {
             ItemStack ret = new ItemStack(item).copy();
@@ -31,7 +29,7 @@ public class ElectricItemManager implements IElectricItemManager {
     }
 
     public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
-        IEnergyItem item = (IEnergyItem) stack.getItem();
+        EnergyItem item = (EnergyItem) stack.getItem();
 
         assert item.getMaxEnergy(stack) > 0.0D;
         if (this.getCharge(stack) == item.getMaxEnergy(stack)) {
@@ -62,7 +60,7 @@ public class ElectricItemManager implements IElectricItemManager {
             boolean externally,
             boolean simulate
     ) {
-        IEnergyItem item = (IEnergyItem) stack.getItem();
+        EnergyItem item = (EnergyItem) stack.getItem();
 
         assert item.getMaxEnergy(stack) > 0.0D;
         if (!(amount < 0.0D) && ModUtils.getSize(stack) <= 1 && item.getTierItem(stack) <= tier) {
@@ -94,7 +92,7 @@ public class ElectricItemManager implements IElectricItemManager {
     }
 
     public double getMaxCharge(ItemStack stack) {
-        return ((IEnergyItem) stack.getItem()).getMaxEnergy(stack);
+        return ((EnergyItem) stack.getItem()).getMaxEnergy(stack);
     }
 
     public boolean canUse(ItemStack stack, double amount) {
@@ -114,10 +112,10 @@ public class ElectricItemManager implements IElectricItemManager {
 
 
     public String getToolTip(ItemStack stack) {
-        if (stack.getItem() instanceof IEnergyItem) {
+        if (stack.getItem() instanceof EnergyItem) {
             double charge = ElectricItem.manager.getCharge(stack);
             return ModUtils.getString(charge) + "/" + ModUtils.getString(
-                    ((IEnergyItem) stack.getItem()).getMaxEnergy(stack)
+                    ((EnergyItem) stack.getItem()).getMaxEnergy(stack)
             ) + " EF";
         } else {
             return "";
@@ -125,8 +123,8 @@ public class ElectricItemManager implements IElectricItemManager {
     }
 
     public int getTier(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof IEnergyItem
-                ? ((IEnergyItem) stack.getItem()).getTierItem(stack)
+        return !stack.isEmpty() && stack.getItem() instanceof EnergyItem
+                ? ((EnergyItem) stack.getItem()).getTierItem(stack)
                 : 0;
     }
 

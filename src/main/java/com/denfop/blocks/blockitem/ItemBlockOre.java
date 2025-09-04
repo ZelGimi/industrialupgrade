@@ -47,7 +47,7 @@ public class ItemBlockOre extends ItemBlockCore<BlockOre.Type> implements IItemT
                 name = "tungsten";
                 break;
             case 2:
-                name = "vanady";
+                name = "vanadium";
                 break;
 
         }

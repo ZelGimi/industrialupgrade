@@ -1,13 +1,13 @@
 package com.denfop.integration.jei.multiblock;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
 import com.denfop.api.multiblock.MultiBlockStructure;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityMoonSpotter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBlockHandler> {
+public class MultiBlockCategory extends ScreenMain implements IRecipeCategory<MultiBlockHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -34,7 +34,7 @@ public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBl
     public MultiBlockCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityMoonSpotter) BlockBaseMachine3.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityMoonSpotter) BlockBaseMachine3Entity.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,

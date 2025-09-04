@@ -2,14 +2,14 @@ package com.denfop.integration.jei.bee;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockHive;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityBatteryFactory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockHiveEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityBatteryFactory;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class BeeCategory extends GuiIU implements IRecipeCategory<BeeHandler> {
+public class BeeCategory extends ScreenMain implements IRecipeCategory<BeeHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -33,7 +33,7 @@ public class BeeCategory extends GuiIU implements IRecipeCategory<BeeHandler> {
     public BeeCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityBatteryFactory) BlockBaseMachine3.battery_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityBatteryFactory) BlockBaseMachine3Entity.battery_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
@@ -46,7 +46,7 @@ public class BeeCategory extends GuiIU implements IRecipeCategory<BeeHandler> {
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockHive.forest_hive).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockHiveEntity.forest_hive).getDescriptionId());
     }
 
 

@@ -1,9 +1,9 @@
 package com.denfop.items.book;
 
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiCore;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -19,14 +19,14 @@ public class ItemStackBook extends ItemStackInventory {
         this.itemStack1 = stack;
     }
 
-    public ContainerBase<ItemStackBook> getGuiContainer(Player player) {
-        return new ContainerBook(this);
+    public ContainerMenuBase<ItemStackBook> getGuiContainer(Player player) {
+        return new ContainerMenuBook(this);
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
-        return new GUIBook(player, itemStack1, (ContainerBook) isAdmin);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player player, ContainerMenuBase<? extends CustomWorldContainer> isAdmin) {
+        return new ScreenBook(player, itemStack1, (ContainerMenuBook) isAdmin);
     }
 
 

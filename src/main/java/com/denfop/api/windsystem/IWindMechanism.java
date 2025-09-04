@@ -15,7 +15,7 @@ public interface IWindMechanism {
 
     void setCoefficient(double coefficient);
 
-    IWindRotor getRotor();
+    WindRotor getRotor();
 
     ItemStack getItemStack();
 

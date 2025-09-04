@@ -1,16 +1,16 @@
 package com.denfop.network;
 
 
-import com.denfop.api.radiationsystem.Radiation;
+import com.denfop.api.pollution.radiation.Radiation;
 import com.denfop.api.recipe.RecipeInfo;
-import com.denfop.api.vein.Vein;
+import com.denfop.api.vein.common.VeinBase;
+import com.denfop.blockentity.base.DataOre;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.inventory.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
 import com.denfop.network.packet.INetworkObject;
-import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufOutputStream;
@@ -280,7 +280,7 @@ public class EncoderHandler {
                 os.writeInt((Integer) o);
                 break;
             case InvSlot:
-                InvSlot slot = (InvSlot) o;
+                Inventory slot = (Inventory) o;
                 ItemStack[] contents = new ItemStack[slot.size()];
 
                 for (i = 0; i < slot.size(); ++i) {
@@ -357,7 +357,7 @@ public class EncoderHandler {
                 os.writeResourceKey(((Level) o).dimension());
                 break;
             case Vein:
-                Vein vein = (Vein) o;
+                VeinBase vein = (VeinBase) o;
                 os.writeBytes(vein.writePacket(os.registryAccess()));
                 break;
             case RecipeInfo:

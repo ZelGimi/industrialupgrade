@@ -2,7 +2,7 @@ package com.denfop.items.genome;
 
 import com.denfop.IUCore;
 import com.denfop.api.bee.genetics.GeneticTraits;
-import com.denfop.api.bee.genetics.IGenomeItem;
+import com.denfop.api.bee.genetics.GenomeItem;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
 
-public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IGenomeItem {
+public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements GenomeItem {
     public ItemBeeGenome(T element) {
         super(new Item.Properties(), element);
     }

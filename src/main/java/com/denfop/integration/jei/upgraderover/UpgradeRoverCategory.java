@@ -1,12 +1,12 @@
 package com.denfop.integration.jei.upgraderover;
 
 import com.denfop.Constants;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import com.denfop.screen.ScreenMain;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class UpgradeRoverCategory extends GuiIU implements IRecipeCategory<UpgradeRoverHandler> {
+public class UpgradeRoverCategory extends ScreenMain implements IRecipeCategory<UpgradeRoverHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -31,7 +31,7 @@ public class UpgradeRoverCategory extends GuiIU implements IRecipeCategory<Upgra
     public UpgradeRoverCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityUpgradeMachineFactory) BlockBaseMachine3Entity.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock".toLowerCase() +
                         ".png"), 3, 3, 148,
@@ -49,7 +49,7 @@ public class UpgradeRoverCategory extends GuiIU implements IRecipeCategory<Upgra
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockBaseMachine3.upgrade_rover).getDisplayName().getString();
+        return JEICompat.getBlockStack(BlockBaseMachine3Entity.upgrade_rover).getDisplayName().getString();
     }
 
 

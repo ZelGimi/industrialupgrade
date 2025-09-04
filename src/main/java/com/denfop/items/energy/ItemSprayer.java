@@ -1,12 +1,12 @@
 package com.denfop.items.energy;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.ItemFluidContainer;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;

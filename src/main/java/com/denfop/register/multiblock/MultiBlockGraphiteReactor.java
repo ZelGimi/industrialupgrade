@@ -2,7 +2,7 @@ package com.denfop.register.multiblock;
 
 import com.denfop.IUItem;
 import com.denfop.api.reactors.IGraphiteReactor;
-import com.denfop.tiles.reactors.graphite.*;
+import com.denfop.blockentity.reactors.graphite.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 

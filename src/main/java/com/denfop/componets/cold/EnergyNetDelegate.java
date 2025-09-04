@@ -1,9 +1,9 @@
 package com.denfop.componets.cold;
 
-import com.denfop.api.cool.ICoolAcceptor;
-import com.denfop.api.cool.ICoolEmitter;
-import com.denfop.api.cool.ICoolTile;
-import com.denfop.api.sytem.*;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.api.otherenergies.cool.ICoolAcceptor;
+import com.denfop.api.otherenergies.cool.ICoolEmitter;
+import com.denfop.api.otherenergies.cool.ICoolTile;
 import com.denfop.componets.BufferEnergy;
 import com.denfop.componets.CoolComponent;
 import net.minecraft.core.BlockPos;
@@ -15,17 +15,19 @@ import java.util.*;
 public class EnergyNetDelegate implements ICoolTile {
     public final BufferEnergy buffer;
     public final BlockPos worldPosition;
+    private final boolean clientSide;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    private final boolean clientSide;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public double tick;
     public Map<Direction, ICoolTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<ICoolTile>> validReceivers = new LinkedList<>();
+    public int hashCodeSource;
     protected double pastEnergy;
     protected double perenergy;
+    List<InfoTile<ICoolTile>> validReceivers = new LinkedList<>();
     private long id;
+
     public EnergyNetDelegate(CoolComponent block) {
         this.worldPosition = block.getParent().pos;
         this.clientSide = block.getParent().getLevel().isClientSide;
@@ -34,10 +36,10 @@ public class EnergyNetDelegate implements ICoolTile {
         this.buffer = block.buffer;
 
     }
+
     public double getSourceEnergy() {
         return this.buffer.storage;
     }
-    public int hashCodeSource;
 
     @Override
     public BlockPos getPos() {
@@ -57,9 +59,11 @@ public class EnergyNetDelegate implements ICoolTile {
         }
         return false;
     }
-    public boolean emitsCoolTo(ICoolAcceptor  receiver, Direction dir) {
+
+    public boolean emitsCoolTo(ICoolAcceptor receiver, Direction dir) {
         return this.sourceDirections.contains(dir);
     }
+
     public long getIdNetwork() {
         return this.id;
     }
@@ -99,7 +103,6 @@ public class EnergyNetDelegate implements ICoolTile {
     }
 
 
-
     public void setSinkDirections(Set<Direction> sinkDirections) {
         this.sinkDirections = sinkDirections;
     }
@@ -107,7 +110,6 @@ public class EnergyNetDelegate implements ICoolTile {
     public void setSourceDirections(Set<Direction> sourceDirections) {
         this.sourceDirections = sourceDirections;
     }
-
 
 
     @Override
@@ -119,6 +121,7 @@ public class EnergyNetDelegate implements ICoolTile {
     public void setHashCodeSource(final int hashCode) {
         hashCodeSource = hashCode;
     }
+
     public List<InfoTile<ICoolTile>> getCoolValidReceivers() {
         return validReceivers;
     }

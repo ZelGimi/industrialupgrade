@@ -1,8 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.Localization;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;

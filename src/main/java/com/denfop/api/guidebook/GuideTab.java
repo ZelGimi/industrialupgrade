@@ -1,6 +1,6 @@
 package com.denfop.api.guidebook;
 
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import net.minecraft.world.item.ItemStack;
 
 public class GuideTab {

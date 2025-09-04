@@ -1,7 +1,7 @@
 package com.denfop.recipe;
 
 
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -62,7 +62,7 @@ public class InputItemStack implements IInputItemStack {
     }
 
     public boolean matches(ItemStack subject) {
-        boolean energy = (this.input.getItem() instanceof IEnergyItem && subject.getItem() instanceof IEnergyItem);
+        boolean energy = (this.input.getItem() instanceof EnergyItem && subject.getItem() instanceof EnergyItem);
         return subject.getItem() == this.input.getItem() && ModUtils.checkItemEquality(this.input, subject);
     }
 

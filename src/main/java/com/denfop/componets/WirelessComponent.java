@@ -1,8 +1,12 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.interfaces.Dual;
+import com.denfop.api.energy.interfaces.EnergySink;
+import com.denfop.api.energy.interfaces.EnergySource;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,10 +22,10 @@ public class WirelessComponent extends AbstractComponent {
 
     boolean hasUpdate = false;
     List<Connect> connectList = new LinkedList<>();
-    IEnergySource energySource;
+    EnergySource energySource;
     private boolean isDual;
 
-    public WirelessComponent(final TileEntityBlock parent) {
+    public WirelessComponent(final BlockEntityBase parent) {
         super(parent);
     }
 
@@ -33,9 +37,9 @@ public class WirelessComponent extends AbstractComponent {
         return hasUpdate;
     }
 
-    public void setEnergySource(final IEnergySource energySource) {
+    public void setEnergySource(final EnergySource energySource) {
         this.energySource = energySource;
-        this.isDual = this.energySource instanceof IDual;
+        this.isDual = this.energySource instanceof Dual;
     }
 
     @Override
@@ -82,8 +86,8 @@ public class WirelessComponent extends AbstractComponent {
                     if (this.isDual && connect.isDual()) {
                         continue;
                     }
-                    if (connect.getTile() != null && connect.getTile() instanceof IEnergySink) {
-                        IEnergySink sink = (IEnergySink) connect.getTile();
+                    if (connect.getTile() != null && connect.getTile() instanceof EnergySink) {
+                        EnergySink sink = (EnergySink) connect.getTile();
                         double demanded = sink.getDemandedEnergy();
                         demanded = Math.min(demanded, this.energySource.canExtractEnergy());
                         sink.receiveEnergy(demanded);
@@ -145,11 +149,11 @@ class Connect {
 
     private final BlockPos pos;
     private boolean isDual;
-    private IEnergyTile tile;
+    private EnergyTile tile;
 
     public Connect(BlockPos pos, Level world) {
         this.tile = EnergyNetGlobal.instance.getTile(world, pos);
-        this.isDual = this.tile instanceof IDual;
+        this.isDual = this.tile instanceof Dual;
         this.pos = pos;
     }
 
@@ -182,13 +186,13 @@ class Connect {
         return Objects.hash(pos);
     }
 
-    public IEnergyTile getTile() {
+    public EnergyTile getTile() {
         return tile;
     }
 
-    public void setTile(final IEnergyTile tile) {
+    public void setTile(final EnergyTile tile) {
         this.tile = tile;
-        this.isDual = this.tile instanceof IDual;
+        this.isDual = this.tile instanceof Dual;
     }
 
 }

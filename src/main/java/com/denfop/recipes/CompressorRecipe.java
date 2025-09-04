@@ -2,7 +2,7 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropNetwork;
+import com.denfop.api.crop.CropNetwork;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
@@ -48,7 +48,7 @@ public class CompressorRecipe {
         List<String> list = new ArrayList<>();
         list.add("Mikhail");//0
         list.add("Aluminium");//1
-        list.add("Vanady");//2
+        list.add("vanadium");//2
         list.add("Tungsten");//3
         list.add("Invar");//4
         list.add("Caravky");//5
@@ -112,7 +112,7 @@ public class CompressorRecipe {
         addcompressor(IUItem.carbonPlate, 9, new ItemStack(IUItem.compresscarbon.getItem()));
         addcompressor(IUItem.advancedAlloy, 9, new ItemStack(IUItem.compressAlloy.getItem()));
         addcompressor(IUItem.iridiumPlate, 4, new ItemStack(IUItem.compressIridiumplate.getItem()));
-        addcompressor(ModUtils.getCellFromFluid(FluidName.fluidNeutron.getInstance().get()), 1, new ItemStack(IUItem.neutronium.getItem()));
+        addcompressor(ModUtils.getCellFromFluid(FluidName.fluidneutron.getInstance().get()), 1, new ItemStack(IUItem.neutronium.getItem()));
         addcompressor(new ItemStack(IUItem.compressIridiumplate.getItem()), 9, new ItemStack(IUItem.doublecompressIridiumplate.getItem()));
         addcompressor(new ItemStack(IUItem.neutronium.getItem()), 9, new ItemStack(IUItem.neutroniumingot.getItem(), 1));
         addcompressor(IUItem.coalBall, 1, IUItem.compressedCoalBall);

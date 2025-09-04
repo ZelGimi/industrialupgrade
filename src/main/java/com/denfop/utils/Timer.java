@@ -1,6 +1,5 @@
 package com.denfop.utils;
 
-import com.denfop.Localization;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.CompoundTag;
 

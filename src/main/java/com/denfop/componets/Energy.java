@@ -1,16 +1,16 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergySource;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.event.EnergyTileLoadEvent;
-import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.api.energy.event.load.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.unload.EnergyTileUnLoadEvent;
+import com.denfop.api.energy.interfaces.EnergySink;
+import com.denfop.api.energy.interfaces.EnergySource;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.inventory.Inventory;
+import com.denfop.inventory.InventoryCharge;
+import com.denfop.inventory.InventoryDischarge;
+import com.denfop.inventory.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +36,7 @@ public class Energy extends AbstractComponent {
     public int defaultSourceTier;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    public List<InvSlot> managedSlots = new ArrayList<>();
+    public List<Inventory> managedSlots = new ArrayList<>();
     public boolean multiSource;
     public int sourcePackets;
     public EnergyNetDelegate delegate;
@@ -49,12 +49,12 @@ public class Energy extends AbstractComponent {
     private ChunkPos chunkPos;
 
 
-    public Energy(TileEntityInventory parent, double capacity) {
+    public Energy(BlockEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public Energy(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -64,7 +64,7 @@ public class Energy extends AbstractComponent {
     }
 
     public Energy(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -86,7 +86,7 @@ public class Energy extends AbstractComponent {
     }
 
     public Energy(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             List<Direction> sinkDirections,
             List<Direction> sourceDirections,
@@ -110,23 +110,23 @@ public class Energy extends AbstractComponent {
         this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
     }
 
-    public static Energy asBasicSink(TileEntityInventory parent, double capacity) {
+    public static Energy asBasicSink(BlockEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static Energy asBasicSink(TileEntityInventory parent, double capacity, int tier) {
+    public static Energy asBasicSink(BlockEntityInventory parent, double capacity, int tier) {
         return new Energy(parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
-    public static Energy asBasicSink(TileEntityInventory parent, double capacity, boolean meta) {
+    public static Energy asBasicSink(BlockEntityInventory parent, double capacity, boolean meta) {
         return new Energy(parent, capacity, ModUtils.allFacings, Collections.emptySet(), 14, 14, false);
     }
 
-    public static Energy asBasicSource(TileEntityInventory parent, double capacity) {
+    public static Energy asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static Energy asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static Energy asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new Energy(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
@@ -140,9 +140,9 @@ public class Energy extends AbstractComponent {
         if (this.delegate != null)
             this.delegate.limit_amount = limit_amount;
         if (!managedSlots.isEmpty()) {
-            for (InvSlot slot : managedSlots) {
-                if (slot instanceof InvSlotDischarge) {
-                    InvSlotDischarge discharge = (InvSlotDischarge) slot;
+            for (Inventory slot : managedSlots) {
+                if (slot instanceof InventoryDischarge) {
+                    InventoryDischarge discharge = (InventoryDischarge) slot;
                     if (!discharge.isEmpty()) {
                         if (discharge.get(0).getItem() == Items.REDSTONE) {
                             double energy = discharge.dischargeWithRedstone(buffer.capacity, this.getFreeEnergy());
@@ -154,8 +154,8 @@ public class Energy extends AbstractComponent {
                             }
                         }
                     }
-                } else if (slot instanceof InvSlotCharge) {
-                    InvSlotCharge charge = (InvSlotCharge) slot;
+                } else if (slot instanceof InventoryCharge) {
+                    InventoryCharge charge = (InventoryCharge) slot;
                     if (!charge.isEmpty()) {
                         double energy = charge.charge(this.buffer.storage);
                         this.useEnergy(energy);
@@ -177,7 +177,7 @@ public class Energy extends AbstractComponent {
         return true;
     }
 
-    public Energy addManagedSlot(InvSlot slot) {
+    public Energy addManagedSlot(Inventory slot) {
         if (this.managedSlots == null) {
             this.managedSlots = new ArrayList<>(4);
         }
@@ -347,23 +347,23 @@ public class Energy extends AbstractComponent {
         return ret;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
-        if (this.getDelegate() instanceof IEnergySink) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
+        if (this.getDelegate() instanceof EnergySink) {
             int tier = invSlotUpgrade.getTier(this.defaultSinkTier);
             this.setSinkTier(tier);
-            for (InvSlot slot : this.managedSlots) {
-                if (slot instanceof InvSlotDischarge) {
-                    InvSlotDischarge discharge = (InvSlotDischarge) slot;
+            for (Inventory slot : this.managedSlots) {
+                if (slot instanceof InventoryDischarge) {
+                    InventoryDischarge discharge = (InventoryDischarge) slot;
                     discharge.setTier(tier);
                 }
             }
         }
-        if (this.getDelegate() instanceof IEnergySource) {
+        if (this.getDelegate() instanceof EnergySource) {
             int tier = invSlotUpgrade.getTier(this.defaultSourceTier);
             this.setSourceTier(tier);
-            for (InvSlot slot : this.managedSlots) {
-                if (slot instanceof InvSlotCharge) {
-                    InvSlotCharge discharge = (InvSlotCharge) slot;
+            for (Inventory slot : this.managedSlots) {
+                if (slot instanceof InventoryCharge) {
+                    InventoryCharge discharge = (InventoryCharge) slot;
                     discharge.setTier(tier);
                 }
             }
@@ -379,9 +379,9 @@ public class Energy extends AbstractComponent {
 
     public void setSinkTier(int tier) {
         this.buffer.sinkTier = tier;
-        for (InvSlot slot : this.managedSlots) {
-            if (slot instanceof InvSlotDischarge) {
-                InvSlotDischarge discharge = (InvSlotDischarge) slot;
+        for (Inventory slot : this.managedSlots) {
+            if (slot instanceof InventoryDischarge) {
+                InventoryDischarge discharge = (InventoryDischarge) slot;
                 discharge.setTier(tier);
             }
         }
@@ -392,9 +392,9 @@ public class Energy extends AbstractComponent {
     }
 
     public void setSourceTier(int tier) {
-        for (InvSlot slot : this.managedSlots) {
-            if (slot instanceof InvSlotCharge) {
-                InvSlotCharge discharge = (InvSlotCharge) slot;
+        for (Inventory slot : this.managedSlots) {
+            if (slot instanceof InventoryCharge) {
+                InventoryCharge discharge = (InventoryCharge) slot;
                 discharge.setTier(tier);
             }
         }
@@ -496,7 +496,7 @@ public class Energy extends AbstractComponent {
         return Collections.unmodifiableSet(this.sinkDirections);
     }
 
-    public IEnergyTile getDelegate() {
+    public EnergyTile getDelegate() {
         return this.delegate;
     }
 

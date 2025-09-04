@@ -1,7 +1,7 @@
 package com.denfop.render.fluidintegrator;
 
+import com.denfop.blockentity.mechanism.BlockEntityPrimalFluidIntegrator;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntityPrimalFluidIntegrator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,7 @@ import org.joml.Matrix4f;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
 @OnlyIn(Dist.CLIENT)
-public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEntityPrimalFluidIntegrator> {
+public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<BlockEntityPrimalFluidIntegrator> {
     private final ItemRenderer itemRenderer;
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
@@ -36,7 +36,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
     }
 
     @Override
-    public void render(TileEntityPrimalFluidIntegrator tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalFluidIntegrator tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         renderTanks(tile, poseStack, bufferSource, packedLight, packedOverlay);
@@ -109,7 +109,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
         rotation += 0.25f;
     }
 
-    private void renderTanks(TileEntityPrimalFluidIntegrator tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    private void renderTanks(BlockEntityPrimalFluidIntegrator tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         if (!tile.fluidTank1.getFluid().isEmpty()) {
             poseStack.pushPose();
             final float scale = tile.fluidTank1.getFluidAmount() * 0.75F / tile.fluidTank1.getCapacity();

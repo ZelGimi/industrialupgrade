@@ -572,17 +572,17 @@ public class SpaceInit {
         new BaseResource(new ItemStack(IUItem.space_cobblestone1.getItemStack(2), 1), 20, 100, 20, moon, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone1.getItemStack(2), 1), 40, 100, 30, moon, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone1.getItemStack(2), 2), 20, 100, 40, moon, EnumTypeRovers.PROBE);
-        new BaseResource(new FluidStack(FluidName.fluidhyd.getInstance().get(), 400), 40, 100, 40, moon, EnumTypeRovers.PROBE);
+        new BaseResource(new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 400), 40, 100, 40, moon, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_stone1.getItemStack(2), 1), 20, 100, 55, moon, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_stone1.getItemStack(2), 4), 40, 100, 65, moon, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(7), 1), 40, 100, 70, moon, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(7), 2), 40, 100, 75, moon, EnumTypeRovers.SATELLITE);
-        new BaseResource(new FluidStack(FluidName.fluidhyd.getInstance().get(), 1000), 50, 100, 40, moon, EnumTypeRovers.SATELLITE);
+        new BaseResource(new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 1000), 50, 100, 40, moon, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(7), 2), 50, 100, 80, moon, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(6), 1), 40, 100, 85, moon, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(6), 2), 70, 100, 90, moon, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(7), 2), 80, 100, 90, moon, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidhyd.getInstance().get(), 2500), 90, 100, 80, moon, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 2500), 90, 100, 80, moon, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(6), 2), 100, 100, 100, moon, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(7), 4), 100, 100, 100, moon, EnumTypeRovers.ROCKET);
 
@@ -617,17 +617,17 @@ public class SpaceInit {
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(14), 1), 20, 100, 20, mars, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(14), 1), 40, 100, 30, mars, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(14), 2), 20, 100, 40, mars, EnumTypeRovers.PROBE);
-        new BaseResource(new FluidStack(FluidName.fluidazot.getInstance().get(), 500), 40, 100, 40, mars, EnumTypeRovers.PROBE);
+        new BaseResource(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 500), 40, 100, 40, mars, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(14), 1), 20, 100, 55, mars, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(14), 4), 40, 100, 65, mars, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(0), 1), 40, 100, 70, mars, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(0), 2), 40, 100, 75, mars, EnumTypeRovers.SATELLITE);
-        new BaseResource(new FluidStack(FluidName.fluidazot.getInstance().get(), 1000), 50, 100, 40, mars, EnumTypeRovers.SATELLITE);
+        new BaseResource(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 1000), 50, 100, 40, mars, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(0), 2), 50, 100, 80, mars, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore1.getItemStack(15), 1), 40, 100, 85, mars, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore1.getItemStack(15), 2), 70, 100, 90, mars, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(0), 2), 80, 100, 90, mars, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidazot.getInstance().get(), 2000), 90, 100, 80, mars, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 2000), 90, 100, 80, mars, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore1.getItemStack(15), 2), 100, 100, 100, mars, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore2.getItemStack(0), 4), 100, 100, 100, mars, EnumTypeRovers.ROCKET);
 
@@ -663,18 +663,18 @@ public class SpaceInit {
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(1), 1), 20, 100, 20, asteroids, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(1), 1), 40, 100, 10, asteroids, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(1), 2), 20, 100, 40, asteroids, EnumTypeRovers.PROBE);
-        new BaseResource(new FluidStack(FluidName.fluidazot.getInstance().get(), 500), 40, 100, 40, asteroids, EnumTypeRovers.PROBE);
+        new BaseResource(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 500), 40, 100, 40, asteroids, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(1), 1), 20, 100, 55, asteroids, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(1), 4), 40, 100, 65, asteroids, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(1), 1), 40, 100, 70, asteroids, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(2), 1), 40, 100, 70, asteroids, EnumTypeRovers.SATELLITE);
-        new BaseResource(new FluidStack(FluidName.fluidazot.getInstance().get(), 1000), 50, 100, 40, asteroids, EnumTypeRovers.SATELLITE);
+        new BaseResource(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 1000), 50, 100, 40, asteroids, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(1), 1), 60, 100, 80, asteroids, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(2), 1), 60, 100, 80, asteroids, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(1), 2), 80, 100, 90, asteroids, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(2), 2), 80, 100, 90, asteroids, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidhyd.getInstance().get(), 2500), 75, 100, 95, asteroids, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidazot.getInstance().get(), 2500), 90, 100, 80, asteroids, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 2500), 75, 100, 95, asteroids, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 2500), 90, 100, 80, asteroids, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(1), 2), 100, 100, 100, asteroids, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(2), 2), 100, 100, 100, asteroids, EnumTypeRovers.ROCKET);
 
@@ -707,16 +707,16 @@ public class SpaceInit {
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(5), 1), 20, 100, 20, deimos, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(5), 1), 40, 100, 10, deimos, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(5), 2), 20, 100, 40, deimos, EnumTypeRovers.PROBE);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 500), 40, 100, 40, deimos, EnumTypeRovers.PROBE);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 500), 40, 100, 40, deimos, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(5), 1), 20, 100, 55, deimos, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(5), 4), 40, 100, 65, deimos, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(10), 1), 10, 100, 70, deimos, EnumTypeRovers.SATELLITE);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000), 50, 100, 40, deimos, EnumTypeRovers.SATELLITE);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 1000), 50, 100, 40, deimos, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(10), 1), 40, 100, 80, deimos, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(10), 1), 70, 100, 90, deimos, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 2500), 90, 100, 80, deimos, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 2500), 90, 100, 80, deimos, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(10), 1), 100, 100, 100, deimos, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 5000), 100, 100, 100, deimos, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 5000), 100, 100, 100, deimos, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.spaceItem.getStack(42), 1), 50, 100, 1, io, EnumTypeRovers.ROVERS);
         new BaseResource(new ItemStack(IUItem.spaceItem.getStack(42), 3), 75, 100, 3, io, EnumTypeRovers.ROVERS);
         new BaseResource(new ItemStack(IUItem.spaceItem.getStack(12), 1), 20, 100, 7, io, EnumTypeRovers.ROVERS);
@@ -816,16 +816,16 @@ public class SpaceInit {
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(7), 1), 40, 100, 30, enceladus, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone.getItemStack(7), 2), 20, 100, 40, enceladus, EnumTypeRovers.PROBE);
         new BaseResource(new FluidStack(FluidName.fluidacetylene.getInstance().get(), 500), 40, 100, 40, enceladus, EnumTypeRovers.PROBE);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 500), 40, 100, 40, enceladus, EnumTypeRovers.PROBE);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 500), 40, 100, 40, enceladus, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(7), 1), 20, 100, 55, enceladus, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_stone.getItemStack(7), 4), 40, 100, 65, enceladus, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(13), 1), 40, 100, 70, enceladus, EnumTypeRovers.SATELLITE);
         new BaseResource(new FluidStack(FluidName.fluidacetylene.getInstance().get(), 1000), 50, 100, 40, enceladus, EnumTypeRovers.SATELLITE);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000), 50, 100, 40, enceladus, EnumTypeRovers.SATELLITE);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 1000), 50, 100, 40, enceladus, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(13), 1), 60, 100, 80, enceladus, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(13), 2), 80, 100, 90, enceladus, EnumTypeRovers.ROCKET);
         new BaseResource(new FluidStack(FluidName.fluidacetylene.getInstance().get(), 2000), 90, 100, 80, enceladus, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 2000), 90, 100, 80, enceladus, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 2000), 90, 100, 80, enceladus, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore.getItemStack(13), 2), 100, 100, 100, enceladus, EnumTypeRovers.ROCKET);
 
         new BaseResource(new ItemStack(IUItem.spaceItem.getStack(55), 1), 50, 100, 1, titan, EnumTypeRovers.ROVERS);
@@ -973,18 +973,18 @@ public class SpaceInit {
         new BaseResource(new ItemStack(IUItem.space_cobblestone1.getItemStack(12), 1), 40, 100, 30, umbriel, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_cobblestone1.getItemStack(12), 2), 20, 100, 40, umbriel, EnumTypeRovers.PROBE);
         new BaseResource(new FluidStack(FluidName.fluidfluor.getInstance().get(), 500), 40, 100, 40, umbriel, EnumTypeRovers.PROBE);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 500), 40, 100, 40, umbriel, EnumTypeRovers.PROBE);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 500), 40, 100, 40, umbriel, EnumTypeRovers.PROBE);
         new BaseResource(new ItemStack(IUItem.space_stone1.getItemStack(12), 1), 20, 100, 55, umbriel, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_stone1.getItemStack(12), 4), 40, 100, 65, umbriel, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore3.getItemStack(11), 1), 20, 100, 70, umbriel, EnumTypeRovers.SATELLITE);
         new BaseResource(new FluidStack(FluidName.fluidfluor.getInstance().get(), 1000), 50, 100, 70, umbriel, EnumTypeRovers.SATELLITE);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000), 50, 100, 70, umbriel, EnumTypeRovers.SATELLITE);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 1000), 50, 100, 70, umbriel, EnumTypeRovers.SATELLITE);
         new BaseResource(new ItemStack(IUItem.space_ore3.getItemStack(11), 1), 40, 100, 80, umbriel, EnumTypeRovers.ROCKET);
         new BaseResource(new FluidStack(FluidName.fluidfluor.getInstance().get(), 2000), 80, 100, 80, umbriel, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 2000), 80, 100, 80, umbriel, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 2000), 80, 100, 80, umbriel, EnumTypeRovers.ROCKET);
         new BaseResource(new ItemStack(IUItem.space_ore3.getItemStack(11), 1), 80, 100, 90, umbriel, EnumTypeRovers.ROCKET);
         new BaseResource(new FluidStack(FluidName.fluidfluor.getInstance().get(), 5000), 90, 100, 100, umbriel, EnumTypeRovers.ROCKET);
-        new BaseResource(new FluidStack(FluidName.fluidHelium.getInstance().get(), 5000), 90, 100, 100, umbriel, EnumTypeRovers.ROCKET);
+        new BaseResource(new FluidStack(FluidName.fluidhelium.getInstance().get(), 5000), 90, 100, 100, umbriel, EnumTypeRovers.ROCKET);
         new BaseResource(new FluidStack(FluidName.fluidmethane.getInstance().get(), 4000), 90, 100, 100, umbriel, EnumTypeRovers.ROCKET);
 
         new BaseResource(new ItemStack(IUItem.spaceItem.getStack(49), 1), 50, 100, 1, oberon, EnumTypeRovers.ROVERS);
@@ -1228,7 +1228,7 @@ public class SpaceInit {
                 new FluidStack(FluidName.fluidhydrogensulfide.getInstance().get(), 1));
         SpaceNet.instance.getColonieNet().addItemStack(mars, (short) 15, new ItemStack(IUItem.space_ore2.getItemStack(0), 1));
         SpaceNet.instance.getColonieNet().addFluidStack(mars, (short) 10,
-                new FluidStack(FluidName.fluidazot.getInstance().get(), 1));
+                new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 1));
         SpaceNet.instance.getColonieNet().addItemStack(mars, (short) 25, new ItemStack(IUItem.space_ore1.getItemStack(15), 1));
         SpaceNet.instance.getColonieNet().addItemStack(ceres, (short) 10, new ItemStack(IUItem.space_ore.getItemStack(7), 1));
         SpaceNet.instance.getColonieNet().addItemStack(ceres, (short) 15, new ItemStack(IUItem.space_ore.getItemStack(6), 1));
@@ -1238,11 +1238,11 @@ public class SpaceInit {
         SpaceNet.instance.getColonieNet().addItemStack(moon, (short) 10, new ItemStack(IUItem.space_ore2.getItemStack(7), 1));
         SpaceNet.instance.getColonieNet().addItemStack(moon, (short) 25, new ItemStack(IUItem.space_ore2.getItemStack(6), 1));
         SpaceNet.instance.getColonieNet().addFluidStack(moon, (short) 17,
-                new FluidStack(FluidName.fluidhyd.getInstance().get(), 1));
+                new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 1));
 
         SpaceNet.instance.getColonieNet().addItemStack(deimos, (short) 25, new ItemStack(IUItem.space_ore.getItemStack(10), 1));
         SpaceNet.instance.getColonieNet().addFluidStack(deimos, (short) 15,
-                new FluidStack(FluidName.fluidHelium.getInstance().get(), 1));
+                new FluidStack(FluidName.fluidhelium.getInstance().get(), 1));
 
         SpaceNet.instance.getColonieNet().addItemStack(phobos, (short) 10, new ItemStack(IUItem.space_ore2.getItemStack(10), 1));
         SpaceNet.instance.getColonieNet().addItemStack(phobos, (short) 15, new ItemStack(IUItem.space_ore2.getItemStack(11), 1));
@@ -1266,7 +1266,7 @@ public class SpaceInit {
         SpaceNet.instance.getColonieNet().addFluidStack(enceladus, (short) 17,
                 new FluidStack(FluidName.fluidacetylene.getInstance().get(), 1));
         SpaceNet.instance.getColonieNet().addFluidStack(enceladus, (short) 22,
-                new FluidStack(FluidName.fluidHelium.getInstance().get(), 1));
+                new FluidStack(FluidName.fluidhelium.getInstance().get(), 1));
 
         SpaceNet.instance.getColonieNet().addItemStack(titan, (short) 10, new ItemStack(IUItem.space_ore3.getItemStack(5), 1));
         SpaceNet.instance.getColonieNet().addItemStack(titan, (short) 15, new ItemStack(IUItem.space_ore3.getItemStack(6), 1));
@@ -1302,7 +1302,7 @@ public class SpaceInit {
         SpaceNet.instance.getColonieNet().addFluidStack(umbriel, (short) 10,
                 new FluidStack(FluidName.fluidfluor.getInstance().get(), 1));
         SpaceNet.instance.getColonieNet().addFluidStack(umbriel, (short) 20,
-                new FluidStack(FluidName.fluidHelium.getInstance().get(), 1));
+                new FluidStack(FluidName.fluidhelium.getInstance().get(), 1));
         SpaceNet.instance.getColonieNet().addFluidStack(umbriel, (short) 25,
                 new FluidStack(FluidName.fluidmethane.getInstance().get(), 1));
 

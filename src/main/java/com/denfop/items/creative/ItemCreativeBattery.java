@@ -1,7 +1,7 @@
 package com.denfop.items.creative;
 
-import com.denfop.ElectricItem;
 import com.denfop.items.energy.ItemBattery;
+import com.denfop.utils.ElectricItem;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

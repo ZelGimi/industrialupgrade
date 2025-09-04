@@ -1,7 +1,7 @@
 package com.denfop.render.tank;
 
+import com.denfop.blockentity.base.BlockEntityLiquedTank;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.base.TileEntityLiquedTank;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
-public class TileEntityTankRender implements BlockEntityRenderer<TileEntityLiquedTank> {
+public class TileEntityTankRender implements BlockEntityRenderer<BlockEntityLiquedTank> {
     private final BlockEntityRendererProvider.Context contex;
 
     public TileEntityTankRender(BlockEntityRendererProvider.Context p_173636_) {
@@ -17,7 +17,7 @@ public class TileEntityTankRender implements BlockEntityRenderer<TileEntityLique
     }
 
     @Override
-    public void render(TileEntityLiquedTank tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityLiquedTank tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         FluidTank tank = tile.fluidTank;
         FluidStack fluidStack = tank.getFluid();

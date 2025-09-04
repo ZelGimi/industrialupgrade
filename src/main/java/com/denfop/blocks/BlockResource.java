@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -29,7 +29,7 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
 
     public BlockResource(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
-        super(Properties.of().mapColor(MapColor.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+        super(element == Type.tempered_glass ? Properties.of().mapColor(MapColor.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops() :  Properties.of().mapColor(MapColor.STONE).destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         BlockTagsProvider.list.add(this);
 
     }

@@ -1,6 +1,6 @@
 package com.denfop.recipes;
 
-import com.denfop.*;
+import com.denfop.dataregistry.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;

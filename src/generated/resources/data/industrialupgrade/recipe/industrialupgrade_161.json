@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "c:ingots/vanady"
+      "tag": "c:ingots/vanadium"
     }
   },
   "pattern": [
@@ -13,7 +13,7 @@
   ],
   "result": {
     "count": 1,
-    "id": "industrialupgrade:baseblockingot/vanady"
+    "id": "industrialupgrade:baseblockingot/vanadium"
   },
   "show_notification": false
 }

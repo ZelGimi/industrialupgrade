@@ -1,6 +1,6 @@
 package com.denfop.render.rolling;
 
-import com.denfop.tiles.mechanism.TileEntityRollingMachine;
+import com.denfop.blockentity.mechanism.BlockEntityRollingMachine;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingMachine> {
+public class RenderItemRolling implements BlockEntityRenderer<BlockEntityRollingMachine> {
     private final ItemRenderer itemRenderer;
 
     public RenderItemRolling(BlockEntityRendererProvider.Context p_173636_) {
@@ -22,7 +22,7 @@ public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingM
 
     @Override
     public void render(
-            TileEntityRollingMachine tile,
+            BlockEntityRollingMachine tile,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource bufferSource,

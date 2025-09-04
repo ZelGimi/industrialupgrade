@@ -1,10 +1,10 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.IReactorModule;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;

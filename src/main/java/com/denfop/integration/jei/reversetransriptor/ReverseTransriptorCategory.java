@@ -1,17 +1,20 @@
 package com.denfop.integration.jei.reversetransriptor;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.TankWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityImpOilRefiner;
+import com.denfop.blockentity.mechanism.BlockEntityPolymerizer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.container.ContainerImpOilRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuImpOilRefiner;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityPolymerizer;
-import com.denfop.tiles.mechanism.TileImpOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -27,11 +30,11 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ReverseTransriptorCategory extends GuiIU implements IRecipeCategory<ReverseTransriptorHandler> {
+public class ReverseTransriptorCategory extends ScreenMain implements IRecipeCategory<ReverseTransriptorHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerImpOilRefiner container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuImpOilRefiner container1;
+    private final ScreenWidget progress_bar;
     JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
@@ -39,7 +42,7 @@ public class ReverseTransriptorCategory extends GuiIU implements IRecipeCategory
     public ReverseTransriptorCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityImpOilRefiner) BlockBaseMachine3Entity.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -47,17 +50,17 @@ public class ReverseTransriptorCategory extends GuiIU implements IRecipeCategory
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.container1 = (ContainerImpOilRefiner) this.getContainer();
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
+        this.container1 = (ContainerMenuImpOilRefiner) this.getContainer();
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(new ComponentProgress(this.container1.base, 1, (short) 100))
         );
         this.componentList.add(progress_bar);
-        this.addElement(TankGauge.createNormal(this, 40, 4,
-                ((TileEntityPolymerizer) BlockBaseMachine3.polymerizer.getDummyTe()).fluidTank1
+        this.addWidget(TankWidget.createNormal(this, 40, 4,
+                ((BlockEntityPolymerizer) BlockBaseMachine3Entity.polymerizer.getDummyTe()).fluidTank1
         ));
 
-        this.addElement(TankGauge.createNormal(this, 100, 4,
-                ((TileEntityPolymerizer) BlockBaseMachine3.polymerizer.getDummyTe()).fluidTank2
+        this.addWidget(TankWidget.createNormal(this, 100, 4,
+                ((BlockEntityPolymerizer) BlockBaseMachine3Entity.polymerizer.getDummyTe()).fluidTank2
         ));
 
     }
@@ -70,7 +73,7 @@ public class ReverseTransriptorCategory extends GuiIU implements IRecipeCategory
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.reverse_transcriptor).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.reverse_transcriptor).getDescriptionId());
     }
 
 
@@ -95,7 +98,7 @@ public class ReverseTransriptorCategory extends GuiIU implements IRecipeCategory
 
         progress_bar.renderBar(stack, 0, 0, xScale);
 
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
             element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }

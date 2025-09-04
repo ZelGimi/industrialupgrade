@@ -3,8 +3,8 @@ package com.denfop.events.client;
 import com.denfop.Constants;
 import com.denfop.api.space.*;
 import com.denfop.api.space.fakebody.IFakeBody;
-import com.denfop.gui.GuiCore;
-import com.denfop.tiles.mechanism.TileEntityHologramSpace;
+import com.denfop.blockentity.mechanism.TileEntityHologramSpace;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -160,7 +160,7 @@ public class SolarSystemRenderer {
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
         poseStack.mulPose(Axis.ZP.rotationDegrees(rotationAngle));
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        GuiCore.bindTexture(texture);
+        ScreenIndustrialUpgrade.bindTexture(texture);
         Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, POSITION_TEX);
         renderCube(poseStack, buffer, radius);
@@ -170,7 +170,7 @@ public class SolarSystemRenderer {
     private void renderRings(PoseStack poseStack, RenderLevelStageEvent event, float radius, ResourceLocation texture, float x, float y, float z, boolean isSaturn) {
         poseStack.pushPose();
         poseStack.translate(x, y, z);
-        GuiCore.bindTexture(texture);
+        ScreenIndustrialUpgrade.bindTexture(texture);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.TRIANGLE_STRIP, POSITION_TEX);
         Vector3f axis = new Vector3f(1.0F, 1.0F, 0.0F).normalize();

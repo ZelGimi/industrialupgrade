@@ -1,7 +1,7 @@
 package com.denfop.toast;
 
-import com.denfop.Localization;
 import com.denfop.api.guidebook.Quest;
+import com.denfop.utils.Localization;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,14 +1,14 @@
 package com.denfop.integration.jei.gaswell;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityOilRefiner;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockRefinerEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHandler> {
+public class GasPumpCategory extends ScreenMain implements IRecipeCategory<GasPumpHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -31,7 +31,7 @@ public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHan
     public GasPumpCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityOilRefiner) BlockRefinerEntity.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
@@ -44,7 +44,7 @@ public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHan
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.gas_pump).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.gas_pump).getDescriptionId());
     }
 
     @Override

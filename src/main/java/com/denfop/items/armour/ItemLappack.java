@@ -2,20 +2,16 @@ package com.denfop.items.armour;
 
 
 import com.denfop.Constants;
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
+import com.denfop.utils.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -49,8 +45,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecialArmor,
-        IUpgradeItem, IProperties {
+public class ItemLappack extends ItemArmorEnergy implements EnergyItem, ISpecialArmor,
+        UpgradeItem, IProperties {
 
     private final double maxCharge;
 
@@ -313,7 +309,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
 
                 if (!player.getInventory().armor.get(i).isEmpty() && player.getInventory().armor
                         .get(i)
-                        .getItem() instanceof IEnergyItem) {
+                        .getItem() instanceof EnergyItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0 && !(itemStack.is(player.getInventory().armor.get(
                             i).getItem()))) {
 
@@ -338,7 +334,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
             for (int j = 0; j < player.getInventory().items.size(); j++) {
 
                 if (!player.getInventory().items.get(j).isEmpty()
-                        && player.getInventory().items.get(j).getItem() instanceof IEnergyItem) {
+                        && player.getInventory().items.get(j).getItem() instanceof EnergyItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0) {
                         double sentPacket = ElectricItem.manager.charge(
                                 player.getInventory().items.get(j),

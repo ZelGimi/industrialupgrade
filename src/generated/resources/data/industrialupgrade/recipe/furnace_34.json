@@ -4,10 +4,10 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:baseore/wolfram"
+    "item": "industrialupgrade:baseore/tungsten"
   },
   "result": {
     "count": 1,
-    "id": "industrialupgrade:itemingots/wolfram_ingot"
+    "id": "industrialupgrade:itemingots/tungsten_ingot"
   }
 }

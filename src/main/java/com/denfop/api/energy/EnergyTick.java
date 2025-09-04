@@ -1,6 +1,10 @@
 package com.denfop.api.energy;
 
 
+import com.denfop.api.energy.interfaces.Dual;
+import com.denfop.api.energy.interfaces.EnergySource;
+import com.denfop.api.energy.networking.Path;
+
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,27 +12,27 @@ import java.util.Objects;
 
 public class EnergyTick {
 
-    private final IEnergySource source;
+    private final EnergySource source;
     private final boolean isAdv;
     private final boolean isDual;
     public boolean hasHash = false;
-    List<Integer> conductors = new LinkedList<>();
-    private IEnergySource advSource = null;
+    public List<Integer> conductors = new LinkedList<>();
+    private EnergySource advSource = null;
     private List<Path> energyPaths;
     private int hash;
 
 
-    public EnergyTick(IEnergySource source, List<Path> list) {
+    public EnergyTick(EnergySource source, List<Path> list) {
         this.source = source;
         this.energyPaths = list;
         this.isAdv = source != null;
-        this.isDual = source instanceof IDual;
+        this.isDual = source instanceof Dual;
         if (this.isAdv) {
             this.advSource = source;
         }
     }
 
-    public IEnergySource getSource() {
+    public EnergySource getSource() {
         return source;
     }
 
@@ -45,7 +49,7 @@ public class EnergyTick {
             if (!this.isDual && this.advSource.isSource()) {
                 this.advSource.setPastEnergy(this.advSource.getPerEnergy());
             } else if (this.isDual && (this.advSource.isSource())) {
-                ((IDual) this.advSource).setPastEnergy1(((IDual) this.advSource).getPerEnergy1());
+                ((Dual) this.advSource).setPastEnergy1(((Dual) this.advSource).getPerEnergy1());
 
             }
         }
@@ -56,7 +60,7 @@ public class EnergyTick {
             if (!this.isDual && this.advSource.isSource()) {
                 this.advSource.addPerEnergy(amount);
             } else if (this.isDual && this.advSource.isSource()) {
-                ((IDual) advSource).addPerEnergy1(amount);
+                ((Dual) advSource).addPerEnergy1(amount);
             }
         }
     }
@@ -73,7 +77,7 @@ public class EnergyTick {
         return source == that.source;
     }
 
-    public IEnergySource getAdvSource() {
+    public EnergySource getAdvSource() {
         return advSource;
     }
 

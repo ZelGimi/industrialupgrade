@@ -1,9 +1,9 @@
 package com.denfop.componets.system;
 
-import com.denfop.api.sytem.IAcceptor;
-import com.denfop.api.sytem.IDual;
-import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ISource;
+import com.denfop.api.otherenergies.common.IAcceptor;
+import com.denfop.api.otherenergies.common.IDual;
+import com.denfop.api.otherenergies.common.IEmitter;
+import com.denfop.api.otherenergies.common.ISource;
 import com.denfop.componets.ComponentBaseEnergy;
 import net.minecraft.core.Direction;
 
@@ -85,7 +85,7 @@ public class EnergyNetDelegateDual extends EnergyNetDelegate implements IDual {
     public void extractEnergy(double amount) {
         assert amount <= this.buffer.storage;
 
-        this.buffer.storage-=amount;
+        this.buffer.storage -= amount;
     }
 
     @Override

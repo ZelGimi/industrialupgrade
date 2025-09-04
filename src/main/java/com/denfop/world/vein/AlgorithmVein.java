@@ -45,7 +45,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
     public static Map<Integer, Map<Integer, Tuple<Color, Integer>>> shellClusterChuncks = new HashMap<>();
     static Random random = new Random();
     private static Map<ChunkPos, ChunkAccess> chunkPosChunkMap = new HashMap<>();
-    private static List<ShellCluster> shellClusterList = new ArrayList<>();
+    public static List<ShellCluster> shellClusterList = new ArrayList<>();
 
     public AlgorithmVein(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
@@ -77,7 +77,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             } else if (veinType.getVein() == TypeVein.BIG) {
                 radius = level.getRandom().nextInt(7) + 5;
             }
-            pos = new BlockPos(blockPos.getX(), (int) (height - radius * 0.9 - random.nextInt(35)), blockPos.getZ());
+            pos = new BlockPos(blockPos.getX(), (int) (height - radius * 0.9 - random.nextInt(35)-15), blockPos.getZ());
             ChunkPos chunkPos = null;
             ChunkAccess chunk1 = null;
             for (int x = -radius; x <= radius; x++) {
@@ -199,8 +199,8 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                             }
                         }
-                    }else{
-                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                    } else {
+                        if (veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
                             setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         else
                             setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
@@ -214,7 +214,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
 
             List<BlockPos> blockPosList = new LinkedList<>();
             final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
-            pos = new BlockPos(blockPos.getX(), height / 2 + height / 4, blockPos.getZ());
+            pos = new BlockPos(blockPos.getX(),Math.max(0, height / 2 + height / 4- random.nextInt(20)), blockPos.getZ()) ;
             int x1 = random.nextInt(veinType.getVein().getMax()) + 3;
             int y1 = random.nextInt(veinType.getVein().getMax()) + 3;
             int z1 = random.nextInt(veinType.getVein().getMax()) + 3;
@@ -465,8 +465,8 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                             }
                         }
-                    }else{
-                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                    } else {
+                        if (veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
                             setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         else
                             setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
@@ -480,8 +480,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
 
             final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
             ;
-            pos = new BlockPos(blockPos.getX(), height / 2 + height / 4, blockPos.getZ());
-            final int centerX = (int) pos.getX();
+            pos = new BlockPos(blockPos.getX(),Math.max(0, height / 2 + height / 4- random.nextInt(20)), blockPos.getZ()) ;    final int centerX = (int) pos.getX();
             final int centerY = (int) pos.getY();
             final int centerZ = (int) pos.getZ();
             int R = 0;
@@ -635,8 +634,8 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                             }
                         }
-                    }else{
-                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                    } else {
+                        if (veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
                             setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         else
                             setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);

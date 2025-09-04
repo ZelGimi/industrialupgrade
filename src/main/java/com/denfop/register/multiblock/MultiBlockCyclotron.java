@@ -1,7 +1,7 @@
 package com.denfop.register.multiblock;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.cyclotron.*;
+import com.denfop.blockentity.cyclotron.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 

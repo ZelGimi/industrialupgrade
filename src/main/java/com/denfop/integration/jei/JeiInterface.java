@@ -1,6 +1,6 @@
 package com.denfop.integration.jei;
 
-import com.denfop.gui.GuiIU;
+import com.denfop.screen.ScreenMain;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-public class JeiInterface<C extends GuiIU & com.denfop.integration.jei.IRecipeCategory> implements IRecipeCategory {
+public class JeiInterface<C extends ScreenMain & com.denfop.integration.jei.IRecipeCategory> implements IRecipeCategory {
 
     private final C instance;
 

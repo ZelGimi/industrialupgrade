@@ -63,7 +63,7 @@ public class RenderFluidBlock {
 
         float height = 1;
 
-        scale = (float) (getCurrentLerpHeight(lerp, gameTime) * 0.99 * scale);
+        scale = (float) (getCurrentLerpHeight(lerp, gameTime));
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(stillTexture);
         int tintColor = fluidTypeExtensions.getTintColor(state, level, pos);
 

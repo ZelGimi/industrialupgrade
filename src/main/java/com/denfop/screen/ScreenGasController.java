@@ -1,0 +1,350 @@
+package com.denfop.screen;
+
+import com.denfop.Constants;
+import com.denfop.api.reactors.EnumTypeComponent;
+import com.denfop.api.reactors.EnumTypeSecurity;
+import com.denfop.api.reactors.EnumTypeWork;
+import com.denfop.api.reactors.LogicComponent;
+import com.denfop.api.widget.AdvancedTooltipWidget;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.reactors.gas.controller.BlockEntityMainController;
+import com.denfop.componets.ComponentButton;
+import com.denfop.containermenu.ContainerMenuGasMainController;
+import com.denfop.containermenu.SlotInvSlot;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.utils.Localization;
+import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class ScreenGasController<T extends ContainerMenuGasMainController> extends ScreenMain<ContainerMenuGasMainController> {
+
+    private boolean visible;
+    private boolean visible1;
+    private boolean visible2;
+    private boolean visible3;
+
+    public ScreenGasController(ContainerMenuGasMainController guiContainer) {
+        super(guiContainer);
+        this.componentList.clear();
+        this.imageWidth = 225;
+        this.imageHeight = 254;
+        this.componentList.add(new ScreenWidget(this, 162, 11, 186 - 160, 38 - 12,
+                new WidgetDefault<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return ((BlockEntityMainController) this.getEntityBlock()).work ? Localization.translate("turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((BlockEntityMainController) this.getEntityBlock()).work;
+                    }
+                })
+        ));
+        this.addComponent(new ScreenWidget(this, 0, 75, 182 - 163, 60 - 41,
+                new WidgetDefault<>(new ComponentButton(this.container.base, -1) {
+                    @Override
+                    public String getText() {
+                        return Localization.translate("iu.reactor_heat");
+                    }
+                })
+        ));
+        this.addComponent(new ScreenWidget(this, 0, 97, 182 - 163, 60 - 41,
+                new WidgetDefault<>(new ComponentButton(this.container.base, -2) {
+                    @Override
+                    public String getText() {
+                        return Localization.translate("iu.reactor_stable");
+                    }
+                })
+        ));
+    }
+
+    public void renderSlot(GuiGraphics p_97800_, Slot p_97801_) {
+        if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
+            if (p_97801_ instanceof SlotInvSlot) {
+                SlotInvSlot slotInvSlot = (SlotInvSlot) p_97801_;
+                if (slotInvSlot.inventory == this.container.base.reactorsElements) {
+                    return;
+                }
+            }
+        }
+        super.renderSlot(p_97800_, p_97801_);
+    }
+
+    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+        if (mouseX >= 160 && mouseX <= 189 && mouseY >= 135 && mouseY <= 148) {
+            List<String> text = new ArrayList<>();
+            text.add(Localization.translate("reactor.guide.gas_reactor"));
+            List<String> compatibleUpgrades = new ArrayList<>();
+            for (int i = 1; i < 20; i++) {
+                compatibleUpgrades.add(Localization.translate("reactor.guide.gas_reactor" + i));
+            }
+            Iterator<String> var5 = compatibleUpgrades.iterator();
+            String itemstack;
+            while (var5.hasNext()) {
+                itemstack = var5.next();
+                text.add(itemstack);
+            }
+
+            this.drawTooltip(mouseX - 260, mouseY - 90, text);
+        }
+    }
+
+
+    @Override
+    protected void mouseClicked(final int i, final int j, final int k) {
+        super.mouseClicked(i, j, k);
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
+        int x = i - xMin;
+        int y = j - yMin;
+
+        if (x >= 200 && y >= 88 && x <= 217 && y <= 105) {
+            new PacketUpdateServerTile(this.container.base, 3);
+        }
+    }
+
+    @Override
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        handleUpgradeTooltip(par1, par2);
+        if (!this.container.base.work) {
+            this.visible = par1 >= 162 && par1 <= 188 && par2 >= 11 && par2 <= 37;
+        } else {
+            this.visible = false;
+        }
+
+        new AdvancedTooltipWidget(this, 200, 88, 217, 105)
+                .withTooltip(Localization.translate("iu.reactor_info.upgrade"))
+                .drawForeground(poseStack,
+                        par1,
+                        par2
+                );
+        this.visible1 = par1 >= 0 && par1 <= 19 && par2 >= 75 && par2 <= 94;
+        this.visible2 = par1 >= 0 && par1 <= 19 && par2 >= 97 && par2 <= 116;
+        this.visible3 = par1 >= 160 && par1 <= 189 && par2 >= 135 && par2 <= 148;
+        if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
+            if (this.container.base.work) {
+                if (this.container.base.getReactor() != null) {
+                    for (LogicComponent component : this.container.base.reactor.getListComponent()) {
+                        for (int i1 = 0; i1 < this.container.slots.size(); ++i1) {
+                            Slot slot = this.container.slots.get(i1);
+                            {
+                                if (slot instanceof SlotInvSlot) {
+                                    SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
+                                    if (slotInvSlot.inventory == this.container.base.reactorsElements) {
+                                        if (slotInvSlot.index == component.getY() * this.container.base.getWidth() + component.getX()) {
+                                            if (this.container.base.heat_sensor) {
+                                                PoseStack pose = poseStack.pose();
+                                                pose.pushPose();
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf((int) component.getHeat())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
+                                                draw(poseStack,
+                                                        String.valueOf((int) component.getHeat()),
+                                                        0,
+                                                        0,
+                                                        ModUtils.convertRGBcolorToInt(195,
+                                                                64, 0
+                                                        )
+                                                );
+                                                pose.popPose();
+                                            }
+                                            if (this.container.base.stable_sensor && component
+                                                    .getItem()
+                                                    .getType() != EnumTypeComponent.ROD) {
+                                                PoseStack pose = poseStack.pose();
+                                                pose.pushPose();
+                                                pose.translate(slotInvSlot.x + 22 / 2 - getStringWidth(String.valueOf(-1 * component.getDamage())) / 2, slotInvSlot.y + 5, 0);
+                                                pose.scale(0.75f, 0.75f, 1f);
+                                                draw(poseStack,
+                                                        String.valueOf(-1 * component.getDamage()),
+                                                        0,
+                                                        0,
+                                                        ModUtils.convertRGBcolorToInt(14,
+                                                                50, 86
+                                                        )
+                                                );
+                                                pose.popPose();
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        String time = "";
+        if (this.container.base.security == EnumTypeSecurity.ERROR) {
+            time = this.container.base.red_timer.getDisplay();
+        }
+        if (this.container.base.security == EnumTypeSecurity.UNSTABLE) {
+            time = this.container.base.yellow_timer.getDisplay();
+        }
+        new AdvancedTooltipWidget(this, 161, 75, 189, 96).withTooltip("Radiation: " + ModUtils.getString(this.container.base
+                .getRad()
+                .getEnergy()) +
+                "/" + ModUtils.getString(this.container.base.getRad().getCapacity()) + " ☢" + "\n" + Localization.translate("iu" +
+                ".potion.radiation") + ": " + ModUtils.getString(
+                this.container.base
+                        .getReactor()
+                        .getRadGeneration()) + " ☢/t \n" + ((this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor())
+                ?
+                Localization.translate("reactor.canupgrade")
+                : Localization.translate("reactor.notcanupgrade")) + "\n" + Localization.translate(
+                "gui.SuperSolarPanel.generating") + ": " + ModUtils.getString(
+                this.container.base.output) + " EF/t" + (!time.isEmpty() ? ("\n" + time) : time)).drawForeground(poseStack, par1, par2);
+        String name = this.container.base.security.name().toLowerCase().equals("") ? "none" :
+                this.container.base.security.name().toLowerCase();
+        new AdvancedTooltipWidget(this, 161, 42, 190, 70).withTooltip(Localization.translate("waterreactor.security." + name)).drawForeground(poseStack,
+                par1,
+                par2
+        );
+        new AdvancedTooltipWidget(this, 19, 139, 146, 162)
+                .withTooltip(Localization.translate("iu.reactor_info.heat") + ": " + ModUtils.getString(this.container.base.getHeat()) +
+                        "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" + Localization.translate(
+                        "iu.reactor_info.stable_heat") + ": " + this.container.base.getStableMaxHeat() + "°C")
+                .drawForeground(poseStack,
+                        par1,
+                        par2
+                );
+        if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
+            new AdvancedTooltipWidget(this, 201, 10, 215, 85)
+                    .withTooltip(Localization.translate("iu.reactor_info.energy") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
+                            "/" + ModUtils.getString(this.container.base.energy.getCapacity()))
+                    .drawForeground(poseStack, par1, par2);
+        } else {
+            new AdvancedTooltipWidget(this, 201, 10, 215, 85)
+                    .withTooltip(Localization.translate("iu.reactor_info.upgrade1"))
+                    .drawForeground(poseStack, par1, par2);
+        }
+    }
+
+
+    @Override
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        if (this.visible) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 162,
+                    this.guiTop + 11
+                    , 228, 159, 27, 27
+            );
+        }
+        if (this.visible1) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                    this.guiTop + 75
+                    , 235, 215, 20, 20
+            );
+        }
+        if (this.visible2) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                    this.guiTop + 97
+                    , 235, 236, 20, 20
+            );
+        }
+        if (this.visible3) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 160,
+                    this.guiTop + 135
+                    , 225, 121, 30, 14
+            );
+        }
+        if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 201,
+                    this.guiTop + 89
+                    , 239, 104, 16, 16
+            );
+        }
+        switch (this.container.base.getLevelReactor()) {
+            case 0:
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                        this.guiTop + 7
+                        , 241, 1, 14, 14
+                );
+                break;
+            case 1:
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                        this.guiTop + 20
+                        , 241, 14, 14, 14
+                );
+                break;
+            case 2:
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                        this.guiTop + 33
+                        , 241, 27, 14, 14
+                );
+                break;
+            case 3:
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                        this.guiTop + 46
+                        , 241, 40, 14, 14
+                );
+                break;
+            case 4:
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
+                        this.guiTop + 59
+                        , 241, 53, 14, 14
+                );
+                break;
+        }
+        if (this.container.base.work) {
+            drawTexturedModalRect(poseStack, this.guiLeft + 162, this.guiTop + 11
+                    , 228, 187, 27, 27);
+        }
+        if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
+            double bar = this.container.base.energy.getFillRatio();
+            bar = Math.min(1, bar);
+            drawTexturedModalRect(poseStack, this.guiLeft + 204, (int) (this.guiTop + 84 - (bar * 70))
+                    , 228, (int) (72 - (bar * 70)), 9, (int) (bar * 70));
+
+        }
+        switch (this.container.base.security) {
+            case NONE:
+                break;
+            case ERROR:
+            case UNSTABLE:
+                drawTexturedModalRect(poseStack, this.guiLeft + 167, this.guiTop + 48
+                        , 238, 68, 5, 11);
+                break;
+            case STABLE:
+                drawTexturedModalRect(poseStack, this.guiLeft + 167, this.guiTop + 48
+                        , 238, 86, 17, 17);
+                break;
+        }
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/common1.png"));
+
+        double bar = this.container.base.heat / this.container.base.getMaxHeat();
+        bar = Math.min(bar, 1);
+        drawTexturedModalRect(poseStack, this.guiLeft + 24, this.guiTop + 143
+                , 6, 165, (int) (bar * 118), 16);
+
+    }
+
+    @Override
+    protected ResourceLocation getTexture() {
+        switch (this.container.base.getMaxLevelReactor()) {
+            case 1:
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor4.png");
+            case 2:
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor1.png");
+            case 3:
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor2.png");
+            case 4:
+                return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor3.png");
+
+        }
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guigasreactor4.png");
+    }
+
+}

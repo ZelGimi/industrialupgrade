@@ -1,8 +1,8 @@
 package com.denfop.render.mini_smeltery;
 
+import com.denfop.blockentity.mechanism.BlockEntityMiniSmeltery;
 import com.denfop.mixin.access.LevelRendererAccessor;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntityMiniSmeltery;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class RenderMiniSmeltery {
-    public static void render(TileEntityMiniSmeltery te, RenderLevelStageEvent event) {
+    public static void render(BlockEntityMiniSmeltery te, RenderLevelStageEvent event) {
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource bufferSource = ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource();
 

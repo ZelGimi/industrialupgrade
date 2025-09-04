@@ -1,11 +1,11 @@
 package com.denfop.componets.client;
 
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.render.base.RenderType;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -30,7 +30,7 @@ public class ComponentVisibleArea extends AbstractComponent {
     public AABB aabb;
     private boolean visible;
 
-    public ComponentVisibleArea(TileEntityBlock parent) {
+    public ComponentVisibleArea(BlockEntityBase parent) {
         super(parent);
     }
 

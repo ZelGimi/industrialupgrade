@@ -2,7 +2,7 @@ package com.denfop.register.multiblock;
 
 import com.denfop.IUItem;
 import com.denfop.api.reactors.IGasReactor;
-import com.denfop.tiles.reactors.gas.*;
+import com.denfop.blockentity.reactors.gas.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 

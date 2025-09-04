@@ -1,9 +1,9 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.solidmatter.EnumSolidMatter;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.tiles.solidmatter.EnumSolidMatter;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;

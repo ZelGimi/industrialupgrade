@@ -1,13 +1,13 @@
 package com.denfop.blocks;
 
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.tile.IWrenchable;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.blockentity.Wrenchable;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.blocks.state.HarvestTool;
 import com.denfop.blocks.state.TypeProperty;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -31,7 +31,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -57,11 +56,11 @@ import oshi.util.tuples.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import static com.denfop.api.tile.IMultiTileBlock.CABLE;
+import static com.denfop.api.blockentity.MultiBlockEntity.CABLE;
 
-public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block implements EntityBlock, IWrenchable, IBlockTag {
+public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block implements EntityBlock, Wrenchable, IBlockTag {
 
-    public static final Map<BlockPos, TileEntityBlock> teBlockDrop = new HashMap<>();
+    public static final Map<BlockPos, BlockEntityBase> teBlockDrop = new HashMap<>();
     public static final Property<Direction> ALL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.allFacings);
     public static final Property<Direction> HORIZONTAL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.horizontalFacings);
     public static final Property<Direction> VERTICAL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.verticalFacings);
@@ -81,12 +80,13 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         p_55164_.put(Direction.UP, UP);
         p_55164_.put(Direction.DOWN, DOWN);
     }));
-    private static final BlockEntityTicker<TileEntityBlock> TICKER = (level, blockPos, blockState, tileEntityBlock) -> {
+    private static final BlockEntityTicker<BlockEntityBase> TICKER = (level, blockPos, blockState, tileEntityBlock) -> {
         tileEntityBlock.tick();
 
     };
     public static TypeProperty currentTypeProperty;
-    private static IMultiTileBlock preValue;
+    public static LinkedList<BlockEntityBase> drops = new LinkedList<>();
+    private static MultiBlockEntity preValue;
     public final Property<Direction> facingProperty;
     public final com.denfop.blocks.TileBlockCreator.InfoAboutTile<?> teInfo;
     private final ResourceLocation identifier;
@@ -119,7 +119,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         BlockTagsProvider.list.add(this);
     }
 
-    public static <T extends Enum<T> & IMultiTileBlock> BlockTileEntity<T> create(
+    public static <T extends Enum<T> & MultiBlockEntity> BlockTileEntity<T> create(
             T value,
             ResourceLocation identifier,
             com.denfop.blocks.TileBlockCreator.InfoAboutTile<T> infoAboutTile
@@ -127,7 +127,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         currentTypeProperty = new TypeProperty(identifier, value);
         preValue = value;
         Properties prop = Properties.of().mapColor(value.getMaterial()).instrument(NoteBlockInstrument.FLUTE).strength(value.getHardness()).isRedstoneConductor((p_61036_, p_61037_, p_61038_) -> {
-            TileEntityBlock te = getTe(p_61037_, p_61038_);
+            BlockEntityBase te = getTe(p_61037_, p_61038_);
             return te != null && te.canConnectRedstone();
         }).noOcclusion().sound(value.getMaterial() == MapColor.WOOL ? SoundType.WOOL : SoundType.STONE);
         if (value.getMaterial() == MapColor.PLANT)
@@ -141,14 +141,14 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         return ret;
     }
 
-    private static TileEntityBlock getTe(Level world, BlockPos pos) {
+    private static BlockEntityBase getTe(Level world, BlockPos pos) {
         BlockEntity te = world.getBlockEntity(pos);
-        return te instanceof TileEntityBlock ? (TileEntityBlock) te : null;
+        return te instanceof BlockEntityBase ? (BlockEntityBase) te : null;
     }
 
-    private static TileEntityBlock getTe(BlockGetter getter, BlockPos pos) {
+    private static BlockEntityBase getTe(BlockGetter getter, BlockPos pos) {
         BlockEntity blockEntity = getter.getBlockEntity(pos);
-        if (blockEntity instanceof TileEntityBlock te) {
+        if (blockEntity instanceof BlockEntityBase te) {
             return te;
         }
         return null;
@@ -170,7 +170,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public boolean skipRendering(BlockState p_53972_, BlockState p_53973_, Direction p_53974_) {
         if (!p_53973_.hasProperty(this.typeProperty))
             return super.skipRendering(p_53972_, p_53973_, p_53974_);
-        IMultiTileBlock type = p_53973_.getValue(this.typeProperty).teBlock;
+        MultiBlockEntity type = p_53973_.getValue(this.typeProperty).teBlock;
         return this.value == type || super.skipRendering(p_53972_, p_53973_, p_53974_);
     }    public TypeProperty typeProperty = this.getTypeProperty();
 
@@ -186,24 +186,24 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
 
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof TileEntityBlock te) {
+        if (blockEntity instanceof BlockEntityBase te) {
             te.onEntityCollision(entity);
         }
 
     }
 
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
-        TileEntityBlock tileEntityBlock = getTe(level, blockPos);
-        if (tileEntityBlock != null) {
-            tileEntityBlock.onPlaced(itemStack, livingEntity, tileEntityBlock.getFacing());
+        BlockEntityBase blockEntityBase = getTe(level, blockPos);
+        if (blockEntityBase != null) {
+            blockEntityBase.onPlaced(itemStack, livingEntity, blockEntityBase.getFacing());
         }
     }
 
     @Override
     public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof TileEntityBlock) {
-            return ((TileEntityBlock) te).getLightOpacity();
+        if (te instanceof BlockEntityBase) {
+            return ((BlockEntityBase) te).getLightOpacity();
         }
         return 0;
     }
@@ -211,14 +211,14 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof TileEntityBlock) {
-            return ((TileEntityBlock) te).getComparatorInputOverride();
+        if (te instanceof BlockEntityBase) {
+            return ((BlockEntityBase) te).getComparatorInputOverride();
         }
         return 0;
     }
 
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext collisionContext) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         return te == null ? super.getShape(state, world, pos, collisionContext) : Shapes.create(te.getVisualBoundingBox());
 
     }
@@ -226,8 +226,8 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof TileEntityBlock) {
-            return Shapes.create(((TileEntityBlock) te).getOutlineBoundingBox().move(pos));
+        if (te instanceof BlockEntityBase) {
+            return Shapes.create(((BlockEntityBase) te).getOutlineBoundingBox().move(pos));
         }
         return super.getInteractionShape(state, world, pos);
     }
@@ -237,14 +237,14 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         if (!this.hasCollision)
             return Shapes.empty();
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof TileEntityBlock) {
-            return Shapes.create(((TileEntityBlock) te).getPhysicsBoundingBox());
+        if (te instanceof BlockEntityBase) {
+            return Shapes.create(((BlockEntityBase) te).getPhysicsBoundingBox());
         }
         return super.getCollisionShape(state, world, pos, context);
     }
 
     public @NotNull VoxelShape getOcclusionShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         return te == null ? super.getOcclusionShape(state, world, pos) : Shapes.create(te.getPhysicsBoundingBox());
 
     }
@@ -278,25 +278,25 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
 
     @Override
     public Direction getFacing(Level world, BlockPos pos) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         return te == null ? Direction.DOWN : te.getFacing();
     }
 
     @Override
     public boolean setFacing(Level world, BlockPos pos, Direction newDirection, Player player) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         return te != null && te.canSetFacingWrench(newDirection, player);
     }
 
     @Override
     public boolean wrenchCanRemove(Level world, BlockPos pos, Player player) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         return te != null && te.wrenchCanRemove(player);
     }
 
     @Override
     public List<ItemStack> getWrenchDrops(Level var1, BlockPos var2, BlockState var3, BlockEntity te, Player player, int fortune) {
-        final List<ItemStack> list = ((TileEntityBlock) te).getWrenchDrops(
+        final List<ItemStack> list = ((BlockEntityBase) te).getWrenchDrops(
                 player,
                 fortune
         );
@@ -305,9 +305,9 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
 
     @Override
     public void wrenchBreak(Level world, BlockPos pos) {
-        TileEntityBlock tileEntityBlock = (TileEntityBlock) world.getBlockEntity(pos);
-        if (tileEntityBlock != null) {
-            tileEntityBlock.wrenchBreak();
+        BlockEntityBase blockEntityBase = (BlockEntityBase) world.getBlockEntity(pos);
+        if (blockEntityBase != null) {
+            blockEntityBase.wrenchBreak();
         }
     }
 
@@ -342,8 +342,8 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     @Override
     public int getSignal(BlockState p_60483_, BlockGetter p_60484_, BlockPos p_60485_, Direction p_60486_) {
         BlockEntity te = p_60484_.getBlockEntity(p_60485_);
-        if (te instanceof TileEntityBlock) {
-            return ((TileEntityBlock) te).getWeakPower(p_60486_);
+        if (te instanceof BlockEntityBase) {
+            return ((BlockEntityBase) te).getWeakPower(p_60486_);
         }
         return 0;
     }
@@ -352,11 +352,9 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     public void playerDestroy(Level p_49827_, Player p_49828_, BlockPos p_49829_, BlockState p_49830_, @Nullable BlockEntity p_49831_, ItemStack p_49832_) {
         super.playerDestroy(p_49827_, p_49828_, p_49829_, p_49830_, p_49831_, p_49832_);
     }
-    public  static LinkedList<TileEntityBlock> drops = new LinkedList<>();
-
 
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         if (te != null) {
             if (!te.onRemovedByPlayer(player, willHarvest)) {
                 return false;
@@ -377,7 +375,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
 
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof TileEntityBlock te) {
+        if (blockEntity instanceof BlockEntityBase te) {
             te.onNeighborChange(level.getBlockState(neighbor), neighbor);
         }
 
@@ -389,7 +387,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
 
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof TileEntityBlock te) {
+        if (blockEntity instanceof BlockEntityBase te) {
             return te.getLightValue();
         } else {
             return super.getLightEmission(state, level, pos);
@@ -438,10 +436,10 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack p_316304_, BlockState p_316362_, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player.isSecondaryUseActive()) {
-            TileEntityBlock te = getTe(level, blockPos);
+            BlockEntityBase te = getTe(level, blockPos);
             return te == null ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
         } else {
-            TileEntityBlock te = getTe(level, blockPos);
+            BlockEntityBase te = getTe(level, blockPos);
             return te == null ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
     }
@@ -449,17 +447,17 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     @Override
     protected InteractionResult useWithoutItem(BlockState p_60503_, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (player.isSecondaryUseActive()) {
-            TileEntityBlock te = getTe(level, blockPos);
+            BlockEntityBase te = getTe(level, blockPos);
             return te == null ? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult1(te.onSneakingActivated(player, InteractionHand.MAIN_HAND, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
         } else {
-            TileEntityBlock te = getTe(level, blockPos);
+            BlockEntityBase te = getTe(level, blockPos);
             return te == null ? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult1(te.onActivated(player, InteractionHand.MAIN_HAND, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
         }
     }
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-        TileEntityBlock te = getTe(level, pos);
+        BlockEntityBase te = getTe(level, pos);
 
         return te == null ? ModUtils.emptyStack : te.getPickBlock(player, target);
     }
@@ -492,7 +490,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         if (ret) {
             return ret;
         } else {
-            TileEntityBlock te = getTe(world, pos);
+            BlockEntityBase te = getTe(world, pos);
             if (te == null) {
                 return false;
             } else {
@@ -534,7 +532,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     }
 
     public List<ItemStack> getDrops(Level world, BlockPos pos, BlockState state, Entity player) {
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         if (te == null) {
             te = drops.removeLast();
             if (te == null) {
@@ -569,7 +567,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     }
 
     public void onRemove(BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, BlockState blockState2, boolean b) {
-        TileEntityBlock te = getTe(level, blockPos);
+        BlockEntityBase te = getTe(level, blockPos);
         if (te != null && blockState2.getBlock() != blockState.getBlock()) {
             te.onBlockBreak(false);
         }
@@ -580,7 +578,7 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
     @Override
     public void attack(BlockState p_60499_, Level world, BlockPos pos, Player player) {
         super.attack(p_60499_, world, pos, player);
-        TileEntityBlock te = getTe(world, pos);
+        BlockEntityBase te = getTe(world, pos);
         if (te != null)
             te.onClicked(player);
     }

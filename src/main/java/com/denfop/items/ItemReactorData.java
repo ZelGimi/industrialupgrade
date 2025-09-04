@@ -1,12 +1,12 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.datacomponent.ReactorData;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -68,8 +68,8 @@ public class ItemReactorData extends Item implements IItemTab {
         Player player = p_41427_.getPlayer();
         InteractionHand hand = p_41427_.getHand();
         BlockEntity tileEntity = world.getBlockEntity(p_41427_.getClickedPos());
-        if (tileEntity instanceof TileMultiBlockBase && tileEntity instanceof IAdvReactor) {
-            TileMultiBlockBase tileMultiBlockBase = (TileMultiBlockBase) tileEntity;
+        if (tileEntity instanceof BlockEntityMultiBlockBase && tileEntity instanceof IAdvReactor) {
+            BlockEntityMultiBlockBase tileMultiBlockBase = (BlockEntityMultiBlockBase) tileEntity;
             player.getItemInHand(hand).set(DataComponentsInit.REACTOR_DATA, new ReactorData(tileMultiBlockBase.getBlockPos(), tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString()));
             return InteractionResult.SUCCESS;
         }

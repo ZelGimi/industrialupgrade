@@ -1,16 +1,16 @@
 package com.denfop.integration.jei.genaddstone;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.ItemStackImage;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.container.ContainerMultiMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.api.widget.ItemStackWidget;
+import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityGearMachine;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockMoreMachine3Entity;
+import com.denfop.containermenu.ContainerMenuMultiMachine;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.Nonnull;
 
-public class GenAddStoneCategory extends GuiIU implements IRecipeCategory<GenAddStoneHandler> {
+public class GenAddStoneCategory extends ScreenMain implements IRecipeCategory<GenAddStoneHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -36,8 +36,8 @@ public class GenAddStoneCategory extends GuiIU implements IRecipeCategory<GenAdd
     public GenAddStoneCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getInstance().player,
-                ((TileGearMachine) BlockMoreMachine3.gearing.getDummyTe()), 1, true
+        super(new ContainerMenuMultiMachine(Minecraft.getInstance().player,
+                ((BlockEntityGearMachine) BlockMoreMachine3Entity.gearing.getDummyTe()), 1, true
         ));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
@@ -55,7 +55,7 @@ public class GenAddStoneCategory extends GuiIU implements IRecipeCategory<GenAdd
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.gen_addition_stone).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.gen_addition_stone).getDescriptionId());
     }
 
 
@@ -76,7 +76,7 @@ public class GenAddStoneCategory extends GuiIU implements IRecipeCategory<GenAdd
                 54 - 48, 33 + 14 - energylevel, 176,
                 14 - energylevel, 14, energylevel
         );
-        new ItemStackImage(this, 61, 25, () -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack, 0, 0);
+        new ItemStackWidget(this, 61, 25, () -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack, 0, 0);
     }
 
     @Override

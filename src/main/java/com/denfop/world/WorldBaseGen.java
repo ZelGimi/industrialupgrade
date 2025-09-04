@@ -35,6 +35,7 @@ public class WorldBaseGen {
     public static DeferredHolder<Feature<?>, WorldGenOil> OIL_GENERATOR;
     public static Map<Integer, BlockState> blockStateMap = new HashMap<>();
     public static Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
+    public static int id;
 
     public WorldBaseGen() {
         NeoForge.EVENT_BUS.register(this);
@@ -440,7 +441,6 @@ public class WorldBaseGen {
             }
         }
     }
-public static int id;
 
     @SubscribeEvent
     public void onWorldTick(LevelTickEvent.Post event) {

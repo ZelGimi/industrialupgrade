@@ -1,6 +1,6 @@
 package com.denfop.api.bee;
 
-import com.denfop.api.agriculture.CropInit;
+import com.denfop.api.crop.CropInit;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;

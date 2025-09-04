@@ -1,12 +1,9 @@
 package com.denfop.componets.heat;
 
-import com.denfop.api.cool.ICoolAcceptor;
-import com.denfop.api.cool.ICoolEmitter;
-import com.denfop.api.cool.ICoolTile;
-import com.denfop.api.heat.IHeatAcceptor;
-import com.denfop.api.heat.IHeatEmitter;
-import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.api.otherenergies.heat.IHeatAcceptor;
+import com.denfop.api.otherenergies.heat.IHeatEmitter;
+import com.denfop.api.otherenergies.heat.IHeatTile;
 import com.denfop.componets.BufferEnergy;
 import com.denfop.componets.HeatComponent;
 import net.minecraft.core.BlockPos;
@@ -15,20 +12,22 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
-public class EnergyNetDelegate  implements IHeatTile {
+public class EnergyNetDelegate implements IHeatTile {
     public final BufferEnergy buffer;
     public final BlockPos worldPosition;
+    private final boolean clientSide;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-    private final boolean clientSide;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public double tick;
     public Map<Direction, IHeatTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IHeatTile>> validReceivers = new LinkedList<>();
+    public int hashCodeSource;
     protected double pastEnergy;
     protected double perenergy;
+    List<InfoTile<IHeatTile>> validReceivers = new LinkedList<>();
     private long id;
+
     public EnergyNetDelegate(HeatComponent block) {
         this.worldPosition = block.getParent().pos;
         this.clientSide = block.getParent().getLevel().isClientSide;
@@ -36,6 +35,7 @@ public class EnergyNetDelegate  implements IHeatTile {
         sourceDirections = block.sourceDirections;
         this.buffer = block.buffer;
     }
+
     @Override
     public BlockPos getPos() {
         return worldPosition;
@@ -54,9 +54,11 @@ public class EnergyNetDelegate  implements IHeatTile {
         }
         return false;
     }
+
     public boolean emitHeatTo(IHeatAcceptor receiver, Direction dir) {
         return this.sourceDirections.contains(dir);
     }
+
     public long getIdNetwork() {
         return this.id;
     }
@@ -89,12 +91,11 @@ public class EnergyNetDelegate  implements IHeatTile {
             }
         }
     }
+
     @Override
     public Map<Direction, IHeatTile> getHeatTiles() {
         return energyConductorMap;
     }
-
-
 
     public void setSinkDirections(Set<Direction> sinkDirections) {
         this.sinkDirections = sinkDirections;
@@ -104,7 +105,6 @@ public class EnergyNetDelegate  implements IHeatTile {
         this.sourceDirections = sourceDirections;
     }
 
-    public int hashCodeSource;
     public double getSourceEnergy() {
         return this.buffer.storage;
     }
@@ -118,6 +118,7 @@ public class EnergyNetDelegate  implements IHeatTile {
     public void setHashCodeSource(final int hashCode) {
         hashCodeSource = hashCode;
     }
+
     public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
         return validReceivers;
     }

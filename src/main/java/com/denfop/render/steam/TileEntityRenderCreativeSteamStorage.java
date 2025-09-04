@@ -1,15 +1,14 @@
 package com.denfop.render.steam;
 
+import com.denfop.blockentity.creative.BlockEntityCreativeSteamStorage;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.creative.TileEntityCreativeSteamStorage;
-import com.denfop.tiles.mechanism.steam.TileSteamStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class TileEntityRenderCreativeSteamStorage implements BlockEntityRenderer<TileEntityCreativeSteamStorage> {
+public class TileEntityRenderCreativeSteamStorage implements BlockEntityRenderer<BlockEntityCreativeSteamStorage> {
 
     private final BlockEntityRendererProvider.Context context;
 
@@ -19,7 +18,7 @@ public class TileEntityRenderCreativeSteamStorage implements BlockEntityRenderer
 
     @Override
     public void render(
-            TileEntityCreativeSteamStorage tile,
+            BlockEntityCreativeSteamStorage tile,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource buffer,

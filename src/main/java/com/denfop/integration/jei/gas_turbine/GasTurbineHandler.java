@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.denfop.tiles.gasturbine.TileEntityGasTurbineController.gasMapValue;
+import static com.denfop.blockentity.gasturbine.BlockEntityGasTurbineController.gasMapValue;
 
 public class GasTurbineHandler {
 

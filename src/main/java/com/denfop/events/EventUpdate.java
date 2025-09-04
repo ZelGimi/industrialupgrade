@@ -2,7 +2,7 @@ package com.denfop.events;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -47,12 +47,24 @@ public class EventUpdate {
                     ChatFormatting.WHITE + Localization.translate("iu.addons.installed") + "\n" +
                     formatAddonStatus("Power Utilities", hasPowerUtilities) + "\n" +
                     formatAddonStatus("Simply Quarry", hasSimplyQuarry) + "\n" +
-                    formatAddonStatus("Quantum Generators", hasQuantumGenerators) + "\n\n" +
+                    formatAddonStatus("Quantum Generators", hasQuantumGenerators) + "\n" +
+                    ChatFormatting.YELLOW + Localization.translate("iu.addons.optional") + "\n\n" +
+                    formatAddonStatus("Diamond Vein", ModList.get().isLoaded("diamondvein")) + "\n" +
+                    formatAddonStatus("Fast Primitive Age", ModList.get().isLoaded("fastprimitiveage")) + "\n" +
+                    formatAddonStatus("Fast Steam Age", ModList.get().isLoaded("faststeameage")) + "\n"+
+                    formatAddonStatus("Mining World Upgrade", ModList.get().isLoaded("miningworldupgrade")) + "\n"+
+                    formatAddonStatus("No Damage Bee", ModList.get().isLoaded("nodamagebee")) + "\n"+
+                    formatAddonStatus("No Heat Machine", ModList.get().isLoaded("noheatmachine")) + "\n"+
+                    formatAddonStatus("No Weed", ModList.get().isLoaded("noweed")) + "\n"+
+                    formatAddonStatus("Reactor Plus", ModList.get().isLoaded("reactorplus")) + "\n"+
+                    formatAddonStatus("Watering Can", ModList.get().isLoaded("wateringcan")) + "\n"+
+                    "\n"+
                     ChatFormatting.YELLOW + Localization.translate("iu.addons.required") + "\n" +
                     formatAddonStatus("JEI", hasJEI) + "\n" +
                     formatAddonStatus("One Probe", oneprobe) + "\n" +
                     formatAddonStatus("Jade", jade) + "\n" +
                     ChatFormatting.DARK_GRAY + "================";
+
 
             IUCore.proxy.messagePlayer(player, message);
             sendDiscordLink(player);

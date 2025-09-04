@@ -2,10 +2,10 @@ package com.denfop.items.upgradekit;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.blockentity.base.BlockEntityElectricBlock;
+import com.denfop.blockentity.wiring.EnumElectricBlock;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.base.TileElectricBlock;
-import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -67,7 +67,7 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         int meta = this.getElement().getId();
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof TileElectricBlock tile) {
+        if (blockEntity instanceof BlockEntityElectricBlock tile) {
             EnumElectricBlock enumblock = tile.getElectricBlock();
             if (enumblock != null && enumblock.kit_meta == meta) {
                 ItemStack stack1 = new ItemStack(tile.getElectricBlock().chargepad

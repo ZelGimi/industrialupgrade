@@ -1,21 +1,21 @@
 package com.denfop.componets;
 
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.PacketUpdateServerTile;
-import com.denfop.tiles.base.TileEntityBlock;
 
 public class ComponentButton {
 
-    private final TileEntityBlock entityBlock;
+    private final BlockEntityBase entityBlock;
     private final int event;
     private final String text;
 
-    public ComponentButton(TileEntityBlock entityBlock, int event) {
+    public ComponentButton(BlockEntityBase entityBlock, int event) {
         this.entityBlock = entityBlock;
         this.event = event;
         this.text = "";
     }
 
-    public ComponentButton(TileEntityBlock entityBlock, int event, String text) {
+    public ComponentButton(BlockEntityBase entityBlock, int event, String text) {
         this.entityBlock = entityBlock;
         this.event = event;
         this.text = text;
@@ -29,7 +29,7 @@ public class ComponentButton {
         return event;
     }
 
-    public TileEntityBlock getEntityBlock() {
+    public BlockEntityBase getEntityBlock() {
         return entityBlock;
     }
 

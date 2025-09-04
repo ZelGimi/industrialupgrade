@@ -2,11 +2,11 @@ package com.denfop.datacomponent;
 
 import com.denfop.IUCore;
 import com.denfop.api.water.upgrade.RotorUpgradeItemInform;
+import com.denfop.blockentity.bee.Bee;
 import com.denfop.items.bags.BagsDescription;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.bee.Bee;
 import com.denfop.utils.CapturedMobUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -27,6 +27,24 @@ import java.io.IOException;
 import java.util.List;
 
 public class DataComponentsInit {
+    public static final Codec<Tuple<Integer, Integer>> INT_TUPLE_CODEC =
+            Codec.INT.listOf()
+                    .comapFlatMap(
+                            list -> list.size() == 2
+                                    ? DataResult.success(new Tuple<>(list.get(0), list.get(1)))
+                                    : DataResult.error(() -> "Expected list of 2 integers"),
+                            tuple -> List.of(tuple.getA(), tuple.getB())
+                    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, Tuple<Integer, Integer>> INT_TUPLE_STREAM_CODEC =
+            StreamCodec.of(
+                    (buf, tuple) -> {
+                        buf.writeVarInt(tuple.getA());
+                        buf.writeVarInt(tuple.getB());
+                    },
+                    buf -> new Tuple<>(buf.readVarInt(), buf.readVarInt())
+            );
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<Tuple<Integer, Integer>>> LIST_TUPLE_STREAM_CODEC =
+            INT_TUPLE_STREAM_CODEC.apply(ByteBufCodecs.list());
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<com.denfop.api.windsystem.upgrade.RotorUpgradeItemInform>>> WIND_UPGRADE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<RotorUpgradeItemInform>>> WATER_UPGRADE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> ENERGY;
@@ -46,7 +64,6 @@ public class DataComponentsInit {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MODE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LEVEL;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LEVEL_MICROCHIP;
-
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Byte>> DIRECTION;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXPERIENCE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SWARM;
@@ -64,7 +81,6 @@ public class DataComponentsInit {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<BagsDescription>>> DESCRIPTIONS_CONTAINER;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<WirelessConnection>> WIRELESS;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<Bee>>> BEE_LIST;
-
     public static DeferredHolder<DataComponentType<?>, DataComponentType<VeinInfo>> VEIN_INFO;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<UpgradeKit>> UPGRADE_KIT;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<ReactorData>> REACTOR_DATA;
@@ -73,7 +89,6 @@ public class DataComponentsInit {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<BeerInfo>> BEER;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<ItemStack>> PATTERN;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<Tuple<Integer, Integer>>>> BOOKMARK;
-
     public static StreamCodec<ByteBuf, List<Integer>> INT_ARRAY = new StreamCodec<>() {
         public List<Integer> decode(ByteBuf p_320167_) {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer(p_320167_, IUCore.registry);
@@ -93,14 +108,6 @@ public class DataComponentsInit {
             }
         }
     };
-    public static final Codec<Tuple<Integer, Integer>> INT_TUPLE_CODEC =
-            Codec.INT.listOf()
-                    .comapFlatMap(
-                            list -> list.size() == 2
-                                    ? DataResult.success(new Tuple<>(list.get(0), list.get(1)))
-                                    : DataResult.error(() -> "Expected list of 2 integers"),
-                            tuple -> List.of(tuple.getA(), tuple.getB())
-                    );
 
     public static void init(DeferredRegister<DataComponentType<?>> dataComponentType) {
 
@@ -148,19 +155,8 @@ public class DataComponentsInit {
         REACTOR_SCHEDULE = dataComponentType.register("reactor_schedule", () -> DataComponentType.<ReactorSchedule>builder().persistent(ReactorSchedule.CODEC).networkSynchronized(ReactorSchedule.STREAM_CODEC).build());
         BEER = dataComponentType.register("beer", () -> DataComponentType.<BeerInfo>builder().persistent(BeerInfo.CODEC).networkSynchronized(BeerInfo.STREAM_CODEC).build());
         PATTERN = dataComponentType.register("pettern", () -> DataComponentType.<ItemStack>builder().persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC).build());
-        BOOKMARK = dataComponentType.register("bookmark", () -> DataComponentType.<List<Tuple<Integer, Integer>>>builder().persistent( INT_TUPLE_CODEC.listOf()).networkSynchronized(LIST_TUPLE_STREAM_CODEC).build());
+        BOOKMARK = dataComponentType.register("bookmark", () -> DataComponentType.<List<Tuple<Integer, Integer>>>builder().persistent(INT_TUPLE_CODEC.listOf()).networkSynchronized(LIST_TUPLE_STREAM_CODEC).build());
 
     }
-    public static final StreamCodec<RegistryFriendlyByteBuf, Tuple<Integer, Integer>> INT_TUPLE_STREAM_CODEC =
-            StreamCodec.of(
-                    (buf, tuple) -> {
-                        buf.writeVarInt(tuple.getA());
-                        buf.writeVarInt(tuple.getB());
-                    },
-                    buf -> new Tuple<>(buf.readVarInt(), buf.readVarInt())
-            );
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, List<Tuple<Integer, Integer>>> LIST_TUPLE_STREAM_CODEC =
-            INT_TUPLE_STREAM_CODEC.apply(ByteBufCodecs.list());
 
 }

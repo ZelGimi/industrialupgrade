@@ -1,22 +1,18 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
-import com.denfop.audio.SoundHandler;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
+import com.denfop.sound.EnumSound;
+import com.denfop.sound.SoundHandler;
+import com.denfop.utils.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -49,8 +45,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
-public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpecialArmor, IProperties,
-        IUpgradeItem {
+public class ItemAdvJetpack extends ItemArmorEnergy implements EnergyItem, ISpecialArmor, IProperties,
+        UpgradeItem {
 
     private static boolean lastJetpackUsed = false;
     private final String armorName;

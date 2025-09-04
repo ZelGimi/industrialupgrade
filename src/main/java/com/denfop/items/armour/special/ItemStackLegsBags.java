@@ -1,14 +1,14 @@
 package com.denfop.items.armour.special;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.container.ContainerBase;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.datacomponent.DataComponentsInit;
-import com.denfop.gui.GuiCore;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.items.bags.BagsDescription;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.utils.ElectricItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -32,18 +32,13 @@ public class ItemStackLegsBags extends ItemStackInventory {
         this.updatelist();
     }
 
-    public ContainerBase<ItemStackLegsBags> getGuiContainer(Player player) {
-        return new ContainerLegsBags(player, this);
+    public ContainerMenuBase<ItemStackLegsBags> getGuiContainer(Player player) {
+        return new ContainerMenuLegsBags(player, this);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
-        return new GuiLegsBags((ContainerLegsBags) isAdmin, itemStack1);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player player, ContainerMenuBase<? extends CustomWorldContainer> isAdmin) {
+        return new ScreenLegsBags((ContainerMenuLegsBags) isAdmin, itemStack1);
     }
 
 

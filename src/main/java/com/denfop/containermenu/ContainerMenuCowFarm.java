@@ -1,0 +1,22 @@
+package com.denfop.containermenu;
+
+import com.denfop.blockentity.mechanism.BlockEntityCowFarm;
+import net.minecraft.world.entity.player.Player;
+
+public class ContainerMenuCowFarm extends ContainerMenuFullInv<BlockEntityCowFarm> {
+
+    public ContainerMenuCowFarm(BlockEntityCowFarm tileEntityChickenFarm, Player var1) {
+        super(tileEntityChickenFarm, var1);
+        this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.slotSeeds, 0, 80, 18));
+        for (int i = 0; i < 9; i++) {
+            this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.output, i, 10 + i * 18, 45));
+        }
+        for (int i = 0; i < 4; i++) {
+            this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.output1, i, 10 + i * 18, 45 + 18 + 2));
+        }
+        for (int i = 0; i < 4; i++) {
+            this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.upgradeSlot, i, 20 + (i + 4) * 18, 45 + 18 + 2));
+        }
+    }
+
+}

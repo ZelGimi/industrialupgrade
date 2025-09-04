@@ -61,7 +61,7 @@ public class RegisterOreDictionary {
         List<String> list = new ArrayList<>();
         list.add("Mikhail");//0
         list.add("Aluminium");//1
-        list.add("Vanady");//2
+        list.add("vanadium");//2
         list.add("Tungsten");//3
         list.add("Cobalt");//4
         list.add("Magnesium");//5
@@ -175,7 +175,7 @@ public class RegisterOreDictionary {
         List<String> list = new ArrayList<>();
         list.add("Mikhail");//0
         list.add("Aluminium");//1
-        list.add("Vanady");//2
+        list.add("vanadium");//2
         list.add("Tungsten");//3
         list.add("Invar");//4
         list.add("Caravky");//5

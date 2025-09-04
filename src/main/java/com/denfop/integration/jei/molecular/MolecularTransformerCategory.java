@@ -2,13 +2,13 @@ package com.denfop.integration.jei.molecular;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityModuleMachine;
+import com.denfop.blocks.mechanism.BlockBaseMachineEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileModuleMachine;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MolecularTransformerCategory extends GuiIU implements IRecipeCategory<MolecularTransformerHandler> {
+public class MolecularTransformerCategory extends ScreenMain implements IRecipeCategory<MolecularTransformerHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -32,7 +32,7 @@ public class MolecularTransformerCategory extends GuiIU implements IRecipeCatego
     public MolecularTransformerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileModuleMachine) BlockBaseMachine.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityModuleMachine) BlockBaseMachineEntity.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimoleculartransformernew" +
                         ".png"), 10, 49, 203,

@@ -1,15 +1,15 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityElectricBlock;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.mechanism.BlockEntityAnalyzerChest;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.componets.Energy;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.datacomponent.WirelessConnection;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.base.TileElectricBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
+import com.denfop.utils.Localization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -104,17 +104,17 @@ public class ItemAdditionModule<T extends Enum<T> & ISubEnum> extends ItemMain<T
 
         if (this.getElement().getId() == 10) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof TileEntityInventory tile) {
+            if (be instanceof BlockEntityInventory tile) {
                 if (tile.getComp(Energy.class) != null) {
                     WirelessConnection wirelessConnection = stack.getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
                     boolean charge = wirelessConnection.change();
-                    if (tile instanceof TileElectricBlock && charge) {
+                    if (tile instanceof BlockEntityElectricBlock && charge) {
                         return InteractionResult.PASS;
                     }
                     wirelessConnection = new WirelessConnection(level.dimension().location(), tile.getComp(Energy.class).getSinkTier(), tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ(), wirelessConnection.change());
                     stack.set(DataComponentsInit.WIRELESS, wirelessConnection);
                     return InteractionResult.SUCCESS;
-                } else if (tile instanceof TileEntityAnalyzerChest) {
+                } else if (tile instanceof BlockEntityAnalyzerChest) {
                     WirelessConnection wirelessConnection = stack.getOrDefault(DataComponentsInit.WIRELESS, WirelessConnection.EMPTY);
                     wirelessConnection = new WirelessConnection(level.dimension().location(), 0, tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ(), wirelessConnection.change());
                     stack.set(DataComponentsInit.WIRELESS, wirelessConnection);

@@ -2,14 +2,14 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
 import com.denfop.blocks.BlockRaws;
 import com.denfop.blocks.TileBlockCreator;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
-import com.denfop.blocks.mechanism.BlockSteamTurbine;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockImpSolarEnergyEntity;
+import com.denfop.blocks.mechanism.BlockSteamTurbineEntity;
 import com.denfop.items.resource.ItemRawMetals;
-import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ public class BaseRecipeFour {
     public static Item PER_SENSOR;
     public static Item PHOTON_SENSOR;
 
-    public static ItemStack getBlockStack(IMultiTileBlock block) {
+    public static ItemStack getBlockStack(MultiBlockEntity block) {
         return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
     }
 
@@ -45,10 +45,10 @@ public class BaseRecipeFour {
 
         PHOTON_SENSOR = IUItem.crafting_elements.getItemFromMeta(620);
         Recipes.recipe.addRecipe(
-                ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_imp_pressure), 1), "DCD", "BAB",
+                ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_pressure), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_adv_pressure),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_pressure),
 
                 ('B'), "c:plates/Draconid",
 
@@ -62,10 +62,10 @@ public class BaseRecipeFour {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_per_pressure), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_per_pressure), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_imp_pressure),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_pressure),
 
                 ('B'), "c:plates/Woods",
 
@@ -80,10 +80,10 @@ public class BaseRecipeFour {
 
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_exchanger), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_exchanger), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_casing),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_casing),
 
                 ('B'), "c:plates/Neodymium",
 
@@ -97,10 +97,10 @@ public class BaseRecipeFour {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_adv_exchanger), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_exchanger), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_exchanger),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_exchanger),
 
                 ('B'), "c:plates/MolybdenumSteel",
 
@@ -114,10 +114,10 @@ public class BaseRecipeFour {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_imp_exchanger), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_exchanger), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_adv_exchanger),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_adv_exchanger),
 
                 ('B'), "c:plates/Draconid",
 
@@ -131,10 +131,10 @@ public class BaseRecipeFour {
 
 
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbine.steam_turbine_per_exchanger), 1), "DCD", "BAB",
+        Recipes.recipe.addRecipe(ModUtils.setSize(getBlockStack(BlockSteamTurbineEntity.steam_turbine_per_exchanger), 1), "DCD", "BAB",
                 "FEF",
 
-                ('A'), getBlockStack(BlockSteamTurbine.steam_turbine_imp_exchanger),
+                ('A'), getBlockStack(BlockSteamTurbineEntity.steam_turbine_imp_exchanger),
 
                 ('B'), "c:plates/Woods",
 
@@ -175,7 +175,7 @@ public class BaseRecipeFour {
                 ('A'), "c:gears/Polonium",
 
                 ('B'), IUItem.bee_frame_template,
-                'C', "c:plates/vanady",
+                'C', "c:plates/vanadium",
                 'D', "c:casings/Copper"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.frame, 1, 1), "CDC", "ABA",
@@ -184,7 +184,7 @@ public class BaseRecipeFour {
                 ('A'), "c:gears/Polonium",
 
                 ('B'), IUItem.adv_bee_frame_template,
-                'C', "c:plates/vanady",
+                'C', "c:plates/vanadium",
                 'D', "c:casings/Copper"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.frame, 1, 2), "CDC", "ABA",
@@ -193,7 +193,7 @@ public class BaseRecipeFour {
                 ('A'), "c:gears/Polonium",
 
                 ('B'), IUItem.imp_bee_frame_template,
-                'C', "c:plates/vanady",
+                'C', "c:plates/vanadium",
                 'D', "c:casings/Copper"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.frame, 1, 9), "CDC", "ABA",
@@ -257,7 +257,7 @@ public class BaseRecipeFour {
 
                 ('B'), IUItem.bee_frame_template,
                 'C', "c:plates/Gadolinium",
-                'D', "c:casings/vanady"
+                'D', "c:casings/vanadium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.frame, 1, 13), "CDC", "ABA",
                 " D ",
@@ -266,7 +266,7 @@ public class BaseRecipeFour {
 
                 ('B'), IUItem.adv_bee_frame_template,
                 'C', "c:plates/Gadolinium",
-                'D', "c:casings/vanady"
+                'D', "c:casings/vanadium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.frame, 1, 14), "CDC", "ABA",
                 " D ",
@@ -275,7 +275,7 @@ public class BaseRecipeFour {
 
                 ('B'), IUItem.imp_bee_frame_template,
                 'C', "c:plates/Gadolinium",
-                'D', "c:casings/vanady"
+                'D', "c:casings/vanadium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.frame, 1, 18), "CDC", "ABA",
                 " D ",
@@ -423,29 +423,29 @@ public class BaseRecipeFour {
                 , 'B', "c:plates/Mithril", 'C', IUItem.synthetic_rubber
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.night_transformer), " C ", "DAE",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.night_transformer), " C ", "DAE",
                 " B ",
 
-                ('A'), getBlockStack(BlockImpSolarEnergy.imp_se_gen)
+                ('A'), getBlockStack(BlockImpSolarEnergyEntity.imp_se_gen)
                 , 'B', IUItem.imp_motors_with_improved_bearings_,
                 'C', IUItem.advancedMachine,
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 30),
                 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 68)
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.night_converter), "DCD", " A ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.night_converter), "DCD", " A ",
                 "DBD",
 
-                ('A'), getBlockStack(BlockBaseMachine3.moon_spotter)
+                ('A'), getBlockStack(BlockBaseMachine3Entity.moon_spotter)
                 , 'B', IUItem.imp_motors_with_improved_bearings_,
                 'C', IUItem.advancedMachine,
                 'D', "c:plates/Permalloy"
 
 
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.peat_generator), " C ", " A ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.peat_generator), " C ", " A ",
                 " B ",
-                ('A'), getBlockStack(BlockBaseMachine3.steam_peat_generator)
+                ('A'), getBlockStack(BlockBaseMachine3Entity.steam_peat_generator)
                 , 'B', IUItem.motors_with_improved_bearings_,
                 'C', IUItem.advancedMachine
         );
@@ -453,7 +453,7 @@ public class BaseRecipeFour {
                 "ABA",
                 ('A'), IUItem.iridiumPlate
                 , 'B', Items.ENDER_PEARL,
-                'C', getBlockStack(BlockBaseMachine3.teleporter_iu)
+                'C', getBlockStack(BlockBaseMachine3Entity.teleporter_iu)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.adv_cokeoven, 1, 0), " A ", "CBC",
                 " A ",
@@ -540,18 +540,18 @@ public class BaseRecipeFour {
                 'B',
                 ItemStackHelper.fromData(IUItem.lightning_rod, 1, 1),
                 'C',
-                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
                 'D',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356)
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.ampere_storage), " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.ampere_storage), " A ", " B ",
                 " C ",
                 ('A'), IUItem.reBattery, 'B', IUItem.advancedMachine,
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         276
                 )
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.gen_bio), "   ", "ABD",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.gen_bio), "   ", "ABD",
                 " C ",
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         27
@@ -562,9 +562,9 @@ public class BaseRecipeFour {
                         64
                 )
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_generator), " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.bio_generator), " A ", " B ",
                 " C ",
-                ('A'), getBlockStack(BlockBaseMachine3.steam_bio_generator), 'B', IUItem.machine,
+                ('A'), getBlockStack(BlockBaseMachine3Entity.steam_bio_generator), 'B', IUItem.machine,
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
                         276
                 ), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1,
@@ -581,7 +581,7 @@ public class BaseRecipeFour {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pollutionDevice), "AAA", "ABA",
                 " C ",
-                ('A'), "c:plates/Iron", 'B', TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2), 'C', "c:gems/Americium"
+                ('A'), "c:plates/Iron", 'B', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2), 'C', "c:gems/Americium"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.ruby_axe), "AA", "AB ",
@@ -623,9 +623,9 @@ public class BaseRecipeFour {
                 ('A'), "c:gems/Topaz", 'B', Items.STICK
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_generator), " A ", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.steam_generator), " A ", " B ",
                 " C ",
-                ('A'), getBlockStack(BlockBaseMachine3.steam_converter), 'B', ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
+                ('A'), getBlockStack(BlockBaseMachine3Entity.steam_converter), 'B', ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 276)
         );
         for (int i = 0; i < BlockRaws.Type.values().length; i++) {
@@ -661,19 +661,19 @@ public class BaseRecipeFour {
         Recipes.recipe.addShapelessRecipe(ModUtils.setSize(IUItem.blockRubberWoods.getItem(2), 4), ItemStackHelper.fromData(IUItem.tropicalRubWood, 1));
         Recipes.recipe.addRecipe(IUItem.smallFluidCell.getItem(1), " A ", "ABA",
                 " A ",
-                ('A'),"c:casings/copper", 'B', Blocks.GLASS_PANE
+                ('A'), "c:casings/copper", 'B', Blocks.GLASS_PANE
         );
         Recipes.recipe.addRecipe(IUItem.reinforcedFluidCell.getItem(1), " A ", "ABA",
                 " A ",
-                ('A'),"c:casings/tungsten", 'B', Blocks.GLASS_PANE
+                ('A'), "c:casings/tungsten", 'B', Blocks.GLASS_PANE
         );
         Recipes.recipe.addRecipe(IUItem.latexPipette, "  A", "DB ",
                 "CD ",
-                ('A'),"c:casings/steel", 'B', Blocks.GLASS_PANE,'C', IUItem.treetap,'D',"c:casings/cobalt"
+                ('A'), "c:casings/steel", 'B', Blocks.GLASS_PANE, 'C', IUItem.treetap, 'D', "c:casings/cobalt"
         );
-        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.auto_latex_collector), "A  ", "CBC",
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3Entity.auto_latex_collector), "A  ", "CBC",
                 "CCC",
-                ('A'),"planks", 'B',IUItem.latexPipette.getItem(),'C', "terracotta"
+                ('A'), "planks", 'B', IUItem.latexPipette.getItem(), 'C', "terracotta"
         );
         if (ModList.get().isLoaded("powerutils")) {
             RecipesPowerUtils.register();
@@ -683,6 +683,9 @@ public class BaseRecipeFour {
         }
         if (ModList.get().isLoaded("quantumgenerators")) {
             RecipeQuantumGenerators.register();
+        }
+        if (ModList.get().isLoaded("wateringcan")) {
+            RecipeWateringCan.register();
         }
     }
 

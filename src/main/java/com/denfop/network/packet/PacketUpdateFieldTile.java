@@ -1,9 +1,9 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ public class PacketUpdateFieldTile implements IPacket {
 
     }
 
-    public PacketUpdateFieldTile(TileEntityBlock te, String field, Object o) {
+    public PacketUpdateFieldTile(BlockEntityBase te, String field, Object o) {
         final CustomPacketBuffer packet = new CustomPacketBuffer(te.getWorld().registryAccess());
         packet.writeString(field);
         try {
@@ -43,7 +43,7 @@ public class PacketUpdateFieldTile implements IPacket {
         final CustomPacketBuffer buf = new CustomPacketBuffer(world.registryAccess());
         buf.writeBytes(is);
         if (te != null) {
-            ((TileEntityBlock) te).updateField(buf.readString().trim(), buf);
+            ((BlockEntityBase) te).updateField(buf.readString().trim(), buf);
         }
     }
 

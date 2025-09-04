@@ -42,6 +42,7 @@ public class BagsDescription {
         this.stack = stack;
         this.count = stack.getCount();
     }
+
     public BagsDescription(CompoundTag tagCompound, HolderLookup.Provider registries) {
         this.stack = ItemStack.parseOptional(registries, tagCompound.getCompound("item"));
         this.count = tagCompound.getInt("count");

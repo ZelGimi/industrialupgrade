@@ -1,22 +1,22 @@
 package com.denfop.integration.jei.impalloysmelter;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityImpAlloySmelter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerImpAlloySmelter;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuImpAlloySmelter;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityImpAlloySmelter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -34,12 +34,12 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
-public class ImpAlloySmelterCategory extends GuiIU implements IRecipeCategory<ImpAlloySmelterHandler> {
+public class ImpAlloySmelterCategory extends ScreenMain implements IRecipeCategory<ImpAlloySmelterHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerImpAlloySmelter container1;
-    private final GuiComponent progress_bar;
-    private final GuiComponent slots1;
+    private final ContainerMenuImpAlloySmelter container1;
+    private final ScreenWidget progress_bar;
+    private final ScreenWidget slots1;
     private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
@@ -47,7 +47,7 @@ public class ImpAlloySmelterCategory extends GuiIU implements IRecipeCategory<Im
     public ImpAlloySmelterCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityImpAlloySmelter) BlockBaseMachine3.imp_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityImpAlloySmelter) BlockBaseMachine3Entity.imp_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine" +
@@ -55,16 +55,16 @@ public class ImpAlloySmelterCategory extends GuiIU implements IRecipeCategory<Im
                 77
         );
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
-        this.slots1 = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
+        this.slots1 = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
         );
-        this.container1 = (ContainerImpAlloySmelter) this.getContainer();
+        this.container1 = (ContainerMenuImpAlloySmelter) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this, 85, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 85, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
 
@@ -74,7 +74,7 @@ public class ImpAlloySmelterCategory extends GuiIU implements IRecipeCategory<Im
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.imp_alloy_smelter).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.imp_alloy_smelter).getDescriptionId());
     }
 
 
@@ -110,7 +110,7 @@ public class ImpAlloySmelterCategory extends GuiIU implements IRecipeCategory<Im
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ImpAlloySmelterHandler recipes, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1(), recipes.getInput2(),
                 recipes.getInput3()
         );
@@ -120,7 +120,7 @@ public class ImpAlloySmelterCategory extends GuiIU implements IRecipeCategory<Im
 
         }
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());
 
     }

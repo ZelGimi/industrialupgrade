@@ -52,7 +52,7 @@ public class GenNeuHandler {
 
     public static void initRecipes() {
 
-        addRecipe(16250000.0D * 1000 / 100, new FluidStack(FluidName.fluidNeutron.getInstance().get(), 1000));
+        addRecipe(16250000.0D * 1000 / 100, new FluidStack(FluidName.fluidneutron.getInstance().get(), 1000));
 
 
     }
