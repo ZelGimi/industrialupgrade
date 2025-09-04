@@ -1,9 +1,9 @@
 package com.denfop.api.tesseract;
 
-import com.denfop.api.energy.IDual;
+import com.denfop.api.energy.interfaces.Dual;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.inventory.Inventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -127,11 +127,11 @@ public class TesseractLocalSystem {
                                     continue cycle;
                                 }
                                 Energy two = channel2.getTesseract().getEnergy();
-                                final double energy = ((IDual) one.getDelegate()).canExtractEnergy();
-                                final double demanded = ((IDual) two.getDelegate()).getDemandedEnergy();
+                                final double energy = ((Dual) one.getDelegate()).canExtractEnergy();
+                                final double demanded = ((Dual) two.getDelegate()).getDemandedEnergy();
                                 final double sent = Math.min(energy, demanded);
-                                ((IDual) one.getDelegate()).extractEnergy(sent);
-                                ((IDual) two.getDelegate()).receiveEnergy(sent);
+                                ((Dual) one.getDelegate()).extractEnergy(sent);
+                                ((Dual) two.getDelegate()).receiveEnergy(sent);
                             }
                         } else {
                             if (channel2.isPrivate()) {
@@ -142,11 +142,11 @@ public class TesseractLocalSystem {
                                 continue cycle;
                             }
                             Energy two = channel2.getTesseract().getEnergy();
-                            final double energy = ((IDual) one.getDelegate()).canExtractEnergy();
-                            final double demanded = ((IDual) two.getDelegate()).getDemandedEnergy();
+                            final double energy = ((Dual) one.getDelegate()).canExtractEnergy();
+                            final double demanded = ((Dual) two.getDelegate()).getDemandedEnergy();
                             final double sent = Math.min(energy, demanded);
-                            ((IDual) one.getDelegate()).extractEnergy(sent);
-                            ((IDual) two.getDelegate()).receiveEnergy(sent);
+                            ((Dual) one.getDelegate()).extractEnergy(sent);
+                            ((Dual) two.getDelegate()).receiveEnergy(sent);
                         }
                     }
                 }
@@ -220,8 +220,8 @@ public class TesseractLocalSystem {
                             if (channel2.isPrivate() && channel1.getTesseract().getPlayer().equals(channel2
                                     .getTesseract()
                                     .getPlayer())) {
-                                InvSlot one = channel1.getTesseract().getSlotItem();
-                                InvSlot two = channel2.getTesseract().getSlotItem();
+                                Inventory one = channel1.getTesseract().getSlotItem();
+                                Inventory two = channel2.getTesseract().getSlotItem();
                                 if (one.isEmpty()) {
                                     continue cycle;
                                 }
@@ -243,8 +243,8 @@ public class TesseractLocalSystem {
                             if (channel2.isPrivate()) {
                                 continue;
                             }
-                            InvSlot one = channel1.getTesseract().getSlotItem();
-                            InvSlot two = channel2.getTesseract().getSlotItem();
+                            Inventory one = channel1.getTesseract().getSlotItem();
+                            Inventory two = channel2.getTesseract().getSlotItem();
                             if (one.isEmpty()) {
                                 continue cycle;
                             }

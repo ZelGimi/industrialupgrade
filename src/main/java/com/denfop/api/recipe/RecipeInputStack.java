@@ -4,7 +4,6 @@ import com.denfop.api.Recipes;
 import com.denfop.recipe.IInputItemStack;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Collections;
 import java.util.List;
 
 public class RecipeInputStack implements IRecipeInputStack {

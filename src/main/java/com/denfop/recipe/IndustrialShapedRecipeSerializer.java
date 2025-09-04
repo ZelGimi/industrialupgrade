@@ -5,14 +5,10 @@ import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -26,7 +22,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class IndustrialShapedRecipeSerializer implements RecipeSerializer<BaseRecipe> {
 
@@ -63,17 +58,14 @@ public class IndustrialShapedRecipeSerializer implements RecipeSerializer<BaseRe
         JsonObject resultJson = GsonHelper.getAsJsonObject(json, "result");
         ItemStack result = ShapedRecipe.itemStackFromJson(resultJson);
 
-        return new BaseRecipe(id,group,category,result, grid, partRecipes);
+        return new BaseRecipe(id, group, category, result, grid, partRecipes);
     }
-
-
-
 
 
     @Override
     public @Nullable BaseRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf pBuffer) {
 
-        return BaseRecipe.create(id,new CustomPacketBuffer(pBuffer));
+        return BaseRecipe.create(id, new CustomPacketBuffer(pBuffer));
     }
 
     @Override

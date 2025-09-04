@@ -1,13 +1,13 @@
 package com.denfop.integration.jei.crops;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockSimpleMachine;
-import com.denfop.container.ContainerMultiMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityMacerator;
+import com.denfop.blocks.mechanism.BlockSimpleMachineEntity;
+import com.denfop.containermenu.ContainerMenuMultiMachine;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileMacerator;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<CropCrossoverHandler> {
+public class CropCrossoverCategory extends ScreenMain implements IRecipeCategory<CropCrossoverHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -32,10 +32,10 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
     public CropCrossoverCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getInstance().player,
-            ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
-      ));
-        this.jeiInform=jeiInform;
+        super(new ContainerMenuMultiMachine(Minecraft.getInstance().player,
+                ((BlockEntityMacerator) BlockSimpleMachineEntity.macerator_iu.getDummyTe()), 1, true
+        ));
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
@@ -55,7 +55,6 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
     }
 
 
-
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -66,8 +65,8 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
 
     @Override
     public void draw(CropCrossoverHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      draw(stack, "+", 45, 48, 4210752);
-     draw(stack, "->", 65, 48, 4210752);
+        draw(stack, "+", 45, 48, 4210752);
+        draw(stack, "->", 65, 48, 4210752);
         this.drawSplitString(stack, Localization.translate("iu.cop.crossing"), 15, 78, 140 - 5, 4210752);
 
     }
@@ -80,11 +79,10 @@ public class CropCrossoverCategory extends GuiIU implements IRecipeCategory<Crop
             builder.addSlot(RecipeIngredientRole.INPUT, 60 - 21, yDisplayPosition1).addItemStack(list.get(i));
 
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT,  85, 44).addItemStack(recipes.getOutputs());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).addItemStack(recipes.getOutputs());
 
 
     }
-
 
 
     protected ResourceLocation getTexture() {

@@ -1,4 +1,3 @@
-
 package com.denfop.render.base;
 
 import com.google.common.collect.Maps;
@@ -67,10 +66,10 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         Material baseLocation = context.hasMaterial("base") ? context.getMaterial("base") : null;
         Material fluidMaskLocation = context.hasMaterial("fluid") ? context.getMaterial("fluid") : null;
         Material coverLocation = context.hasMaterial("cover") ? context.getMaterial("cover") : null;
-        TextureAtlasSprite baseSprite = baseLocation != null ? (TextureAtlasSprite)spriteGetter.apply(baseLocation) : null;
-        TextureAtlasSprite fluidSprite = this.fluid != Fluids.EMPTY ? (TextureAtlasSprite)spriteGetter.apply(ForgeHooksClient.getBlockMaterial(IClientFluidTypeExtensions.of(this.fluid).getStillTexture())) : null;
-        TextureAtlasSprite coverSprite = coverLocation == null || this.coverIsMask && baseLocation == null ? null : (TextureAtlasSprite)spriteGetter.apply(coverLocation);
-        TextureAtlasSprite particleSprite = particleLocation != null ? (TextureAtlasSprite)spriteGetter.apply(particleLocation) : null;
+        TextureAtlasSprite baseSprite = baseLocation != null ? (TextureAtlasSprite) spriteGetter.apply(baseLocation) : null;
+        TextureAtlasSprite fluidSprite = this.fluid != Fluids.EMPTY ? (TextureAtlasSprite) spriteGetter.apply(ForgeHooksClient.getBlockMaterial(IClientFluidTypeExtensions.of(this.fluid).getStillTexture())) : null;
+        TextureAtlasSprite coverSprite = coverLocation == null || this.coverIsMask && baseLocation == null ? null : (TextureAtlasSprite) spriteGetter.apply(coverLocation);
+        TextureAtlasSprite particleSprite = particleLocation != null ? (TextureAtlasSprite) spriteGetter.apply(particleLocation) : null;
         if (particleSprite == null) {
             particleSprite = fluidSprite;
         }
@@ -84,7 +83,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         }
 
         if (this.flipGas && this.fluid != Fluids.EMPTY && this.fluid.getFluidType().isLighterThanAir()) {
-            modelState = new SimpleModelState(modelState.getRotation().compose(new Transformation(null, new Quaternionf(0.0F, 0.0F, 1.0F, 0.0F), (Vector3f)null, (Quaternionf)null)));
+            modelState = new SimpleModelState(modelState.getRotation().compose(new Transformation(null, new Quaternionf(0.0F, 0.0F, 1.0F, 0.0F), (Vector3f) null, (Quaternionf) null)));
         }
 
         StandaloneGeometryBakingContext itemContext = StandaloneGeometryBakingContext.builder(context).withGui3d(false).withUseBlockLight(false).build(modelLocation);
@@ -101,9 +100,9 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         TextureAtlasSprite sprite;
         SimpleModelState transformedState;
         if (fluidMaskLocation != null && fluidSprite != null) {
-            sprite = (TextureAtlasSprite)spriteGetter.apply(fluidMaskLocation);
+            sprite = (TextureAtlasSprite) spriteGetter.apply(fluidMaskLocation);
             if (sprite != null) {
-                transformedState = new SimpleModelState(((ModelState)modelState).getRotation().compose(FLUID_TRANSFORM), ((ModelState)modelState).isUvLocked());
+                transformedState = new SimpleModelState(((ModelState) modelState).getRotation().compose(FLUID_TRANSFORM), ((ModelState) modelState).isUvLocked());
                 unbaked = UnbakedGeometryHelper.createUnbakedItemMaskElements(1, sprite.contents());
                 quads = UnbakedGeometryHelper.bakeElements(unbaked, ($) -> {
                     return fluidSprite;
@@ -121,7 +120,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         if (coverSprite != null) {
             sprite = this.coverIsMask ? baseSprite : coverSprite;
             if (sprite != null) {
-                transformedState = new SimpleModelState(((ModelState)modelState).getRotation().compose(COVER_TRANSFORM), ((ModelState)modelState).isUvLocked());
+                transformedState = new SimpleModelState(((ModelState) modelState).getRotation().compose(COVER_TRANSFORM), ((ModelState) modelState).isUvLocked());
                 unbaked = UnbakedGeometryHelper.createUnbakedItemMaskElements(2, coverSprite.contents());
                 TextureAtlasSprite finalSprite = sprite;
                 quads = UnbakedGeometryHelper.bakeElements(unbaked, material -> finalSprite, transformedState, modelLocation);
@@ -149,7 +148,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
 
         public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
             BakedModel overridden = this.nested.resolve(originalModel, stack, level, entity, seed);
-            return overridden != originalModel ? overridden : (BakedModel)FluidUtil.getFluidContained(stack).map((fluidStack) -> {
+            return overridden != originalModel ? overridden : (BakedModel) FluidUtil.getFluidContained(stack).map((fluidStack) -> {
                 Fluid fluid = fluidStack.getFluid();
                 String name = ForgeRegistries.FLUIDS.getKey(fluid).toString();
                 if (!this.cache.containsKey(name)) {
@@ -158,7 +157,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
                     this.cache.put(name, bakedModel);
                     return bakedModel;
                 } else {
-                    return (BakedModel)this.cache.get(name);
+                    return (BakedModel) this.cache.get(name);
                 }
             }).orElse(originalModel);
         }
@@ -169,7 +168,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
         }
 
         public int getColor(@NotNull ItemStack stack, int tintIndex) {
-            return tintIndex != 1 ? -1 : (Integer)FluidUtil.getFluidContained(stack).map((fluidStack) -> {
+            return tintIndex != 1 ? -1 : (Integer) FluidUtil.getFluidContained(stack).map((fluidStack) -> {
                 return IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
             }).orElse(-1);
         }
@@ -186,7 +185,7 @@ public class DynamicFluidContainerModel implements IUnbakedGeometry<DynamicFluid
                 throw new RuntimeException("Bucket model requires 'fluid' value.");
             } else {
                 ResourceLocation fluidName = new ResourceLocation("minecraft:empty");
-                Fluid fluid = (Fluid)ForgeRegistries.FLUIDS.getValue(fluidName);
+                Fluid fluid = (Fluid) ForgeRegistries.FLUIDS.getValue(fluidName);
                 boolean flip = GsonHelper.getAsBoolean(jsonObject, "flip_gas", false);
                 boolean coverIsMask = GsonHelper.getAsBoolean(jsonObject, "cover_is_mask", true);
                 boolean applyFluidLuminosity = GsonHelper.getAsBoolean(jsonObject, "apply_fluid_luminosity", true);

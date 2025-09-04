@@ -1,7 +1,7 @@
 package com.denfop.items.resource.preciousresources;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemPreciousGem<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemPreciousGem<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemPreciousGem(T element) {
         super(new Item.Properties(), element);
     }
@@ -18,16 +18,18 @@ public class ItemPreciousGem<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         return new String[]{"forge:gems/" + getElement().getName().substring(0, getElement().getName().indexOf("_")), "forge:gems"};
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         ruby_gem(0),
         sapphire_gem(1),
         topaz_gem(2);

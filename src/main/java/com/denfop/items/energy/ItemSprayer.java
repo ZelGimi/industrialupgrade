@@ -1,12 +1,12 @@
 package com.denfop.items.energy;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.items.CapabilityFluidHandlerItem;
 import com.denfop.items.ItemFluidContainer;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -49,7 +49,7 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, list, tooltipFlag);
 
-        list.add(Component.literal(Localization.translate( "iu.sprayer.info")));
+        list.add(Component.literal(Localization.translate("iu.sprayer.info")));
     }
 
     @Override
@@ -150,10 +150,10 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
     }
 
 
-
     public boolean canfill(Fluid fluid) {
         return fluid == FluidName.fluidconstruction_foam.getInstance().get();
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -161,6 +161,7 @@ public class ItemSprayer extends ItemFluidContainer implements IItemTab {
             p_41392_.add(this.getItemStack(FluidName.fluidconstruction_foam.getInstance().get()));
         }
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;

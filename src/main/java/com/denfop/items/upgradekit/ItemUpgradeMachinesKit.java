@@ -1,10 +1,10 @@
 package com.denfop.items.upgradekit;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blocks.SubEnum;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,17 +31,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemUpgradeMachinesKit<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public static int tick = 0;
     public static int[] inform = new int[5];
 
     public ItemUpgradeMachinesKit(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.UpgradeTab;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
@@ -62,8 +64,8 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
             ItemStack output = ItemStack.of(outputNBT);
 
             BlockEntity tileEntity = world.getBlockEntity(pos);
-            if (tileEntity instanceof TileEntityBlock tileEntityBlock) {
-                if (tileEntityBlock.getPickBlock(player, null).is(input.getItem())) {
+            if (tileEntity instanceof BlockEntityBase blockEntityBase) {
+                if (blockEntityBase.getPickBlock(player, null).is(input.getItem())) {
                     Block outputBlock = ((ItemBlockTileEntity) output.getItem()).getBlock();
 
                     BlockState state = world.getBlockState(pos);
@@ -117,7 +119,7 @@ public class ItemUpgradeMachinesKit<T extends Enum<T> & ISubEnum> extends ItemMa
         super.appendHoverText(stack, world, tooltip, flag);
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         upgradepanelkitmachine(0),
         upgradepanelkitmachine1(1),
         upgradepanelkitmachine2(2),

@@ -1,14 +1,13 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.*;
 import com.denfop.items.bags.BagsDescription;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -51,6 +50,7 @@ public class ItemRecipeSchedule extends Item implements IItemTab, IProperties {
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public List<ItemStack> getItems(ItemStack stack) {
         List<ItemStack> list = new ArrayList<>();
         final CompoundTag nbt = ModUtils.nbt(stack);
@@ -144,7 +144,6 @@ public class ItemRecipeSchedule extends Item implements IItemTab, IProperties {
             }
         }
     }
-
 
 
 }

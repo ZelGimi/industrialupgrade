@@ -1,8 +1,8 @@
 package com.denfop.network;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.*;
-import com.denfop.tiles.base.TileEntityBlock;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,9 +28,9 @@ import java.util.function.Supplier;
 
 public class NetworkManager {
 
+    public static Map<Byte, IPacket> packetMap = new HashMap<>();
     private static SimpleChannel channel;
     private static ResourceLocation handler;
-    public static Map<Byte, IPacket> packetMap = new HashMap<>();
 
     public NetworkManager() {
         handler = new ResourceLocation("industrialupgrade", "network");
@@ -116,8 +116,8 @@ public class NetworkManager {
     public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
         if (!this.isClient()) {
             packetDistributor.send(makePacket(packetDistributor.getDirection(), buffer));
-        } else{
-            IUCore.network.getClient().sendPacket(packetDistributor,buffer);
+        } else {
+            IUCore.network.getClient().sendPacket(packetDistributor, buffer);
         }
 
     }
@@ -145,7 +145,7 @@ public class NetworkManager {
                 CustomPacketBuffer is1 = new CustomPacketBuffer(bytes);
                 if (is1.writerIndex() > is1.readerIndex()) {
                     byte type = is1.readByte();
-                    IUCore.network.getClient().onPacketData(is1,type);
+                    IUCore.network.getClient().onPacketData(is1, type);
 
                 }
             });
@@ -198,7 +198,7 @@ public class NetworkManager {
         }
     }
 
-    public void addTileContainerToUpdate(TileEntityBlock te, ServerPlayer player, CustomPacketBuffer packetBuffer) {
+    public void addTileContainerToUpdate(BlockEntityBase te, ServerPlayer player, CustomPacketBuffer packetBuffer) {
         if (te == null) {
             return;
         }
@@ -216,26 +216,26 @@ public class NetworkManager {
         map.put(player, packetBuffer);
     }
 
-    public void addTileToUpdate(TileEntityBlock te) {
+    public void addTileToUpdate(BlockEntityBase te) {
         if (te.hasLevel()) {
             WorldData worldData = WorldData.get(te.getLevel());
             worldData.listUpdateTile.add(te);
         }
     }
 
-    public void addTileToOvertimeUpdate(TileEntityBlock te) {
+    public void addTileToOvertimeUpdate(BlockEntityBase te) {
         WorldData worldData = WorldData.get(te.getLevel());
         if (!worldData.mapUpdateOvertimeField.containsKey(te.getBlockPos())) {
             worldData.mapUpdateOvertimeField.put(te.getBlockPos(), te);
         }
     }
 
-    public void removeTileToOvertimeUpdate(TileEntityBlock te) {
+    public void removeTileToOvertimeUpdate(BlockEntityBase te) {
         WorldData worldData = WorldData.get(te.getLevel());
         worldData.mapUpdateOvertimeField.remove(te.getBlockPos());
     }
 
-    public void addTileFieldToUpdate(TileEntityBlock te, CustomPacketBuffer packet) {
+    public void addTileFieldToUpdate(BlockEntityBase te, CustomPacketBuffer packet) {
         WorldData worldData = WorldData.get(te.getLevel());
         if (worldData.mapUpdateField.containsKey(te)) {
             worldData.mapUpdateField.get(te).add(packet);

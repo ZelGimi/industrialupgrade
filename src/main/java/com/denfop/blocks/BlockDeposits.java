@@ -1,15 +1,15 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.items.energy.ItemHammer;
+import com.denfop.utils.Localization;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
@@ -57,11 +57,12 @@ import java.util.*;
 import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN;
 import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL;
 
-public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements SimpleWaterloggedBlock, IBlockTag, IDeposits {
+public class BlockDeposits<T extends Enum<T> & SubEnum> extends BlockCore<T> implements SimpleWaterloggedBlock, IBlockTag, com.denfop.blocks.Deposits {
 
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape Deposits = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
+    public static Map<Integer, List<String>> mapInf = new HashMap<>();
 
     public BlockDeposits(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of().mapColor(MapColor.STONE).destroyTime(3f).noOcclusion().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
@@ -69,7 +70,9 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         BlockTagsProvider.list.add(this);
     }
 
-    public static Map<Integer, List<String>> mapInf = new HashMap<>();
+    public static boolean isFree(BlockState p_53242_) {
+        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || p_53242_.liquid() || p_53242_.canBeReplaced();
+    }
 
     @Override
     public List<String> getInformationFromMeta() {
@@ -113,10 +116,6 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         }
     }
 
-    public static boolean isFree(BlockState p_53242_) {
-        return p_53242_.isAir() || p_53242_.is(BlockTags.FIRE) || p_53242_.liquid() || p_53242_.canBeReplaced();
-    }
-
     @Override
     public int getMetaFromState(BlockState state) {
         return getElement().getId();
@@ -132,17 +131,18 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
         return blockstate;
     }
+
     @Override
     public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
         ItemStack tool = p_60538_.getParameter(TOOL);
         BlockPos pos = new BlockPos((int) p_60538_.getParameter(ORIGIN).x, (int) p_60538_.getParameter(ORIGIN).y, (int) p_60538_.getParameter(ORIGIN).z);
         List<ItemStack> drops = NonNullList.create();
-        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool),tool);
+        drops = getDrops(p_60538_.getLevel(), pos, p_60537_, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool), tool);
         return drops;
     }
 
-    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune,ItemStack tool) {
-        List<ItemStack>   drops = new ArrayList<>();
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune, ItemStack tool) {
+        List<ItemStack> drops = new ArrayList<>();
         if (tool.getItem() instanceof ItemHammer) {
             final IBaseRecipe recipe = Recipes.recipes.getRecipe("handlerho");
             final List<BaseMachineRecipe> recipe_list = Recipes.recipes.getRecipeList("handlerho");
@@ -177,7 +177,7 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
                 }
             }
         } else {
-            drops.add(new ItemStack(IUItem.heavyore.getItem( this.getMetaFromState(state)), 1));
+            drops.add(new ItemStack(IUItem.heavyore.getItem(this.getMetaFromState(state)), 1));
         }
         return drops;
     }
@@ -198,7 +198,6 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
         return IUItem.heavyore.getStack(this.getElement().getId());
     }
-
 
 
     public FluidState getFluidState(BlockState state) {
@@ -250,7 +249,7 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
         return this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
@@ -313,7 +312,7 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.getOwner().defaultBlockState().getBlock()));
     }
 
@@ -328,7 +327,7 @@ public class BlockDeposits<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         return new Pair<>("pickaxe", 0);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         deposits_Magnetite(0),
         deposits_Calaverite(1),
         deposits_Galena(2),

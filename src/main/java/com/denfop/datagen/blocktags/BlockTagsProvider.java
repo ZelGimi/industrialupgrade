@@ -23,11 +23,12 @@ public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsP
     private final String key;
 
     public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        this(packOutput,lookupProvider, IUCore.MODID,existingFileHelper);
+        this(packOutput, lookupProvider, IUCore.MODID, existingFileHelper);
 
     }
-    public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider,String modid, ExistingFileHelper existingFileHelper) {
-        super(packOutput,lookupProvider, modid,existingFileHelper);
+
+    public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modid, ExistingFileHelper existingFileHelper) {
+        super(packOutput, lookupProvider, modid, existingFileHelper);
         this.key = modid;
     }
 
@@ -53,6 +54,7 @@ public class BlockTagsProvider extends net.minecraftforge.common.data.BlockTagsP
             this.tag(BlockTags.SAPLINGS).add(IUItem.rubberSapling.getBlock().get());
         }
     }
+
     private TagKey<Block> getLevelFromInteger(Integer b) {
         return switch (b) {
             default -> Tags.Blocks.NEEDS_WOOD_TOOL;

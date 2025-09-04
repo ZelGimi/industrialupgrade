@@ -1,14 +1,14 @@
 package com.denfop.integration.jei.replicator;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
+import com.denfop.blockentity.mechanism.BlockEntityImpOilRefiner;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileImpOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ReplicatorCategory extends GuiIU implements IRecipeCategory<ReplicatorHandler> {
+public class ReplicatorCategory extends ScreenMain implements IRecipeCategory<ReplicatorHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -32,7 +32,7 @@ public class ReplicatorCategory extends GuiIU implements IRecipeCategory<Replica
     public ReplicatorCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityImpOilRefiner) BlockBaseMachine3Entity.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
@@ -49,7 +49,7 @@ public class ReplicatorCategory extends GuiIU implements IRecipeCategory<Replica
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.replicator_iu).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.replicator_iu).getDescriptionId());
     }
 
 
@@ -72,8 +72,8 @@ public class ReplicatorCategory extends GuiIU implements IRecipeCategory<Replica
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ReplicatorHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,  95, 21).setFluidRenderer(10000, true,12, 47).addFluidStack(FluidName.fluiduu_matter.getInstance().get(), (int) recipe.getMatter());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,31,11).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 95, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(FluidName.fluiduu_matter.getInstance().get(), (int) recipe.getMatter());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 31, 11).addItemStack(recipe.getOutput());
     }
 
 

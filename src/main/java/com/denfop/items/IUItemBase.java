@@ -1,9 +1,9 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.recipes.ScrapboxRecipeManager;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +27,7 @@ public class IUItemBase extends Item implements IItemTab {
         super(new Properties());
         this.tabCore = tabCore;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         if (!player.getItemInHand(hand).is(IUItem.doublescrapBox.getItem())) {
@@ -47,6 +48,7 @@ public class IUItemBase extends Item implements IItemTab {
         }
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));

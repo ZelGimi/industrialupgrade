@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 import oshi.util.tuples.Pair;
 
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockBasaltHeavyOre1<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockBasaltHeavyOre1(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -44,10 +43,10 @@ public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCor
     }
 
     @Override
-    public List<ItemStack> getDrops(      @Nonnull final Level world,
-                                          @Nonnull final BlockPos pos,
-                                          @Nonnull final BlockState state,
-                                          final int fortune) {
+    public List<ItemStack> getDrops(@Nonnull final Level world,
+                                    @Nonnull final BlockPos pos,
+                                    @Nonnull final BlockState state,
+                                    final int fortune) {
         List<ItemStack> drops = new ArrayList<>();
         drops.add(new ItemStack(IUItem.mineral.getItem(this.getMetaFromState(state))));
         drops.add(new ItemStack(IUItem.basalts.getItem(0)));
@@ -74,12 +73,12 @@ public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCor
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -93,7 +92,7 @@ public class BlockBasaltHeavyOre1<T extends Enum<T> & ISubEnum> extends BlockCor
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         arsenopyrite(0),
         braggite(1),
         wolframite(2),

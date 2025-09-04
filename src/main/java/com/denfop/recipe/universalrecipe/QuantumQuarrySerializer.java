@@ -52,7 +52,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
         switch (recipeOperation) {
             case "default":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_adding.addAll(input);
                         break;
                     case "remove":
@@ -62,7 +62,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
             case "furnace":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_furnace_adding.addAll(input);
                         break;
                     case "remove":
@@ -72,7 +72,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
             case "macerator":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_crushed_adding.addAll(input);
                         break;
                     case "remove":
@@ -82,7 +82,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
             case "comb_macerator":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_comb_crushed_adding.addAll(input);
                         break;
                     case "remove":

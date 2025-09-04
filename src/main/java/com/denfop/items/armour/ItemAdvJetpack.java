@@ -1,21 +1,17 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.EnumSound;
-import com.denfop.audio.SoundHandler;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
+import com.denfop.sound.EnumSound;
+import com.denfop.sound.SoundHandler;
+import com.denfop.utils.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -45,8 +41,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
-public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpecialArmor, IProperties,
-        IUpgradeItem {
+public class ItemAdvJetpack extends ItemArmorEnergy implements EnergyItem, ISpecialArmor, IProperties,
+        UpgradeItem {
 
     private static boolean lastJetpackUsed = false;
     private final String armorName;
@@ -67,6 +63,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.JETPACK.list));
 
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -76,6 +73,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
             p_41392_.add(new ItemStack(this, 1));
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -88,11 +86,12 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem =pathBuilder.toString().split("\\.")[2]+".name";
+            this.nameItem = pathBuilder.toString().split("\\.")[2] + ".name";
         }
 
         return this.nameItem;
     }
+
     @Override
     public String[] properties() {
         return new String[]{"", "Demon", "Dark", "Cold", "Ender"};
@@ -286,8 +285,6 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, ISpe
     public double getTransferEnergy(ItemStack itemStack) {
         return this.TransferLimit;
     }
-
-
 
 
     public void onArmorTick(@Nonnull ItemStack itemStack, @Nonnull Level world, Player player) {

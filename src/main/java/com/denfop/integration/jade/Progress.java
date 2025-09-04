@@ -11,9 +11,9 @@ public class Progress {
     private final int g;
     private final int b;
 
-    public Progress(int progress, int max, String suffix, int color,String prefix) {
+    public Progress(int progress, int max, String suffix, int color, String prefix) {
         this.progress = progress;
-        this.max=max;
+        this.max = max;
         this.suffix = suffix;
         Color color1 = new Color(color);
         this.r = color1.getRed();
@@ -25,48 +25,50 @@ public class Progress {
 
     public Progress(int progress, int max, String suffix, int color) {
         this.progress = progress;
-        this.max=max;
+        this.max = max;
         this.suffix = suffix;
         Color color1 = new Color(color);
         this.r = color1.getRed();
         this.g = color1.getGreen();
         this.b = color1.getBlue();
-        this.prefix="";
+        this.prefix = "";
 
     }
 
-
-
-    public String getPrefix() {
-        return prefix;
-    }
 
     public Progress(int progress, int max, String suffix, int r, int g, int b, String prefix) {
         this.progress = progress;
-        this.max=max;
+        this.max = max;
         this.suffix = suffix;
 
-        this.r =r;
-        this.g =g;
+        this.r = r;
+        this.g = g;
         this.b = b;
         this.prefix = prefix;
     }
+
     public Progress(int progress, int max, String suffix, int r, int g, int b) {
         this.progress = progress;
-        this.max=max;
+        this.max = max;
         this.suffix = suffix;
 
-        this.r =r;
-        this.g =g;
+        this.r = r;
+        this.g = g;
         this.b = b;
         this.prefix = "";
     }
+
     public static int[] intToRgb(int hexColor) {
         int r = (hexColor >> 16) & 0xFF;
         int g = (hexColor >> 8) & 0xFF;
         int b = hexColor & 0xFF;
         return new int[]{r, g, b};
     }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
     public int getMax() {
         return max;
     }

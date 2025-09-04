@@ -30,11 +30,7 @@ public class ImpAlloySmelterHandler {
         this.input3 = input3;
         this.output = output;
         this.temperature = temperature;
-        this.container=container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<ImpAlloySmelterHandler> getRecipes() {
@@ -52,7 +48,7 @@ public class ImpAlloySmelterHandler {
             ItemStack output,
             final short temperature,
             BaseMachineRecipe container) {
-        ImpAlloySmelterHandler recipe = new ImpAlloySmelterHandler(input, input1, input2, input3, output, temperature,container);
+        ImpAlloySmelterHandler recipe = new ImpAlloySmelterHandler(input, input1, input2, input3, output, temperature, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -77,15 +73,21 @@ public class ImpAlloySmelterHandler {
             addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0), container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"),container
+                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"), container
             );
 
 
         }
     }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input3);
     }
+
     public ItemStack getInput() {
         return input;
     }

@@ -1,21 +1,23 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemCore<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemCore<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemCore(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
-    public enum Types implements ISubEnum {
+
+    public enum Types implements SubEnum {
         advcore(0),
         hybcore(1),
         ultcore(2),

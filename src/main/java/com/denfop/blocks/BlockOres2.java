@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class BlockOres2<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockOres2<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockOres2(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -48,12 +48,12 @@ public class BlockOres2<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -111,7 +111,7 @@ public class BlockOres2<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
         return new Pair<>("shovel", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         lithium(0),
         beryllium(1),
         bor(2),

@@ -1,13 +1,17 @@
 package com.denfop.items.armour;
 
-import com.denfop.*;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.potion.IUPotion;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.KeyboardClient;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -38,8 +42,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem, ISpecialArmor,
-        IUpgradeItem {
+public class ItemSolarPanelHelmet extends ItemArmorEnergy implements EnergyItem, ISpecialArmor,
+        UpgradeItem {
 
     protected static final Map<MobEffect, Integer> potionRemovalCost = new HashMap<>();
     private final int solarType;
@@ -142,11 +146,13 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
             p_41392_.add(new ItemStack(this, 1));
         }
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
 
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -159,7 +165,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -323,7 +329,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
             for (int i = 0; i < player.getInventory().armor.size(); i++) {
                 if (energyLeft > 0) {
                     if (!player.getInventory().armor.get(i).isEmpty()
-                            && player.getInventory().armor.get(i).getItem() instanceof IEnergyItem) {
+                            && player.getInventory().armor.get(i).getItem() instanceof EnergyItem) {
                         double sentPacket = ElectricItem.manager.charge(player.getInventory().armor.get(i), energyLeft,
                                 2147483647, true, false
                         );
@@ -342,7 +348,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
             for (int j = 0; j < player.getInventory().items.size(); j++) {
                 if (energyLeft > 0) {
                     if (!player.getInventory().items.get(j).isEmpty()
-                            && player.getInventory().items.get(j).getItem() instanceof IEnergyItem) {
+                            && player.getInventory().items.get(j).getItem() instanceof EnergyItem) {
                         double sentPacket = ElectricItem.manager.charge(player.getInventory().items.get(j), energyLeft,
                                 2147483647, true, false
                         );
@@ -389,7 +395,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         this.sunIsUp = player.level().isDay() && !rainWeather;
 
         this.skyIsVisible = player.level().canSeeSky(pos.above()) &&
-                (player.level().getBlockState(pos.above()).getMapColor(player.level(),pos.above()) ==
+                (player.level().getBlockState(pos.above()).getMapColor(player.level(), pos.above()) ==
                         MapColor.NONE) && !noSunWorld;
     }
 
@@ -442,8 +448,6 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
     public double getDamageAbsorptionRatio() {
         return this.damageAbsorptionRatio;
     }
-
-
 
 
     public boolean canProvideEnergy(final ItemStack itemStack) {

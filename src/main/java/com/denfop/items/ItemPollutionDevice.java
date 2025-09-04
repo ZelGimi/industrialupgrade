@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.pollution.ChunkLevel;
-import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pollution.component.ChunkLevel;
+import com.denfop.api.pollution.component.LevelPollution;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -28,6 +28,7 @@ public class ItemPollutionDevice extends Item implements IItemTab {
     public ItemPollutionDevice() {
         super(new Properties().stacksTo(1).setNoRepair());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
@@ -36,7 +37,7 @@ public class ItemPollutionDevice extends Item implements IItemTab {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.pollution_scanner.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.pollution_scanner.info")));
     }
 
     @Override

@@ -88,9 +88,11 @@ public class SolidMixerHandler {
     public boolean matchesInput(ItemStack is) {
         return true;
     }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1);
     }
+
     public List<ItemStack> getOutputs() {
         return Arrays.asList(output, output1);
     }

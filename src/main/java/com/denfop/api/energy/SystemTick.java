@@ -1,6 +1,6 @@
 package com.denfop.api.energy;
 
-import com.denfop.api.sytem.IConductor;
+import com.denfop.api.otherenergies.common.IConductor;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,10 +1,10 @@
 package com.denfop.render.oilquarry;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.vein.Type;
+import com.denfop.api.vein.common.Type;
+import com.denfop.blockentity.base.BlockEntityQuarryVein;
 import com.denfop.blocks.FluidName;
-import com.denfop.tiles.base.TileQuarryVein;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 
-public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
+public class QuarryOilRenderer implements BlockEntityRenderer<BlockEntityQuarryVein> {
 
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
@@ -32,7 +32,7 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
     }
 
     @Override
-    public void render(TileQuarryVein tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
+    public void render(BlockEntityQuarryVein tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
 
         if (tile.vein == null || !tile.vein.get()) return;
@@ -94,13 +94,13 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
                 if (tile.vein.getType() != Type.GAS) {
                     itextcomponent =
                             Component.literal(Localization.translate(varietyString) + " " + Localization.translate(
-                                    typeString)).append(Component.literal(" "+stack));
+                                    typeString)).append(Component.literal(" " + stack));
                 } else {
-                  itextcomponent =  Component.literal(
+                    itextcomponent = Component.literal(
                             stack);
                 }
             } else {
-              itextcomponent =  Component.literal(
+                itextcomponent = Component.literal(
                         stack);
 
 
@@ -133,7 +133,7 @@ public class QuarryOilRenderer implements BlockEntityRenderer<TileQuarryVein> {
         float f2 = (float) (-font.width(text) / 2);
         font.drawInBatch(text, f2, (float) 0, 553648127, false, matrix4f, buffer, Font.DisplayMode.NORMAL, j, packedLight);
         if (true) {
-            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer,  Font.DisplayMode.NORMAL, 0, packedLight);
+            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
         }
         poseStack.popPose();
     }

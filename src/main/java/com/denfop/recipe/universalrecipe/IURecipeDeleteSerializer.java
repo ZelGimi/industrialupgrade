@@ -53,19 +53,19 @@ public class IURecipeDeleteSerializer implements RecipeSerializer<IURecipeDelete
             }
         }
 
-        if (isFluidRecipe && !outputsFluid.isEmpty()){
-            Recipes.recipes.addFluidRemoveRecipe(recipeType,outputsFluid.get(0),removeAll);
+        if (isFluidRecipe && !outputsFluid.isEmpty()) {
+            Recipes.recipes.addFluidRemoveRecipe(recipeType, outputsFluid.get(0), removeAll);
         }
-        if (!outputs1.isEmpty()){
-            Recipes.recipes.addRemoveRecipe(recipeType,outputs1.get(0),removeAll);
+        if (!outputs1.isEmpty()) {
+            Recipes.recipes.addRemoveRecipe(recipeType, outputs1.get(0), removeAll);
         }
-        return new IURecipeDelete(id, recipeType, isFluidRecipe, new ArrayList<>(),removeAll);
+        return new IURecipeDelete(id, recipeType, isFluidRecipe, new ArrayList<>(), removeAll);
     }
 
     @Override
     public IURecipeDelete fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
 
-        return new IURecipeDelete(id, "",false, new ArrayList<>(), false);
+        return new IURecipeDelete(id, "", false, new ArrayList<>(), false);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.api.cool.EnumCoolUpgrade;
-import com.denfop.api.cool.ICoolItem;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.api.otherenergies.cool.EnumCoolUpgrade;
+import com.denfop.api.otherenergies.cool.ICoolItem;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
 
-public class ItemCoolingUpgrade<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICoolItem {
+public class ItemCoolingUpgrade<T extends Enum<T> & SubEnum> extends ItemMain<T> implements ICoolItem {
     public ItemCoolingUpgrade(T element) {
         super(new Item.Properties(), element);
     }
@@ -25,11 +25,13 @@ public class ItemCoolingUpgrade<T extends Enum<T> & ISubEnum> extends ItemMain<T
             case 2 -> EnumCoolUpgrade.HELIUM;
         };
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
-    public enum Types implements ISubEnum {
+
+    public enum Types implements SubEnum {
         azote(0),
         hydrogen(1),
         helium(2),

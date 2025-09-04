@@ -1,9 +1,9 @@
 package com.denfop.items.energy;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.tile.IWrenchable;
-import com.denfop.audio.EnumSound;
+import com.denfop.api.blockentity.Wrenchable;
+import com.denfop.sound.EnumSound;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -41,7 +41,7 @@ public class ItemToolWrench extends Item implements IItemTab {
         Block block = state.getBlock();
 
         if (!block.defaultBlockState().isAir()) {
-            if (block instanceof IWrenchable wrenchable) {
+            if (block instanceof Wrenchable wrenchable) {
                 Direction currentFacing = wrenchable.getFacing(level, pos);
                 Direction newFacing = currentFacing;
                 int experience;

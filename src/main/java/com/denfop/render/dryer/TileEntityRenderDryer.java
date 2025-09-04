@@ -1,7 +1,7 @@
 package com.denfop.render.dryer;
 
+import com.denfop.blockentity.mechanism.BlockEntityDryer;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntityDryer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDryer> {
+public class TileEntityRenderDryer implements BlockEntityRenderer<BlockEntityDryer> {
     private final BlockEntityRendererProvider.Context contex;
 
     public TileEntityRenderDryer(BlockEntityRendererProvider.Context p_173636_) {
@@ -21,7 +21,7 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
     }
 
     @Override
-    public void render(TileEntityDryer te, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityDryer te, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         FluidTank tank = te.fluidTank1;
         FluidStack fluidStack = tank.getFluid();
@@ -31,13 +31,13 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
             poseStack.pushPose();
             poseStack.translate(0.17, 0, 0.17);
             poseStack.translate(0.0, 1.2, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f,0);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f, 0);
             poseStack.popPose();
 
             poseStack.pushPose();
             poseStack.translate(0.1 + 0.6, 0, 0.1 + 0.6);
             poseStack.translate(0.0, 0.7, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.4f, 0.3f,1);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.4f, 0.3f, 1);
             poseStack.popPose();
         }
         ItemStack itemstack = te.outputSlot.get(0);
@@ -46,8 +46,8 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
             poseStack.translate(0.5, 0.65, 0.4);
 
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
-            contex.getItemRenderer().renderStatic(itemstack,GROUND,
-                    packedLight, combinedOverlay, poseStack, bufferSource,te.getLevel(), 0);
+            contex.getItemRenderer().renderStatic(itemstack, GROUND,
+                    packedLight, combinedOverlay, poseStack, bufferSource, te.getLevel(), 0);
             poseStack.popPose();
         }
     }

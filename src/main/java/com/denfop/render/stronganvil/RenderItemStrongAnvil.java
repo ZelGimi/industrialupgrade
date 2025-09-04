@@ -1,6 +1,6 @@
 package com.denfop.render.stronganvil;
 
-import com.denfop.tiles.base.TileEntityStrongAnvil;
+import com.denfop.blockentity.base.BlockEntityStrongAnvil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStrongAnvil> {
+public class RenderItemStrongAnvil implements BlockEntityRenderer<BlockEntityStrongAnvil> {
 
 
     private final ItemRenderer itemRenderer;
@@ -22,7 +22,7 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
     }
 
     @Override
-    public void render(TileEntityStrongAnvil tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityStrongAnvil tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         ItemStack itemStack = tile.inputSlotA.get(0);
         if (!itemStack.isEmpty()) {
@@ -31,7 +31,7 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
 
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             itemRenderer.renderStatic(itemStack, GROUND,
-                    combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                    combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
             if (tile.facing == 5 || tile.facing == 4) {
                 poseStack.translate(0, -1, -0.05);
 
@@ -41,7 +41,7 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
             for (int i = 0; i < itemStack.getCount() - 1; i++) {
                 poseStack.translate(0, 0, -0.0075);
                 itemRenderer.renderStatic(itemStack, GROUND,
-                        combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                        combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
             }
             poseStack.popPose();
         }
@@ -62,8 +62,8 @@ public class RenderItemStrongAnvil implements BlockEntityRenderer<TileEntityStro
 
             for (int i = 0; i < outputStack.getCount(); i++) {
                 poseStack.translate(0, 0, -0.0075);
-                itemRenderer.renderStatic(outputStack,GROUND,
-                        combinedLight, combinedOverlay, poseStack, buffer,tile.getLevel(), 0);
+                itemRenderer.renderStatic(outputStack, GROUND,
+                        combinedLight, combinedOverlay, poseStack, buffer, tile.getLevel(), 0);
 
             }
 

@@ -2,8 +2,8 @@ package com.denfop.render.base;
 
 
 import com.denfop.Constants;
-import com.denfop.tiles.base.IIsMolecular;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.IIsMolecular;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -34,7 +34,7 @@ import java.util.*;
 
 import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 
-public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> implements BlockEntityRenderer<T> {
+public class RenderCoreProcess<T extends BlockEntityBase & IIsMolecular> implements BlockEntityRenderer<T> {
     private static final Map<List<Serializable>, Integer> textureSizeCache = new HashMap<>();
     private static final ResourceLocation plazmaTextloc = new ResourceLocation(Constants.MOD_ID, "textures/block/plazma.png");
     private static final ResourceLocation particlesTextloc = new ResourceLocation(
@@ -117,7 +117,7 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> impleme
                 }
 
                 BakedModel transformedModel = te.getTransformedModel();
-                contex.getItemRenderer().render(itemStack,FIXED, false, poseStack, buffer, light, overlay, transformedModel);
+                contex.getItemRenderer().render(itemStack, FIXED, false, poseStack, buffer, light, overlay, transformedModel);
                 poseStack.popPose();
             }
 

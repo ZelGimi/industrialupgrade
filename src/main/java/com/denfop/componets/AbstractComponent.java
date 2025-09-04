@@ -1,8 +1,8 @@
 package com.denfop.componets;
 
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketAbstractComponent;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,17 +31,17 @@ enum TypePurifierJob {
 
 public abstract class AbstractComponent {
 
-    protected TileEntityBlock parent;
+    protected BlockEntityBase parent;
 
-    public AbstractComponent(final TileEntityBlock parent) {
+    public AbstractComponent(final BlockEntityBase parent) {
         this.parent = parent;
     }
 
-    public TileEntityBlock getParent() {
+    public BlockEntityBase getParent() {
         return this.parent;
     }
 
-    public void setParent(final TileEntityBlock parent) {
+    public void setParent(final BlockEntityBase parent) {
         this.parent = parent;
     }
 

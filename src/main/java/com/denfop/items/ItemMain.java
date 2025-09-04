@@ -1,14 +1,14 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.datagen.itemtag.ItemTagProvider;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 
-public abstract class ItemMain<T extends Enum<T> & ISubEnum> extends Item implements IItemTab {
+public abstract class ItemMain<T extends Enum<T> & SubEnum> extends Item implements IItemTab {
 
     private final T element;
     protected String nameItem;

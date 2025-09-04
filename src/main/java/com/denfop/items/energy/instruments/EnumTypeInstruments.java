@@ -1,6 +1,6 @@
 package com.denfop.items.energy.instruments;
 
-import com.denfop.api.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.EnumUpgrades;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -58,7 +58,7 @@ public enum EnumTypeInstruments {
             Blocks.DETECTOR_RAIL.defaultBlockState(),
             Blocks.POWERED_RAIL.defaultBlockState(),
             Blocks.ACTIVATOR_RAIL.defaultBlockState()
-    ),  ImmutableSet.of("pickaxe"),
+    ), ImmutableSet.of("pickaxe"),
             Collections.singletonList(BlockTags.MINEABLE_WITH_PICKAXE), Arrays.asList(EnumOperations.DEFAULT, EnumOperations.BIGHOLES,
             EnumOperations.ORE, EnumOperations.TUNNEL
     )
@@ -171,7 +171,7 @@ public enum EnumTypeInstruments {
             Blocks.FARMLAND.defaultBlockState(),
             Blocks.SOUL_SAND.defaultBlockState(),
             Blocks.MYCELIUM.defaultBlockState()
-    ) , ImmutableSet.of("pickaxe", "shovel"), Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL),
+    ), ImmutableSet.of("pickaxe", "shovel"), Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL),
             Arrays.asList(EnumOperations.DEFAULT, EnumOperations.BIGHOLES
             )
     ),

@@ -3,11 +3,11 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "industrialupgrade:baseblockingot/electrium"
+      "item": "industrialupgrade:baseblockingot/electrum"
     }
   ],
   "result": {
     "count": 9,
-    "item": "industrialupgrade:itemingots/electrium_ingot"
+    "item": "industrialupgrade:itemingots/electrum_ingot"
   }
 }

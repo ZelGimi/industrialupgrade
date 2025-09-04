@@ -11,6 +11,7 @@ public class ItemBlockSpace extends ItemBlockCore<BlockSpace.Type> implements II
     public ItemBlockSpace(BlockCore p_40565_, BlockSpace.Type element) {
         super(p_40565_, element, new Properties(), IUCore.OreTab);
     }
+
     @Override
     public Item getItem() {
         return this;

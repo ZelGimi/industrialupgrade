@@ -2,13 +2,13 @@ package com.denfop.integration.jei.sunnariumpanel;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityStampMechanism;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityStampMechanism;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,16 +23,17 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SannariumPanelCategory extends GuiIU implements IRecipeCategory<SannariumPanelHandler> {
+public class SannariumPanelCategory extends ScreenMain implements IRecipeCategory<SannariumPanelHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public SannariumPanelCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityStampMechanism) BlockBaseMachine3Entity.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guisunnariumpanelmaker" +
                         ".png"), 3, 3, 140,
@@ -73,19 +74,19 @@ public class SannariumPanelCategory extends GuiIU implements IRecipeCategory<San
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect(stack,+22, 54 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(stack, +22, 54 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
 
-        drawTexturedModalRect(stack,+74, +33, 177, 15, xScale + 1, 15);
+        drawTexturedModalRect(stack, +74, +33, 177, 15, xScale + 1, 15);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SannariumPanelHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,26,33).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,48,33).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,103,33).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 26, 33).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 48, 33).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 33).addItemStack(recipe.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }

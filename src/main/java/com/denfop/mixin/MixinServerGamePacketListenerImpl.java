@@ -1,7 +1,6 @@
 package com.denfop.mixin;
 
-import com.denfop.tiles.base.TileEntityBlock;
-import com.mojang.logging.LogUtils;
+import com.denfop.blockentity.base.BlockEntityBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,11 +32,6 @@ public abstract class MixinServerGamePacketListenerImpl {
 
     @Shadow
     public ServerPlayer player;
-
-    private ServerGamePacketListenerImpl getSelf() {
-        return (ServerGamePacketListenerImpl) (Object) this;
-    }
-
     @Shadow
     private Vec3 awaitingPositionFromClient;
 
@@ -49,6 +42,10 @@ public abstract class MixinServerGamePacketListenerImpl {
             Item item = pStack.getItem();
             return (item instanceof BlockItem || item instanceof BucketItem) && !pPlayer.getCooldowns().isOnCooldown(item);
         }
+    }
+
+    private ServerGamePacketListenerImpl getSelf() {
+        return (ServerGamePacketListenerImpl) (Object) this;
     }
 
     @Inject(method = "handleUseItemOn", at = @At("HEAD"))
@@ -67,7 +64,7 @@ public abstract class MixinServerGamePacketListenerImpl {
                 Vec3 vec32 = vec3.subtract(vec31);
                 double d0 = 1.0000001D;
                 BlockEntity blockEntity = this.player.level().getBlockEntity(blockpos);
-                if (blockEntity instanceof TileEntityBlock base) {
+                if (blockEntity instanceof BlockEntityBase base) {
                     AABB aabb = base.getAabb(false);
                     if (aabb.maxX > 1 || aabb.maxY > 1 && aabb.maxZ > 1)
                         if ((Math.abs(vec32.x()) > 1 || Math.abs(vec32.y()) > 1 || Math.abs(vec32.z()) > 1) && Math.abs(vec32.x()) <= aabb.maxX && Math.abs(vec32.y()) <= aabb.maxY && Math.abs(vec32.z()) <= aabb.maxZ) {

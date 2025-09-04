@@ -2,14 +2,14 @@ package com.denfop.integration.jei.anvil;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.BlockAnvil;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.triple.heat.BlockEntityAdvAlloySmelter;
+import com.denfop.blocks.BlockAnvilEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine1Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -25,15 +25,16 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler> {
+public class AnvilCategory extends ScreenMain implements IRecipeCategory<AnvilHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public AnvilCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        super(((BlockEntityAdvAlloySmelter) BlockBaseMachine1Entity.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 140
@@ -51,7 +52,7 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockAnvil.block_anvil).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockAnvilEntity.block_anvil).getDescriptionId());
     }
 
 
@@ -69,9 +70,9 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AnvilHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,5,25).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,30,25).addItemStack(new ItemStack(IUItem.ForgeHammer.getItem()));
-        builder.addSlot(RecipeIngredientRole.OUTPUT,60,25).addItemStack(recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.ForgeHammer.getItem()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipes.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
 
@@ -83,18 +84,17 @@ public class AnvilCategory extends GuiIU implements IRecipeCategory<AnvilHandler
         this.drawSplitString(stack, Minecraft.getInstance().font, Localization.translate("iu.anvil.jei"), 5, 3,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack, Minecraft.getInstance().font,"+", 26, 31,
+        this.drawSplitString(stack, Minecraft.getInstance().font, "+", 26, 31,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack, Minecraft.getInstance().font,"->", 47, 31,
+        this.drawSplitString(stack, Minecraft.getInstance().font, "->", 47, 31,
                 140 - 5, 4210752
         );
-        this.drawSplitString(stack, Minecraft.getInstance().font,Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
+        this.drawSplitString(stack, Minecraft.getInstance().font, Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
                         "iu.anvil.jei2"), 5, 50,
                 140 - 5, 4210752
         );
     }
-
 
 
     protected ResourceLocation getTexture() {

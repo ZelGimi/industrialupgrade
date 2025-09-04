@@ -1,6 +1,6 @@
 package com.denfop.world.vein;
 
-import com.denfop.blocks.IMineral;
+import com.denfop.blocks.Mineral;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
@@ -10,58 +10,60 @@ import java.util.Map;
 
 public class VeinType {
 
+    public static Map<Integer, VeinType> veinTypeMap = new HashMap<>();
+    public static int maxId = 0;
     private final List<ChanceOre> ores;
-    private final IMineral heavyOre;
+    private final Mineral heavyOre;
     private final int deposits_meta;
     private final int meta;
-    private TypeVein vein;
     BlockState deposits = null;
-    public static Map<Integer, VeinType> veinTypeMap = new HashMap<>();
+    private TypeVein vein;
     private int id;
-    public static int maxId = 0;
-    public VeinType(IMineral heavyOre, int meta, int deposits_meta, TypeVein vein, ChanceOre... ores) {
+
+    public VeinType(Mineral heavyOre, int meta, int deposits_meta, TypeVein vein, ChanceOre... ores) {
         this.heavyOre = heavyOre;
         this.vein = vein;
         this.meta = meta;
         this.deposits_meta = deposits_meta;
         this.ores = Arrays.asList(ores);
         this.id = maxId;
-        veinTypeMap.put(id,this);
+        veinTypeMap.put(id, this);
         maxId++;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
     public VeinType(BlockState deposits, TypeVein vein, List<ChanceOre> ores) {
         this.heavyOre = null;
         this.vein = vein;
         this.meta = 0;
         this.deposits = deposits;
         this.deposits_meta = meta;
-        this.ores =ores;
+        this.ores = ores;
         this.id = maxId;
-        veinTypeMap.put(id,this);
+        veinTypeMap.put(id, this);
         maxId++;
     }
 
-    public BlockState getDeposits() {
-        return deposits;
-    }
-
-    public VeinType(IMineral heavyOre, int meta, TypeVein vein, ChanceOre... ores) {
+    public VeinType(Mineral heavyOre, int meta, TypeVein vein, ChanceOre... ores) {
         this.heavyOre = heavyOre;
         this.vein = vein;
         this.meta = meta;
         this.deposits_meta = meta;
         this.ores = Arrays.asList(ores);
         this.id = maxId;
-        veinTypeMap.put(id,this);
+        veinTypeMap.put(id, this);
         maxId++;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public BlockState getDeposits() {
+        return deposits;
     }
 
     public int getMeta() {
@@ -72,7 +74,7 @@ public class VeinType {
         return deposits_meta;
     }
 
-    public IMineral getHeavyOre() {
+    public Mineral getHeavyOre() {
         return heavyOre;
     }
 

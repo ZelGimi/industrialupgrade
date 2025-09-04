@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,9 +12,10 @@ public class ItemPickaxe extends PickaxeItem implements IItemTab {
     private String nameItem;
 
     public ItemPickaxe(String name) {
-        super(IUTiers.RUBY, 1, -2.8F,new Properties().stacksTo(1));
-        this.name=name;
+        super(IUTiers.RUBY, 1, -2.8F, new Properties().stacksTo(1));
+        this.name = name;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -27,7 +28,7 @@ public class ItemPickaxe extends PickaxeItem implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+name;
+            this.nameItem = "item." + name;
         }
 
         return this.nameItem;

@@ -1,14 +1,14 @@
 package com.denfop.items.space;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemSpace<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemSpace<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemSpace(T element) {
         super(new Item.Properties(), element);
     }
@@ -17,7 +17,8 @@ public class ItemSpace<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     public CreativeModeTab getItemCategory() {
         return IUCore.SpaceTab;
     }
-    public enum Types implements ISubEnum {
+
+    public enum Types implements SubEnum {
         ariel_boulder(),
         asteroids_boulder(),
         callisto_boulder(),

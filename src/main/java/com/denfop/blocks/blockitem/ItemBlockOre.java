@@ -13,10 +13,11 @@ public class ItemBlockOre extends ItemBlockCore<BlockOre.Type> implements IItemT
     public ItemBlockOre(BlockCore p_40565_, BlockOre.Type element) {
         super(p_40565_, element, new Properties(), IUCore.OreTab);
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
-            String targetString = "industrialupgrade."+getElement().getMainPath()+".";
+            String targetString = "industrialupgrade." + getElement().getMainPath() + ".";
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);
@@ -40,16 +41,8 @@ public class ItemBlockOre extends ItemBlockCore<BlockOre.Type> implements IItemT
 
     @Override
     public String[] getTags() {
-        String name =  getElement().getName();
-        switch (this.getElement().getId()) {
-            case 3:
-                 name = "tungsten";
-                break;
-            case 2:
-                name = "vanady";
-                break;
+        String name = getElement().getName();
 
-        }
-        return new String[]{"forge:ores/" +name, "forge:ores"};
+        return new String[]{"forge:ores/" + name, "forge:ores"};
     }
 }

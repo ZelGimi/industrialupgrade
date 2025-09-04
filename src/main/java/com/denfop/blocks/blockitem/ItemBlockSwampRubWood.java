@@ -9,10 +9,11 @@ public class ItemBlockSwampRubWood extends ItemBlockCore<BlockSwampRubWood.Rubbe
     public ItemBlockSwampRubWood(BlockCore p_40565_, BlockSwampRubWood.RubberWoodState element) {
         super(p_40565_, element, new Properties(), IUCore.IUTab);
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem ="iu.swamp_rubber_wood";
+            this.nameItem = "iu.swamp_rubber_wood";
         }
 
         return this.nameItem;

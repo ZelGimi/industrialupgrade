@@ -16,10 +16,11 @@ public class ItemBlockIngot extends ItemBlockCore<BlocksIngot.Type> implements I
     public Item getItem() {
         return this;
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem = "iu."+this.getElement().getName()+"_block.name";
+            this.nameItem = "iu." + this.getElement().getName() + "_block.name";
         }
 
         return "" + this.nameItem;
@@ -28,18 +29,8 @@ public class ItemBlockIngot extends ItemBlockCore<BlocksIngot.Type> implements I
     @Override
     public String[] getTags() {
         String name = getElement().getName();
-        switch (this.getElement().getId()) {
-            case 3:
-                name = "tungsten";
-                break;
-            case 9:
-                name = "platinum";
-                break;
-            case 13:
-                name = "electrum";
-                break;
 
-        }
+
         return new String[]{"forge:storage_blocks/" + name.replace("_", ""), "forge:storage_blocks"};
     }
 }

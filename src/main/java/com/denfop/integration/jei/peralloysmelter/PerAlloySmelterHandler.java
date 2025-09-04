@@ -35,10 +35,6 @@ public class PerAlloySmelterHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<PerAlloySmelterHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -55,7 +51,7 @@ public class PerAlloySmelterHandler {
             ItemStack output,
             final short temperature,
             BaseMachineRecipe container) {
-        PerAlloySmelterHandler recipe = new PerAlloySmelterHandler(input, input1, input2, input3, input4, output, temperature,container);
+        PerAlloySmelterHandler recipe = new PerAlloySmelterHandler(input, input1, input2, input3, input4, output, temperature, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -84,11 +80,15 @@ public class PerAlloySmelterHandler {
                         container.input.getInputs().get(4).getInputs().get(0),
                         container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"), container
                 );
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(2);
             }
 
         }
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public ItemStack getInput() {
@@ -118,6 +118,7 @@ public class PerAlloySmelterHandler {
     public boolean matchesInput(ItemStack is) {
         return true;
     }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3, input4);
     }

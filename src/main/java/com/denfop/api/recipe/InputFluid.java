@@ -23,6 +23,7 @@ public class InputFluid implements IInputFluid {
     public InputFluid(FluidStack... inputs) {
         this.inputsfluid = Arrays.asList(inputs);
     }
+
     public InputFluid(List<FluidStack> inputs) {
         this.inputsfluid = inputs;
     }
@@ -31,39 +32,27 @@ public class InputFluid implements IInputFluid {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Collections.emptyList();
     }
+
     public InputFluid(ItemStack stack) {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Collections.emptyList();
     }
+
     public InputFluid(IInputItemStack stack) {
         this.stack = stack;
         inputsfluid = Collections.emptyList();
     }
+
     public InputFluid(IInputItemStack stack, FluidStack... inputs) {
         this.stack = stack;
         inputsfluid = Arrays.asList(inputs);
     }
+
     public InputFluid(ItemStack stack, FluidStack... inputs) {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Arrays.asList(inputs);
     }
-    @Override
-    public CompoundTag writeNBT() {
-        CompoundTag tag = new CompoundTag();
-        ListTag fluidsTag = new ListTag();
-        for (FluidStack fluid : inputsfluid) {
-            CompoundTag fluidTag = new CompoundTag();
-            fluid.writeToNBT(fluidTag);
-            fluidsTag.add(fluidTag);
-        }
-        tag.put("Fluids", fluidsTag);
 
-        if (stack != null) {
-            tag.put("Stack", stack.writeNBT());
-        }
-
-        return tag;
-    }
     public static InputFluid readNBT(CompoundTag tag) {
         List<FluidStack> fluids = new ArrayList<>();
         ListTag fluidsTag = tag.getList("Fluids", Tag.TAG_COMPOUND);
@@ -85,8 +74,22 @@ public class InputFluid implements IInputFluid {
         return inputFluid;
     }
 
-    private void setStack(IInputItemStack stack) {
-        this.stack = stack;
+    @Override
+    public CompoundTag writeNBT() {
+        CompoundTag tag = new CompoundTag();
+        ListTag fluidsTag = new ListTag();
+        for (FluidStack fluid : inputsfluid) {
+            CompoundTag fluidTag = new CompoundTag();
+            fluid.writeToNBT(fluidTag);
+            fluidsTag.add(fluidTag);
+        }
+        tag.put("Fluids", fluidsTag);
+
+        if (stack != null) {
+            tag.put("Stack", stack.writeNBT());
+        }
+
+        return tag;
     }
 
     @Override
@@ -97,6 +100,10 @@ public class InputFluid implements IInputFluid {
     @Override
     public IInputItemStack getStack() {
         return stack;
+    }
+
+    private void setStack(IInputItemStack stack) {
+        this.stack = stack;
     }
 
 

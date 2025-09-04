@@ -46,7 +46,7 @@ public class MaceratorRecipe {
         List<String> list = new ArrayList<>();
         list.add("Mikhail");//0
         list.add("Aluminium");//1
-        list.add("Vanady");//2
+        list.add("Vanadium");//2
         list.add("Tungsten");//3
         list.add("Invar");//4
         list.add("Caravky");//5
@@ -162,11 +162,11 @@ public class MaceratorRecipe {
         addmacerator("forge:ingots/Invar", "forge:dusts/Invar");
         addmacerator("forge:gems/Quartz", "forge:dusts/Quartz");
         for (int i = 0; i < BlockRaws.Type.values().length; i++) {
-            addmacerator("forge:storage_blocks/"+BlockRaws.Type.values()[i].getName(), "forge:crushed/"+BlockRaws.Type.values()[i].name(),18);
+            addmacerator("forge:storage_blocks/" + BlockRaws.Type.values()[i].getName(), "forge:crushed/" + BlockRaws.Type.values()[i].name(), 18);
         }
-        addmacerator("forge:storage_blocks/raw_iron", "forge:crushed/iron",18);
-        addmacerator("forge:storage_blocks/raw_copper", "forge:crushed/copper",18);
-        addmacerator("forge:storage_blocks/raw_gold", "forge:crushed/gold",18);
+        addmacerator("forge:storage_blocks/raw_iron", "forge:crushed/iron", 18);
+        addmacerator("forge:storage_blocks/raw_copper", "forge:crushed/copper", 18);
+        addmacerator("forge:storage_blocks/raw_gold", "forge:crushed/gold", 18);
 
         addmacerator("forge:ingots/Bronze", "forge:dusts/Bronze");
         addmacerator("forge:ingots/Lead", "forge:dusts/Lead");
@@ -346,6 +346,7 @@ public class MaceratorRecipe {
 
 
     }
+
     public static void addmacerator1(ItemStack input, ItemStack output) {
         final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
@@ -360,6 +361,7 @@ public class MaceratorRecipe {
 
 
     }
+
     public static void addmacerator(ItemStack input, int i, ItemStack output) {
         final IInputHandler input1 = Recipes.inputFactory;
         input = input.copy();

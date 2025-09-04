@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemCasing<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemCasing(T element) {
         super(new Item.Properties(), element);
     }
@@ -18,10 +18,12 @@ public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -49,21 +51,21 @@ public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
         return new String[]{"forge:casings/" + name, "forge:casings"};
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
-        wolfram(3),
+        vanadium(2),
+        tungsten(3),
         invar(4),
         caravky(5),
         cobalt(6),
         magnesium(7),
         nickel(8),
-        platium(9),
+        platinum(9),
         titanium(10),
         chromium(11),
         spinel(12),
-        electrium(13),
+        electrum(13),
         silver(14),
         zinc(15),
         manganese(16),
@@ -94,12 +96,13 @@ public class ItemCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implem
         strontium(41),
         thallium(42),
         zirconium(43),
-        adamantite(44),
+        adamantium(44),
         bloodstone(45),
         draconid(46),
         meteoric_iron(47),
-        mythril(48),
-        orichalcum(49),;
+        mithril(48),
+        orichalcum(49),
+        ;
 
         private final String name;
         private final int ID;

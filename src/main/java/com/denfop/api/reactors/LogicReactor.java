@@ -173,11 +173,11 @@ public class LogicReactor {
                     for (LogicComponent component1 : component.getLogicComponents()) {
                         if (component1.getItem().getType() == EnumTypeComponent.ROD) {
                             count++;
-                            temp_generation +=((component1
+                            temp_generation += ((component1
                                     .getItem()
                                     .getEnergyProduction(this.reactor) * reactor.getMulOutput(component1.getX(),
                                     component1.getY(), component1.getStack()
-                            )) * (0.45+component.getItem().getEnergyProduction(this.reactor)));
+                            )) * (0.45 + component.getItem().getEnergyProduction(this.reactor)));
                             temp_rad_generation += component1.getItem().getRadiation() * component
                                     .getItem()
                                     .getEnergyProduction(this.reactor);

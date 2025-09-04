@@ -28,6 +28,7 @@ public class PacketUpdateRecipe implements IPacket {
             sendChunkedRecipes(recipe, recipes, false, player);
         }
     }
+
     private <T> void sendChunkedRecipes(String recipeKey, List<T> fullList, boolean isFluid, ServerPlayer player) {
         final int CHUNK_SIZE = 64;
         for (int i = 0; i < fullList.size(); i += CHUNK_SIZE) {
@@ -65,7 +66,7 @@ public class PacketUpdateRecipe implements IPacket {
                 List<BaseFluidMachineRecipe> recipes = (List<BaseFluidMachineRecipe>) DecoderHandler.decode(customPacketBuffer);
                 for (BaseFluidMachineRecipe baseFluidMachineRecipe : recipes)
                     Recipes.recipes.getRecipeFluid().addRecipe(recipe, baseFluidMachineRecipe);
-            }else{
+            } else {
                 List<BaseMachineRecipe> recipes = (List<BaseMachineRecipe>) DecoderHandler.decode(customPacketBuffer);
                 for (BaseMachineRecipe baseFluidMachineRecipe : recipes)
                     Recipes.recipes.addRecipe(recipe, baseFluidMachineRecipe);

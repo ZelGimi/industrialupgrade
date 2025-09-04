@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:plates/bismuth"
+    },
+    "B": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "pattern": [
+    "  A",
+    "AB ",
+    "AAA"
+  ],
+  "result": {
+    "item": "wateringcan:simple_watering_can"
+  },
+  "show_notification": true
+}

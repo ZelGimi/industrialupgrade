@@ -1,7 +1,7 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import com.denfop.utils.CapturedMobUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemEntityModule<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemEntityModule(T element) {
         super(new Item.Properties(), element);
     }
@@ -43,10 +43,12 @@ public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
 
         return super.use(level, player, hand);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
@@ -136,7 +138,7 @@ public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
     }
 
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         module_player(0),
         module_mob(1),
         ;

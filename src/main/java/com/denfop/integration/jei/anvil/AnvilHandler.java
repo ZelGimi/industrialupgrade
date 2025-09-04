@@ -19,11 +19,7 @@ public class AnvilHandler {
     public AnvilHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
-        this.container =container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<AnvilHandler> getRecipes() {
@@ -36,7 +32,7 @@ public class AnvilHandler {
     public static AnvilHandler addRecipe(
             ItemStack input, ItemStack output,
             BaseMachineRecipe container) {
-        AnvilHandler recipe = new AnvilHandler(input, output,container);
+        AnvilHandler recipe = new AnvilHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -49,15 +45,19 @@ public class AnvilHandler {
             try {
                 addRecipe(
                         container.input.getInputs().get(0).getInputs().get(0),
-                        container.getOutput().items.get(0),container
+                        container.getOutput().items.get(0), container
                 );
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(2);
-            };
-
+            }
+            ;
 
 
         }
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public ItemStack getInput() {

@@ -4,12 +4,9 @@ package com.denfop.utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -218,11 +215,11 @@ public final class CapturedMobUtils {
                         if (pos != null && difficulty == null) {
                             difficulty = world.getCurrentDifficultyAt(pos);
                         }
-                        SpawnData spawndata =new SpawnData();
+                        SpawnData spawndata = new SpawnData();
 
                         if (difficulty != null && (pos == null || !ForgeEventFactory.checkSpawnPositionSpawner(
                                 (Mob) entity,
-                                (ServerLevelAccessor) world,MobSpawnType.NATURAL,
+                                (ServerLevelAccessor) world, MobSpawnType.NATURAL,
                                 spawndata,
                                 null
                         ))) {

@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class BlockOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockOre<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockOre(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -32,7 +32,7 @@ public class BlockOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> impleme
     }
 
     @Override
-    public  int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -62,12 +62,12 @@ public class BlockOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> impleme
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -81,11 +81,11 @@ public class BlockOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> impleme
         return new Pair<>("pickaxe", 2);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         mikhail(0),
         aluminium(1),
         vanadium(2),
-        wolfram(3),
+        tungsten(3),
         cobalt(4),
         magnesium(5),
         nickel(6),

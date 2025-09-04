@@ -1,9 +1,9 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,14 +20,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemQuarryModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemQuarryModule<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemQuarryModule(T element) {
         super(new Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, p_41422_, p_41423_, p_41424_);
@@ -84,7 +86,7 @@ public class ItemQuarryModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
         }
     }
 
-    public enum CraftingTypes implements ISubEnum {
+    public enum CraftingTypes implements SubEnum {
         per(0),
         ef(1),
         ef1(2),

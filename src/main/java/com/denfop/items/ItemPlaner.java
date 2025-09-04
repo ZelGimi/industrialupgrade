@@ -1,12 +1,12 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.multiblock.IMainMultiBlock;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockElement;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,6 +37,7 @@ public class ItemPlaner extends Item implements IItemTab {
     public ItemPlaner() {
         super(new Properties().stacksTo(1).setNoRepair());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
@@ -45,7 +46,7 @@ public class ItemPlaner extends Item implements IItemTab {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.planner.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.planner.info")));
 
     }
 
@@ -61,7 +62,7 @@ public class ItemPlaner extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -91,7 +92,7 @@ public class ItemPlaner extends Item implements IItemTab {
                     Direction rotation = mainMultiBlock.getMultiBlockStucture().RotationMap.get(entry.getKey());
 
 
-                    pos1 = switch (((TileMultiBlockBase) mainMultiBlock).getFacing()) {
+                    pos1 = switch (((BlockEntityMultiBlockBase) mainMultiBlock).getFacing()) {
                         case NORTH -> new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
                         case EAST ->
                                 new BlockPos(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
@@ -113,8 +114,8 @@ public class ItemPlaner extends Item implements IItemTab {
                                     BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), stack1, new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
                                     if (item1.place(placeContext) == InteractionResult.CONSUME) {
                                         stack1.shrink(1);
-                                        TileEntityMultiBlockElement tileEntity2 = (TileEntityMultiBlockElement) world.getBlockEntity(pos2);
-                                        Direction facing = ((TileMultiBlockBase) mainMultiBlock).getFacing();
+                                        BlockEntityMultiBlockElement tileEntity2 = (BlockEntityMultiBlockElement) world.getBlockEntity(pos2);
+                                        Direction facing = ((BlockEntityMultiBlockBase) mainMultiBlock).getFacing();
                                         rotation = adjustRotation(facing, rotation);
                                         tileEntity2.setFacing(rotation.getOpposite());
                                         break;
@@ -126,11 +127,11 @@ public class ItemPlaner extends Item implements IItemTab {
                         BlockPos pos2 = pos.offset(pos1);
                         ItemBlockTileEntity item1 = (ItemBlockTileEntity) item.getItem();
                         BlockEntity tileEntity = world.getBlockEntity(pos2);
-                        if (tileEntity == null  && canPlace(world.getBlockState(pos2))) {
+                        if (tileEntity == null && canPlace(world.getBlockState(pos2))) {
                             BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), context.getItemInHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
                             if (item1.place(placeContext) == InteractionResult.SUCCESS) {
-                                TileEntityMultiBlockElement tileEntity2 = (TileEntityMultiBlockElement) world.getBlockEntity(pos2);
-                                Direction facing = ((TileMultiBlockBase) mainMultiBlock).getFacing();
+                                BlockEntityMultiBlockElement tileEntity2 = (BlockEntityMultiBlockElement) world.getBlockEntity(pos2);
+                                Direction facing = ((BlockEntityMultiBlockBase) mainMultiBlock).getFacing();
                                 rotation = adjustRotation(facing, rotation);
                                 tileEntity2.setFacing(rotation.getOpposite());
                             }
@@ -188,7 +189,7 @@ public class ItemPlaner extends Item implements IItemTab {
     }
 
     private boolean canPlace(BlockState state) {
-        return state.isAir()|| state.getBlock() == Blocks.TALL_GRASS || state.liquid() || state.canBeReplaced();
+        return state.isAir() || state.getBlock() == Blocks.TALL_GRASS || state.liquid() || state.canBeReplaced();
     }
 
 }

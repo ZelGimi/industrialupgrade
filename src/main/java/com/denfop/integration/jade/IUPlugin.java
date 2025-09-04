@@ -1,10 +1,10 @@
 package com.denfop.integration.jade;
 
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blocks.BlockDeposits;
 import com.denfop.blocks.BlockDeposits1;
 import com.denfop.blocks.BlockDeposits2;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.tiles.base.TileEntityBlock;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
@@ -15,7 +15,7 @@ public class IUPlugin implements IWailaPlugin {
 
     @Override
     public void register(IWailaCommonRegistration registration) {
-        registration.registerBlockDataProvider(BlockComponentProvider.INSTANCE, TileEntityBlock.class);
+        registration.registerBlockDataProvider(BlockComponentProvider.INSTANCE, BlockEntityBase.class);
     }
 
     @Override

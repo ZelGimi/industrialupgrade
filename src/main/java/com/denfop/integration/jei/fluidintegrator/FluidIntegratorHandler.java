@@ -28,17 +28,12 @@ public class FluidIntegratorHandler {
         this.container = baseMachineRecipe;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<FluidIntegratorHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
         }
         return recipes;
     }
-
 
     public static FluidIntegratorHandler getRecipe(ItemStack is) {
         if (is == null || is.isEmpty()) {
@@ -61,7 +56,7 @@ public class FluidIntegratorHandler {
 
 
             addRecipe(input, output,
-                    inputFluid, outputFluid,baseMachineRecipe
+                    inputFluid, outputFluid, baseMachineRecipe
             );
         }
 
@@ -74,7 +69,7 @@ public class FluidIntegratorHandler {
             FluidStack inputFluid,
             FluidStack outputFluid,
             BaseMachineRecipe baseMachineRecipe) {
-        FluidIntegratorHandler recipe = new FluidIntegratorHandler(input, output, inputFluid, outputFluid,baseMachineRecipe);
+        FluidIntegratorHandler recipe = new FluidIntegratorHandler(input, output, inputFluid, outputFluid, baseMachineRecipe);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -82,6 +77,9 @@ public class FluidIntegratorHandler {
         return recipe;
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() {
         return input;

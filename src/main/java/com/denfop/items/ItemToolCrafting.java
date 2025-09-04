@@ -1,8 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,10 +32,12 @@ public class ItemToolCrafting extends Item implements IItemTab {
         ItemStack ret = itemStack.copy();
         return ret.hurt(1, IUCore.randomSource, null) ? ModUtils.emptyStack : ret;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));

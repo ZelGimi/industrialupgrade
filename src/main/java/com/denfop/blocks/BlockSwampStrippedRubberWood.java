@@ -1,17 +1,12 @@
 package com.denfop.blocks;
 
-import com.denfop.DataMultiBlock;
-import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataMultiBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +25,7 @@ import oshi.util.tuples.Pair;
 
 import java.util.List;
 
-public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockSwampStrippedRubberWood<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
     public static final EnumProperty<RubberWoodState> stateProperty = EnumProperty.create("state", RubberWoodState.class);
 
@@ -38,7 +33,7 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
         super(Properties.of().mapColor(MapColor.WOOD).destroyTime(1f).randomTicks().sound(SoundType.WOOD).requiresCorrectToolForDrops(), element, dataBlock);
         this.registerDefaultState(this.stateDefinition.any().setValue(stateProperty, RubberWoodState.plain_y));
         BlockTagsProvider.list.add(this);
-     
+
     }
 
     public static void spawnAsEntity(Level worldIn, BlockPos pos, ItemStack stack) {
@@ -71,7 +66,7 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
     }
 
     @Override
-    public  int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return state.getValue(stateProperty).getId();
     }
 
@@ -81,12 +76,12 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any().setValue(stateProperty, getPlainAxisState(context.getClickedFace().getAxis()));
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().setValue(stateProperty, RubberWoodState.values()[element.getId()]).getBlock()));
     }
 
@@ -113,14 +108,12 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
     }
 
 
-
-
     @Override
     public Pair<String, Integer> getHarvestLevel() {
         return new Pair<>("axe", 0);
     }
 
-    public enum RubberWoodState implements ISubEnum {
+    public enum RubberWoodState implements SubEnum {
         plain_y(Direction.Axis.Y, null, false),
         plain_x(Direction.Axis.X, null, false),
         plain_z(Direction.Axis.Z, null, false);
@@ -137,7 +130,6 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
         }
 
 
-
         @Override
         public boolean registerOnlyBlock() {
             return true;
@@ -150,10 +142,6 @@ public class BlockSwampStrippedRubberWood<T extends Enum<T> & ISubEnum> extends 
 
         public String getName() {
             return this.name();
-        }
-
-        public boolean registerVariants() {
-            return false;
         }
 
         ;

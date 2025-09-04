@@ -1,9 +1,9 @@
 package com.denfop.items.reactors;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.reactors.graphite.ICapacitorItem;
+import com.denfop.blockentity.reactors.graphite.ICapacitorItem;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -27,10 +27,12 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTa
         this.level = level;
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -43,7 +45,7 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTa
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.iu_"+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu.iu_" + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -61,7 +63,6 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTa
     }
 
 
-
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
@@ -72,6 +73,7 @@ public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTa
 
 
     }
+
     @Override
     public boolean damageItem(final ItemStack stack, final int damage) {
         return applyCustomDamage(stack, damage, null);

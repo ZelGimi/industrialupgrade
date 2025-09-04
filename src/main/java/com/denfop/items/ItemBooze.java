@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.brewage.EnumBeerVariety;
 import com.denfop.api.brewage.EnumTimeVariety;
 import com.denfop.api.brewage.EnumWaterVariety;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.Util;
@@ -40,10 +40,12 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
         super(new Properties().stacksTo(1).setNoRepair());
         IUCore.proxy.addProperties(this);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab tab, @Nonnull NonNullList<ItemStack> items) {
         if (allowedIn(tab)) {
@@ -67,6 +69,7 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
             }
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -199,7 +202,6 @@ public class ItemBooze extends Item implements IProperties, IItemTab {
 
         return new ItemStack(this);
     }
-
 
 
     @Override

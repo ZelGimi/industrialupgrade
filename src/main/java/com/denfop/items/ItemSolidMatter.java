@@ -1,9 +1,9 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.blocks.ISubEnum;
-import com.denfop.tiles.solidmatter.EnumSolidMatter;
+import com.denfop.blockentity.solidmatter.EnumSolidMatter;
+import com.denfop.blocks.SubEnum;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -15,14 +15,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemSolidMatter<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemSolidMatter<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemSolidMatter(T element) {
         super(new Item.Properties(), element);
     }
-    @Override
-    public CreativeModeTab getItemCategory() {
-        return IUCore.ItemTab;
-    }
+
     public static EnumSolidMatter getsolidmatter(int meta) {
         return switch (meta) {
             case 0 -> EnumSolidMatter.AER;
@@ -38,11 +35,16 @@ public class ItemSolidMatter<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
     }
 
     @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
+    }
+
+    @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         p_41423_.add(Component.literal(Localization.translate("iu.matter.info")));
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         matter(0),
         sun_matter(1),
         aqua_matter(2),

@@ -2,7 +2,6 @@ package com.denfop.blocks.blockitem;
 
 import com.denfop.IUCore;
 import com.denfop.blocks.BlockCore;
-import com.denfop.blocks.BlockPrecious;
 import com.denfop.blocks.BlockRaws;
 import com.denfop.blocks.ItemBlockCore;
 import com.denfop.datagen.itemtag.IItemTag;
@@ -24,12 +23,13 @@ public class ItemBlockRaws extends ItemBlockCore<BlockRaws.Type> implements IIte
     @Override
     public String[] getTags() {
         String name = getElement().getName();
-        return new String[]{"forge:storage_blocks/" +name, "forge:storage_blocks"};
+        return new String[]{"forge:storage_blocks/" + name, "forge:storage_blocks"};
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
-            String targetString = "industrialupgrade."+getElement().getMainPath()+".";
+            String targetString = "industrialupgrade." + getElement().getMainPath() + ".";
             String replacement = "";
             int index = pathBuilder.indexOf(targetString);
             while (index != -1) {

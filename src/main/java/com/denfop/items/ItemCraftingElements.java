@@ -2,7 +2,7 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Locale;
 
-public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IProperties {
+public class ItemCraftingElements<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IProperties {
     public ItemCraftingElements(T element) {
         super(new Item.Properties(), element);
         if (properties().length > 0)
@@ -53,12 +53,14 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
     public CreativeModeTab getItemCategory() {
         return IUCore.ElementsTab;
     }
+
     @Override
     public String[] properties() {
         if (getElement().getId() != 272 && getElement().getId() != 273)
             return new String[]{};
         return new String[]{"level"};
     }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel world, LivingEntity entity, int p174679, String property) {
@@ -74,7 +76,7 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
         return level;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         crafting_0_element(),
         crafting_1_element(),
         crafting_2_element(),

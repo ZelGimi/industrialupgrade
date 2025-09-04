@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -25,7 +25,7 @@ import oshi.util.tuples.Pair;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class BlockHumus<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockHumus<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
@@ -60,12 +60,12 @@ public class BlockHumus<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -79,7 +79,7 @@ public class BlockHumus<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
         return new Pair<>("shovel", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         humus(0);
 
         private final int metadata;

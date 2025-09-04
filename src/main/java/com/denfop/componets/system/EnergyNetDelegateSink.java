@@ -1,14 +1,12 @@
 package com.denfop.componets.system;
 
-import com.denfop.api.energy.IEnergyEmitter;
-import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ISink;
-import com.denfop.api.sytem.ISource;
+import com.denfop.api.otherenergies.common.ISink;
+import com.denfop.api.otherenergies.common.ISource;
 import com.denfop.componets.ComponentBaseEnergy;
-import net.minecraft.core.Direction;
 
 import java.util.LinkedList;
 import java.util.List;
+
 public class EnergyNetDelegateSink extends EnergyNetDelegate implements ISink {
 
 
@@ -18,7 +16,6 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements ISink {
     public EnergyNetDelegateSink(ComponentBaseEnergy baseEnergy) {
         super(baseEnergy);
     }
-
 
 
     @Override
@@ -72,7 +69,6 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements ISink {
     public boolean isSink() {
         return true;
     }
-
 
 
 }

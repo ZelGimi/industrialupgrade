@@ -38,9 +38,8 @@ public class IURecipe implements Recipe<Container> {
     public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
         if (outputs == null)
             return ItemStack.EMPTY;
-        return  outputs.get(0);
+        return outputs.get(0);
     }
-
 
 
     @Override
@@ -52,7 +51,7 @@ public class IURecipe implements Recipe<Container> {
     public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         if (outputs == null)
             return ItemStack.EMPTY;
-        return  outputs.get(0);
+        return outputs.get(0);
     }
 
 

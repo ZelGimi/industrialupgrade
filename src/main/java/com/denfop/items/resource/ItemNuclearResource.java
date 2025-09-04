@@ -1,11 +1,11 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import com.denfop.items.reactors.IRadioactiveItemType;
+import com.denfop.potion.IUPotion;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ItemNuclearResource<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemNuclearResource<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemNuclearResource(T element) {
         super(new Item.Properties(), element);
     }
@@ -22,17 +22,18 @@ public class ItemNuclearResource<T extends Enum<T> & ISubEnum> extends ItemMain<
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
         if (entity instanceof LivingEntity) {
             LivingEntity entityLiving = (LivingEntity) entity;
-            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+            if (!HazmatLike.hasCompleteHazmat(entityLiving)) {
                 IUPotion.radiation.applyEffect(entityLiving, ((Types) getElement()).getRadiationDuration());
             }
         }
     }
 
-    public enum Types implements ISubEnum, IRadioactiveItemType {
+    public enum Types implements SubEnum, IRadioactiveItemType {
 
         uranium(0, 60, 100),
         uranium_235(1, 150, 100),

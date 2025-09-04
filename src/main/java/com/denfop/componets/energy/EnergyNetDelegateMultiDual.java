@@ -1,10 +1,10 @@
 package com.denfop.componets.energy;
 
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.IEnergyEmitter;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.IMultiDual;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.energy.interfaces.EnergyAcceptor;
+import com.denfop.api.energy.interfaces.EnergyEmitter;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.energy.interfaces.MultiDual;
+import com.denfop.api.otherenergies.common.InfoTile;
 import com.denfop.componets.Energy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMultiDual {
+public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements MultiDual {
 
 
     int hashCodeSource;
@@ -26,7 +26,7 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
         super(block);
     }
 
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
+    public boolean acceptsEnergyFrom(EnergyEmitter emitter, Direction dir) {
         for (Direction facing1 : this.sinkDirections) {
             if (facing1.ordinal() == dir.ordinal()) {
                 return true;
@@ -46,26 +46,26 @@ public class EnergyNetDelegateMultiDual extends EnergyNetDelegate implements IMu
     }
 
 
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+    public List<InfoTile<EnergyTile>> getValidReceivers() {
         return validReceivers;
     }
 
     @Override
-    public void AddTile(final IEnergyTile tile, final Direction dir) {
+    public void AddTile(final EnergyTile tile, final Direction dir) {
         super.AddTile(tile, dir);
     }
 
     @Override
-    public void RemoveTile(final IEnergyTile tile, final Direction dir) {
+    public void RemoveTile(final EnergyTile tile, final Direction dir) {
         super.RemoveTile(tile, dir);
     }
 
     @Override
-    public Map<Direction, IEnergyTile> getTiles() {
+    public Map<Direction, EnergyTile> getTiles() {
         return this.energyConductorMap;
     }
 
-    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+    public boolean emitsEnergyTo(EnergyAcceptor receiver, Direction dir) {
         for (Direction facing1 : this.sourceDirections) {
             if (facing1.ordinal() == dir.ordinal()) {
                 return true;

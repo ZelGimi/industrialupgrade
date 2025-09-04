@@ -1,7 +1,7 @@
 package com.denfop.utils;
 
 
-import com.denfop.api.IKeyboard;
+import com.denfop.api.Keyboard;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 
 import java.util.*;
 
-public class KeyboardIU implements IKeyboard {
+public class KeyboardIU implements Keyboard {
 
     private final Map<Player, Set<KeyboardIU.Key>> playerKeys = new WeakHashMap<>();
 
@@ -28,6 +28,7 @@ public class KeyboardIU implements IKeyboard {
     public boolean isJumpKeyDown(Player player) {
         return this.get(player, Key.JUMP);
     }
+
     public boolean isAltKeyDown(Player player) {
         return this.get(player, Key.ALT);
     }

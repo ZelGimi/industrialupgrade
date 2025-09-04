@@ -187,6 +187,7 @@ public class RecipesCore implements IRecipes {
     public void addFluidRemoveRecipe(String name, FluidStack stack) {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, false));
     }
+
     public void addFluidRemoveRecipe(String name, FluidStack stack, boolean removeAll) {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, removeAll));
     }
@@ -194,14 +195,14 @@ public class RecipesCore implements IRecipes {
     public void removeAllRecipesFromList() {
         this.recipeRemoves.forEach(recipeRemove -> {
             if (recipeRemove.isRemoveAll())
-            this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+                this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
             else
                 this.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
 
         });
 
         this.recipeFluidRemoves.forEach(recipeRemove -> {
-            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(),recipeRemove.isRemoveAll(), recipeRemove.getStack());
+            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.isRemoveAll(), recipeRemove.getStack());
 
         });
     }
@@ -431,7 +432,7 @@ public class RecipesCore implements IRecipes {
 
         for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
             if (!recipe.require()) {
-                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()){
+                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()) {
                     if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid()))
                         continue;
                 }
@@ -472,7 +473,7 @@ public class RecipesCore implements IRecipes {
                 }
             } else {
                 List<IInputItemStack> recipeInputList = baseMachineRecipe.input.getInputs();
-                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()){
+                if (!tank.isEmpty() && baseMachineRecipe.input.getFluid() != null && !baseMachineRecipe.input.getFluid().isEmpty()) {
                     if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid()))
                         continue;
                 }
@@ -974,7 +975,7 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
-    public boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot) {
+    public boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot) {
         if (recipe == null) {
             return false;
         }
@@ -996,7 +997,7 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
-    public boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot, final FluidTank tank) {
+    public boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot, final FluidTank tank) {
         if (recipe == null) {
             return false;
         }

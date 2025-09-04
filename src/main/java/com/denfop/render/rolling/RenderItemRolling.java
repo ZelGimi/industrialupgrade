@@ -1,6 +1,6 @@
 package com.denfop.render.rolling;
 
-import com.denfop.tiles.mechanism.TileEntityRollingMachine;
+import com.denfop.blockentity.mechanism.BlockEntityRollingMachine;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -13,15 +13,16 @@ import net.minecraft.world.item.ItemStack;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingMachine> {
+public class RenderItemRolling implements BlockEntityRenderer<BlockEntityRollingMachine> {
     private final ItemRenderer itemRenderer;
 
     public RenderItemRolling(BlockEntityRendererProvider.Context p_173636_) {
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
+
     @Override
     public void render(
-            TileEntityRollingMachine tile,
+            BlockEntityRollingMachine tile,
             float partialTicks,
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -54,7 +55,7 @@ public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingM
 
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
 
-            itemRenderer.renderStatic(itemstack, GROUND, packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(),  0);
+            itemRenderer.renderStatic(itemstack, GROUND, packedLight, packedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
             poseStack.popPose();
         }
 
@@ -77,14 +78,14 @@ public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingM
 
                 for (int i = 0; i < itemstack.getCount() - 1; i++) {
                     poseStack.translate(0, 0, -0.0075);
-                    itemRenderer.renderStatic(itemstack, GROUND, packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
+                    itemRenderer.renderStatic(itemstack, GROUND, packedLight, packedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
                 }
             }
 
             poseStack.popPose();
         }
 
-         ItemStack itemstack1 = tile.outputSlot.get(0);
+        ItemStack itemstack1 = tile.outputSlot.get(0);
         if (!itemstack1.isEmpty() && itemstack1.getCount() > 0) {
             poseStack.pushPose();
             poseStack.translate(0, 0, 0);
@@ -105,7 +106,7 @@ public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingM
 
             for (int i = 0; i <= itemstack1.getCount(); i++) {
                 poseStack.translate(0, 0, -0.0075);
-                itemRenderer.renderStatic(itemstack1, GROUND, packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(),  0);
+                itemRenderer.renderStatic(itemstack1, GROUND, packedLight, packedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
             }
 
             poseStack.popPose();

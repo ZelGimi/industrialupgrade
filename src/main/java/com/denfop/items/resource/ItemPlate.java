@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemPlate<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemPlate(T element) {
         super(new Item.Properties(), element);
     }
@@ -18,10 +18,12 @@ public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -48,21 +50,21 @@ public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
         return new String[]{"forge:plates/" + name.split("_")[0], "forge:plates"};
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         mikhail_plate(0),
         aluminium_plate(1),
-        vanady_plate(2),
-        wolfram_plate(3),
+        vanadium_plate(2),
+        tungsten_plate(3),
         invar_plate(4),
         caravky_plate(5),
         cobalt_plate(6),
         magnesium_plate(7),
         nickel_plate(8),
-        platium_plate(9),
+        platinum_plate(9),
         titanium_plate(10),
         chromium_plate(11),
         spinel_plate(12),
-        electrium_plate(13),
+        electrum_plate(13),
         silver_plate(14),
         zinc_plate(15),
         manganese_plate(16),
@@ -96,11 +98,11 @@ public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
         strontium(43),
         thallium(44),
         zirconium(45),
-        adamantite(46),
+        adamantium(46),
         bloodstone(47),
         draconid(48),
         meteoric_iron(49),
-        mythril(50),
+        mithril(50),
         orichalcum(51),
         ;
 

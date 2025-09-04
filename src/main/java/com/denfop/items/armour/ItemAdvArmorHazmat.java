@@ -1,7 +1,7 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.damagesource.IUDamageSource;
 import com.denfop.items.armour.material.ArmorMaterials;
 import net.minecraft.Util;
@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ItemAdvArmorHazmat extends ItemArmorUtility implements IHazmatLike, ISpecialArmor {
+public class ItemAdvArmorHazmat extends ItemArmorUtility implements HazmatLike, ISpecialArmor {
 
     public ItemAdvArmorHazmat(String name, Type type) {
         super(ArmorMaterials.HAZMAT, name, type);
@@ -38,6 +38,41 @@ public class ItemAdvArmorHazmat extends ItemArmorUtility implements IHazmatLike,
         this.armorName = name;
 
     }
+
+    public static boolean hasCompleteHazmat(LivingEntity living) {
+        Iterator<EquipmentSlot> var1 =
+                Arrays
+                        .stream(EquipmentSlot.values())
+                        .filter(slot -> slot != EquipmentSlot.MAINHAND && slot != EquipmentSlot.OFFHAND)
+                        .iterator();
+
+        EquipmentSlot slot;
+        ItemStack stack;
+        HazmatLike hazmat;
+        do {
+            if (!var1.hasNext()) {
+                return true;
+            }
+
+            slot = var1.next();
+            stack = living.getItemBySlot(slot);
+            if (!(stack.getItem() instanceof HazmatLike)) {
+                return false;
+            }
+
+            hazmat = (HazmatLike) stack.getItem();
+            if (!hazmat.addsProtection(living, slot, stack)) {
+                return false;
+            }
+        } while (!hazmat.fullyProtects(living, slot, stack));
+
+        return true;
+    }
+
+    public static boolean hazmatAbsorbs(DamageSource source) {
+        return source.is(DamageTypeTags.IS_FIRE) && source == IUDamageSource.radiation;
+    }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -50,45 +85,11 @@ public class ItemAdvArmorHazmat extends ItemArmorUtility implements IHazmatLike,
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
-    public static boolean hasCompleteHazmat(LivingEntity living) {
-        Iterator<EquipmentSlot> var1 =
-                Arrays
-                        .stream(EquipmentSlot.values())
-                        .filter(slot -> slot != EquipmentSlot.MAINHAND && slot != EquipmentSlot.OFFHAND)
-                        .iterator();
-
-        EquipmentSlot slot;
-        ItemStack stack;
-        IHazmatLike hazmat;
-        do {
-            if (!var1.hasNext()) {
-                return true;
-            }
-
-            slot = var1.next();
-            stack = living.getItemBySlot(slot);
-            if (!(stack.getItem() instanceof IHazmatLike)) {
-                return false;
-            }
-
-            hazmat = (IHazmatLike) stack.getItem();
-            if (!hazmat.addsProtection(living, slot, stack)) {
-                return false;
-            }
-        } while (!hazmat.fullyProtects(living, slot, stack));
-
-        return true;
-    }
-
-    public static boolean hazmatAbsorbs(DamageSource source) {
-        return source.is(DamageTypeTags.IS_FIRE)&&  source == IUDamageSource.radiation;
-    }
-
 
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         int suffix1 = this.type.getSlot() == EquipmentSlot.LEGS ? 2 : 1;

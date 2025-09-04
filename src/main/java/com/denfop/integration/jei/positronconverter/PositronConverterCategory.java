@@ -1,21 +1,21 @@
 package com.denfop.integration.jei.positronconverter;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityPositronConverter;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerPositronsConverter;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuPositronsConverter;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityPositronConverter;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -34,18 +34,18 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
-public class PositronConverterCategory extends GuiIU implements IRecipeCategory<PositronConverterHandler> {
+public class PositronConverterCategory extends ScreenMain implements IRecipeCategory<PositronConverterHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerPositronsConverter container1;
-    private final GuiComponent progress_bar;
-    private int progress;
+    private final ContainerMenuPositronsConverter container1;
+    private final ScreenWidget progress_bar;
     private final JeiInform jeiInform;
+    private int progress;
 
     public PositronConverterCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityPositronConverter) BlockBaseMachine3.positronconverter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityPositronConverter) BlockBaseMachine3Entity.positronconverter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 5, 5, 140,
                 75
@@ -53,13 +53,13 @@ public class PositronConverterCategory extends GuiIU implements IRecipeCategory<
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
-        this.container1 = (ContainerPositronsConverter) this.getContainer();
+        this.container1 = (ContainerMenuPositronsConverter) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
     }
@@ -68,7 +68,7 @@ public class PositronConverterCategory extends GuiIU implements IRecipeCategory<
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.positronconverter).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.positronconverter).getDescriptionId());
     }
 
     @Override
@@ -89,10 +89,10 @@ public class PositronConverterCategory extends GuiIU implements IRecipeCategory<
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,10, -10, xScale);
-      drawSplitString(stack,
+        progress_bar.renderBar(stack, 10, -10, xScale);
+        drawSplitString(stack,
                 ModUtils.getString(recipe.getEnergy()) + "e⁺",
                 110,
                 28,
@@ -103,15 +103,14 @@ public class PositronConverterCategory extends GuiIU implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PositronConverterHandler recipe, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Arrays.asList(recipe.input1, recipe.input2);
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
         }
     }
-
 
 
     protected ResourceLocation getTexture() {

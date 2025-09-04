@@ -4,8 +4,8 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.InputFluid;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.tiles.smeltery.TileEntitySmelteryController;
-import com.denfop.tiles.smeltery.TileEntitySmelteryFurnace;
+import com.denfop.blockentity.smeltery.BlockEntitySmelteryController;
+import com.denfop.blockentity.smeltery.BlockEntitySmelteryFurnace;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -63,10 +63,10 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                     }
                 }
                 if (stack != null && fluidStack != null)
-                    TileEntitySmelteryFurnace.addRecipe("", stack, fluidStack);
+                    BlockEntitySmelteryFurnace.addRecipe("", stack, fluidStack);
                 break;
             case "castings_ingot":
-                 stack = null;
+                stack = null;
 
                 if (GsonHelper.isValidNode(json, "outputs")) {
                     JsonArray inArray = GsonHelper.getAsJsonArray(json, "outputs");
@@ -75,13 +75,13 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         String itemId = GsonHelper.getAsString(obj, "id");
                         int amount = GsonHelper.getAsInt(obj, "amount", 1);
                         stack = new ItemStack(
-                                ForgeRegistries.ITEMS.getValue( ResourceLocation.tryParse(itemId)),
+                                ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(itemId)),
                                 amount
                         );
                         break;
                     }
                 }
-                 fluidStack = null;
+                fluidStack = null;
                 if (GsonHelper.isValidNode(json, "inputs")) {
                     JsonArray inArray = GsonHelper.getAsJsonArray(json, "inputs");
                     for (JsonElement el : inArray) {
@@ -89,7 +89,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         String itemId = GsonHelper.getAsString(obj, "id");
                         int amount = GsonHelper.getAsInt(obj, "amount", 1);
                         fluidStack = new FluidStack(
-                                ForgeRegistries.FLUIDS.getValue( ResourceLocation.tryParse(itemId)),
+                                ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(itemId)),
                                 amount
                         );
                         break;
@@ -97,7 +97,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
 
                 }
                 Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                       fluidStack), new RecipeOutput(
+                        fluidStack), new RecipeOutput(
                         null,
                         stack
                 )));
@@ -112,7 +112,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         String itemId = GsonHelper.getAsString(obj, "id");
                         int amount = GsonHelper.getAsInt(obj, "amount", 1);
                         stack = new ItemStack(
-                                ForgeRegistries.ITEMS.getValue( ResourceLocation.tryParse(itemId)),
+                                ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(itemId)),
                                 amount
                         );
                         break;
@@ -127,7 +127,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         String itemId = GsonHelper.getAsString(obj, "id");
                         int amount = GsonHelper.getAsInt(obj, "amount", 1);
                         fluidStack = new FluidStack(
-                                ForgeRegistries.FLUIDS.getValue( ResourceLocation.tryParse(itemId)),
+                                ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(itemId)),
                                 amount
                         );
                         break;
@@ -141,7 +141,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                 )));
                 break;
             case "mix":
-               FluidStack fluidStack1 = null;
+                FluidStack fluidStack1 = null;
 
                 if (GsonHelper.isValidNode(json, "outputs")) {
                     JsonArray inArray = GsonHelper.getAsJsonArray(json, "outputs");
@@ -150,7 +150,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         String itemId = GsonHelper.getAsString(obj, "id");
                         int amount = GsonHelper.getAsInt(obj, "amount", 1);
                         fluidStack1 = new FluidStack(
-                                ForgeRegistries.FLUIDS.getValue( ResourceLocation.tryParse(itemId)),
+                                ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(itemId)),
                                 amount
                         );
                         break;
@@ -165,14 +165,14 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                         String itemId = GsonHelper.getAsString(obj, "id");
                         int amount = GsonHelper.getAsInt(obj, "amount", 1);
                         fluidStack = new FluidStack(
-                                ForgeRegistries.FLUIDS.getValue( ResourceLocation.tryParse(itemId)),
+                                ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(itemId)),
                                 amount
                         );
                         list.add(fluidStack);
                     }
 
                 }
-                TileEntitySmelteryController.mapRecipes.put(list, fluidStack1);
+                BlockEntitySmelteryController.mapRecipes.put(list, fluidStack1);
                 break;
         }
 

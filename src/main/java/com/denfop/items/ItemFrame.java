@@ -1,10 +1,10 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.blocks.ISubEnum;
-import com.denfop.tiles.bee.FrameAttributeLevel;
-import com.denfop.tiles.bee.IFrameItem;
+import com.denfop.blockentity.bee.FrameAttributeLevel;
+import com.denfop.blockentity.bee.FrameItem;
+import com.denfop.blocks.SubEnum;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IFrameItem {
+public class ItemFrame<T extends Enum<T> & SubEnum> extends ItemMain<T> implements FrameItem {
     public ItemFrame(T element) {
         super(new Item.Properties().stacksTo(1), element);
     }
@@ -30,10 +30,12 @@ public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
     public FrameAttributeLevel getAttribute(final int meta) {
         return FrameAttributeLevel.values()[this.getElement().getId()];
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public int getCustomDamage(final ItemStack stack) {
         if (!stack.hasTag()) {
@@ -87,7 +89,7 @@ public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
         return getMaxCustomDamage(stack) - damage1 == 0;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         slow_aging_1,
         slow_aging_2,
         slow_aging_3,

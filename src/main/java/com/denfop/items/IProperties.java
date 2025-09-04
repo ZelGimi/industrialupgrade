@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public interface IProperties {
 
     String[] properties();
+
     @OnlyIn(Dist.CLIENT)
     float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property);
 }

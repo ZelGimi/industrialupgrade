@@ -1,14 +1,14 @@
 package com.denfop.items.relocator;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerRelocator;
-import com.denfop.container.ContainerRelocatorAddPoint;
-import com.denfop.gui.GuiCore;
-import com.denfop.gui.GuiRelocator;
-import com.denfop.gui.GuiRelocatorAddPoint;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuRelocator;
+import com.denfop.containermenu.ContainerMenuRelocatorAddPoint;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenRelocator;
+import com.denfop.screen.ScreenRelocatorAddPoint;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -50,35 +50,25 @@ public class ItemStackRelocator extends ItemStackInventory {
 
     }
 
-    public ContainerBase<ItemStackRelocator> getGuiContainer(Player player) {
+    public ContainerMenuBase<ItemStackRelocator> getGuiContainer(Player player) {
         if (sneaking) {
-            return new ContainerRelocatorAddPoint(this);
+            return new ContainerMenuRelocatorAddPoint(this);
         }
-        return new ContainerRelocator(this);
+        return new ContainerMenuRelocator(this);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
         if (sneaking) {
-            return new GuiRelocatorAddPoint(isAdmin);
+            return new ScreenRelocatorAddPoint(isAdmin);
         }
-        return new GuiRelocator(isAdmin);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+        return new ScreenRelocator(isAdmin);
     }
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;
@@ -51,10 +51,12 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     public boolean canfill(Fluid fluid) {
         return true;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.fluidCellTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -123,7 +125,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
         ItemStack itemstack = player.getItemInHand(hand);
         IFluidHandlerItem fs = itemstack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse(null);
         if (fs == null)
-            fs = (IFluidHandlerItem) initCapabilities(itemstack,itemstack.getOrCreateTag());
+            fs = (IFluidHandlerItem) initCapabilities(itemstack, itemstack.getOrCreateTag());
         BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, fs.getFluidInTank(0).getFluid() == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         if (blockhitresult.getType() == HitResult.Type.MISS) {
             return InteractionResultHolder.pass(itemstack);
@@ -228,7 +230,7 @@ public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
                         );
                     }
                 } else {
-                    if (!worldIn.isClientSide && ( flag1) && !iblockstate.liquid()) {
+                    if (!worldIn.isClientSide && (flag1) && !iblockstate.liquid()) {
                         worldIn.destroyBlock(posIn, true);
                     }
 

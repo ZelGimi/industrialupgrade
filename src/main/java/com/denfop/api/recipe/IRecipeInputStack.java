@@ -11,6 +11,7 @@ public interface IRecipeInputStack {
     List<ItemStack> getItemStack();
 
     IInputItemStack getInput();
+
     boolean matched(ItemStack stack);
 
 }

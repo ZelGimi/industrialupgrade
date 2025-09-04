@@ -3,11 +3,11 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "industrialupgrade:itemingots/platium_ingot"
+      "item": "industrialupgrade:itemingots/platinum_ingot"
     }
   ],
   "result": {
     "count": 9,
-    "item": "industrialupgrade:nugget/platium"
+    "item": "industrialupgrade:nugget/platinum"
   }
 }

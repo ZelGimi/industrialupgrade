@@ -1,11 +1,11 @@
 package com.denfop.items.reactors;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -29,10 +29,12 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem, IItemT
         this.level = level;
         this.percent = percent;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -45,11 +47,12 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem, IItemT
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);

@@ -165,8 +165,6 @@ public final class ScrapboxRecipeManager {
         this.addDrop(IUItem.classic_ore.getItemStack(BlockClassicOre.Type.tin), 0.7F);
 
 
-
-
         this.addDrop(Blocks.EXPOSED_COPPER, 0.5F);
         this.addDrop(Blocks.WEATHERED_COPPER, 0.5F);
         this.addDrop(Blocks.OXIDIZED_COPPER, 0.4F);
@@ -203,8 +201,6 @@ public final class ScrapboxRecipeManager {
         this.addDrop(Blocks.SCULK_CATALYST, 0.7F);
         this.addDrop(Blocks.SCULK_SHRIEKER, 0.8F);
         this.addDrop(Blocks.SCULK_SENSOR, 0.7F);
-
-
 
 
         this.addDrop(Blocks.MANGROVE_LOG, 1.5F);

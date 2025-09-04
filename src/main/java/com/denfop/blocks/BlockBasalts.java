@@ -1,11 +1,11 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IVolcanoArmor;
+import com.denfop.api.item.armor.VolcanoArmor;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.potion.IUPotion;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -17,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -26,8 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import oshi.util.tuples.Pair;
 
@@ -37,7 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockBasalts<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public static final BooleanProperty BOOL_PROPERTY = BooleanProperty.create("hasdamage");
@@ -49,10 +45,10 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    public List<ItemStack> getDrops(      @Nonnull final Level world,
-                                          @Nonnull final BlockPos pos,
-                                          @Nonnull final BlockState state,
-                                          final int fortune) {
+    public List<ItemStack> getDrops(@Nonnull final Level world,
+                                    @Nonnull final BlockPos pos,
+                                    @Nonnull final BlockState state,
+                                    final int fortune) {
         Random rand = WorldBaseGen.random;
         List<ItemStack> drops = new ArrayList<>();
 
@@ -83,7 +79,7 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
         List<Player> players = level.getEntitiesOfClass(Player.class, axisAlignedBB);
 
         for (Player player : players) {
-            if (!IVolcanoArmor.hasCompleteHazmat(player)) {
+            if (!VolcanoArmor.hasCompleteHazmat(player)) {
                 player.addEffect(new MobEffectInstance(IUPotion.poison_gas, 200, 0));
             }
         }
@@ -98,7 +94,7 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    public  int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -110,12 +106,12 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any().setValue(BOOL_PROPERTY, true);
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -129,7 +125,7 @@ public class BlockBasalts<T extends Enum<T> & ISubEnum> extends BlockCore<T> imp
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         basalt(5, 45.0F, false),
         basalt_cobblestone(5, 45.0F, false),
         basalt_melted(10, 45.0F, false),

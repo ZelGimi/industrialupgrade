@@ -6,7 +6,11 @@ import java.util.Random;
 
 class Center {
     double x, y;
-    public Center(double x, double y) { this.x = x; this.y = y; }
+
+    public Center(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
 
 
     public static ArrayList<Center> generateCenters(int maxCenters, double minDist, int width, int height) {

@@ -1,7 +1,7 @@
 package com.denfop.componets;
 
-import com.denfop.DataSimpleItem;
 import com.denfop.IUItem;
+import com.denfop.dataregistry.DataSimpleItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

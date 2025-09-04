@@ -6,13 +6,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.RegistryObject;
 
-public enum FluidName implements ISubEnum {
+public enum FluidName implements SubEnum {
 
-    fluidNeutron,
-    fluidHelium,
-    fluidbenz,
-    fluiddizel,
-    fluidneft,
+    fluidneutron,
+    fluidhelium,
+    fluidgasoline,
+    fluiddiesel,
+    fluidpetroleum,
     fluidsweet_medium_oil(),
     fluidsweet_heavy_oil(),
     fluidsour_light_oil(),
@@ -20,11 +20,11 @@ public enum FluidName implements ISubEnum {
     fluidsour_heavy_oil(),
     fluidpolyeth,
     fluidpolyprop,
-    fluidoxy,
-    fluidhyd,
+    fluidoxygen,
+    fluidhydrogen,
     fluidfluorhyd(),
-    fluidazot,
-    fluidco2,
+    fluidnitrogen,
+    fluidcarbondioxide,
     fluidgas,
     fluidpropane(),
     fluidacetylene(),

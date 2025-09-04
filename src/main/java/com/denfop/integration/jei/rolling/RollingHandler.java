@@ -17,11 +17,7 @@ public class RollingHandler {
     public RollingHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
-        this.container  = container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<RollingHandler> getRecipes() {
@@ -32,7 +28,7 @@ public class RollingHandler {
     }
 
     public static RollingHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
-        RollingHandler recipe = new RollingHandler(input, output,container);
+        RollingHandler recipe = new RollingHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -58,13 +54,16 @@ public class RollingHandler {
 
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0),container
+                    container.getOutput().items.get(0), container
             );
 
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

@@ -2,15 +2,15 @@ package com.denfop.items.crop;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.agriculture.ICropItem;
-import com.denfop.api.agriculture.genetics.Genome;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.api.crop.Crop;
+import com.denfop.api.crop.CropItem;
+import com.denfop.api.crop.CropNetwork;
+import com.denfop.api.crop.genetics.Genome;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.IProperties;
 import com.denfop.items.ItemMain;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICropItem, IProperties {
+public class ItemCrops<T extends Enum<T> & SubEnum> extends ItemMain<T> implements CropItem, IProperties {
     public ItemCrops(T element) {
         super(new Item.Properties(), element);
         IUCore.proxy.addProperties(this);
@@ -66,7 +66,7 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
 
         super.appendHoverText(stack, level, tooltip, flag);
 
-        ICrop crop = getCrop(0, stack);
+        Crop crop = getCrop(0, stack);
         if (crop.getId() != 3) {
             ItemStack soil = crop.getSoil().getStack();
             if (!soil.isEmpty()) {
@@ -88,15 +88,15 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
 
             if (!crop.getCropCombine().isEmpty()) {
                 tooltip.add(Component.translatable("iu.crop.breeding").withStyle(ChatFormatting.GREEN));
-                for (ICrop crop1 : crop.getCropCombine()) {
+                for (Crop crop1 : crop.getCropCombine()) {
                     tooltip.add(Component.translatable("crop." + crop1.getName()));
                 }
             }
         }
         Genome genome = new Genome(stack);
-        if (!genome.getGeneticTraitsMap().isEmpty()){
+        if (!genome.getGeneticTraitsMap().isEmpty()) {
             tooltip.add(Component.literal(Localization.translate("iu.genomes.info")));
-            genome.getGeneticTraitsMap().values().forEach(value ->      tooltip.add(Component.literal(Localization.translate("iu.info.crop_genome_"+ value.name().toLowerCase()))));
+            genome.getGeneticTraitsMap().values().forEach(value -> tooltip.add(Component.literal(Localization.translate("iu.info.crop_genome_" + value.name().toLowerCase()))));
 
 
         }
@@ -105,23 +105,25 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
     @Override
     public Component getName(ItemStack stack) {
         CompoundTag tag = ModUtils.nbt(stack);
-        ICrop crop = CropNetwork.instance.getCrop(tag.getInt("crop_id"));
+        Crop crop = CropNetwork.instance.getCrop(tag.getInt("crop_id"));
         return Component.translatable(super.getDescriptionId(stack)).append(Component.literal(": "))
                 .append(Component.translatable("crop." + crop.getName()));
     }
 
 
-    public ICrop getCrop(int meta, ItemStack stack) {
+    public Crop getCrop(int meta, ItemStack stack) {
         CompoundTag tag = ModUtils.nbt(stack);
         return CropNetwork.instance.getCrop(tag.getInt("crop_id"));
     }
+
     public ItemStack getCrop(int meta) {
         ItemStack stack = new ItemStack(this);
         CompoundTag tag = ModUtils.nbt(stack);
         tag.putInt("crop_id", meta);
         new Genome(stack);
-       return stack;
+        return stack;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
         if (allowedIn(tab)) {
@@ -149,13 +151,13 @@ public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
 
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
-        ICrop crop = getCrop(0, itemStack);
+        Crop crop = getCrop(0, itemStack);
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
             return crop.getId() == 3 ? -1 : crop.getId();
         return -1;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         crop;
 
         private final String name;

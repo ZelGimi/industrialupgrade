@@ -16,10 +16,11 @@ public class ItemBlockClassicOre extends ItemBlockCore<BlockClassicOre.Type> imp
     public Item getItem() {
         return this;
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem = "iu."+this.getElement().getName()+"_ore.name";
+            this.nameItem = "iu." + this.getElement().getName() + "_ore.name";
         }
 
         return "" + this.nameItem;

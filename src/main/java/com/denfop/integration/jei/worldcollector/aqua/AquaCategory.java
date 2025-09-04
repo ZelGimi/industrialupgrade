@@ -2,13 +2,13 @@ package com.denfop.integration.jei.worldcollector.aqua;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityEnchanterBooks;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,15 +24,17 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class AquaCategory extends GuiIU implements IRecipeCategory<AquaHandler> {
+public class AquaCategory extends ScreenMain implements IRecipeCategory<AquaHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public AquaCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
-    ) {  super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+    ) {
+        super(((BlockEntityEnchanterBooks) BlockBaseMachine3Entity.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
@@ -50,7 +52,7 @@ public class AquaCategory extends GuiIU implements IRecipeCategory<AquaHandler> 
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 35).getDescriptionId());
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 35).getDescriptionId());
     }
 
 
@@ -74,13 +76,13 @@ public class AquaCategory extends GuiIU implements IRecipeCategory<AquaHandler> 
         bindTexture(getTexture());
 
 
-        drawTexturedModalRect( stack,
+        drawTexturedModalRect(stack,
                 25 + 1, 12 + 51 - energylevel, 179, 2 + 51 - energylevel,
                 5, energylevel
         );
 
 
-        drawTexturedModalRect( stack,+66 - 5, +34 - 5, 177, 60, xScale, 18);
+        drawTexturedModalRect(stack, +66 - 5, +34 - 5, 177, 60, xScale, 18);
         drawSplitString(stack,
                 Localization.translate("iu.need_info") + recipe.getNeed() + Localization.translate("iu.need_info_matter"),
                 79,
@@ -92,8 +94,8 @@ public class AquaCategory extends GuiIU implements IRecipeCategory<AquaHandler> 
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AquaHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,39,19).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,105,30).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 39, 19).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 30).addItemStack(recipe.getOutput());
     }
 
 

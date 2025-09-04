@@ -22,10 +22,10 @@ import static com.denfop.datagen.itemtag.ItemTagProvider.mapItems;
 
 public class InputOreDict implements IInputItemStack {
 
-    public int amount;
     public final Integer meta;
     private final TagKey<Item> tag;
     private final List<ItemStack> ores;
+    public int amount;
 
     public InputOreDict(String input) {
         this(input.toLowerCase(), 1);
@@ -43,8 +43,8 @@ public class InputOreDict implements IInputItemStack {
         ores = new ArrayList<>();
         Iterable<Holder<Item>> holder = BuiltInRegistries.ITEM.getTagOrEmpty(this.tag);
         holder.forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-        if (ores.isEmpty()){
-            if (mapItems.containsKey(tag.location())){
+        if (ores.isEmpty()) {
+            if (mapItems.containsKey(tag.location())) {
                 mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
             }
         }
@@ -53,6 +53,7 @@ public class InputOreDict implements IInputItemStack {
         }
 
     }
+
     public InputOreDict(CompoundTag tagCompound) {
         this.amount = tagCompound.getInt("Amount");
 
@@ -67,10 +68,10 @@ public class InputOreDict implements IInputItemStack {
         for (int i = 0; i < list.size(); i++) {
             ores.add(ItemStack.of(list.getCompound(i)));
         }
-        if (ores.isEmpty()){
+        if (ores.isEmpty()) {
             BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-            if (ores.isEmpty()){
-                if (mapItems.containsKey(tag.location())){
+            if (ores.isEmpty()) {
+                if (mapItems.containsKey(tag.location())) {
                     mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
                 }
             }
@@ -79,26 +80,19 @@ public class InputOreDict implements IInputItemStack {
             }
         }
     }
+
     public InputOreDict(TagKey<Item> tag, int amount) {
         this.amount = amount;
         this.meta = 0;
         this.tag = tag;
         ores = new ArrayList<>();
         BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-        if (ores.isEmpty()){
-            if (mapItems.containsKey(tag.location())){
+        if (ores.isEmpty()) {
+            if (mapItems.containsKey(tag.location())) {
                 mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
             }
         }
         for (ItemStack stack : ores) {
-            stack.setCount(this.getAmount());
-        }
-    }
-
-    @Override
-    public void growAmount(final int col) {
-        amount += col;
-        for (ItemStack stack : getOres()) {
             stack.setCount(this.getAmount());
         }
     }
@@ -109,8 +103,8 @@ public class InputOreDict implements IInputItemStack {
         this.tag = tag;
         ores = new ArrayList<>();
         BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
-        if (ores.isEmpty()){
-            if (mapItems.containsKey(tag.location())){
+        if (ores.isEmpty()) {
+            if (mapItems.containsKey(tag.location())) {
                 mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
             }
         }
@@ -129,6 +123,14 @@ public class InputOreDict implements IInputItemStack {
         stack = stack.copy();
         stack.setCount(col);
         return stack;
+    }
+
+    @Override
+    public void growAmount(final int col) {
+        amount += col;
+        for (ItemStack stack : getOres()) {
+            stack.setCount(this.getAmount());
+        }
     }
 
     public boolean matches(ItemStack subject) {

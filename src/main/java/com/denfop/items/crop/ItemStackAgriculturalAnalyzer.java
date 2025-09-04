@@ -1,14 +1,14 @@
 package com.denfop.items.crop;
 
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.agriculture.ICropItem;
-import com.denfop.api.agriculture.genetics.Genome;
-import com.denfop.container.ContainerAgriculturalAnalyzer;
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiAgriculturalAnalyzer;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.crop.Crop;
+import com.denfop.api.crop.CropItem;
+import com.denfop.api.crop.genetics.Genome;
+import com.denfop.containermenu.ContainerMenuAgriculturalAnalyzer;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenAgriculturalAnalyzer;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,8 +24,7 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
     public final int inventorySize;
     public final ItemStack itemStack1;
     public Genome genome;
-    public ICrop crop;
-
+    public Crop crop;
 
 
     public ItemStackAgriculturalAnalyzer(Player player, ItemStack stack, int inventorySize) {
@@ -36,7 +35,7 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
 
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 
-        return itemstack.getItem() instanceof ICropItem;
+        return itemstack.getItem() instanceof CropItem;
     }
 
     public void save() {
@@ -59,29 +58,19 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
         this.clear();
     }
 
-    public ContainerAgriculturalAnalyzer getGuiContainer(Player player) {
-        return new ContainerAgriculturalAnalyzer(player, this);
+    public ContainerMenuAgriculturalAnalyzer getGuiContainer(Player player) {
+        return new ContainerMenuAgriculturalAnalyzer(player, this);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
-        return new GuiAgriculturalAnalyzer((ContainerAgriculturalAnalyzer) isAdmin, itemStack1);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
+        return new ScreenAgriculturalAnalyzer((ContainerMenuAgriculturalAnalyzer) isAdmin, itemStack1);
     }
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 
@@ -106,8 +95,6 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
     public boolean hasCustomName() {
         return false;
     }
-
-
 
 
     protected ItemStack[] backup() {

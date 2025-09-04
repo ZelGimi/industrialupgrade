@@ -1,18 +1,17 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.cool.*;
-import com.denfop.api.cool.event.CoolTileLoadEvent;
-import com.denfop.api.cool.event.CoolTileUnloadEvent;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.otherenergies.cool.ICoolSink;
+import com.denfop.api.otherenergies.cool.ICoolTile;
+import com.denfop.api.otherenergies.cool.event.CoolTileLoadEvent;
+import com.denfop.api.otherenergies.cool.event.CoolTileUnloadEvent;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.BlockEntityMultiMachine;
 import com.denfop.componets.cold.EnergyNetDelegate;
 import com.denfop.componets.cold.EnergyNetDelegateSink;
 import com.denfop.componets.cold.EnergyNetDelegateSource;
-import com.denfop.invslot.InvSlot;
 import com.denfop.items.modules.ItemCoolingUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,12 +22,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
 
 public class CoolComponent extends AbstractComponent {
 
@@ -38,7 +36,7 @@ public class CoolComponent extends AbstractComponent {
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
 
-
+    public static boolean cooling = true;
 
     public EnergyNetDelegate delegate;
     public boolean loaded;
@@ -46,12 +44,12 @@ public class CoolComponent extends AbstractComponent {
     public int meta = 0;
     private double coef;
 
-    public CoolComponent(TileEntityInventory parent, double capacity) {
+    public CoolComponent(BlockEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public CoolComponent(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -61,7 +59,7 @@ public class CoolComponent extends AbstractComponent {
     }
 
     public CoolComponent(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -73,23 +71,23 @@ public class CoolComponent extends AbstractComponent {
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
         this.world = parent.getLevel();
-        this.buffer = new BufferEnergy(0,capacity,sinkTier,sourceTier);
+        this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
         this.coef = 1;
     }
 
-    public static CoolComponent asBasicSink(TileEntityInventory parent, double capacity) {
+    public static CoolComponent asBasicSink(BlockEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static CoolComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
+    public static CoolComponent asBasicSink(BlockEntityInventory parent, double capacity, int tier) {
         return new CoolComponent(parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
-    public static CoolComponent asBasicSource(TileEntityInventory parent, double capacity) {
+    public static CoolComponent asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static CoolComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static CoolComponent asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new CoolComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
@@ -102,7 +100,7 @@ public class CoolComponent extends AbstractComponent {
 
     public CompoundTag writeToNbt() {
         CompoundTag ret = new CompoundTag();
-        ret.putDouble("storage",  this.buffer.storage);
+        ret.putDouble("storage", this.buffer.storage);
         ret.putBoolean("upgrade", this.upgrade);
         ret.putInt("meta", this.meta);
         ret.putBoolean("allow", this.buffer.allow);
@@ -170,7 +168,7 @@ public class CoolComponent extends AbstractComponent {
     @Override
     public boolean onBlockActivated(Player player, InteractionHand hand) {
         if (!player.level().isClientSide() && player != null) {
-            if (this.getParent() instanceof TileMultiMachine multiMachine && player.getItemInHand(hand).getItem() instanceof ItemCoolingUpgrade<?>) {
+            if (this.getParent() instanceof BlockEntityMultiMachine multiMachine && player.getItemInHand(hand).getItem() instanceof ItemCoolingUpgrade<?>) {
 
                 ItemCoolingUpgrade<ItemCoolingUpgrade.Types> coolingUpgrade = (ItemCoolingUpgrade) player.getItemInHand(hand).getItem();
 
@@ -223,7 +221,6 @@ public class CoolComponent extends AbstractComponent {
     }
 
 
-
     public double getCapacity() {
         return this.buffer.capacity;
     }
@@ -251,7 +248,11 @@ public class CoolComponent extends AbstractComponent {
         if (this.upgrade) {
             this.buffer.storage = 0;
         }
+        if (this.delegate instanceof ICoolSink){
+            if (!cooling)
+                this.buffer.storage = 0;
 
+        }
         return amount;
     }
 
@@ -319,7 +320,6 @@ public class CoolComponent extends AbstractComponent {
     }
 
 
-
     public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
 
         if (this.delegate != null) {
@@ -364,13 +364,6 @@ public class CoolComponent extends AbstractComponent {
     private double getSourceEnergy() {
         return this.buffer.storage;
     }
-
-
-
-
-
-
-
 
 
 }

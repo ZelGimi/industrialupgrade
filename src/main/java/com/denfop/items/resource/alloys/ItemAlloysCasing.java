@@ -1,7 +1,7 @@
 package com.denfop.items.resource.alloys;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemAlloysCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemAlloysCasing<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemAlloysCasing(T element) {
         super(new Item.Properties(), element);
     }
@@ -18,16 +18,18 @@ public class ItemAlloysCasing<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         return new String[]{"forge:casings/" + getElement().getName().replace("_alloy", "").replace("_", ""), "forge:casings"};
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         aluminum_bronze(0),
         alumel(1),
         red_brass(2),

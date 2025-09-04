@@ -27,10 +27,6 @@ public class SunnariumHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<SunnariumHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -42,7 +38,7 @@ public class SunnariumHandler {
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
             ItemStack output,
             BaseMachineRecipe container) {
-        SunnariumHandler recipe = new SunnariumHandler(input, input1, input2, input3, output,container);
+        SunnariumHandler recipe = new SunnariumHandler(input, input1, input2, input3, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -69,12 +65,17 @@ public class SunnariumHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0),container
+                    container.getOutput().items.get(0), container
             );
 
 
         }
     }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3);
     }

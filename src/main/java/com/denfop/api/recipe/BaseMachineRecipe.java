@@ -19,24 +19,6 @@ public class BaseMachineRecipe {
         this.output = output;
     }
 
-    public CompoundTag writeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.put("Input", input.writeNBT());
-        ListTag itemsTag = new ListTag();
-        if (output != null)
-            if (output.items != null)
-                for (ItemStack stack : output.items) {
-                    if (stack != null)
-                        itemsTag.add(stack.save(new CompoundTag()));
-                }
-        tag.put("Items", itemsTag);
-        if (output != null&& output.metadata != null) {
-            tag.put("Metadata", output.metadata);
-        }
-
-        return tag;
-    }
-
     public static BaseMachineRecipe readNBT(CompoundTag tag) {
         Input input = Input.readNBT(tag.getCompound("Input"));
         List<ItemStack> items = new ArrayList<>();
@@ -52,6 +34,24 @@ public class BaseMachineRecipe {
 
         RecipeOutput output = new RecipeOutput(metadata, items);
         return new BaseMachineRecipe(input, output);
+    }
+
+    public CompoundTag writeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.put("Input", input.writeNBT());
+        ListTag itemsTag = new ListTag();
+        if (output != null)
+            if (output.items != null)
+                for (ItemStack stack : output.items) {
+                    if (stack != null)
+                        itemsTag.add(stack.save(new CompoundTag()));
+                }
+        tag.put("Items", itemsTag);
+        if (output != null && output.metadata != null) {
+            tag.put("Metadata", output.metadata);
+        }
+
+        return tag;
     }
 
     public boolean matches(List<ItemStack> stacks) {

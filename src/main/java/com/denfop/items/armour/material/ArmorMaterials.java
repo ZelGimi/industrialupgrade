@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum ArmorMaterials implements ArmorMaterial {
-   RUBY("ruby", 450, new int[]{2, 7, 3, 1}, 25, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
+    RUBY("ruby", 450, new int[]{2, 7, 3, 1}, 25, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
         return Ingredient.of(IUItem.preciousgem.getItemFromMeta(0));
     }),
     SAPPHIRE("sapphire", 550, new int[]{3, 5, 3, 2}, 25, SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
@@ -26,9 +26,7 @@ public enum ArmorMaterials implements ArmorMaterial {
     }),
     ENERGY_ITEM("energy_item", 0, new int[]{3, 6, 8, 3}, 25, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, 0.0F, () -> null),
     BRONZE("bronze", 15, new int[]{2, 5, 6, 2}, 9,
-           SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> Ingredient.of(IUItem.bronzeIngot));
-
-    ;
+            SoundEvents.ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> Ingredient.of(IUItem.bronzeIngot));;
 
 
     private final String name;
@@ -50,7 +48,6 @@ public enum ArmorMaterials implements ArmorMaterial {
         this.knockbackResistance = p_40480_;
         this.repairIngredient = new LazyLoadedValue<>(p_40481_);
     }
-
 
 
     @Override

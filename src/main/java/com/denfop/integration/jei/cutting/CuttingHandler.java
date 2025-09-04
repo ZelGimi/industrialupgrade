@@ -17,11 +17,7 @@ public class CuttingHandler {
     public CuttingHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
-        this.container=container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<CuttingHandler> getRecipes() {
@@ -32,7 +28,7 @@ public class CuttingHandler {
     }
 
     public static CuttingHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
-        CuttingHandler recipe = new CuttingHandler(input, output,container);
+        CuttingHandler recipe = new CuttingHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -55,18 +51,22 @@ public class CuttingHandler {
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("cutting")) {
 
-    try {
-        addRecipe(
-                container.input.getInputs().get(0).getInputs().get(0),
-                container.getOutput().items.get(0),container
-        );
-    }catch (Exception e){
-        System.out.println(2);
-    };
+            try {
+                addRecipe(
+                        container.input.getInputs().get(0).getInputs().get(0),
+                        container.getOutput().items.get(0), container
+                );
+            } catch (Exception e) {
+                System.out.println(2);
+            }
+            ;
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

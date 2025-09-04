@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.Data;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -39,10 +39,12 @@ public class ItemTomeResearchSpace extends Item implements IItemTab {
         tooltip.add(Component.literal(Localization.translate("iu.tome_research1")));
         tooltip.add(Component.literal(Localization.translate("iu.tome_research2")));
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -60,6 +62,7 @@ public class ItemTomeResearchSpace extends Item implements IItemTab {
 
         return this.nameItem;
     }
+
     @Override
     public InteractionResultHolder<ItemStack> use(
             @Nonnull final Level world,

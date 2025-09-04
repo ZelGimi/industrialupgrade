@@ -1,6 +1,5 @@
 package com.denfop.render;
 
-import com.denfop.blocks.FluidName;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -14,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -23,13 +21,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class RenderFluidBlock {
-    private static final  Map<Integer, Map<BlockPos, TickLerp>> lerpMap = new WeakHashMap<>();
-
-    private static class TickLerp {
-        long startTick;
-        float startAmount;
-        float targetAmount;
-    }
+    private static final Map<Integer, Map<BlockPos, TickLerp>> lerpMap = new WeakHashMap<>();
 
     private static float getCurrentLerpHeight(TickLerp lerp, long currentTick) {
         float progress = (currentTick - lerp.startTick) / 20f;
@@ -40,7 +32,6 @@ public class RenderFluidBlock {
 
     public static void renderFluid(FluidStack fluidStack, MultiBufferSource bufferSource, Level level, BlockPos pos, PoseStack poseStack, float scale, float scale1, int tank) {
         if (fluidStack.isEmpty()) return;
-
 
 
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
@@ -69,7 +60,7 @@ public class RenderFluidBlock {
 
         float height = 1;
 
-        scale = (float) (getCurrentLerpHeight(lerp, gameTime) * 0.99 * scale);
+        scale = (float) (getCurrentLerpHeight(lerp, gameTime));
         poseStack.translate(-0.5, 0, -0.5);
         poseStack.scale(2f * scale1, scale, 2f * scale1);
 
@@ -104,7 +95,6 @@ public class RenderFluidBlock {
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         poseStack.popPose();
     }
-
 
     public static void renderFluid(FluidStack fluidStack, MultiBufferSource bufferSource, Level level, BlockPos pos, PoseStack poseStack, float scale, float scale1, float scale2) {
         if (fluidStack.isEmpty())
@@ -176,5 +166,11 @@ public class RenderFluidBlock {
         drawVertex(builder, poseStack, x0, y1, z1, u0, v1, packedLight, color);
         drawVertex(builder, poseStack, x1, y1, z1, u1, v1, packedLight, color);
         drawVertex(builder, poseStack, x1, y0, z0, u1, v0, packedLight, color);
+    }
+
+    private static class TickLerp {
+        long startTick;
+        float startAmount;
+        float targetAmount;
     }
 }

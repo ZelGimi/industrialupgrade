@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -25,11 +25,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockResource<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockResource(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
-        super(Properties.of().mapColor(MapColor.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+
+        super(element == Type.tempered_glass ? Properties.of().mapColor(MapColor.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops() :  Properties.of().mapColor(MapColor.STONE).destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+       
         BlockTagsProvider.list.add(this);
 
     }
@@ -47,7 +49,7 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public   int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -58,12 +60,12 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         if (this.getElement().canAddToTab())
             p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
@@ -92,7 +94,7 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         cryogen(0),
         bronze_block(1),
         copper_block(2),

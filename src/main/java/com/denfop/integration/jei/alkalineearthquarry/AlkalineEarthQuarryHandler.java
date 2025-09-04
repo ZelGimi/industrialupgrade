@@ -12,8 +12,8 @@ import java.util.List;
 public class AlkalineEarthQuarryHandler {
 
     private static final List<AlkalineEarthQuarryHandler> recipes = new ArrayList<>();
-    private final ItemStack input;
     public final double chance;
+    private final ItemStack input;
     private final ItemStack output;
     private final ItemStack mesh;
 
@@ -50,15 +50,15 @@ public class AlkalineEarthQuarryHandler {
         addRecipe(new ItemStack(Blocks.SAND), 7, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.steleticMesh));
 
 
-        addRecipe(new ItemStack(Blocks.DIRT), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 1),ItemStackHelper.fromData(IUItem.steelMesh));
+        addRecipe(new ItemStack(Blocks.DIRT), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.steelMesh));
         addRecipe(new ItemStack(Blocks.DIRT), 2, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
-        addRecipe(new ItemStack(Blocks.DIRT), 3, ItemStackHelper.fromData(IUItem.ore2, 1, 1),ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
+        addRecipe(new ItemStack(Blocks.DIRT), 3, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
         addRecipe(new ItemStack(Blocks.DIRT), 4, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.steleticMesh));
 
 
         addRecipe(new ItemStack(Blocks.GRAVEL), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.steelMesh));
         addRecipe(new ItemStack(Blocks.GRAVEL), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
-        addRecipe(new ItemStack(Blocks.GRAVEL), 1, ItemStackHelper.fromData(IUItem.ore2, 1, 2),ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
+        addRecipe(new ItemStack(Blocks.GRAVEL), 1, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
         addRecipe(new ItemStack(Blocks.GRAVEL), 2, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.steleticMesh));
 
 

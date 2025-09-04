@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.denfop.api.space.SpaceInit.regBaseResource;
-import static com.denfop.api.space.SpaceInit.regPlanet;
 
 public class SpaceBodySerializer implements RecipeSerializer<SpaceBodyRecipe> {
     public static final SpaceBodySerializer INSTANCE = new SpaceBodySerializer();
@@ -71,49 +70,49 @@ public class SpaceBodySerializer implements RecipeSerializer<SpaceBodyRecipe> {
         int chance = GsonHelper.getAsInt(json, "chance");
         IBody body = SpaceNet.instance.getBodyFromName(bodyName.toLowerCase());
         if (body != null)
-            if (operationType.equals("add")) {
+            if (operationType.equals("addAll")) {
                 switch (roverType) {
                     case "rover":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->    new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROVERS));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROVERS));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->   new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROVERS));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROVERS));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->    new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROVERS));
+                                regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROVERS));
 
                         }
                         break;
                     case "probe":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->     new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.PROBE));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.PROBE));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->     new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.PROBE));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.PROBE));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->   new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.PROBE));
+                                regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.PROBE));
 
                         }
                         break;
                     case "satellite":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->    new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.SATELLITE));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.SATELLITE));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->    new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->  new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
+                                regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.SATELLITE));
 
                         }
                         break;
                     case "rocket":
                         for (IInputItemStack itemStack : input) {
                             if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() ->     new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROCKET));
+                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, body, EnumTypeRovers.ROCKET));
                             if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() ->   new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROCKET));
+                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, body, EnumTypeRovers.ROCKET));
                             if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() ->   new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROCKET));
+                                regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, body, EnumTypeRovers.ROCKET));
 
                         }
                         break;

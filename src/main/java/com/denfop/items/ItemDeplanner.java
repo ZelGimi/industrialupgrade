@@ -1,11 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,16 +33,19 @@ public class ItemDeplanner extends Item implements IItemTab {
     public ItemDeplanner() {
         super(new Properties().stacksTo(1).setNoRepair());
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.deplanner.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.deplanner.info")));
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -55,7 +58,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
@@ -85,7 +88,7 @@ public class ItemDeplanner extends Item implements IItemTab {
                     }
 
 
-                    pos1 = switch (((TileMultiBlockBase) mainMultiBlock).getFacing()) {
+                    pos1 = switch (((BlockEntityMultiBlockBase) mainMultiBlock).getFacing()) {
                         case NORTH -> new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
                         case EAST ->
                                 new BlockPos(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
@@ -95,15 +98,15 @@ public class ItemDeplanner extends Item implements IItemTab {
                                 new BlockPos(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                         default -> throw new IllegalStateException("Unexpected value: ");
                     };
-                    TileEntityBlock block = (TileEntityBlock) world.getBlockEntity(pos.offset(pos1));
-                    itemStackList.add(block.getPickBlock(null,null));
+                    BlockEntityBase block = (BlockEntityBase) world.getBlockEntity(pos.offset(pos1));
+                    itemStackList.add(block.getPickBlock(null, null));
                     world.removeBlockEntity(pos.offset(pos1));
                     world.setBlock(pos.offset(pos1), Blocks.AIR.defaultBlockState(), 3);
 
                 }
                 itemStackList.add(mainMultiBlock.getMultiBlockStucture().ItemStackMap.get(BlockPos.ZERO).copy());
 
-                ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
+                ((BlockEntityMultiBlockBase) mainMultiBlock).onUnloaded();
                 world.removeBlockEntity(pos);
                 world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 

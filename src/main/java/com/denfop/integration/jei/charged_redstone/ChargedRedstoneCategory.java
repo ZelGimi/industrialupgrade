@@ -2,14 +2,14 @@ package com.denfop.integration.jei.charged_redstone;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.container.ContainerMultiMachine;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityCentrifuge;
+import com.denfop.blocks.mechanism.BlockMoreMachine3Entity;
+import com.denfop.containermenu.ContainerMenuMultiMachine;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileCentrifuge;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -24,17 +24,18 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<ChargedRedstoneHandler> {
+public class ChargedRedstoneCategory extends ScreenMain implements IRecipeCategory<ChargedRedstoneHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public ChargedRedstoneCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getInstance().player,
-                ((TileCentrifuge) BlockMoreMachine3.centrifuge_iu.getDummyTe()), 1, true
+        super(new ContainerMenuMultiMachine(Minecraft.getInstance().player,
+                ((BlockEntityCentrifuge) BlockMoreMachine3Entity.centrifuge_iu.getDummyTe()), 1, true
         ));
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
@@ -54,6 +55,7 @@ public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<Ch
     public RecipeType<ChargedRedstoneHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
+
     @SuppressWarnings("removal")
     @Nonnull
     @Override
@@ -63,7 +65,7 @@ public class ChargedRedstoneCategory extends GuiIU implements IRecipeCategory<Ch
 
     @Override
     public void draw(ChargedRedstoneHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-        drawSplitString(stack,Localization.translate(recipe.output), 5, 3,
+        drawSplitString(stack, Localization.translate(recipe.output), 5, 3,
                 140 - 5, 4210752
         );
     }

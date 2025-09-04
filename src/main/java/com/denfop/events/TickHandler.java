@@ -1,11 +1,10 @@
 package com.denfop.events;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.upgrade.UpgradeItemInform;
-import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.UpgradeItemInform;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.pollution.radiation.Radiation;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -55,7 +54,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.denfop.items.ItemVeinSensor.dataColors;
 import static com.denfop.render.base.RenderType.LEASH;
@@ -86,10 +87,6 @@ public class TickHandler {
     public TickHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
-    @SubscribeEvent
-    public void initData(TickEvent.LevelTickEvent event){
-
-    }
 
     protected static BlockHitResult getPlayerPOVHitResult(Level p_41436_, Player p_41437_, ClipContext.Fluid p_41438_) {
         float f = p_41437_.getXRot();
@@ -106,9 +103,14 @@ public class TickHandler {
         return p_41436_.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, p_41438_, p_41437_));
     }
 
+    @SubscribeEvent
+    public void initData(TickEvent.LevelTickEvent event) {
+
+    }
+
     public int getOreColor(BlockState state) {
         Block block = state.getBlock();
-        if (dataColors.containsKey(state)){
+        if (dataColors.containsKey(state)) {
             return dataColors.get(state);
         }
         if (block == Blocks.IRON_ORE) {
@@ -123,11 +125,9 @@ public class TickHandler {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
         } else if (block == Blocks.COAL_ORE) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        }
-        else if (block == Blocks.COPPER_ORE) {
+        } else if (block == Blocks.COPPER_ORE) {
             return ModUtils.convertRGBcolorToInt(255, 144, 0);
-        }
-        else if (block == Blocks.EMERALD_ORE) {
+        } else if (block == Blocks.EMERALD_ORE) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
         } else if (block == Blocks.NETHER_QUARTZ_ORE) {
             return ModUtils.convertRGBcolorToInt(223, 223, 223);

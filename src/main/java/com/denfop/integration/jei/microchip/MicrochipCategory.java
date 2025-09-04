@@ -2,13 +2,13 @@ package com.denfop.integration.jei.microchip;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityMatterFactory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityMatterFactory;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MicrochipCategory extends GuiIU implements IRecipeCategory<MicrochipHandler> {
+public class MicrochipCategory extends ScreenMain implements IRecipeCategory<MicrochipHandler> {
 
     private final JeiInform jeiInform;
 
@@ -34,7 +34,7 @@ public class MicrochipCategory extends GuiIU implements IRecipeCategory<Microchi
     public MicrochipCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityMatterFactory) BlockBaseMachine3.matter_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityMatterFactory) BlockBaseMachine3Entity.matter_factory.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICirsuit".toLowerCase() +
                         ".png"), 3, 3, 140,
@@ -77,33 +77,33 @@ public class MicrochipCategory extends GuiIU implements IRecipeCategory<Microchi
 
         draw(stack, "" + recipe.getTemperature() + "°C", 70, 80, 4210752);
 
-      bindTexture(getTexture());
+        bindTexture(getTexture());
         int temperature = 38 * recipe.getTemperature() / 5000;
         if (temperature > 0) {
             drawTexturedModalRect(stack, 67, 60, 176, 21, temperature + 1, 11);
         }
-        drawTexturedModalRect(stack,25, 9, 176, 34, (int) (xScale + 1), 32);
+        drawTexturedModalRect(stack, 25, 9, 176, 34, (int) (xScale + 1), 32);
 
 
-        drawTexturedModalRect(stack,57, 13, 176, 65, (int) (xScale1 + 1), 21);
+        drawTexturedModalRect(stack, 57, 13, 176, 65, (int) (xScale1 + 1), 21);
 
 
-        drawTexturedModalRect(stack,86, 19, 176, 86, (int) (xScale2 + 1), 7);
+        drawTexturedModalRect(stack, 86, 19, 176, 86, (int) (xScale2 + 1), 7);
 
 
-        drawTexturedModalRect(stack,2, 72 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(stack, 2, 72 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MicrochipHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,7, 6).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT,7, 27).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT,40, 6).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT,40, 26).addItemStack(recipe.getInput3());
-        builder.addSlot(RecipeIngredientRole.INPUT,68, 16).addItemStack(recipe.getInput4());
-        builder.addSlot(RecipeIngredientRole.OUTPUT,109, 16).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 7, 6).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 7, 27).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 40, 6).addItemStack(recipe.getInput2());
+        builder.addSlot(RecipeIngredientRole.INPUT, 40, 26).addItemStack(recipe.getInput3());
+        builder.addSlot(RecipeIngredientRole.INPUT, 68, 16).addItemStack(recipe.getInput4());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 16).addItemStack(recipe.getOutput());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }

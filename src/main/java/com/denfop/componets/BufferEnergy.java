@@ -8,11 +8,11 @@ public class BufferEnergy {
     public boolean allow;
     public boolean need;
 
-    public BufferEnergy(double storage, double capacity, int sinkTier, int sourceTier){
-        this.storage=storage;
+    public BufferEnergy(double storage, double capacity, int sinkTier, int sourceTier) {
+        this.storage = storage;
         this.capacity = capacity;
-        this.sourceTier=sourceTier;
-        this.sinkTier=sinkTier;
+        this.sourceTier = sourceTier;
+        this.sinkTier = sinkTier;
     }
 
 }

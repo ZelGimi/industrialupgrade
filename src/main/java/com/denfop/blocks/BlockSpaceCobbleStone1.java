@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ import oshi.util.tuples.Pair;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class BlockSpaceCobbleStone1<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockSpaceCobbleStone1<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockSpaceCobbleStone1(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -37,12 +37,12 @@ public class BlockSpaceCobbleStone1<T extends Enum<T> & ISubEnum> extends BlockC
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -56,7 +56,7 @@ public class BlockSpaceCobbleStone1<T extends Enum<T> & ISubEnum> extends BlockC
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         mimas_cobblestone(0),
         miranda_cobblestone(1),
         moon_cobblestone(2),

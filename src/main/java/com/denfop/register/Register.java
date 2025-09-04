@@ -1,19 +1,22 @@
 package com.denfop.register;
 
-import com.denfop.*;
+import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
 import com.denfop.api.space.rovers.enums.EnumRoversLevelFluid;
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
 import com.denfop.api.upgrades.UpgradeRegistry;
-import com.denfop.audio.Sounds;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.fluid.IUFluidType;
 import com.denfop.blocks.mechanism.*;
-import com.denfop.container.ContainerBase;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.dataregistry.*;
 import com.denfop.effects.EffectsRegister;
-import com.denfop.entity.SmallBee;
 import com.denfop.entity.EntityNuclearBombPrimed;
+import com.denfop.entity.SmallBee;
 import com.denfop.items.*;
 import com.denfop.items.armour.*;
 import com.denfop.items.armour.material.ArmorMaterials;
@@ -49,10 +52,11 @@ import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.potion.IUPotion;
 import com.denfop.recipe.IndustrialShapedRecipeSerializer;
 import com.denfop.recipe.IndustrialShapelessRecipeSerializer;
 import com.denfop.recipe.universalrecipe.*;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.sound.Sounds;
 import com.denfop.villager.VillagerInit;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
@@ -93,7 +97,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = IUCore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Register {
@@ -126,18 +129,14 @@ public class Register {
     public static DeferredRegister<DamageType> DAMAGE_TYPE = DeferredRegister.create(Registries.DAMAGE_TYPE, IUCore.MODID);
 
     public static ForgeFlowingFluid.Properties properties;
-    private static ItemStackInventory invent;
-    public static RegistryObject<MenuType<ContainerBase<?>>> containerBase;
-    public static RegistryObject<MenuType<ContainerBase<?>>> inventory_container;
-
+    public static RegistryObject<MenuType<ContainerMenuBase<?>>> containerBase;
+    public static RegistryObject<MenuType<ContainerMenuBase<?>>> inventory_container;
     public static DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, IUCore.MODID);
     public static RegistryObject<RecipeType<Recipe<?>>> UNIVERSAL_RECIPE_TYPE;
     public static RegistryObject<IURecipeSerializer> RECIPE_SERIALIZER_IU;
-
     public static RegistryObject<RecipeType<Recipe<?>>> UNIVERSAL_RECIPE_TYPE_DELETE;
     public static RegistryObject<IURecipeDeleteSerializer> RECIPE_SERIALIZER_IU_DELETE;
-
     public static RegistryObject<RecipeType<Recipe<?>>> QUANTUM_QUARRY;
     public static RegistryObject<QuantumQuarrySerializer> RECIPE_SERIALIZER_QUANTUM_QUARRY;
     public static RegistryObject<RecipeType<Recipe<?>>> BODY_RECIPE;
@@ -161,228 +160,618 @@ public class Register {
     public static RegistryObject<IndustrialShapedRecipeSerializer> RECIPE_SERIALIZER_SHAPED_RECIPE;
     public static RegistryObject<SmelterSerializer> RECIPE_SERIALIZER_SMELTERY_RECIPE;
     public static RegistryObject<RecipeType<Recipe<?>>> SMELTERY_RECIPE;
+    private static ItemStackInventory invent;
 
     public static void register() {
-        ITEMS.register(IUCore.context.getModEventBus());
-        BLOCKS.register(IUCore.context.getModEventBus());
-        SOUND_EVENTS.register(IUCore.context.getModEventBus());
-        RECIPE_SERIALIZER.register(IUCore.context.getModEventBus());
-        FLUIDS.register(IUCore.context.getModEventBus());
-        FLUID_TYPES.register(IUCore.context.getModEventBus());
-        MOB_EFFECT.register(IUCore.context.getModEventBus());
-        FEATURES.register(IUCore.context.getModEventBus());
-        CONFIGURED_FEATURES.register(IUCore.context.getModEventBus());
-        PLACED_FEATURES.register(IUCore.context.getModEventBus());
-        BLOCK_ENTITIES.register(IUCore.context.getModEventBus());
-        MENU_TYPE.register(IUCore.context.getModEventBus());
-        ENTITIES.register(IUCore.context.getModEventBus());
-        DAMAGE_TYPE.register(IUCore.context.getModEventBus());
-        RECIPE_TYPE.register(IUCore.context.getModEventBus());
-        TABS.register(IUCore.context.getModEventBus());
-        PARTICLE_TYPE.register(IUCore.context.getModEventBus());
-        POI_TYPE.register(IUCore.context.getModEventBus());
-        VILLAGER_PROFESSIONS.register(IUCore.context.getModEventBus());
-        EffectsRegister.register(PARTICLE_TYPE);
-        UNIVERSAL_RECIPE_TYPE = RECIPE_TYPE.register("universal_recipe", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_IU = RECIPE_SERIALIZER.register("universal_recipe", IURecipeSerializer::new);
-        UNIVERSAL_RECIPE_TYPE_DELETE = RECIPE_TYPE.register("universal_recipe_delete", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_IU_DELETE = RECIPE_SERIALIZER.register("universal_recipe_delete", IURecipeDeleteSerializer::new);
-        RECIPE_SERIALIZER_SHAPED_RECIPE= RECIPE_SERIALIZER.register("shaped_recipe", IndustrialShapedRecipeSerializer::new);
-        RECIPE_SERIALIZER_SHAPELESS_RECIPE= RECIPE_SERIALIZER.register("shapeless_recipe", IndustrialShapelessRecipeSerializer::new);
-
-        
-        QUANTUM_QUARRY = RECIPE_TYPE.register("quantum_quarry", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_QUANTUM_QUARRY = RECIPE_SERIALIZER.register("quantum_quarry", QuantumQuarrySerializer::new);
-        BODY_RECIPE = RECIPE_TYPE.register("body_resource", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_BODY_RECIPE = RECIPE_SERIALIZER.register("body_resource", SpaceBodySerializer::new);
-        SATELLITE_RECIPE = RECIPE_TYPE.register("satellite_add", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_SATELLITE_RECIPE = RECIPE_SERIALIZER.register("satellite_add", SatelliteSerializer::new);
-        PLANET_RECIPE = RECIPE_TYPE.register("planet_add", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_PLANET_RECIPE = RECIPE_SERIALIZER.register("planet_add", PlanetSerializer::new);
-        STAR_RECIPE = RECIPE_TYPE.register("star_add", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_STAR_RECIPE = RECIPE_SERIALIZER.register("star_add", StarSerializer::new);
-        SYSTEM_RECIPE = RECIPE_TYPE.register("system_add", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_SYSTEM_RECIPE = RECIPE_SERIALIZER.register("system_add", SystemSerializer::new);
-        ASTEROID_RECIPE = RECIPE_TYPE.register("asteroid_add", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_ASTEROID_RECIPE = RECIPE_SERIALIZER.register("asteroid_add", AsteroidSerializer::new);
-        COLONY_RECIPE = RECIPE_TYPE.register("colony_resource_add", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_COLONY_RECIPE = RECIPE_SERIALIZER.register("colony_resource_add", ColonySerializer::new);
-
-        SMELTERY_RECIPE = RECIPE_TYPE.register("smeltery", () -> new RecipeType<>() {});
-        RECIPE_SERIALIZER_SMELTERY_RECIPE = RECIPE_SERIALIZER.register("smeltery", () -> new SmelterSerializer());
-        TABS.register("iutab",
-                () -> IUCore.IUTab);
-        TABS.register("moduletab",
-                () -> IUCore.ModuleTab);
-        TABS.register("itemtab",
-                () -> IUCore.ItemTab);
-        TABS.register("oretab",
-                () -> IUCore.OreTab);
-        TABS.register("energytab",
-                () -> IUCore.EnergyTab);
-        TABS.register("resourcetab",
-                () -> IUCore.RecourseTab);
-        TABS.register("reactorstab",
-                () -> IUCore.ReactorsTab);
-        TABS.register("upgradetab",
-                () -> IUCore.UpgradeTab);
-        TABS.register("elementstab",
-                () -> IUCore.ElementsTab);
-        TABS.register("reactorsblocktab",
-                () -> IUCore.ReactorsBlockTab);
-        TABS.register("croptab",
-                () -> IUCore.CropsTab);
-        TABS.register("beetab",
-                () -> IUCore.BeesTab);
-        TABS.register("genometab",
-                () -> IUCore.GenomeTab);
-        TABS.register("spacetab",
-                () -> IUCore.SpaceTab);
-        TABS.register("fluidtab",
-                () -> IUCore.fluidCellTab);
-        containerBase = MENU_TYPE.register("containerbase", () -> IForgeMenuType.create((windowId, inv, data) -> {
-            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
-            try {
-                BlockEntity blockEntity = (BlockEntity) DecoderHandler.decode(packetBuffer);
-                if (blockEntity instanceof TileEntityInventory)
-                    return ((ContainerBase<?>) ((TileEntityInventory) blockEntity).createMenu(windowId, inv, inv.player));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        }));
-        inventory_container = MENU_TYPE.register("inventory_container", () -> IForgeMenuType.create((windowId, inv, data) -> {
-            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
-            try {
-                byte id = packetBuffer.readByte();
-                if (id == 1) {
-                    final ItemStack stack = inv.player.getItemInHand(InteractionHand.MAIN_HAND);
-                    if (stack.getItem() instanceof IItemStackInventory inventory) {
-                        Player player = inv.player;
-                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
-                        return ((ContainerBase<?>) invent.createMenu(windowId, inv, inv.player));
-                    }
-                } else if (id == 2) {
-                    final ItemStack stack = inv.player.getItemBySlot(EquipmentSlot.LEGS);
-                    if (stack.getItem() instanceof IItemStackInventory inventory) {
-                        Player player = inv.player;
-                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
-                        return ((ContainerBase<?>) invent.createMenu(windowId, inv, inv.player));
-                    }
-                } else if (id == 3) {
-                    final ItemStack stack = inv.player.getItemBySlot(EquipmentSlot.CHEST);
-                    if (stack.getItem() instanceof IItemStackInventory inventory) {
-                        Player player = inv.player;
-                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
-                        return ((ContainerBase<?>) invent.createMenu(windowId, inv, inv.player));
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            return null;
-        }));
-        Sounds.registerSounds(SOUND_EVENTS);
+        registerRegisters();
+        registerParticles();
+        registerRecipes();
+        registerTabs();
+        registerContainerMenu();
+        registerSounds();
         registerFluids();
         registerPotions();
-        IUItem.entity_nuclear_bomb = ENTITIES.register("nuclear_bomb", () ->
-                EntityType.Builder.<EntityNuclearBombPrimed>of(EntityNuclearBombPrimed::new, MobCategory.MISC)
-                        .sized(0.98F, 0.98F)
-                        .clientTrackingRange(10)
-                        .updateInterval(10)
-                        .build("nuclear_bomb"));
-        IUItem.entity_bee = ENTITIES.register("bee", () -> EntityType.Builder.of(SmallBee::new, MobCategory.CREATURE).sized(0.7F*0.2f, 0.6F*0.2f).clientTrackingRange(8).build("bee"));
-        IUItem.combinersolidmatter = new DataBlockEntity<>(BlockCombinerSolid.class);
-        IUItem.oiladvrefiner = new DataBlockEntity<>(BlockAdvRefiner.class);
-        IUItem.adv_se_generator = new DataBlockEntity<>(BlockAdvSolarEnergy.class);
-        IUItem.machines = new DataBlockEntity<>(BlockBaseMachine.class);
-        IUItem.basemachine = new DataBlockEntity<>(BlockBaseMachine1.class);
-        IUItem.basemachine1 = new DataBlockEntity<>(BlockBaseMachine2.class);
-        IUItem.basemachine2 = new DataBlockEntity<>(BlockBaseMachine3.class);
+        registerEntities();
+        registerBlockEntity();
+        registerItemBeforeBlocks();
+        registerBlocks();
+        registerItemAfterBlocks();
+        registerVillagers();
+    }
 
-        IUItem.anvil = new DataBlockEntity<>(BlockAnvil.class);
-        IUItem.blockmolecular = new DataBlockEntity<>(BlockMolecular.class);
-        IUItem.chargepadelectricblock = new DataBlockEntity<>(BlockChargepadStorage.class);
-        IUItem.electricblock = new DataBlockEntity<>(BlockEnergyStorage.class);
-        IUItem.blockpanel = new DataBlockEntity<>(BlockSolarPanels.class);
-        IUItem.machines_base = new DataBlockEntity<>(BlockMoreMachine.class);
-        IUItem.simplemachine = new DataBlockEntity<>(BlockSimpleMachine.class);
-        IUItem.machines_base1 = new DataBlockEntity<>(BlockMoreMachine1.class);
-        IUItem.machines_base2 = new DataBlockEntity<>(BlockMoreMachine2.class);
-        IUItem.machines_base3 = new DataBlockEntity<>(BlockMoreMachine3.class);
-        IUItem.pho_machine = new DataBlockEntity<>(BlocksPhotonicMachine.class);
-        IUItem.blastfurnace = new DataBlockEntity<>(BlockBlastFurnace.class);
-        IUItem.mini_smeltery = new DataBlockEntity<>(BlockMiniSmeltery.class);
-        IUItem.oilgetter = new DataBlockEntity<>(BlockPetrolQuarry.class);
-        IUItem.primalFluidHeater = new DataBlockEntity<>(BlockPrimalFluidHeater.class);
-        IUItem.electronics_assembler = new DataBlockEntity<>(BlockElectronicsAssembler.class);
-        IUItem.gasChamber = new DataBlockEntity<>(BlockGasChamber.class);
-        IUItem.imp_se_generator = new DataBlockEntity<>(BlockImpSolarEnergy.class);
-        IUItem.blockSE = new DataBlockEntity<>(BlockSolarEnergy.class);
-        IUItem.squeezer = new DataBlockEntity<>(BlockSqueezer.class);
-        IUItem.solderingMechanism = new DataBlockEntity<>(BlockSolderingMechanism.class);
-        IUItem.solidmatter = new DataBlockEntity<>(BlockSolidMatter.class);
-        IUItem.programming_table = new DataBlockEntity<>(BlockPrimalProgrammingTable.class);
-        IUItem.primalPolisher = new DataBlockEntity<>(BlockPrimalLaserPolisher.class);
-        IUItem.tank = new DataBlockEntity<>(BlockTank.class);
-        IUItem.dryer = new DataBlockEntity<>(BlockDryer.class);
-        IUItem.primalSiliconCrystal = new DataBlockEntity<>(BlockPrimalSiliconCrystalHandler.class);
-        IUItem.blockCompressor = new DataBlockEntity<>(BlockCompressor.class);
-        IUItem.cable = new DataBlockEntity<>(BlockCable.class);
-        IUItem.coolpipes = new DataBlockEntity<>(BlockCoolPipe.class);
-        IUItem.pipes = new DataBlockEntity<>(BlockPipe.class);
-        IUItem.heatcold_pipes = new DataBlockEntity<>(BlockHeatColdPipe.class);
-        IUItem.scable = new DataBlockEntity<>(BlockSolariumCable.class);
-        IUItem.qcable = new DataBlockEntity<>(BlockQuantumCable.class);
-        IUItem.amperepipes = new DataBlockEntity<>(BlockAmpereCable.class);
-        IUItem.steamPipe = new DataBlockEntity<>(BlockSteamPipe.class);
-        IUItem.biopipes = new DataBlockEntity<>(BlockBioPipe.class);
-        IUItem.nightpipes = new DataBlockEntity<>(BlockNightCable.class);
-        IUItem.radcable_item = new DataBlockEntity<>(BlockRadPipe.class);
-        IUItem.expcable = new DataBlockEntity<>(BlockExpCable.class);
-        IUItem.universal_cable = new DataBlockEntity<>(BlockUniversalCable.class);
-        IUItem.item_pipes = new DataBlockEntity<>(BlockTransportPipe.class);
-        IUItem.barrel = new DataBlockEntity<>(BlockBarrel.class);
-        IUItem.convertersolidmatter = new DataBlockEntity<>(BlockConverterMatter.class);
-        IUItem.fluidIntegrator = new DataBlockEntity<>(BlockPrimalFluidIntegrator.class);
-        IUItem.sunnariummaker = new DataBlockEntity<>(BlockSunnariumMaker.class);
-        IUItem.sunnariumpanelmaker = new DataBlockEntity<>(BlockSunnariumPanelMaker.class);
-        IUItem.primal_pump = new DataBlockEntity<>(BlockPrimalPump.class);
-        IUItem.oilquarry = new DataBlockEntity<>(BlockQuarryVein.class);
-        IUItem.refractoryFurnace = new DataBlockEntity<>(BlockRefractoryFurnace.class);
-        IUItem.upgradeblock = new DataBlockEntity<>(BlockUpgradeBlock.class);
-        IUItem.oilrefiner = new DataBlockEntity<>(BlockRefiner.class);
-        IUItem.blockdoublemolecular = new DataBlockEntity<>(BlockDoubleMolecularTransfomer.class);
-        IUItem.crop = new DataBlockEntity<>(BlockCrop.class);
-        IUItem.apiary = new DataBlockEntity<>(BlockApiary.class);
-        IUItem.hive = new DataBlockEntity<>(BlockHive.class);
-        IUItem.tranformer = new DataBlockEntity<>(BlockTransformer.class);
-        IUItem.blockMacerator = new DataBlockEntity<>(BlockMacerator.class);
-        IUItem.blockadmin = new DataBlockEntity<>(BlockAdminPanel.class);
-        IUItem.chemicalPlant = new DataBlockEntity<>(BlockChemicalPlant.class);
-        IUItem.blockwireinsulator = new DataBlockEntity<>(BlockPrimalWireInsulator.class);
-        IUItem.cokeoven = new DataBlockEntity<>(BlockCokeOven.class);
-        IUItem.adv_cokeoven = new DataBlockEntity<>(BlockAdvCokeOven.class);
-        IUItem.cyclotron = new DataBlockEntity<>(BlockCyclotron.class);
-        IUItem.strong_anvil = new DataBlockEntity<>(BlockStrongAnvil.class);
-        IUItem.blocksintezator = new DataBlockEntity<>(BlockSintezator.class);
-        IUItem.earthQuarry = new DataBlockEntity<>(BlockEarthQuarry.class);
-        IUItem.geothermalpump = new DataBlockEntity<>(BlockGeothermalPump.class);
-        IUItem.gasTurbine = new DataBlockEntity<>(BlockGasTurbine.class);
-        IUItem.gas_well = new DataBlockEntity<>(BlockGasWell.class);
-        IUItem.smeltery = new DataBlockEntity<>(BlockSmeltery.class);
-        IUItem.lightning_rod = new DataBlockEntity<>(BlockLightningRod.class);
-        IUItem.steam_boiler = new DataBlockEntity<>(BlockSteamBoiler.class);
-        IUItem.windTurbine = new DataBlockEntity<>(BlockWindTurbine.class);
-        IUItem.hydroTurbine = new DataBlockEntity<>(BlockHydroTurbine.class);
-        IUItem.steam_turbine = new DataBlockEntity<>(BlockSteamTurbine.class);
-        IUItem.water_reactors_component = new DataBlockEntity<>(BlockWaterReactors.class);
-        IUItem.gas_reactor = new DataBlockEntity<>(BlockGasReactor.class);
-        IUItem.graphite_reactor = new DataBlockEntity<>(BlocksGraphiteReactors.class);
-        IUItem.heat_reactor = new DataBlockEntity<>(BlockHeatReactor.class);
-        IUItem.creativeBlock = new DataBlockEntity<>(BlockCreativeBlocks.class);
+    private static void registerSounds() {
 
+        Sounds.registerSounds(SOUND_EVENTS);
+    }
+
+    private static void registerParticles() {
+
+        EffectsRegister.register(PARTICLE_TYPE);
+    }
+
+    private static void registerItemAfterBlocks() {
+        IUItem.coolupgrade = new DataItem<>(ItemCoolingUpgrade.Types.class, ItemCoolingUpgrade.class);
+        IUItem.autoheater = new DataSimpleItem<>(new ResourceLocation("", "autoheater"), () -> new IUItemBase(IUCore.ModuleTab));
+        IUItem.upgrade_speed_creation = new DataSimpleItem<>(new ResourceLocation("", "upgrade_speed_creation"), () -> new IUItemBase(IUCore.ModuleTab));
+
+        IUItem.treetap = new DataSimpleItem<>(new ResourceLocation("tools", "treetap"), ItemTreetap::new);
+
+        IUItem.recipe_schedule = new DataSimpleItem<>(new ResourceLocation("", "recipe_schedule"), ItemRecipeSchedule::new);
+        IUItem.magnet = new DataSimpleItem<>(new ResourceLocation("energy", "magnet"), () -> new ItemMagnet(100000, 5000, 4, 7));
+        IUItem.impmagnet = new DataSimpleItem<>(new ResourceLocation("energy", "impmagnet"), () -> new ItemMagnet(200000, 7500, 5, 11));
+        IUItem.electric_treetap = new DataSimpleItem<>(new ResourceLocation("energy", "electric_treetap"), ItemTreetapEnergy::new);
+        IUItem.electric_wrench = new DataSimpleItem<>(new ResourceLocation("energy", "electric_wrench"), ItemToolWrenchEnergy::new);
+        IUItem.electric_hoe = new DataSimpleItem<>(new ResourceLocation("energy", "electric_hoe"), ItemEnergyToolHoe::new);
+        IUItem.wrench = new DataSimpleItem<>(new ResourceLocation("energy", "wrench"), ItemToolWrench::new);
+        IUItem.windmeter = new DataSimpleItem<>(new ResourceLocation("energy", "wind_meter"), ItemWindMeter::new);
+        IUItem.itemiu = new DataItem<>(ItemIUCrafring.Types.class, ItemIUCrafring.class);
+        IUItem.rawMetals = new DataItem<>(ItemRawMetals.Types.class, ItemRawMetals.class);
+        IUItem.rawIngot = new DataItem<>(ItemRawIngot.Types.class, ItemRawIngot.class);
+        IUItem.radiationModule = new DataItem<>(ItemReactorModules.Types.class, ItemReactorModules.class);
+        IUItem.stik = new DataItem<>(ItemSticks.Types.class, ItemSticks.class);
+        IUItem.verysmalldust = new DataItem<>(ItemVerySmallDust.Types.class, ItemVerySmallDust.class);
+        IUItem.corewater = new DataItem<>(ItemCoreWater.Types.class, ItemCoreWater.class);
+        IUItem.corewind = new DataItem<>(ItemCoreWind.Types.class, ItemCoreWind.class);
+        IUItem.crystalMemory = new DataSimpleItem<>(new ResourceLocation("", "crystal_memory"), ItemCrystalMemory::new);
+        IUItem.lens = new DataItem<>(ItemLens.Types.class, ItemLens.class);
+        IUItem.spaceItem = new DataItem<>(ItemSpace.Types.class, ItemSpace.class);
+        IUItem.rotors_upgrade = new DataItem<>(ItemRotorsUpgrade.Types.class, ItemRotorsUpgrade.class);
+        IUItem.spaceupgrademodule_schedule = new DataSimpleItem<>(new ResourceLocation("", "spaceupgrademodule_schedule"), () -> new IUItemBase(IUCore.ModuleTab));
+        IUItem.colonial_building = new DataItem<>(ItemColonialBuilding.Types.class, ItemColonialBuilding.class);
+        IUItem.research_lens = new DataItem<>(ItemResearchLens.Types.class, ItemResearchLens.class);
+        IUItem.spaceupgrademodule = new DataItem<>(ItemSpaceUpgradeModule.Types.class, ItemSpaceUpgradeModule.class);
+        IUItem.water_rotors_upgrade = new DataItem<>(ItemWaterRotorsUpgrade.Types.class, ItemWaterRotorsUpgrade.class);
+        IUItem.excitednucleus = new DataItem<>(ItemExcitedNucleus.Types.class, ItemExcitedNucleus.class);
+        IUItem.water_rod = new DataItem<>(ItemWaterRod.Types.class, ItemWaterRod.class);
+        IUItem.relocator = new DataSimpleItem<>(new ResourceLocation("energy", "relocator"), () -> new ItemRelocator());
+        IUItem.rocket = new DataSimpleItem<>(new ResourceLocation("rover", "rocket"), () -> new ItemRover("rocket", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROCKET, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 2));
+        IUItem.adv_rocket = new DataSimpleItem<>(new ResourceLocation("rover", "adv_rocket"), () -> new ItemRover("adv_rocket", 20000, EnumRoversLevel.TWO, EnumTypeRovers.ROCKET, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 3.5));
+        IUItem.imp_rocket = new DataSimpleItem<>(new ResourceLocation("rover", "imp_rocket"), () -> new ItemRover("imp_rocket", 30000, EnumRoversLevel.THREE, EnumTypeRovers.ROCKET, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 5));
+        IUItem.per_rocket = new DataSimpleItem<>(new ResourceLocation("rover", "per_rocket"), () -> new ItemRover("per_rocket", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROCKET, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 7.5));
+        IUItem.probe = new DataSimpleItem<>(new ResourceLocation("rover", "probe"), () -> new ItemRover("probe", 10000, EnumRoversLevel.ONE, EnumTypeRovers.PROBE, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 1.35));
+        IUItem.adv_probe = new DataSimpleItem<>(new ResourceLocation("rover", "adv_probe"), () -> new ItemRover("adv_probe", 20000, EnumRoversLevel.TWO, EnumTypeRovers.PROBE, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 2.25));
+        IUItem.imp_probe = new DataSimpleItem<>(new ResourceLocation("rover", "imp_probe"), () -> new ItemRover("imp_probe", 30000, EnumRoversLevel.THREE, EnumTypeRovers.PROBE, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 3));
+        IUItem.per_probe = new DataSimpleItem<>(new ResourceLocation("rover", "per_probe"), () -> new ItemRover("per_probe", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.PROBE, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 4));
+        IUItem.book = new DataSimpleItem<>(new ResourceLocation("book", "guide_book"), () -> new ItemBook("guide_book"));
+
+        IUItem.rover = new DataSimpleItem<>(new ResourceLocation("rover", "rover"), () -> new ItemRover("rover", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROVERS, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 1));
+        IUItem.adv_rover = new DataSimpleItem<>(new ResourceLocation("rover", "adv_rover"), () -> new ItemRover("adv_rover", 20000, EnumRoversLevel.TWO, EnumTypeRovers.ROVERS, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 1.5));
+        IUItem.imp_rover = new DataSimpleItem<>(new ResourceLocation("rover", "imp_rover"), () -> new ItemRover("imp_rover", 30000, EnumRoversLevel.THREE, EnumTypeRovers.ROVERS, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 2));
+        IUItem.per_rover = new DataSimpleItem<>(new ResourceLocation("rover", "per_rover"), () -> new ItemRover("per_rover", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROVERS, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 3));
+        IUItem.satellite = new DataSimpleItem<>(new ResourceLocation("rover", "satellite"), () -> new ItemRover("satellite", 10000, EnumRoversLevel.ONE, EnumTypeRovers.SATELLITE, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 1.65));
+        IUItem.adv_satellite = new DataSimpleItem<>(new ResourceLocation("rover", "adv_satellite"), () -> new ItemRover("adv_satellite", 20000, EnumRoversLevel.TWO, EnumTypeRovers.SATELLITE, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 3.1));
+        IUItem.imp_satellite = new DataSimpleItem<>(new ResourceLocation("rover", "imp_satellite"), () -> new ItemRover("imp_satellite", 30000, EnumRoversLevel.THREE, EnumTypeRovers.SATELLITE, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 4));
+        IUItem.per_satellite = new DataSimpleItem<>(new ResourceLocation("rover", "per_satellite"), () -> new ItemRover("per_satellite", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.SATELLITE, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 6));
+        IUItem.cutter = new DataSimpleItem<>(new ResourceLocation("", "cutter"), ItemToolCutter::new);
+        IUItem.ForgeHammer = new DataSimpleItem<>(new ResourceLocation("", "forge_hammer"), () -> new ItemToolHammer(80));
+        IUItem.ObsidianForgeHammer = new DataSimpleItem<>(new ResourceLocation("", "obsidian_hammer"), () -> new ItemToolHammer(240));
+        IUItem.solderingIron = new DataSimpleItem<>(new ResourceLocation("", "solderingiron"), () -> new ItemToolCrafting(1500));
+        IUItem.laser = new DataSimpleItem<>(new ResourceLocation("", "laser"), () -> new ItemToolCrafting(60));
+        IUItem.matter = new DataItem<>(ItemSolidMatter.Types.class, ItemSolidMatter.class);
+        IUItem.windrod = new DataItem<>(ItemWindRod.Types.class, ItemWindRod.class);
+        IUItem.preciousgem = new DataItem<>(ItemPreciousGem.Types.class, ItemPreciousGem.class);
+        IUItem.photonglass = new DataItem<>(ItemPhotoniumGlass.Types.class, ItemPhotoniumGlass.class);
+        IUItem.solar_day_glass = new DataItem<>(ItemDaySolarPanelGlass.Types.class, ItemDaySolarPanelGlass.class);
+        IUItem.solar_night_glass = new DataItem<>(ItemNightSolarPanelGlass.Types.class, ItemNightSolarPanelGlass.class);
+        IUItem.solar_night_day_glass = new DataItem<>(ItemDayNightSolarPanelGlass.Types.class, ItemDayNightSolarPanelGlass.class);
+        IUItem.solar_battery = new DataItem<>(ItemBatterySolarPanel.Types.class, ItemBatterySolarPanel.class);
+        IUItem.solar_output = new DataItem<>(ItemOutputSolarPanel.Types.class, ItemOutputSolarPanel.class);
+        IUItem.alloyscasing = new DataItem<>(ItemAlloysCasing.Types.class, ItemAlloysCasing.class);
+        IUItem.alloysdoubleplate = new DataItem<>(ItemAlloysDoublePlate.Type.class, ItemAlloysDoublePlate.class);
+        IUItem.alloysdust = new DataItem<>(ItemAlloysDust.Type.class, ItemAlloysDust.class);
+        IUItem.alloysingot = new DataItem<>(ItemAlloysIngot.Type.class, ItemAlloysIngot.class);
+        IUItem.alloygear = new DataItem<>(ItemAlloysGear.Types.class, ItemAlloysGear.class);
+        IUItem.alloysnugget = new DataItem<>(ItemAlloysNugget.Types.class, ItemAlloysNugget.class);
+        IUItem.alloysplate = new DataItem<>(ItemAlloysPlate.Types.class, ItemAlloysPlate.class);
+        IUItem.frame = new DataItem<>(ItemFrame.Types.class, ItemFrame.class);
+        IUItem.entitymodules = new DataItem<>(ItemEntityModule.Types.class, ItemEntityModule.class);
+        IUItem.purifier = new DataSimpleItem<>(new ResourceLocation("energy", "purifier"), () -> new ItemPurifier(100000, 1000, 3));
+        IUItem.gasSensor = new DataSimpleItem<>(new ResourceLocation("tools", "gas_sensor"), ItemGasSensor::new);
+        IUItem.facadeItem = new DataSimpleItem<>(new ResourceLocation("", "facadeitem"), ItemFacadeItem::new);
+        IUItem.efReader = new DataSimpleItem<>(new ResourceLocation("ef", "reader"), ItemEFReader::new);
+        IUItem.rawLatex = new DataSimpleItem<>(new ResourceLocation("", "raw_latex"), IUItemBase::new);
+        IUItem.net = new DataSimpleItem<>(new ResourceLocation("energy", "net"), ItemNet::new);
+        IUItem.molot = new DataSimpleItem<>(new ResourceLocation("energy", "molot"), ItemHammer::new);
+        IUItem.nanosaber = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nano_saber"), () -> new ItemNanoSaber(160000, 500, 3, 19, 4));
+        IUItem.quantumSaber = new DataSimpleItem<>(new ResourceLocation("energy_tools", "itemnanosaber1"), () -> new ItemQuantumSaber(200000, 15000, 4, 40, 8));
+        IUItem.spectralSaber = new DataSimpleItem<>(new ResourceLocation("energy_tools", "itemnanosaber"), () -> new ItemSpectralSaber(600000, 40000, 5, 60, 12));
+        IUItem.katana = new DataSimpleItem<>(new ResourceLocation("energy_tools", "katana"), () -> new ItemKatana());
+        IUItem.bags = new DataSimpleItem<>(new ResourceLocation("bags", "iu_bags"), () -> new ItemEnergyBags(27, 50000, 500));
+        IUItem.adv_bags = new DataSimpleItem<>(new ResourceLocation("bags", "adv_iu_bags"), () -> new ItemEnergyBags(45, 75000, 750));
+        IUItem.imp_bags = new DataSimpleItem<>(new ResourceLocation("bags", "imp_iu_bags"), () -> new ItemEnergyBags(63, 100000, 1000));
+        IUItem.booze_mug = new DataSimpleItem<>(new ResourceLocation("", "booze_mug"), ItemBooze::new);
+        IUItem.suBattery = new DataSimpleItem<>(new ResourceLocation("", "single_use_battery"), () -> new ItemBatterySU(1200, 1));
+        IUItem.UpgradeKit = new DataItem<>(ItemUpgradeKit.Types.class, ItemUpgradeKit.class);
+
+        IUItem.veinsencor = new DataItem<>(ItemVeinSensor.Types.class, ItemVeinSensor.class);
+        IUItem.upgradepanelkit = new DataItem<>(ItemUpgradePanelKit.Types.class, ItemUpgradePanelKit.class);
+        IUItem.machinekit = new DataItem<>(ItemUpgradeMachinesKit.Types.class, ItemUpgradeMachinesKit.class);
+        IUItem.steelHammer = new DataSimpleItem<>(new ResourceLocation("energy", "steel_hammer"), ItemSteelHammer::new);
+        IUItem.ironHammer = new DataSimpleItem<>(new ResourceLocation("energy", "iron_hammer"), ItemIronHammer::new);
+        IUItem.double_molecular = new DataSimpleItem<>(new ResourceLocation("", "double_molecular"), () -> new IUItemBase(IUCore.ModuleTab));
+        IUItem.quad_molecular = new DataSimpleItem<>(new ResourceLocation("", "quad_molecular"), () -> new IUItemBase(IUCore.ModuleTab));
+        IUItem.bee_frame_template = new DataSimpleItem<>(new ResourceLocation("", "bee_frame_template"), IUItemBase::new);
+        IUItem.adv_bee_frame_template = new DataSimpleItem<>(new ResourceLocation("", "adv_bee_frame_template"), IUItemBase::new);
+        IUItem.imp_bee_frame_template = new DataSimpleItem<>(new ResourceLocation("", "imp_bee_frame_template"), IUItemBase::new);
+        IUItem.larva = new DataSimpleItem<>(new ResourceLocation("", "larva"), IUItemBase::new);
+        IUItem.plant_mixture = new DataSimpleItem<>(new ResourceLocation("", "plant_mixture"), IUItemBase::new);
+        IUItem.tomeResearch = new DataSimpleItem<>(new ResourceLocation("", "tome_research"), () -> new ItemTomeResearchSpace());
+        IUItem.ironMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "ironmesh"), () -> new ItemMesh("ironmesh", 1000, 1));
+        IUItem.steelMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "steelmesh"), () -> new ItemMesh("steelmesh", 2000, 2));
+        IUItem.boridehafniumMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "boridehafniummesh"), () -> new ItemMesh("boridehafniummesh", 3500, 3));
+        IUItem.vanadiumaluminumMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "vanadiumaluminummesh"), () -> new ItemMesh("vanadiumaluminummesh", 5000, 4));
+        IUItem.steleticMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "steleticmesh"), () -> new ItemMesh("steleticmesh", 8000, 5));
+        IUItem.water_rotor_wood = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_wood"), () -> new ItemWaterRotor("water_rotor_wood", 10800 / 2, 0.25F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor" +
+                        "/wood_rotor_model.png"
+        ), 1, 0, new Color(94, 71, 39)));
+        IUItem.water_rotor_bronze = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_bronze"), () -> new ItemWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/bronze_rotor_model_1.png"
+        ), 2, 1, new Color(158, 79, 0)));
+        IUItem.water_rotor_iron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_iron"), () -> new ItemWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/iron_rotor_model_1.png"
+        ), 3, 2, new Color(159, 159, 159)));
+        IUItem.water_rotor_steel = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_steel"), () -> new ItemWaterRotor(
+                "water_rotor_steel",
+                (int) (172800 / 1.5),
+                0.75F,
+                new ResourceLocation(
+                        Constants.MOD_ID,
+                        "textures/item/rotor/steel_rotor_model_1.png"
+                ),
+                4,
+                3, new Color(157, 166, 170)
+        ));
+        IUItem.water_rotor_carbon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_carbon"), () -> new ItemWaterRotor(
+                "water_rotor_carbon",
+                (int) (604800 / 1.5),
+                1.0F,
+                new ResourceLocation(
+                        Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"),
+                5,
+                4, new Color(41, 41, 41)
+        ));
+        IUItem.water_iridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_iridium"), () -> new ItemWaterRotor("water_iridium",
+                (int) (172800 / 1.4D), 2,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png"), 6, 5, new Color(214, 212, 216)
+        ));
+        IUItem.water_compressiridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_compressiridium"), () -> new ItemWaterRotor("water_compressiridium",
+                (int) (172800 / 1.2D), 4.0F,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6, new Color(135, 134, 136)
+        ));
+        IUItem.water_spectral = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_spectral"), () -> new ItemWaterRotor("water_spectral",
+                (int) (172800 / 1.1D), 8.0F,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195, 151, 32)
+        ));
+        IUItem.water_myphical = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_myphical"), () -> new ItemWaterRotor("water_myphical",
+                3456000, 16,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98, 22, 182)
+        ));
+
+        IUItem.water_photon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_photon"), () -> new ItemWaterRotor("water_photon", 691200,
+                32,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36, 175, 17)
+        ));
+        IUItem.water_neutron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_neutron"), () -> new ItemWaterRotor("water_neutron", 27648000,
+                64,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10, new Color(41, 86, 208)
+        ));
+
+        IUItem.water_barionrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_barionrotor"), () -> new ItemWaterRotor("water_barionrotor",
+                27648000 * 4, 64 * 2,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11, new Color(155, 17, 175)
+        ));
+
+        IUItem.water_adronrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_adronrotor"), () -> new ItemWaterRotor("water_adronrotor",
+                27648000 * 16, 64 * 4,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12, new Color(0, 179, 192)
+        ));
+        IUItem.water_ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_ultramarinerotor"), () -> new ItemWaterRotor("water_ultramarinerotor",
+                27648000 * 64, 64 * 8,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13, new Color(17, 175, 166)
+        ));
+        IUItem.wood_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_wood"), () -> new ItemSteamRod(0, 0.02, 10800 / 2, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor" +
+                        "/wood_rotor_model.png"
+        )));
+        IUItem.rotor_wood = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_wood"), () -> new ItemWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor" +
+                        "/wood_rotor_model.png"
+        ), 1, 0, new Color(158, 79, 0)));
+        IUItem.rotor_bronze = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_bronze"), () -> new ItemWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/bronze_rotor_model_1.png"
+        ), 2, 1, new Color(158, 79, 0)));
+        IUItem.rotor_iron = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_iron"), () -> new ItemWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/iron_rotor_model_1.png"
+        ), 3, 2, new Color(159, 159, 159)));
+        IUItem.rotor_steel = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_steel"), () -> new ItemWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/steel_rotor_model_1.png"
+        ), 4, 3, new Color(157, 166, 170)));
+        IUItem.rotor_carbon = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_carbon"), () -> new ItemWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
+                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"), 5, 4, new Color(41, 41, 41)));
+
+        IUItem.iridium = new DataSimpleItem<>(new ResourceLocation("rotor", "iridium"), () -> new ItemWindRotor("iridium", 11, (int) (172800 / 1.4D),
+                2,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_1.png"), 6, 5, new Color(214, 212, 216)
+        ));
+        IUItem.compressiridium = new DataSimpleItem<>(new ResourceLocation("rotor", "compressiridium"), () -> new ItemWindRotor("compressiridium", 11,
+                (int) (172800 / 1.2D), 4,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6, new Color(135, 134, 136)
+        ));
+        IUItem.spectral = new DataSimpleItem<>(new ResourceLocation("rotor", "spectral"), () -> new ItemWindRotor("spectral", 11,
+                (int) (172800 / 1.1D), 8,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195, 151, 32)
+        ));
+        IUItem.myphical = new DataSimpleItem<>(new ResourceLocation("rotor", "myphical"), () -> new ItemWindRotor("myphical", 11,
+                3456000, 16,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98, 22, 182)
+        ));
+
+        IUItem.photon = new DataSimpleItem<>(new ResourceLocation("rotor", "photon"), () -> new ItemWindRotor("photon", 11, 691200,
+                32,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36, 175, 17)
+        ));
+        IUItem.neutron = new DataSimpleItem<>(new ResourceLocation("rotor", "neutron"), () -> new ItemWindRotor("neutron", 11, 27648000,
+                64,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10, new Color(41, 86, 208)
+        ));
+
+        IUItem.barionrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "barionrotor"), () -> new ItemWindRotor("barionrotor", 11,
+                27648000 * 4, 64 * 2,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11, new Color(155, 17, 175)
+        ));
+
+        IUItem.adronrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "adronrotor"), () -> new ItemWindRotor("adronrotor", 11,
+                27648000 * 16, 64 * 4,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12, new Color(0, 179, 192)
+        ));
+        IUItem.ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("rotor", "ultramarinerotor"), () -> new ItemWindRotor("ultramarinerotor", 11,
+                27648000 * 64, 64 * 8,
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13, new Color(17, 175, 166)
+        ));
+        IUItem.bronze_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_bronze"), () -> new ItemSteamRod(0, 0.04, 10800, new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/bronze_rotor_model_1.png"
+        )));
+        IUItem.iron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_iron"), () -> new ItemSteamRod(0, 0.08, (int) (10800 * 1.5), new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/iron_rotor_model_1.png"
+        )));
+        IUItem.steel_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_steel"), () -> new ItemSteamRod(0, 0.1, (int) (20800 * 1.5), new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/item/rotor/steel_rotor_model_1.png"
+        )));
+        IUItem.carbon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_carbon"), () -> new ItemSteamRod(1, 0.2, (int) (60800 * 1.5), new ResourceLocation(
+                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png")));
+
+
+        IUItem.iridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_iridium"), () -> new ItemSteamRod(1, 0.4, (int) (60800 * 2),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png")
+        ));
+        IUItem.compressiridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_compressiridium"), () -> new ItemSteamRod(1, 0.6, (int) (60800 * 3),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png")
+        ));
+        IUItem.spectral_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_spectral"), () -> new ItemSteamRod(1, 0.95, (int) (60800 * 4),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png")
+        ));
+        IUItem.myphical_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_myphical"), () -> new ItemSteamRod(2, 1.15, (int) (60800 * 6),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png")
+        ));
+
+        IUItem.photon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_photon"), () -> new ItemSteamRod(2, 1.5, (int) (60800 * 10),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png")
+        ));
+        IUItem.neutron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_neutron"), () -> new ItemSteamRod(2, 2.0, (int) (60800 * 15),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png")
+        ));
+
+        IUItem.barion_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_barion"), () -> new ItemSteamRod(3, 2.5, (int) (60800 * 20),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png")
+        ));
+
+        IUItem.hadron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_hadron"), () -> new ItemSteamRod(3, 3, (int) (60800 * 30),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png")
+        ));
+        IUItem.ultramarine_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_ultramarine"), () -> new ItemSteamRod(3, 3.5, (int) (60800 * 50),
+                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png")
+        ));
+        IUItem.hops = new DataSimpleItem<>(new ResourceLocation("", "hops"), () -> (IUItemBase) new IUItemBase(IUCore.CropsTab));
+        IUItem.tomato = new DataSimpleItem<>(new ResourceLocation("", "tomato"), () -> new ItemFoodIU("tomato", 3, 0.6F));
+        IUItem.terra_wart = new DataSimpleItem<>(new ResourceLocation("", "terra_wart"), () -> new ItemFoodIU("terra_wart", 1, 0.4F, true));
+        IUItem.corn = new DataSimpleItem<>(new ResourceLocation("", "corn"), () -> new ItemFoodIU("corn", 2, 0.4f));
+        IUItem.raspberry = new DataSimpleItem<>(new ResourceLocation("", "raspberry"), () -> new ItemFoodIU("raspberry", 2, 0.4f));
+        IUItem.fertilizer = new DataSimpleItem<>(new ResourceLocation("", "fertilizer"), IUItemBase::new);
+        IUItem.raw_apatite = new DataSimpleItem<>(new ResourceLocation("", "raw_apatite"), IUItemBase::new);
+        IUItem.apatite_cube = new DataSimpleItem<>(new ResourceLocation("", "apatite_cube"), IUItemBase::new);
+        IUItem.white_phosphorus = new DataSimpleItem<>(new ResourceLocation("", "white_phosphorus"), IUItemBase::new);
+        IUItem.red_phosphorus = new DataSimpleItem<>(new ResourceLocation("", "red_phosphorus"), IUItemBase::new);
+        IUItem.phosphorus_oxide = new DataSimpleItem<>(new ResourceLocation("", "phosphorus_oxide"), IUItemBase::new);
+        IUItem.honeycomb = new DataSimpleItem<>(new ResourceLocation("", "honeycomb"), IUItemBase::new);
+        IUItem.honey_drop = new DataSimpleItem<>(new ResourceLocation("", "honey_drop"), IUItemBase::new);
+        IUItem.bee_pollen = new DataSimpleItem<>(new ResourceLocation("", "bee_pollen"), IUItemBase::new);
+        IUItem.planner = new DataSimpleItem<>(new ResourceLocation("tools", "multiblock_planner"), () -> new ItemPlaner());
+        IUItem.deplanner = new DataSimpleItem<>(new ResourceLocation("tools", "multiblock_deplanner"), () -> new ItemDeplanner());
+        IUItem.pollutionDevice = new DataSimpleItem<>(new ResourceLocation("", "pollution_device"), () -> new ItemPollutionDevice());
+        IUItem.reactorData = new DataSimpleItem<>(new ResourceLocation("tools", "reactor_data_item"), () -> new ItemReactorData());
+        IUItem.coolingsensor = new DataSimpleItem<>(new ResourceLocation("tools", "cooling_sensor"), () -> new ItemsCoolingSensor());
+        IUItem.heatsensor = new DataSimpleItem<>(new ResourceLocation("tools", "heat_sensor"), () -> new ItemsHeatSensor());
+        IUItem.synthetic_rubber = new DataSimpleItem<>(new ResourceLocation("", "synthetic_rubber"), IUItemBase::new);
+        IUItem.synthetic_plate = new DataSimpleItem<>(new ResourceLocation("", "synthetic_plate"), IUItemBase::new);
+        IUItem.charged_redstone = new DataSimpleItem<>(new ResourceLocation("", "charged_redstone"), IUItemBase::new);
+        IUItem.charged_quartz = new DataSimpleItem<>(new ResourceLocation("", "charged_quartz"), IUItemBase::new);
+        IUItem.peat_balls = new DataSimpleItem<>(new ResourceLocation("", "peat_balls"), IUItemBase::new);
+        IUItem.cultivated_peat_balls = new DataSimpleItem<>(new ResourceLocation("", "cultivated_peat"), IUItemBase::new);
+        IUItem.nether_star_ingot = new DataSimpleItem<>(new ResourceLocation("", "nether_star_ingot"), IUItemBase::new);
+        IUItem.wolframite = new DataSimpleItem<>(new ResourceLocation("", "wolframite"), IUItemBase::new);
+        IUItem.wax_stick = new DataSimpleItem<>(new ResourceLocation("", "wax_stick"), IUItemBase::new);
+        IUItem.royal_jelly = new DataSimpleItem<>(new ResourceLocation("", "royal_jelly"), IUItemBase::new);
+        IUItem.beeswax = new DataSimpleItem<>(new ResourceLocation("", "beeswax"), IUItemBase::new);
+        IUItem.cooling_mixture = new DataSimpleItem<>(new ResourceLocation("", "cooling_mixture"), IUItemBase::new);
+        IUItem.helium_cooling_mixture = new DataSimpleItem<>(new ResourceLocation("", "helium_cooling_mixture"), IUItemBase::new);
+        IUItem.cryogenic_cooling_mixture = new DataSimpleItem<>(new ResourceLocation("", "cryogenic_cooling_mixture"), IUItemBase::new);
+        IUItem.medium_current_converter_to_low = new DataSimpleItem<>(new ResourceLocation("", "medium_current_converter_to_low"), IUItemBase::new);
+        IUItem.high_current_converter_to_low = new DataSimpleItem<>(new ResourceLocation("", "high_current_converter_to_low"), IUItemBase::new);
+        IUItem.extreme_current_converter_to_low = new DataSimpleItem<>(new ResourceLocation("", "extreme_current_converter_to_low"), IUItemBase::new);
+        IUItem.upgrade_casing = new DataSimpleItem<>(new ResourceLocation("", "upgrade_casing"), IUItemBase::new);
+        IUItem.voltage_sensor_for_mechanism = new DataSimpleItem<>(new ResourceLocation("", "voltage_sensor_for_mechanism"), IUItemBase::new);
+        IUItem.graphene_wire = new DataSimpleItem<>(new ResourceLocation("", "graphene_wire"), IUItemBase::new);
+        IUItem.graphene = new DataSimpleItem<>(new ResourceLocation("", "graphene"), IUItemBase::new);
+        IUItem.graphene_plate = new DataSimpleItem<>(new ResourceLocation("", "graphene_plate"), IUItemBase::new);
+        IUItem.motors_with_improved_bearings_ = new DataSimpleItem<>(new ResourceLocation("", "motors_with_improved_bearings_"), IUItemBase::new);
+        IUItem.adv_motors_with_improved_bearings_ = new DataSimpleItem<>(new ResourceLocation("", "adv_motors_with_improved_bearings_"), IUItemBase::new);
+        IUItem.imp_motors_with_improved_bearings_ = new DataSimpleItem<>(new ResourceLocation("", "imp_motors_with_improved_bearings_"), IUItemBase::new);
+        IUItem.compressed_redstone = new DataSimpleItem<>(new ResourceLocation("", "compressed_redstone"), IUItemBase::new);
+        IUItem.electronic_stabilizers = new DataSimpleItem<>(new ResourceLocation("", "electronic_stabilizers"), IUItemBase::new);
+        IUItem.polonium_palladium_composite = new DataSimpleItem<>(new ResourceLocation("", "polonium_palladium_composite"), IUItemBase::new);
+        IUItem.polished_stick = new DataSimpleItem<>(new ResourceLocation("", "polished_stick"), IUItemBase::new);
+        IUItem.ruby_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_helmet"), () -> new BaseArmor(ArmorMaterials.RUBY, ArmorItem.Type.HELMET, "ruby"));
+        IUItem.ruby_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_chestplate"), () -> new BaseArmor(ArmorMaterials.RUBY, ArmorItem.Type.CHESTPLATE, "ruby"));
+        IUItem.ruby_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_leggings"), () -> new BaseArmor(ArmorMaterials.RUBY, ArmorItem.Type.LEGGINGS, "ruby"));
+        IUItem.ruby_boots = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_boots"), () -> new BaseArmor(ArmorMaterials.RUBY, ArmorItem.Type.BOOTS, "ruby"));
+        IUItem.topaz_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_helmet"), () -> new BaseArmor(ArmorMaterials.TOPAZ, ArmorItem.Type.HELMET, "topaz"));
+        IUItem.topaz_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_chestplate"), () -> new BaseArmor(ArmorMaterials.TOPAZ, ArmorItem.Type.CHESTPLATE, "topaz"));
+        IUItem.topaz_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_leggings"), () -> new BaseArmor(ArmorMaterials.TOPAZ, ArmorItem.Type.LEGGINGS, "topaz"));
+        IUItem.topaz_boots = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_boots"), () -> new BaseArmor(ArmorMaterials.TOPAZ, ArmorItem.Type.BOOTS, "topaz"));
+        IUItem.sapphire_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_helmet"), () -> new BaseArmor(ArmorMaterials.SAPPHIRE, ArmorItem.Type.HELMET, "sapphire"));
+        IUItem.sapphire_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_chestplate"), () -> new BaseArmor(
+                ArmorMaterials.SAPPHIRE,
+                ArmorItem.Type.CHESTPLATE,
+                "sapphire"
+        ));
+        IUItem.sapphire_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_leggings"), () -> new BaseArmor(ArmorMaterials.SAPPHIRE, ArmorItem.Type.LEGGINGS, "sapphire"));
+        IUItem.sapphire_boots = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_boots"), () -> new BaseArmor(ArmorMaterials.SAPPHIRE, ArmorItem.Type.BOOTS, "sapphire"));
+
+        IUItem.batpack = new DataSimpleItem<>(new ResourceLocation("armour", "batpack"), () -> new ItemLappack("batpack", 60000.0, 1, 100.0));
+        IUItem.advanced_batpack = new DataSimpleItem<>(new ResourceLocation("armour", "advanced_batpack"), () -> new ItemLappack("advanced_batpack", 600000.0, 2, 1000.0));
+        IUItem.lappack = new DataSimpleItem<>(new ResourceLocation("armour", "lappack"), () -> new ItemLappack("lappack", 2.0E6, 3, 2500.0));
+
+        IUItem.bronze_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_helmet"), () -> new BaseArmor(ArmorMaterials.BRONZE, ArmorItem.Type.HELMET, "bronze"));
+        IUItem.bronze_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_chestplate"), () -> new BaseArmor(ArmorMaterials.BRONZE, ArmorItem.Type.CHESTPLATE, "bronze"));
+        IUItem.bronze_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_leggings"), () -> new BaseArmor(ArmorMaterials.BRONZE, ArmorItem.Type.LEGGINGS, "bronze"));
+        IUItem.bronze_boots = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_boots"), () -> new BaseArmor(ArmorMaterials.BRONZE, ArmorItem.Type.BOOTS, "bronze"));
+
+
+        IUItem.adv_lappack = new DataSimpleItem<>(new ResourceLocation("armour", "adv_lappack"), () -> new ItemLappack(
+                "adv_lappack",
+                25000000,
+                3,
+                50000
+        ));
+        IUItem.imp_lappack = new DataSimpleItem<>(new ResourceLocation("armour", "imp_lappack"), () -> new ItemLappack(
+                "imp_lappack",
+                50000000,
+                4,
+                100000
+        ));
+        IUItem.per_lappack = new DataSimpleItem<>(new ResourceLocation("armour", "per_lappack"), () -> new ItemLappack(
+                "per_lappack",
+                100000000,
+                5,
+                500000
+        ));
+        IUItem.electricJetpack = new DataSimpleItem<>(new ResourceLocation("armour", "jetpack"), () -> new ItemAdvJetpack("jetpack", 30000.0, 60.0, 1));
+
+        IUItem.advjetpack = new DataSimpleItem<>(new ResourceLocation("armour", "advjetpack"), () -> new ItemAdvJetpack(
+                "advjetpack",
+                60000,
+                120,
+                2
+        ));
+        IUItem.impjetpack = new DataSimpleItem<>(new ResourceLocation("armour", "impjetpack"), () -> new ItemAdvJetpack(
+                "impjetpack",
+                120000,
+                500,
+                3
+        ));
+        IUItem.perjetpack = new DataSimpleItem<>(new ResourceLocation("armour", "perjetpack"), () -> new ItemAdvJetpack(
+                "perjetpack",
+                250000,
+                1000,
+                4
+        ));
+        IUItem.nightvision = new DataSimpleItem<>(new ResourceLocation("armour", "nightvision_goggles"), ItemArmorNightvisionGoggles::new);
+        IUItem.hazmat_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "hazmat_chestplate"), () -> new ItemArmorHazmat("hazmat_chestplate", ArmorItem.Type.CHESTPLATE));
+        IUItem.hazmat_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "hazmat_helmet"), () -> new ItemArmorHazmat("hazmat_helmet", ArmorItem.Type.HELMET));
+        IUItem.hazmat_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "hazmat_leggings"), () -> new ItemArmorHazmat("hazmat_leggings", ArmorItem.Type.LEGGINGS));
+        IUItem.rubber_boots = new DataSimpleItem<>(new ResourceLocation("armour", "rubber_boots"), () -> new ItemArmorHazmat("rubber_boots", ArmorItem.Type.BOOTS));
+
+        IUItem.volcano_hazmat_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_hazmat_chestplate"), () -> new ItemArmorVolcanoHazmat("volcano_hazmat_chestplate", ArmorItem.Type.CHESTPLATE));
+        IUItem.volcano_hazmat_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_hazmat_helmet"), () -> new ItemArmorVolcanoHazmat("volcano_hazmat_helmet", ArmorItem.Type.HELMET));
+        IUItem.volcano_hazmat_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_hazmat_leggings"), () -> new ItemArmorVolcanoHazmat("volcano_hazmat_leggings", ArmorItem.Type.LEGGINGS));
+        IUItem.volcano_rubber_boots = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_rubber_boots"), () -> new ItemArmorVolcanoHazmat("volcano_rubber_boots", ArmorItem.Type.BOOTS));
+
+        IUItem.spectralSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_solar_helmet"), () -> new ItemSolarPanelHelmet(
+
+                4,
+                "spectral_solar_helmet"
+        ));
+        IUItem.singularSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "singular_solar_helmet"), () -> new ItemSolarPanelHelmet(
+
+                5,
+                "singular_solar_helmet"
+        ));
+        IUItem.advancedSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "advanced_solar_helmet"), () -> new ItemSolarPanelHelmet(
+
+                1,
+                "advanced_solar_helmet"
+        ));
+        IUItem.hybridSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "hybrid_solar_helmet"), () -> new ItemSolarPanelHelmet(
+
+                2,
+                "hybrid_solar_helmet"
+        ));
+        IUItem.ultimateSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "ultimate_solar_helmet"), () -> new ItemSolarPanelHelmet(
+
+                3,
+                "ultimate_solar_helmet"
+        ));
+
+        IUItem.hazmathelmet = new DataSimpleItem<>(new ResourceLocation("armour", "hazmathelmet"), () -> new ItemAdvArmorHazmat("hazmathelmet", ArmorItem.Type.HELMET));
+        IUItem.hazmatchest = new DataSimpleItem<>(new ResourceLocation("armour", "hazmatchest"), () -> new ItemAdvArmorHazmat("hazmatchest", ArmorItem.Type.CHESTPLATE));
+        IUItem.hazmatleggins = new DataSimpleItem<>(new ResourceLocation("armour", "hazmatleggins"), () -> new ItemAdvArmorHazmat("hazmatleggins", ArmorItem.Type.LEGGINGS));
+        IUItem.hazmatboosts = new DataSimpleItem<>(new ResourceLocation("armour", "hazmatboosts"), () -> new ItemAdvArmorHazmat("hazmatboosts", ArmorItem.Type.BOOTS));
+
+        IUItem.spectral_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_helmet"), () -> new ItemSpecialArmor(
+                EnumSubTypeArmor.HELMET, EnumTypeArmor.SPECTRAL
+        ));
+        IUItem.spectral_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_chestplate"), () -> new ItemSpecialArmor(
+                EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.SPECTRAL
+        ));
+        IUItem.spectral_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_leggings"), () -> new ItemSpecialArmor(
+                EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.SPECTRAL
+        ));
+        IUItem.spectral_boots = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_boots"), () -> new ItemSpecialArmor(
+                EnumSubTypeArmor.BOOTS, EnumTypeArmor.SPECTRAL
+        ));
+        IUItem.adv_nano_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_helmet"), () -> new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.ADV_NANO));
+        IUItem.adv_nano_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_chestplate"), () -> new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.ADV_NANO));
+        IUItem.adv_nano_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_leggings"), () -> new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.ADV_NANO));
+        IUItem.adv_nano_boots = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_boots"), () -> new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.ADV_NANO));
+
+        IUItem.nano_boots = new DataSimpleItem<>(new ResourceLocation("armour", "nano_boots"), () -> new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.NANO));
+        IUItem.nano_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "nano_chestplate"), () -> new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.NANO));
+        IUItem.nano_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "nano_helmet"), () -> new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.NANO));
+        IUItem.nano_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "nano_leggings"), () -> new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.NANO));
+        IUItem.quantum_boots = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_boots"), () -> new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.QUANTUM));
+        IUItem.quantum_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_chestplate"), () -> new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.QUANTUM));
+        IUItem.quantum_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_helmet"), () -> new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.QUANTUM));
+        IUItem.quantum_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_leggings"), () -> new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.QUANTUM));
+        IUItem.chainsaw = new DataSimpleItem<>(new ResourceLocation("energy_tools", "chainsaw"), () -> new ItemEnergyInstruments(EnumTypeInstruments.CHAINSAW, EnumVarietyInstruments.CHAINSAW, "chainsaw"));
+        IUItem.vajra = new DataSimpleItem<>(new ResourceLocation("energy_tools", "vajra"), () -> new ItemEnergyInstruments(EnumTypeInstruments.VAJRA, EnumVarietyInstruments.VAJRA, "vajra"));
+        IUItem.ult_vajra = new DataSimpleItem<>(new ResourceLocation("energy_tools", "ult_vajra"), () -> new ItemEnergyInstruments(EnumTypeInstruments.ULT_VAJRA, EnumVarietyInstruments.VAJRA, "ult_vajra"));
+
+        IUItem.GraviTool = new DataSimpleItem<>(new ResourceLocation("gravitool", "gravitool".toLowerCase()), () -> new ItemGraviTool());
+        IUItem.drill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "drill"), () -> new ItemEnergyInstruments(EnumTypeInstruments.SIMPLE_DRILL, EnumVarietyInstruments.SIMPLE, "drill"));
+        IUItem.diamond_drill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "diamond_drill"), () -> new ItemEnergyInstruments(EnumTypeInstruments.DIAMOND_DRILL, EnumVarietyInstruments.DIAMOND,
+                "diamond_drill"
+        ));
+        IUItem.nanodrill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanodrill"), () -> new ItemEnergyInstruments(EnumTypeInstruments.DRILL, EnumVarietyInstruments.NANO, "nanodrill"));
+        IUItem.quantumdrill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumdrill"), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.DRILL,
+                EnumVarietyInstruments.QUANTUM,
+                "quantumdrill"
+        ));
+        IUItem.spectraldrill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectraldrill"), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.DRILL,
+                EnumVarietyInstruments.SPECTRAL,
+                "spectraldrill"
+        ));
+        IUItem.nanopickaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanopickaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.PICKAXE, EnumVarietyInstruments.NANO, "nanopickaxe"));
+        IUItem.nanoshovel = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanoshovel"), () -> new ItemEnergyInstruments(EnumTypeInstruments.SHOVEL, EnumVarietyInstruments.NANO, "nanoshovel"));
+        IUItem.nanoaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanoaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.NANO, "nanoaxe"));
+        IUItem.quantumpickaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumpickaxe"), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.PICKAXE,
+                EnumVarietyInstruments.QUANTUM,
+                "quantumpickaxe"
+        ));
+        IUItem.quantumshovel = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumshovel"), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.SHOVEL,
+                EnumVarietyInstruments.QUANTUM,
+                "quantumshovel"
+        ));
+        IUItem.quantumaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.QUANTUM, "quantumaxe"));
+        IUItem.spectralpickaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectralpickaxe"), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.PICKAXE,
+                EnumVarietyInstruments.SPECTRAL,
+                "spectralpickaxe"
+        ));
+        IUItem.perfect_drill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "ultDDrill".toLowerCase()), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.PERFECT_DRILL,
+                EnumVarietyInstruments.PERFECT_DRILL,
+                "ultDDrill"
+        ));
+        IUItem.spectralshovel = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectralshovel"), () -> new ItemEnergyInstruments(
+                EnumTypeInstruments.SHOVEL,
+                EnumVarietyInstruments.SPECTRAL,
+                "spectralshovel"
+        ));
+        IUItem.spectralaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectralaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.SPECTRAL, "spectralaxe"));
+        IUItem.nano_bow = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nano_bow"), () -> new ItemEnergyBow(
+                "nano_bow",
+                0,
+                2,
+                5000,
+                50000,
+                1f
+        ));
+        IUItem.quantum_bow = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantum_bow"), () -> new ItemEnergyBow(
+                "quantum_bow",
+                0,
+                3,
+                25000,
+                80000,
+                2f
+        ));
+        IUItem.spectral_bow = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectral_bow"), () -> new ItemEnergyBow(
+                "spectral_bow",
+                0,
+                4,
+                50000,
+                150000,
+                4f
+        ));
+        IUItem.ruby_pickaxe = new DataSimpleItem<>(new ResourceLocation("", "ruby_pickaxe"), () -> new ItemPickaxe("ruby_pickaxe"));
+        IUItem.topaz_pickaxe = new DataSimpleItem<>(new ResourceLocation("", "topaz_pickaxe"), () -> new ItemPickaxe("topaz_pickaxe"));
+        IUItem.sapphire_pickaxe = new DataSimpleItem<>(new ResourceLocation("", "sapphire_pickaxe"), () -> new ItemPickaxe("sapphire_pickaxe"));
+        IUItem.ruby_axe = new DataSimpleItem<>(new ResourceLocation("", "ruby_axe"), () -> new ItemAxe("ruby_axe"));
+        IUItem.topaz_axe = new DataSimpleItem<>(new ResourceLocation("", "topaz_axe"), () -> new ItemAxe("topaz_axe"));
+        IUItem.sapphire_axe = new DataSimpleItem<>(new ResourceLocation("", "sapphire_axe"), () -> new ItemAxe("sapphire_axe"));
+        IUItem.ruby_shovel = new DataSimpleItem<>(new ResourceLocation("", "ruby_shovel"), () -> new ItemShovel("ruby_shovel"));
+        IUItem.topaz_shovel = new DataSimpleItem<>(new ResourceLocation("", "topaz_shovel"), () -> new ItemShovel("topaz_shovel"));
+        IUItem.sapphire_shovel = new DataSimpleItem<>(new ResourceLocation("", "sapphire_shovel"), () -> new ItemShovel("sapphire_shovel"));
+
+
+        IUItem.creativeBattery = new DataSimpleItem<>(new ResourceLocation("battery", "creative_battery"), () -> new ItemCreativeBattery(false));
+        IUItem.creativeBatteryWireless = new DataSimpleItem<>(new ResourceLocation("battery", "creative_battery_wireless"), () -> new ItemCreativeBattery(true));
+        IUItem.creativeTomeResearch = new DataSimpleItem<>(new ResourceLocation("", "creative_tome_research"), () -> new ItemCreativeTomeResearchSpace());
+
+    }
+
+    private static void registerItemBeforeBlocks() {
 
 
         IUItem.crafting_elements = new DataItem<>(ItemCraftingElements.Types.class, ItemCraftingElements.class);
@@ -727,7 +1116,9 @@ public class Register {
         IUItem.sprayer = new DataSimpleItem<>(new ResourceLocation("tools", "foam_sprayer"), ItemSprayer::new);
         IUItem.latexPipette = new DataSimpleItem<>(new ResourceLocation("tools", "latex_pipette"), ItemLatexPipette::new);
 
+    }
 
+    private static void registerBlocks() {
         IUItem.ore = new DataBlock<>(BlockOre.Type.class, BlockOre.class, ItemBlockOre.class);
         IUItem.ore2 = new DataBlock<>(BlockOres2.Type.class, BlockOres2.class, ItemBlockOre2.class);
         IUItem.ore3 = new DataBlock<>(BlockOres3.Type.class, BlockOres3.class, ItemBlockOre3.class);
@@ -775,586 +1166,255 @@ public class Register {
         IUItem.leaves = new DataSimpleBlock<>(RubberLeaves.class, ItemBlockLeaves.class, "leaves", "leaves");
         IUItem.radiationore = new DataBlock<>(BlocksRadiationOre.Type.class, BlocksRadiationOre.class, ItemBlockRadiationOre.class);
         IUItem.glass = new DataBlock<>(BlockTexGlass.Type.class, BlockTexGlass.class, ItemBlockTexGlass.class);
+    }
 
-        IUItem.coolupgrade = new DataItem<>(ItemCoolingUpgrade.Types.class, ItemCoolingUpgrade.class);
-        IUItem.autoheater = new DataSimpleItem<>(new ResourceLocation("", "autoheater"), () -> new IUItemBase(IUCore.ModuleTab));
-        IUItem.upgrade_speed_creation = new DataSimpleItem<>(new ResourceLocation("", "upgrade_speed_creation"), () -> new IUItemBase(IUCore.ModuleTab));
+    private static void registerBlockEntity() {
+        IUItem.combinersolidmatter = new DataBlockEntity<>(BlockCombinerSolidEntity.class);
+        IUItem.oiladvrefiner = new DataBlockEntity<>(BlockAdvRefinerEntity.class);
+        IUItem.adv_se_generator = new DataBlockEntity<>(BlockAdvSolarEnergyEntity.class);
+        IUItem.machines = new DataBlockEntity<>(BlockBaseMachineEntity.class);
+        IUItem.basemachine = new DataBlockEntity<>(BlockBaseMachine1Entity.class);
+        IUItem.basemachine1 = new DataBlockEntity<>(BlockBaseMachine2Entity.class);
+        IUItem.basemachine2 = new DataBlockEntity<>(BlockBaseMachine3Entity.class);
 
-        IUItem.treetap = new DataSimpleItem<>(new ResourceLocation("tools", "treetap"), ItemTreetap::new);
+        IUItem.anvil = new DataBlockEntity<>(BlockAnvilEntity.class);
+        IUItem.blockmolecular = new DataBlockEntity<>(BlockMolecularEntity.class);
+        IUItem.chargepadelectricblock = new DataBlockEntity<>(BlockChargepadStorageEntity.class);
+        IUItem.electricblock = new DataBlockEntity<>(BlockEnergyStorageEntity.class);
+        IUItem.blockpanel = new DataBlockEntity<>(BlockSolarPanelsEntity.class);
+        IUItem.machines_base = new DataBlockEntity<>(BlockMoreMachineEntity.class);
+        IUItem.simplemachine = new DataBlockEntity<>(BlockSimpleMachineEntity.class);
+        IUItem.machines_base1 = new DataBlockEntity<>(BlockMoreMachine1Entity.class);
+        IUItem.machines_base2 = new DataBlockEntity<>(BlockMoreMachine2Entity.class);
+        IUItem.machines_base3 = new DataBlockEntity<>(BlockMoreMachine3Entity.class);
+        IUItem.pho_machine = new DataBlockEntity<>(BlocksPhotonicMachine.class);
+        IUItem.blastfurnace = new DataBlockEntity<>(BlockBlastFurnaceEntity.class);
+        IUItem.mini_smeltery = new DataBlockEntity<>(BlockMiniSmelteryEntity.class);
+        IUItem.oilgetter = new DataBlockEntity<>(BlockPetrolQuarryEntity.class);
+        IUItem.primalFluidHeater = new DataBlockEntity<>(BlockPrimalFluidHeaterEntity.class);
+        IUItem.electronics_assembler = new DataBlockEntity<>(BlockElectronicsAssemblerEntity.class);
+        IUItem.gasChamber = new DataBlockEntity<>(BlockGasChamberEntity.class);
+        IUItem.imp_se_generator = new DataBlockEntity<>(BlockImpSolarEnergyEntity.class);
+        IUItem.blockSE = new DataBlockEntity<>(BlockSolarEnergyEntity.class);
+        IUItem.squeezer = new DataBlockEntity<>(BlockSqueezerEntity.class);
+        IUItem.solderingMechanism = new DataBlockEntity<>(BlockSolderingMechanismEntity.class);
+        IUItem.solidmatter = new DataBlockEntity<>(BlockSolidMatterEntity.class);
+        IUItem.programming_table = new DataBlockEntity<>(BlockPrimalProgrammingTableEntity.class);
+        IUItem.primalPolisher = new DataBlockEntity<>(BlockPrimalLaserPolisherEntity.class);
+        IUItem.tank = new DataBlockEntity<>(BlockTankEntity.class);
+        IUItem.dryer = new DataBlockEntity<>(BlockDryerEntity.class);
+        IUItem.primalSiliconCrystal = new DataBlockEntity<>(BlockPrimalSiliconCrystalHandlerEntity.class);
+        IUItem.blockCompressor = new DataBlockEntity<>(BlockCompressorEntity.class);
+        IUItem.cable = new DataBlockEntity<>(BlockCableEntity.class);
+        IUItem.coolpipes = new DataBlockEntity<>(BlockCoolPipeEntity.class);
+        IUItem.pipes = new DataBlockEntity<>(BlockPipeEntity.class);
+        IUItem.heatcold_pipes = new DataBlockEntity<>(BlockHeatColdPipeEntity.class);
+        IUItem.scable = new DataBlockEntity<>(BlockSolariumCableEntity.class);
+        IUItem.qcable = new DataBlockEntity<>(BlockQuantumCableEntity.class);
+        IUItem.amperepipes = new DataBlockEntity<>(BlockAmpereCableEntity.class);
+        IUItem.steamPipe = new DataBlockEntity<>(BlockSteamPipeEntity.class);
+        IUItem.biopipes = new DataBlockEntity<>(BlockBioPipeEntity.class);
+        IUItem.nightpipes = new DataBlockEntity<>(BlockNightCableEntity.class);
+        IUItem.radcable_item = new DataBlockEntity<>(BlockRadPipeEntity.class);
+        IUItem.expcable = new DataBlockEntity<>(BlockExpCableEntity.class);
+        IUItem.universal_cable = new DataBlockEntity<>(BlockUniversalCableEntity.class);
+        IUItem.item_pipes = new DataBlockEntity<>(BlockTransportPipeEntity.class);
+        IUItem.barrel = new DataBlockEntity<>(BlockBarrelEntity.class);
+        IUItem.convertersolidmatter = new DataBlockEntity<>(BlockConverterMatterEntity.class);
+        IUItem.fluidIntegrator = new DataBlockEntity<>(BlockPrimalFluidIntegratorEntity.class);
+        IUItem.sunnariummaker = new DataBlockEntity<>(BlockSunnariumMakerEntity.class);
+        IUItem.sunnariumpanelmaker = new DataBlockEntity<>(BlockSunnariumPanelMakerEntity.class);
+        IUItem.primal_pump = new DataBlockEntity<>(BlockPrimalPumpEntity.class);
+        IUItem.oilquarry = new DataBlockEntity<>(BlockQuarryVeinEntity.class);
+        IUItem.refractoryFurnace = new DataBlockEntity<>(BlockRefractoryFurnaceEntity.class);
+        IUItem.upgradeblock = new DataBlockEntity<>(BlockUpgradeBlockEntity.class);
+        IUItem.oilrefiner = new DataBlockEntity<>(BlockRefinerEntity.class);
+        IUItem.blockdoublemolecular = new DataBlockEntity<>(BlockDoubleMolecularTransfomerEntity.class);
+        IUItem.crop = new DataBlockEntity<>(BlockCropEntity.class);
+        IUItem.apiary = new DataBlockEntity<>(BlockApiaryEntity.class);
+        IUItem.hive = new DataBlockEntity<>(BlockHiveEntity.class);
+        IUItem.tranformer = new DataBlockEntity<>(BlockTransformerEntity.class);
+        IUItem.blockMacerator = new DataBlockEntity<>(BlockMaceratorEntity.class);
+        IUItem.blockadmin = new DataBlockEntity<>(BlockAdminPanelEntity.class);
+        IUItem.chemicalPlant = new DataBlockEntity<>(BlockChemicalPlantEntity.class);
+        IUItem.blockwireinsulator = new DataBlockEntity<>(BlockPrimalWireInsulatorEntity.class);
+        IUItem.cokeoven = new DataBlockEntity<>(BlockCokeOvenEntity.class);
+        IUItem.adv_cokeoven = new DataBlockEntity<>(BlockAdvCokeOvenEntity.class);
+        IUItem.cyclotron = new DataBlockEntity<>(BlockCyclotronEntity.class);
+        IUItem.strong_anvil = new DataBlockEntity<>(BlockStrongAnvilEntity.class);
+        IUItem.blocksintezator = new DataBlockEntity<>(BlockSintezatorEntity.class);
+        IUItem.earthQuarry = new DataBlockEntity<>(BlockEarthQuarryEntity.class);
+        IUItem.geothermalpump = new DataBlockEntity<>(BlockGeothermalPumpEntity.class);
+        IUItem.gasTurbine = new DataBlockEntity<>(BlockGasTurbineEntity.class);
+        IUItem.gas_well = new DataBlockEntity<>(BlockGasWellEntity.class);
+        IUItem.smeltery = new DataBlockEntity<>(BlockSmelteryEntity.class);
+        IUItem.lightning_rod = new DataBlockEntity<>(BlockLightningRodEntity.class);
+        IUItem.steam_boiler = new DataBlockEntity<>(BlockSteamBoilerEntity.class);
+        IUItem.windTurbine = new DataBlockEntity<>(BlockWindTurbineEntity.class);
+        IUItem.hydroTurbine = new DataBlockEntity<>(BlockHydroTurbineEntity.class);
+        IUItem.steam_turbine = new DataBlockEntity<>(BlockSteamTurbineEntity.class);
+        IUItem.water_reactors_component = new DataBlockEntity<>(BlockWaterReactorsEntity.class);
+        IUItem.gas_reactor = new DataBlockEntity<>(BlockGasReactorEntity.class);
+        IUItem.graphite_reactor = new DataBlockEntity<>(BlocksGraphiteReactors.class);
+        IUItem.heat_reactor = new DataBlockEntity<>(BlockHeatReactorEntity.class);
+        IUItem.creativeBlock = new DataBlockEntity<>(BlockCreativeBlocksEntity.class);
+    }
 
-        IUItem.recipe_schedule = new DataSimpleItem<>(new ResourceLocation("", "recipe_schedule"), ItemRecipeSchedule::new);
-        IUItem.magnet = new DataSimpleItem<>(new ResourceLocation("energy", "magnet"), () -> new ItemMagnet(100000, 5000, 4, 7));
-        IUItem.impmagnet = new DataSimpleItem<>(new ResourceLocation("energy", "impmagnet"), () -> new ItemMagnet(200000, 7500, 5, 11));
-        IUItem.electric_treetap = new DataSimpleItem<>(new ResourceLocation("energy", "electric_treetap"), ItemTreetapEnergy::new);
-        IUItem.electric_wrench = new DataSimpleItem<>(new ResourceLocation("energy", "electric_wrench"), ItemToolWrenchEnergy::new);
-        IUItem.electric_hoe = new DataSimpleItem<>(new ResourceLocation("energy", "electric_hoe"), ItemEnergyToolHoe::new);
-        IUItem.wrench = new DataSimpleItem<>(new ResourceLocation("energy", "wrench"), ItemToolWrench::new);
-        IUItem.windmeter = new DataSimpleItem<>(new ResourceLocation("energy", "wind_meter"), ItemWindMeter::new);
-        IUItem.itemiu = new DataItem<>(ItemIUCrafring.Types.class, ItemIUCrafring.class);
-        IUItem.rawMetals = new DataItem<>(ItemRawMetals.Types.class, ItemRawMetals.class);
-        IUItem.rawIngot = new DataItem<>(ItemRawIngot.Types.class, ItemRawIngot.class);
-        IUItem.radiationModule = new DataItem<>(ItemReactorModules.Types.class, ItemReactorModules.class);
-        IUItem.stik = new DataItem<>(ItemSticks.Types.class, ItemSticks.class);
-        IUItem.verysmalldust = new DataItem<>(ItemVerySmallDust.Types.class, ItemVerySmallDust.class);
-        IUItem.corewater = new DataItem<>(ItemCoreWater.Types.class, ItemCoreWater.class);
-        IUItem.corewind = new DataItem<>(ItemCoreWind.Types.class, ItemCoreWind.class);
-        IUItem.crystalMemory = new DataSimpleItem<>(new ResourceLocation("", "crystal_memory"), ItemCrystalMemory::new);
-        IUItem.lens = new DataItem<>(ItemLens.Types.class, ItemLens.class);
-        IUItem.spaceItem = new DataItem<>(ItemSpace.Types.class, ItemSpace.class);
-        IUItem.rotors_upgrade = new DataItem<>(ItemRotorsUpgrade.Types.class, ItemRotorsUpgrade.class);
-        IUItem.spaceupgrademodule_schedule = new DataSimpleItem<>(new ResourceLocation("", "spaceupgrademodule_schedule"), () -> new IUItemBase(IUCore.ModuleTab));
-        IUItem.colonial_building = new DataItem<>(ItemColonialBuilding.Types.class, ItemColonialBuilding.class);
-        IUItem.research_lens = new DataItem<>(ItemResearchLens.Types.class, ItemResearchLens.class);
-        IUItem.spaceupgrademodule = new DataItem<>(ItemSpaceUpgradeModule.Types.class, ItemSpaceUpgradeModule.class);
-        IUItem.water_rotors_upgrade = new DataItem<>(ItemWaterRotorsUpgrade.Types.class, ItemWaterRotorsUpgrade.class);
-        IUItem.excitednucleus = new DataItem<>(ItemExcitedNucleus.Types.class, ItemExcitedNucleus.class);
-        IUItem.water_rod = new DataItem<>(ItemWaterRod.Types.class, ItemWaterRod.class);
-        IUItem.relocator = new DataSimpleItem<>(new ResourceLocation("energy", "relocator"), () -> new ItemRelocator());
-        IUItem.rocket = new DataSimpleItem<>(new ResourceLocation("rover", "rocket"), () -> new ItemRover("rocket", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROCKET, 2, 500000, 2048,
-                EnumRoversLevelFluid.ONE, 2));
-        IUItem.adv_rocket = new DataSimpleItem<>(new ResourceLocation("rover", "adv_rocket"), () -> new ItemRover("adv_rocket", 20000, EnumRoversLevel.TWO, EnumTypeRovers.ROCKET, 3, 1000000, 4096,
-                EnumRoversLevelFluid.TWO, 3.5));
-        IUItem.imp_rocket = new DataSimpleItem<>(new ResourceLocation("rover", "imp_rocket"), () -> new ItemRover("imp_rocket", 30000, EnumRoversLevel.THREE, EnumTypeRovers.ROCKET, 4, 2000000, 8192,
-                EnumRoversLevelFluid.THREE, 5));
-        IUItem.per_rocket = new DataSimpleItem<>(new ResourceLocation("rover", "per_rocket"), () -> new ItemRover("per_rocket", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROCKET, 5, 5000000, 16384,
-                EnumRoversLevelFluid.FOUR, 7.5));
-        IUItem.probe = new DataSimpleItem<>(new ResourceLocation("rover", "probe"), () -> new ItemRover("probe", 10000, EnumRoversLevel.ONE, EnumTypeRovers.PROBE, 2, 500000, 2048,
-                EnumRoversLevelFluid.ONE, 1.35));
-        IUItem.adv_probe = new DataSimpleItem<>(new ResourceLocation("rover", "adv_probe"), () -> new ItemRover("adv_probe", 20000, EnumRoversLevel.TWO, EnumTypeRovers.PROBE, 3, 1000000, 4096,
-                EnumRoversLevelFluid.TWO, 2.25));
-        IUItem.imp_probe = new DataSimpleItem<>(new ResourceLocation("rover", "imp_probe"), () -> new ItemRover("imp_probe", 30000, EnumRoversLevel.THREE, EnumTypeRovers.PROBE, 4, 2000000, 8192,
-                EnumRoversLevelFluid.THREE, 3));
-        IUItem.per_probe = new DataSimpleItem<>(new ResourceLocation("rover", "per_probe"), () -> new ItemRover("per_probe", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.PROBE, 5, 5000000, 16384,
-                EnumRoversLevelFluid.FOUR, 4));
-        IUItem.book = new DataSimpleItem<>(new ResourceLocation("book", "guide_book"), () -> new ItemBook("guide_book"));
-
-        IUItem.rover = new DataSimpleItem<>(new ResourceLocation("rover", "rover"), () -> new ItemRover("rover", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROVERS, 2, 500000, 2048,
-                EnumRoversLevelFluid.ONE, 1));
-        IUItem.adv_rover = new DataSimpleItem<>(new ResourceLocation("rover", "adv_rover"), () -> new ItemRover("adv_rover", 20000, EnumRoversLevel.TWO, EnumTypeRovers.ROVERS, 3, 1000000, 4096,
-                EnumRoversLevelFluid.TWO, 1.5));
-        IUItem.imp_rover = new DataSimpleItem<>(new ResourceLocation("rover", "imp_rover"), () -> new ItemRover("imp_rover", 30000, EnumRoversLevel.THREE, EnumTypeRovers.ROVERS, 4, 2000000, 8192,
-                EnumRoversLevelFluid.THREE, 2));
-        IUItem.per_rover = new DataSimpleItem<>(new ResourceLocation("rover", "per_rover"), () -> new ItemRover("per_rover", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROVERS, 5, 5000000, 16384,
-                EnumRoversLevelFluid.FOUR, 3));
-        IUItem.satellite = new DataSimpleItem<>(new ResourceLocation("rover", "satellite"), () -> new ItemRover("satellite", 10000, EnumRoversLevel.ONE, EnumTypeRovers.SATELLITE, 2, 500000, 2048,
-                EnumRoversLevelFluid.ONE, 1.65));
-        IUItem.adv_satellite = new DataSimpleItem<>(new ResourceLocation("rover", "adv_satellite"), () -> new ItemRover("adv_satellite", 20000, EnumRoversLevel.TWO, EnumTypeRovers.SATELLITE, 3, 1000000, 4096,
-                EnumRoversLevelFluid.TWO, 3.1));
-        IUItem.imp_satellite = new DataSimpleItem<>(new ResourceLocation("rover", "imp_satellite"), () -> new ItemRover("imp_satellite", 30000, EnumRoversLevel.THREE, EnumTypeRovers.SATELLITE, 4, 2000000, 8192,
-                EnumRoversLevelFluid.THREE, 4));
-        IUItem.per_satellite = new DataSimpleItem<>(new ResourceLocation("rover", "per_satellite"), () -> new ItemRover("per_satellite", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.SATELLITE, 5, 5000000, 16384,
-                EnumRoversLevelFluid.FOUR, 6));
-        IUItem.cutter = new DataSimpleItem<>(new ResourceLocation("", "cutter"), ItemToolCutter::new);
-        IUItem.ForgeHammer = new DataSimpleItem<>(new ResourceLocation("", "forge_hammer"), () -> new ItemToolHammer(80));
-        IUItem.ObsidianForgeHammer = new DataSimpleItem<>(new ResourceLocation("", "obsidian_hammer"), () -> new ItemToolHammer(240));
-        IUItem.solderingIron = new DataSimpleItem<>(new ResourceLocation("", "solderingiron"), () -> new ItemToolCrafting(1500));
-        IUItem.laser = new DataSimpleItem<>(new ResourceLocation("", "laser"), () -> new ItemToolCrafting(60));
-        IUItem.matter = new DataItem<>(ItemSolidMatter.Types.class, ItemSolidMatter.class);
-        IUItem.windrod = new DataItem<>(ItemWindRod.Types.class, ItemWindRod.class);
-        IUItem.preciousgem = new DataItem<>(ItemPreciousGem.Types.class, ItemPreciousGem.class);
-        IUItem.photonglass = new DataItem<>(ItemPhotoniumGlass.Types.class, ItemPhotoniumGlass.class);
-        IUItem.solar_day_glass = new DataItem<>(ItemDaySolarPanelGlass.Types.class, ItemDaySolarPanelGlass.class);
-        IUItem.solar_night_glass = new DataItem<>(ItemNightSolarPanelGlass.Types.class, ItemNightSolarPanelGlass.class);
-        IUItem.solar_night_day_glass = new DataItem<>(ItemDayNightSolarPanelGlass.Types.class, ItemDayNightSolarPanelGlass.class);
-        IUItem.solar_battery = new DataItem<>(ItemBatterySolarPanel.Types.class, ItemBatterySolarPanel.class);
-        IUItem.solar_output = new DataItem<>(ItemOutputSolarPanel.Types.class, ItemOutputSolarPanel.class);
-        IUItem.alloyscasing = new DataItem<>(ItemAlloysCasing.Types.class, ItemAlloysCasing.class);
-        IUItem.alloysdoubleplate = new DataItem<>(ItemAlloysDoublePlate.Type.class, ItemAlloysDoublePlate.class);
-        IUItem.alloysdust = new DataItem<>(ItemAlloysDust.Type.class, ItemAlloysDust.class);
-        IUItem.alloysingot = new DataItem<>(ItemAlloysIngot.Type.class, ItemAlloysIngot.class);
-        IUItem.alloygear = new DataItem<>(ItemAlloysGear.Types.class, ItemAlloysGear.class);
-        IUItem.alloysnugget = new DataItem<>(ItemAlloysNugget.Types.class, ItemAlloysNugget.class);
-        IUItem.alloysplate = new DataItem<>(ItemAlloysPlate.Types.class, ItemAlloysPlate.class);
-        IUItem.frame = new DataItem<>(ItemFrame.Types.class, ItemFrame.class);
-        IUItem.entitymodules = new DataItem<>(ItemEntityModule.Types.class, ItemEntityModule.class);
-        IUItem.purifier = new DataSimpleItem<>(new ResourceLocation("energy", "purifier"), () -> new ItemPurifier(100000, 1000, 3));
-        IUItem.gasSensor = new DataSimpleItem<>(new ResourceLocation("tools", "gas_sensor"), ItemGasSensor::new);
-        IUItem.facadeItem = new DataSimpleItem<>(new ResourceLocation("", "facadeitem"), ItemFacadeItem::new);
-        IUItem.efReader = new DataSimpleItem<>(new ResourceLocation("ef", "reader"), ItemEFReader::new);
-        IUItem.rawLatex = new DataSimpleItem<>(new ResourceLocation("", "raw_latex"), IUItemBase::new);
-        IUItem.net = new DataSimpleItem<>(new ResourceLocation("energy", "net"), ItemNet::new);
-        IUItem.molot = new DataSimpleItem<>(new ResourceLocation("energy", "molot"), ItemHammer::new);
-        IUItem.nanosaber = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nano_saber"), () -> new ItemNanoSaber(160000, 500, 3, 19, 4));
-        IUItem.quantumSaber = new DataSimpleItem<>(new ResourceLocation("energy_tools", "itemnanosaber1"), () -> new ItemQuantumSaber(200000, 15000, 4, 40, 8));
-        IUItem.spectralSaber = new DataSimpleItem<>(new ResourceLocation("energy_tools", "itemnanosaber"), () -> new ItemSpectralSaber(600000, 40000, 5, 60, 12));
-        IUItem.katana = new DataSimpleItem<>(new ResourceLocation("energy_tools", "katana"), () -> new ItemKatana());
-        IUItem.bags = new DataSimpleItem<>(new ResourceLocation("bags", "iu_bags"), () -> new ItemEnergyBags(27, 50000, 500));
-        IUItem.adv_bags = new DataSimpleItem<>(new ResourceLocation("bags", "adv_iu_bags"), () -> new ItemEnergyBags(45, 75000, 750));
-        IUItem.imp_bags = new DataSimpleItem<>(new ResourceLocation("bags", "imp_iu_bags"), () -> new ItemEnergyBags(63, 100000, 1000));
-        IUItem.booze_mug = new DataSimpleItem<>(new ResourceLocation("", "booze_mug"), ItemBooze::new);
-        IUItem.suBattery = new DataSimpleItem<>(new ResourceLocation("", "single_use_battery"), () -> new ItemBatterySU(1200, 1));
-        IUItem.UpgradeKit = new DataItem<>(ItemUpgradeKit.Types.class, ItemUpgradeKit.class);
-
-        IUItem.veinsencor = new DataItem<>(ItemVeinSensor.Types.class, ItemVeinSensor.class);
-        IUItem.upgradepanelkit = new DataItem<>(ItemUpgradePanelKit.Types.class, ItemUpgradePanelKit.class);
-        IUItem.machinekit = new DataItem<>(ItemUpgradeMachinesKit.Types.class, ItemUpgradeMachinesKit.class);
-        IUItem.steelHammer = new DataSimpleItem<>(new ResourceLocation("energy", "steel_hammer"), ItemSteelHammer::new);
-        IUItem.ironHammer = new DataSimpleItem<>(new ResourceLocation("energy", "iron_hammer"), ItemIronHammer::new);
-        IUItem.double_molecular = new DataSimpleItem<>(new ResourceLocation("", "double_molecular"), () -> new IUItemBase(IUCore.ModuleTab));
-        IUItem.quad_molecular = new DataSimpleItem<>(new ResourceLocation("", "quad_molecular"), () -> new IUItemBase(IUCore.ModuleTab));
-        IUItem.bee_frame_template = new DataSimpleItem<>(new ResourceLocation("", "bee_frame_template"), IUItemBase::new);
-        IUItem.adv_bee_frame_template = new DataSimpleItem<>(new ResourceLocation("", "adv_bee_frame_template"), IUItemBase::new);
-        IUItem.imp_bee_frame_template = new DataSimpleItem<>(new ResourceLocation("", "imp_bee_frame_template"), IUItemBase::new);
-        IUItem.larva = new DataSimpleItem<>(new ResourceLocation("", "larva"), IUItemBase::new);
-        IUItem.plant_mixture = new DataSimpleItem<>(new ResourceLocation("", "plant_mixture"), IUItemBase::new);
-        IUItem.tomeResearch = new DataSimpleItem<>(new ResourceLocation("", "tome_research"), () -> new ItemTomeResearchSpace());
-        IUItem.ironMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "ironmesh"), () -> new ItemMesh("ironmesh", 1000, 1));
-        IUItem.steelMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "steelmesh"), () -> new ItemMesh("steelmesh", 2000, 2));
-        IUItem.boridehafniumMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "boridehafniummesh"), () -> new ItemMesh("boridehafniummesh", 3500, 3));
-        IUItem.vanadiumaluminumMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "vanadiumaluminummesh"), () -> new ItemMesh("vanadiumaluminummesh", 5000, 4));
-        IUItem.steleticMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "steleticmesh"), () -> new ItemMesh("steleticmesh", 8000, 5));
-        IUItem.water_rotor_wood = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_wood"), () -> new ItemWaterRotor("water_rotor_wood", 10800 / 2, 0.25F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor" +
-                        "/wood_rotor_model.png"
-        ), 1, 0, new Color(94,71,39)));
-        IUItem.water_rotor_bronze = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_bronze"), () -> new ItemWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/bronze_rotor_model_1.png"
-        ), 2, 1, new Color(158,79,0)));
-        IUItem.water_rotor_iron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_iron"), () -> new ItemWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/iron_rotor_model_1.png"
-        ), 3, 2, new Color(159,159,159)));
-        IUItem.water_rotor_steel = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_steel"), () -> new ItemWaterRotor(
-                "water_rotor_steel",
-                (int) (172800 / 1.5),
-                0.75F,
-                new ResourceLocation(
-                        Constants.MOD_ID,
-                        "textures/item/rotor/steel_rotor_model_1.png"
-                ),
-                4,
-                3, new Color(157,166,170)
-        ));
-        IUItem.water_rotor_carbon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_carbon"), () -> new ItemWaterRotor(
-                "water_rotor_carbon",
-                (int) (604800 / 1.5),
-                1.0F,
-                new ResourceLocation(
-                        Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"),
-                5,
-                4,new Color(41,41,41)
-        ));
-        IUItem.water_iridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_iridium"), () -> new ItemWaterRotor("water_iridium",
-                (int) (172800 / 1.4D),2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png"), 6, 5, new Color(214,212,216)
-        ));
-        IUItem.water_compressiridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_compressiridium"), () -> new ItemWaterRotor("water_compressiridium",
-                (int) (172800 / 1.2D), 4.0F,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6, new Color(135,134,136)
-        ));
-        IUItem.water_spectral = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_spectral"), () -> new ItemWaterRotor("water_spectral",
-                (int) (172800 / 1.1D), 8.0F,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195,151,32)
-        ));
-        IUItem.water_myphical = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_myphical"), () -> new ItemWaterRotor("water_myphical",
-                3456000, 16,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98,22,182)
-        ));
-
-        IUItem.water_photon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_photon"), () -> new ItemWaterRotor("water_photon", 691200,
-                32,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36,175,17)
-        ));
-        IUItem.water_neutron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_neutron"), () -> new ItemWaterRotor("water_neutron", 27648000,
-                64,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10,new Color(41,86,208)
-        ));
-
-        IUItem.water_barionrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_barionrotor"), () -> new ItemWaterRotor("water_barionrotor",
-                27648000 * 4, 64 * 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11, new Color(155,17,175)
-        ));
-
-        IUItem.water_adronrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_adronrotor"), () -> new ItemWaterRotor("water_adronrotor",
-                27648000 * 16, 64 * 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12,new Color(0,179,192)
-        ));
-        IUItem.water_ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_ultramarinerotor"), () -> new ItemWaterRotor("water_ultramarinerotor",
-                27648000 * 64, 64 * 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13, new Color(17,175,166)
-        ));
-        IUItem.wood_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_wood"), () -> new ItemSteamRod(0, 0.02, 10800 / 2, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor" +
-                        "/wood_rotor_model.png"
-        )));
-        IUItem.rotor_wood = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_wood"), () -> new ItemWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor" +
-                        "/wood_rotor_model.png"
-        ), 1, 0, new Color(158,79,0)));
-        IUItem.rotor_bronze = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_bronze"), () -> new ItemWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/bronze_rotor_model_1.png"
-        ), 2, 1, new Color(158,79,0)));
-        IUItem.rotor_iron = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_iron"), () -> new ItemWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/iron_rotor_model_1.png"
-        ), 3, 2, new Color(159,159,159)));
-        IUItem.rotor_steel = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_steel"), () -> new ItemWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/steel_rotor_model_1.png"
-        ), 4, 3, new Color(157,166,170)));
-        IUItem.rotor_carbon = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_carbon"), () -> new ItemWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
-                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"), 5, 4,new Color(41,41,41)));
-
-        IUItem.iridium = new DataSimpleItem<>(new ResourceLocation("rotor", "iridium"), () -> new ItemWindRotor("iridium", 11, (int) (172800 / 1.4D),
-                2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_1.png"), 6, 5,  new Color(214,212,216)
-        ));
-        IUItem.compressiridium = new DataSimpleItem<>(new ResourceLocation("rotor", "compressiridium"), () -> new ItemWindRotor("compressiridium", 11,
-                (int) (172800 / 1.2D), 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6,new Color(135,134,136)
-        ));
-        IUItem.spectral = new DataSimpleItem<>(new ResourceLocation("rotor", "spectral"), () -> new ItemWindRotor("spectral", 11,
-                (int) (172800 / 1.1D), 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195,151,32)
-        ));
-        IUItem.myphical = new DataSimpleItem<>(new ResourceLocation("rotor", "myphical"), () -> new ItemWindRotor("myphical", 11,
-                3456000, 16,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98,22,182)
-        ));
-
-        IUItem.photon = new DataSimpleItem<>(new ResourceLocation("rotor", "photon"), () -> new ItemWindRotor("photon", 11, 691200,
-                32,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36,175,17)
-        ));
-        IUItem.neutron = new DataSimpleItem<>(new ResourceLocation("rotor", "neutron"), () -> new ItemWindRotor("neutron", 11, 27648000,
-                64,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10,new Color(41,86,208)
-        ));
-
-        IUItem.barionrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "barionrotor"), () -> new ItemWindRotor("barionrotor", 11,
-                27648000 * 4, 64 * 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11,  new Color(155,17,175)
-        ));
-
-        IUItem.adronrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "adronrotor"), () -> new ItemWindRotor("adronrotor", 11,
-                27648000 * 16, 64 * 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12,new Color(0,179,192)
-        ));
-        IUItem.ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("rotor", "ultramarinerotor"), () -> new ItemWindRotor("ultramarinerotor", 11,
-                27648000 * 64, 64 * 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13,new Color(17,175,166)
-        ));
-        IUItem.bronze_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_bronze"), () -> new ItemSteamRod(0, 0.04, 10800, new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/bronze_rotor_model_1.png"
-        )));
-        IUItem.iron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_iron"), () -> new ItemSteamRod(0, 0.08, (int) (10800 * 1.5), new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/iron_rotor_model_1.png"
-        )));
-        IUItem.steel_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_steel"), () -> new ItemSteamRod(0, 0.1, (int) (20800 * 1.5), new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/item/rotor/steel_rotor_model_1.png"
-        )));
-        IUItem.carbon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_carbon"), () -> new ItemSteamRod(1, 0.2, (int) (60800 * 1.5), new ResourceLocation(
-                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png")));
-
-
-        IUItem.iridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_iridium"), () -> new ItemSteamRod(1, 0.4, (int) (60800 * 2),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png")
-        ));
-        IUItem.compressiridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_compressiridium"), () -> new ItemSteamRod(1, 0.6, (int) (60800 * 3),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png")
-        ));
-        IUItem.spectral_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_spectral"), () -> new ItemSteamRod(1, 0.95, (int) (60800 * 4),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png")
-        ));
-        IUItem.myphical_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_myphical"), () -> new ItemSteamRod(2, 1.15, (int) (60800 * 6),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png")
-        ));
-
-        IUItem.photon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_photon"), () -> new ItemSteamRod(2, 1.5, (int) (60800 * 10),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png")
-        ));
-        IUItem.neutron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_neutron"), () -> new ItemSteamRod(2, 2.0, (int) (60800 * 15),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png")
-        ));
-
-        IUItem.barion_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_barion"), () -> new ItemSteamRod(3, 2.5, (int) (60800 * 20),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png")
-        ));
-
-        IUItem.hadron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_hadron"), () -> new ItemSteamRod(3, 3, (int) (60800 * 30),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png")
-        ));
-        IUItem.ultramarine_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_ultramarine"), () -> new ItemSteamRod(3, 3.5, (int) (60800 * 50),
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png")
-        ));
-        IUItem.hops = new DataSimpleItem<>(new ResourceLocation("", "hops"), () -> (IUItemBase) new IUItemBase(IUCore.CropsTab));
-        IUItem.tomato = new DataSimpleItem<>(new ResourceLocation("", "tomato"), () -> new ItemFoodIU("tomato", 3, 0.6F));
-        IUItem.terra_wart = new DataSimpleItem<>(new ResourceLocation("", "terra_wart"), () -> new ItemFoodIU("terra_wart", 1, 0.4F, true));
-        IUItem.corn = new DataSimpleItem<>(new ResourceLocation("", "corn"), () -> new ItemFoodIU("corn", 2, 0.4f));
-        IUItem.raspberry = new DataSimpleItem<>(new ResourceLocation("", "raspberry"), () -> new ItemFoodIU("raspberry", 2, 0.4f));
-        IUItem.fertilizer = new DataSimpleItem<>(new ResourceLocation("", "fertilizer"), IUItemBase::new);
-        IUItem.raw_apatite = new DataSimpleItem<>(new ResourceLocation("", "raw_apatite"), IUItemBase::new);
-        IUItem.apatite_cube = new DataSimpleItem<>(new ResourceLocation("", "apatite_cube"), IUItemBase::new);
-        IUItem.white_phosphorus = new DataSimpleItem<>(new ResourceLocation("", "white_phosphorus"), IUItemBase::new);
-        IUItem.red_phosphorus = new DataSimpleItem<>(new ResourceLocation("", "red_phosphorus"), IUItemBase::new);
-        IUItem.phosphorus_oxide = new DataSimpleItem<>(new ResourceLocation("", "phosphorus_oxide"), IUItemBase::new);
-        IUItem.honeycomb = new DataSimpleItem<>(new ResourceLocation("", "honeycomb"), IUItemBase::new);
-        IUItem.honey_drop = new DataSimpleItem<>(new ResourceLocation("", "honey_drop"), IUItemBase::new);
-        IUItem.bee_pollen = new DataSimpleItem<>(new ResourceLocation("", "bee_pollen"), IUItemBase::new);
-        IUItem.planner = new DataSimpleItem<>(new ResourceLocation("tools", "multiblock_planner"), () -> new ItemPlaner());
-        IUItem.deplanner = new DataSimpleItem<>(new ResourceLocation("tools", "multiblock_deplanner"), () -> new ItemDeplanner());
-        IUItem.pollutionDevice = new DataSimpleItem<>(new ResourceLocation("", "pollution_device"), () -> new ItemPollutionDevice());
-        IUItem.reactorData = new DataSimpleItem<>(new ResourceLocation("tools", "reactor_data_item"), () -> new ItemReactorData());
-        IUItem.coolingsensor = new DataSimpleItem<>(new ResourceLocation("tools", "cooling_sensor"), () -> new ItemsCoolingSensor());
-        IUItem.heatsensor = new DataSimpleItem<>(new ResourceLocation("tools", "heat_sensor"), () -> new ItemsHeatSensor());
-        IUItem.synthetic_rubber = new DataSimpleItem<>(new ResourceLocation("", "synthetic_rubber"), IUItemBase::new);
-        IUItem.synthetic_plate = new DataSimpleItem<>(new ResourceLocation("", "synthetic_plate"), IUItemBase::new);
-        IUItem.charged_redstone = new DataSimpleItem<>(new ResourceLocation("", "charged_redstone"), IUItemBase::new);
-        IUItem.charged_quartz = new DataSimpleItem<>(new ResourceLocation("", "charged_quartz"), IUItemBase::new);
-        IUItem.peat_balls = new DataSimpleItem<>(new ResourceLocation("", "peat_balls"), IUItemBase::new);
-        IUItem.cultivated_peat_balls = new DataSimpleItem<>(new ResourceLocation("", "cultivated_peat"), IUItemBase::new);
-        IUItem.nether_star_ingot = new DataSimpleItem<>(new ResourceLocation("", "nether_star_ingot"), IUItemBase::new);
-        IUItem.wolframite = new DataSimpleItem<>(new ResourceLocation("", "wolframite"), IUItemBase::new);
-        IUItem.wax_stick = new DataSimpleItem<>(new ResourceLocation("", "wax_stick"), IUItemBase::new);
-        IUItem.royal_jelly = new DataSimpleItem<>(new ResourceLocation("", "royal_jelly"), IUItemBase::new);
-        IUItem.beeswax = new DataSimpleItem<>(new ResourceLocation("", "beeswax"), IUItemBase::new);
-        IUItem.cooling_mixture = new DataSimpleItem<>(new ResourceLocation("", "cooling_mixture"), IUItemBase::new);
-        IUItem.helium_cooling_mixture = new DataSimpleItem<>(new ResourceLocation("", "helium_cooling_mixture"), IUItemBase::new);
-        IUItem.cryogenic_cooling_mixture = new DataSimpleItem<>(new ResourceLocation("", "cryogenic_cooling_mixture"), IUItemBase::new);
-        IUItem.medium_current_converter_to_low = new DataSimpleItem<>(new ResourceLocation("", "medium_current_converter_to_low"), IUItemBase::new);
-        IUItem.high_current_converter_to_low = new DataSimpleItem<>(new ResourceLocation("", "high_current_converter_to_low"), IUItemBase::new);
-        IUItem.extreme_current_converter_to_low = new DataSimpleItem<>(new ResourceLocation("", "extreme_current_converter_to_low"), IUItemBase::new);
-        IUItem.upgrade_casing = new DataSimpleItem<>(new ResourceLocation("", "upgrade_casing"), IUItemBase::new);
-        IUItem.voltage_sensor_for_mechanism = new DataSimpleItem<>(new ResourceLocation("", "voltage_sensor_for_mechanism"), IUItemBase::new);
-        IUItem.graphene_wire = new DataSimpleItem<>(new ResourceLocation("", "graphene_wire"), IUItemBase::new);
-        IUItem.graphene = new DataSimpleItem<>(new ResourceLocation("", "graphene"), IUItemBase::new);
-        IUItem.graphene_plate = new DataSimpleItem<>(new ResourceLocation("", "graphene_plate"), IUItemBase::new);
-        IUItem.motors_with_improved_bearings_ = new DataSimpleItem<>(new ResourceLocation("", "motors_with_improved_bearings_"), IUItemBase::new);
-        IUItem.adv_motors_with_improved_bearings_ = new DataSimpleItem<>(new ResourceLocation("", "adv_motors_with_improved_bearings_"), IUItemBase::new);
-        IUItem.imp_motors_with_improved_bearings_ = new DataSimpleItem<>(new ResourceLocation("", "imp_motors_with_improved_bearings_"), IUItemBase::new);
-        IUItem.compressed_redstone = new DataSimpleItem<>(new ResourceLocation("", "compressed_redstone"), IUItemBase::new);
-        IUItem.electronic_stabilizers = new DataSimpleItem<>(new ResourceLocation("", "electronic_stabilizers"), IUItemBase::new);
-        IUItem.polonium_palladium_composite = new DataSimpleItem<>(new ResourceLocation("", "polonium_palladium_composite"), IUItemBase::new);
-        IUItem.polished_stick = new DataSimpleItem<>(new ResourceLocation("", "polished_stick"), IUItemBase::new);
-        IUItem.ruby_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_helmet"), () -> new BaseArmor(ArmorMaterials.RUBY, ArmorItem.Type.HELMET, "ruby"));
-        IUItem.ruby_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_chestplate"), () -> new BaseArmor(ArmorMaterials.RUBY,  ArmorItem.Type.CHESTPLATE, "ruby"));
-        IUItem.ruby_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_leggings"), () -> new BaseArmor(ArmorMaterials.RUBY,  ArmorItem.Type.LEGGINGS, "ruby"));
-        IUItem.ruby_boots = new DataSimpleItem<>(new ResourceLocation("armour", "ruby_boots"), () -> new BaseArmor(ArmorMaterials.RUBY,  ArmorItem.Type.BOOTS, "ruby"));
-        IUItem.topaz_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_helmet"), () -> new BaseArmor(ArmorMaterials.TOPAZ,  ArmorItem.Type.HELMET, "topaz"));
-        IUItem.topaz_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_chestplate"), () -> new BaseArmor(ArmorMaterials.TOPAZ,  ArmorItem.Type.CHESTPLATE, "topaz"));
-        IUItem.topaz_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_leggings"), () -> new BaseArmor(ArmorMaterials.TOPAZ,  ArmorItem.Type.LEGGINGS, "topaz"));
-        IUItem.topaz_boots = new DataSimpleItem<>(new ResourceLocation("armour", "topaz_boots"), () -> new BaseArmor(ArmorMaterials.TOPAZ,  ArmorItem.Type.BOOTS, "topaz"));
-        IUItem.sapphire_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_helmet"), () -> new BaseArmor(ArmorMaterials.SAPPHIRE,  ArmorItem.Type.HELMET, "sapphire"));
-        IUItem.sapphire_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_chestplate"), () -> new BaseArmor(
-                ArmorMaterials.SAPPHIRE,
-                ArmorItem.Type.CHESTPLATE,
-                "sapphire"
-        ));
-        IUItem.sapphire_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_leggings"), () -> new BaseArmor(ArmorMaterials.SAPPHIRE,  ArmorItem.Type.LEGGINGS, "sapphire"));
-        IUItem.sapphire_boots = new DataSimpleItem<>(new ResourceLocation("armour", "sapphire_boots"), () -> new BaseArmor(ArmorMaterials.SAPPHIRE,  ArmorItem.Type.BOOTS, "sapphire"));
-
-        IUItem.batpack = new DataSimpleItem<>(new ResourceLocation("armour", "batpack"), () -> new ItemLappack("batpack", 60000.0, 1, 100.0));
-        IUItem.advanced_batpack = new DataSimpleItem<>(new ResourceLocation("armour", "advanced_batpack"), () -> new ItemLappack("advanced_batpack", 600000.0, 2, 1000.0));
-        IUItem.lappack = new DataSimpleItem<>(new ResourceLocation("armour", "lappack"), () -> new ItemLappack("lappack", 2.0E6, 3, 2500.0));
-
-        IUItem.bronze_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_helmet"), () -> new BaseArmor(ArmorMaterials.BRONZE,  ArmorItem.Type.HELMET, "bronze"));
-        IUItem.bronze_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_chestplate"), () -> new BaseArmor(ArmorMaterials.BRONZE,  ArmorItem.Type.CHESTPLATE, "bronze"));
-        IUItem.bronze_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_leggings"), () -> new BaseArmor(ArmorMaterials.BRONZE,  ArmorItem.Type.LEGGINGS, "bronze"));
-        IUItem.bronze_boots = new DataSimpleItem<>(new ResourceLocation("armour", "bronze_boots"), () -> new BaseArmor(ArmorMaterials.BRONZE,  ArmorItem.Type.BOOTS, "bronze"));
-
-
-        IUItem.adv_lappack = new DataSimpleItem<>(new ResourceLocation("armour", "adv_lappack"), () -> new ItemLappack(
-                "adv_lappack",
-                25000000,
-                3,
-                50000
-        ));
-        IUItem.imp_lappack = new DataSimpleItem<>(new ResourceLocation("armour", "imp_lappack"), () -> new ItemLappack(
-                "imp_lappack",
-                50000000,
-                4,
-                100000
-        ));
-        IUItem.per_lappack = new DataSimpleItem<>(new ResourceLocation("armour", "per_lappack"), () -> new ItemLappack(
-                "per_lappack",
-                100000000,
-                5,
-                500000
-        ));
-        IUItem.electricJetpack = new DataSimpleItem<>(new ResourceLocation("armour", "jetpack"), () -> new ItemAdvJetpack("jetpack", 30000.0, 60.0, 1));
-
-        IUItem.advjetpack = new DataSimpleItem<>(new ResourceLocation("armour", "advjetpack"), () -> new ItemAdvJetpack(
-                "advjetpack",
-                60000,
-                120,
-                2
-        ));
-        IUItem.impjetpack = new DataSimpleItem<>(new ResourceLocation("armour", "impjetpack"), () -> new ItemAdvJetpack(
-                "impjetpack",
-                120000,
-                500,
-                3
-        ));
-        IUItem.perjetpack = new DataSimpleItem<>(new ResourceLocation("armour", "perjetpack"), () -> new ItemAdvJetpack(
-                "perjetpack",
-                250000,
-                1000,
-                4
-        ));
-        IUItem.nightvision = new DataSimpleItem<>(new ResourceLocation("armour", "nightvision_goggles"), ItemArmorNightvisionGoggles::new);
-        IUItem.hazmat_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "hazmat_chestplate"), () -> new ItemArmorHazmat("hazmat_chestplate", ArmorItem.Type.CHESTPLATE));
-        IUItem.hazmat_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "hazmat_helmet"), () -> new ItemArmorHazmat("hazmat_helmet", ArmorItem.Type.HELMET));
-        IUItem.hazmat_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "hazmat_leggings"), () -> new ItemArmorHazmat("hazmat_leggings", ArmorItem.Type.LEGGINGS));
-        IUItem.rubber_boots = new DataSimpleItem<>(new ResourceLocation("armour", "rubber_boots"), () -> new ItemArmorHazmat("rubber_boots", ArmorItem.Type.BOOTS));
-
-        IUItem.volcano_hazmat_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_hazmat_chestplate"), () -> new ItemArmorVolcanoHazmat("volcano_hazmat_chestplate", ArmorItem.Type.CHESTPLATE));
-        IUItem.volcano_hazmat_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_hazmat_helmet"), () -> new ItemArmorVolcanoHazmat("volcano_hazmat_helmet", ArmorItem.Type.HELMET));
-        IUItem.volcano_hazmat_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_hazmat_leggings"), () -> new ItemArmorVolcanoHazmat("volcano_hazmat_leggings", ArmorItem.Type.LEGGINGS));
-        IUItem.volcano_rubber_boots = new DataSimpleItem<>(new ResourceLocation("armour", "volcano_rubber_boots"), () -> new ItemArmorVolcanoHazmat("volcano_rubber_boots", ArmorItem.Type.BOOTS));
-
-        IUItem.spectralSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_solar_helmet"), () -> new ItemSolarPanelHelmet(
-
-                4,
-                "spectral_solar_helmet"
-        ));
-        IUItem.singularSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "singular_solar_helmet"), () -> new ItemSolarPanelHelmet(
-
-                5,
-                "singular_solar_helmet"
-        ));
-        IUItem.advancedSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "advanced_solar_helmet"), () -> new ItemSolarPanelHelmet(
-
-                1,
-                "advanced_solar_helmet"
-        ));
-        IUItem.hybridSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "hybrid_solar_helmet"), () -> new ItemSolarPanelHelmet(
-
-                2,
-                "hybrid_solar_helmet"
-        ));
-        IUItem.ultimateSolarHelmet = new DataSimpleItem<>(new ResourceLocation("armour", "ultimate_solar_helmet"), () -> new ItemSolarPanelHelmet(
-
-                3,
-                "ultimate_solar_helmet"
-        ));
-
-        IUItem.hazmathelmet = new DataSimpleItem<>(new ResourceLocation("armour", "hazmathelmet"), () -> new ItemAdvArmorHazmat("hazmathelmet", ArmorItem.Type.HELMET));
-        IUItem.hazmatchest = new DataSimpleItem<>(new ResourceLocation("armour", "hazmatchest"), () -> new ItemAdvArmorHazmat("hazmatchest", ArmorItem.Type.CHESTPLATE));
-        IUItem.hazmatleggins = new DataSimpleItem<>(new ResourceLocation("armour", "hazmatleggins"), () -> new ItemAdvArmorHazmat("hazmatleggins", ArmorItem.Type.LEGGINGS));
-        IUItem.hazmatboosts = new DataSimpleItem<>(new ResourceLocation("armour", "hazmatboosts"), () -> new ItemAdvArmorHazmat("hazmatboosts", ArmorItem.Type.BOOTS));
-
-        IUItem.spectral_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_helmet"), () -> new ItemSpecialArmor(
-                EnumSubTypeArmor.HELMET, EnumTypeArmor.SPECTRAL
-        ));
-        IUItem.spectral_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_chestplate"), () -> new ItemSpecialArmor(
-                EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.SPECTRAL
-        ));
-        IUItem.spectral_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_leggings"), () -> new ItemSpecialArmor(
-                EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.SPECTRAL
-        ));
-        IUItem.spectral_boots = new DataSimpleItem<>(new ResourceLocation("armour", "spectral_boots"), () -> new ItemSpecialArmor(
-                EnumSubTypeArmor.BOOTS, EnumTypeArmor.SPECTRAL
-        ));
-        IUItem.adv_nano_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_helmet"), () -> new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.ADV_NANO));
-        IUItem.adv_nano_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_chestplate"), () -> new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.ADV_NANO));
-        IUItem.adv_nano_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_leggings"), () -> new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.ADV_NANO));
-        IUItem.adv_nano_boots = new DataSimpleItem<>(new ResourceLocation("armour", "adv_nano_boots"), () -> new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.ADV_NANO));
-
-        IUItem.nano_boots = new DataSimpleItem<>(new ResourceLocation("armour", "nano_boots"), () -> new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.NANO));
-        IUItem.nano_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "nano_chestplate"), () -> new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.NANO));
-        IUItem.nano_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "nano_helmet"), () -> new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.NANO));
-        IUItem.nano_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "nano_leggings"), () -> new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.NANO));
-        IUItem.quantum_boots = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_boots"), () -> new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.QUANTUM));
-        IUItem.quantum_chestplate = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_chestplate"), () -> new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.QUANTUM));
-        IUItem.quantum_helmet = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_helmet"), () -> new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.QUANTUM));
-        IUItem.quantum_leggings = new DataSimpleItem<>(new ResourceLocation("armour", "quantum_leggings"), () -> new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.QUANTUM));
-        IUItem.chainsaw = new DataSimpleItem<>(new ResourceLocation("energy_tools", "chainsaw"), () -> new ItemEnergyInstruments(EnumTypeInstruments.CHAINSAW, EnumVarietyInstruments.CHAINSAW, "chainsaw"));
-        IUItem.vajra = new DataSimpleItem<>(new ResourceLocation("energy_tools", "vajra"), () -> new ItemEnergyInstruments(EnumTypeInstruments.VAJRA, EnumVarietyInstruments.VAJRA, "vajra"));
-        IUItem.ult_vajra = new DataSimpleItem<>(new ResourceLocation("energy_tools", "ult_vajra"), () -> new ItemEnergyInstruments(EnumTypeInstruments.ULT_VAJRA, EnumVarietyInstruments.VAJRA, "ult_vajra"));
-
-        IUItem.GraviTool = new DataSimpleItem<>(new ResourceLocation("gravitool", "gravitool".toLowerCase()), () -> new ItemGraviTool());
-        IUItem.drill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "drill"), () -> new ItemEnergyInstruments(EnumTypeInstruments.SIMPLE_DRILL, EnumVarietyInstruments.SIMPLE, "drill"));
-        IUItem.diamond_drill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "diamond_drill"), () -> new ItemEnergyInstruments(EnumTypeInstruments.DIAMOND_DRILL, EnumVarietyInstruments.DIAMOND,
-                "diamond_drill"
-        ));
-        IUItem.nanodrill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanodrill"), () -> new ItemEnergyInstruments(EnumTypeInstruments.DRILL, EnumVarietyInstruments.NANO, "nanodrill"));
-        IUItem.quantumdrill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumdrill"), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.DRILL,
-                EnumVarietyInstruments.QUANTUM,
-                "quantumdrill"
-        ));
-        IUItem.spectraldrill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectraldrill"), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.DRILL,
-                EnumVarietyInstruments.SPECTRAL,
-                "spectraldrill"
-        ));
-        IUItem.nanopickaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanopickaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.PICKAXE, EnumVarietyInstruments.NANO, "nanopickaxe"));
-        IUItem.nanoshovel = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanoshovel"), () -> new ItemEnergyInstruments(EnumTypeInstruments.SHOVEL, EnumVarietyInstruments.NANO, "nanoshovel"));
-        IUItem.nanoaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nanoaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.NANO, "nanoaxe"));
-        IUItem.quantumpickaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumpickaxe"), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.PICKAXE,
-                EnumVarietyInstruments.QUANTUM,
-                "quantumpickaxe"
-        ));
-        IUItem.quantumshovel = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumshovel"), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.SHOVEL,
-                EnumVarietyInstruments.QUANTUM,
-                "quantumshovel"
-        ));
-        IUItem.quantumaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantumaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.QUANTUM, "quantumaxe"));
-        IUItem.spectralpickaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectralpickaxe"), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.PICKAXE,
-                EnumVarietyInstruments.SPECTRAL,
-                "spectralpickaxe"
-        ));
-        IUItem.perfect_drill = new DataSimpleItem<>(new ResourceLocation("energy_tools", "ultDDrill".toLowerCase()), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.PERFECT_DRILL,
-                EnumVarietyInstruments.PERFECT_DRILL,
-                "ultDDrill"
-        ));
-        IUItem.spectralshovel = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectralshovel"), () -> new ItemEnergyInstruments(
-                EnumTypeInstruments.SHOVEL,
-                EnumVarietyInstruments.SPECTRAL,
-                "spectralshovel"
-        ));
-        IUItem.spectralaxe = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectralaxe"), () -> new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.SPECTRAL, "spectralaxe"));
-        IUItem.nano_bow = new DataSimpleItem<>(new ResourceLocation("energy_tools", "nano_bow"), () -> new ItemEnergyBow(
-                "nano_bow",
-                0,
-                2,
-                5000,
-                50000,
-                1f
-        ));
-        IUItem.quantum_bow = new DataSimpleItem<>(new ResourceLocation("energy_tools", "quantum_bow"), () -> new ItemEnergyBow(
-                "quantum_bow",
-                0,
-                3,
-                25000,
-                80000,
-                2f
-        ));
-        IUItem.spectral_bow = new DataSimpleItem<>(new ResourceLocation("energy_tools", "spectral_bow"), () -> new ItemEnergyBow(
-                "spectral_bow",
-                0,
-                4,
-                50000,
-                150000,
-                4f
-        ));
-        IUItem.ruby_pickaxe = new DataSimpleItem<>(new ResourceLocation("", "ruby_pickaxe"), () -> new ItemPickaxe("ruby_pickaxe"));
-        IUItem.topaz_pickaxe = new DataSimpleItem<>(new ResourceLocation("", "topaz_pickaxe"), () -> new ItemPickaxe("topaz_pickaxe"));
-        IUItem.sapphire_pickaxe = new DataSimpleItem<>(new ResourceLocation("", "sapphire_pickaxe"), () -> new ItemPickaxe("sapphire_pickaxe"));
-        IUItem.ruby_axe = new DataSimpleItem<>(new ResourceLocation("", "ruby_axe"), () -> new ItemAxe("ruby_axe"));
-        IUItem.topaz_axe = new DataSimpleItem<>(new ResourceLocation("", "topaz_axe"), () -> new ItemAxe("topaz_axe"));
-        IUItem.sapphire_axe = new DataSimpleItem<>(new ResourceLocation("", "sapphire_axe"), () -> new ItemAxe("sapphire_axe"));
-        IUItem.ruby_shovel = new DataSimpleItem<>(new ResourceLocation("", "ruby_shovel"), () -> new ItemShovel("ruby_shovel"));
-        IUItem.topaz_shovel = new DataSimpleItem<>(new ResourceLocation("", "topaz_shovel"), () -> new ItemShovel("topaz_shovel"));
-        IUItem.sapphire_shovel = new DataSimpleItem<>(new ResourceLocation("", "sapphire_shovel"), () -> new ItemShovel("sapphire_shovel"));
+    private static void registerVillagers() {
         VillagerInit.init();
+    }
 
-        IUItem.creativeBattery =new DataSimpleItem<>(new ResourceLocation("battery", "creative_battery"), () -> new ItemCreativeBattery(false));
-        IUItem.creativeBatteryWireless =new DataSimpleItem<>(new ResourceLocation("battery", "creative_battery_wireless"), () -> new ItemCreativeBattery(true));
-        IUItem.creativeTomeResearch = new DataSimpleItem<>(new ResourceLocation("", "creative_tome_research"), () -> new ItemCreativeTomeResearchSpace());
+    private static void registerEntities() {
+        IUItem.entity_nuclear_bomb = ENTITIES.register("nuclear_bomb", () ->
+                EntityType.Builder.<EntityNuclearBombPrimed>of(EntityNuclearBombPrimed::new, MobCategory.MISC)
+                        .sized(0.98F, 0.98F)
+                        .clientTrackingRange(10)
+                        .updateInterval(10)
+                        .build("nuclear_bomb"));
+        IUItem.entity_bee = ENTITIES.register("bee", () -> EntityType.Builder.of(SmallBee::new, MobCategory.CREATURE).sized(0.7F * 0.2f, 0.6F * 0.2f).clientTrackingRange(8).build("bee"));
 
+    }
+
+    private static void registerRecipes() {
+        UNIVERSAL_RECIPE_TYPE = RECIPE_TYPE.register("universal_recipe", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_IU = RECIPE_SERIALIZER.register("universal_recipe", IURecipeSerializer::new);
+        UNIVERSAL_RECIPE_TYPE_DELETE = RECIPE_TYPE.register("universal_recipe_delete", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_IU_DELETE = RECIPE_SERIALIZER.register("universal_recipe_delete", IURecipeDeleteSerializer::new);
+        RECIPE_SERIALIZER_SHAPED_RECIPE = RECIPE_SERIALIZER.register("shaped_recipe", IndustrialShapedRecipeSerializer::new);
+        RECIPE_SERIALIZER_SHAPELESS_RECIPE = RECIPE_SERIALIZER.register("shapeless_recipe", IndustrialShapelessRecipeSerializer::new);
+
+
+        QUANTUM_QUARRY = RECIPE_TYPE.register("quantum_quarry", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_QUANTUM_QUARRY = RECIPE_SERIALIZER.register("quantum_quarry", QuantumQuarrySerializer::new);
+        BODY_RECIPE = RECIPE_TYPE.register("body_resource", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_BODY_RECIPE = RECIPE_SERIALIZER.register("body_resource", SpaceBodySerializer::new);
+        SATELLITE_RECIPE = RECIPE_TYPE.register("satellite_add", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_SATELLITE_RECIPE = RECIPE_SERIALIZER.register("satellite_add", SatelliteSerializer::new);
+        PLANET_RECIPE = RECIPE_TYPE.register("planet_add", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_PLANET_RECIPE = RECIPE_SERIALIZER.register("planet_add", PlanetSerializer::new);
+        STAR_RECIPE = RECIPE_TYPE.register("star_add", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_STAR_RECIPE = RECIPE_SERIALIZER.register("star_add", StarSerializer::new);
+        SYSTEM_RECIPE = RECIPE_TYPE.register("system_add", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_SYSTEM_RECIPE = RECIPE_SERIALIZER.register("system_add", SystemSerializer::new);
+        ASTEROID_RECIPE = RECIPE_TYPE.register("asteroid_add", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_ASTEROID_RECIPE = RECIPE_SERIALIZER.register("asteroid_add", AsteroidSerializer::new);
+        COLONY_RECIPE = RECIPE_TYPE.register("colony_resource_add", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_COLONY_RECIPE = RECIPE_SERIALIZER.register("colony_resource_add", ColonySerializer::new);
+
+        SMELTERY_RECIPE = RECIPE_TYPE.register("smeltery", () -> new RecipeType<>() {
+        });
+        RECIPE_SERIALIZER_SMELTERY_RECIPE = RECIPE_SERIALIZER.register("smeltery", () -> new SmelterSerializer());
+    }
+
+    private static void registerContainerMenu() {
+        containerBase = MENU_TYPE.register("containerbase", () -> IForgeMenuType.create((windowId, inv, data) -> {
+            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
+            try {
+                BlockEntity blockEntity = (BlockEntity) DecoderHandler.decode(packetBuffer);
+                if (blockEntity instanceof BlockEntityInventory)
+                    return ((ContainerMenuBase<?>) ((BlockEntityInventory) blockEntity).createMenu(windowId, inv, inv.player));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }));
+        inventory_container = MENU_TYPE.register("inventory_container", () -> IForgeMenuType.create((windowId, inv, data) -> {
+            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
+            try {
+                byte id = packetBuffer.readByte();
+                if (id == 1) {
+                    final ItemStack stack = inv.player.getItemInHand(InteractionHand.MAIN_HAND);
+                    if (stack.getItem() instanceof IItemStackInventory inventory) {
+                        Player player = inv.player;
+                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
+                        return ((ContainerMenuBase<?>) invent.createMenu(windowId, inv, inv.player));
+                    }
+                } else if (id == 2) {
+                    final ItemStack stack = inv.player.getItemBySlot(EquipmentSlot.LEGS);
+                    if (stack.getItem() instanceof IItemStackInventory inventory) {
+                        Player player = inv.player;
+                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
+                        return ((ContainerMenuBase<?>) invent.createMenu(windowId, inv, inv.player));
+                    }
+                } else if (id == 3) {
+                    final ItemStack stack = inv.player.getItemBySlot(EquipmentSlot.CHEST);
+                    if (stack.getItem() instanceof IItemStackInventory inventory) {
+                        Player player = inv.player;
+                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
+                        return ((ContainerMenuBase<?>) invent.createMenu(windowId, inv, inv.player));
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            return null;
+        }));
+    }
+
+    private static void registerTabs() {
+        TABS.register("iutab",
+                () -> IUCore.IUTab);
+        TABS.register("moduletab",
+                () -> IUCore.ModuleTab);
+        TABS.register("itemtab",
+                () -> IUCore.ItemTab);
+        TABS.register("oretab",
+                () -> IUCore.OreTab);
+        TABS.register("energytab",
+                () -> IUCore.EnergyTab);
+        TABS.register("resourcetab",
+                () -> IUCore.RecourseTab);
+        TABS.register("reactorstab",
+                () -> IUCore.ReactorsTab);
+        TABS.register("upgradetab",
+                () -> IUCore.UpgradeTab);
+        TABS.register("elementstab",
+                () -> IUCore.ElementsTab);
+        TABS.register("reactorsblocktab",
+                () -> IUCore.ReactorsBlockTab);
+        TABS.register("croptab",
+                () -> IUCore.CropsTab);
+        TABS.register("beetab",
+                () -> IUCore.BeesTab);
+        TABS.register("genometab",
+                () -> IUCore.GenomeTab);
+        TABS.register("spacetab",
+                () -> IUCore.SpaceTab);
+        TABS.register("fluidtab",
+                () -> IUCore.fluidCellTab);
+    }
+
+    private static void registerRegisters() {
+        ITEMS.register(IUCore.context.getModEventBus());
+        BLOCKS.register(IUCore.context.getModEventBus());
+        SOUND_EVENTS.register(IUCore.context.getModEventBus());
+        RECIPE_SERIALIZER.register(IUCore.context.getModEventBus());
+        FLUIDS.register(IUCore.context.getModEventBus());
+        FLUID_TYPES.register(IUCore.context.getModEventBus());
+        MOB_EFFECT.register(IUCore.context.getModEventBus());
+        FEATURES.register(IUCore.context.getModEventBus());
+        CONFIGURED_FEATURES.register(IUCore.context.getModEventBus());
+        PLACED_FEATURES.register(IUCore.context.getModEventBus());
+        BLOCK_ENTITIES.register(IUCore.context.getModEventBus());
+        MENU_TYPE.register(IUCore.context.getModEventBus());
+        ENTITIES.register(IUCore.context.getModEventBus());
+        DAMAGE_TYPE.register(IUCore.context.getModEventBus());
+        RECIPE_TYPE.register(IUCore.context.getModEventBus());
+        TABS.register(IUCore.context.getModEventBus());
+        PARTICLE_TYPE.register(IUCore.context.getModEventBus());
+        POI_TYPE.register(IUCore.context.getModEventBus());
+        VILLAGER_PROFESSIONS.register(IUCore.context.getModEventBus());
     }
 
     public static void registerFluids() {
@@ -1392,23 +1452,23 @@ public class Register {
         registerfluid(FluidName.fluidarsenicum_gallium, 1000, 3000, false);
 
 
-        registerfluid(FluidName.fluidNeutron, 3000, 300, false);
-        registerfluid(FluidName.fluidHelium, -1000, 300, true);
+        registerfluid(FluidName.fluidneutron, 3000, 300, false);
+        registerfluid(FluidName.fluidhelium, -1000, 300, true);
         registerfluid(FluidName.fluidcryogen, -1000, 300, true);
         registerfluid(FluidName.fluidazurebrilliant, 1000, 300, false);
         registerfluid(FluidName.fluidglowstone, 1000, 300, false);
         registerfluid(FluidName.fluidrawlatex, 1000, 300, false);
-        registerfluid(FluidName.fluidbenz, 3000, 500, false);
+        registerfluid(FluidName.fluidgasoline, 3000, 500, false);
         registerfluid(FluidName.fluidpetrol90, 3000, 500, false);
         registerfluid(FluidName.fluidpetrol95, 3000, 500, false);
         registerfluid(FluidName.fluidpetrol100, 3000, 500, false);
         registerfluid(FluidName.fluidpetrol105, 3000, 500, false);
-        registerfluid(FluidName.fluiddizel, 3000, 500, false);
+        registerfluid(FluidName.fluiddiesel, 3000, 500, false);
         registerfluid(FluidName.fluida_diesel, 3000, 500, false);
         registerfluid(FluidName.fluidaa_diesel, 3000, 500, false);
         registerfluid(FluidName.fluidaaa_diesel, 3000, 500, false);
         registerfluid(FluidName.fluidaaaa_diesel, 3000, 500, false);
-        registerfluid(FluidName.fluidneft, 3000, 500, false);
+        registerfluid(FluidName.fluidpetroleum, 3000, 500, false);
 
 
         registerfluid(FluidName.fluidsweet_medium_oil, 3000, 500, false);
@@ -1427,7 +1487,7 @@ public class Register {
         registerfluid(FluidName.fluidpolyeth, -3000, 2000, true);
         registerfluid(FluidName.fluidpolyprop, -3000, 2000, true);
         registerfluid(FluidName.fluidacetylene, -3000, 2000, true);
-        registerfluid(FluidName.fluidoxy, -3000, 500, true);
+        registerfluid(FluidName.fluidoxygen, -3000, 500, true);
         registerfluid(FluidName.fluidnitricoxide, -3000, 500, true);
 
         registerfluid(FluidName.fluidnitrogenoxy, -3000, 500, true);
@@ -1439,12 +1499,12 @@ public class Register {
         registerfluid(FluidName.fluidethane, -3000, 500, true);
         registerfluid(FluidName.fluidbutadiene, -3000, 500, true);
         registerfluid(FluidName.fluidpolybutadiene, -3000, 500, true);
-        registerfluid(FluidName.fluidhyd, -3000, 500, true);
+        registerfluid(FluidName.fluidhydrogen, -3000, 500, true);
         registerfluid(FluidName.fluidnitrogenhydride, -3000, 500, true);
         registerfluid(FluidName.fluidnitrogendioxide, -3000, 500, true);
         registerfluid(FluidName.fluidfluorhyd, -3000, 500, true);
-        registerfluid(FluidName.fluidazot, -3000, 500, true);
-        registerfluid(FluidName.fluidco2, -3000, 500, true);
+        registerfluid(FluidName.fluidnitrogen, -3000, 500, true);
+        registerfluid(FluidName.fluidcarbondioxide, -3000, 500, true);
         registerfluid(FluidName.fluidgas, -3000, 500, true);
         registerfluid(FluidName.fluidchlorum, -3000, 500, true);
         registerfluid(FluidName.fluidfluor, -3000, 500, true);

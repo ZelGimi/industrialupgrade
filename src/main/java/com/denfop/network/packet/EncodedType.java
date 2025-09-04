@@ -2,7 +2,9 @@ package com.denfop.network.packet;
 
 
 import com.denfop.api.recipe.*;
+import com.denfop.api.vein.common.VeinBase;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.inventory.Inventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
@@ -41,22 +43,22 @@ public enum EncodedType {
     ChunkPos(net.minecraft.world.level.ChunkPos.class),
     Vec3(net.minecraft.world.phys.Vec3.class),
     Fluid(net.minecraft.world.level.material.Fluid.class),
-    Vein(com.denfop.api.vein.Vein.class),
+    Vein(VeinBase.class),
     MachineRecipe(BaseMachineRecipe.class),
     FluidStack(net.minecraftforge.fluids.FluidStack.class),
     FluidTank(net.minecraftforge.fluids.capability.templates.FluidTank.class),
-    InvSlot(com.denfop.invslot.InvSlot.class),
+    InvSlot(Inventory.class),
     //    FAKE_PLANET(FakePlanet.class),
     //   FAKE_SATELLITE(FakeSatellite.class),
     //   FAKE_ASTEROID(FakeAsteroid.class),
     Component(AbstractComponent.class, false),
 
-    Radiation(com.denfop.api.radiationsystem.Radiation.class),
+    Radiation(com.denfop.api.pollution.radiation.Radiation.class),
     Collection(java.util.Collection.class),
     //   BaseLevelSystem(com.denfop.api.research.main.BaseLevelSystem.class),
     //   BaseResearch(com.denfop.api.research.main.BaseResearch.class),
     RecipeInfo(com.denfop.api.recipe.RecipeInfo.class),
-    DataOre(com.denfop.tiles.base.DataOre.class),
+    DataOre(com.denfop.blockentity.base.DataOre.class),
     BaseRecipe(BaseMachineRecipe.class),
     BaseFluidRecipe(BaseFluidMachineRecipe.class),
     recipeOutput(RecipeOutput.class),

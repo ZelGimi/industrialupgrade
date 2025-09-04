@@ -9,7 +9,7 @@ import com.denfop.api.space.colonies.api.building.IFactory;
 import com.denfop.api.space.colonies.building.*;
 import com.denfop.api.space.colonies.enums.*;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemColonialBuilding<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IBuildingItem {
+public class ItemColonialBuilding<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IBuildingItem {
     public ItemColonialBuilding(T element) {
         super(new Item.Properties(), element);
     }
@@ -64,10 +64,12 @@ public class ItemColonialBuilding<T extends Enum<T> & ISubEnum> extends ItemMain
                 return EnumTypeBuilding.FABRIC;
         }
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.SpaceTab;
     }
+
     @Override
     public IColonyBuilding getBuilding(final IColony colony, final ItemStack stack, boolean simulate) {
         EnumTypeBuilding building = getBuilding(stack);
@@ -246,7 +248,7 @@ public class ItemColonialBuilding<T extends Enum<T> & ISubEnum> extends ItemMain
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         low_protection(0),
         medium_protection(1),
         high_protection(2),

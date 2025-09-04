@@ -2,27 +2,26 @@ package com.denfop.integration.one_probe;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.bee.IBee;
-import com.denfop.api.cool.ICoolSource;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IEnergyConductor;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.NodeStats;
+import com.denfop.api.bee.Bee;
+import com.denfop.api.crop.Crop;
+import com.denfop.api.energy.interfaces.EnergyConductor;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
+import com.denfop.api.energy.networking.NodeStats;
+import com.denfop.api.otherenergies.common.EnergyBase;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.api.otherenergies.common.IConductor;
+import com.denfop.api.otherenergies.common.ITile;
+import com.denfop.api.otherenergies.cool.ICoolSource;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.sytem.EnergyBase;
-import com.denfop.api.sytem.EnergyType;
-import com.denfop.api.sytem.IConductor;
-import com.denfop.api.sytem.ITile;
-import com.denfop.blocks.FluidName;
-import com.denfop.blocks.IDeposits;
+import com.denfop.blockentity.base.*;
+import com.denfop.blockentity.bee.BlockEntityApiary;
+import com.denfop.blockentity.crop.TileEntityCrop;
+import com.denfop.blockentity.mechanism.*;
+import com.denfop.blocks.Deposits;
 import com.denfop.componets.*;
 import com.denfop.recipe.IInputItemStack;
-import com.denfop.tiles.base.*;
-import com.denfop.tiles.bee.TileEntityApiary;
-import com.denfop.tiles.crop.TileEntityCrop;
-import com.denfop.tiles.mechanism.*;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
@@ -49,18 +48,108 @@ import java.util.List;
 public class MyProbeInfoProvider implements IProbeInfoProvider {
 
 
+    public static void euBar(IProbeInfo probeInfo, int energy, int capacity) {
+        probeInfo.progress(
+                energy,
+                capacity,
+                probeInfo
+                        .defaultProgressStyle()
+                        .suffix("EF")
+                        .filledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
+                        .numberFormat(NumberFormat.COMPACT)
+        );
+    }
+
+    public static void qeBar(IProbeInfo probeInfo, int energy, int capacity) {
+        probeInfo.progress(
+                energy,
+                capacity,
+                probeInfo
+                        .defaultProgressStyle()
+                        .suffix("QE")
+                        .filledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
+                        .borderColor(Config.rfbarBorderColor)
+                        .numberFormat(
+                                NumberFormat.COMPACT)
+        );
+    }
+
+    public static void radBar(IProbeInfo probeInfo, int energy, int capacity) {
+        probeInfo.progress(
+                energy,
+                capacity,
+                probeInfo
+                        .defaultProgressStyle()
+                        .suffix("☢")
+                        .filledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
+                        .borderColor(Config.rfbarBorderColor)
+                        .numberFormat(
+                                NumberFormat.COMPACT)
+        );
+    }
+
+    public static void posBar(IProbeInfo probeInfo, int energy, int capacity) {
+        probeInfo.progress(
+                energy,
+                capacity,
+                probeInfo
+                        .defaultProgressStyle()
+                        .suffix("e⁺")
+                        .filledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
+                        .borderColor(Config.rfbarBorderColor)
+                        .numberFormat(
+                                NumberFormat.COMPACT)
+        );
+    }
+
+    public static void seBar(IProbeInfo probeInfo, int energy, int capacity) {
+        probeInfo.progress(
+                energy,
+                capacity,
+                probeInfo
+                        .defaultProgressStyle()
+                        .suffix("SE")
+                        .filledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
+                        .borderColor(Config.rfbarBorderColor)
+                        .numberFormat(
+                                NumberFormat.COMPACT)
+        );
+    }
+
+    public static void eeBar(IProbeInfo probeInfo, int energy, int capacity) {
+        probeInfo.progress(
+                energy,
+                capacity,
+                probeInfo
+                        .defaultProgressStyle()
+                        .suffix("EE")
+                        .filledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
+                        .borderColor(Config.rfbarBorderColor)
+                        .numberFormat(
+                                NumberFormat.COMPACT)
+        );
+    }
+
+    public static TextureAtlas getBlockTextureMap() {
+        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS);
+    }
 
     @Override
     public ResourceLocation getID() {
-        return new ResourceLocation(Constants.MOD_ID,"probe");
+        return new ResourceLocation(Constants.MOD_ID, "probe");
     }
-
 
     @Override
     public void addProbeInfo(ProbeMode probeMode, IProbeInfo probeInfo, Player entityPlayer, Level world, BlockState iBlockState, IProbeHitData data) {
         BlockEntity tile = world.getBlockEntity(data.getPos());
-        if (tile instanceof TileEntityBlock) {
-            TileEntityBlock te = (TileEntityBlock) tile;
+        if (tile instanceof BlockEntityBase) {
+            BlockEntityBase te = (BlockEntityBase) tile;
             if (te.wrenchCanRemove(entityPlayer)) {
                 probeInfo.text(Localization.translate("iu.wrench.info"));
             }
@@ -68,8 +157,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
             final ComponentProcess component1 = te.getComp(ComponentProcess.class);
 
             ProcessMultiComponent component2 = te.getComp(ProcessMultiComponent.class);
-            if (te instanceof TileEntityAnvil) {
-                TileEntityAnvil anvil = (TileEntityAnvil) te;
+            if (te instanceof BlockEntityAnvil) {
+                BlockEntityAnvil anvil = (BlockEntityAnvil) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -87,8 +176,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntityStrongAnvil) {
-                TileEntityStrongAnvil anvil = (TileEntityStrongAnvil) te;
+            if (te instanceof BlockEntityStrongAnvil) {
+                BlockEntityStrongAnvil anvil = (BlockEntityStrongAnvil) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -103,27 +192,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntityCompressor) {
-                TileEntityCompressor anvil = (TileEntityCompressor) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo
-                        .horizontal()
-                        .text(ChatFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
-
-            }
-            if (te instanceof TileEntityMacerator) {
-                TileEntityMacerator anvil = (TileEntityMacerator) te;
+            if (te instanceof BlockEntityCompressor) {
+                BlockEntityCompressor anvil = (BlockEntityCompressor) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -141,8 +211,27 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntityPrimalWireInsulator) {
-                TileEntityPrimalWireInsulator anvil = (TileEntityPrimalWireInsulator) te;
+            if (te instanceof BlockEntityMacerator) {
+                BlockEntityMacerator anvil = (BlockEntityMacerator) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(ChatFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo
+                        .horizontal()
+                        .text(ChatFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof BlockEntityPrimalWireInsulator) {
+                BlockEntityPrimalWireInsulator anvil = (BlockEntityPrimalWireInsulator) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -157,8 +246,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntityRollingMachine) {
-                TileEntityRollingMachine anvil = (TileEntityRollingMachine) te;
+            if (te instanceof BlockEntityRollingMachine) {
+                BlockEntityRollingMachine anvil = (BlockEntityRollingMachine) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -173,8 +262,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntityPrimalLaserPolisher) {
-                TileEntityPrimalLaserPolisher anvil = (TileEntityPrimalLaserPolisher) te;
+            if (te instanceof BlockEntityPrimalLaserPolisher) {
+                BlockEntityPrimalLaserPolisher anvil = (BlockEntityPrimalLaserPolisher) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -189,8 +278,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntitySqueezer) {
-                TileEntitySqueezer anvil = (TileEntitySqueezer) te;
+            if (te instanceof BlockEntitySqueezer) {
+                BlockEntitySqueezer anvil = (BlockEntitySqueezer) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -205,8 +294,8 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 );
 
             }
-            if (te instanceof TileEntityDryer) {
-                TileEntityDryer anvil = (TileEntityDryer) te;
+            if (te instanceof BlockEntityDryer) {
+                BlockEntityDryer anvil = (BlockEntityDryer) te;
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUUID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
@@ -224,7 +313,7 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
             if (te instanceof TileEntityCrop) {
                 TileEntityCrop tileEntityCrop = (TileEntityCrop) te;
                 if (tileEntityCrop.getCrop() != null) {
-                    ICrop crop = tileEntityCrop.getCrop();
+                    Crop crop = tileEntityCrop.getCrop();
                     IProbeInfo cropInfo = probeInfo.vertical();
 
 
@@ -286,13 +375,13 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                     }
                 }
             }
-            if (te instanceof TileEntityApiary) {
-                TileEntityApiary apiary = (TileEntityApiary) te;
+            if (te instanceof BlockEntityApiary) {
+                BlockEntityApiary apiary = (BlockEntityApiary) te;
 
                 if (apiary.getQueen() != null) {
                     IProbeInfo apiaryInfo = probeInfo.vertical();
 
-                    IBee queen = apiary.getQueen();
+                    Bee queen = apiary.getQueen();
                     apiaryInfo.text(ChatFormatting.GOLD + Localization.translate("iu.crop.oneprobe.queen") + ChatFormatting.BOLD + queen.getName());
 
                     apiaryInfo.progress((int) apiary.food, (int) apiary.maxFood,
@@ -438,20 +527,20 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                 probeInfo.text(Localization.translate("iu.manufacturer_level.info") + manufacturerBlock.getLevelMechanism() + "/" + 10);
             }
         }
-        if (tile instanceof IEnergyConductor) {
-            final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) tile,tile.getLevel());
-            euBar(probeInfo, (int) node.getEnergyOut(), (int) ((IEnergyConductor) tile).getConductorBreakdownEnergy());
+        if (tile instanceof EnergyConductor) {
+            final NodeStats node = EnergyNetGlobal.instance.getNodeStats((EnergyTile) tile, tile.getLevel());
+            euBar(probeInfo, (int) node.getEnergyOut(), (int) ((EnergyConductor) tile).getConductorBreakdownEnergy());
         }
-        if (tile instanceof TileEntityInventory) {
+        if (tile instanceof BlockEntityInventory) {
             List<String> stringList = new ArrayList<>();
-            ((TileEntityInventory) tile).addInformation(((TileEntityInventory) tile).getPickBlock(entityPlayer, null), stringList
+            ((BlockEntityInventory) tile).addInformation(((BlockEntityInventory) tile).getPickBlock(entityPlayer, null), stringList
             );
             for (String s : stringList) {
                 probeInfo.text(s);
             }
         }
-        if (iBlockState.getBlock() instanceof IDeposits) {
-            IDeposits deposits = (IDeposits) iBlockState.getBlock();
+        if (iBlockState.getBlock() instanceof Deposits) {
+            Deposits deposits = (Deposits) iBlockState.getBlock();
             final List<String> stringList = deposits.getInformationFromMeta();
             for (String s : stringList) {
                 probeInfo.text(s);
@@ -529,15 +618,15 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                     );
                 }
             }
-        } else if (tile instanceof TileEntityInventory) {
-            TileEntityInventory tileBlock = (TileEntityInventory) tile;
+        } else if (tile instanceof BlockEntityInventory) {
+            BlockEntityInventory tileBlock = (BlockEntityInventory) tile;
             for (AbstractComponent component : tileBlock.getComponentList()) {
                 if (component instanceof Energy) {
                     euBar(probeInfo, (int) ((Energy) component).getEnergy(), (int) ((Energy) component).getCapacity());
                 }
                 if (component instanceof Fluids) {
                     Iterator<Fluids.InternalFluidTank> tanks = ((Fluids) component).getAllTanks().iterator();
-                    while (tanks.hasNext()){
+                    while (tanks.hasNext()) {
                         Fluids.InternalFluidTank tank = tanks.next();
                         if (!tank.isEmpty()) {
                             FluidStack fluidStack = tank.getFluid();
@@ -548,12 +637,11 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                             TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fluidStack));
                             int color = extensions.getTintColor();
 
-                            probeInfo.horizontal().text(Localization.translate(fluid.getFluidType().getDescriptionId())+": "+String.format("§b%d / %d mB", amount, capacity));
+                            probeInfo.horizontal().text(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + String.format("§b%d / %d mB", amount, capacity));
                         } else {
-                            probeInfo.text(Component.literal("§7"+Localization.translate("iu.probe.recipe.empty")));
+                            probeInfo.text(Component.literal("§7" + Localization.translate("iu.probe.recipe.empty")));
                         }
                     }
-
 
 
                 }
@@ -646,96 +734,5 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
 
 
         }
-    }
-
-    public static void euBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("EF")
-                        .filledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
-                        .numberFormat(NumberFormat.COMPACT)
-        );
-    }
-
-    public static void qeBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("QE")
-                        .filledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
-
-    public static void radBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("☢")
-                        .filledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
-
-    public static void posBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("e⁺")
-                        .filledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
-
-    public static void seBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("SE")
-                        .filledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
-
-    public static void eeBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("EE")
-                        .filledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
-    public static TextureAtlas getBlockTextureMap() {
-        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS);
     }
 }

@@ -1,6 +1,6 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
+import com.denfop.utils.ElectricItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -50,9 +50,9 @@ public class ItemEnergyToolHoe extends ItemEnergyTool {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-        if (context.getClickedFace() == Direction.DOWN ||(
+        if (context.getClickedFace() == Direction.DOWN || (
                 !world.getBlockState(pos.below()).isAir() &&
-                (block != Blocks.MYCELIUM && block != Blocks.GRASS_BLOCK && block != Blocks.DIRT))) {
+                        (block != Blocks.MYCELIUM && block != Blocks.GRASS_BLOCK && block != Blocks.DIRT))) {
             return super.useOn(context);
         }
 

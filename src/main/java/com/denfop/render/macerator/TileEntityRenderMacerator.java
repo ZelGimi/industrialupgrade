@@ -1,7 +1,7 @@
 package com.denfop.render.macerator;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.TileEntityMacerator;
+import com.denfop.blockentity.mechanism.BlockEntityMacerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -17,26 +17,28 @@ import net.minecraft.world.level.Level;
 import static net.minecraft.world.item.ItemDisplayContext.FIXED;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntityMacerator> {
+public class TileEntityRenderMacerator implements BlockEntityRenderer<BlockEntityMacerator> {
 
     private final BlockEntityRendererProvider.Context contex;
     private ItemStack stack;
+    private float rotation;
+    private float prevRotation;
 
     public TileEntityRenderMacerator(BlockEntityRendererProvider.Context context) {
         this.contex = context;
     }
 
     @Override
-    public void render(TileEntityMacerator tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityMacerator tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         poseStack.pushPose();
-        if (tile.durability == 0){
-            if (this.stack == null){
+        if (tile.durability == 0) {
+            if (this.stack == null) {
                 this.stack = new ItemStack(IUItem.crafting_elements.getStack(41));
             }
-            renderItem(stack,tile.getLevel(),poseStack,buffer,combinedLight,combinedOverlay);
+            renderItem(stack, tile.getLevel(), poseStack, buffer, combinedLight, combinedOverlay);
         }
         poseStack.popPose();
         ItemStack input = tile.inputSlotA.get(0);
@@ -47,11 +49,11 @@ public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntity
 
             itemRenderer.renderStatic(
                     input,
-                   GROUND,
+                    GROUND,
                     combinedLight,
                     combinedOverlay,
                     poseStack,
-                    buffer,tile.getLevel(),
+                    buffer, tile.getLevel(),
                     0
             );
             poseStack.popPose();
@@ -69,12 +71,13 @@ public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntity
                     combinedLight,
                     combinedOverlay,
                     poseStack,
-                    buffer,tile.getLevel(),
+                    buffer, tile.getLevel(),
                     0
             );
             poseStack.popPose();
         }
     }
+
     private int transformModelCount(PoseStack poseStack, float partialTicks
     ) {
 
@@ -90,29 +93,28 @@ public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntity
         rotation = (prevRotation + (rotation - prevRotation) * (partialTicks)) % 360;
 
         prevRotation = rotation;
-        rotation +=2F;
+        rotation += 2F;
 
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
 
 
         return modelCount;
     }
-    private float rotation;
-    private float prevRotation;
+
     public void renderItem(ItemStack itemStack, Level level, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
         if (itemStack.isEmpty()) {
             return;
         }
 
-        BakedModel bakedModel = this.contex.getItemRenderer().getModel(itemStack,level,null,0);
+        BakedModel bakedModel = this.contex.getItemRenderer().getModel(itemStack, level, null, 0);
         RandomSource random = level.random;
         if (bakedModel != null) {
             boolean isGui3d = bakedModel.isGui3d();
 
             poseStack.pushPose();
-            poseStack.translate(0,2,0);
+            poseStack.translate(0, 2, 0);
 
-            int count =transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
+            int count = transformModelCount(poseStack, Minecraft.getInstance().getPartialTick());
 
             for (int i = 0; i < 1; ++i) {
                 poseStack.pushPose();
@@ -132,12 +134,12 @@ public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntity
                     }
                 }
 
-                BakedModel transformedModel =net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                BakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
                         bakedModel,
                         GROUND,
                         false
                 );
-                contex.getItemRenderer().render(itemStack,FIXED, false, poseStack, buffer, light, overlay, transformedModel);
+                contex.getItemRenderer().render(itemStack, FIXED, false, poseStack, buffer, light, overlay, transformedModel);
                 poseStack.popPose();
             }
 

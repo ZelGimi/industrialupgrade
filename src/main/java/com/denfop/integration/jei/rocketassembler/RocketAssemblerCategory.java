@@ -1,22 +1,22 @@
 package com.denfop.integration.jei.rocketassembler;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityRocketAssembler;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerRocketAssembler;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuRocketAssembler;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityRocketAssembler;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -35,19 +35,20 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<RocketAssemblerHandler> {
+public class RocketAssemblerCategory extends ScreenMain implements IRecipeCategory<RocketAssemblerHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerRocketAssembler container1;
-    private final GuiComponent progress_bar;
-    private final GuiComponent slots1;
+    private final ContainerMenuRocketAssembler container1;
+    private final ScreenWidget progress_bar;
+    private final ScreenWidget slots1;
+    JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    JeiInform jeiInform;
+
     public RocketAssemblerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityRocketAssembler) BlockBaseMachine3.rocket_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityRocketAssembler) BlockBaseMachine3Entity.rocket_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
@@ -55,17 +56,17 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
                 180
         );
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
-        this.slots1 = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
+        this.slots1 = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
         );
-        this.container1 = (ContainerRocketAssembler) this.getContainer();
+        this.container1 = (ContainerMenuRocketAssembler) this.getContainer();
         this.componentList.add(slots);
         this.componentList.add(slots1);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
     }
@@ -74,9 +75,8 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.rocket_assembler).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.rocket_assembler).getDescriptionId());
     }
-
 
 
     @Nonnull
@@ -96,10 +96,10 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack,0, 0);
-        this.slots1.drawBackground( stack,0, 0);
+        this.slots.drawBackground(stack, 0, 0);
+        this.slots1.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack,40, 55, xScale);
+        progress_bar.renderBar(stack, 40, 55, xScale);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         List<SlotInvSlot> list = new ArrayList<>();
         for (Slot slot : container1.slots) {
             if (slot instanceof SlotInvSlot) {
-                if (((SlotInvSlot) slot).invSlot instanceof InvSlotRecipes) {
+                if (((SlotInvSlot) slot).inventory instanceof InventoryRecipes) {
                     list.add((SlotInvSlot) slot);
                 }
             }
@@ -115,13 +115,13 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         final List<ItemStack> inputs = recipe.getInput();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
 
     }
 

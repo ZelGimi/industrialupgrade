@@ -1,0 +1,37 @@
+package com.denfop.api.otherenergies.transport;
+
+
+import net.minecraft.core.Direction;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
+
+public class Path {
+
+
+    final ITransportSink target;
+
+    final Direction targetDirection;
+    private final Object handler;
+    Direction firstSide;
+
+    ITransportConductor first = null;
+
+    ITransportConductor end = null;
+
+    Path(ITransportSink sink, Direction facing) {
+        this.target = sink;
+        this.targetDirection = facing;
+        this.handler = sink.getHandler(facing);
+        this.firstSide = null;
+    }
+
+    public IItemHandler getHandler() {
+        return (handler instanceof IItemHandler) ? (IItemHandler) handler : null;
+    }
+
+
+    public IFluidHandler getFluidHandler() {
+        return (handler instanceof IFluidHandler) ? (IFluidHandler) handler : null;
+    }
+
+}

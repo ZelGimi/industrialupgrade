@@ -1,11 +1,9 @@
 package com.denfop.componets.cold;
 
-import com.denfop.api.cool.ICoolSource;
+import com.denfop.api.otherenergies.cool.ICoolSource;
 import com.denfop.componets.CoolComponent;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-public  class EnergyNetDelegateSource extends EnergyNetDelegate implements ICoolSource {
-
+public class EnergyNetDelegateSource extends EnergyNetDelegate implements ICoolSource {
 
 
     public EnergyNetDelegateSource(CoolComponent coolComponent) {
@@ -28,7 +26,6 @@ public  class EnergyNetDelegateSource extends EnergyNetDelegate implements ICool
     public void setAllowed(final boolean allowed) {
         this.buffer.allow = allowed;
     }
-
 
 
 }

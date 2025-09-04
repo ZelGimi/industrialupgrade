@@ -1,12 +1,11 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.tabs.IItemTab;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -38,10 +37,12 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
         super(new Properties().stacksTo(1));
         this.slots = 1;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -60,7 +61,7 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
         return this.nameItem;
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         return new FacadeItemInventory(player, stack, this.slots);
     }
 
@@ -88,8 +89,8 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
 
         if (nbt.getBoolean("open")) {
             int slotId = nbt.getInt("slot_inventory");
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerFacadeItem) {
-                FacadeItemInventory toolbox = ((ContainerFacadeItem) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuFacadeItem) {
+                FacadeItemInventory toolbox = ((ContainerMenuFacadeItem) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -115,8 +116,8 @@ public class ItemFacadeItem extends Item implements IItemStackInventory, IItemTa
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerFacadeItem) {
-            FacadeItemInventory toolbox = ((ContainerFacadeItem) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuFacadeItem) {
+            FacadeItemInventory toolbox = ((ContainerMenuFacadeItem) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeContainer();

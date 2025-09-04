@@ -1,23 +1,24 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemSunnariumPanel<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemSunnariumPanel<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemSunnariumPanel(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         hsp(0),
         usp(1),
         qsp(2),

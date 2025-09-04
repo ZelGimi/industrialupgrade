@@ -24,12 +24,11 @@ import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends ItemTagsProvider {
     public static List<IItemTag> list = new ArrayList<>();
-    public static Map<ResourceLocation,List<ItemStack>> mapItems = new HashMap<>();
+    public static Map<ResourceLocation, List<ItemStack>> mapItems = new HashMap<>();
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagsProvider.TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, blockTagProvider, Constants.MOD_ID, existingFileHelper);
     }
-
 
 
     public void addCustom(String tag, Item item) {

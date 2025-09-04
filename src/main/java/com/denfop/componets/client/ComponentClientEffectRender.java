@@ -2,11 +2,11 @@ package com.denfop.componets.client;
 
 
 import com.denfop.api.windsystem.WindSystem;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.hydroturbine.BlockEntityHydroTurbineController;
+import com.denfop.blockentity.mechanism.water.BlockEntityBaseWaterGenerator;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.CoolComponent;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineController;
-import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ public class ComponentClientEffectRender extends AbstractComponent {
 
     private final EffectType effectType;
 
-    public ComponentClientEffectRender(final TileEntityInventory parent, EffectType effectType) {
+    public ComponentClientEffectRender(final BlockEntityInventory parent, EffectType effectType) {
         super(parent);
         this.effectType = effectType;
     }
@@ -67,10 +67,10 @@ public class ComponentClientEffectRender extends AbstractComponent {
                 }
                 break;
             case WATER_GENERATOR:
-                if (!(this.parent instanceof TileEntityHydroTurbineController)) {
-                    if (!(this.parent instanceof TileBaseWaterGenerator))
+                if (!(this.parent instanceof BlockEntityHydroTurbineController)) {
+                    if (!(this.parent instanceof BlockEntityBaseWaterGenerator))
                         break;
-                    TileBaseWaterGenerator baseWaterGenerator = (TileBaseWaterGenerator) this.parent;
+                    BlockEntityBaseWaterGenerator baseWaterGenerator = (BlockEntityBaseWaterGenerator) this.parent;
                     if (baseWaterGenerator.getActive()) {
                         rnd = this.parent.getLevel().random;
                         if (WindSystem.windSystem.getLevelWind() <= 3) {
@@ -146,7 +146,7 @@ public class ComponentClientEffectRender extends AbstractComponent {
                     }
                     break;
                 }
-                TileEntityHydroTurbineController baseWaterGenerator = (TileEntityHydroTurbineController) this.parent;
+                BlockEntityHydroTurbineController baseWaterGenerator = (BlockEntityHydroTurbineController) this.parent;
                 if (baseWaterGenerator.getActive()) {
                     rnd = this.parent.getLevel().random;
                     if (WindSystem.windSystem.getLevelWind() <= 3) {

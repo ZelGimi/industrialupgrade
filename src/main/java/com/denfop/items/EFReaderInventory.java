@@ -1,10 +1,10 @@
 package com.denfop.items;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerEFReader;
-import com.denfop.gui.GUIEFReader;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuEFReader;
+import com.denfop.inventory.Inventory;
+import com.denfop.screen.ScreenEFReader;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,29 +23,19 @@ public class EFReaderInventory extends ItemStackInventory {
         this.itemStack1 = stack;
     }
 
-    public ContainerBase<EFReaderInventory> getGuiContainer(Player player) {
-        return new ContainerEFReader(this, this.itemStack1, player);
+    public ContainerMenuBase<EFReaderInventory> getGuiContainer(Player player) {
+        return new ContainerMenuEFReader(this, this.itemStack1, player);
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
-        return new GUIEFReader((ContainerEFReader) isAdmin, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player player, ContainerMenuBase<?> isAdmin) {
+        return new ScreenEFReader((ContainerMenuEFReader) isAdmin, this.itemStack1);
     }
 
     @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
+    public void addInventorySlot(final Inventory var1) {
 
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

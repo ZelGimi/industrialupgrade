@@ -1,39 +1,41 @@
 package com.denfop.api.bee;
 
-import com.denfop.api.agriculture.ICrop;
+import com.denfop.api.crop.Crop;
 
 import java.util.Objects;
 
 public class Product {
 
+    private final Crop crop;
     private double chance;
-    private final ICrop crop;
 
-    public Product(double chance, ICrop crop) {
+    public Product(double chance, Crop crop) {
         this.chance = chance;
         this.crop = crop;
     }
 
-    public boolean equals(ICrop crop) {
+    public boolean equals(Crop crop) {
         return crop.getId() == crop.getId();
     }
 
     public double getChance() {
         return chance;
     }
+
     public void addChance(double chance) {
-        this.chance+=chance;
+        this.chance += chance;
     }
 
-    public ICrop getCrop() {
+    public Crop getCrop() {
         return crop;
     }
 
     public void removeChance(double chance) {
-        this.chance-=chance;
+        this.chance -= chance;
         if (this.chance < 0)
             this.chance = 0;
     }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

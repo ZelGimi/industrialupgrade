@@ -16,10 +16,11 @@ public class ItemBlockIngot2 extends ItemBlockCore<BlockIngots2.Type> implements
     public Item getItem() {
         return this;
     }
+
     public String getDescriptionId() {
         if (this.nameItem == null) {
 
-            this.nameItem = "iu."+this.getElement().getName()+"_block.name";
+            this.nameItem = "iu." + this.getElement().getName() + "_block.name";
         }
 
         return "" + this.nameItem;

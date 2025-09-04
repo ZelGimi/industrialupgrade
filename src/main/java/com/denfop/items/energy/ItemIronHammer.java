@@ -1,8 +1,8 @@
 package com.denfop.items.energy;
 
-import com.denfop.Localization;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.utils.ExperienceUtils;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.RetraceDiggingUtils;
 import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ public class ItemIronHammer extends ItemToolIU {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate( "iu.hammer.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.hammer.info")));
     }
 
     @Override
@@ -61,6 +61,7 @@ public class ItemIronHammer extends ItemToolIU {
     public int getEnchantmentValue() {
         return Tiers.IRON.getEnchantmentValue();
     }
+
     public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull Player player) {
         Level world = player.level();
         BlockState state = world.getBlockState(pos);
@@ -198,10 +199,12 @@ public class ItemIronHammer extends ItemToolIU {
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         return mineableBlocks.contains(state) ? this.speed : 1.0F;
     }
+
     @Override
     public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
         return ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
     }
+
     public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof Player player)) {
             return false;

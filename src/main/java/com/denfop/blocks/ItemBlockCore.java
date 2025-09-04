@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.datagen.itemtag.ItemTagProvider;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,30 +18,32 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
 
-public class ItemBlockCore<T extends Enum<T> & ISubEnum> extends BlockItem implements IItemTab {
+public class ItemBlockCore<T extends Enum<T> & SubEnum> extends BlockItem implements IItemTab {
     private final T element;
     private final ResourceLocation registryName;
     private final CreativeModeTab modeTab;
     protected String nameItem;
 
-    public ItemBlockCore(Block p_40565_, T element, Properties property,CreativeModeTab modeTab) {
+    public ItemBlockCore(Block p_40565_, T element, Properties property, CreativeModeTab modeTab) {
         super(p_40565_, property);
         this.element = element;
-        this.modeTab=modeTab;
+        this.modeTab = modeTab;
         this.registryName = new ResourceLocation(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
         if (this instanceof IItemTag)
             ItemTagProvider.list.add((IItemTag) this);
         ;
     }
+
     public ItemBlockCore(Block p_40565_, T element, Properties property) {
         super(p_40565_, property);
         this.element = element;
-        this.modeTab=null;
+        this.modeTab = null;
         this.registryName = new ResourceLocation(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
         if (this instanceof IItemTag)
             ItemTagProvider.list.add((IItemTag) this);
         ;
     }
+
     public ResourceLocation getRegistryName() {
         return registryName;
     }
@@ -69,7 +71,7 @@ public class ItemBlockCore<T extends Enum<T> & ISubEnum> extends BlockItem imple
     public String getDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
-            String targetString = "industrialupgrade."+getElement().getMainPath()+".";
+            String targetString = "industrialupgrade." + getElement().getMainPath() + ".";
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);

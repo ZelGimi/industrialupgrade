@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -25,7 +25,7 @@ import oshi.util.tuples.Pair;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class BlockTexGlass<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockTexGlass<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockTexGlass(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -56,7 +56,7 @@ public class BlockTexGlass<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -67,12 +67,12 @@ public class BlockTexGlass<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -86,7 +86,7 @@ public class BlockTexGlass<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         reinforced(0),
         ;
 

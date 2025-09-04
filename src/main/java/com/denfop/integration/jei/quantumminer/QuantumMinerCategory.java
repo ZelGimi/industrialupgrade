@@ -1,21 +1,21 @@
 package com.denfop.integration.jei.quantumminer;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuLaserPolisher;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -34,18 +34,18 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
-public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<QuantumMinerHandler> {
+public class QuantumMinerCategory extends ScreenMain implements IRecipeCategory<QuantumMinerHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerLaserPolisher container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuLaserPolisher container1;
+    private final ScreenWidget progress_bar;
     private final JeiInform jeiInform;
     private int progress;
 
     public QuantumMinerCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        super(((BlockEntityLaserPolisher) BlockBaseMachine3Entity.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 5, 5, 140,
                 75
@@ -53,13 +53,13 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
-        this.container1 = (ContainerLaserPolisher) this.getContainer();
+        this.container1 = (ContainerMenuLaserPolisher) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
     }
@@ -72,7 +72,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.quantum_miner).getDescriptionId());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3Entity.quantum_miner).getDescriptionId());
     }
 
 
@@ -89,7 +89,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
         if (xScale >= 1) {
             progress = 0;
         }
-     drawSplitString( stack,
+        drawSplitString(stack,
                 ModUtils.getString(recipe.getEnergy()) + "QE",
                 10,
                 28,
@@ -104,11 +104,11 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, QuantumMinerHandler recipe, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Arrays.asList(recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT,slots1.get(i).getJeiX() + 51, slots1.get(i).getJeiY() - 9).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.OUTPUT, slots1.get(i).getJeiX() + 51, slots1.get(i).getJeiY() - 9).addItemStack(inputs.get(i));
 
 
         }

@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,14 +10,16 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemIUCrafring<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemIUCrafring<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemIUCrafring(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -33,7 +35,7 @@ public class ItemIUCrafring<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         return this.nameItem;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         itemIrradiantUranium(0),
         itemIrradiantGlassPane(1),
         itemUranIngot(2),

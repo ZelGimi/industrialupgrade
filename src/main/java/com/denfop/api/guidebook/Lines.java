@@ -1,9 +1,9 @@
 package com.denfop.api.guidebook;
 
 public enum Lines {
-    GOLD(48, 8,18,13),
-    GRAY(48, 2,12,13),
-    DARK(48, 5,15,13);
+    GOLD(48, 8, 18, 13),
+    GRAY(48, 2, 12, 13),
+    DARK(48, 5, 15, 13);
 
     private final int hX;
     private final int hY;

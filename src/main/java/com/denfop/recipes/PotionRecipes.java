@@ -207,7 +207,7 @@ public class PotionRecipes {
 
     }
 
-    public static void addStartMix(Item p_341103_,Potion p_341346_) {
+    public static void addStartMix(Item p_341103_, Potion p_341346_) {
 
         addMix(Potions.WATER, p_341103_, Potions.MUNDANE);
         addMix(Potions.AWKWARD, p_341103_, p_341346_);
@@ -215,6 +215,6 @@ public class PotionRecipes {
 
     }
 
-    public  static record Mix<T>(Holder<T> from, Ingredient ingredient, Holder<T> to) {
+    public static record Mix<T>(Holder<T> from, Ingredient ingredient, Holder<T> to) {
     }
 }

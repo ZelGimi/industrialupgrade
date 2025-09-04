@@ -2,12 +2,12 @@ package com.denfop.integration.jei.gassensor;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityOilRefiner;
+import com.denfop.blocks.mechanism.BlockRefinerEntity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSensorHandler> {
+public class GasSensorCategory extends ScreenMain implements IRecipeCategory<GasSensorHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -31,8 +31,8 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
     public GasSensorCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
-        this.jeiInform=jeiInform;
+        super(((BlockEntityOilRefiner) BlockRefinerEntity.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
@@ -48,7 +48,6 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
     }
 
 
-
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -57,7 +56,7 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
 
     @Override
     public void draw(GasSensorHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
-      drawSplitString( stack, Localization.translate(recipe.output), 5, 3,
+        drawSplitString(stack, Localization.translate(recipe.output), 5, 3,
                 140 - 5, 4210752
         );
 
@@ -65,7 +64,7 @@ public class GasSensorCategory extends GuiIU implements IRecipeCategory<GasSenso
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GasSensorHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT,50, 70).setFluidRenderer(1,true,16, 16).addFluidStack(recipe.input,1);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 70).setFluidRenderer(1, true, 16, 16).addFluidStack(recipe.input, 1);
 
     }
 

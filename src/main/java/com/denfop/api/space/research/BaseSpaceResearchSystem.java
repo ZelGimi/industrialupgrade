@@ -1,12 +1,12 @@
 package com.denfop.api.space.research;
 
-import com.denfop.ElectricItem;
 import com.denfop.api.space.*;
 import com.denfop.api.space.fakebody.*;
 import com.denfop.api.space.research.api.IResearchSystem;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.rovers.api.IRovers;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.FluidHandlerFix;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;

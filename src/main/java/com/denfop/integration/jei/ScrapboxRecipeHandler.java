@@ -58,7 +58,7 @@ public class ScrapboxRecipeHandler {
 
     public static void initRecipes() {
         for (final Map.Entry<ItemStack, Float> itemStackFloatEntry : ScrapboxRecipeManager.instance.getDrops().entrySet()) {
-            addRecipe(itemStackFloatEntry.getKey(),itemStackFloatEntry.getKey(),itemStackFloatEntry.getValue());
+            addRecipe(itemStackFloatEntry.getKey(), itemStackFloatEntry.getKey(), itemStackFloatEntry.getValue());
         }
     }
 

@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
@@ -15,16 +15,19 @@ public class ItemToolIU extends DiggerItem implements IItemTab {
         super(damage, speed, Tiers.IRON, p_204111_, new Properties().stacksTo(1).setNoRepair());
     }
 
+    public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties) {
+        super(damage, speed, Tiers.IRON, p_204111_, properties);
+    }
+
+    public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties, Tier tier) {
+        super(damage, speed, tier, p_204111_, properties);
+    }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;
     }
-    public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties) {
-        super(damage, speed, Tiers.IRON, p_204111_, properties);
-    }
-    public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties, Tier tier) {
-        super(damage, speed, tier, p_204111_, properties);
-    }
+
     @Override
     public boolean isEnchantable(ItemStack p_41456_) {
         return false;
@@ -47,7 +50,7 @@ public class ItemToolIU extends DiggerItem implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

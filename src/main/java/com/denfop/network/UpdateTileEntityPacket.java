@@ -1,7 +1,7 @@
 package com.denfop.network;
 
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.network.packet.*;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 public class UpdateTileEntityPacket {
     public static void send(WorldData worldData) throws IOException {
         if (!worldData.listUpdateTile.isEmpty()) {
-            for (TileEntityBlock te : new ArrayList<>(worldData.listUpdateTile)) {
+            for (BlockEntityBase te : new ArrayList<>(worldData.listUpdateTile)) {
                 List<ServerPlayer> playersInRange = NetworkManager.getPlayersInRange(
                         te.getLevel(),
                         te.getBlockPos(),
@@ -31,7 +31,7 @@ public class UpdateTileEntityPacket {
 
         worldData.listUpdateTile.clear();
         if (worldData.getWorld().getGameTime() % 80 == 0) {
-            for (TileEntityBlock te : worldData.mapUpdateOvertimeField.values()) {
+            for (BlockEntityBase te : worldData.mapUpdateOvertimeField.values()) {
                 List<ServerPlayer> playersInRange = NetworkManager.getPlayersInRange(
                         te.getLevel(),
                         te.getBlockPos(),
@@ -46,7 +46,7 @@ public class UpdateTileEntityPacket {
                 }
             }
         }
-        for (Map.Entry<TileEntityBlock, Map<Player, CustomPacketBuffer>> entry : worldData.mapUpdateContainer.entrySet()) {
+        for (Map.Entry<BlockEntityBase, Map<Player, CustomPacketBuffer>> entry : worldData.mapUpdateContainer.entrySet()) {
             for (Map.Entry<Player, CustomPacketBuffer> entry1 : entry.getValue().entrySet()) {
 
                 final CustomPacketBuffer playerBuffer = new CustomPacketBuffer();
@@ -57,9 +57,9 @@ public class UpdateTileEntityPacket {
             }
         }
 
-        for (Map.Entry<TileEntityBlock, List<CustomPacketBuffer>> entry : worldData.mapUpdateField.entrySet()) {
+        for (Map.Entry<BlockEntityBase, List<CustomPacketBuffer>> entry : worldData.mapUpdateField.entrySet()) {
 
-            final TileEntityBlock te = entry.getKey();
+            final BlockEntityBase te = entry.getKey();
 
             List<ServerPlayer> playersInRange = NetworkManager.getPlayersInRange(
                     te.getLevel(),

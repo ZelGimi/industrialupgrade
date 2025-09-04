@@ -1,10 +1,10 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.componets.Fluids;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +49,7 @@ public class PacketDrainFluidPipette implements IPacket {
             throw new RuntimeException(e);
         }
 
-        TileEntityBlock te = DecoderHandler.getValue(teDeferred);
+        BlockEntityBase te = DecoderHandler.getValue(teDeferred);
         Fluids fluids = te.getComp(Fluids.class);
         if (fluids != null) {
             String nameTank = is.readString();

@@ -1,9 +1,9 @@
 package com.denfop.componets;
 
-import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.FluidName;
 import com.denfop.effects.EffectsRegister;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,17 +21,13 @@ import java.util.Set;
 public class ComponentSteamEnergy extends ComponentBaseEnergy {
 
     FluidTank fluidTank;
-
-    public ComponentSteamEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
+    public static int speedGeneration = 1;
+    public ComponentSteamEnergy(EnergyType type, BlockEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
-    public FluidTank getFluidTank() {
-        return fluidTank;
-    }
-
     public ComponentSteamEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -41,7 +37,7 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     }
 
     public ComponentSteamEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -53,7 +49,7 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     }
 
     public ComponentSteamEnergy(
-            EnergyType type, TileEntityInventory parent,
+            EnergyType type, BlockEntityInventory parent,
             double capacity,
             List<Direction> sinkDirections,
             List<Direction> sourceDirections,
@@ -64,29 +60,33 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier);
     }
 
-    public static ComponentSteamEnergy asBasicSink(TileEntityInventory parent, double capacity) {
+    public static ComponentSteamEnergy asBasicSink(BlockEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static ComponentSteamEnergy asBasicSink(TileEntityInventory parent, double capacity, int tier) {
+    public static ComponentSteamEnergy asBasicSink(BlockEntityInventory parent, double capacity, int tier) {
         return new ComponentSteamEnergy(EnergyType.STEAM, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
-    public static ComponentSteamEnergy asBasicSource(TileEntityInventory parent, double capacity) {
+    public static ComponentSteamEnergy asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static ComponentSteamEnergy asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static ComponentSteamEnergy asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new ComponentSteamEnergy(EnergyType.STEAM, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
+    }
+
+    public FluidTank getFluidTank() {
+        return fluidTank;
+    }
+
+    public void setFluidTank(final FluidTank fluidTank) {
+        this.fluidTank = fluidTank;
     }
 
     @Override
     public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
         super.onPlaced(stack, placer, facing);
-    }
-
-    public void setFluidTank(final FluidTank fluidTank) {
-        this.fluidTank = fluidTank;
     }
 
     @Override
@@ -99,6 +99,7 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         }
         return amount;
     }
+
     @Override
     public boolean isServer() {
         return true;
@@ -107,13 +108,16 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())){
-            fluidTank.fill(new FluidStack(FluidName.fluidsteam.getInstance().get(),  (int)this.buffer.storage-fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
-        }
-        if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())){
-            fluidTank.drain(fluidTank.getFluid().getAmount()- (int)this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
+        if (this.delegate != null) {
+            if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage > fluidTank.getFluid().getAmount())) {
+                fluidTank.fill(new FluidStack(FluidName.fluidsteam.getInstance().get(), (int) this.buffer.storage - fluidTank.getFluid().getAmount()), IFluidHandler.FluidAction.EXECUTE);
+            }
+            if (fluidTank.getFluid().getAmount() != this.buffer.storage && (this.buffer.storage < fluidTank.getFluid().getAmount())) {
+                fluidTank.drain(fluidTank.getFluid().getAmount() - (int) this.buffer.storage, IFluidHandler.FluidAction.EXECUTE);
+            }
         }
     }
+
     @Override
     public boolean isClient() {
         return true;
@@ -131,6 +135,7 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         }
         return true;
     }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {

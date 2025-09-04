@@ -1,12 +1,12 @@
 package com.denfop.items.energy;
 
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerHeldUpgradeItem;
-import com.denfop.gui.GuiCore;
-import com.denfop.gui.GuiUpgradeItem;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuHeldUpgradeItem;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenUpgradeItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,29 +29,19 @@ public class ItemStackUpgradeItem extends ItemStackInventory {
     }
 
 
-    public ContainerBase<ItemStackUpgradeItem> getGuiContainer(Player player) {
-        return new ContainerHeldUpgradeItem(this, player);
+    public ContainerMenuBase<ItemStackUpgradeItem> getGuiContainer(Player player) {
+        return new ContainerMenuHeldUpgradeItem(this, player);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
-        return new GuiUpgradeItem((ContainerHeldUpgradeItem) isAdmin, itemStack1);
-    }
-
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player player, ContainerMenuBase<? extends CustomWorldContainer> isAdmin) {
+        return new ScreenUpgradeItem((ContainerMenuHeldUpgradeItem) isAdmin, itemStack1);
     }
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

@@ -40,15 +40,15 @@ public class ModPlacedFeatures {
         registerPlaced(context, VOLCANO_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.VOLCANO));
         registerPlaced(context, OIL_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.OIL));
         registerPlaced(context, CALCIUM_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.CALCIUM),
-                PlacementUtils.HEIGHTMAP_TOP_SOLID,InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID, InSquarePlacement.spread(),
                 BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)),
                 BiomeFilter.biome());
         registerPlaced(context, SALTPETER_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.SALTPETER),
-                PlacementUtils.HEIGHTMAP_TOP_SOLID,InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID, InSquarePlacement.spread(),
                 BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)),
                 BiomeFilter.biome());
         registerPlaced(context, PEAT_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.PEAT),
-                PlacementUtils.HEIGHTMAP_TOP_SOLID,InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID, InSquarePlacement.spread(),
                 BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)),
                 BiomeFilter.biome());
     }

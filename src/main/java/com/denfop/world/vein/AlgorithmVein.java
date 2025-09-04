@@ -11,35 +11,28 @@ import com.denfop.world.vein.noise.ShellCluster;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.SectionPos;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.KelpBlock;
+import net.minecraft.world.level.block.SeagrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -48,11 +41,12 @@ import static com.denfop.world.vein.VeinType.veinTypeMap;
 
 public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
     public static List<VeinStructure> veinStructureList = new LinkedList<>();
-    static Random random = new Random();
-    private static Map<ChunkPos, ChunkAccess> chunkPosChunkMap = new HashMap<>();
-
     public static List<ShellCluster> shellClusterList = new ArrayList<>();
     public static ShellCluster volcano;
+    public static Map<Integer, Map<Integer, Tuple<Color, Integer>>> shellClusterChuncks = new HashMap<>();
+    public static Map<Integer, Map<Integer, List<Integer>>> veinCoordination = new HashMap<>();
+    static Random random = new Random();
+    private static Map<ChunkPos, ChunkAccess> chunkPosChunkMap = new HashMap<>();
 
     public AlgorithmVein(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
@@ -82,7 +76,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             } else if (veinType.getVein() == TypeVein.BIG) {
                 radius = level.getRandom().nextInt(7) + 5;
             }
-            pos = new BlockPos(blockPos.getX(), (int) (height - radius * 0.9 - random.nextInt(35)), blockPos.getZ());
+            pos = new BlockPos(blockPos.getX(), (int) (height - radius * 0.9 - random.nextInt(35)-15), blockPos.getZ());
             ChunkPos chunkPos = null;
             ChunkAccess chunk1 = null;
             for (int x = -radius; x <= radius; x++) {
@@ -99,7 +93,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 if (canGenerateSphere(level, pos1, chunk1)) {
                                     blockPosList.add(pos1);
                                     setBlockState1(level, pos1,
-                                            ore.getBlock(), 2,chunk1
+                                            ore.getBlock(), 2, chunk1
                                     );
                                 }
                             }
@@ -111,7 +105,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 if (random.nextInt(100) > 40 && canGenerateSphere(level, pos1, chunk1)) {
                                     blockPosList.add(pos1);
                                     setBlockState1(level, pos1,
-                                            veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2,chunk1
+                                            veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2, chunk1
                                     );
                                 }
                             } else {
@@ -123,7 +117,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                     if (canGenerateSphere(level, pos1, chunk1)) {
                                         blockPosList.add(pos1);
                                         setBlockState1(level, pos1,
-                                                ore.getBlock(), 2,chunk1
+                                                ore.getBlock(), 2, chunk1
                                         );
                                     }
                                 }
@@ -131,7 +125,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                         } else if (distance <= radius && distance < radius * 0.35) {
                             final BlockPos pos1 = pos.offset(x, y, z);
                             setBlockState1(level, pos1,
-                                    Blocks.AIR.defaultBlockState(), 2,chunk1
+                                    Blocks.AIR.defaultBlockState(), 2, chunk1
                             );
                         }
                     }
@@ -179,8 +173,8 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                             }
                         }
-                    }else{
-                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                    } else {
+                        if (veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
                             setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         else
                             setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
@@ -194,7 +188,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         } else if (chance_type <= 80) {
             List<BlockPos> blockPosList = new LinkedList<>();
             final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
-            pos = new BlockPos(blockPos.getX(), height / 2 + height / 4, blockPos.getZ());
+            pos = new BlockPos(blockPos.getX(),Math.max(0, height / 2 + height / 4- random.nextInt(20)), blockPos.getZ()) ;
             int x1 = random.nextInt(veinType.getVein().getMax()) + 3;
             int y1 = random.nextInt(veinType.getVein().getMax()) + 3;
             int z1 = random.nextInt(veinType.getVein().getMax()) + 3;
@@ -242,7 +236,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                             }
                             blockPosList.add(pos1);
                             setBlockState1(level, pos1,
-                                    ore.getBlock(), 2,chunk1
+                                    ore.getBlock(), 2, chunk1
                             );
                         } else {
                             chunk1 = level.getChunk(pos1.getX() >> 4, pos1.getZ() >> 4, ChunkStatus.EMPTY, false);
@@ -253,7 +247,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                         .getNeed(), 90)) > 50 && canGenerate(level, pos1, chunk1)) {
                                     blockPosList.add(pos1);
                                     setBlockState1(level, pos1,
-                                            veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2,chunk1
+                                            veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2, chunk1
                                     );
                                     if (x < minX) {
                                         minX = x;
@@ -307,7 +301,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                     if (canGenerate(level, pos1, chunk1)) {
                                         blockPosList.add(pos1);
                                         setBlockState1(level, pos1,
-                                                ore.getBlock(), 2,chunk1
+                                                ore.getBlock(), 2, chunk1
                                         );
                                     }
                                 }
@@ -329,7 +323,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                     if (canGenerate(level, pos1, chunk1)) {
                                         blockPosList.add(pos1);
                                         setBlockState1(level, pos1,
-                                                ore.getBlock(), 2,chunk1
+                                                ore.getBlock(), 2, chunk1
                                         );
                                     }
                                 }
@@ -400,8 +394,8 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                             }
                         }
-                    }else{
-                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                    } else {
+                        if (veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
                             setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         else
                             setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
@@ -417,10 +411,10 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
 
             final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
             ;
-            pos = new BlockPos(blockPos.getX(), height / 2 + height / 4, blockPos.getZ());
-            final int centerX = (int) pos.getX();
-            final int centerY = (int) pos.getY();
-            final int centerZ = (int) pos.getZ();
+            pos = new BlockPos(blockPos.getX(),Math.max(0, height / 2 + height / 4- random.nextInt(20)), blockPos.getZ()) ;
+            final int centerX = pos.getX();
+            final int centerY = pos.getY();
+            final int centerZ = pos.getZ();
             int R = 0;
             int r = 0;
             int y1 = 0;
@@ -453,7 +447,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 if (canGenerate(level, pos1, chunk1)) {
                                     blockPosList.add(pos1);
                                     setBlockState1(level, pos1,
-                                            ore.getBlock(), 2,chunk1
+                                            ore.getBlock(), 2, chunk1
                                     );
                                 }
                             }
@@ -467,7 +461,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 if (random.nextInt(100) > 40 && canGenerate(level, pos1, chunk1)) {
                                     blockPosList.add(pos1);
                                     setBlockState1(level, pos1,
-                                            veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2,chunk1
+                                            veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2, chunk1
                                     );
                                 }
                             } else {
@@ -479,7 +473,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                     if (canGenerate(level, pos1, chunk1)) {
                                         blockPosList.add(pos1);
                                         setBlockState1(level, pos1,
-                                                ore.getBlock(), 2,chunk1
+                                                ore.getBlock(), 2, chunk1
                                         );
                                     }
                                 }
@@ -545,9 +539,9 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                                 setBlockState1(level, pos2, IUItem.blockdeposits2.getBlock(BlockDeposits2.Type.getFromID(meta1 - 32)).get().defaultBlockState().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                             }
                         }
-                    }else{
-                        if ( veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
-                        setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
+                    } else {
+                        if (veinType.getDeposits().hasProperty(BlockDeposits.WATERLOGGED))
+                            setBlockState1(level, pos2, veinType.getDeposits().setValue(BlockDeposits.WATERLOGGED, fluidState != Fluids.EMPTY.defaultFluidState() && fluidState.getType() == Fluids.WATER), 3, chunk1);
                         else
                             setBlockState1(level, pos2, veinType.getDeposits(), 3, chunk1);
 
@@ -616,7 +610,6 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         return state.is(BlockTags.CORALS) || state.is(BlockTags.CORAL_BLOCKS);
     }
 
-
     private static boolean isWaterPlant(BlockState state) {
         Block b = state.getBlock();
         return b instanceof SeagrassBlock
@@ -627,9 +620,6 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
                 || b == Blocks.KELP_PLANT
                 || b == Blocks.SEA_PICKLE;
     }
-
-    public static Map<Integer,Map<Integer, Tuple<Color, Integer>>> shellClusterChuncks = new HashMap<>();
-    public static Map<Integer,Map<Integer ,List<Integer>>> veinCoordination = new HashMap<>();
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
@@ -680,8 +670,8 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             veinStructure = new VeinStructure(p_159749_.level(), veinType,
                     new BlockPos(chunkPos.x * 16 + random.nextInt(16), 2, chunkPos.z * 16 + random.nextInt(16)), chunk, veinType.getDeposits_meta());
 
-            return AlgorithmVein.generate(p_159749_.level(), veinStructure.getVeinType(), veinStructure.getBlockPos(), veinStructure.getChunk(), veinStructure.getDepositsMeta(),color);
-        }else{
+            return AlgorithmVein.generate(p_159749_.level(), veinStructure.getVeinType(), veinStructure.getBlockPos(), veinStructure.getChunk(), veinStructure.getDepositsMeta(), color);
+        } else {
             return false;
         }
 

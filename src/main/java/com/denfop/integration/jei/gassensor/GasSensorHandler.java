@@ -1,8 +1,8 @@
 package com.denfop.integration.jei.gassensor;
 
 
-import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
+import com.denfop.utils.Localization;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;

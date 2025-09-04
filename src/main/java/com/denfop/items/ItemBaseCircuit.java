@@ -1,7 +1,7 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -14,12 +14,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Locale;
 
-public class ItemBaseCircuit<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IProperties {
+public class ItemBaseCircuit<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IProperties {
     public ItemBaseCircuit(T element) {
         super(new Item.Properties(), element);
         if (properties().length > 0)
             IUCore.proxy.addProperties(this);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
@@ -49,7 +50,7 @@ public class ItemBaseCircuit<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
         return level;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         nanocircuit_part1(0),
         quantumcircuit_part1(1),
         spectralcircuit_part1(2),

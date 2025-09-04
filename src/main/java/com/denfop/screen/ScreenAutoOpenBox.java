@@ -1,0 +1,24 @@
+package com.denfop.screen;
+
+import com.denfop.Constants;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.containermenu.ContainerMenuAutoOpenBox;
+import net.minecraft.resources.ResourceLocation;
+
+public class ScreenAutoOpenBox<T extends ContainerMenuAutoOpenBox> extends ScreenMain<ContainerMenuAutoOpenBox> {
+
+    public ScreenAutoOpenBox(ContainerMenuAutoOpenBox guiContainer) {
+        super(guiContainer);
+        this.addComponent(new ScreenWidget(this, 154, 65, EnumTypeComponent.ENERGY,
+                new WidgetDefault<>(this.container.base.energy)
+        ));
+    }
+
+    @Override
+    protected ResourceLocation getTexture() {
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+    }
+
+}

@@ -43,7 +43,7 @@ public abstract class RenderType extends net.minecraft.client.renderer.RenderTyp
                     .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                     .createCompositeState(false)
     );
-    public static final net.minecraft.client.renderer.RenderType  QUAD_TRANSPARENT_OVER_WATER = RenderType.create(
+    public static final net.minecraft.client.renderer.RenderType QUAD_TRANSPARENT_OVER_WATER = RenderType.create(
             "quad_transparent_over_water",
             DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS,

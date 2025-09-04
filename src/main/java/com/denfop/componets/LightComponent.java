@@ -1,12 +1,11 @@
 package com.denfop.componets;
 
-import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.world.level.block.Blocks;
+import com.denfop.blockentity.base.BlockEntityBase;
 
-public class LightComponent extends AbstractComponent{
+public class LightComponent extends AbstractComponent {
     private boolean active;
 
-    public LightComponent(TileEntityBlock parent) {
+    public LightComponent(BlockEntityBase parent) {
         super(parent);
     }
 
@@ -23,6 +22,7 @@ public class LightComponent extends AbstractComponent{
     public int getLightOpacity() {
         return 15;
     }
+
     @Override
     public boolean isServer() {
         return true;
@@ -31,7 +31,7 @@ public class LightComponent extends AbstractComponent{
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.active != parent.getActive()){
+        if (this.active != parent.getActive()) {
             this.active = parent.getActive();
         }
     }

@@ -1,19 +1,19 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.KeyboardIU;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -45,7 +45,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, IUpdatableItemStackEvent, IUpgradeItem {
+public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, IUpdatableItemStackEvent, UpgradeItem {
     private final int radius;
 
     public ItemMagnet(double maxCharge, double transferLimit, int tier, int radius) {
@@ -60,6 +60,7 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
 
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -72,11 +73,12 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.energy."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu.energy." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     @Override
     public void updateEvent(final int event, final ItemStack stack) {
         final CompoundTag nbt = ModUtils.nbt(stack);
@@ -152,8 +154,8 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
         ItemStack stack = itemStack;
         if (nbt.getBoolean("open")) {
             int slotId = nbt.getInt("slot_inventory");
-            if (slotId != slotIndex && !p_77663_2_.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMagnet) {
-                ItemStackMagnet toolbox = ((ContainerMagnet) player.containerMenu).base;
+            if (slotId != slotIndex && !p_77663_2_.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuMagnet) {
+                ItemStackMagnet toolbox = ((ContainerMenuMagnet) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -231,14 +233,14 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
         nbt.putInt("slot_inventory", player.getInventory().selected);
     }
 
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         return new ItemStackMagnet(player, stack, 0);
     }
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMagnet) {
-            ItemStackMagnet toolbox = ((ContainerMagnet) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuMagnet) {
+            ItemStackMagnet toolbox = ((ContainerMenuMagnet) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeContainer();

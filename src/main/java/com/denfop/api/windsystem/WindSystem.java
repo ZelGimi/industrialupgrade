@@ -1,9 +1,9 @@
 package com.denfop.api.windsystem;
 
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
+import com.denfop.blockentity.mechanism.water.BlockEntityBaseWaterGenerator;
+import com.denfop.blockentity.mechanism.wind.BlockEntityWindGenerator;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
-import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,14 +59,14 @@ public class WindSystem implements IWindSystem {
         }
         facing = facingMap.get(facing);
 
-     if (windMechanism instanceof TileWindGenerator) {
-            ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
-            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", (byte) windMechanism.getFacing().ordinal());
+        if (windMechanism instanceof BlockEntityWindGenerator) {
+            ((BlockEntityWindGenerator) windMechanism).setFacingWrench(facing, null);
+            new PacketUpdateFieldTile(((BlockEntityWindGenerator) windMechanism), "facing", (byte) windMechanism.getFacing().ordinal());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         } else {
-            ((TileBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
+            ((BlockEntityBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
             new PacketUpdateFieldTile(
-                    ((TileBaseWaterGenerator) windMechanism),
+                    ((BlockEntityBaseWaterGenerator) windMechanism),
                     "facing",
                     (byte) windMechanism.getFacing().ordinal()
             );
@@ -112,11 +112,11 @@ public class WindSystem implements IWindSystem {
 
     public void getNewPositionOfMechanism(IWindMechanism windMechanism) {
         final Direction newFacing = getNewFacing();
-      if (windMechanism instanceof TileWindGenerator) {
+        if (windMechanism instanceof BlockEntityWindGenerator) {
             if (windMechanism.getFacing() != newFacing) {
-                ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
+                ((BlockEntityWindGenerator) windMechanism).setFacingWrench(newFacing, null);
                 new PacketUpdateFieldTile(
-                        ((TileWindGenerator) windMechanism),
+                        ((BlockEntityWindGenerator) windMechanism),
                         "facing",
                         (byte) windMechanism.getFacing().ordinal()
                 );
@@ -125,9 +125,9 @@ public class WindSystem implements IWindSystem {
 
         } else {
             if (windMechanism.getFacing() != newFacing) {
-                ((TileBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
+                ((BlockEntityBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
                 new PacketUpdateFieldTile(
-                        ((TileBaseWaterGenerator) windMechanism),
+                        ((BlockEntityBaseWaterGenerator) windMechanism),
                         "facing",
                         (byte) windMechanism.getFacing().ordinal()
                 );

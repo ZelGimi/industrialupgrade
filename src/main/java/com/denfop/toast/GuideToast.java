@@ -1,7 +1,7 @@
 package com.denfop.toast;
 
-import com.denfop.Localization;
 import com.denfop.api.guidebook.Quest;
+import com.denfop.utils.Localization;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,9 +13,11 @@ public class GuideToast implements Toast {
 
     private final Quest quest;
     private boolean visible = false;
-    public GuideToast(Quest quest){
-        this.quest=quest;
+
+    public GuideToast(Quest quest) {
+        this.quest = quest;
     }
+
     @Override
     public Visibility render(GuiGraphics pGuiGraphics, ToastComponent toastComponent, long time) {
         Minecraft mc = toastComponent.getMinecraft();
@@ -26,8 +28,8 @@ public class GuideToast implements Toast {
 
         ItemStack icon = quest.icon;
         pGuiGraphics.renderFakeItem(icon, 8, 8);
-        pGuiGraphics.drawString(toastComponent.getMinecraft().font, ChatFormatting.GOLD+ Localization.translate("iu.quest.completed"), 30, 7, -1, false);
-        pGuiGraphics.drawString(toastComponent.getMinecraft().font,quest.getLocalizedName(), 30, 18, -1, false);
+        pGuiGraphics.drawString(toastComponent.getMinecraft().font, ChatFormatting.GOLD + Localization.translate("iu.quest.completed"), 30, 7, -1, false);
+        pGuiGraphics.drawString(toastComponent.getMinecraft().font, quest.getLocalizedName(), 30, 18, -1, false);
         return time >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 

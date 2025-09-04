@@ -3,7 +3,7 @@ package com.denfop.items.space;
 import com.denfop.IUCore;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemSpaceUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemSpaceUpgradeModule<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemSpaceUpgradeModule(T element) {
         super(new Item.Properties(), element);
     }
@@ -27,10 +27,12 @@ public class ItemSpaceUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMa
         return EnumTypeUpgrade.getFromID(meta);
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(
@@ -45,7 +47,7 @@ public class ItemSpaceUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMa
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         space_upgrademodule(0),
         space_upgrademodule1(1),
         space_upgrademodule2(2),

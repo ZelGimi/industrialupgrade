@@ -12,7 +12,7 @@ public enum EnumModule {
     STORAGE_I(7, EnumBaseType.STORAGE, 5 * 2, "iu.module3"),
     STORAGE_II(8, EnumBaseType.STORAGE, 5 * 3, "iu.module3"),
     OUTPUT(9, EnumBaseType.OUTPUT, 5, "iu.module4"),
-    OUTPUT_I(10, EnumBaseType.OUTPUT, 5* 2, "iu.module4"),
+    OUTPUT_I(10, EnumBaseType.OUTPUT, 5 * 2, "iu.module4"),
     OUTPUT_II(11, EnumBaseType.OUTPUT, 5 * 3, "iu.module4"),
     PHASE(12, EnumBaseType.PHASE, 30, "iu.module5"),
     PHASE_I(13, EnumBaseType.PHASE, 65, "iu.module5"),

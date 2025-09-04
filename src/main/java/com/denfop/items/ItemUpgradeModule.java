@@ -1,11 +1,11 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
-import com.denfop.blocks.ISubEnum;
-import com.denfop.container.ContainerUpgrade;
+import com.denfop.blocks.SubEnum;
+import com.denfop.containermenu.ContainerMenuUpgrade;
 import com.denfop.items.bags.BagsDescription;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IUpgradeItem, IItemStackInventory, IUpdatableItemStackEvent {
+public class ItemUpgradeModule<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IUpgradeItem, IItemStackInventory, IUpdatableItemStackEvent {
     public ItemUpgradeModule(T element) {
         super(new Item.Properties(), element);
     }
@@ -45,10 +45,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
         }
         return Type.Values[meta];
     }
-    @Override
-    public CreativeModeTab getItemCategory() {
-        return IUCore.UpgradeTab;
-    }
+
     private static Direction getDirection(final ItemStack stack) {
         final int rawDir = ModUtils.nbt(stack).getByte("dir");
         if (rawDir < 1 || rawDir > 6) {
@@ -88,7 +85,12 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
     }
 
     @Override
-    public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
+    public CreativeModeTab getItemCategory() {
+        return IUCore.UpgradeTab;
+    }
+
+    @Override
+    public CustomWorldContainer getInventory(final Player var1, final ItemStack var2) {
         if (this.getElement().getId() < 11) {
             return null;
         } else {
@@ -127,8 +129,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
         if (nbt.getBoolean("open")) {
             int slotId = nbt.getInt("slot_inventory");
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
-                ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuUpgrade) {
+                ItemStackUpgradeModules toolbox = ((ContainerMenuUpgrade) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -149,8 +151,8 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
-            ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuUpgrade) {
+            ItemStackUpgradeModules toolbox = ((ContainerMenuUpgrade) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeContainer();
@@ -412,7 +414,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         overclockerUpgrade1(0),
         overclockerUpgrade2(1),
         transformerUpgrade1(2),

@@ -1,12 +1,12 @@
 package com.denfop.componets.energy;
 
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.IEnergySource;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.energy.interfaces.EnergyAcceptor;
+import com.denfop.api.energy.interfaces.EnergySource;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.otherenergies.common.InfoTile;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.componets.BufferEnergy;
 import com.denfop.componets.Energy;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -15,20 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class EnergyNetDelegateSource extends EnergyNetDelegate implements IEnergySource {
+public class EnergyNetDelegateSource extends EnergyNetDelegate implements EnergySource {
 
 
+    public double maxOutput = -1;
     int hashCodeSource;
-    public   double maxOutput = -1;
 
     public EnergyNetDelegateSource(Energy block) {
         super(block);
 
     }
-    public EnergyNetDelegateSource(TileEntityBlock block, Set<Direction> sourceDirection, BufferEnergy bufferEnergy) {
-        super(block,sourceDirection,bufferEnergy);
+
+    public EnergyNetDelegateSource(BlockEntityBase block, Set<Direction> sourceDirection, BufferEnergy bufferEnergy) {
+        super(block, sourceDirection, bufferEnergy);
 
     }
+
     @Override
     public int getHashCodeSource() {
         return hashCodeSource;
@@ -39,22 +41,22 @@ public class EnergyNetDelegateSource extends EnergyNetDelegate implements IEnerg
         hashCodeSource = hashCode;
     }
 
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+    public List<InfoTile<EnergyTile>> getValidReceivers() {
         return validReceivers;
     }
 
     @Override
-    public void AddTile(final IEnergyTile tile, final Direction dir) {
+    public void AddTile(final EnergyTile tile, final Direction dir) {
         super.AddTile(tile, dir);
     }
 
     @Override
-    public void RemoveTile(final IEnergyTile tile, final Direction dir) {
+    public void RemoveTile(final EnergyTile tile, final Direction dir) {
         super.RemoveTile(tile, dir);
     }
 
     @Override
-    public Map<Direction, IEnergyTile> getTiles() {
+    public Map<Direction, EnergyTile> getTiles() {
         return this.energyConductorMap;
     }
 
@@ -67,7 +69,7 @@ public class EnergyNetDelegateSource extends EnergyNetDelegate implements IEnerg
         return buffer.sourceTier;
     }
 
-    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+    public boolean emitsEnergyTo(EnergyAcceptor receiver, Direction dir) {
         for (Direction facing1 : this.sourceDirections) {
             if (facing1.ordinal() == dir.ordinal()) {
                 return true;

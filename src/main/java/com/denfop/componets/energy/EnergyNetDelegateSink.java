@@ -1,9 +1,9 @@
 package com.denfop.componets.energy;
 
-import com.denfop.api.energy.IEnergyEmitter;
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.energy.interfaces.EnergyEmitter;
+import com.denfop.api.energy.interfaces.EnergySink;
+import com.denfop.api.energy.interfaces.EnergyTile;
+import com.denfop.api.otherenergies.common.InfoTile;
 import com.denfop.componets.Energy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class EnergyNetDelegateSink extends EnergyNetDelegate implements IEnergySink {
+public class EnergyNetDelegateSink extends EnergyNetDelegate implements EnergySink {
 
     int hashCodeSource;
     List<Integer> energyTicks = new LinkedList<>();
@@ -27,7 +27,7 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements IEnergyS
         return buffer.sinkTier;
     }
 
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
+    public boolean acceptsEnergyFrom(EnergyEmitter emitter, Direction dir) {
         for (Direction facing1 : this.sinkDirections) {
             if (facing1.ordinal() == dir.ordinal()) {
                 return true;
@@ -37,7 +37,7 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements IEnergyS
     }
 
 
-    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+    public List<InfoTile<EnergyTile>> getValidReceivers() {
         return validReceivers;
     }
 
@@ -52,17 +52,17 @@ public class EnergyNetDelegateSink extends EnergyNetDelegate implements IEnergyS
     }
 
     @Override
-    public void AddTile(final IEnergyTile tile, final Direction dir) {
+    public void AddTile(final EnergyTile tile, final Direction dir) {
         super.AddTile(tile, dir);
     }
 
     @Override
-    public void RemoveTile(final IEnergyTile tile, final Direction dir) {
+    public void RemoveTile(final EnergyTile tile, final Direction dir) {
         super.RemoveTile(tile, dir);
     }
 
     @Override
-    public Map<Direction, IEnergyTile> getTiles() {
+    public Map<Direction, EnergyTile> getTiles() {
         return this.energyConductorMap;
     }
 

@@ -29,7 +29,7 @@ public class NetworkManagerClient extends NetworkManager {
     public void sendPacket(CustomPacketBuffer buffer) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) {
-            this.sendPacket(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(Minecraft.getInstance().player.getX(),Minecraft.getInstance().player.getY(),Minecraft.getInstance().player.getZ(),2,Minecraft.getInstance().player.level().dimension()))
+            this.sendPacket(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(Minecraft.getInstance().player.getX(), Minecraft.getInstance().player.getY(), Minecraft.getInstance().player.getZ(), 2, Minecraft.getInstance().player.level().dimension()))
                     , buffer);
             return;
         }
@@ -42,13 +42,15 @@ public class NetworkManagerClient extends NetworkManager {
     public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
         Minecraft.getInstance().player.connection.send(makePacket(NetworkDirection.PLAY_TO_SERVER, buffer));
     }
-    public void onPacketData(CustomPacketBuffer is,  byte type) {
+
+    public void onPacketData(CustomPacketBuffer is, byte type) {
         Player player = Minecraft.getInstance().player;
         IPacket packet = this.packetMap.get(type);
         if (packet != null && packet.getPacketType() == EnumTypePacket.SERVER) {
             packet.readPacket(is, player);
         }
     }
+
     protected boolean isClient() {
         return true;
     }

@@ -8,27 +8,36 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractContainerScreen.class)
 public interface AbstractContainerScreenAccessor {
-    @Accessor("snapbackItem")
-    void setSnapbackItem(ItemStack stack);
     @Accessor
-     int getSnapbackStartX();
+    int getSnapbackStartX();
+
     @Accessor
-     int getSnapbackStartY();
+    int getSnapbackStartY();
+
+    @Accessor
+    int getQuickCraftingRemainder();
 
     @Accessor("quickCraftingRemainder")
     void setQuickCraftingRemainder(int value);
-    @Accessor
-    int getQuickCraftingRemainder();
+
     @Accessor
     Slot getHoveredSlot();
+
     @Accessor
     boolean getIsSplittingStack();
+
     @Accessor
     ItemStack getSnapbackItem();
+
+    @Accessor("snapbackItem")
+    void setSnapbackItem(ItemStack stack);
+
     @Accessor
     long getSnapbackTime();
+
     @Accessor
     ItemStack getDraggingItem();
+
     @Accessor
     int getQuickCraftingType();
 

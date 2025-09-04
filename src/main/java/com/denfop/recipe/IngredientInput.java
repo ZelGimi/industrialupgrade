@@ -33,8 +33,8 @@ public class IngredientInput extends Ingredient {
         if (this.items == null) {
             this.items = this.input.getInputs().toArray(new ItemStack[0]);
         }
-        if (this.input.hasTag() && this.input.getInputs().isEmpty()){
-            input = new InputOreDict(this.input.getTag(),this.input.getAmount());
+        if (this.input.hasTag() && this.input.getInputs().isEmpty()) {
+            input = new InputOreDict(this.input.getTag(), this.input.getAmount());
             this.items = this.input.getInputs().toArray(new ItemStack[0]);
         }
         return this.items;

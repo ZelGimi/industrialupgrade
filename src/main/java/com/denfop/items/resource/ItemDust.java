@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.Util;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemDust<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemDust(T element) {
         super(new Item.Properties(), element);
     }
@@ -20,10 +20,12 @@ public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -57,24 +59,24 @@ public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implemen
             this.nameItem = pathBuilder.toString();
         }
 
-        return this.nameItem.replace("_dust","");
+        return this.nameItem.replace("_dust", "");
     }
 
-    public enum ItemDustTypes implements ISubEnum {
+    public enum ItemDustTypes implements SubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
-        wolfram(3),
+        vanadium(2),
+        tungsten(3),
         invar(4),
         caravky(5),
         cobalt(6),
         magnesium(7),
         nickel(8),
-        platium(9),
+        platinum(9),
         titanium(10),
         chromium(11),
         spinel(12),
-        electrium(13),
+        electrum(13),
         silver(14),
         zinc(15),
         manganese(16),

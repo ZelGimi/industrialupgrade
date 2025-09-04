@@ -135,24 +135,24 @@ public class IURecipeSerializer implements RecipeSerializer<IURecipe> {
             Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(fluidStacks.get(0), inputs), new RecipeOutput(compoundTag, outputs1)));
 
         } else if (inputs.isEmpty() && isFluidRecipe) {
-             if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
+            if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
                 Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
-            }else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()){
+            } else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()) {
                 Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
 
-            }else if (outputs1.isEmpty() && !outputsFluid.isEmpty()){
+            } else if (outputs1.isEmpty() && !outputsFluid.isEmpty()) {
                 Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(fluidStacks.toArray(new FluidStack[0])), outputsFluid));
 
             }
-        }else if (!inputs.isEmpty() && isFluidRecipe) {
+        } else if (!inputs.isEmpty() && isFluidRecipe) {
             Recipes.recipes.addAdderRecipe(recipeType, new BaseMachineRecipe(new Input(fluidStacks.get(0), inputs), new RecipeOutput(compoundTag, outputs1)));
             if (!outputs1.isEmpty() && outputsFluid.isEmpty()) {
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0),fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
-            }else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()){
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0),fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
+                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0), fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1)));
+            } else if (!outputs1.isEmpty() && !outputsFluid.isEmpty()) {
+                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0), fluidStacks.toArray(new FluidStack[0])), new RecipeOutput(compoundTag, outputs1), outputsFluid));
 
-            }else if (outputs1.isEmpty() && !outputsFluid.isEmpty()){
-                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0),fluidStacks.toArray(new FluidStack[0])), outputsFluid));
+            } else if (outputs1.isEmpty() && !outputsFluid.isEmpty()) {
+                Recipes.recipes.addFluidAdderRecipe(recipeType, new BaseFluidMachineRecipe(new InputFluid(inputs.get(0).getInputs().get(0), fluidStacks.toArray(new FluidStack[0])), outputsFluid));
 
             }
         }

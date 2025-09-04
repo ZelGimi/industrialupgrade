@@ -1,17 +1,24 @@
 package com.denfop;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropInit;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.cool.CoolNet;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.crop.Crop;
+import com.denfop.api.crop.CropInit;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
 import com.denfop.api.guidebook.GuideBookCore;
-import com.denfop.api.heat.HeatNet;
+import com.denfop.api.item.upgrade.BaseUpgradeSystem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
 import com.denfop.api.multiblock.MultiBlockSystem;
+import com.denfop.api.otherenergies.common.EnergyBase;
+import com.denfop.api.otherenergies.cool.CoolNet;
+import com.denfop.api.otherenergies.cool.CoolNetGlobal;
+import com.denfop.api.otherenergies.heat.HeatNet;
+import com.denfop.api.otherenergies.heat.HeatNetGlobal;
+import com.denfop.api.otherenergies.pressure.PressureNet;
+import com.denfop.api.otherenergies.pressure.PressureNetGlobal;
+import com.denfop.api.otherenergies.transport.TransportNetGlobal;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.pressure.PressureNet;
-import com.denfop.api.radiationsystem.RadiationSystem;
+import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.api.recipe.*;
 import com.denfop.api.solar.SolarEnergySystem;
 import com.denfop.api.space.BaseSpaceSystem;
@@ -20,25 +27,29 @@ import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.tesseract.TesseractSystem;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.transport.TransportNetGlobal;
-import com.denfop.api.upgrade.BaseUpgradeSystem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.vein.VeinSystem;
+import com.denfop.api.vein.common.VeinSystem;
+import com.denfop.api.vein.gas.GasVeinSystem;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
+import com.denfop.blockentity.base.IManufacturerBlock;
+import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
+import com.denfop.blockentity.mechanism.BlockEntitySolidCooling;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
+import com.denfop.blockentity.mechanism.quarry.QuarryItem;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;
-import com.denfop.cool.CoolNetGlobal;
+import com.denfop.config.ModConfig;
 import com.denfop.datagen.*;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.datagen.itemtag.ItemTagProvider;
+import com.denfop.dataregistry.DataBlock;
+import com.denfop.dataregistry.DataBlockEntity;
+import com.denfop.dataregistry.DataItem;
 import com.denfop.entity.SmallBee;
 import com.denfop.events.*;
-import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.one_probe.RegisterProvider;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.energy.EntityAdvArrow;
@@ -53,7 +64,6 @@ import com.denfop.network.packet.PacketFixerRecipe;
 import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
 import com.denfop.network.packet.PacketUpdateRecipe;
 import com.denfop.network.packet.PacketUpdateRelocator;
-import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.ClientProxy;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.recipe.IInputHandler;
@@ -62,18 +72,12 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.render.streak.PlayerStreakInfo;
+import com.denfop.tabs.IItemTab;
 import com.denfop.tabs.TabCore;
-import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.mechanism.EnumTypeMachines;
-import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import com.denfop.tiles.mechanism.TileSolidCooling;
-import com.denfop.tiles.mechanism.quarry.QuarryItem;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.utils.*;
 import com.denfop.villager.TradingSystem;
 import com.denfop.world.WorldBaseGen;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -142,14 +146,8 @@ import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 @Mod(IUCore.MODID)
 public class IUCore {
-    public static IUCore instance;
-    public static FMLJavaModLoadingContext context;
     public static final Logger LOGGER = LogUtils.getLogger();
-
     public static final CommonProxy proxy;
-    public static Random random = new Random();
-
-    public static RandomSource randomSource = new LegacyRandomSource(random.nextLong());
     public static final List<ItemStack> list = new ArrayList<>();
     public static final List<ItemStack> get_ore = new ArrayList<>();
     public static final List<ItemStack> get_ingot = new ArrayList<>();
@@ -172,18 +170,40 @@ public class IUCore {
     public static final List<QuarryItem> get_separator_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_comb_crushed_quarry = new ArrayList<>();
     public static final List<List<ItemStack>> removing_list = new ArrayList<>();
-
     public static final List<ItemStack> get_polisher = new ArrayList<>();
-    public static Sides<NetworkManager> network;
     public static final KeyboardIU keyboard;
-
+    public static final String MODID = "industrialupgrade";
+    public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
+    public static final Map<String, LootTable> lootTables = new HashMap<>();
+    public static final CreativeModeTab IUTab = new TabCore(0, "IUTab");
+    public static final CreativeModeTab ModuleTab = new TabCore(1, "ModuleTab");
+    public static final CreativeModeTab ItemTab = new TabCore(2, "ItemTab");
+    public static final CreativeModeTab OreTab = new TabCore(3, "OreTab");
+    public static final CreativeModeTab EnergyTab = new TabCore(4, "EnergyTab");
+    public static final CreativeModeTab RecourseTab = new TabCore(5, "ResourceTab");
+    public static final CreativeModeTab ReactorsTab = new TabCore(6, "ReactorsTab");
+    public static final CreativeModeTab UpgradeTab = new TabCore(7, "UpgradeTab");
+    public static final CreativeModeTab ElementsTab = new TabCore(9, "CraftingElementsTab");
+    public static final CreativeModeTab ReactorsBlockTab = new TabCore(10, "ReactorsBlockTab");
+    public static final CreativeModeTab CropsTab = new TabCore(11, "CropsTab");
+    public static final CreativeModeTab BeesTab = new TabCore(12, "BeesTab");
+    public static final CreativeModeTab GenomeTab = new TabCore(13, "GenomeTab");
+    public static final CreativeModeTab SpaceTab = new TabCore(14, "SpaceTab");
+    public static final CreativeModeTab fluidCellTab = new TabCore(15, "fluidCellTab");
+    private static final RegistrySetBuilder BUILDER = (new RegistrySetBuilder()).add(Registries.CONFIGURED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ConfiguredFeaturesGen::bootstrap).add(Registries.PLACED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ModPlacedFeatures::bootstrap).add(Registries.DAMAGE_TYPE, DamageTypes::bootstrap);
+    public static IUCore instance;
+    public static FMLJavaModLoadingContext context;
+    public static Random random = new Random();
+    public static RandomSource randomSource = new LegacyRandomSource(random.nextLong());
+    public static Sides<NetworkManager> network;
     public static List<Runnable> runnableListAfterRegisterItem = new ArrayList<>();
-
     public static boolean update = false;
     public static List<String> stringList = new ArrayList<>();
-    static boolean change = false;
     public static boolean register = false;
     public static boolean register1 = false;
+    public static Map<Item, Crop> cropMap = new HashMap<>();
+    public static List<String> players = new LinkedList<>();
+    static boolean change = false;
 
     static {
         proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
@@ -192,8 +212,8 @@ public class IUCore {
         Keys.instance = IUCore.keyboard;
     }
 
-    public static final String MODID = "industrialupgrade";
-
+    boolean reg = false;
+    List<RegistryObject<?>> objects = new ArrayList<>();
     public IUCore() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
@@ -225,7 +245,47 @@ public class IUCore {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private static final RegistrySetBuilder BUILDER = (new RegistrySetBuilder()).add(Registries.CONFIGURED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ConfiguredFeaturesGen::bootstrap).add(Registries.PLACED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ModPlacedFeatures::bootstrap).add(Registries.DAMAGE_TYPE, DamageTypes::bootstrap);
+    public static void addrecipe(
+            ItemStack stack,
+            double matter,
+            double sunmatter,
+            double aquamatter,
+            double nethermatter,
+            double nightmatter,
+            double earthmatter,
+            double endmatter,
+            double aermatter
+    ) {
+        CompoundTag nbt = new CompoundTag();
+        double[] quantitysolid = {Precision.round(matter, 2),
+                Precision.round(sunmatter, 2), Precision.round(aquamatter, 2),
+                Precision.round(nethermatter, 2), Precision.round(nightmatter, 2),
+                Precision.round(earthmatter, 2),
+                Precision.round(endmatter, 2), Precision.round(aermatter, 2)};
+        for (int i = 0; i < quantitysolid.length; i++) {
+            ModUtils.SetDoubleWithoutItem(nbt, ("quantitysolid_" + i), quantitysolid[i]);
+        }
+        final IInputHandler input = inputFactory;
+        if (stack.isEmpty()) {
+            return;
+        }
+        List<TagKey<Item>> list1 = stack.getItem().builtInRegistryHolder().tags().toList();
+        if (list1.isEmpty()) {
+            Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(new Input(input.getInput(stack)), new RecipeOutput(
+                    nbt,
+                    stack
+            )));
+        } else {
+            Recipes.recipes.addRecipe(
+                    "converter",
+                    new BaseMachineRecipe(new Input(input.getInput(list1)), new RecipeOutput(
+                            nbt,
+                            stack
+                    ))
+            );
+        }
+
+    }
 
     @SubscribeEvent
     public void onAttributeCreate(EntityAttributeCreationEvent event) {
@@ -286,52 +346,6 @@ public class IUCore {
         }
     }
 
-    public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
-
-    public static void addrecipe(
-            ItemStack stack,
-            double matter,
-            double sunmatter,
-            double aquamatter,
-            double nethermatter,
-            double nightmatter,
-            double earthmatter,
-            double endmatter,
-            double aermatter
-    ) {
-        CompoundTag nbt = new CompoundTag();
-        double[] quantitysolid = {Precision.round(matter, 2),
-                Precision.round(sunmatter, 2), Precision.round(aquamatter, 2),
-                Precision.round(nethermatter, 2), Precision.round(nightmatter, 2),
-                Precision.round(earthmatter, 2),
-                Precision.round(endmatter, 2), Precision.round(aermatter, 2)};
-        for (int i = 0; i < quantitysolid.length; i++) {
-            ModUtils.SetDoubleWithoutItem(nbt, ("quantitysolid_" + i), quantitysolid[i]);
-        }
-        final IInputHandler input = inputFactory;
-        if (stack.isEmpty()) {
-            return;
-        }
-        List<TagKey<Item>> list1 = stack.getItem().builtInRegistryHolder().tags().toList();
-        if (list1.isEmpty()) {
-            Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(new Input(input.getInput(stack)), new RecipeOutput(
-                    nbt,
-                    stack
-            )));
-        } else {
-            Recipes.recipes.addRecipe(
-                    "converter",
-                    new BaseMachineRecipe(new Input(input.getInput(list1)), new RecipeOutput(
-                            nbt,
-                            stack
-                    ))
-            );
-        }
-
-    }
-
-    public static final Map<String, LootTable> lootTables = new HashMap<>();
-
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
@@ -364,7 +378,6 @@ public class IUCore {
         }
     }
 
-
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.getEntity().level().isClientSide()) {
@@ -372,22 +385,6 @@ public class IUCore {
         }
 
     }
-
-    public static final CreativeModeTab IUTab = new TabCore(0, "IUTab");
-    public static final CreativeModeTab ModuleTab = new TabCore(1, "ModuleTab");
-    public static final CreativeModeTab ItemTab = new TabCore(2, "ItemTab");
-    public static final CreativeModeTab OreTab = new TabCore(3, "OreTab");
-    public static final CreativeModeTab EnergyTab = new TabCore(4, "EnergyTab");
-    public static final CreativeModeTab RecourseTab = new TabCore(5, "ResourceTab");
-    public static final CreativeModeTab ReactorsTab = new TabCore(6, "ReactorsTab");
-    public static final CreativeModeTab UpgradeTab = new TabCore(7, "UpgradeTab");
-    public static final CreativeModeTab ElementsTab = new TabCore(9, "CraftingElementsTab");
-    public static final CreativeModeTab ReactorsBlockTab = new TabCore(10, "ReactorsBlockTab");
-    public static final CreativeModeTab CropsTab = new TabCore(11, "CropsTab");
-    public static final CreativeModeTab BeesTab = new TabCore(12, "BeesTab");
-    public static final CreativeModeTab GenomeTab = new TabCore(13, "GenomeTab");
-    public static final CreativeModeTab SpaceTab = new TabCore(14, "SpaceTab");
-    public static final CreativeModeTab fluidCellTab = new TabCore(15, "fluidCellTab");
 
     private void registerContent(RegisterEvent event) {
         if (Objects.equals(event.getForgeRegistry(), ForgeRegistries.ITEMS)) {
@@ -406,19 +403,19 @@ public class IUCore {
 
         EnumTypeMachines.writeSound();
     }
-    public static Map<Item, ICrop> cropMap = new HashMap<>();
+
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
-        cropMap.put(Items.WHEAT_SEEDS,CropInit.wheat_seed);
-        cropMap.put(Items.SUGAR_CANE,CropInit.reed_seed);
-        cropMap.put(Items.POTATO,CropInit.potato);
-        cropMap.put(Items.CARROT,CropInit.carrot);
-        cropMap.put(Items.MELON_SEEDS,CropInit.melon);
-        cropMap.put(Items.PUMPKIN_SEEDS,CropInit.pumpkin);
-        cropMap.put(Items.MELON,CropInit.melon);
-        cropMap.put(Items.PUMPKIN,CropInit.pumpkin);
-        cropMap.put(Items.BEETROOT,CropInit.beet);
-        cropMap.put(Items.NETHER_WART,CropInit.nether_wart);
+        cropMap.put(Items.WHEAT_SEEDS, CropInit.wheat_seed);
+        cropMap.put(Items.SUGAR_CANE, CropInit.reed_seed);
+        cropMap.put(Items.POTATO, CropInit.potato);
+        cropMap.put(Items.CARROT, CropInit.carrot);
+        cropMap.put(Items.MELON_SEEDS, CropInit.melon);
+        cropMap.put(Items.PUMPKIN_SEEDS, CropInit.pumpkin);
+        cropMap.put(Items.MELON, CropInit.melon);
+        cropMap.put(Items.PUMPKIN, CropInit.pumpkin);
+        cropMap.put(Items.BEETROOT, CropInit.beet);
+        cropMap.put(Items.NETHER_WART, CropInit.nether_wart);
         proxy.postInit();
         for (IItemTag iItemTag : ItemTagProvider.list) {
             Item item = iItemTag.getItem();
@@ -569,7 +566,6 @@ public class IUCore {
 
         }
     }
-
 
     @SubscribeEvent
     public void updateRecipe(PlayerEvent.PlayerLoggedInEvent event) {
@@ -869,8 +865,8 @@ public class IUCore {
 
 
             ListInformationUtils.init();
-            List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
-            for (IMultiTileBlock tileBlock : tiles)
+            List<MultiBlockEntity> tiles = TileBlockCreator.instance.getAllTiles();
+            for (MultiBlockEntity tileBlock : tiles)
 
                 if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
                     if (!mechanism_info1.containsKey(tileBlock)) {
@@ -1059,9 +1055,6 @@ public class IUCore {
         }
     }
 
-    boolean reg = false;
-    List<RegistryObject<?>> objects = new ArrayList<>();
-
     @SubscribeEvent
     public void registerItemTab(BuildCreativeModeTabContentsEvent event) {
         if (!reg) {
@@ -1073,8 +1066,8 @@ public class IUCore {
 
         for (RegistryObject<?> object : objects) {
             if (object != null && object.get() instanceof IItemTab) {
-                if (object.get() instanceof Item item){
-                    if (!ResourceLocation.isValidNamespace(item.getDescriptionId())){
+                if (object.get() instanceof Item item) {
+                    if (!ResourceLocation.isValidNamespace(item.getDescriptionId())) {
                         System.out.println(item.getDescriptionId());
                     }
                 }
@@ -1087,8 +1080,6 @@ public class IUCore {
 
     }
 
-    public static List<String> players = new LinkedList<>();
-
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) {
@@ -1100,7 +1091,7 @@ public class IUCore {
                 new PacketUpdateRecipe(baseRecipe, false, (ServerPlayer) event.getEntity());
             for (String baseRecipe : Recipes.recipes.getRecipeFluid().getRecipes())
                 new PacketUpdateRecipe(baseRecipe, true, (ServerPlayer) event.getEntity());
-            new PacketFixerRecipe( (ServerPlayer) event.getEntity());
+            new PacketFixerRecipe((ServerPlayer) event.getEntity());
         }
         if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())) {
             GuideBookCore.instance.load(event.getEntity().getUUID(), event.getEntity());
@@ -1133,8 +1124,8 @@ public class IUCore {
             ReplicatorRecipe.init();
             CentrifugeRecipe.init();
             MetalFormerRecipe.init();
-            TileEntityPalletGenerator.init();
-            TileSolidCooling.init();
+            BlockEntityPalletGenerator.init();
+            BlockEntitySolidCooling.init();
             SpaceInit.jsonInit();
             BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
             IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);

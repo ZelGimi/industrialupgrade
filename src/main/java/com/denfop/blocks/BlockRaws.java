@@ -1,14 +1,13 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -18,7 +17,7 @@ import oshi.util.tuples.Pair;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockRaws<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockRaws(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -28,7 +27,7 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
     }
 
     @Override
-    public    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -39,12 +38,12 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -58,10 +57,10 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
+        vanadium(2),
         tungsten(3),
         cobalt(4),
         magnesium(5),
@@ -125,7 +124,7 @@ public class BlockRaws<T extends Enum<T> & ISubEnum> extends BlockCore<T> implem
 
         @Nonnull
         public String getName() {
-            return "raw_"+this.name;
+            return "raw_" + this.name;
         }
 
         @Override

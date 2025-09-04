@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemRawIngot<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemRawIngot<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemRawIngot(T element) {
         super(new Item.Properties(), element);
     }
@@ -18,27 +18,20 @@ public class ItemRawIngot<T extends Enum<T> & ISubEnum> extends ItemMain<T> impl
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
-        switch (this.getElement().getId()) {
-            case 3:
-                name = "tungsten";
-                break;
-            case 2:
-                name = "vanady";
-                break;
 
-
-        }
         return new String[]{"forge:raw_ingots/" + name, "forge:raw_ingots"};
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         mikhail(0),
         aluminium(1),
         vanadium(2),

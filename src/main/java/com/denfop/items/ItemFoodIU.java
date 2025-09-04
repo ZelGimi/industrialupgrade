@@ -1,8 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -38,10 +38,24 @@ public class ItemFoodIU extends Item implements IItemTab {
         this.name = name;
         this.path = "";
     }
+
+    public ItemFoodIU(String name, String path, int amount, float saturation) {
+        super(new Item.Properties()
+                .food(new FoodProperties.Builder()
+                        .nutrition(amount)
+                        .saturationMod(saturation)
+                        .build())
+        );
+
+        this.name = name;
+        this.path = path;
+    }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.CropsTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -54,21 +68,10 @@ public class ItemFoodIU extends Item implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[1]+".name";
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[1] + ".name";
         }
 
         return this.nameItem;
-    }
-    public ItemFoodIU(String name, String path, int amount, float saturation) {
-        super(new Item.Properties()
-                .food(new FoodProperties.Builder()
-                        .nutrition(amount)
-                        .saturationMod(saturation)
-                        .build())
-        );
-
-        this.name = name;
-        this.path = path;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.denfop.items.bags;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerLeadBox;
-import com.denfop.gui.GuiCore;
-import com.denfop.gui.GuiLeadBox;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerMenuLeadBox;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenLeadBox;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -54,31 +54,20 @@ public class ItemStackLeadBox extends ItemStackInventory {
 
 
     @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
+    public void addInventorySlot(final Inventory var1) {
 
-
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerLeadBox containerLeadBox = (ContainerLeadBox) menu;
-        return new GuiLeadBox(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuLeadBox containerLeadBox = (ContainerMenuLeadBox) menu;
+        return new ScreenLeadBox(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerLeadBox getGuiContainer(Player player) {
-        return new ContainerLeadBox(player, this);
+    public ContainerMenuLeadBox getGuiContainer(Player player) {
+        return new ContainerMenuLeadBox(player, this);
     }
 
 

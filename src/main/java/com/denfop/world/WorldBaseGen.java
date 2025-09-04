@@ -25,41 +25,43 @@ import static com.denfop.blocks.BlocksRadiationOre.BOOL_PROPERTY;
 import static com.denfop.register.Register.FEATURES;
 
 public class WorldBaseGen {
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> RUB_TREE_GENERATOR;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> RUB_TREE;
+    public static RegistryObject<Feature<NoneFeatureConfiguration>> RUB_TREE_GENERATOR;
+    public static RegistryObject<ConfiguredFeature<?, ?>> RUB_TREE;
     public static RegistryObject<PlacedFeature> RUB_TREE_PLACER;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> VEIN_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> GEN_GAS_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> GEN_HIVE_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> VOLCANO_GENERATOR ;
-    public static  RegistryObject<Feature<NoneFeatureConfiguration>> OIL_GENERATOR ;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> VEIN;
+    public static RegistryObject<Feature<NoneFeatureConfiguration>> VEIN_GENERATOR;
+    public static RegistryObject<Feature<NoneFeatureConfiguration>> GEN_GAS_GENERATOR;
+    public static RegistryObject<Feature<NoneFeatureConfiguration>> GEN_HIVE_GENERATOR;
+    public static RegistryObject<Feature<NoneFeatureConfiguration>> VOLCANO_GENERATOR;
+    public static RegistryObject<Feature<NoneFeatureConfiguration>> OIL_GENERATOR;
+    public static RegistryObject<ConfiguredFeature<?, ?>> VEIN;
     public static RegistryObject<PlacedFeature> VEIN_PLACER;
     public static RegistryObject<ConfiguredFeature<?, ?>> GEN_GAS;
     public static RegistryObject<ConfiguredFeature<?, ?>> GEN_HIVE;
     public static RegistryObject<PlacedFeature> GEN_GAS_PLACER;
     public static RegistryObject<PlacedFeature> GEN_HIVE_PLACER;
     public static RegistryObject<ConfiguredFeature<?, ?>> VOLCANO;
-    public static RegistryObject<PlacedFeature> VOLCANO_PLACER ;
+    public static RegistryObject<PlacedFeature> VOLCANO_PLACER;
     public static RegistryObject<ConfiguredFeature<?, ?>> OIL;
     public static RegistryObject<PlacedFeature> OIL_PLACER;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> CALCIUM;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> SALTPETER;
-    public static  RegistryObject<ConfiguredFeature<?, ?>> PEAT;
-    public static RegistryObject<PlacedFeature> CALCIUM_PLACER ;
+    public static RegistryObject<ConfiguredFeature<?, ?>> CALCIUM;
+    public static RegistryObject<ConfiguredFeature<?, ?>> SALTPETER;
+    public static RegistryObject<ConfiguredFeature<?, ?>> PEAT;
+    public static RegistryObject<PlacedFeature> CALCIUM_PLACER;
     public static RegistryObject<PlacedFeature> SALTPETER_PLACER;
     public static RegistryObject<PlacedFeature> PEAT_PLACER;
     public static List<VeinType> veinTypes = new ArrayList<>();
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
-    public static     Map<Integer, BlockState> blockStateMap = new HashMap<>();
-    public static    Map<Block, Integer> idToblockStateMap = new HashMap<>();
+    public static Map<Integer, BlockState> blockStateMap = new HashMap<>();
+    public static Map<Block, Integer> idToblockStateMap = new HashMap<>();
+    public static int id;
+
     public WorldBaseGen() {
         MinecraftForge.EVENT_BUS.register(this);
         WorldGenGas.registerFluid();
 
 
-         RUB_TREE_GENERATOR = FEATURES.register("rub_tree",
+        RUB_TREE_GENERATOR = FEATURES.register("rub_tree",
                 () -> new RubTreeFeature(NoneFeatureConfiguration.CODEC));
         VEIN_GENERATOR = FEATURES.register("vein",
                 () -> new AlgorithmVein(NoneFeatureConfiguration.CODEC));
@@ -224,7 +226,7 @@ public class WorldBaseGen {
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(6)).get(), 6, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 60, 3),
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY, true), 60, 3),
                         new ChanceOre(IUItem.toriyore.getBlockState(0).setValue(BlockThoriumOre.BOOL_PROPERTY, true), 32, 0),
                         new ChanceOre(IUItem.radiationore.getBlockState(1).setValue(BOOL_PROPERTY, true), 4, 1),
                         new ChanceOre(IUItem.radiationore.getBlockState(0).setValue(BOOL_PROPERTY, true), 3, 0),
@@ -252,8 +254,8 @@ public class WorldBaseGen {
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(10)).get(), 10, TypeVein.SMALL,
                 new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 50, 8),
-                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY,true), 25, 3),
-                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY,true), 25, 0),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(3).setValue(BlockClassicOre.BOOL_PROPERTY, true), 25, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState().setValue(BlockThoriumOre.BOOL_PROPERTY, true), 25, 0),
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(11)).get(), 11, TypeVein.SMALL,
@@ -439,26 +441,25 @@ public class WorldBaseGen {
                 }
         ));
         id = 0;
-        for (VeinType veinType : veinTypes){
-            if (veinType.getHeavyOre() != null){
+        for (VeinType veinType : veinTypes) {
+            if (veinType.getHeavyOre() != null) {
                 BlockState state = veinType.getHeavyOre().getBlock().defaultBlockState();
-                if (!idToblockStateMap.containsKey(state.getBlock())){
-                    idToblockStateMap.put(state.getBlock(),id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state.getBlock())) {
+                    idToblockStateMap.put(state.getBlock(), id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
-            for (ChanceOre chanceOre : veinType.getOres()){
+            for (ChanceOre chanceOre : veinType.getOres()) {
                 BlockState state = chanceOre.getBlock();
-                if (!idToblockStateMap.containsKey(state.getBlock())){
-                    idToblockStateMap.put(state.getBlock(),id);
-                    blockStateMap.put(id,state);
+                if (!idToblockStateMap.containsKey(state.getBlock())) {
+                    idToblockStateMap.put(state.getBlock(), id);
+                    blockStateMap.put(id, state);
                     id++;
                 }
             }
         }
     }
-    public static int id;
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.LevelTickEvent event) {

@@ -23,11 +23,7 @@ public class PlasticCreatorPlateHandler {
         this.input = input;
         this.input2 = input2;
         this.output = output;
-        this.container=container;
-    }
-
-    public BaseMachineRecipe getContainer() {
-        return container;
+        this.container = container;
     }
 
     public static List<PlasticCreatorPlateHandler> getRecipes() {
@@ -41,7 +37,7 @@ public class PlasticCreatorPlateHandler {
             ItemStack input, FluidStack input2,
             ItemStack output,
             BaseMachineRecipe container) {
-        PlasticCreatorPlateHandler recipe = new PlasticCreatorPlateHandler(input, input2, output,container);
+        PlasticCreatorPlateHandler recipe = new PlasticCreatorPlateHandler(input, input2, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -66,12 +62,15 @@ public class PlasticCreatorPlateHandler {
 
             addRecipe(container.input.getInputs().get(0).getInputs().get(0), container.input.getFluid(),
 
-                    container.getOutput().items.get(0),container
+                    container.getOutput().items.get(0), container
             );
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

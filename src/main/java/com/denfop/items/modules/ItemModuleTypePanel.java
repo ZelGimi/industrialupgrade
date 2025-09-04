@@ -2,11 +2,11 @@ package com.denfop.items.modules;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.utils.Keyboard;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemModuleTypePanel<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemModuleTypePanel<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     int number = 0;
 
     public ItemModuleTypePanel(T element) {
@@ -29,10 +29,12 @@ public class ItemModuleTypePanel<T extends Enum<T> & ISubEnum> extends ItemMain<
     public static EnumSolarPanels getSolarType(int meta) {
         return EnumSolarPanels.getFromID(meta + 1);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level worldIn, List<Component> info, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, worldIn, info, p_41424_);
@@ -69,7 +71,7 @@ public class ItemModuleTypePanel<T extends Enum<T> & ISubEnum> extends ItemMain<
         }
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         module61(0),
         module62(1),
         module63(2),

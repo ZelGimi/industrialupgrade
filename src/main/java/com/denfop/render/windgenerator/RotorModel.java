@@ -14,7 +14,6 @@ import net.minecraft.world.entity.Entity;
 public class RotorModel<T extends Entity> extends EntityModel<T> {
 
 
-
     private final ModelPart rotor1;
     private final ModelPart rotor2;
     private final ModelPart rotor3;
@@ -25,28 +24,27 @@ public class RotorModel<T extends Entity> extends EntityModel<T> {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
 
-        rotor1 =   root.addOrReplaceChild("rotor1", CubeListBuilder.create()
+        rotor1 = root.addOrReplaceChild("rotor1", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
                 PartPose.rotation(0.0F, -0.5F, 0.0F)).bake(32, 256);
 
-        rotor2 =   root.addOrReplaceChild("rotor2", CubeListBuilder.create()
+        rotor2 = root.addOrReplaceChild("rotor2", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
                 PartPose.rotation(3.1F, 0.5F, 0.0F)).bake(32, 256);
 
-        rotor3 =   root.addOrReplaceChild("rotor3", CubeListBuilder.create()
+        rotor3 = root.addOrReplaceChild("rotor3", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
                 PartPose.rotation(4.7F, 0.0F, 0.5F)).bake(32, 256);
 
-        rotor4 =   root.addOrReplaceChild("rotor4", CubeListBuilder.create()
+        rotor4 = root.addOrReplaceChild("rotor4", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
                 PartPose.rotation(1.5F, 0.0F, -0.5F)).bake(32, 256);
 
     }
-
 
 
     @Override

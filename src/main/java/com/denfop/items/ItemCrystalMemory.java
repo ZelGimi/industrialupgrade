@@ -1,9 +1,9 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.recipe.ReplicatorRecipe;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,10 +24,12 @@ public class ItemCrystalMemory extends Item implements IItemTab {
     public ItemCrystalMemory() {
         super(new Properties().stacksTo(1));
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public ItemStack readItemStack(ItemStack stack) {
         CompoundTag nbt = ModUtils.nbt(stack);
         CompoundTag contentTag = nbt.getCompound("Pattern");

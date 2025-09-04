@@ -1,11 +1,11 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
+import com.denfop.potion.IUPotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlocksRadiationOre<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
     public static final BooleanProperty BOOL_PROPERTY = BooleanProperty.create("hasdamage");
 
@@ -42,7 +42,7 @@ public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<
     }
 
     @Override
-    public    int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -52,7 +52,7 @@ public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any().setValue(BOOL_PROPERTY, false);
     }
 
@@ -71,7 +71,7 @@ public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<
 
 
         ChunkPos chunkPos = new ChunkPos(pos);
-          PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1);
+        PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1);
         AABB axisAlignedBB = new AABB(
                 pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2,
                 pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3
@@ -80,7 +80,7 @@ public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<
 
         List<Player> players = world.getEntitiesOfClass(Player.class, axisAlignedBB);
         for (Player player : players) {
-            boolean canAffect = !IHazmatLike.hasCompleteHazmat(player);
+            boolean canAffect = !HazmatLike.hasCompleteHazmat(player);
             if (canAffect) {
                 player.addEffect(new MobEffectInstance(IUPotion.radiation, 400, 0));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 0));
@@ -89,7 +89,7 @@ public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -103,7 +103,7 @@ public class BlocksRadiationOre<T extends Enum<T> & ISubEnum> extends BlockCore<
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         americium_ore(0),
         neptunium_ore(1),
         curium_ore(2),

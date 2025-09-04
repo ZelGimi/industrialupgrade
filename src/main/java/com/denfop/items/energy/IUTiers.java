@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 
 public enum IUTiers implements Tier {
 
-    RUBY(3, (int) (250* 2.5), 8.0F, 3.0F, 10, () -> Ingredient.of()),
-    IRON(3, (int) (250*3), 6.0F, 2.0F, 14, () -> Ingredient.of(new ItemStack(IUItem.advIronIngot.getItem())));
+    RUBY(3, (int) (250 * 2.5), 8.0F, 3.0F, 10, () -> Ingredient.of()),
+    IRON(3, (int) (250 * 3), 6.0F, 2.0F, 14, () -> Ingredient.of(new ItemStack(IUItem.advIronIngot.getItem())));
 
 
     private final int level;
@@ -55,5 +55,8 @@ public enum IUTiers implements Tier {
         return this.repairIngredient.get();
     }
 
-    @org.jetbrains.annotations.Nullable public net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> getTag() { return BlockTags.NEEDS_DIAMOND_TOOL; }
+    @org.jetbrains.annotations.Nullable
+    public net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> getTag() {
+        return BlockTags.NEEDS_DIAMOND_TOOL;
+    }
 }

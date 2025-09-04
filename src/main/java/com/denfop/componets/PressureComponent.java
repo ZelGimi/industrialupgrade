@@ -1,29 +1,25 @@
 package com.denfop.componets;
 
-import com.denfop.api.pressure.*;
-import com.denfop.api.pressure.event.PressureTileLoadEvent;
-import com.denfop.api.pressure.event.PressureTileUnloadEvent;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.otherenergies.pressure.IPressureTile;
+import com.denfop.api.otherenergies.pressure.event.PressureTileLoadEvent;
+import com.denfop.api.otherenergies.pressure.event.PressureTileUnloadEvent;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.pressure.EnergyNetDelegate;
 import com.denfop.componets.pressure.EnergyNetDelegateSink;
 import com.denfop.componets.pressure.EnergyNetDelegateSource;
-import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Set;
 
 public class PressureComponent extends AbstractComponent {
     public final BufferEnergy buffer;
@@ -36,12 +32,12 @@ public class PressureComponent extends AbstractComponent {
     Random rand = new Random();
     private long id;
 
-    public PressureComponent(TileEntityInventory parent, double capacity) {
+    public PressureComponent(BlockEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public PressureComponent(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -51,7 +47,7 @@ public class PressureComponent extends AbstractComponent {
     }
 
     public PressureComponent(
-            TileEntityInventory parent,
+            BlockEntityInventory parent,
             double capacity,
             Set<Direction> sinkDirections,
             Set<Direction> sourceDirections,
@@ -62,23 +58,23 @@ public class PressureComponent extends AbstractComponent {
         super(parent);
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
-        this.buffer =  new BufferEnergy(0,capacity,sinkTier,sourceTier);
+        this.buffer = new BufferEnergy(0, capacity, sinkTier, sourceTier);
         this.defaultCapacity = capacity;
     }
 
-    public static PressureComponent asBasicSink(TileEntityInventory parent, double capacity) {
+    public static PressureComponent asBasicSink(BlockEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static PressureComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
+    public static PressureComponent asBasicSink(BlockEntityInventory parent, double capacity, int tier) {
         return new PressureComponent(parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
-    public static PressureComponent asBasicSource(TileEntityInventory parent, double capacity) {
+    public static PressureComponent asBasicSource(BlockEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static PressureComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
+    public static PressureComponent asBasicSource(BlockEntityInventory parent, double capacity, int tier) {
         return new PressureComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
@@ -285,7 +281,6 @@ public class PressureComponent extends AbstractComponent {
     }
 
 
-
     public void setReceivingEnabled(boolean enabled) {
         this.delegate.receivingDisabled = !enabled;
     }
@@ -328,11 +323,6 @@ public class PressureComponent extends AbstractComponent {
     public IPressureTile getDelegate() {
         return this.delegate;
     }
-
-
-
-
-
 
 
 }

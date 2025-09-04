@@ -1,9 +1,9 @@
 package com.denfop.items.reactors;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.reactors.graphite.IExchangerItem;
+import com.denfop.blockentity.reactors.graphite.IExchangerItem;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemExchanger extends ItemDamage implements IExchangerItem , IItemTab {
+public class ItemExchanger extends ItemDamage implements IExchangerItem, IItemTab {
 
     private final double percent;
     private final int level;
@@ -27,10 +27,12 @@ public class ItemExchanger extends ItemDamage implements IExchangerItem , IItemT
         this.level = level;
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -43,11 +45,12 @@ public class ItemExchanger extends ItemDamage implements IExchangerItem , IItemT
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu.iu_"+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu.iu_" + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
+
     @Override
     public double getPercent() {
         return percent;
@@ -68,6 +71,7 @@ public class ItemExchanger extends ItemDamage implements IExchangerItem , IItemT
 
 
     }
+
     @Override
     public boolean damageItem(final ItemStack stack, final int damage) {
         return applyCustomDamage(stack, damage, null);

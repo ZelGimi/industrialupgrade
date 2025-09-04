@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
-import com.denfop.api.item.IMultiBlockItem;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.item.MultiBlockItem;
+import com.denfop.blockentity.base.BlockEntityBase;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.material.MapColor;
@@ -23,7 +23,7 @@ public final class TileBlockCreator {
     }
 
 
-    public <E extends Enum<E> & IMultiTileBlock> BlockTileEntity<E> create(E enumClass, ResourceLocation location) {
+    public <E extends Enum<E> & MultiBlockEntity> BlockTileEntity<E> create(E enumClass, ResourceLocation location) {
         InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass, index);
         final BlockTileEntity<E> block = BlockTileEntity.create(
                 enumClass,
@@ -39,7 +39,7 @@ public final class TileBlockCreator {
 
     public void buildBlocks() {
         for (InfoAboutTile<?> tile : dataInfo) {
-            for (IMultiTileBlock multiTileBlock : tile.teBlocks) {
+            for (MultiBlockEntity multiTileBlock : tile.teBlocks) {
                 multiTileBlock.buildDummies();
             }
         }
@@ -51,30 +51,30 @@ public final class TileBlockCreator {
         return dataInfo.get(index).getBlock();
     }
 
-    public List<IMultiTileBlock> getAllTiles() {
-        List<IMultiTileBlock> tileBlocks = new ArrayList<>();
+    public List<MultiBlockEntity> getAllTiles() {
+        List<MultiBlockEntity> tileBlocks = new ArrayList<>();
         for (InfoAboutTile<?> tile : dataInfo) {
             tileBlocks.addAll(tile.teBlocks);
         }
         return tileBlocks;
     }
 
-    public static class InfoAboutTile<E extends Enum<E> & IMultiTileBlock> {
+    public static class InfoAboutTile<E extends Enum<E> & MultiBlockEntity> {
 
         private final boolean specialModels;
         private final int index;
         private final CreativeModeTab tab;
         private final MapColor defaultMaterial;
-        private final List<? extends IMultiTileBlock> listBlock;
-        private List<IMultiTileBlock> teBlocks;
-        private List<IMultiTileBlock> idMap;
+        private final List<? extends MultiBlockEntity> listBlock;
+        private List<MultiBlockEntity> teBlocks;
+        private List<MultiBlockEntity> idMap;
         private BlockTileEntity<E> block;
 
         InfoAboutTile(E universe, int index) {
             this.idMap = new LinkedList<>();
             this.index = index;
             this.teBlocks = new LinkedList<>();
-            this.specialModels = IMultiBlockItem.class.isAssignableFrom(universe.getClass());
+            this.specialModels = MultiBlockItem.class.isAssignableFrom(universe.getClass());
             this.register(universe);
             this.idMap = new ArrayList<>(idMap);
             this.teBlocks = new ArrayList<>(this.teBlocks);
@@ -93,7 +93,7 @@ public final class TileBlockCreator {
             });
         }
 
-        public List<? extends IMultiTileBlock> getListBlock() {
+        public List<? extends MultiBlockEntity> getListBlock() {
             return listBlock;
         }
 
@@ -101,8 +101,8 @@ public final class TileBlockCreator {
             return tab;
         }
 
-        public Class<? extends TileEntityBlock> getClassFromName(String name) {
-            for (IMultiTileBlock e : listBlock) {
+        public Class<? extends BlockEntityBase> getClassFromName(String name) {
+            for (MultiBlockEntity e : listBlock) {
                 if (e.getName().equals(name)) {
                     return e.getTeClass();
                 }
@@ -130,7 +130,7 @@ public final class TileBlockCreator {
 
         }
 
-        public List<IMultiTileBlock> getTeBlocks() {
+        public List<MultiBlockEntity> getTeBlocks() {
             return teBlocks;
         }
 
@@ -151,7 +151,7 @@ public final class TileBlockCreator {
             return this.specialModels;
         }
 
-        public List<IMultiTileBlock> getIdMap() {
+        public List<MultiBlockEntity> getIdMap() {
             return idMap;
         }
 

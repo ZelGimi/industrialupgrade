@@ -1,29 +1,28 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.inv.IStackInventory;
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.inventory.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStack;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
 import static com.denfop.register.Register.inventory_container;
 
-public abstract class ItemStackInventory implements IAdvInventory<ItemStackInventory>, IUpdatableItemStack, IStackInventory {
+public abstract class ItemStackInventory implements CustomWorldContainer, IUpdatableItemStack {
 
     public final Player player;
     protected final ItemStack[] inventory;
@@ -53,6 +52,11 @@ public abstract class ItemStackInventory implements IAdvInventory<ItemStackInven
             }
         }
 
+    }
+
+    @Override
+    public Level getWorld() {
+        return player.level();
     }
 
     @Override
@@ -208,7 +212,7 @@ public abstract class ItemStackInventory implements IAdvInventory<ItemStackInven
 
     protected void save() {
         if (!player.level().isClientSide()) {
-            if ( this.containerStack.isEmpty())
+            if (this.containerStack.isEmpty())
                 this.containerStack = this.player.getInventory().getSelected();
             if (!this.cleared) {
                 boolean dropItself = false;
@@ -283,21 +287,11 @@ public abstract class ItemStackInventory implements IAdvInventory<ItemStackInven
     }
 
 
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
 
 
     @Override
-    public void addInventorySlot(InvSlot var1) {
+    public void addInventorySlot(Inventory var1) {
 
-    }
-
-
-    @Override
-    public int getBaseIndex(InvSlot var1) {
-        return 0;
     }
 
 
@@ -313,13 +307,13 @@ public abstract class ItemStackInventory implements IAdvInventory<ItemStackInven
 
 
     @Override
-    public ContainerBase<?> getGuiContainer(Player var1) {
+    public ContainerMenuBase<?> getGuiContainer(Player var1) {
         return null;
     }
 
 
     @Override
-    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> var2) {
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player var1, ContainerMenuBase<? extends CustomWorldContainer> var2) {
         return null;
     }
 
@@ -332,7 +326,7 @@ public abstract class ItemStackInventory implements IAdvInventory<ItemStackInven
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
+    public AbstractContainerMenu createMenu(int p_39954_, net.minecraft.world.entity.player.Inventory p_39955_, Player p_39956_) {
         containerId = p_39954_;
         return getGuiContainer(p_39956_);
     }

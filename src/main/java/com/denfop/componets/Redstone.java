@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,7 +13,7 @@ public class Redstone extends AbstractComponent {
     private final List<RedstoneHandler> changeSubscribers = new ArrayList<>();
     protected int redstoneInput;
 
-    public Redstone(TileEntityInventory parent) {
+    public Redstone(BlockEntityInventory parent) {
         super(parent);
     }
 

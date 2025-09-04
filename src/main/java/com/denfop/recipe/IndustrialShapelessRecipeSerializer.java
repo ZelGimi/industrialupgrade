@@ -1,16 +1,12 @@
 package com.denfop.recipe;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.BaseShapelessRecipe;
-import com.denfop.api.crafting.PartRecipe;
-import com.denfop.api.crafting.RecipeGrid;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.gson.*;
-import net.minecraft.core.NonNullList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -23,8 +19,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class IndustrialShapelessRecipeSerializer implements RecipeSerializer<BaseShapelessRecipe> {
 
@@ -55,17 +49,14 @@ public class IndustrialShapelessRecipeSerializer implements RecipeSerializer<Bas
         ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 
 
-        return new BaseShapelessRecipe(id,group,category,result, inputList);
+        return new BaseShapelessRecipe(id, group, category, result, inputList);
     }
-
-
-
 
 
     @Override
     public @Nullable BaseShapelessRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf pBuffer) {
 
-        return BaseShapelessRecipe.create(id,new CustomPacketBuffer(pBuffer));
+        return BaseShapelessRecipe.create(id, new CustomPacketBuffer(pBuffer));
     }
 
     @Override

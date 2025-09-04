@@ -32,17 +32,19 @@ public class InputFluidStack implements IInputItemStack {
     public InputFluidStack(Fluid fluid) {
         this(fluid, 1000);
     }
-    public InputFluidStack(CompoundTag compoundTag){
+
+    public InputFluidStack(CompoundTag compoundTag) {
         boolean exist = compoundTag.getBoolean("exist");
-        if (exist){
+        if (exist) {
             ResourceLocation fluidId = new ResourceLocation(compoundTag.getString("Fluid"));
             this.fluid = ForgeRegistries.FLUIDS.getValue(fluidId);
             this.amount = compoundTag.getInt("Amount");
-        }else{
+        } else {
             this.fluid = Fluids.EMPTY;
             this.amount = 1;
         }
     }
+
     public InputFluidStack(FluidStack fluid) {
         this(fluid.getFluid(), fluid.getAmount());
     }
@@ -113,7 +115,7 @@ public class InputFluidStack implements IInputItemStack {
     }
 
     public FluidStack getFluid() {
-        return new FluidStack(fluid,amount);
+        return new FluidStack(fluid, amount);
     }
 
     @Override
@@ -130,7 +132,7 @@ public class InputFluidStack implements IInputItemStack {
     public CompoundTag writeNBT() {
         CompoundTag compoundTag = new CompoundTag();
         compoundTag.putByte("id", (byte) 2);
-        compoundTag.putBoolean("exist",fluid != null && !fluid.equals(Fluids.EMPTY) && amount != 0);
+        compoundTag.putBoolean("exist", fluid != null && !fluid.equals(Fluids.EMPTY) && amount != 0);
         if (fluid != null && !fluid.equals(Fluids.EMPTY)) {
             ResourceLocation fluidId = ForgeRegistries.FLUIDS.getKey(fluid);
             if (fluidId != null) {

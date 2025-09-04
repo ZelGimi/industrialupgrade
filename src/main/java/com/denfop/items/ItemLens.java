@@ -1,21 +1,23 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemLens<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemLens<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemLens(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
-    public enum Types implements ISubEnum {
+
+    public enum Types implements SubEnum {
         aerlinse(0),
         earthlinse(1),
         netherlinse(2),

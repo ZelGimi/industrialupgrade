@@ -6,7 +6,7 @@
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:itemcell/itemcell",
-      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidazot\"}}"
+      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidnitrogen\"}}"
     },
     "B": {
       "item": "industrialupgrade:module_schedule"

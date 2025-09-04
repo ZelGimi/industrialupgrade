@@ -1,10 +1,10 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.reactors.IReactorModule;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -16,14 +16,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemReactorModules<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IReactorModule {
+public class ItemReactorModules<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IReactorModule {
     public ItemReactorModules(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
     public double getStableHeat(final ItemStack stack) {
         Types craftingTypes = (Types) this.getElement();
@@ -114,7 +116,7 @@ public class ItemReactorModules<T extends Enum<T> & ISubEnum> extends ItemMain<T
         }
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         generation0(0.98, 1, 1.05, 1, 1, 1, 1),
         generation1(0.95, 1, 1.1, 1, 1, 1, 1),
         generation2(0.92, 1, 1.15, 1, 1, 1, 1),

@@ -88,7 +88,7 @@ public class LogicGraphiteReactor extends LogicReactor {
                                         this.graphiteReactor.getCoalDioxideTank().drain((int) (col * level)
                                                 , IFluidHandler.FluidAction.EXECUTE);
                                         this.graphiteReactor.getOxideTank().fill(new FluidStack(
-                                                FluidName.fluidoxy.getInstance().get(),
+                                                FluidName.fluidoxygen.getInstance().get(),
                                                 (int) (col * level)
                                         ), IFluidHandler.FluidAction.EXECUTE);
                                         temp_heat -= rand.nextInt((int) (10 * col));
@@ -119,7 +119,7 @@ public class LogicGraphiteReactor extends LogicReactor {
                                             this.graphiteReactor.getCoalDioxideTank().drain((int) (col * level)
                                                     , IFluidHandler.FluidAction.EXECUTE);
                                             this.graphiteReactor.getOxideTank().fill(new FluidStack(
-                                                    FluidName.fluidoxy.getInstance().get(),
+                                                    FluidName.fluidoxygen.getInstance().get(),
                                                     (int) (col * level)
                                             ), IFluidHandler.FluidAction.EXECUTE);
                                             temp_heat -= rand.nextInt((int) (10 * col));

@@ -52,7 +52,7 @@ public class GenHydHandler {
 
     public static void initRecipes() {
 
-        addRecipe(10000, new FluidStack(FluidName.fluidhyd.getInstance().get(), 1000));
+        addRecipe(10000, new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 1000));
 
 
     }

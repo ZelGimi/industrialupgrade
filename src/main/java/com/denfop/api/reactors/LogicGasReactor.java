@@ -65,7 +65,7 @@ public class LogicGasReactor extends LogicReactor {
                         .getHeliumTank()
                         .getFluidAmount() + col * this.gasReactor.getPressure(j) <= this.gasReactor.getCapacityHelium()) {
                     this.gasReactor.getHeliumTank().fill(new FluidStack(
-                            FluidName.fluidHelium.getInstance().get(),
+                            FluidName.fluidhelium.getInstance().get(),
                             col * this.gasReactor.getPressure(j)
                     ), IFluidHandler.FluidAction.EXECUTE);
                     this.gasReactor.addHeliumToRegenerate(-col * this.gasReactor.getPressure(j));
@@ -100,9 +100,9 @@ public class LogicGasReactor extends LogicReactor {
                                     2 * power
                                     , IFluidHandler.FluidAction.EXECUTE);
                             this.gasReactor
-                                    .getHydrogenTank(j).fill(new FluidStack(FluidName.fluidhyd.getInstance().get(), 2 * power), IFluidHandler.FluidAction.EXECUTE);
+                                    .getHydrogenTank(j).fill(new FluidStack(FluidName.fluidhydrogen.getInstance().get(), 2 * power), IFluidHandler.FluidAction.EXECUTE);
                             this.gasReactor
-                                    .getOxygenTank(j).fill(new FluidStack(FluidName.fluidoxy.getInstance().get(), power), IFluidHandler.FluidAction.EXECUTE);
+                                    .getOxygenTank(j).fill(new FluidStack(FluidName.fluidoxygen.getInstance().get(), power), IFluidHandler.FluidAction.EXECUTE);
                             this.gasReactor.damagePump(j);
                         }
                     }

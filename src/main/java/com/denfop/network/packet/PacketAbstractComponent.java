@@ -1,10 +1,10 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +21,7 @@ public class PacketAbstractComponent implements IPacket {
     }
 
     public PacketAbstractComponent(
-            TileEntityBlock te,
+            BlockEntityBase te,
             String componentName,
             ServerPlayer player,
             CustomPacketBuffer data
@@ -58,8 +58,8 @@ public class PacketAbstractComponent implements IPacket {
         final byte[] data = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(data);
         BlockEntity teRaw = entityPlayer.level().getBlockEntity(pos1);
-        if (teRaw instanceof TileEntityBlock) {
-            TileEntityBlock tile = (TileEntityBlock) teRaw;
+        if (teRaw instanceof BlockEntityBase) {
+            BlockEntityBase tile = (BlockEntityBase) teRaw;
             AbstractComponent component = tile.getComp(componentName);
 
             if (component != null) {

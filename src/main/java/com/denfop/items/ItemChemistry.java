@@ -1,19 +1,16 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IDamageItem;
+import com.denfop.api.item.DamageItem;
 import com.denfop.items.reactors.ItemDamage;
-import com.denfop.utils.ModUtils;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -22,13 +19,14 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemChemistry extends ItemDamage implements IDamageItem, IItemTab {
+public class ItemChemistry extends ItemDamage implements DamageItem, IItemTab {
     private String nameItem;
 
     public ItemChemistry(int durability) {
-        super(new Properties().setNoRepair().stacksTo(1),durability);
+        super(new Properties().setNoRepair().stacksTo(1), durability);
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;

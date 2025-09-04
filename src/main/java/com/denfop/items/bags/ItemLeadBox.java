@@ -1,15 +1,15 @@
 package com.denfop.items.bags;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.Localization;
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerLeadBox;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.items.reactors.ItemBaseRod;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.potion.IUPotion;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -44,6 +44,7 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
         super(new Properties().stacksTo(1));
         this.slots = 27;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -68,12 +69,13 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
-    public IAdvInventory getInventory(Player player, ItemStack stack) {
+
+    public CustomWorldContainer getInventory(Player player, ItemStack stack) {
         return new ItemStackLeadBox(player, stack, this.slots);
     }
 
@@ -101,8 +103,8 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
 
         if (nbt.getBoolean("open")) {
             int slotId = nbt.getInt("slot_inventory");
-            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
-                ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuLeadBox) {
+                ItemStackLeadBox toolbox = ((ContainerMenuLeadBox) player.containerMenu).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeContainer();
@@ -112,7 +114,7 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
         }
 
         if (world.getGameTime() % 40 == 0) {
-            if (!(player.containerMenu instanceof ContainerLeadBox)) {
+            if (!(player.containerMenu instanceof ContainerMenuLeadBox)) {
                 boolean rod = nbt.getBoolean("rod");
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack currentStack = player.getInventory().getItem(i);
@@ -158,8 +160,8 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
 
     @Override
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
-        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
-            ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMenuLeadBox) {
+            ItemStackLeadBox toolbox = ((ContainerMenuLeadBox) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeContainer();

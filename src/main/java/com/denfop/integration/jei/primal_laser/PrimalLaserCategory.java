@@ -2,23 +2,23 @@ package com.denfop.integration.jei.primal_laser;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockPrimalLaserPolisher;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.blocks.mechanism.BlockPrimalLaserPolisherEntity;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuLaserPolisher;
+import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -36,19 +36,19 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<PrimalLaserHandler> {
+public class PrimalLaserCategory extends ScreenMain implements IRecipeCategory<PrimalLaserHandler> {
 
     private final IDrawableStatic bg;
-    private final ContainerLaserPolisher container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuLaserPolisher container1;
+    private final ScreenWidget progress_bar;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
-    private final JeiInform jeiInform;
 
     public PrimalLaserCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        super(((BlockEntityLaserPolisher) BlockBaseMachine3Entity.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -56,13 +56,13 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
-        this.container1 = (ContainerLaserPolisher) this.getContainer();
+        this.container1 = (ContainerMenuLaserPolisher) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(this.container1.base.componentProgress)
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
     }
@@ -76,10 +76,9 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
     @Override
     public String getTitles() {
         return Localization.translate(JEICompat
-                .getBlockStack(BlockPrimalLaserPolisher.primal_laser_polisher)
+                .getBlockStack(BlockPrimalLaserPolisherEntity.primal_laser_polisher)
                 .getDescriptionId());
     }
-
 
 
     @Nonnull
@@ -99,30 +98,28 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground( stack, 0, 0);
+        this.slots.drawBackground(stack, 0, 0);
 
-        progress_bar.renderBar( stack, 0, 0, xScale);
+        progress_bar.renderBar(stack, 0, 0, xScale);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PrimalLaserHandler recipe, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
 
 
         }
-        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX()-20, slots1.get(0).getJeiY()).addItemStack(new ItemStack(IUItem.laser.getItem()));
+        builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(0).getJeiX() - 20, slots1.get(0).getJeiY()).addItemStack(new ItemStack(IUItem.laser.getItem()));
 
 
-
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
 
     }
-
 
 
     protected ResourceLocation getTexture() {

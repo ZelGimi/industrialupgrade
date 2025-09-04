@@ -2,10 +2,10 @@ package com.denfop.items.upgradekit;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
+import com.denfop.blockentity.panels.entity.EnumSolarPanels;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.tiles.panels.entity.TileSolarPanel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -28,16 +28,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemUpgradePanelKit<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public static int tick = 0;
 
     public ItemUpgradePanelKit(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.UpgradeTab;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
@@ -54,7 +56,7 @@ public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<
         int meta = getElement().getId();
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof TileSolarPanel tile) {
+        if (blockEntity instanceof BlockEntitySolarPanel tile) {
             if (tile.getPanels() == null) {
                 return InteractionResult.PASS;
             }
@@ -116,7 +118,7 @@ public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<
         super.appendHoverText(stack, world, tooltip, flag);
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         upgradepanelkit(0),
         upgradepanelkit1(1),
         upgradepanelkit2(2),

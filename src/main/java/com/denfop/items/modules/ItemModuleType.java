@@ -1,9 +1,9 @@
 package com.denfop.items.modules;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -15,14 +15,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemModuleType<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemModuleType<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemModuleType(T element) {
         super(new Item.Properties(), element);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ModuleTab;
     }
+
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> info, TooltipFlag p_41424_) {
         super.appendHoverText(itemStack, p_41422_, info, p_41424_);
@@ -55,7 +57,7 @@ public class ItemModuleType<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         }
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         module51(0),
         module52(1),
         module53(2),

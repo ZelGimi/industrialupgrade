@@ -1,10 +1,13 @@
 package com.denfop.api.energy;
 
 
-import com.denfop.api.energy.event.EnergyTileLoadEvent;
-import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
-import com.denfop.api.energy.event.EventLoadController;
-import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.api.energy.event.load.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.load.EventLoadController;
+import com.denfop.api.energy.event.unload.EnergyTileUnLoadEvent;
+import com.denfop.api.energy.event.unload.EventUnloadController;
+import com.denfop.api.energy.interfaces.EnergyController;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
+import com.denfop.api.energy.networking.EnergyNetLocal;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -26,7 +29,7 @@ public class EventHandler {
         }
         EnergyNetLocal local = EnergyNetGlobal.getForWorld((Level) event.getLevel());
         if (local != null) {
-            local.addController((IEnergyController) event.tile);
+            local.addController((EnergyController) event.tile);
         }
     }
 
@@ -37,7 +40,7 @@ public class EventHandler {
         }
         EnergyNetLocal local = EnergyNetGlobal.getForWorld((Level) event.getLevel());
         if (local != null) {
-            local.removeController((IEnergyController) event.tile);
+            local.removeController((EnergyController) event.tile);
         }
     }
 

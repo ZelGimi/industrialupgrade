@@ -4,13 +4,11 @@ import com.denfop.IUCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.io.IOException;
-import java.util.List;
 
 public class PacketUpdateBookMarks implements IPacket {
 

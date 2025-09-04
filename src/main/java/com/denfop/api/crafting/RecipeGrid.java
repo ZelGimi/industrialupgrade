@@ -240,7 +240,7 @@ public class RecipeGrid {
 
     public void encode(CustomPacketBuffer customPacketBuffer) {
         try {
-            EncoderHandler.encode(customPacketBuffer,args);
+            EncoderHandler.encode(customPacketBuffer, args);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

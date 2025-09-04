@@ -11,14 +11,16 @@ public class System implements ISystem {
 
     public System(String name) {
         this.name = name;
-        this.distance=0;
+        this.distance = 0;
         SpaceNet.instance.addSystem(this);
     }
+
     public System(String name, int distance) {
         this.name = name;
-        this.distance=distance;
+        this.distance = distance;
         SpaceNet.instance.addSystem(this);
     }
+
     @Override
     public String getName() {
         return this.name;

@@ -137,7 +137,7 @@ public class LogicHeatReactor extends LogicReactor {
                         this.heatReactor
                                 .getHeliumTank().fill(
                                         new FluidStack(
-                                                FluidName.fluidHelium.getInstance().get(),
+                                                FluidName.fluidhelium.getInstance().get(),
                                                 (int) col
                                         ),
                                         IFluidHandler.FluidAction.EXECUTE
@@ -151,7 +151,7 @@ public class LogicHeatReactor extends LogicReactor {
                         this.heatReactor
                                 .getHeliumTank().fill(
                                         new FluidStack(
-                                                FluidName.fluidHelium.getInstance().get(),
+                                                FluidName.fluidhelium.getInstance().get(),
                                                 power
                                         ),
                                         IFluidHandler.FluidAction.EXECUTE
@@ -190,14 +190,14 @@ public class LogicHeatReactor extends LogicReactor {
                             this.heatReactor
                                     .getHydrogenTank().fill(
                                             new FluidStack(
-                                                    FluidName.fluidhyd.getInstance().get(),
+                                                    FluidName.fluidhydrogen.getInstance().get(),
                                                     10 * power
                                             ),
                                             IFluidHandler.FluidAction.EXECUTE
                                     );
                             this.heatReactor
                                     .getOxygenTank().fill(new FluidStack(
-                                            FluidName.fluidoxy.getInstance().get(),
+                                            FluidName.fluidoxygen.getInstance().get(),
                                             5 * power
                                     ), IFluidHandler.FluidAction.EXECUTE);
                             this.heatReactor.damagePump(j);

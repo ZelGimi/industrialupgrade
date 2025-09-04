@@ -138,6 +138,7 @@ dependencies {
     //runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${ct_version}")
 
     compileOnly fg.deobf("curse.maven:emi-580555:5872526")
+    runtimeOnly fg.deobf("curse.maven:emi-580555:5872526")
 
 
     implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}")

@@ -1,10 +1,10 @@
 package com.denfop.items.energy;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.items.bags.BagsDescription;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -290,32 +290,22 @@ public class ItemStackMagnet extends ItemStackInventory {
         }
     }
 
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerMagnet containerLeadBox = (ContainerMagnet) menu;
-        return new GuiMagnet(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuMagnet containerLeadBox = (ContainerMenuMagnet) menu;
+        return new ScreenMagnet(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerMagnet getGuiContainer(Player player) {
-        return new ContainerMagnet(player, this);
+    public ContainerMenuMagnet getGuiContainer(Player player) {
+        return new ContainerMenuMagnet(player, this);
     }
 
 

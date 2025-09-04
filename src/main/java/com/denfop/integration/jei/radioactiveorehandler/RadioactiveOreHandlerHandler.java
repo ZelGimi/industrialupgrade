@@ -11,9 +11,9 @@ import java.util.List;
 public class RadioactiveOreHandlerHandler {
 
     private static final List<RadioactiveOreHandlerHandler> recipes = new ArrayList<>();
+    public final int chance;
     private final ItemStack input, output;
     private final ItemStack input1;
-    public final int chance;
 
     public RadioactiveOreHandlerHandler(
             ItemStack input,

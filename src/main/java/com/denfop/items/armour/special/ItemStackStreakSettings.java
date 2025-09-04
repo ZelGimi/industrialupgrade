@@ -1,10 +1,10 @@
 package com.denfop.items.armour.special;
 
-import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.inventory.Inventory;
 import com.denfop.items.ItemStackInventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,29 +27,20 @@ public class ItemStackStreakSettings extends ItemStackInventory {
 
     }
 
-    public ContainerBase<ItemStackStreakSettings> getGuiContainer(Player player) {
-        return new ContainerStreak(player, this);
+    public ContainerMenuBase<ItemStackStreakSettings> getGuiContainer(Player player) {
+        return new ContainerMenuStreak(player, this);
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
-        return new GuiColorPicker((ContainerStreak) isAdmin, itemStack1);
-    }
-    @Override
-    public ItemStackInventory getParent() {
-        return this;
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player player, ContainerMenuBase<? extends CustomWorldContainer> isAdmin) {
+        return new WidgetColorPicker((ContainerMenuStreak) isAdmin, itemStack1);
     }
 
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 
@@ -78,8 +69,6 @@ public class ItemStackStreakSettings extends ItemStackInventory {
 
         this.save();
     }
-
-
 
 
     public ItemStack get(int index) {

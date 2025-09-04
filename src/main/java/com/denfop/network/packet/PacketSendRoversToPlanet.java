@@ -6,10 +6,10 @@ import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.rovers.Rovers;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.mechanism.BlockEntityRocketLaunchPad;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -28,8 +28,8 @@ public class PacketSendRoversToPlanet implements IPacket {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeByte(getId());
         try {
-            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) base).getWorld());
-            EncoderHandler.encode(customPacketBuffer, ((TileEntityBlock) base).getPos());
+            EncoderHandler.encode(customPacketBuffer, ((BlockEntityBase) base).getWorld());
+            EncoderHandler.encode(customPacketBuffer, ((BlockEntityBase) base).getPos());
             EncoderHandler.encode(customPacketBuffer, player.getUUID());
             customPacketBuffer.writeBoolean(iBody != null);
             if (iBody != null) {
@@ -63,7 +63,7 @@ public class PacketSendRoversToPlanet implements IPacket {
                         if (tileEntityResearchTableSpace.getPlayer().equals(uuid)) {
                             IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(uuid);
                             if (rocketLaunchPad != null) {
-                                TileEntityRocketLaunchPad entityRocketLaunchPad = (TileEntityRocketLaunchPad) world.getBlockEntity(rocketLaunchPad.getPos());
+                                BlockEntityRocketLaunchPad entityRocketLaunchPad = (BlockEntityRocketLaunchPad) world.getBlockEntity(rocketLaunchPad.getPos());
                                 if (entityRocketLaunchPad != null)
                                     SpaceNet.instance.getResearchSystem().sendingOperation(new Rovers(
                                             entityRocketLaunchPad.getRover(),

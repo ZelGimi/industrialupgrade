@@ -1,12 +1,12 @@
 package com.denfop.integration.jei.earthquarry;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityElectricDryer;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityElectricDryer;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQuarryHandler> {
+public class EarthQuarryCategory extends ScreenMain implements IRecipeCategory<EarthQuarryHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
@@ -29,13 +29,13 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     public EarthQuarryCategory(
             final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityElectricDryer) BlockBaseMachine3.electric_dryer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityElectricDryer) BlockBaseMachine3Entity.electric_dryer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein" +
                         ".png"), 3, 3, 140,
                 140
         );
-        this.jeiInform=jeiInform;
+        this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
 
@@ -45,7 +45,6 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     public String getTitles() {
         return Localization.translate("earth_quarry.jei");
     }
-
 
 
     @SuppressWarnings("removal")
@@ -60,10 +59,10 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
     public void draw(EarthQuarryHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         int y = 20;
         int x = 25;
-       drawSplitString(stack,Localization.translate("earth_quarry.jei1"), 5, 3,
+        drawSplitString(stack, Localization.translate("earth_quarry.jei1"), 5, 3,
                 140 - 5, 4210752
         );
-        drawSplitString(stack," + " + recipe.chance + "%" + " ->", 20, 30,
+        drawSplitString(stack, " + " + recipe.chance + "%" + " ->", 20, 30,
                 140 - 5, 4210752
         );
 
@@ -80,7 +79,6 @@ public class EarthQuarryCategory extends GuiIU implements IRecipeCategory<EarthQ
         builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipe.getOutput());
 
     }
-
 
 
     protected ResourceLocation getTexture() {

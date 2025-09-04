@@ -1,8 +1,8 @@
 package com.denfop.render.mini_smeltery;
 
+import com.denfop.blockentity.mechanism.BlockEntityMiniSmeltery;
 import com.denfop.mixin.access.LevelRendererAccessor;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntityMiniSmeltery;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class RenderMiniSmeltery {
-    public static void render(TileEntityMiniSmeltery te, RenderLevelStageEvent event) {
+    public static void render(BlockEntityMiniSmeltery te, RenderLevelStageEvent event) {
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource bufferSource = ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource();
 
@@ -29,7 +29,7 @@ public class RenderMiniSmeltery {
 
             poseStack.pushPose();
             poseStack.translate(0.175, 0, 0.175);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale, 0.82f,0);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale, 0.82f, 0);
             poseStack.popPose();
         }
 
@@ -37,7 +37,7 @@ public class RenderMiniSmeltery {
         if (te.outputSlot.isEmpty() && te.fluidTank1.getFluidAmount() > 144) {
             poseStack.pushPose();
             poseStack.translate(0.04, 0.975, 0.04);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f,1);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, 0.15f, 0.95f, 1);
             poseStack.popPose();
         }
         if (!outputItem.isEmpty()) {
@@ -57,9 +57,9 @@ public class RenderMiniSmeltery {
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             itemRenderer.renderStatic(outputItem,
-                   ItemDisplayContext.GROUND,
+                    ItemDisplayContext.GROUND,
                     0xF000F0, OverlayTexture.NO_OVERLAY,
-                    poseStack, bufferSource,te.getLevel(), 0);
+                    poseStack, bufferSource, te.getLevel(), 0);
             ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource().endBatch();
 
             poseStack.popPose();

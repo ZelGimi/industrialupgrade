@@ -1,6 +1,6 @@
 package com.denfop.render.primal_laser_polisher;
 
-import com.denfop.tiles.mechanism.TileEntityPrimalLaserPolisher;
+import com.denfop.blockentity.mechanism.BlockEntityPrimalLaserPolisher;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-public class PrimalLaserPolisherRender implements BlockEntityRenderer<TileEntityPrimalLaserPolisher> {
+public class PrimalLaserPolisherRender implements BlockEntityRenderer<BlockEntityPrimalLaserPolisher> {
     private final BlockEntityRendererProvider.Context contex;
 
     public PrimalLaserPolisherRender(BlockEntityRendererProvider.Context p_173636_) {
@@ -19,7 +19,7 @@ public class PrimalLaserPolisherRender implements BlockEntityRenderer<TileEntity
     }
 
     @Override
-    public void render(TileEntityPrimalLaserPolisher tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalLaserPolisher tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         ItemStack itemstack = tile.inputSlotA.get(0);
         final ItemStack itemstack1 = tile.outputSlot.get(0);
@@ -30,7 +30,7 @@ public class PrimalLaserPolisherRender implements BlockEntityRenderer<TileEntity
             poseStack.translate(0.5, 0.88, 0.4);
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             itemRenderer.renderStatic(itemStack, GROUND,
-                    packedLight, combinedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
+                    packedLight, combinedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
             poseStack.popPose();
         }
     }

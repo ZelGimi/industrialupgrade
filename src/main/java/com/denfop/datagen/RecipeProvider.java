@@ -34,6 +34,8 @@ import static com.denfop.datagen.furnace.FurnaceProvider.furnaceRecipeList;
 public class RecipeProvider extends VanillaRecipeProvider {
 
 
+    public static int ID = 0;
+
     public RecipeProvider(PackOutput output) {
         super(output);
     }
@@ -47,46 +49,46 @@ public class RecipeProvider extends VanillaRecipeProvider {
                 String id = entry.getKey();
                 Recipe recipe = entry.getValue();
                 if (recipe instanceof BaseRecipe baseRecipe) {
-                    ShapedRecipeBuilder shaped = ShapedRecipeBuilder.shaped(RecipeCategory.MISC,baseRecipe.getOutput().getItem(),  baseRecipe.getOutput().getCount());
+                    ShapedRecipeBuilder shaped = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, baseRecipe.getOutput().getItem(), baseRecipe.getOutput().getCount());
                     baseRecipe.getRecipeGrid().getGrids().get(0).forEach(shaped::pattern);
                     boolean has = false;
                     for (PartRecipe partRecipe : baseRecipe.getPartRecipe()) {
                         Character character = partRecipe.getIndex().charAt(0);
                         IInputItemStack recipeInput = partRecipe.getInput();
-                        if (!recipeInput.getInputs().isEmpty() &&recipeInput.getInputs().get(0).hasTag()){
+                        if (!recipeInput.getInputs().isEmpty() && recipeInput.getInputs().get(0).hasTag()) {
                             has = true;
-                            if (recipeInput.getInputs().size() == 1){
+                            if (recipeInput.getInputs().size() == 1) {
                                 shaped.define(character, StrictNBTIngredient.of(recipeInput.getInputs().get(0)));
-                            }else {
+                            } else {
                                 List<Item> items = new ArrayList<>();
                                 recipeInput.getInputs().forEach(stack -> items.add(stack.getItem()));
-                                shaped.define(character, PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(),items.toArray(new Item[0])));
+                                shaped.define(character, PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(), items.toArray(new Item[0])));
                             }
-                        }else {
+                        } else {
                             shaped.define(character, new IngredientInput(recipeInput).getInput());
                         }
                     }
                     shaped.unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR));
                     Recipes.registerRecipe(consumer, shaped, id.toLowerCase());
                 } else if (recipe instanceof BaseShapelessRecipe baseShapelessRecipe) {
-                    ShapelessRecipeBuilder shaped = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,baseShapelessRecipe.getOutput().getItem(), baseShapelessRecipe.getOutput().getCount());
+                    ShapelessRecipeBuilder shaped = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, baseShapelessRecipe.getOutput().getItem(), baseShapelessRecipe.getOutput().getCount());
                     for (IInputItemStack recipeInput : baseShapelessRecipe.getRecipeInputList())
-                        if (!recipeInput.getInputs().isEmpty() &&recipeInput.getInputs().get(0).hasTag()){
-                            if (recipeInput.getInputs().size() == 1){
+                        if (!recipeInput.getInputs().isEmpty() && recipeInput.getInputs().get(0).hasTag()) {
+                            if (recipeInput.getInputs().size() == 1) {
                                 shaped.requires(StrictNBTIngredient.of(recipeInput.getInputs().get(0)));
-                            }else {
+                            } else {
                                 List<Item> items = new ArrayList<>();
                                 recipeInput.getInputs().forEach(stack -> items.add(stack.getItem()));
-                                shaped.requires(PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(),items.toArray(new Item[0])));
+                                shaped.requires(PartialNBTIngredient.of(recipeInput.getInputs().get(0).getTag(), items.toArray(new Item[0])));
                             }
-                        }else {
+                        } else {
                             shaped.requires(new IngredientInput(recipeInput).getInput());
                         }
 
                     shaped.unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR));
                     Recipes.registerRecipe(consumer, shaped, id.toLowerCase());
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -97,6 +99,5 @@ public class RecipeProvider extends VanillaRecipeProvider {
             SimpleCookingRecipeBuilder.smelting(Ingredient.of(furnaceRecipe.getInput()), RecipeCategory.MISC, furnaceRecipe.getOutput().getItem(), furnaceRecipe.getXp(), 200).unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()})).save(consumer, "industrialupgrade:" + "furnace_" + ID++);
 
     }
-    public static int ID = 0;
 
 }

@@ -68,9 +68,11 @@ public class RecipesFluidCore implements IFluidRecipes {
     public IBaseRecipe getRecipeFromName(String name) {
         return map_recipe_managers.get(name);
     }
+
     public List<String> getRecipes() {
         return map_recipe_managers.keySet().stream().toList();
     }
+
     public void addInitRecipes(final IHasRecipe hasRecipe) {
         this.recipes.add(hasRecipe);
     }
@@ -146,7 +148,7 @@ public class RecipesFluidCore implements IFluidRecipes {
             i++;
 
         }
-      boolean hasRecipe = Recipes.recipes.getRecipeList(name) != null;
+        boolean hasRecipe = Recipes.recipes.getRecipeList(name) != null;
         List<RecipeRemove> recipeRemoves = new ArrayList<>();
         for (BaseFluidMachineRecipe deleteRecipe : deleteRecipes) {
             recipes.remove(deleteRecipe);
@@ -166,7 +168,7 @@ public class RecipesFluidCore implements IFluidRecipes {
         }
         recipeRemoves.forEach(recipeRemove -> {
             if (recipeRemove.isRemoveAll())
-                Recipes.recipes.removeAllRecipe(recipeRemove.getNameRecipe(),  new RecipeOutput(null, recipeRemove.getStack()));
+                Recipes.recipes.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
             else
                 Recipes.recipes.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
 

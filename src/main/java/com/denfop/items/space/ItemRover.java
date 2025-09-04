@@ -1,9 +1,7 @@
 package com.denfop.items.space;
 
-import com.denfop.ElectricItem;
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.api.space.BaseSpaceSystem;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
@@ -13,8 +11,9 @@ import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
-import com.denfop.blocks.FluidName;
 import com.denfop.items.ItemFluidContainer;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
@@ -33,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnergyItem, IItemTab {
+public class ItemRover extends ItemFluidContainer implements IRoversItem, EnergyItem, IItemTab {
 
     private final EnumRoversLevel enumRoversLevel;
     private final EnumTypeRovers typeRovers;
@@ -59,10 +58,12 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
         BaseSpaceUpgradeSystem.list.add(() -> SpaceUpgradeSystem.system.addRecipe(this, EnumTypeUpgrade.values()));
 
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.SpaceTab;
     }
+
     @Override
     public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> subItems) {
         if (this.allowedIn(tab)) {
@@ -72,15 +73,16 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
             ElectricItem.manager.charge(stack1, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
             subItems.add(stack1);
 
-            for (Map.Entry<Fluid, Integer> entry: BaseSpaceSystem.fluidToLevel.entrySet()) {
+            for (Map.Entry<Fluid, Integer> entry : BaseSpaceSystem.fluidToLevel.entrySet()) {
                 if (entry.getValue() > this.enumRoversLevel.ordinal() + 1)
                     continue;
                 ItemStack stack = new ItemStack(this);
                 ElectricItem.manager.charge(stack, Double.MAX_VALUE, Integer.MAX_VALUE, true, false);
-                subItems.add(this.getItemStack(stack,entry.getKey()));
+                subItems.add(this.getItemStack(stack, entry.getKey()));
             }
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -98,6 +100,7 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
 
         return this.nameItem;
     }
+
     @Override
     public boolean canProvideEnergy(final ItemStack var1) {
         return false;
@@ -107,7 +110,6 @@ public class ItemRover extends ItemFluidContainer implements IRoversItem, IEnerg
     public double getMaxEnergy(final ItemStack var1) {
         return maxEnergy;
     }
-
 
 
     @Override

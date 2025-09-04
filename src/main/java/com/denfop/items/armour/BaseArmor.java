@@ -1,8 +1,8 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,14 +37,14 @@ public class BaseArmor extends ArmorItem implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
     }
 
     @Override
-    public  String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         if (this.render != 1) {
             return Constants.TEXTURES + ":" + "textures/armor/" + armor_type + "_layer_1.png";
         } else {

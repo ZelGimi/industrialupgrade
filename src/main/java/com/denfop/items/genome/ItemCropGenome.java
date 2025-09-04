@@ -1,9 +1,9 @@
 package com.denfop.items.genome;
 
 import com.denfop.IUCore;
-import com.denfop.api.agriculture.genetics.GeneticTraits;
-import com.denfop.api.agriculture.genetics.IGenomeItem;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.api.crop.genetics.GeneticTraits;
+import com.denfop.api.crop.genetics.GenomeItem;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
 
-public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IGenomeItem {
+public class ItemCropGenome<T extends Enum<T> & SubEnum> extends ItemMain<T> implements GenomeItem {
     public ItemCropGenome(T element) {
         super(new Item.Properties(), element);
     }
@@ -25,7 +25,8 @@ public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
     public CreativeModeTab getItemCategory() {
         return IUCore.GenomeTab;
     }
-    public enum Types implements ISubEnum {
+
+    public enum Types implements SubEnum {
         soil_i(0),
         soil_ii(1),
         soil_iii(2),
@@ -74,7 +75,8 @@ public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         genome_resistance_iii(45),
         genome_adaptive_i(46),
         genome_adaptive_ii(47),
-        genome_adaptive_iii(48),;
+        genome_adaptive_iii(48),
+        ;
 
         private final String name;
         private final int ID;
@@ -90,7 +92,7 @@ public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
 
         @Override
         public String getName() {
-            return "crop_genome"+name;
+            return "crop_genome" + name;
         }
 
         @Override

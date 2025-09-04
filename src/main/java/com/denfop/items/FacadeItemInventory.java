@@ -1,8 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.gui.GuiCore;
-import com.denfop.invslot.InvSlot;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.inventory.Inventory;
+import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -51,31 +51,20 @@ public class FacadeItemInventory extends ItemStackInventory {
 
 
     @Override
-    public ItemStackInventory getParent() {
-        return this;
-    }
+    public void addInventorySlot(final Inventory var1) {
 
-
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
-        ContainerFacadeItem containerLeadBox = (ContainerFacadeItem) menu;
-        return new GuiFacadeItem(containerLeadBox, this.itemStack1);
+    public ScreenIndustrialUpgrade<ContainerMenuBase<?>> getGui(Player var1, ContainerMenuBase<?> menu) {
+        ContainerMenuFacadeItem containerLeadBox = (ContainerMenuFacadeItem) menu;
+        return new ScreenFacadeItem(containerLeadBox, this.itemStack1);
     }
 
-    public ContainerFacadeItem getGuiContainer(Player player) {
-        return new ContainerFacadeItem(player, this);
+    public ContainerMenuFacadeItem getGuiContainer(Player player) {
+        return new ContainerMenuFacadeItem(player, this);
     }
 
 

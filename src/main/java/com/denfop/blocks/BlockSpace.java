@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.api.Recipes;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -12,16 +12,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
@@ -30,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class BlockSpace<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockSpace<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlockSpace(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -40,16 +36,16 @@ public class BlockSpace<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
     }
 
     @Override
-    public   int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
     @Override
-    public List<ItemStack> getDrops(  @Nonnull final Level world,
-                                      @Nonnull final BlockPos pos,
-                                      @Nonnull final BlockState state,
-                                      final int fortune) {
-        RandomSource rand =world.random;
+    public List<ItemStack> getDrops(@Nonnull final Level world,
+                                    @Nonnull final BlockPos pos,
+                                    @Nonnull final BlockState state,
+                                    final int fortune) {
+        RandomSource rand = world.random;
 
         List<ItemStack> list = new ArrayList<>();
         NonNullList<ItemStack> ret = NonNullList.create();
@@ -113,12 +109,12 @@ public class BlockSpace<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
 
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -132,7 +128,7 @@ public class BlockSpace<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         ariel_draconium(0),
         asteroid_barium_ore(1),
         asteroid_cadmium_ore(2),

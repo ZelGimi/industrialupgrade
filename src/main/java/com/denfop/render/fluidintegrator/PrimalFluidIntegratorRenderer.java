@@ -1,7 +1,7 @@
 package com.denfop.render.fluidintegrator;
 
+import com.denfop.blockentity.mechanism.BlockEntityPrimalFluidIntegrator;
 import com.denfop.render.RenderFluidBlock;
-import com.denfop.tiles.mechanism.TileEntityPrimalFluidIntegrator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -24,18 +24,19 @@ import org.joml.Matrix4f;
 import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
 @OnlyIn(Dist.CLIENT)
-public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEntityPrimalFluidIntegrator> {
+public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<BlockEntityPrimalFluidIntegrator> {
     private final ItemRenderer itemRenderer;
     private final BlockEntityRendererProvider.Context contex;
     private float rotation = 0;
     private float prevRotation = 0;
+
     public PrimalFluidIntegratorRenderer(BlockEntityRendererProvider.Context p_173636_) {
         this.contex = p_173636_;
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
     @Override
-    public void render(TileEntityPrimalFluidIntegrator tile, float partialTicks, PoseStack poseStack,
+    public void render(BlockEntityPrimalFluidIntegrator tile, float partialTicks, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         renderTanks(tile, poseStack, bufferSource, packedLight, packedOverlay);
@@ -59,7 +60,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
             poseStack.scale(0.9f, 0.9f, 0.9f);
 
             itemRenderer.renderStatic(itemStack, GROUND,
-                    packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
+                    packedLight, packedOverlay, poseStack, bufferSource, tile.getLevel(), 0);
 
             poseStack.popPose();
         }
@@ -91,7 +92,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
 
             Minecraft.getInstance().getItemRenderer().renderStatic(
                     outputStack,
-                  GROUND,
+                    GROUND,
                     packedLight,
                     packedOverlay,
                     poseStack,
@@ -108,7 +109,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
         rotation += 0.25f;
     }
 
-    private void renderTanks(TileEntityPrimalFluidIntegrator tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    private void renderTanks(BlockEntityPrimalFluidIntegrator tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         if (!tile.fluidTank1.getFluid().isEmpty()) {
             poseStack.pushPose();
             final float scale = tile.fluidTank1.getFluidAmount() * 0.75F / tile.fluidTank1.getCapacity();
@@ -126,7 +127,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
                     poseStack.translate(0.19 + 0.19, 0.3, +0.44 + 0.19);
                     break;
             }
-            RenderFluidBlock.renderFluid(tile.fluidTank1.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.62f,0);
+            RenderFluidBlock.renderFluid(tile.fluidTank1.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.62f, 0);
             poseStack.popPose();
         }
         if (!tile.fluidTank2.getFluid().isEmpty()) {
@@ -146,7 +147,7 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
                     poseStack.translate(+0.26 + 0.25, +0.15, -0.24 + 0.25);
                     break;
             }
-            RenderFluidBlock.renderFluid(tile.fluidTank2.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.49f,1);
+            RenderFluidBlock.renderFluid(tile.fluidTank2.getFluid(), bufferSource, tile.getLevel(), tile.getPos(), poseStack, scale, 0.49f, 1);
             poseStack.popPose();
         }
     }
@@ -160,9 +161,9 @@ public class PrimalFluidIntegratorRenderer implements BlockEntityRenderer<TileEn
         int j = (int) (f1 * 255.0F) << 24;
         Font font = contex.getFont();
         float f2 = (float) (-font.width(text) / 2);
-        font.drawInBatch(text, f2, (float) 0, 553648127, false, matrix4f, buffer,  Font.DisplayMode.NORMAL, j, packedLight);
+        font.drawInBatch(text, f2, (float) 0, 553648127, false, matrix4f, buffer, Font.DisplayMode.NORMAL, j, packedLight);
         if (true) {
-            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer,  Font.DisplayMode.NORMAL, 0, packedLight);
+            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
         }
         poseStack.popPose();
     }

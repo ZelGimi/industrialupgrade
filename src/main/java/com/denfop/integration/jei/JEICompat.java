@@ -2,11 +2,11 @@ package com.denfop.integration.jei;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.multiblock.MultiBlockSystem;
-import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.BlockAnvil;
-import com.denfop.blocks.BlockStrongAnvil;
+import com.denfop.blocks.BlockAnvilEntity;
+import com.denfop.blocks.BlockStrongAnvilEntity;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.*;
 import com.denfop.integration.jei.advalloysmelter.AdvAlloySmelterCategory;
@@ -546,10 +546,15 @@ public class JEICompat implements IModPlugin {
     public static JeiInform world_collector_end = new JeiInform("world_collector_end", EndCategory.class, EndHandler.class);
     public static JeiInform world_collector_nether = new JeiInform("world_collector_nether", NetherCategory.class, NetherHandler.class);
     public static JeiInform scrapbox = new JeiInform("scrapbox", ScrapboxRecipeCategory.class, ScrapboxRecipeHandler.class);
+    public static IGuiHelper guiHelper;
 
-
-  //  public static JeiInform reactor_schemes = new JeiInform("reactor_schemes", ReactorSchemesCategory.class, ReactorSchemesHandler.class);
+    //  public static JeiInform reactor_schemes = new JeiInform("reactor_schemes", ReactorSchemesCategory.class, ReactorSchemesHandler.class);
     public JEICompat() {
+
+    }
+
+    public static ItemStack getBlockStack(MultiBlockEntity block) {
+        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
 
     }
 
@@ -558,21 +563,15 @@ public class JEICompat implements IModPlugin {
         return UID;
     }
 
-    public static ItemStack getBlockStack(IMultiTileBlock block) {
-        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
-
-    }
-
-
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.double_furnace), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachineEntity.double_furnace), RecipeTypes.SMELTING);
 
-        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.triple_furnace),RecipeTypes.SMELTING);
-        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.quad_furnace),RecipeTypes.SMELTING);
-        registry.addRecipeCatalyst(getBlockStack(BlockSimpleMachine.furnace_iu), RecipeTypes.SMELTING);
-        registry.addRecipeCatalyst(getBlockStack(BlocksPhotonicMachine.photonic_furnace),RecipeTypes.SMELTING);
-        registry.addRecipeCatalyst(getBlockStack(BlockBaseMachine3.bio_furnace), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachineEntity.triple_furnace), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockMoreMachineEntity.quad_furnace), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockSimpleMachineEntity.furnace_iu), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlocksPhotonicMachine.photonic_furnace), RecipeTypes.SMELTING);
+        registry.addRecipeCatalyst(getBlockStack(BlockBaseMachine3Entity.bio_furnace), RecipeTypes.SMELTING);
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.basemachine2, 1, 37),
                 world_collector_nether.recipeType
@@ -599,19 +598,19 @@ public class JEICompat implements IModPlugin {
                 world_collector_aer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.electric_wire_insulator),
+                getBlockStack(BlockBaseMachine3Entity.electric_wire_insulator),
                 wire_insulator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_wire_insulator),
+                getBlockStack(BlockBaseMachine3Entity.steam_wire_insulator),
                 wire_insulator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockPrimalWireInsulator.primal_wire_insulator),
+                getBlockStack(BlockPrimalWireInsulatorEntity.primal_wire_insulator),
                 wire_insulator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.welding),
+                getBlockStack(BlockBaseMachine3Entity.welding),
                 welding.recipeType
         );
         registry.addRecipeCatalyst(
@@ -619,7 +618,7 @@ public class JEICompat implements IModPlugin {
                 water_rotors_upgrade.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.water_rotor_assembler),
+                getBlockStack(BlockBaseMachine3Entity.water_rotor_assembler),
                 water_rotors.recipeType
         );
         registry.addRecipeCatalyst(
@@ -631,12 +630,12 @@ public class JEICompat implements IModPlugin {
                 vein.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.upgrade_rover),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.upgrade_rover),
                 upgrade_rover.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.upgrade_machine),
+                getBlockStack(BlockBaseMachine3Entity.upgrade_machine),
                 upgrade_machine.recipeType
         );
         registry.addRecipeCatalyst(
@@ -649,7 +648,7 @@ public class JEICompat implements IModPlugin {
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.triple_solid_mixer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.triple_solid_mixer),
                 triple_solid_mixer.recipeType
         );
         registry.addRecipeCatalyst(
@@ -666,19 +665,19 @@ public class JEICompat implements IModPlugin {
                 sunnarium_panel.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.stamp_mechanism),
+                getBlockStack(BlockBaseMachine3Entity.stamp_mechanism),
                 stamp.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockSqueezer.squeezer),
+                JEICompat.getBlockStack(BlockSqueezerEntity.squeezer),
                 squeezer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.electric_squeezer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.electric_squeezer),
                 squeezer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.steam_squeezer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.steam_squeezer),
                 squeezer.recipeType
         );
         registry.addRecipeCatalyst(
@@ -751,7 +750,7 @@ public class JEICompat implements IModPlugin {
                 space_body.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.solid_mixer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.solid_mixer),
                 solid_mixer.recipeType
         );
         registry.addRecipeCatalyst(
@@ -787,46 +786,46 @@ public class JEICompat implements IModPlugin {
                 solid_matter.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.solid_fluid_integrator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.solid_fluid_integrator),
                 solid_fluid_integrator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.solid_state_electrolyzer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.solid_state_electrolyzer),
                 solid_electrolyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.socket_factory),
+                getBlockStack(BlockBaseMachine3Entity.socket_factory),
                 socket.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockSmeltery.smeltery_furnace),
+                JEICompat.getBlockStack(BlockSmelteryEntity.smeltery_furnace),
                 smeltery_furnace.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockSmeltery.smeltery_casting),
+                JEICompat.getBlockStack(BlockSmelteryEntity.smeltery_casting),
                 smeltery_casting.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockSmeltery.smeltery_controller),
+                JEICompat.getBlockStack(BlockSmelteryEntity.smeltery_controller),
                 smeltery_controller.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.single_fluid_adapter),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.single_fluid_adapter),
                 single_fluid_adapter.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.silicon_crystal_handler),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.silicon_crystal_handler),
                 silicon.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockPrimalSiliconCrystalHandler.primal_silicon_crystal_handler),
+                JEICompat.getBlockStack(BlockPrimalSiliconCrystalHandlerEntity.primal_silicon_crystal_handler),
                 silicon.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.steam_sharpener),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.steam_sharpener),
                 sharpener.recipeType
         );
         registry.addRecipeCatalyst(
@@ -850,15 +849,15 @@ public class JEICompat implements IModPlugin {
                 scrap.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.sawmill),
+                getBlockStack(BlockBaseMachine3Entity.sawmill),
                 sawmill.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.satellite_assembler),
+                getBlockStack(BlockBaseMachine3Entity.satellite_assembler),
                 satellite_assembler.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.rover_assembler),
+                getBlockStack(BlockBaseMachine3Entity.rover_assembler),
                 rovers.recipeType
         );
         registry.addRecipeCatalyst(
@@ -886,13 +885,10 @@ public class JEICompat implements IModPlugin {
                 getBlockStack(BlocksPhotonicMachine.photonic_rolling),
                 rolling.recipeType
         );
-        registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.rolling_machine),
-                rolling.recipeType
-        );
+
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_rolling),
+                getBlockStack(BlockBaseMachine3Entity.steam_rolling),
                 rolling.recipeType
         );
 
@@ -905,35 +901,35 @@ public class JEICompat implements IModPlugin {
                 rolling.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.reactor_rod_factory),
+                getBlockStack(BlockBaseMachine3Entity.reactor_rod_factory),
                 rod_factory.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.rocket_assembler),
+                getBlockStack(BlockBaseMachine3Entity.rocket_assembler),
                 rocket.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.rna_collector),
+                getBlockStack(BlockBaseMachine3Entity.rna_collector),
                 rna_collector.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.reverse_transcriptor),
+                getBlockStack(BlockBaseMachine3Entity.reverse_transcriptor),
                 reverse_transriptor.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.replicator_iu),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.replicator_iu),
                 replicator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.adv_replicator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.adv_replicator),
                 replicator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.imp_replicator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.imp_replicator),
                 replicator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.per_replicator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.per_replicator),
                 replicator.recipeType
         );
         registry.addRecipeCatalyst(
@@ -941,15 +937,15 @@ public class JEICompat implements IModPlugin {
                 replicator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.refrigerator_fluids),
+                getBlockStack(BlockBaseMachine3Entity.refrigerator_fluids),
                 refrigerator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockRefractoryFurnace.refractory_furnace),
+                getBlockStack(BlockRefractoryFurnaceEntity.refractory_furnace),
                 refractory_furnace_primal.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.electric_refractory_furnace),
+                getBlockStack(BlockBaseMachine3Entity.electric_refractory_furnace),
                 refractory_furnace.recipeType
         );
         registry.addRecipeCatalyst(
@@ -989,7 +985,7 @@ public class JEICompat implements IModPlugin {
                 recycler.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.radioactive_handler_ore),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.radioactive_handler_ore),
                 radiation_ore_handler.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1041,23 +1037,23 @@ public class JEICompat implements IModPlugin {
                 quarry.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.quantum_miner),
+                getBlockStack(BlockBaseMachine3Entity.quantum_miner),
                 quantum_miner.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.quantum_transformer),
+                getBlockStack(BlockBaseMachine3Entity.quantum_transformer),
                 quantum_molecular.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.programming_table),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.programming_table),
                 programming.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockPrimalProgrammingTable.primal_programming_table),
+                JEICompat.getBlockStack(BlockPrimalProgrammingTableEntity.primal_programming_table),
                 programming.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.probe_assembler),
+                getBlockStack(BlockBaseMachine3Entity.probe_assembler),
                 probe_assembler.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1065,25 +1061,25 @@ public class JEICompat implements IModPlugin {
                 privatizer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.rolling_machine),
+                getBlockStack(BlockBaseMachine3Entity.rolling_machine),
                 primal_rolling.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockPrimalFluidIntegrator.primal_fluid_integrator),
+                JEICompat.getBlockStack(BlockPrimalFluidIntegratorEntity.primal_fluid_integrator),
                 primal_fluid_integrator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockPrimalLaserPolisher.primal_laser_polisher),
+                JEICompat.getBlockStack(BlockPrimalLaserPolisherEntity.primal_laser_polisher),
                 primal_laser.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.positronconverter),
+                getBlockStack(BlockBaseMachine3Entity.positronconverter),
                 positrons.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.polymerizer),
+                getBlockStack(BlockBaseMachine3Entity.polymerizer),
                 polymizer.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1095,11 +1091,11 @@ public class JEICompat implements IModPlugin {
                 plastic_creator_plate.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.per_alloy_smelter),
+                getBlockStack(BlockBaseMachine3Entity.per_alloy_smelter),
                 per_alloy.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.pallet_generator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.pallet_generator),
                 pelletes.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1127,11 +1123,11 @@ public class JEICompat implements IModPlugin {
                 ore_washing.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_orewashing),
+                getBlockStack(BlockBaseMachine3Entity.bio_orewashing),
                 ore_washing.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.oil_purifier),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.oil_purifier),
                 oil_purifier.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1140,16 +1136,16 @@ public class JEICompat implements IModPlugin {
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.wireless_oil_pump),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.wireless_oil_pump),
                 oil_pump.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.neutronseparator),
+                getBlockStack(BlockBaseMachine3Entity.neutronseparator),
                 neutron_separator.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.mutatron),
+                getBlockStack(BlockBaseMachine3Entity.mutatron),
                 mutatron.recipeType
         );
         for (Map.Entry<String, MultiBlockStructure> entry : MultiBlockSystem.getInstance().mapMultiBlocks.entrySet()) {
@@ -1161,11 +1157,11 @@ public class JEICompat implements IModPlugin {
 
         }
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.moon_spotter),
+                getBlockStack(BlockBaseMachine3Entity.moon_spotter),
                 moon_spooter.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.night_converter),
+                getBlockStack(BlockBaseMachine3Entity.night_converter),
                 moon_spooter.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1181,7 +1177,7 @@ public class JEICompat implements IModPlugin {
                 modulator1.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockMiniSmeltery.mini_smeltery),
+                getBlockStack(BlockMiniSmelteryEntity.mini_smeltery),
                 mini_smeltery.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1189,54 +1185,54 @@ public class JEICompat implements IModPlugin {
                 microchip.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockSolderingMechanism.primal_soldering_mechanism),
+                getBlockStack(BlockSolderingMechanismEntity.primal_soldering_mechanism),
                 microchip.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.matter_factory),
+                getBlockStack(BlockBaseMachine3Entity.matter_factory),
                 matter.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.laser_polisher),
+                getBlockStack(BlockBaseMachine3Entity.laser_polisher),
                 laser.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.item_divider_to_fluid),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.item_divider_to_fluid),
                 item_divider_fluid.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.item_divider),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.item_divider),
                 item_divider.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.insulator),
+                getBlockStack(BlockBaseMachine3Entity.insulator),
                 insulator.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.inoculator),
+                getBlockStack(BlockBaseMachine3Entity.inoculator),
                 inoculator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.industrial_ore_purifier),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.industrial_ore_purifier),
                 industrial_ore_purifier.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.incubator),
+                getBlockStack(BlockBaseMachine3Entity.incubator),
                 incubator.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.imp_refiner),
+                getBlockStack(BlockBaseMachine3Entity.imp_refiner),
                 imp_refiner.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.imp_alloy_smelter),
+                getBlockStack(BlockBaseMachine3Entity.imp_alloy_smelter),
                 imp_alloy_smelter.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockStrongAnvil.block_strong_anvil),
+                getBlockStack(BlockStrongAnvilEntity.block_strong_anvil),
                 strong_anvil.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1244,15 +1240,15 @@ public class JEICompat implements IModPlugin {
                 handlerHO.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.double_handlerho),
+                getBlockStack(BlockBaseMachine3Entity.double_handlerho),
                 handlerHO.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.triple_handlerho),
+                getBlockStack(BlockBaseMachine3Entity.triple_handlerho),
                 handlerHO.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.quad_handlerho),
+                getBlockStack(BlockBaseMachine3Entity.quad_handlerho),
                 handlerHO.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1261,15 +1257,15 @@ public class JEICompat implements IModPlugin {
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_handler_ore),
+                getBlockStack(BlockBaseMachine3Entity.steam_handler_ore),
                 handlerHO.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.graphite_handler),
+                getBlockStack(BlockBaseMachine3Entity.graphite_handler),
                 graphite.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockGeothermalPump.geothermal_controller),
+                JEICompat.getBlockStack(BlockGeothermalPumpEntity.geothermal_controller),
                 geothermal.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1283,7 +1279,8 @@ public class JEICompat implements IModPlugin {
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.imp_se_generator, 1, 0),
                 gen_se.recipeType
-        );  registry.addRecipeCatalyst(
+        );
+        registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.blockSE, 1, 0),
                 gen_se.recipeType
         );
@@ -1292,19 +1289,19 @@ public class JEICompat implements IModPlugin {
                 gen_se.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.redstone_generator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.redstone_generator),
                 gen_red.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.adv_redstone_generator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.adv_redstone_generator),
                 gen_red.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.imp_redstone_generator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.imp_redstone_generator),
                 gen_red.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.per_redstone_generator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.per_redstone_generator),
                 gen_red.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1312,11 +1309,11 @@ public class JEICompat implements IModPlugin {
                 gen_red.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.nuclear_waste_recycler),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.nuclear_waste_recycler),
                 gen_rad.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.radiation_purifier),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.radiation_purifier),
                 gen_rad1.recipeType
         );
 
@@ -1333,19 +1330,19 @@ public class JEICompat implements IModPlugin {
                 gen_neu.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockSimpleMachine.generator_matter),
+                JEICompat.getBlockStack(BlockSimpleMachineEntity.generator_matter),
                 gen_matter.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.per_matter),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.per_matter),
                 gen_matter.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.imp_matter),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.imp_matter),
                 gen_matter.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.adv_matter),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.adv_matter),
                 gen_matter.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1365,36 +1362,36 @@ public class JEICompat implements IModPlugin {
                 gen_helium.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.genetic_stabilizer),
+                getBlockStack(BlockBaseMachine3Entity.genetic_stabilizer),
                 genetic_stabilizer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.genetic_transposer),
+                getBlockStack(BlockBaseMachine3Entity.genetic_transposer),
                 genetic_transposer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.genetic_replicator),
+                getBlockStack(BlockBaseMachine3Entity.genetic_replicator),
                 genetic_replicator.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.genetic_polymerizer),
+                getBlockStack(BlockBaseMachine3Entity.genetic_polymerizer),
                 genetic_polymizer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.geogenerator_iu),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.geogenerator_iu),
                 generator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine1.adv_geo),
+                JEICompat.getBlockStack(BlockBaseMachine1Entity.adv_geo),
                 generator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine1.imp_geo),
+                JEICompat.getBlockStack(BlockBaseMachine1Entity.imp_geo),
                 generator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine1.per_geo),
+                JEICompat.getBlockStack(BlockBaseMachine1Entity.per_geo),
                 generator.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1406,29 +1403,29 @@ public class JEICompat implements IModPlugin {
                 gen_diesel.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.gen_bio),
+                getBlockStack(BlockBaseMachine3Entity.gen_bio),
                 gen_bio.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.gen_addition_stone),
+                getBlockStack(BlockBaseMachine3Entity.gen_addition_stone),
                 gen_addstone.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockMoreMachine3.gearing),
+                getBlockStack(BlockMoreMachine3Entity.gearing),
                 gearing.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockMoreMachine3.doublegearing),
+                getBlockStack(BlockMoreMachine3Entity.doublegearing),
                 gearing.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockMoreMachine3.triplegearing),
+                getBlockStack(BlockMoreMachine3Entity.triplegearing),
                 gearing.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockMoreMachine3.quadgearing),
+                getBlockStack(BlockMoreMachine3Entity.quadgearing),
                 gearing.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1436,16 +1433,16 @@ public class JEICompat implements IModPlugin {
                 gearing.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_gearing),
+                getBlockStack(BlockBaseMachine3Entity.bio_gearing),
                 gearing.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.gas_pump),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.gas_pump),
                 gas_pump.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.wireless_gas_pump),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.wireless_gas_pump),
                 gas_pump.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1453,24 +1450,24 @@ public class JEICompat implements IModPlugin {
                 gas_sensor.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.gas_generator),
+                getBlockStack(BlockBaseMachine3Entity.gas_generator),
                 gas_gen.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.gas_combiner),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.gas_combiner),
                 gas_combiner.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockGasWell.gas_well_controller),
+                JEICompat.getBlockStack(BlockGasWellEntity.gas_well_controller),
                 gas_well.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockGasTurbine.gas_turbine_controller),
+                JEICompat.getBlockStack(BlockGasTurbineEntity.gas_turbine_controller),
                 gas_turbine.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockGasChamber.primal_gas_chamber),
+                JEICompat.getBlockStack(BlockGasChamberEntity.primal_gas_chamber),
                 gas_chamber.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1490,39 +1487,39 @@ public class JEICompat implements IModPlugin {
                 fquarry.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.solid_fluid_mixer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.solid_fluid_mixer),
                 fluid_solid_mixed.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.steam_solid_fluid_mixer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.steam_solid_fluid_mixer),
                 fluid_solid_mixed.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.fluid_separator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.fluid_separator),
                 fluid_separator.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.fluid_mixer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.fluid_mixer),
                 fluid_mixer.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.fluid_integrator),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.fluid_integrator),
                 fluid_integrator.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.fluid_heater),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.fluid_heater),
                 fluid_heater.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockPrimalFluidHeater.primal_fluid_heater),
+                JEICompat.getBlockStack(BlockPrimalFluidHeaterEntity.primal_fluid_heater),
                 fluid_heater.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.fluid_adapter),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.fluid_adapter),
                 fluid_adapter.recipeType
         );
 
@@ -1570,12 +1567,12 @@ public class JEICompat implements IModPlugin {
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_extractor),
+                getBlockStack(BlockBaseMachine3Entity.bio_extractor),
                 extractor.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_extractor),
+                getBlockStack(BlockBaseMachine3Entity.steam_extractor),
                 extractor.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1600,12 +1597,12 @@ public class JEICompat implements IModPlugin {
                 extruder.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_extruder),
+                getBlockStack(BlockBaseMachine3Entity.bio_extruder),
                 extruder.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_extruder),
+                getBlockStack(BlockBaseMachine3Entity.steam_extruder),
                 extruder.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1613,16 +1610,16 @@ public class JEICompat implements IModPlugin {
                 enrich.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.enchanter_books),
+                getBlockStack(BlockBaseMachine3Entity.enchanter_books),
                 enchant.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.electronic_assembler),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.electronic_assembler),
                 electronics.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockElectronicsAssembler.electronics_assembler),
+                JEICompat.getBlockStack(BlockElectronicsAssemblerEntity.electronics_assembler),
                 electronics.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1630,23 +1627,23 @@ public class JEICompat implements IModPlugin {
                 electrolyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_electrolyzer),
+                getBlockStack(BlockBaseMachine3Entity.steam_electrolyzer),
                 electrolyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockEarthQuarry.earth_controller),
+                getBlockStack(BlockEarthQuarryEntity.earth_controller),
                 earth_quarry.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockDryer.dryer),
+                JEICompat.getBlockStack(BlockDryerEntity.dryer),
                 dryer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.electric_dryer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.electric_dryer),
                 dryer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.steamdryer),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.steamdryer),
                 dryer.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1654,19 +1651,19 @@ public class JEICompat implements IModPlugin {
                 double_molecular.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.solardestiller),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.solardestiller),
                 distiller.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.adv_solar_destiller),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.adv_solar_destiller),
                 distiller.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.imp_solar_destiller),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.imp_solar_destiller),
                 distiller.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.per_solar_destiller),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.per_solar_destiller),
                 distiller.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1674,11 +1671,11 @@ public class JEICompat implements IModPlugin {
                 distiller.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.crystal_charge),
+                getBlockStack(BlockBaseMachine3Entity.crystal_charge),
                 crystal_charge.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockCyclotron.cyclotron_controller),
+                JEICompat.getBlockStack(BlockCyclotronEntity.cyclotron_controller),
                 cyclotron.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1702,16 +1699,16 @@ public class JEICompat implements IModPlugin {
                 cutting.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_cutting),
+                getBlockStack(BlockBaseMachine3Entity.bio_cutting),
                 cutting.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_cutting),
+                getBlockStack(BlockBaseMachine3Entity.steam_cutting),
                 cutting.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_crystal_charge),
+                getBlockStack(BlockBaseMachine3Entity.steam_crystal_charge),
                 crystal_charge.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1731,7 +1728,7 @@ public class JEICompat implements IModPlugin {
                 compressor.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_compressor),
+                getBlockStack(BlockBaseMachine3Entity.bio_compressor),
                 compressor.recipeType
         );
 
@@ -1740,11 +1737,11 @@ public class JEICompat implements IModPlugin {
                 compressor.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_compressor),
+                getBlockStack(BlockBaseMachine3Entity.steam_compressor),
                 compressor.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockCompressor.compressor),
+                getBlockStack(BlockCompressorEntity.compressor),
                 compressor.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1782,7 +1779,7 @@ public class JEICompat implements IModPlugin {
                 coke_oven.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockChemicalPlant.chemical_plant_controller),
+                JEICompat.getBlockStack(BlockChemicalPlantEntity.chemical_plant_controller),
                 chemical_plant.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1806,19 +1803,19 @@ public class JEICompat implements IModPlugin {
                 centrifuge.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_centrifuge),
+                getBlockStack(BlockBaseMachine3Entity.bio_centrifuge),
                 centrifuge.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.battery_factory),
+                getBlockStack(BlockBaseMachine3Entity.battery_factory),
                 battery.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.electric_brewing),
+                getBlockStack(BlockBaseMachine3Entity.electric_brewing),
                 brewing.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_bio_generator),
+                getBlockStack(BlockBaseMachine3Entity.steam_bio_generator),
                 biomass.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1826,36 +1823,36 @@ public class JEICompat implements IModPlugin {
                 blastFurnace.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.centrifuge),
+                getBlockStack(BlockBaseMachine3Entity.centrifuge),
                 bee_centrifuge.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockHive.forest_hive),
+                JEICompat.getBlockStack(BlockHiveEntity.forest_hive),
                 bee.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockHive.winter_hive),
+                JEICompat.getBlockStack(BlockHiveEntity.winter_hive),
                 bee.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockHive.tropical_hive),
+                JEICompat.getBlockStack(BlockHiveEntity.tropical_hive),
                 bee.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockHive.plains_hive),
+                JEICompat.getBlockStack(BlockHiveEntity.plains_hive),
                 bee.recipeType
         );
 
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockHive.swamp_hive),
+                JEICompat.getBlockStack(BlockHiveEntity.swamp_hive),
                 bee.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockApiary.apiary),
+                JEICompat.getBlockStack(BlockApiaryEntity.apiary),
                 apiary.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockAnvil.block_anvil),
+                getBlockStack(BlockAnvilEntity.block_anvil),
                 anvil.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1863,27 +1860,27 @@ public class JEICompat implements IModPlugin {
                 anti_upgrade.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine2.analyzer),
+                JEICompat.getBlockStack(BlockBaseMachine2Entity.analyzer),
                 analyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.wireless_mineral_quarry),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.wireless_mineral_quarry),
                 analyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.quantum_quarry),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.quantum_quarry),
                 analyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.imp_quantum_quarry),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.imp_quantum_quarry),
                 analyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.adv_quantum_quarry),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.adv_quantum_quarry),
                 analyzer.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine.per_quantum_quarry),
+                JEICompat.getBlockStack(BlockBaseMachineEntity.per_quantum_quarry),
                 analyzer.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1891,7 +1888,7 @@ public class JEICompat implements IModPlugin {
                 alloy.recipeType
         );
         registry.addRecipeCatalyst(
-                JEICompat.getBlockStack(BlockBaseMachine3.alkalineearthquarry),
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.alkalineearthquarry),
                 alkailine.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1911,7 +1908,7 @@ public class JEICompat implements IModPlugin {
                 macerator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockMacerator.macerator),
+                getBlockStack(BlockMaceratorEntity.macerator),
                 macerator.recipeType
         );
         registry.addRecipeCatalyst(
@@ -1931,18 +1928,16 @@ public class JEICompat implements IModPlugin {
                 macerator.recipeType
         );
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.bio_macerator),
+                getBlockStack(BlockBaseMachine3Entity.bio_macerator),
                 macerator.recipeType
         );
 
         registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.steam_macerator),
+                getBlockStack(BlockBaseMachine3Entity.steam_macerator),
                 macerator.recipeType
         );
 
     }
-
-    public static IGuiHelper guiHelper;
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {

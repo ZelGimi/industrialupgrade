@@ -32,8 +32,9 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
     private final List<IInputItemStack> recipeInputList;
     private final String id;
     private ResourceLocation name;
+
     public BaseShapelessRecipe(ResourceLocation id, String group, CraftingBookCategory category, ItemStack output, List<IInputItemStack> recipeInputList) {
-        super(id,group,category,output,NonNullList.create());
+        super(id, group, category, output, NonNullList.create());
         this.id = "";
 
         this.output = output;
@@ -47,8 +48,9 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
         }
 
     }
+
     public BaseShapelessRecipe(ItemStack output, List<IInputItemStack> recipeInputList) {
-        super(ResourceLocation.tryParse("minecraft:minecraft"), "", CraftingBookCategory.MISC,output,NonNullList.create());
+        super(ResourceLocation.tryParse("minecraft:minecraft"), "", CraftingBookCategory.MISC, output, NonNullList.create());
         this.output = output;
         this.recipeInputList = recipeInputList;
         listIngridient = NonNullList.create();
@@ -62,7 +64,23 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
         this.id = Recipes.registerRecipe(this);
     }
 
+    public static BaseShapelessRecipe create(ResourceLocation id, CustomPacketBuffer customPacketBuffer) {
+        try {
+            String group = (String) DecoderHandler.decode(customPacketBuffer);
+            int category = (int) DecoderHandler.decode(customPacketBuffer);
+            ItemStack output = (ItemStack) DecoderHandler.decode(customPacketBuffer);
 
+
+            List<IInputItemStack> recipeInputList = new ArrayList<>();
+            int size = customPacketBuffer.readInt();
+            for (int i = 0; i < size; i++) {
+                recipeInputList.add(InputItemStack.create((CompoundTag) DecoderHandler.decode(customPacketBuffer)));
+            }
+            return new BaseShapelessRecipe(id, group, CraftingBookCategory.values()[category], output, recipeInputList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public List<IInputItemStack> getRecipeInputList() {
         return recipeInputList;
@@ -72,13 +90,12 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
         return output;
     }
 
-
     public ItemStack matches(final CraftingContainer inv) {
 
-        for (int i = 0; i < recipeInputList.size();i++) {
+        for (int i = 0; i < recipeInputList.size(); i++) {
             IInputItemStack input = this.recipeInputList.get(i);
-            if (input instanceof InputOreDict &&input .hasTag() &&  input .getInputs().isEmpty())
-                recipeInputList.set(i,new InputOreDict(input .getTag(),input .getAmount()));
+            if (input instanceof InputOreDict && input.hasTag() && input.getInputs().isEmpty())
+                recipeInputList.set(i, new InputOreDict(input.getTag(), input.getAmount()));
         }
         List<IInputItemStack> recipeInputList1 = new ArrayList<>(recipeInputList);
         for (int i = 0; i < inv.getContainerSize(); i++) {
@@ -110,7 +127,6 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
         }
     }
 
-
     @Override
     public boolean matches(CraftingContainer p_44002_, Level p_44003_) {
         return matches(p_44002_) != ItemStack.EMPTY;
@@ -121,7 +137,6 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
         return this.output.copy();
     }
 
-
     @Override
     public boolean canCraftInDimensions(int x, int y) {
         return x * y >= this.recipeInputList.size();
@@ -129,9 +144,8 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
 
     @Override
     public ItemStack getResultItem(RegistryAccess registryAccess) {
-     return    this.output.copy();
+        return this.output.copy();
     }
-
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer p_44004_) {
@@ -157,19 +171,15 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
         return ingredients;
     }
 
-
-
     @Override
     public RecipeType<?> getType() {
         return RecipeType.CRAFTING;
     }
 
-
     @Override
     public RecipeSerializer<?> getSerializer() {
         return Register.RECIPE_SERIALIZER_SHAPELESS_RECIPE.get();
     }
-
 
     public void toNetwork(FriendlyByteBuf buf) {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer(buf);
@@ -181,23 +191,6 @@ public class BaseShapelessRecipe extends ShapelessRecipe {
             packetBuffer.writeInt(recipeInputList.size());
             for (IInputItemStack part : recipeInputList)
                 EncoderHandler.encode(packetBuffer, part.writeNBT());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static BaseShapelessRecipe create(ResourceLocation id, CustomPacketBuffer customPacketBuffer) {
-        try {
-            String group = (String) DecoderHandler.decode(customPacketBuffer);
-            int category = (int) DecoderHandler.decode(customPacketBuffer);
-            ItemStack output = (ItemStack) DecoderHandler.decode(customPacketBuffer);
-
-
-            List<IInputItemStack>  recipeInputList = new ArrayList<>();
-            int size = customPacketBuffer.readInt();
-            for (int i = 0; i < size; i++) {
-                recipeInputList.add(InputItemStack.create((CompoundTag) DecoderHandler.decode(customPacketBuffer)));
-            }
-            return new BaseShapelessRecipe(id, group, CraftingBookCategory.values()[category], output, recipeInputList);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
-import com.denfop.ElectricItem;
-import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 
-public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
+public abstract class ItemEnergyTool extends ItemToolIU implements EnergyItem {
     public final int operationEnergyCost;
     public int maxCharge;
     public int transferLimit;
@@ -27,17 +27,9 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     public ItemEnergyTool(
             int operationEnergyCost
     ) {
-        this(2.0F, -3.0F, operationEnergyCost,  Tags.Blocks.GLASS);
+        this(2.0F, -3.0F, operationEnergyCost, Tags.Blocks.GLASS);
     }
 
-
-
-    @Override
-    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
-        if (this.allowedIn(p_41391_)) {
-            ElectricItemManager.addChargeVariants(this, p_41392_);
-        }
-    }
 
     public ItemEnergyTool(
             float damage,
@@ -47,6 +39,13 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     ) {
         super(damage, speed, mineableBlocks);
         this.operationEnergyCost = operationEnergyCost;
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            ElectricItemManager.addChargeVariants(this, p_41392_);
+        }
     }
 
     protected String getOrCreateDescriptionId() {
@@ -61,7 +60,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "iu." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;

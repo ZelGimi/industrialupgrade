@@ -1,26 +1,16 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.windsystem.Wind;
-import com.denfop.api.windsystem.WindSystem;
+import com.denfop.api.pollution.component.ChunkLevel;
+import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +25,7 @@ public class ComponentPollution extends AbstractComponent {
 
     private double percent;
 
-    public ComponentPollution(final TileEntityInventory parent) {
+    public ComponentPollution(final BlockEntityInventory parent) {
         super(parent);
     }
 

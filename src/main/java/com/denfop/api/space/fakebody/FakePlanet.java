@@ -6,7 +6,6 @@ import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import com.denfop.blocks.FluidName;
 import com.denfop.utils.Timer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -40,6 +39,7 @@ public class FakePlanet implements IFakePlanet {
         this.data = data;
         int seconds =
                 (int) ((Math.abs(planet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+        seconds+=planet.getSystem().getDistanceFromSolar()*60*60;
         if (SpaceUpgradeSystem.system.hasModules(
                 EnumTypeUpgrade.ENGINE,
                 rovers.getItemStack()

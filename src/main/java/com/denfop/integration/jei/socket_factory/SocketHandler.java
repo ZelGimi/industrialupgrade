@@ -109,6 +109,7 @@ public class SocketHandler {
     public boolean matchesInput(ItemStack is) {
         return true;
     }
+
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3, input4, input5);
     }

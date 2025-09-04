@@ -85,6 +85,8 @@ public class Storage implements IStorage {
         if (fluidStack == null) {
             return false;
         }
+        if (fluidStack.isEmpty())
+            return false;
         List<FluidStack> fluidStacks = this.getFluidStacks();
         boolean added = false;
         fluidStacks.removeIf(Objects::isNull);
@@ -122,6 +124,8 @@ public class Storage implements IStorage {
         if (!this.getStorageBuilding().getWork()) {
             return false;
         }
+        if (fluidStack.isEmpty())
+            return false;
         List<FluidStack> fluidStacks = this.getFluidStacks();
         for (FluidStack stack : fluidStacks) {
             if (stack.isFluidEqual(fluidStack)) {
@@ -139,6 +143,8 @@ public class Storage implements IStorage {
         if (!this.getStorageBuilding().getWork()) {
             return false;
         }
+        if (itemStack.isEmpty())
+            return false;
         List<ItemStack> stackList = this.getStacks();
         int size = itemStack.getCount();
         boolean added = false;
@@ -175,6 +181,8 @@ public class Storage implements IStorage {
         if (!this.getStorageBuilding().getWork()) {
             return false;
         }
+        if (itemStack.isEmpty())
+            return false;
         List<ItemStack> itemStackList = this.getStacks();
         for (ItemStack stack : itemStackList) {
             if (ModUtils.checkItemEquality(itemStack, stack)) {
@@ -192,6 +200,7 @@ public class Storage implements IStorage {
         tag.putInt("max", this.max);
         tag.putInt("fluidmax", this.fluidmax);
         CompoundTag nbt = new CompoundTag();
+        this.itemStackList.removeIf(ItemStack::isEmpty);
         nbt.putInt("col", this.getStacks().size());
         for (int i = 0; i < this.getStacks().size(); i++) {
             nbt.put(String.valueOf(i), this.getStacks().get(i).save(new CompoundTag()));
@@ -259,6 +268,7 @@ public class Storage implements IStorage {
         customPacketBuffer.writeInt(max);
         customPacketBuffer.writeInt(fluidmax);
         CompoundTag nbt = new CompoundTag();
+        this.itemStackList.removeIf(ItemStack::isEmpty);
         nbt.putInt("col", this.getStacks().size());
         for (int i = 0; i < this.getStacks().size(); i++) {
             nbt.put(String.valueOf(i), this.getStacks().get(i).save(new CompoundTag()));

@@ -1,22 +1,22 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
-import com.denfop.api.audio.EnumTypeAudio;
-import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.recipe.IMultiUpdateTick;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.sound.EnumTypeAudio;
+import com.denfop.blockentity.base.BlockEntityBase;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blockentity.base.EnumMultiMachine;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
+import com.denfop.blockentity.mechanism.multimechanism.IMultiMachine;
 import com.denfop.blocks.FluidName;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.inventory.Inventory;
+import com.denfop.inventory.InventoryDischarge;
+import com.denfop.inventory.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.EnumMultiMachine;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.EnumTypeMachines;
-import com.denfop.tiles.mechanism.multimechanism.IMultiMachine;
 import com.denfop.utils.Timer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,10 +35,10 @@ import java.util.List;
 
 public class ProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
-    public final InvSlotOutput outputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final Energy energy;
-    public final InvSlotMultiRecipes inputSlots;
+    public final InventoryMultiRecipes inputSlots;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     final short[] progress;
@@ -74,20 +74,20 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public ProcessMultiComponent(
             final IMultiMachine parent, EnumMultiMachine enumMultiMachine
     ) {
-        super((TileEntityBlock) parent);
+        super((BlockEntityBase) parent);
         this.multimachine = parent;
-        this.inputSlots = new InvSlotMultiRecipes(
-                (TileEntityInventory) parent,
+        this.inputSlots = new InventoryMultiRecipes(
+                (BlockEntityInventory) parent,
                 enumMultiMachine.type.recipe,
                 this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(
-                (IAdvInventory<?>) parent,
+        this.outputSlot = new InventoryOutput(
+                (CustomWorldContainer) parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
-        this.upgradeSlot = new InvSlotUpgrade((TileEntityInventory) parent, 4);
-        this.energy = ((TileEntityInventory) parent).getComp(Energy.class);
+        this.upgradeSlot = new InventoryUpgrade((BlockEntityInventory) parent, 4);
+        this.energy = ((BlockEntityInventory) parent).getComp(Energy.class);
         this.enumMultiMachine = enumMultiMachine;
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
         this.progress = new short[sizeWorkingSlot];
@@ -106,9 +106,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.max = enumMultiMachine.getMax();
         this.random = enumMultiMachine.type == EnumTypeMachines.RECYCLER;
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.cold = ((TileEntityInventory) parent).getComp(CoolComponent.class);
-        this.exp = ((TileEntityInventory) parent).getComp(ComponentBaseEnergy.class);
-        this.heat = ((TileEntityInventory) parent).getComp(HeatComponent.class);
+        this.cold = ((BlockEntityInventory) parent).getComp(CoolComponent.class);
+        this.exp = ((BlockEntityInventory) parent).getComp(ComponentBaseEnergy.class);
+        this.heat = ((BlockEntityInventory) parent).getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
     }
 
@@ -120,7 +120,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.output[slotId] = output;
     }
 
-    public InvSlotUpgrade getUpgradeSlot() {
+    public InventoryUpgrade getUpgradeSlot() {
         return upgradeSlot;
     }
 
@@ -315,7 +315,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 RandomSource rand = this.getParent().getLevel().random;
                 this.inputSlots.consume(slotId);
                 if (rand.nextInt(max + 1) <= min) {
-                    this.outputSlot.add(processResult);
+                    this.outputSlot.addAll(processResult);
                 }
             }
 
@@ -645,9 +645,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
         int tier = this.upgradeSlot.getTier(this.defaultTier);
         this.energy.setSinkTier(tier);
-        for (InvSlot slot : this.energy.managedSlots)
-            if (slot instanceof InvSlotDischarge)
-                ((InvSlotDischarge) slot).setTier(tier);
+        for (Inventory slot : this.energy.managedSlots)
+            if (slot instanceof InventoryDischarge)
+                ((InventoryDischarge) slot).setTier(tier);
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
@@ -808,7 +808,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
     public void setMode(int mode1) {
         if (this.enumMultiMachine.type == EnumTypeMachines.METALFOMER) {
-            final InvSlotMultiRecipes slot = this.inputSlots;
+            final InventoryMultiRecipes slot = this.inputSlots;
             switch (mode1) {
                 case 0:
                     slot.setNameRecipe("extruding");

@@ -1,10 +1,10 @@
 package com.denfop.items.reactors;
 
 import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.api.item.IHazmatLike;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.potion.IUPotion;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.Locale;
 
-public class RadiationPellets<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IRadioactiveItemType {
+public class RadiationPellets<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IRadioactiveItemType {
     public RadiationPellets(T element) {
         super(new Item.Properties(), element);
     }
@@ -23,7 +23,7 @@ public class RadiationPellets<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
         if (entity instanceof LivingEntity) {
             LivingEntity entityLiving = (LivingEntity) entity;
-            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+            if (!HazmatLike.hasCompleteHazmat(entityLiving)) {
                 IUPotion.radiation.applyEffect(entityLiving, this.getRadiationDuration());
             }
         }
@@ -33,6 +33,7 @@ public class RadiationPellets<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
     public CreativeModeTab getItemCategory() {
         return IUCore.ReactorsTab;
     }
+
     @Override
     public int getRadiationDuration() {
         return 200;
@@ -43,7 +44,7 @@ public class RadiationPellets<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
         return 100;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         americium_pellet(0),
         neptunium_pellet(1),
         curium_pellet(2),

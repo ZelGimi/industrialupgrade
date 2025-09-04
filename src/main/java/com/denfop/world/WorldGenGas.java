@@ -209,46 +209,46 @@ public class WorldGenGas extends Feature<NoneFeatureConfiguration> {
         }
 
 
-            for (int j = 0; j < 16; j++) {
-                for (k = 0; k < 16; k++) {
-                    for (m = 0; m < 8; m++) {
-                        int i2 = (j * 16 + k) * 8 + m;
-                        int i1 = arrayOfBoolean[i2]
-                                && (j < 15 && arrayOfBoolean[((j + 1) * 16 + k) * 8 + m]
-                                || j > 0 && arrayOfBoolean[((j - 1) * 16 + k) * 8 + m]
-                                || k < 15 && arrayOfBoolean[(j * 16 + k + 1) * 8 + m]
-                                || k > 0 && arrayOfBoolean[(j * 16 + k - 1) * 8 + m]
-                                || m < 7 && arrayOfBoolean[(j * 16 + k) * 8 + m + 1]
-                                || m > 0 && arrayOfBoolean[i2 - 1]) ? 1 : 0;
+        for (int j = 0; j < 16; j++) {
+            for (k = 0; k < 16; k++) {
+                for (m = 0; m < 8; m++) {
+                    int i2 = (j * 16 + k) * 8 + m;
+                    int i1 = arrayOfBoolean[i2]
+                            && (j < 15 && arrayOfBoolean[((j + 1) * 16 + k) * 8 + m]
+                            || j > 0 && arrayOfBoolean[((j - 1) * 16 + k) * 8 + m]
+                            || k < 15 && arrayOfBoolean[(j * 16 + k + 1) * 8 + m]
+                            || k > 0 && arrayOfBoolean[(j * 16 + k - 1) * 8 + m]
+                            || m < 7 && arrayOfBoolean[(j * 16 + k) * 8 + m + 1]
+                            || m > 0 && arrayOfBoolean[i2 - 1]) ? 1 : 0;
 
-                        if (i1 != 0 && (m < 4 || rand.nextInt(2) != 0)
-                                && world.getBlockState(new BlockPos(x + j, y + m, z + k)).isSolid()) {
-                            world.setBlock(
-                                    new BlockPos(x + j, y + m, z + k),
-                                    this.block, 3
-                            );
-                            if (xmin > x + j) {
-                                xmin = x + j;
-                            }
-                            if (xmax < x + j) {
-                                xmax = x + j;
-                            }
-                            if (zmin > z + k) {
-                                zmin = z + k;
-                            }
-                            if (zmax < z + k) {
-                                zmax = z + k;
-                            }
-                            if (ymin > y + m) {
-                                ymin = y + m;
-                            }
-                            if (ymax < y + m) {
-                                ymax = y + m;
-                            }
+                    if (i1 != 0 && (m < 4 || rand.nextInt(2) != 0)
+                            && world.getBlockState(new BlockPos(x + j, y + m, z + k)).isSolid()) {
+                        world.setBlock(
+                                new BlockPos(x + j, y + m, z + k),
+                                this.block, 3
+                        );
+                        if (xmin > x + j) {
+                            xmin = x + j;
+                        }
+                        if (xmax < x + j) {
+                            xmax = x + j;
+                        }
+                        if (zmin > z + k) {
+                            zmin = z + k;
+                        }
+                        if (zmax < z + k) {
+                            zmax = z + k;
+                        }
+                        if (ymin > y + m) {
+                            ymin = y + m;
+                        }
+                        if (ymax < y + m) {
+                            ymax = y + m;
                         }
                     }
                 }
             }
+        }
 
         int xCenter = (xmin + xmax) / 2;
         int zCenter = (zmin + zmax) / 2;

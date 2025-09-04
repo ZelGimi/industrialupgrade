@@ -28,6 +28,7 @@ public class RubberLeaves extends LeavesBlock {
     public RubberLeaves() {
         super(Properties.of().mapColor(MapColor.PLANT).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((S, W, P, E) -> E == EntityType.OCELOT || E == EntityType.PARROT).isSuffocating((K, V, E) -> false).isViewBlocking((K, V, E) -> false));
     }
+
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 30;
     }
@@ -35,8 +36,8 @@ public class RubberLeaves extends LeavesBlock {
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.tick(pState, pLevel, pPos, pRandom);
-        spawnFallingLeavesParticles(pLevel,pPos,this);
-        pLevel.scheduleTick(pPos, this, pRandom.nextInt(200)+100);
+        spawnFallingLeavesParticles(pLevel, pPos, this);
+        pLevel.scheduleTick(pPos, this, pRandom.nextInt(200) + 100);
     }
 
     @Override

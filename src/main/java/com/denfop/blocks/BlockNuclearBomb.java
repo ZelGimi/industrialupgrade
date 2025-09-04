@@ -1,6 +1,6 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
+import com.denfop.dataregistry.DataBlock;
 import com.denfop.entity.EntityNuclearBombPrimed;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class BlockNuclearBomb<T extends Enum<T> & ISubEnum> extends BlockCore<T> {
+public class BlockNuclearBomb<T extends Enum<T> & SubEnum> extends BlockCore<T> {
     public static final BooleanProperty UNSTABLE = BlockStateProperties.UNSTABLE;
 
 
@@ -63,7 +63,7 @@ public class BlockNuclearBomb<T extends Enum<T> & ISubEnum> extends BlockCore<T>
     }
 
     @Override
-    public   int getMetaFromState(BlockState state) {
+    public int getMetaFromState(BlockState state) {
         return getElement().getId();
     }
 
@@ -150,17 +150,17 @@ public class BlockNuclearBomb<T extends Enum<T> & ISubEnum> extends BlockCore<T>
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.defaultBlockState();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         nuclear_bomb(0),
         ;
 

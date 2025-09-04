@@ -1,6 +1,6 @@
 package com.denfop.items.energy.instruments;
 
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import net.minecraft.ChatFormatting;
 
 public enum EnumOperations {

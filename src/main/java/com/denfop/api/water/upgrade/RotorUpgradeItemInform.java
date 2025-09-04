@@ -1,6 +1,6 @@
 package com.denfop.api.water.upgrade;
 
-import com.denfop.Localization;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 

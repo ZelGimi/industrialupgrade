@@ -20,10 +20,6 @@ public class MaceratorHandler {
         this.container = container;
     }
 
-    public BaseMachineRecipe getContainer() {
-        return container;
-    }
-
     public static List<MaceratorHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -32,7 +28,7 @@ public class MaceratorHandler {
     }
 
     public static MaceratorHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
-        MaceratorHandler recipe = new MaceratorHandler(input, output,container);
+        MaceratorHandler recipe = new MaceratorHandler(input, output, container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -56,15 +52,18 @@ public class MaceratorHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("macerator")) {
 
 
-                addRecipe(
-                        container.input.getInputs().get(0).getInputs().get(0),
-                        container.getOutput().items.get(0),container
-                );
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.getOutput().items.get(0), container
+            );
 
 
         }
     }
 
+    public BaseMachineRecipe getContainer() {
+        return container;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

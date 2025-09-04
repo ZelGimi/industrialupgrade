@@ -12,23 +12,21 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
-import java.util.Map;
 
 public class IURecipeDelete implements Recipe<Container> {
     private final ResourceLocation id;
     private final String recipeType;
     private final boolean isFluid;
-    private final  List<IInputItemStack> inputItemStackList;
+    private final List<IInputItemStack> inputItemStackList;
     private final boolean removeAll;
 
 
-
-    public IURecipeDelete(ResourceLocation id, String recipeType,Boolean isFluidRecipe, List<IInputItemStack> inputItemStackList,  boolean removeAll) {
+    public IURecipeDelete(ResourceLocation id, String recipeType, Boolean isFluidRecipe, List<IInputItemStack> inputItemStackList, boolean removeAll) {
         this.id = id;
         this.recipeType = recipeType;
         this.inputItemStackList = inputItemStackList;
         this.removeAll = removeAll;
-        this.isFluid=isFluidRecipe;
+        this.isFluid = isFluidRecipe;
     }
 
     @Override
@@ -38,9 +36,8 @@ public class IURecipeDelete implements Recipe<Container> {
 
     @Override
     public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
-        return  ItemStack.EMPTY;
+        return ItemStack.EMPTY;
     }
-
 
 
     @Override
@@ -50,12 +47,13 @@ public class IURecipeDelete implements Recipe<Container> {
 
     @Override
     public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
-        return  ItemStack.EMPTY;
+        return ItemStack.EMPTY;
     }
 
     public boolean isFluid() {
         return isFluid;
     }
+
     @Override
     public ResourceLocation getId() {
         return id;
@@ -66,7 +64,7 @@ public class IURecipeDelete implements Recipe<Container> {
     }
 
     public List<IInputItemStack> getInputsAll() {
-        return  inputItemStackList;
+        return inputItemStackList;
     }
 
     public String getRecipeType() {

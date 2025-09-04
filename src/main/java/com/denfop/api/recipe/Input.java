@@ -19,6 +19,36 @@ public class Input implements IInput {
     private final boolean hasfluid;
     private final FluidStack fluid;
     private List<FluidStack> inputsfluid;
+
+    public Input(FluidStack fluid, IInputItemStack... inputs) {
+        this.list = Arrays.asList(inputs);
+        this.hasfluid = fluid != null;
+        this.fluid = fluid;
+        this.inputsfluid = null;
+    }
+
+    public Input(IInputItemStack... inputs) {
+        this(null, inputs);
+
+    }
+
+    public Input(List<IInputItemStack> inputs) {
+        this(null, inputs);
+
+    }
+
+    public Input(FluidStack fluid, List<IInputItemStack> inputs) {
+        this.list = inputs;
+        this.hasfluid = fluid != null;
+        this.fluid = fluid;
+        this.inputsfluid = null;
+    }
+
+    public Input(FluidStack... inputs) {
+        this((IInputItemStack) null);
+        this.inputsfluid = Arrays.asList(inputs);
+    }
+
     public static Input readNBT(CompoundTag tag) {
         List<IInputItemStack> inputList = new ArrayList<>();
         ListTag itemsTag = tag.getList("Items", 10);
@@ -35,12 +65,7 @@ public class Input implements IInput {
 
         return new Input(fluid, inputList.toArray(new IInputItemStack[0]));
     }
-    public Input(FluidStack fluid, IInputItemStack... inputs) {
-        this.list = Arrays.asList(inputs);
-        this.hasfluid = fluid != null;
-        this.fluid = fluid;
-        this.inputsfluid = null;
-    }
+
     public CompoundTag writeNBT() {
         CompoundTag tag = new CompoundTag();
 
@@ -60,25 +85,6 @@ public class Input implements IInput {
 
         tag.putBoolean("HasFluid", hasfluid);
         return tag;
-    }
-
-    public Input(IInputItemStack... inputs) {
-        this(null, inputs);
-
-    }
-    public Input(List<IInputItemStack> inputs) {
-        this(null, inputs);
-
-    }
-    public Input(FluidStack fluid, List<IInputItemStack> inputs) {
-        this.list = inputs;
-        this.hasfluid = fluid != null;
-        this.fluid = fluid;
-        this.inputsfluid = null;
-    }
-    public Input(FluidStack... inputs) {
-        this((IInputItemStack) null);
-        this.inputsfluid = Arrays.asList(inputs);
     }
 
     @Override
@@ -109,6 +115,7 @@ public class Input implements IInput {
         }
         return new ArrayList<>(stacks);
     }
+
     @Override
     public List<ItemStack> getAllStackInputs() {
         List<ItemStack> stacks = new LinkedList<>();

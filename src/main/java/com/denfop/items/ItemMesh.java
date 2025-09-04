@@ -1,8 +1,8 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.items.reactors.ItemDamage;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -20,10 +20,12 @@ public class ItemMesh extends ItemDamage implements IItemTab {
         super(new Properties().stacksTo(1), maxDamage);
         this.level = level;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     public int getLevel() {
         return level;
     }

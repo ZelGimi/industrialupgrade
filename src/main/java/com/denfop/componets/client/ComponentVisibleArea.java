@@ -1,11 +1,11 @@
 package com.denfop.componets.client;
 
-import com.denfop.Localization;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.render.base.RenderType;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -31,7 +31,7 @@ public class ComponentVisibleArea extends AbstractComponent {
     public AABB aabb;
     private boolean visible;
 
-    public ComponentVisibleArea(TileEntityBlock parent) {
+    public ComponentVisibleArea(BlockEntityBase parent) {
         super(parent);
     }
 
@@ -174,10 +174,10 @@ public class ComponentVisibleArea extends AbstractComponent {
                     .getBuffer(net.minecraft.client.renderer.RenderType.lines());
 
 
-             red = 0f;
-             green = 124 / 255f;
-             blue = 255f / 255f;
-             alpha =1f;
+            red = 0f;
+            green = 124 / 255f;
+            blue = 255f / 255f;
+            alpha = 1f;
             Matrix4f matrix4f = poseStack.last().pose();
             p_109623_.vertex(matrix4f, f, f1, f2).color(red, green, blue, alpha).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
             p_109623_.vertex(matrix4f, f3, f1, f2).color(red, green, blue, alpha).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();

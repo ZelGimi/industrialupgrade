@@ -3,7 +3,6 @@ package com.denfop.blocks.blockitem;
 import com.denfop.IUCore;
 import com.denfop.blocks.BlockCore;
 import com.denfop.blocks.BlockPlanksRubberWood;
-import com.denfop.blocks.BlockResource;
 import com.denfop.blocks.ItemBlockCore;
 import com.denfop.datagen.itemtag.IItemTag;
 import net.minecraft.world.item.Item;
@@ -23,6 +22,6 @@ public class ItemBlockRubberPlanks extends ItemBlockCore<BlockPlanksRubberWood.T
     public String[] getTags() {
 
         String name = getElement().getName();
-        return new String[]{ "logs"};
+        return new String[]{"logs"};
     }
 }

@@ -1,15 +1,13 @@
 package com.denfop.items;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.networking.EnergyNetGlobal;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.api.windsystem.IWindRotor;
+import com.denfop.api.windsystem.WindRotor;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeItemInform;
@@ -17,6 +15,8 @@ import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.tabs.IItemTab;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
-public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgradeItem, IItemTab {
+public class ItemWindRotor extends ItemDamage implements WindRotor, IRotorUpgradeItem, IItemTab {
     private final int radius;
     private final float efficiency;
     private final ResourceLocation renderTexture;
@@ -49,11 +49,11 @@ public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgra
     public ItemWindRotor(
             String name, int Radius, int durability, float efficiency,
             ResourceLocation RenderTexture, int level, int index, Color color
-            ) {
+    ) {
         super(new Properties().stacksTo(1), durability);
         this.radius = Radius;
         this.efficiency = efficiency;
-        this.renderTexture =RenderTexture;
+        this.renderTexture = RenderTexture;
         this.level = level;
         this.index = index;
         this.color = color;
@@ -85,6 +85,7 @@ public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgra
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -102,6 +103,7 @@ public class ItemWindRotor extends ItemDamage implements IWindRotor, IRotorUpgra
 
         return this.nameItem;
     }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {

@@ -1,9 +1,9 @@
 package com.denfop.blocks;
 
-import com.denfop.DataMultiBlock;
 import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataMultiBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -29,7 +29,7 @@ import oshi.util.tuples.Pair;
 
 import java.util.List;
 
-public class BlockSwampRubWood<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlockSwampRubWood<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
     public static final EnumProperty<RubberWoodState> stateProperty = EnumProperty.create("state", RubberWoodState.class);
 
@@ -80,12 +80,12 @@ public class BlockSwampRubWood<T extends Enum<T> & ISubEnum> extends BlockCore<T
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any().setValue(stateProperty, getPlainAxisState(context.getClickedFace().getAxis()));
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().setValue(stateProperty, RubberWoodState.values()[element.getId()]).getBlock()));
     }
 
@@ -100,7 +100,7 @@ public class BlockSwampRubWood<T extends Enum<T> & ISubEnum> extends BlockCore<T
                     Item item = this.getMultiData().getItem(RubberWoodState.plain_y.getId());
                     spawnAsEntity(p_60538_.getLevel(), new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), new ItemStack(item, 1));
                     if (!p_60537_.getValue(stateProperty).isPlain() && p_60538_.getLevel().random.nextInt(6) == 0) {
-                        spawnAsEntity(p_60538_.getLevel(),  new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), IUItem.latex.copy());
+                        spawnAsEntity(p_60538_.getLevel(), new BlockPos((int) p_60538_.getParameter(LootContextParams.ORIGIN).x, (int) p_60538_.getParameter(LootContextParams.ORIGIN).y, (int) p_60538_.getParameter(LootContextParams.ORIGIN).z), IUItem.latex.copy());
                     }
                 }
             }
@@ -152,7 +152,7 @@ public class BlockSwampRubWood<T extends Enum<T> & ISubEnum> extends BlockCore<T
         return new Pair<>("axe", 0);
     }
 
-    public enum RubberWoodState implements ISubEnum {
+    public enum RubberWoodState implements SubEnum {
         plain_y(Direction.Axis.Y, null, false),
         plain_x(Direction.Axis.X, null, false),
         plain_z(Direction.Axis.Z, null, false),
@@ -198,10 +198,6 @@ public class BlockSwampRubWood<T extends Enum<T> & ISubEnum> extends BlockCore<T
 
         public String getName() {
             return this.name();
-        }
-
-        public boolean registerVariants() {
-            return false;
         }
 
         ;

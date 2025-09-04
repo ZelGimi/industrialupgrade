@@ -1,18 +1,21 @@
 package com.denfop.integration.jei.itemdividerfluid;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.gui.*;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.api.widget.EnumTypeComponent;
+import com.denfop.api.widget.ScreenWidget;
+import com.denfop.api.widget.TankWidget;
+import com.denfop.api.widget.WidgetDefault;
+import com.denfop.blockentity.mechanism.BlockEntityItemDividerFluids;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerItemDividerFluids;
-import com.denfop.gui.GuiIU;
+import com.denfop.containermenu.ContainerMenuItemDividerFluids;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.tiles.mechanism.TileEntityItemDividerFluids;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -28,19 +31,19 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemDividerFluidCategory extends GuiIU implements IRecipeCategory<ItemDividerFluidHandler> {
+public class ItemDividerFluidCategory extends ScreenMain implements IRecipeCategory<ItemDividerFluidHandler> {
 
     private final IDrawableStatic bg;
     private final JeiInform jeiInform;
-    private final ContainerItemDividerFluids container1;
-    private final GuiComponent progress_bar;
+    private final ContainerMenuItemDividerFluids container1;
+    private final ScreenWidget progress_bar;
     private int progress;
 
 
     public ItemDividerFluidCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityItemDividerFluids) BlockBaseMachine3.item_divider_to_fluid.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityItemDividerFluids) BlockBaseMachine3Entity.item_divider_to_fluid.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         this.jeiInform = jeiInform;
         this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
@@ -48,16 +51,16 @@ public class ItemDividerFluidCategory extends GuiIU implements IRecipeCategory<I
                 107
         );
         this.componentList.clear();
-        this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        this.slots = new ScreenWidget(this, 3, 3, getComponent(),
+                new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
         );
-        this.container1 = (ContainerItemDividerFluids) this.getContainer();
-        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
-                new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
+        this.container1 = (ContainerMenuItemDividerFluids) this.getContainer();
+        progress_bar = new ScreenWidget(this, 70, 35, EnumTypeComponent.PROCESS,
+                new WidgetDefault<>(new ComponentProgress(this.container1.base, 1, (short) 100))
         );
         this.componentList.add(progress_bar);
-        this.addElement(TankGauge.createNormal(this, 26 + 71, 17, container1.base.fluidTank1));
-        this.addElement(TankGauge.createNormal(this, 46 + 71, 17, container1.base.fluidTank2));
+        this.addWidget(TankWidget.createNormal(this, 26 + 71, 17, container1.base.fluidTank1));
+        this.addWidget(TankWidget.createNormal(this, 46 + 71, 17, container1.base.fluidTank2));
     }
 
     @Override
@@ -68,7 +71,7 @@ public class ItemDividerFluidCategory extends GuiIU implements IRecipeCategory<I
     @Nonnull
     @Override
     public String getTitles() {
-        return Localization.translate((JEICompat.getBlockStack(BlockBaseMachine3.item_divider_to_fluid)).getDescriptionId());
+        return Localization.translate((JEICompat.getBlockStack(BlockBaseMachine3Entity.item_divider_to_fluid)).getDescriptionId());
     }
 
 
@@ -85,19 +88,19 @@ public class ItemDividerFluidCategory extends GuiIU implements IRecipeCategory<I
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(stack,-20, 0);
+        this.slots.drawBackground(stack, -20, 0);
 
-        progress_bar.renderBar(stack,-10, 10, xScale);
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground(stack,this.guiLeft, this.guiTop);
+        progress_bar.renderBar(stack, -10, 10, xScale);
+        for (final ScreenWidget element : ((List<ScreenWidget>) this.elements)) {
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ItemDividerFluidHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 30 + 71,21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71,21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput1().getFluid(), recipe.getOutput1().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 40 - 20, 45 ).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 30 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput().getFluid(), recipe.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutput1().getFluid(), recipe.getOutput1().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 40 - 20, 45).addItemStack(recipe.getInput());
 
     }
 

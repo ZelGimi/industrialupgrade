@@ -45,10 +45,6 @@ public class Sends {
         this.timerToPlanet = new Timer(seconds / (4 + dop));
     }
 
-    public IBody getBody() {
-        return body;
-    }
-
     public Sends(CompoundTag tagCompound) {
         this.uuid = tagCompound.getUUID("uuid");
         this.body = SpaceNet.instance.getBodyFromName(tagCompound.getString("body"));
@@ -64,6 +60,10 @@ public class Sends {
             this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(nbtTagList1.getCompound(i)));
         }
 
+    }
+
+    public IBody getBody() {
+        return body;
     }
 
     public CompoundTag writeToNbt() {

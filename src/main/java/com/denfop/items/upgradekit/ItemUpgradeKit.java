@@ -2,10 +2,10 @@ package com.denfop.items.upgradekit;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blockentity.base.BlockEntityElectricBlock;
+import com.denfop.blockentity.wiring.EnumElectricBlock;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
-import com.denfop.tiles.base.TileElectricBlock;
-import com.denfop.tiles.wiring.EnumElectricBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+public class ItemUpgradeKit<T extends Enum<T> & SubEnum> extends ItemMain<T> {
     public ItemUpgradeKit(T element) {
         super(new Item.Properties(), element);
     }
@@ -44,10 +44,12 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         tooltip.add(Component.translatable("waring_kit"));
         super.appendHoverText(stack, world, tooltip, flag);
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.UpgradeTab;
     }
+
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Player player = context.getPlayer();
@@ -63,7 +65,7 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         int meta = this.getElement().getId();
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof TileElectricBlock tile) {
+        if (blockEntity instanceof BlockEntityElectricBlock tile) {
             EnumElectricBlock enumblock = tile.getElectricBlock();
             if (enumblock != null && enumblock.kit_meta == meta) {
                 ItemStack stack1 = new ItemStack(tile.getElectricBlock().chargepad
@@ -105,7 +107,7 @@ public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
         return InteractionResult.PASS;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         upgradekit(0),
         upgradekit1(1),
         upgradekit2(2),

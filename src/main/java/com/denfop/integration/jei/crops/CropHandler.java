@@ -1,8 +1,8 @@
 package com.denfop.integration.jei.crops;
 
 
-import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.agriculture.ICrop;
+import com.denfop.api.crop.Crop;
+import com.denfop.api.crop.CropNetwork;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ import java.util.List;
 public class CropHandler {
 
     private static final List<CropHandler> recipes = new ArrayList<>();
-    public final ICrop output;
+    public final Crop output;
 
 
     public CropHandler(
-            ICrop output
+            Crop output
     ) {
         this.output = output;
     }
@@ -28,7 +28,7 @@ public class CropHandler {
     }
 
     public static CropHandler addRecipe(
-            ICrop output
+            Crop output
     ) {
         CropHandler recipe = new CropHandler(output);
         if (recipes.contains(recipe)) {
@@ -36,17 +36,6 @@ public class CropHandler {
         }
         recipes.add(recipe);
         return recipe;
-    }
-    public ItemStack getInputs() {
-
-        return output.getStack();
-    }
-    public ICrop getOutput() {
-        return output;
-    }
-
-    public ItemStack getOutputs() {
-        return output.getDrop().isEmpty() ? ItemStack.EMPTY : output.getDrop().get(0);
     }
 
     public static CropHandler getRecipe(ItemStack is) {
@@ -65,6 +54,19 @@ public class CropHandler {
         });
 
 
+    }
+
+    public ItemStack getInputs() {
+
+        return output.getStack();
+    }
+
+    public Crop getOutput() {
+        return output;
+    }
+
+    public ItemStack getOutputs() {
+        return output.getDrop().isEmpty() ? ItemStack.EMPTY : output.getDrop().get(0);
     }
 
 

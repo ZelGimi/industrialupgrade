@@ -1,8 +1,8 @@
 package com.denfop.blocks;
 
-import com.denfop.DataBlock;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.dataregistry.DataBlock;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ import oshi.util.tuples.Pair;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class BlocksIngot<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
+public class BlocksIngot<T extends Enum<T> & SubEnum> extends BlockCore<T> implements IBlockTag {
 
 
     public BlocksIngot(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
@@ -38,12 +38,12 @@ public class BlocksIngot<T extends Enum<T> & ISubEnum> extends BlockCore<T> impl
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+    public <T extends Enum<T> & SubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
         return this.stateDefinition.any();
     }
 
     @Override
-    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+    public <T extends Enum<T> & SubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
@@ -57,21 +57,21 @@ public class BlocksIngot<T extends Enum<T> & ISubEnum> extends BlockCore<T> impl
         return new Pair<>("pickaxe", 1);
     }
 
-    public enum Type implements ISubEnum {
+    public enum Type implements SubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
-        wolfram(3),
+        vanadium(2),
+        tungsten(3),
         invar(4),
         caravky(5),
         cobalt(6),
         magnesium(7),
         nickel(8),
-        platium(9),
+        platinum(9),
         titanium(10),
         chromium(11),
         spinel(12),
-        electrium(13),
+        electrum(13),
         silver(14),
         zinc(15),
         ;;

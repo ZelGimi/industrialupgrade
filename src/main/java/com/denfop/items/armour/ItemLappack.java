@@ -2,20 +2,16 @@ package com.denfop.items.armour;
 
 
 import com.denfop.Constants;
-import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.item.IEnergyItem;
-import com.denfop.api.upgrade.EnumUpgrades;
-import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.api.item.energy.EnergyItem;
+import com.denfop.api.item.upgrade.EnumUpgrades;
+import com.denfop.api.item.upgrade.UpgradeItem;
+import com.denfop.api.item.upgrade.UpgradeSystem;
+import com.denfop.api.item.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IProperties;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.utils.KeyboardClient;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.ModUtils;
+import com.denfop.utils.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -46,8 +42,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecialArmor,
-        IUpgradeItem, IProperties {
+public class ItemLappack extends ItemArmorEnergy implements EnergyItem, ISpecialArmor,
+        UpgradeItem, IProperties {
 
     private final double maxCharge;
 
@@ -74,6 +70,16 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
         IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.LAPPACK.list));
 
     }
+
+    public static int readToolMode(ItemStack itemstack) {
+        CompoundTag nbttagcompound = ModUtils.nbt(itemstack);
+        int toolMode = nbttagcompound.getInt("toolMode");
+        if (toolMode < 0 || toolMode > 1) {
+            toolMode = 0;
+        }
+        return toolMode;
+    }
+
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
         if (this.allowedIn(p_41391_)) {
@@ -83,6 +89,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
             p_41392_.add(new ItemStack(this, 1));
         }
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -95,19 +102,10 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+            this.nameItem = "item." + pathBuilder.toString().split("\\.")[2];
         }
 
         return this.nameItem;
-    }
-
-    public static int readToolMode(ItemStack itemstack) {
-        CompoundTag nbttagcompound = ModUtils.nbt(itemstack);
-        int toolMode = nbttagcompound.getInt("toolMode");
-        if (toolMode < 0 || toolMode > 1) {
-            toolMode = 0;
-        }
-        return toolMode;
     }
 
     @Override
@@ -181,7 +179,6 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
     }
 
 
-
     public boolean canProvideEnergy(ItemStack itemStack) {
         return true;
     }
@@ -241,7 +238,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
     public void appendHoverText(ItemStack par1ItemStack, @Nullable Level p_41422_, List<Component> par3List, TooltipFlag p_41424_) {
         super.appendHoverText(par1ItemStack, p_41422_, par3List, p_41424_);
         int toolMode = readToolMode(par1ItemStack);
-        par3List.add(Component.literal(Localization.translate( "iu.lappack.info")));
+        par3List.add(Component.literal(Localization.translate("iu.lappack.info")));
         if (toolMode == 0) {
             par3List.add(Component.literal(ChatFormatting.GOLD + Localization.translate("iu.message.text.powerSupply") + ": " + ChatFormatting.RED + Localization.translate(
                     "iu.message.text.disabled")));
@@ -308,7 +305,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
 
                 if (!player.getInventory().armor.get(i).isEmpty() && player.getInventory().armor
                         .get(i)
-                        .getItem() instanceof IEnergyItem) {
+                        .getItem() instanceof EnergyItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0 && !(itemStack.is(player.getInventory().armor.get(
                             i).getItem()))) {
 
@@ -333,7 +330,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, ISpecia
             for (int j = 0; j < player.getInventory().items.size(); j++) {
 
                 if (!player.getInventory().items.get(j).isEmpty()
-                        && player.getInventory().items.get(j).getItem() instanceof IEnergyItem) {
+                        && player.getInventory().items.get(j).getItem() instanceof EnergyItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0) {
                         double sentPacket = ElectricItem.manager.charge(
                                 player.getInventory().items.get(j),

@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
 import com.denfop.IUCore;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.datagen.itemtag.IItemTag;
 import com.denfop.items.ItemMain;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+public class ItemDoublePlate<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IItemTag {
     public ItemDoublePlate(T element) {
         super(new Item.Properties(), element);
     }
@@ -18,10 +18,12 @@ public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
     public Item getItem() {
         return this;
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.RecourseTab;
     }
+
     @Override
     public String[] getTags() {
         String name = getElement().getName();
@@ -49,21 +51,21 @@ public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
         return new String[]{"forge:doubleplate/" + name.replace("_doubleplate", ""), "forge:doubleplate"};
     }
 
-    public enum ItemDoublePlateTypes implements ISubEnum {
+    public enum ItemDoublePlateTypes implements SubEnum {
         mikhail_doubleplate(0),
         aluminium_doubleplate(1),
-        vanady_doubleplate(2),
-        wolfram_doubleplate(3),
+        vanadium_doubleplate(2),
+        tungsten_doubleplate(3),
         invar_doubleplate(4),
         caravky_doubleplate(5),
         cobalt_doubleplate(6),
         magnesium_doubleplate(7),
         nickel_doubleplate(8),
-        platium_doubleplate(9),
+        platinum_doubleplate(9),
         titanium_doubleplate(10),
         chromium_doubleplate(11),
         spinel_doubleplate(12),
-        electrium_doubleplate(13),
+        electrum_doubleplate(13),
         silver_doubleplate(14),
         zinc_doubleplate(15),
         manganese_doubleplate(16),
@@ -96,11 +98,11 @@ public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> i
         strontium(43),
         thallium(44),
         zirconium(45),
-        adamantite(46),
+        adamantium(46),
         bloodstone(47),
         draconid(48),
         meteoric_iron(49),
-        mythril(50),
+        mithril(50),
         orichalcum(51),
         ;
 

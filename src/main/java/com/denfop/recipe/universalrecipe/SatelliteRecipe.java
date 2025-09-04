@@ -15,10 +15,10 @@ import java.util.List;
 public class SatelliteRecipe implements Recipe<Container> {
     private final ResourceLocation id;
     private final String recipeType;
-    private final  List<ItemStack> inputs;
+    private final List<ItemStack> inputs;
     private final String typeOperation;
 
-    public SatelliteRecipe(ResourceLocation id, String recipeType,  List<ItemStack> inputs, String typeOperation) {
+    public SatelliteRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
         this.id = id;
         this.recipeType = recipeType;
         this.inputs = inputs;
@@ -34,7 +34,6 @@ public class SatelliteRecipe implements Recipe<Container> {
     public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
         return ItemStack.EMPTY;
     }
-
 
 
     @Override
@@ -53,7 +52,7 @@ public class SatelliteRecipe implements Recipe<Container> {
         return id;
     }
 
-    public  List<ItemStack> getInputs() {
+    public List<ItemStack> getInputs() {
         return inputs;
     }
 
@@ -62,11 +61,9 @@ public class SatelliteRecipe implements Recipe<Container> {
     }
 
 
-
     public String getRecipeType() {
         return recipeType;
     }
-
 
 
     @Override

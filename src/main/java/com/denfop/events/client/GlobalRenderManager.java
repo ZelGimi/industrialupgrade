@@ -1,8 +1,8 @@
 package com.denfop.events.client;
 
 
-import com.denfop.gui.GuiIU;
 import com.denfop.mixin.access.LevelRendererAccessor;
+import com.denfop.screen.ScreenMain;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -63,10 +63,10 @@ public class GlobalRenderManager {
                 .getGameTime()) {
             tick = event.player.level().getGameTime();
             Screen guiScreen = Minecraft.getInstance().screen;
-            if (guiScreen instanceof GuiIU) {
+            if (guiScreen instanceof ScreenMain) {
                 double ticks = 4;
                 while (ticks > 0) {
-                    ((GuiIU<?>) guiScreen).updateTickInterface();
+                    ((ScreenMain<?>) guiScreen).updateTickInterface();
                     ticks--;
                 }
 

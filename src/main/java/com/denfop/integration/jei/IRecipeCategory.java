@@ -5,9 +5,12 @@ import net.minecraft.network.chat.Component;
 
 public interface IRecipeCategory<T> extends mezz.jei.api.recipe.category.IRecipeCategory<T> {
     @Override
-    default Component getTitle(){
+    default Component getTitle() {
         return Component.literal(getTitles());
-    };
+    }
+
+    ;
+
     String getTitles();
 
     @Override

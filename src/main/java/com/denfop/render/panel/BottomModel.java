@@ -55,7 +55,7 @@ public class BottomModel<T extends Entity> extends EntityModel<T> {
                 break;
         }
 
-        this.glass =  partdefinition.addOrReplaceChild("glass", builder, PartPose.ZERO).bake(64, 64);
+        this.glass = partdefinition.addOrReplaceChild("glass", builder, PartPose.ZERO).bake(64, 64);
     }
 
 

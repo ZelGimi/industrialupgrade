@@ -12,5 +12,6 @@ public interface IInputFluid {
     List<FluidStack> getInputs();
 
     IInputItemStack getStack();
+
     CompoundTag writeNBT();
 }

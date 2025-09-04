@@ -1,9 +1,9 @@
 package com.denfop.api.multiblock;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
+import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockElement;
+import com.denfop.utils.Localization;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +28,7 @@ public class MultiBlockStructure {
     public final Map<BlockPos, Direction> RotationMap = new HashMap<>();
     public final Map<BlockPos, BakedModel> bakedModelMap = new HashMap<>();
     public final BlockPos pos;
-    private final Map<Class<? extends IMultiElement>, String> reportLaskBlock = new HashMap<>();
+    private final Map<Class<? extends IMultiElement>, String> reportInfoMap = new HashMap<>();
     public boolean hasActivatedItem = false;
     public int height;
     public int weight;
@@ -277,7 +277,7 @@ public class MultiBlockStructure {
                     return false;
                 }
             } else if (!entry.getValue().isInstance(tile)) {
-                String report = this.reportLaskBlock.get(entry.getValue());
+                String report = this.reportInfoMap.get(entry.getValue());
 
                 if (report != null && !report.isEmpty()) {
                     if (!world.isClientSide) {
@@ -372,10 +372,10 @@ public class MultiBlockStructure {
     }
 
     public void addReport(Class<? extends IMultiElement> name, String report) {
-        reportLaskBlock.put(name, report);
+        reportInfoMap.put(name, report);
     }
 
-    public void markDirty(TileMultiBlockBase tileMultiBlockBase, boolean full) {
+    public void markDirty(BlockEntityMultiBlockBase tileMultiBlockBase, boolean full) {
         List<ChunkPos> passedChunk = new ArrayList<>();
         if (full) {
             for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
@@ -394,8 +394,8 @@ public class MultiBlockStructure {
                     default -> pos1;
                 };
                 BlockEntity tile = world.getBlockEntity(pos1);
-                if (tile instanceof TileEntityMultiBlockElement) {
-                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getBlockEntity(pos1);
+                if (tile instanceof BlockEntityMultiBlockElement) {
+                    BlockEntityMultiBlockElement te = (BlockEntityMultiBlockElement) world.getBlockEntity(pos1);
                     te.setMainMultiElement(tileMultiBlockBase);
                     ChunkPos chunkPos = new ChunkPos(pos1);
                     if (!passedChunk.contains(chunkPos)) {
@@ -426,8 +426,8 @@ public class MultiBlockStructure {
                         break;
                 }
                 BlockEntity tile = world.getBlockEntity(pos1);
-                if (tile instanceof TileEntityMultiBlockElement) {
-                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getBlockEntity(pos1);
+                if (tile instanceof BlockEntityMultiBlockElement) {
+                    BlockEntityMultiBlockElement te = (BlockEntityMultiBlockElement) world.getBlockEntity(pos1);
                     te.setMainMultiElement(null);
                     ChunkPos chunkPos = new ChunkPos(pos1);
                     if (!passedChunk.contains(chunkPos)) {

@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
-import com.denfop.IItemTab;
 import com.denfop.IUCore;
+import com.denfop.tabs.IItemTab;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,9 +14,10 @@ public class ItemAxe extends AxeItem implements IItemTab {
     private String nameItem;
 
     public ItemAxe(String name) {
-        super(IUTiers.RUBY, 5.0F, -3.0F,new Properties().stacksTo(1));
-        this.name=name;
+        super(IUTiers.RUBY, 5.0F, -3.0F, new Properties().stacksTo(1));
+        this.name = name;
     }
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
@@ -29,7 +30,7 @@ public class ItemAxe extends AxeItem implements IItemTab {
                     index = pathBuilder.indexOf(targetString, index + replacement.length());
                 }
             }
-            this.nameItem = "item."+name;
+            this.nameItem = "item." + name;
         }
 
         return this.nameItem;

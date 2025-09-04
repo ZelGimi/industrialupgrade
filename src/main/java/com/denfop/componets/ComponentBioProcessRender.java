@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.tiles.mechanism.EnumTypeMachines;
+import com.denfop.blockentity.mechanism.EnumTypeMachines;
 
 public class ComponentBioProcessRender {
 

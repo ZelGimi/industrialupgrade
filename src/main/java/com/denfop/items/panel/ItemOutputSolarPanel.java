@@ -1,10 +1,10 @@
 package com.denfop.items.panel;
 
 import com.denfop.IUCore;
-import com.denfop.Localization;
 import com.denfop.api.solar.IOutputItem;
-import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.SubEnum;
 import com.denfop.items.ItemMain;
+import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemOutputSolarPanel<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IOutputItem {
+public class ItemOutputSolarPanel<T extends Enum<T> & SubEnum> extends ItemMain<T> implements IOutputItem {
     public ItemOutputSolarPanel(T element) {
         super(new Item.Properties(), element);
     }
@@ -29,16 +29,18 @@ public class ItemOutputSolarPanel<T extends Enum<T> & ISubEnum> extends ItemMain
         //   p_41423_.addComponent.literal((Localization.translate("iu.minipanel.jei1") + Localization.translate(new ItemStack(IUItem.basemachine2, 1
         //          , 91).getUnlocalizedName())());
     }
+
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.ItemTab;
     }
+
     @Override
     public double getOutput(final int damage) {
         return 0.5625 * Math.pow(2, damage);
     }
 
-    public enum Types implements ISubEnum {
+    public enum Types implements SubEnum {
         adv(0),
         hyb(1),
         ult(2),

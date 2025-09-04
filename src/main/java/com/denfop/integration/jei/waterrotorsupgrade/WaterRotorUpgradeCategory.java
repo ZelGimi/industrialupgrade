@@ -2,13 +2,13 @@ package com.denfop.integration.jei.waterrotorsupgrade;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.gui.GuiIU;
+import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
-import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import com.denfop.screen.ScreenMain;
+import com.denfop.utils.Localization;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -21,14 +21,15 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class WaterRotorUpgradeCategory extends GuiIU implements IRecipeCategory<WaterRotorUpgradeHandler> {
+public class WaterRotorUpgradeCategory extends ScreenMain implements IRecipeCategory<WaterRotorUpgradeHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
+
     public WaterRotorUpgradeCategory(
             IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        super(((BlockEntityUpgradeMachineFactory) BlockBaseMachine3Entity.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsupgrade_jei" +
                         ".png"), 5, 5, 140,
@@ -59,8 +60,8 @@ public class WaterRotorUpgradeCategory extends GuiIU implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, WaterRotorUpgradeHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT,52+22,37).addItemStack(recipe.getInputs()[1]);
-        builder.addSlot(RecipeIngredientRole.INPUT,30+22,37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 52 + 22, 37).addItemStack(recipe.getInputs()[1]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 30 + 22, 37).addItemStack(recipe.getInputs()[0]);
     }
 
     protected ResourceLocation getTexture() {
