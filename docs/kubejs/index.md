@@ -2,7 +2,7 @@
 description: Creating JSON Recipes for IndustrialUpgrade (Forge 1.19.2-1.20.1, NeoForge 1.21.1)
 ---
 
-# KubeJS Integration
+# Creating recipes in mechanisms
 
 Below is a comprehensive guide for players on how to create custom JSON recipes for the `industrialupgrade:universal_recipe` system. This document focuses exclusively on the recipe format and usage—no internal algorithm details are included.
 
