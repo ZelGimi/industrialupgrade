@@ -24,7 +24,7 @@ Each object type (system, star, planet, satellite, asteroid) has its own format 
   ```
 
 * All resource identifiers (`id`, `texture`, `system`, `star`, `planet`) are case-sensitive.
-* Texture paths are written **without `.png`** — it is added automatically.
+* Texture paths are written **with `.png`**
 * If a required object (system, star, planet) is not found, the game will throw an error when loading.
 
 ---
