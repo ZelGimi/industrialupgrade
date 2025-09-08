@@ -2,7 +2,7 @@
 description: Creating JSON Quantum Quarry recipes
 ---
 
-## Quantum Quarry Recipe Guide
+# Quantum Quarry Recipe Guide
 
 This guide explains how to write a JSON script for registering **Quantum Quarry** modifications in IndustrialUpgrade. Players can define which items are added or removed for various processing types.
 
