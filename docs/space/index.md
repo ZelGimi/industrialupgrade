@@ -35,6 +35,7 @@ A **system** is the root container for stars and planets.
 
 ```json
 {
+  "type": "industrialupgrade:system_add",
   "name": "сentauri",
   "distance": 1
 }
@@ -55,6 +56,7 @@ Stars must belong to a system and are defined with angle and size.
 
 ```json
 {
+"type": "industrialupgrade:star_add",
   "name": "сentauri_a",
   "system": "сentauri",
   "texture": "modid:textures/star/сentauri_a.png",
@@ -81,6 +83,7 @@ Planets orbit stars inside a system.
 
 ```json
 {
+ "type": "industrialupgrade:planet_add",
   "name": "proxima_b",
   "system": "сentauri",
   "texture": "modid:textures/planet/proxima_b.png",
@@ -127,6 +130,7 @@ Satellites orbit planets.
 
 ```json
 {
+   "type": "industrialupgrade:satellite_add",
   "name": "proxima_b_a",
   "system": "сentauri",
   "texture": "modid:textures/satellite/proxima_b_a.png",
@@ -157,6 +161,7 @@ Asteroids orbit stars and may spawn in belts.
 
 ```json
 {
+ "type": "industrialupgrade:asteroid_add",
   "name": "asteroid_belt",
   "system": "сentauri",
   "texture": "modid:textures/celestial/asteroid_belt",
