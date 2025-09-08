@@ -2,7 +2,7 @@
 description: Creating JSON Recipes for IndustrialUpgrade (Forge 1.19.2-1.20.1, NeoForge 1.21.1)
 ---
 
-# Creating recipes in mechanisms
+# Creating/Removing recipes in mechanisms
 
 Below is a comprehensive guide for players on how to create custom JSON recipes for the `industrialupgrade:universal_recipe` system. This document focuses exclusively on the recipe format and usage—no internal algorithm details are included.
 
@@ -10,7 +10,7 @@ Below is a comprehensive guide for players on how to create custom JSON recipes 
 
 ## 1. Basic JSON Structure
 
-Every Universal Recipe JSON file must follow this format:
+Every Universal Recipe JSON file must follow this format(adding):
 
 ```json
 {
@@ -35,6 +35,27 @@ Every Universal Recipe JSON file must follow this format:
 * `inputs` is an array of input definitions (items, fluids, or tags).
 * `outputs` is an array of output definitions (items or fluids).
 * `params` is an optional object for any additional metadata (e.g., heat value, processing time, flags).
+
+
+Every Universal Recipe JSON file must follow this format(removing):
+
+```json
+{
+  "type": "industrialupgrade:universal_recipe",
+  "recipe_type": "<machine_name>",
+  "isFluidRecipe": <true|false>,       // optional; defaults to false
+  "isRemoveAll": <true|false>,       // optional; defaults to false
+  "output": [
+    // array of output components: item or fluid
+  ]
+}
+```
+
+* `type` must always be `"industrialupgrade:universal_recipe_delete"`.
+* `recipe_type` defines the **machine or processing type** to which this recipe belongs (e.g., `"macerator"`, `"fluid_integrator"`, `"crusher"`, `"alloy_smelter"`). The mod registers recipes under this name.
+* `isFluidRecipe` (boolean) indicates whether the recipe should also be registered as a fluid-centric recipe. If omitted, it defaults to `false`.
+* `isRemoveAll` (boolean) indicates whether it is necessary to delete all recipes with such an output`.
+* `output` is an array of output definitions (items or fluids).
 
 ---
 
