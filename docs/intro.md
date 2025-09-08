@@ -1,3 +1,6 @@
+---
+
+---
 # Industrial Upgrade Wiki
 
 Welcome to the **Industrial Upgrade Wiki** — your complete guide to modding and customizing Industrial Upgrade.  
