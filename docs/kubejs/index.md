@@ -1,5 +1,5 @@
 ---
-description: Creating JSON Recipes for IndustrialUpgrade (Forge 1.19.2-1.20.1, NeoForge 1.21.1)
+description: Creating/Removing JSON Recipes for IndustrialUpgrade (Forge 1.19.2-1.20.1, NeoForge 1.21.1)
 ---
 
 # Creating/Removing recipes in mechanisms
