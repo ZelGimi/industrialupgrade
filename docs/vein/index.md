@@ -26,7 +26,7 @@ Each vein is described in a JSON file located under the `data/modid/vein/` direc
   ],
   "colors": [ // Additionally, not necessarily
     {
-      "id": "minecraft:stone",
+      "id": "minecraft:coal_ore",
       "color": 16777215
     },
     {
