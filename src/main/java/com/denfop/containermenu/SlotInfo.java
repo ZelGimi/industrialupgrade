@@ -71,6 +71,11 @@ public class SlotInfo extends Inventory implements VirtualSlot {
         this.fluidStackList = fluidStackList;
     }
 
+    @Override
+    public boolean canPlaceVirtualItem(int index, ItemStack stack) {
+        return true;
+    }
+
     public boolean isFluid() {
         return fluid;
     }

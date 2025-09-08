@@ -57,10 +57,7 @@ public class WorldSavedDataIU extends SavedData {
 
     public WorldSavedDataIU(@Nonnull CompoundTag compound) {
 
-        if (shellClusterChuncks != null)
-            shellClusterChuncks.clear();
-        if (shellClusterChuncks == null)
-            shellClusterChuncks = new HashMap<>();
+        shellClusterChuncks = new HashMap<>();
 
         if (volcano != null)
             volcano = null;

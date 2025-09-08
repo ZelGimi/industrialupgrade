@@ -195,7 +195,7 @@ public class BlockDeposits2<T extends Enum<T> & SubEnum> extends BlockCore<T> im
             }
         } else {
             final int meta = getMetaFromState(state);
-            final VeinType vein = WorldBaseGen.veinTypes.get(16 + meta);
+            final VeinType vein = WorldBaseGen.veinTypes.get(32 + meta);
             if (vein.getHeavyOre() == null) {
                 final ChanceOre block = vein.getOres().get(0);
                 drops.add(new ItemStack(block.getBlock().getBlock(), 1));

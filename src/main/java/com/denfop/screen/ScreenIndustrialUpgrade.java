@@ -333,7 +333,7 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
                     renderSlotHighlight(guiGraphics, j2, k2, 0, this.getSlotColor(k));
                 }
                 if (slot instanceof SlotInvSlot)
-                    if (((SlotInvSlot) slot).inventory.hasItemList() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (((SlotInvSlot) slot).inventory.hasItemList()&&!((SlotInvSlot) slot).hasItem() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                         renderItemTooltipGrid(guiGraphics, ((SlotInvSlot) slot).inventory.getStacks(((SlotInvSlot) slot).index), mouseX - guiLeft + 5, mouseY - guiTop + 5);
                     }
             }

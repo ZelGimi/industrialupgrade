@@ -51,6 +51,11 @@ public class BlockEntitySimulatorReactor extends BlockEntityInventory implements
         super(BlockBaseMachine3Entity.simulation_reactors, pos, state);
         this.invSlot = new InventorySimulatorReactor(this, Inventory.TypeItemSlot.INPUT, 80) {
             @Override
+            public boolean canPlaceVirtualItem(int index, ItemStack stack) {
+                return canPlaceItem(index,stack);
+            }
+
+            @Override
             public boolean canPlaceItem(final int index, final ItemStack stack) {
                 if (reactors == null) {
                     return false;

@@ -3,7 +3,7 @@ loaderVersion="[43,)"
 license="AGPL"
 [[mods]] 
 modId="industrialupgrade"
-version="3.3.2.3" #mandatory
+version="3.3.2.5" #mandatory
 displayName="Industrial Upgrade" #mandatory
 credits=""
 authors="Denfop"
