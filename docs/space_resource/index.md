@@ -1,7 +1,7 @@
 ---
 
-## description: Adding Items to Colonies and Expeditions (Space Objects)
-
+description: Adding Items to Colonies and Expeditions (Space Objects)
+---
 # Adding Resources to Space Objects
 
 This guide explains how to configure **items and fluids** that can be obtained through **colonies** or **exploration missions** (rovers, probes, satellites, rockets) on planets, satellites, and asteroids.
