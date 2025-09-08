@@ -41,7 +41,7 @@ Every Universal Recipe JSON file must follow this format(removing):
 
 ```json
 {
-  "type": "industrialupgrade:universal_recipe",
+  "type": "industrialupgrade:universal_recipe_delete",
   "recipe_type": "<machine_name>",
   "isFluidRecipe": <true|false>,       // optional; defaults to false
   "isRemoveAll": <true|false>,       // optional; defaults to false
