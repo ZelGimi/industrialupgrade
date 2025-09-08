@@ -242,12 +242,14 @@ public class InventoryRecipes extends Inventory implements ITypeSlot {
             return false;
         }
         if (this.tank == null) {
-            return
+            return tile
+                    .getRecipeOutput(index) != null &&
 
                     slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile
                             .getRecipeOutput(index).getList().get(0);
         } else {
-            return slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile
+            return tile
+                    .getRecipeOutput(index) != null && slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile
                     .getRecipeOutput(index).getList().get(0) && this.tank.getFluidAmount() >= this.tile
                     .getRecipeOutput(index)
                     .getRecipe().input.getFluid().getAmount();

@@ -443,7 +443,13 @@ public class WorldBaseGen {
         if (!event.level.isClientSide() && event.level.dimension() == Level.OVERWORLD) {
             if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
                 GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
-                generatorVolcano.setWorld(event.level);
+                try {
+                    generatorVolcano.setWorld(event.level);
+                }catch (Exception e){
+                    WorldGenVolcano.generatorVolcanoList.remove(0);
+                    return;
+                }
+
                 generatorVolcano.generate();
                 if (generatorVolcano.isEnd()) {
                     WorldGenVolcano.generatorVolcanoList.remove(0);

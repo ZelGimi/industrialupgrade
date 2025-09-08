@@ -2,6 +2,7 @@ package com.denfop.inventory;
 
 import com.denfop.api.menu.VirtualSlot;
 import com.denfop.blockentity.base.BlockEntitySimulatorReactor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collections;
@@ -13,6 +14,10 @@ public class InventorySimulatorReactor extends Inventory implements VirtualSlot 
         super(base, typeItemSlot, count);
     }
 
+    @Override
+    public boolean canPlaceVirtualItem(int index, ItemStack stack) {
+        return this.canPlaceItem(index,stack);
+    }
 
     @Override
     public boolean isFluid() {

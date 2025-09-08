@@ -302,7 +302,7 @@ public class BlockEntityAutoCrafter extends BlockEntityElectricMachine implement
         if (!(level instanceof ServerLevel))
             return;
         ;
-        RecipeManager recipeManager = ((ServerLevel) level).getRecipeManager();
+        RecipeManager recipeManager = level.getRecipeManager();
         Collection<CraftingRecipe> recipes = recipeManager.getAllRecipesFor(RecipeType.CRAFTING);
 
         if (this.autoCrafter.isEmpty()) {

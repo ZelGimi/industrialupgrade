@@ -9,6 +9,8 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
+
 import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
 
 
@@ -23,7 +25,7 @@ public class VeinCommand {
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     if (!player.isCreative())
                         return 0;
-                    shellClusterChuncks.clear();
+                    shellClusterChuncks = new HashMap<>();
                     return 1;
                 }));
     }

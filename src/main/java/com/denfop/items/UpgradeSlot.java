@@ -40,7 +40,7 @@ public class UpgradeSlot implements VirtualSlot {
     }
 
     @Override
-    public boolean canPlaceItem(final int index, final ItemStack stack) {
+    public boolean canPlaceVirtualItem(final int index, final ItemStack stack) {
         return true;
     }
 

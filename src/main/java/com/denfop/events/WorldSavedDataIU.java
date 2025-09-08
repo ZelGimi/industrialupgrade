@@ -56,10 +56,7 @@ public class WorldSavedDataIU extends SavedData {
     }
 
     public WorldSavedDataIU(@Nonnull CompoundTag compound) {
-        if (shellClusterChuncks == null)
-            shellClusterChuncks = new HashMap<>();
-        if (shellClusterChuncks != null)
-            shellClusterChuncks.clear();
+        shellClusterChuncks = new HashMap<>();
         if (compound.contains("shells")) {
             loadShellClusterChunks(compound.getCompound("shells"));
         }

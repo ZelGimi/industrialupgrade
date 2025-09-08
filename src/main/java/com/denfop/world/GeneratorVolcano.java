@@ -74,6 +74,14 @@ public class GeneratorVolcano {
 
 
         this.position2 = new BlockPos(p159749.origin().getX(), 30, p159749.origin().getZ());
+        this.chunkPos = new ChunkPos(position2);
+        this.chunk = p159749.level().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.EMPTY, false);
+        final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(), position2.getZ());
+        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
+
+        this.position = checkPos.above(maxbaseHeight / 2);
+        if (position.getY() >= 40)
+            position = position.below(position.getY() - 40);
         this.thread = new Thread() {
             @Override
             public void run() {
@@ -319,8 +327,6 @@ public class GeneratorVolcano {
             this.world = world;
             this.rand = WorldBaseGen.random;
             this.end = false;
-            this.chunkPos = new ChunkPos(position2);
-            this.chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
             this.baseHeight = 80 + rand.nextInt(30);
             this.baseRadius = 35 + rand.nextInt(20);
             this.protrusionChance = 0.05;
@@ -340,13 +346,7 @@ public class GeneratorVolcano {
                 initBasaltsOres();
             }
 
-            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(), position2.getZ());
-            BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
-
-            this.position = checkPos.above(maxbaseHeight / 2);
-            if (position.getY() >= 40)
-                position = position.below(position.getY() - 40);
-            this.y = 0;
+             this.y = 0;
             this.end = false;
         }
     }

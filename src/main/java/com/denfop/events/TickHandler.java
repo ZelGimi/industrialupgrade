@@ -17,9 +17,7 @@ import com.denfop.items.energy.instruments.ItemEnergyInstruments;
 import com.denfop.mixin.invoker.ParticleInvoker;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
@@ -781,7 +779,6 @@ public class TickHandler {
                     }
                 }
             }
-
 
             RenderSystem.disableDepthTest();
 

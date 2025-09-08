@@ -56,6 +56,11 @@ public class SlotInfo extends Inventory implements VirtualSlot {
     }
 
     @Override
+    public boolean canPlaceVirtualItem(int index, ItemStack stack) {
+        return this.canPlaceItem(index,stack);
+    }
+
+    @Override
     public CompoundTag writeToNbt(CompoundTag nbt) {
         nbt = super.writeToNbt(nbt);
         nbt.putBoolean("fluid", isFluid());
