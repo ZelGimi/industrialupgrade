@@ -2,7 +2,7 @@
 description: Creating JSON Vein 
 ---
 
-# Vein Documentation
+# Creating Vein 
 
 This document describes how to create **custom ore veins** in IndustrialUpgrade using JSON files. These veins define where ores generate, their probabilities, colors, and associated deposit blocks.
 
