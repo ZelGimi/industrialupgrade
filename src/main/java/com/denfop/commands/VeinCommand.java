@@ -9,6 +9,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import java.util.HashMap;
+
 import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
@@ -22,7 +24,7 @@ public class VeinCommand {
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     if (!player.isCreative())
                         return 0;
-                    shellClusterChuncks.clear();
+                    shellClusterChuncks = new HashMap<>();
                     return 1;
                 }));
     }

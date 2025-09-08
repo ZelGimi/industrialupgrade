@@ -25,10 +25,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BaseRecipe implements CraftingRecipe {
@@ -275,134 +272,206 @@ public class BaseRecipe implements CraftingRecipe {
     }
 
     public ItemStack matches(CraftingInput inv1) {
-        CraftingInputIndustrial inv = new CraftingInputIndustrial(inv1.width(), inv1.height(), inv1.items());
-        int width = (int) inv.width();
-        int height = inv.height();
+        CraftingInputIndustrial inv2 = new CraftingInputIndustrial(inv1.width(), inv1.height(), inv1.items());
+        int width = (int) inv2.width();
+        int height = inv2.height();
+        List<CraftingInputIndustrial> craftingInputIndustrials = new LinkedList<>();
         if (height == 1 && width == 1) {
-            inv = new CraftingInputIndustrial(3, 1, List.of(inv.getItem(0), ItemStack.EMPTY, ItemStack.EMPTY));
+            inv2 = new CraftingInputIndustrial(3, 1, List.of(inv2.getItem(0), ItemStack.EMPTY, ItemStack.EMPTY));
+            craftingInputIndustrials.add(inv2);
+            inv2 = new CraftingInputIndustrial(3, 1, List.of(ItemStack.EMPTY, inv2.getItem(0), ItemStack.EMPTY));
+            craftingInputIndustrials.add(inv2);
+            inv2 = new CraftingInputIndustrial(3, 1, List.of(ItemStack.EMPTY, ItemStack.EMPTY, inv2.getItem(0)));
+            craftingInputIndustrials.add(inv2);
+        } else if (height == 2 && width == 2) {
+            inv2 = new CraftingInputIndustrial(3, 2, List.of(inv2.getItem(0), inv2.getItem(1), ItemStack.EMPTY, inv2.getItem(2), inv2.getItem(3), ItemStack.EMPTY));
+            craftingInputIndustrials.add(inv2);
+            inv2 = new CraftingInputIndustrial(3, 2, List.of(ItemStack.EMPTY, inv2.getItem(0), inv2.getItem(1), ItemStack.EMPTY, inv2.getItem(2), inv2.getItem(3)));
+            craftingInputIndustrials.add(inv2);
+        } else if (height == 1 && width == 2) {
+            inv2 = new CraftingInputIndustrial(3, 1, List.of(inv2.getItem(0), inv2.getItem(1), ItemStack.EMPTY));
+            craftingInputIndustrials.add(inv2);
+            inv2 = new CraftingInputIndustrial(3, 1, List.of(ItemStack.EMPTY, inv2.getItem(0), inv2.getItem(1)));
+            craftingInputIndustrials.add(inv2);
+        } else if (height == 2 && width == 1) {
+            inv2 = new CraftingInputIndustrial(1, 3, List.of(inv2.getItem(0), inv2.getItem(1), ItemStack.EMPTY));
+            craftingInputIndustrials.add(inv2);
+            inv2 = new CraftingInputIndustrial(1, 3, List.of(ItemStack.EMPTY, inv2.getItem(0), inv2.getItem(1)));
+            craftingInputIndustrials.add(inv2);
+        } else {
+            craftingInputIndustrials.add(inv2);
         }
-        if (height == 2 && width == 2) {
-            inv = new CraftingInputIndustrial(3, 2, List.of(inv.getItem(0), inv.getItem(1), ItemStack.EMPTY, inv.getItem(2), inv.getItem(3), ItemStack.EMPTY));
-        }
-        if (height == 1 && width == 2) {
-            inv = new CraftingInputIndustrial(3, 1, List.of(inv.getItem(0), inv.getItem(1), ItemStack.EMPTY));
-        }
-        if (height == 2 && width == 1) {
-            inv = new CraftingInputIndustrial(1, 3, List.of(inv.getItem(0), inv.getItem(1), ItemStack.EMPTY));
-        }
-        width = (int) inv.width();
-        height = inv.height();
-        List<Map<Integer, ItemStack>> inventories = new ArrayList<>();
+        for (CraftingInputIndustrial inv : craftingInputIndustrials) {
+            width = inv.width();
+            height = inv.height();
+            List<Map<Integer, ItemStack>> inventories = new ArrayList<>();
 
-        if (width > 2 || height > 2) {
+            if (width > 2 || height > 2) {
 
-            if (width == 2) {
-                Map<Integer, ItemStack> inventory = new HashMap<>();
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, inv.getItem(j * 2));
-                    inventory.put((j * 3) + 1, inv.getItem((j * 2) + 1));
-                    inventory.put((j * 3) + 2, ItemStack.EMPTY);
-                }
-                inventories.add(new HashMap<>(inventory));
-                inventory = new HashMap<>();
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, ItemStack.EMPTY);
-                    inventory.put((j * 3) + 1, inv.getItem(j * 2));
-                    inventory.put((j * 3) + 2, inv.getItem((j * 2) + 1));
-                }
-                inventories.add(new HashMap<>(inventory));
-            } else if (width == 1) {
-                Map<Integer, ItemStack> inventory = new HashMap<>();
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, ItemStack.EMPTY);
-                    inventory.put((j * 3) + 1, inv.getItem(j));
-                    inventory.put((j * 3) + 2, ItemStack.EMPTY);
-                }
-                inventories.add(new HashMap<>(inventory));
-                inventory = new HashMap<>();
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, ItemStack.EMPTY);
-                    inventory.put((j * 3) + 1, ItemStack.EMPTY);
-                    inventory.put((j * 3) + 2, inv.getItem(j));
-                }
-                inventories.add(new HashMap<>(inventory));
-                inventory = new HashMap<>();
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, inv.getItem(j));
-                    inventory.put((j * 3) + 1, ItemStack.EMPTY);
-                    inventory.put((j * 3) + 2, ItemStack.EMPTY);
-                }
-                inventories.add(new HashMap<>(inventory));
+                if (width == 2) {
+                    Map<Integer, ItemStack> inventory = new HashMap<>();
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, inv.getItem(j * 2));
+                        inventory.put((j * 3) + 1, inv.getItem((j * 2) + 1));
+                        inventory.put((j * 3) + 2, ItemStack.EMPTY);
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                    inventory = new HashMap<>();
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, ItemStack.EMPTY);
+                        inventory.put((j * 3) + 1, inv.getItem(j * 2));
+                        inventory.put((j * 3) + 2, inv.getItem((j * 2) + 1));
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                } else if (width == 1) {
+                    Map<Integer, ItemStack> inventory = new HashMap<>();
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, ItemStack.EMPTY);
+                        inventory.put((j * 3) + 1, inv.getItem(j));
+                        inventory.put((j * 3) + 2, ItemStack.EMPTY);
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                    inventory = new HashMap<>();
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, ItemStack.EMPTY);
+                        inventory.put((j * 3) + 1, ItemStack.EMPTY);
+                        inventory.put((j * 3) + 2, inv.getItem(j));
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                    inventory = new HashMap<>();
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, inv.getItem(j));
+                        inventory.put((j * 3) + 1, ItemStack.EMPTY);
+                        inventory.put((j * 3) + 2, ItemStack.EMPTY);
+                    }
+                    inventories.add(new HashMap<>(inventory));
 
-            } else if (height == 2) {
-                Map<Integer, ItemStack> inventory = new HashMap<>();
-                inventory.put(0, ItemStack.EMPTY);
-                inventory.put(1, ItemStack.EMPTY);
-                inventory.put(2, ItemStack.EMPTY);
-                for (int j = 1; j < height + 1; j++) {
-                    inventory.put(j * 3, inv.getItem((j - 1) * 3));
-                    inventory.put((j * 3) + 1, inv.getItem(((j - 1) * 3) + 1));
-                    inventory.put((j * 3) + 2, inv.getItem(((j - 1) * 3) + 2));
+                } else if (height == 2) {
+                    Map<Integer, ItemStack> inventory = new HashMap<>();
+                    inventory.put(0, ItemStack.EMPTY);
+                    inventory.put(1, ItemStack.EMPTY);
+                    inventory.put(2, ItemStack.EMPTY);
+                    for (int j = 1; j < height + 1; j++) {
+                        inventory.put(j * 3, inv.getItem((j - 1) * 3));
+                        inventory.put((j * 3) + 1, inv.getItem(((j - 1) * 3) + 1));
+                        inventory.put((j * 3) + 2, inv.getItem(((j - 1) * 3) + 2));
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                    inventory = new HashMap<>();
+                    inventory.put(6, ItemStack.EMPTY);
+                    inventory.put(7, ItemStack.EMPTY);
+                    inventory.put(8, ItemStack.EMPTY);
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, inv.getItem((j) * 3));
+                        inventory.put((j * 3) + 1, inv.getItem(((j) * 3) + 1));
+                        inventory.put((j * 3) + 2, inv.getItem(((j) * 3) + 2));
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                } else if (height == 1) {
+                    Map<Integer, ItemStack> inventory = new HashMap<>();
+                    inventory.put(0, ItemStack.EMPTY);
+                    inventory.put(1, ItemStack.EMPTY);
+                    inventory.put(2, ItemStack.EMPTY);
+                    for (int j = 1; j < height + 1; j++) {
+                        inventory.put(j * 3, inv.getItem((j - 1) * 3));
+                        inventory.put((j * 3) + 1, inv.getItem(((j - 1) * 3) + 1));
+                        inventory.put((j * 3) + 2, inv.getItem(((j - 1) * 3) + 2));
+                    }
+                    inventory.put(6, ItemStack.EMPTY);
+                    inventory.put(7, ItemStack.EMPTY);
+                    inventory.put(8, ItemStack.EMPTY);
+                    inventories.add(new HashMap<>(inventory));
+                    inventory = new HashMap<>();
+                    inventory.put(3, ItemStack.EMPTY);
+                    inventory.put(4, ItemStack.EMPTY);
+                    inventory.put(5, ItemStack.EMPTY);
+                    inventory.put(6, ItemStack.EMPTY);
+                    inventory.put(7, ItemStack.EMPTY);
+                    inventory.put(8, ItemStack.EMPTY);
+                    for (int j = 0; j < height; j++) {
+                        inventory.put(j * 3, inv.getItem((j) * 3));
+                        inventory.put((j * 3) + 1, inv.getItem(((j) * 3) + 1));
+                        inventory.put((j * 3) + 2, inv.getItem(((j) * 3) + 2));
+                    }
+                    inventories.add(new HashMap<>(inventory));
+                    inventory = new HashMap<>();
+                    inventory.put(0, ItemStack.EMPTY);
+                    inventory.put(1, ItemStack.EMPTY);
+                    inventory.put(2, ItemStack.EMPTY);
+                    inventory.put(3, ItemStack.EMPTY);
+                    inventory.put(4, ItemStack.EMPTY);
+                    inventory.put(5, ItemStack.EMPTY);
+                    for (int j = 2; j < height + 2; j++) {
+                        inventory.put(j * 3, inv.getItem((j - 2) * 3));
+                        inventory.put((j * 3) + 1, inv.getItem(((j - 2) * 3) + 1));
+                        inventory.put((j * 3) + 2, inv.getItem(((j - 2) * 3) + 2));
+                    }
+                    inventories.add(new HashMap<>(inventory));
                 }
-                inventories.add(new HashMap<>(inventory));
-                inventory = new HashMap<>();
-                inventory.put(6, ItemStack.EMPTY);
-                inventory.put(7, ItemStack.EMPTY);
-                inventory.put(8, ItemStack.EMPTY);
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, inv.getItem((j) * 3));
-                    inventory.put((j * 3) + 1, inv.getItem(((j) * 3) + 1));
-                    inventory.put((j * 3) + 2, inv.getItem(((j) * 3) + 2));
-                }
-                inventories.add(new HashMap<>(inventory));
-            } else if (height == 1) {
-                Map<Integer, ItemStack> inventory = new HashMap<>();
-                inventory.put(0, ItemStack.EMPTY);
-                inventory.put(1, ItemStack.EMPTY);
-                inventory.put(2, ItemStack.EMPTY);
-                for (int j = 1; j < height + 1; j++) {
-                    inventory.put(j * 3, inv.getItem((j - 1) * 3));
-                    inventory.put((j * 3) + 1, inv.getItem(((j - 1) * 3) + 1));
-                    inventory.put((j * 3) + 2, inv.getItem(((j - 1) * 3) + 2));
-                }
-                inventory.put(6, ItemStack.EMPTY);
-                inventory.put(7, ItemStack.EMPTY);
-                inventory.put(8, ItemStack.EMPTY);
-                inventories.add(new HashMap<>(inventory));
-                inventory = new HashMap<>();
-                inventory.put(3, ItemStack.EMPTY);
-                inventory.put(4, ItemStack.EMPTY);
-                inventory.put(5, ItemStack.EMPTY);
-                inventory.put(6, ItemStack.EMPTY);
-                inventory.put(7, ItemStack.EMPTY);
-                inventory.put(8, ItemStack.EMPTY);
-                for (int j = 0; j < height; j++) {
-                    inventory.put(j * 3, inv.getItem((j) * 3));
-                    inventory.put((j * 3) + 1, inv.getItem(((j) * 3) + 1));
-                    inventory.put((j * 3) + 2, inv.getItem(((j) * 3) + 2));
-                }
-                inventories.add(new HashMap<>(inventory));
-                inventory = new HashMap<>();
-                inventory.put(0, ItemStack.EMPTY);
-                inventory.put(1, ItemStack.EMPTY);
-                inventory.put(2, ItemStack.EMPTY);
-                inventory.put(3, ItemStack.EMPTY);
-                inventory.put(4, ItemStack.EMPTY);
-                inventory.put(5, ItemStack.EMPTY);
-                for (int j = 2; j < height + 2; j++) {
-                    inventory.put(j * 3, inv.getItem((j - 2) * 3));
-                    inventory.put((j * 3) + 1, inv.getItem(((j - 2) * 3) + 1));
-                    inventory.put((j * 3) + 2, inv.getItem(((j - 2) * 3) + 2));
-                }
-                inventories.add(new HashMap<>(inventory));
-            }
-            if (!inventories.isEmpty()) {
-                for (Map<Integer, ItemStack> inventory : inventories) {
+                if (!inventories.isEmpty()) {
+                    for (Map<Integer, ItemStack> inventory : inventories) {
+                        for (int j = 0; j < this.size; j++) {
+                            if (j != this.size - 1) {
+                                boolean has = true;
+                                for (int i = 0; i < inventory.size(); i++) {
+                                    ItemStack offer = inventory.get(i);
+                                    if (this.inputIndex[j][i] == 0 && !offer.isEmpty()) {
+                                        has = false;
+                                        break;
+                                    }
+                                    if (this.inputIndex[j][i] != 0 && offer.isEmpty()) {
+                                        has = false;
+                                        break;
+                                    }
+                                    if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
+                                        continue;
+                                    }
+                                    if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                                        input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
+
+                                    if (!this.input[j][i].matches(offer)) {
+                                        has = false;
+                                        break;
+                                    }
+                                }
+                                if (has) {
+                                    return this.output.copy();
+                                }
+                            } else {
+                                boolean has = true;
+                                for (int i = 0; i < inventory.size(); i++) {
+                                    ItemStack offer = inventory.get(i);
+                                    if (this.inputIndex[j][i] == 0 && !offer.isEmpty()) {
+                                        has = false;
+                                        break;
+                                    }
+                                    if (this.inputIndex[j][i] != 0 && offer.isEmpty()) {
+                                        has = false;
+                                        break;
+                                    }
+                                    if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
+                                        continue;
+                                    }
+                                    if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
+                                        input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
+
+                                    if (!this.input[j][i].matches(offer)) {
+                                        has = false;
+                                        break;
+                                    }
+                                }
+                                if (has) {
+                                    return this.output.copy();
+                                }
+                            }
+                        }
+                    }
+                } else {
                     for (int j = 0; j < this.size; j++) {
                         if (j != this.size - 1) {
                             boolean has = true;
-                            for (int i = 0; i < inventory.size(); i++) {
-                                ItemStack offer = inventory.get(i);
+                            for (int i = 0; i < 9; i++) {
+                                ItemStack offer = inv.getItem(i % 3, i / 3);
                                 if (this.inputIndex[j][i] == 0 && !offer.isEmpty()) {
                                     has = false;
                                     break;
@@ -426,16 +495,13 @@ public class BaseRecipe implements CraftingRecipe {
                                 return this.output.copy();
                             }
                         } else {
-                            boolean has = true;
-                            for (int i = 0; i < inventory.size(); i++) {
-                                ItemStack offer = inventory.get(i);
+                            for (int i = 0; i < width * height; i++) {
+                                ItemStack offer = inv.getItem(i);
                                 if (this.inputIndex[j][i] == 0 && !offer.isEmpty()) {
-                                    has = false;
-                                    break;
+                                    return ItemStack.EMPTY;
                                 }
                                 if (this.inputIndex[j][i] != 0 && offer.isEmpty()) {
-                                    has = false;
-                                    break;
+                                    return ItemStack.EMPTY;
                                 }
                                 if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
                                     continue;
@@ -444,71 +510,18 @@ public class BaseRecipe implements CraftingRecipe {
                                     input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
 
                                 if (!this.input[j][i].matches(offer)) {
-                                    has = false;
-                                    break;
+                                    return ItemStack.EMPTY;
                                 }
                             }
-                            if (has) {
-                                return this.output.copy();
-                            }
                         }
                     }
+                    return this.output.copy();
                 }
-            } else {
-                for (int j = 0; j < this.size; j++) {
-                    if (j != this.size - 1) {
-                        boolean has = true;
-                        for (int i = 0; i < 9; i++) {
-                            ItemStack offer = inv.getItem(i % 3, i / 3);
-                            if (this.inputIndex[j][i] == 0 && !offer.isEmpty()) {
-                                has = false;
-                                break;
-                            }
-                            if (this.inputIndex[j][i] != 0 && offer.isEmpty()) {
-                                has = false;
-                                break;
-                            }
-                            if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
-                                continue;
-                            }
-                            if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
-                                input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
-
-                            if (!this.input[j][i].matches(offer)) {
-                                has = false;
-                                break;
-                            }
-                        }
-                        if (has) {
-                            return this.output.copy();
-                        }
-                    } else {
-                        for (int i = 0; i < width * height; i++) {
-                            ItemStack offer = inv.getItem(i);
-                            if (this.inputIndex[j][i] == 0 && !offer.isEmpty()) {
-                                return ItemStack.EMPTY;
-                            }
-                            if (this.inputIndex[j][i] != 0 && offer.isEmpty()) {
-                                return ItemStack.EMPTY;
-                            }
-                            if (this.inputIndex[j][i] == 0 && offer.isEmpty()) {
-                                continue;
-                            }
-                            if (input[j][i] instanceof InputOreDict && input[j][i].hasTag() && input[j][i].getInputs().isEmpty())
-                                input[j][i] = new InputOreDict(this.input[j][i].getTag(), this.input[j][i].getAmount());
-
-                            if (!this.input[j][i].matches(offer)) {
-                                return ItemStack.EMPTY;
-                            }
-                        }
-                    }
-                }
-                return this.output.copy();
             }
-        } else {
-            return ItemStack.EMPTY;
         }
+
         return ItemStack.EMPTY;
+
     }
 
     public ShapedRecipePattern getPattern() {

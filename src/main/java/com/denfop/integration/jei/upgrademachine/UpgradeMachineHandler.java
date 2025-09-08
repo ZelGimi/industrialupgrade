@@ -76,18 +76,23 @@ public class UpgradeMachineHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("upgrade_machine")) {
-            addRecipe(
-                    container.input.getInputs().get(0).getInputs().get(0),
-                    container.input.getInputs().get(1).getInputs().get(0),
-                    container.input.getInputs().get(2).getInputs().get(0),
-                    container.input.getInputs().get(3).getInputs().get(0),
-                    container.input.getInputs().get(4).getInputs().get(0),
-                    container.input.getInputs().get(5).getInputs().get(0),
-                    container.input.getInputs().get(6).getInputs().get(0),
-                    container.input.getInputs().get(7).getInputs().get(0),
-                    container.input.getInputs().get(8).getInputs().get(0),
-                    container.getOutput().items.get(0)
-            );
+            try {
+                addRecipe(
+                        container.input.getInputs().get(0).getInputs().get(0),
+                        container.input.getInputs().get(1).getInputs().get(0),
+                        container.input.getInputs().get(2).getInputs().get(0),
+                        container.input.getInputs().get(3).getInputs().get(0),
+                        container.input.getInputs().get(4).getInputs().get(0),
+                        container.input.getInputs().get(5).getInputs().get(0),
+                        container.input.getInputs().get(6).getInputs().get(0),
+                        container.input.getInputs().get(7).getInputs().get(0),
+                        container.input.getInputs().get(8).getInputs().get(0),
+                        container.getOutput().items.get(0)
+                );
+            }catch (Exception e){
+                System.out.println(2);
+            }
+
 
 
         }

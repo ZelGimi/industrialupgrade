@@ -759,8 +759,12 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             Color color = tuple.getA();
             veinStructure = new VeinStructure(p_159749_.level(), veinType,
                     new BlockPos(chunkPos.x * 16 + random.nextInt(16), 2, chunkPos.z * 16 + random.nextInt(16)), chunk, veinType.getDeposits_meta());
+            try {
+                return AlgorithmVein.generate(p_159749_.level(), veinStructure.getVeinType(), veinStructure.getBlockPos(), veinStructure.getChunk(), veinStructure.getDepositsMeta(), color);
 
-            return AlgorithmVein.generate(p_159749_.level(), veinStructure.getVeinType(), veinStructure.getBlockPos(), veinStructure.getChunk(), veinStructure.getDepositsMeta(), color);
+            }catch (Exception e) {
+                return false;
+            }
         } else {
             return false;
         }

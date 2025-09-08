@@ -15,6 +15,11 @@ public class InventoryAutoCrafter extends Inventory implements VirtualSlot {
     }
 
     @Override
+    public boolean canPlaceVirtualItem(int index, ItemStack stack) {
+        return this.canPlaceItem(index,stack);
+    }
+
+    @Override
     public ItemStack set(final int index, final ItemStack content) {
         super.set(index, content);
         ((BlockEntityAutoCrafter) this.base).updateCraft();

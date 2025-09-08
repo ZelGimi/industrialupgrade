@@ -30,6 +30,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -76,22 +77,22 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
     public static void addRecipe(BaseRecipe baseRecipe, int upgrade) {
         if (IUCore.registryAccess != null)
             try {
-                final NonNullList<IInputItemStack> ingredients = baseRecipe.getListInput();
+                final NonNullList<Ingredient> ingredients = baseRecipe.getIngredients();
                 final ItemStack outputStack = baseRecipe.getOutput();
-                ItemStack input_mechanism = ingredients.get(4).getInputs().get(0);
+                ItemStack input_mechanism = ingredients.get(4).getItems()[0];;
                 List<IInputItemStack> inputs = new ArrayList<>();
                 ItemStack upgradeStack = new ItemStack(IUItem.machinekit.getStack(upgrade), 1);
-                for (IInputItemStack ingredient : ingredients) {
-                    if (ingredient == InputItemStack.EMPTY) {
+                for (Ingredient ingredient : ingredients) {
+                    if (ingredient == Ingredient.EMPTY) {
                         inputs.add(InputItemStack.EMPTY);
                         continue;
                     }
-                    final ItemStack input = ingredient.getInputs().get(0);
+                    final ItemStack input = ingredient.getItems()[0];
                     if (input.is(input_mechanism.getItem())) {
                         inputs.add(new InputItemStack(upgradeStack.copy()));
                         continue;
                     }
-                    inputs.add(ingredient);
+                    inputs.add(Recipes.inputFactory.getInput(ingredient));
                 }
                 upgradeStack.set(DataComponentsInit.UPGRADE_KIT, new UpgradeKit(input_mechanism, outputStack));
                 Recipes.recipes.addRecipe(

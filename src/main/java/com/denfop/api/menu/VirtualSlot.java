@@ -18,6 +18,6 @@ public interface VirtualSlot   {
 
     int size();
 
-    boolean canPlaceItem(int index, ItemStack stack);
+    boolean canPlaceVirtualItem(int index, ItemStack stack);
 
 }

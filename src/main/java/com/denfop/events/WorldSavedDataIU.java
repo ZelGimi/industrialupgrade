@@ -145,10 +145,7 @@ public class WorldSavedDataIU extends SavedData {
 
     public void readNBT(CompoundTag compound, HolderLookup.Provider lookupProvider) {
         SpaceNet.instance.getFakeSpaceSystem().unload();
-        if (shellClusterChuncks == null)
-            shellClusterChuncks = new HashMap<>();
-        if (shellClusterChuncks != null)
-            shellClusterChuncks.clear();
+        shellClusterChuncks = new HashMap<>();
         if (compound.contains("shells")) {
 
             loadShellClusterChunks(compound.getCompound("shells"));

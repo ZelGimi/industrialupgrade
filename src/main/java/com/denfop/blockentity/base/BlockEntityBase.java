@@ -26,10 +26,7 @@ import com.denfop.utils.Keyboard;
 import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -49,6 +46,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -415,9 +413,24 @@ public abstract class BlockEntityBase extends BlockEntity {
         if (state1 == null) {
             state1 = state;
         }
-        this.getLevel().sendBlockUpdated(this.worldPosition, blockState, blockState, 2);
+        if (isChunkLoaded(this.level, pos))
+            this.getLevel().sendBlockUpdated(this.worldPosition, blockState, blockState, 2);
     }
 
+    public boolean isChunkLoaded(@Nullable Level world, @NotNull BlockPos pos) {
+        return isChunkLoaded(world, SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
+    }
+
+    public boolean isChunkLoaded(Level world, int chunkX, int chunkZ) {
+        if (world == null) {
+            return false;
+        } else if (world instanceof Level accessor) {
+            if (!accessor.isClientSide) {
+                return accessor.hasChunk(chunkX, chunkZ);
+            }
+        }
+        return world.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false) != null;
+    }
 
     public void onClicked(Player player) {
 
@@ -903,7 +916,8 @@ public abstract class BlockEntityBase extends BlockEntity {
         if (this.active.equals(active)) {
             return;
         }
-
+        if (!isChunkLoaded(this.level, pos))
+            return;
         this.active = active;
         if (!this.getLevel().isClientSide) {
             new PacketUpdateFieldTile(this, "active", this.active);
@@ -931,6 +945,8 @@ public abstract class BlockEntityBase extends BlockEntity {
                 new PacketUpdateFieldTile(this, "active", this.active);
             }
         }
+        if (!isChunkLoaded(this.level, pos))
+            return;
         this.getWorld().setBlock(this.worldPosition, this.getBlockState().setValue(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active)), 3);
 
     }
@@ -951,7 +967,8 @@ public abstract class BlockEntityBase extends BlockEntity {
             if (!this.getLevel().isClientSide) {
                 new PacketUpdateFieldTile(this, "facing", this.facing);
             }
-
+            if (!isChunkLoaded(this.level, pos))
+                return;
             this.getWorld().setBlock(this.worldPosition, this.getBlockState().setValue(this.block.facingProperty, this.getFacing()), 3);
 
 

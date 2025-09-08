@@ -1253,6 +1253,7 @@ public class RecipesCore implements IRecipes {
                 List<IInputItemStack> recipeInputList = baseMachineRecipe.input.getInputs();
                 boolean need = true;
                 for (int i = 0; i < size; i++) {
+
                     if (!recipeInputList.get(i).matches(stacks.get(i))) {
                         need = true;
                         break;

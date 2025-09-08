@@ -397,7 +397,7 @@ public class BlockEntitySmelteryController extends BlockEntityMultiBlockBase imp
             }
             int i = 0;
             if (this.casting != null && !casting.getInputSlotB().isEmpty()) {
-                if (this.getWorld().getGameTime() % 20 == 0) {
+                if (this.getWorld().getGameTime() % 10 == 0) {
                     if (this.list.isEmpty()) {
                         this.firstTank = null;
                         this.prevIndex = -1;

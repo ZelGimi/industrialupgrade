@@ -36,7 +36,7 @@ public class SlotVirtual extends Slot {
     }
 
     public boolean mayPlace(@NotNull ItemStack itemStack) {
-        return this.slotInfo.canPlaceItem(this.index, itemStack);
+        return this.slotInfo.canPlaceVirtualItem(this.index, itemStack);
     }
 
     public int getJeiX() {

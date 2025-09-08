@@ -5,12 +5,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class InventoryAutoCrafting extends TransientCraftingContainer {
 
     private final BlockEntityAutoCrafter tile;
 
     public InventoryAutoCrafting(BlockEntityAutoCrafter tile) {
-        super((AbstractContainerMenu) null, 3, 3);
+        super(null, 3, 3);
         this.tile = tile;
     }
 
@@ -39,5 +41,8 @@ public class InventoryAutoCrafting extends TransientCraftingContainer {
         return 9;
     }
 
-
+    @Override
+    public List<ItemStack> getItems() {
+        return tile.getAutoCrafter();
+    }
 }

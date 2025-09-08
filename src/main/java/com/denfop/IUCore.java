@@ -1,6 +1,7 @@
 package com.denfop;
 
 import com.denfop.api.Recipes;
+import com.denfop.api.bee.BeeAI;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.crop.CropInit;
 import com.denfop.api.crop.ICrop;
@@ -34,6 +35,7 @@ import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.base.IManufacturerBlock;
+import com.denfop.blockentity.bee.BlockEntityApiary;
 import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
 import com.denfop.blockentity.mechanism.BlockEntitySolidCooling;
 import com.denfop.blockentity.mechanism.EnumTypeMachines;
@@ -474,6 +476,7 @@ public class IUCore {
 
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
+        BlockEntityApiary.beeAI =  BeeAI.beeAI;
         cropMap.put(Items.WHEAT_SEEDS, CropInit.wheat_seed);
         cropMap.put(Items.SUGAR_CANE, CropInit.reed_seed);
         cropMap.put(Items.POTATO, CropInit.potato);
