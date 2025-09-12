@@ -24,7 +24,7 @@ Each object type (system, star, planet, satellite, asteroid) has its own format 
   ```
 
 * All resource identifiers (`id`, `texture`, `system`, `star`, `planet`) are case-sensitive.
-* Texture paths are written **with `.png`**
+* Texture paths are written **without `.png`**
 * If a required object (system, star, planet) is not found, the game will throw an error when loading.
 
 ---
@@ -86,7 +86,7 @@ Planets orbit stars inside a system.
  "type": "industrialupgrade:planet_add",
   "name": "proxima_b",
   "system": "сentauri",
-  "texture": "modid:textures/planet/proxima_b.png",
+  "texture": "modid:textures/planet/proxima_b",
   "level": "TWO",
   "star": "сentauri_a",
   "temperature": -60,
@@ -133,7 +133,7 @@ Satellites orbit planets.
    "type": "industrialupgrade:satellite_add",
   "name": "proxima_b_a",
   "system": "сentauri",
-  "texture": "modid:textures/satellite/proxima_b_a.png",
+  "texture": "modid:textures/satellite/proxima_b_a",
   "level": "THREE",
   "planet": "proxima_b",
   "temperature": -40,
