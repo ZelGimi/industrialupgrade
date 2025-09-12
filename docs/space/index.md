@@ -59,7 +59,7 @@ Stars must belong to a system and are defined with angle and size.
 "type": "industrialupgrade:star_add",
   "name": "сentauri_a",
   "system": "сentauri",
-  "texture": "modid:textures/star/сentauri_a.png",
+  "texture": "modid:textures/star/сentauri_a",
   "angle": 0,
   "size": 1.0
 }
@@ -71,7 +71,7 @@ Stars must belong to a system and are defined with angle and size.
 |-----------|---------|-----------------------------------------------------------------------------|
 | `name`    | string  | Star name.                                                                  |
 | `system`  | string  | System name where this star belongs.                                        |
-| `texture` | string  | Path to texture (with `.png`).                                           |
+| `texture` | string  | Path to texture (without `.png`).                                           |
 | `angle`   | int     | Orbital angle position in system layout.                                   |
 | `size`    | double  | Size of the star (relative scale).                                         |
 
