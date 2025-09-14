@@ -83,7 +83,7 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
         );
 
 
-        this.addWidget(new TankWidget(this, 6, 18, 20, 55, container.base.tank1, TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 6, 18, 20, 55, container.base.tank1) {
             @Override
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -116,14 +116,12 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 12;
-                        fluidHeight = 48;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 48;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
@@ -145,22 +143,17 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                             false,
                             true
                     );
-                    if (this.getStyle().withGauge) {
-                        bindCommonTexture();
-                        int gaugeX = this.x;
-                        int gaugeY = this.y;
-                        if (!this.getStyle().withBorder) {
-                            gaugeX -= 4;
-                            gaugeY -= 4;
-                        }
+                    bindCommonTexture();
+                    int gaugeX = this.x;
+                    int gaugeY = this.y;
 
-                        this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
-                    }
+                    this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
+
                 }
             }
         });
 
-        this.addWidget(new TankWidget(this, 30, 18, 20, 55, container.base.tank, TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 30, 18, 20, 55, container.base.tank) {
             @Override
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -193,14 +186,12 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 12;
-                        fluidHeight = 48;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 48;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -223,17 +214,13 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                             false,
                             true
                     );
-                    if (this.getStyle().withGauge) {
-                        bindCommonTexture();
-                        int gaugeX = this.x;
-                        int gaugeY = this.y;
-                        if (!this.getStyle().withBorder) {
-                            gaugeX -= 4;
-                            gaugeY -= 4;
-                        }
+                    bindCommonTexture();
+                    int gaugeX = this.x;
+                    int gaugeY = this.y;
 
-                        this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
-                    }
+
+                    this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
+
                 }
             }
         });

@@ -1,6 +1,11 @@
 package com.denfop.api.recipe;
 
 import com.denfop.recipe.IInputItemStack;
+import com.denfop.recipe.InputItemStack;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -73,7 +78,42 @@ public class Input implements IInput {
         }
         return new ArrayList<>(stacks);
     }
+    public static Input readNBT(CompoundTag tag, RegistryAccess access) {
+        List<IInputItemStack> inputList = new ArrayList<>();
+        ListTag itemsTag = tag.getList("Items", 10);
+        for (Tag itemTag : itemsTag) {
+            if (itemTag instanceof CompoundTag compoundTag) {
+                inputList.add(InputItemStack.create(compoundTag, access));
+            }
+        }
 
+        FluidStack fluid = FluidStack.EMPTY;
+        if (tag.getBoolean("HasFluid") && tag.contains("Fluid", Tag.TAG_COMPOUND)) {
+            fluid = FluidStack.parseOptional(access,tag.getCompound("Fluid"));
+        }
+
+        return new Input(fluid, inputList.toArray(new IInputItemStack[0]));
+    }
+    public CompoundTag writeNBT(RegistryAccess access) {
+        CompoundTag tag = new CompoundTag();
+
+
+        ListTag itemsTag = new ListTag();
+        for (IInputItemStack item : list) {
+            itemsTag.add(item.writeNBT(access));
+        }
+        tag.put("Items", itemsTag);
+
+
+        if (hasfluid && fluid != null && !fluid.isEmpty()) {
+            CompoundTag fluidTag = new CompoundTag();
+            fluid.save(access,fluidTag);
+            tag.put("Fluid", fluidTag);
+        }
+
+        tag.putBoolean("HasFluid", hasfluid);
+        return tag;
+    }
     @Override
     public List<ItemStack> getAllStackInputs() {
         List<ItemStack> stacks = new LinkedList<>();

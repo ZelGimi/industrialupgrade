@@ -108,10 +108,18 @@ public class DataComponentsInit {
             }
         }
     };
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> QUANTUM_ENERGY;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> SOLARIUM_ENERGY;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> EXPERIENCE_ENERGY;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> RADIATION_ENERGY;
 
     public static void init(DeferredRegister<DataComponentType<?>> dataComponentType) {
 
         ENERGY = dataComponentType.register("energy", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
+        QUANTUM_ENERGY = dataComponentType.register("quantum_energy", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
+        SOLARIUM_ENERGY = dataComponentType.register("solarium_energy", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
+        EXPERIENCE_ENERGY = dataComponentType.register("experience_energy", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
+        RADIATION_ENERGY = dataComponentType.register("radiation_energy", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
         GENOME_CROP = dataComponentType.register("genome_crop", () -> DataComponentType.<GenomeCrop>builder().persistent(GenomeCrop.CODEC).networkSynchronized(GenomeCrop.STREAM_CODEC).build());
         GENOME_BEE = dataComponentType.register("genome_bee", () -> DataComponentType.<GenomeBee>builder().persistent(GenomeBee.CODEC).networkSynchronized(GenomeBee.STREAM_CODEC).build());
         DATA = dataComponentType.register("data", () -> DataComponentType.<CompoundTag>builder().persistent(CompoundTag.CODEC).networkSynchronized(ByteBufCodecs.TRUSTED_COMPOUND_TAG).cacheEncoding().build());

@@ -63,19 +63,13 @@ public class EventSpectralSuitEffect {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Post event) {
-        this.render(true, event.getPartialTick(), event.getPoseStack());
+        this.render(event.getEntity(), event.getPartialTick(), event.getPoseStack());
     }
 
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderLevelStageEvent event) {
 
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS)
-            this.render(false, event.getPartialTick().getGameTimeDeltaTicks(), event.getPoseStack());
-    }
 
-    public void render(boolean ignore, float partialTicks, PoseStack poseStack) {
+    public void render(Player player, float partialTicks, PoseStack poseStack) {
         Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
         if (player == null) {
             return;
         }
@@ -85,11 +79,10 @@ public class EventSpectralSuitEffect {
         if (playerStreak1 != null) {
             needRender = isRenderStreak(player);
         }
-
         if (needRender) {
-            for (Player targetPlayer : mc.level.players()) {
-                if (this.isRenderStreak(targetPlayer) && (!targetPlayer.getName().getString().equals(player.getName().getString())) || ignore) {
-                    ArrayList<EventSpectralSuitEffect.StreakLocation> loc = getPlayerStreakLocationInfo(targetPlayer);
+
+            if (this.isRenderStreak(player)) {
+                    ArrayList<EventSpectralSuitEffect.StreakLocation> loc = getPlayerStreakLocationInfo(player);
 
                     poseStack.pushPose();
 
@@ -180,10 +173,10 @@ public class EventSpectralSuitEffect {
                             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
 
-                            PlayerStreakInfo playerStreak = mapStreakInfo.get(targetPlayer.getName().getString());
+                            PlayerStreakInfo playerStreak = mapStreakInfo.get(player.getName().getString());
                             if (playerStreak == null) {
                                 playerStreak = new PlayerStreakInfo(new RGB((short) 0, (short) 0, (short) 0), false);
-                                mapStreakInfo.put(targetPlayer.getName().getString(), playerStreak);
+                                mapStreakInfo.put(player.getName().getString(), playerStreak);
                             }
 
                             double red = playerStreak.getRgb().getRed() / 255d;
@@ -239,7 +232,7 @@ public class EventSpectralSuitEffect {
 
                 }
             }
-        }
+
     }
 
     @SubscribeEvent

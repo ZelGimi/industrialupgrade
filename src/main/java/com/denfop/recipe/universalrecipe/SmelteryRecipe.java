@@ -15,14 +15,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SmelteryRecipe implements Recipe<CraftingInput> {
-    private final String recipeType;
-    private final List<FluidStack> inputs;
-    private final ItemStack stack;
 
-    public SmelteryRecipe(String recipeType, List<FluidStack> fluidStacks, ItemStack stack) {
-        this.recipeType = recipeType;
-        this.inputs = fluidStacks;
-        this.stack = stack;
+    private final String operation;
+    private final List<IInputItemStack> inputs;
+    private final List<IInputItemStack> outputs;
+
+    public SmelteryRecipe(String operation, List<IInputItemStack> inputs, List<IInputItemStack> outputs) {
+        this.operation = operation;
+        this.inputs = inputs;
+        this.outputs = outputs;
+    }
+
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public List<IInputItemStack> getInputs() {
+        return inputs;
+    }
+
+    public List<IInputItemStack> getOutputs() {
+        return outputs;
     }
 
 
@@ -49,25 +63,6 @@ public class SmelteryRecipe implements Recipe<CraftingInput> {
     }
 
 
-    public List<FluidStack> getInputs() {
-        return inputs;
-    }
-
-    public List<IInputItemStack> getInput() {
-        return new LinkedList<>();
-    }
-
-    public List<IInputItemStack> getOutput() {
-        return new LinkedList<>();
-    }
-
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

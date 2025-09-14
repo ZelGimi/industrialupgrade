@@ -1,5 +1,10 @@
 package com.denfop.api.recipe;
 
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -29,6 +34,34 @@ public class BaseFluidMachineRecipe {
         this.output = output;
     }
 
+    public static BaseFluidMachineRecipe readNBT(CompoundTag tag,RegistryAccess access) {
+        IInputFluid input = InputFluid.readNBT(tag.getCompound("Input"), access);
+
+        List<FluidStack> fluids = new ArrayList<>();
+        ListTag fluidsTag = tag.getList("OutputFluids", Tag.TAG_COMPOUND);
+        for (Tag fluidTag : fluidsTag) {
+            if (fluidTag instanceof CompoundTag fluidCompound) {
+                fluids.add(FluidStack.parseOptional(access,fluidCompound));
+            }
+        }
+
+        List<ItemStack> items = new ArrayList<>();
+        ListTag itemsTag = tag.getList("OutputItems", Tag.TAG_COMPOUND);
+        for (Tag itemTag : itemsTag) {
+            if (itemTag instanceof CompoundTag itemCompound) {
+                items.add(ItemStack.parseOptional(access,itemCompound));
+            }
+        }
+
+        CompoundTag metadata = tag.contains("Metadata", Tag.TAG_COMPOUND)
+                ? tag.getCompound("Metadata")
+                : null;
+
+        RecipeOutput output = new RecipeOutput(metadata, items);
+
+        return new BaseFluidMachineRecipe(input, output, fluids);
+    }
+
     public boolean matches(List<FluidStack> stacks) {
         for (int i = 0; i < stacks.size(); i++) {
             if (this.input.getInputs().get(i).getFluid().equals(stacks.get(i).getFluid())) {
@@ -50,4 +83,30 @@ public class BaseFluidMachineRecipe {
         return input;
     }
 
+    public CompoundTag writeNBT(RegistryAccess registryAccess) {
+        CompoundTag tag = new CompoundTag();
+
+        tag.put("Input", input.writeNBT(registryAccess));
+
+        ListTag fluidsTag = new ListTag();
+        for (FluidStack fluid : output_fluid) {
+            CompoundTag fluidTag = new CompoundTag();
+            fluid.save(registryAccess,fluidTag);
+            fluidsTag.add(fluidTag);
+        }
+        tag.put("OutputFluids", fluidsTag);
+
+        ListTag itemsTag = new ListTag();
+        if (output != null)
+            for (ItemStack stack : output.items) {
+                itemsTag.add(stack.save(registryAccess,new CompoundTag()));
+            }
+        tag.put("OutputItems", itemsTag);
+        if (output != null)
+            if (output.metadata != null) {
+                tag.put("Metadata", output.metadata);
+            }
+
+        return tag;
+    }
 }

@@ -1,13 +1,18 @@
 package com.denfop.world;
 
 import com.denfop.IUItem;
+import com.denfop.blockentity.base.FakePlayerSpawner;
+import com.denfop.blockentity.mechanism.BlockEntityVolcanoChest;
 import com.denfop.blocks.BlockBasalts;
 import com.denfop.blocks.BlockHeavyOre;
 import com.denfop.blocks.BlockMineral;
 import com.denfop.blocks.FluidName;
+import com.denfop.network.packet.PacketUpdateTile;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -88,12 +93,12 @@ public class GeneratorVolcano {
                     while (!genChest) {
                         int index = rand.nextInt(blockPosList1.size());
                         if (rand.nextDouble() >= 0.95) {
-                            BlockPos pos = blockPosList1.get(index);
+                            BlockPos pos = blockPosList1.remove(index);
                             while (true) {
                                 if (!world.getBlockState(pos).isAir()) {
                                     pos = pos.above();
                                 }
-                                // generateChest(pos);
+                                 generateChest(pos);
                                 break;
                             }
                             genChest = true;
@@ -104,7 +109,7 @@ public class GeneratorVolcano {
                                     if (!world.getBlockState(pos).isAir()) {
                                         pos = pos.above();
                                     }
-                                    //   generateChest(pos);
+                                    generateChest(pos);
                                     break;
                                 }
                                 genChest = true;
@@ -534,7 +539,13 @@ public class GeneratorVolcano {
             }
         }
     }
+    public void generateChest(BlockPos pos) {
 
+
+        IUItem.volcanoChest.getItem().placeTeBlock(new ItemStack(IUItem.volcanoChest.getItem()),new FakePlayerSpawner(world),world,pos);
+
+        return;
+    }
     public void setBlockState1(Level level, BlockPos p_46605_, BlockState p_46606_, int p_46607_) {
 
         level.setBlock(p_46605_, p_46606_, p_46607_);

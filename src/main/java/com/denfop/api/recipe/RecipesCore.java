@@ -511,7 +511,9 @@ public class RecipesCore implements IRecipes {
             this.recipes.add(hasRecipe);
         }
     }
-
+    public List<String> getMap_recipe_managers() {
+        return map_recipe_managers.keySet().stream().toList();
+    }
     @Override
     public MachineRecipe getRecipeOutputMachineFluid(
             final String name,

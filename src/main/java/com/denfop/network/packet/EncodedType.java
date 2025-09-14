@@ -1,7 +1,7 @@
 package com.denfop.network.packet;
 
 
-import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.*;
 import com.denfop.api.vein.common.VeinBase;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.inventory.Inventory;
@@ -49,6 +49,11 @@ public enum EncodedType {
     InvSlot(Inventory.class),
     tuple(Tuple.class),
     DataComponentPatch(net.minecraft.core.component.DataComponentPatch.class),
+    BaseRecipe(BaseMachineRecipe.class),
+    BaseFluidRecipe(BaseFluidMachineRecipe.class),
+    recipeOutput(RecipeOutput.class),
+    inputStack(IInput.class),
+    inputFluidStack(IInputFluid.class),
     //    FAKE_PLANET(FakePlanet.class),
     //   FAKE_SATELLITE(FakeSatellite.class),
     //   FAKE_ASTEROID(FakeAsteroid.class),

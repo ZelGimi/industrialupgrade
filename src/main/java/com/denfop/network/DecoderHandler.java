@@ -2,7 +2,7 @@ package com.denfop.network;
 
 import com.denfop.IUCore;
 import com.denfop.api.pollution.radiation.Radiation;
-import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.recipe.*;
 import com.denfop.api.vein.common.VeinBase;
 import com.denfop.inventory.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -15,6 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
@@ -280,6 +281,25 @@ public class DecoderHandler {
                 FluidTank fluidTank = new FluidTank(is.readInt());
                 fluidTank.setFluid(fluidStack);
                 return fluidTank;
+            case recipeOutput:
+
+                List<ItemStack> itemStackList = (List<ItemStack>) decode(is);
+                CompoundTag compoundTag = null;
+                boolean hasTag = (boolean) decode(is);
+                if (hasTag)
+                    compoundTag = (CompoundTag) decode(is);
+                return new RecipeOutput(compoundTag, itemStackList);
+            case inputStack:
+
+                compoundTag = (CompoundTag) decode(is);
+                return Input.readNBT(compoundTag,is.registryAccess());
+            case inputFluidStack:
+                compoundTag = (CompoundTag) decode(is);
+                return InputFluid.readNBT(compoundTag,is.registryAccess());
+            case BaseRecipe:
+                return BaseMachineRecipe.readNBT((CompoundTag) decode(is), is.registryAccess());
+            case BaseFluidRecipe:
+                return BaseFluidMachineRecipe.readNBT((CompoundTag) decode(is), is.registryAccess());
             case GameProfile:
                 return new GameProfile((UUID) decode(is), is.readString());
             case Integer:

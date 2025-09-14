@@ -1,6 +1,5 @@
 package com.denfop.recipe.universalrecipe;
 
-import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputFluidStack;
@@ -18,12 +17,74 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
+import static com.denfop.IUCore.register;
+import static com.denfop.IUCore.updateRecipe;
 import static com.denfop.api.space.SpaceInit.regColonyBaseResource;
 
 public class ColonySerializer implements RecipeSerializer<ColonyRecipe> {
-    public static final StreamCodec<RegistryFriendlyByteBuf, ColonyRecipe> STREAM_CODEC = StreamCodec.of(ColonySerializer::toNetwork, ColonySerializer::fromNetwork);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ColonyRecipe> STREAM_CODEC =
+            StreamCodec.of(
+                    (buf, recipe) -> {
+                        buf.writeUtf(recipe.bodyName);
+                        buf.writeVarInt(recipe.level);
+                        buf.writeVarInt(recipe.input.size());
+
+                        for (IInputItemStack inputStack : recipe.input) {
+                            if (inputStack instanceof InputItemStack stack) {
+                                buf.writeUtf("item");
+                                buf.writeUtf(BuiltInRegistries.ITEM.getKey(stack.input.getItem()).toString());
+                                buf.writeVarInt(stack.input.getCount());
+                            } else if (inputStack instanceof InputFluidStack fluid) {
+                                buf.writeUtf("fluid");
+                                buf.writeUtf(BuiltInRegistries.FLUID.getKey(fluid.getFluid().getFluid()).toString());
+                                buf.writeVarInt(fluid.getFluid().getAmount());
+                            } else if (inputStack instanceof InputOreDict ore) {
+                                buf.writeUtf("tag");
+                                buf.writeUtf(ore.getTag().location().toString());
+                                buf.writeVarInt(ore.getInputs().get(0).getCount());
+                            } else {
+                                throw new IllegalArgumentException("Unknown input type: " + inputStack);
+                            }
+                        }
+                    },
+                    buf -> {
+                        String bodyName = buf.readUtf();
+                        int level = buf.readVarInt();
+                        int size = buf.readVarInt();
+                        List<IInputItemStack> inputs = new ArrayList<>();
+
+                        for (int i = 0; i < size; i++) {
+                            String type = buf.readUtf();
+                            String id = buf.readUtf();
+                            int amount = buf.readVarInt();
+
+                            switch (type) {
+                                case "item" -> inputs.add(new InputItemStack(
+                                        new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(id)), amount)
+                                ));
+                                case "fluid" -> inputs.add(new InputFluidStack(
+                                        new FluidStack(BuiltInRegistries.FLUID.get(ResourceLocation.parse(id)), amount)
+                                ));
+                                case "tag" -> inputs.add(new InputOreDict(id, amount));
+                                default -> throw new IllegalArgumentException("Unknown input type: " + type);
+                            }
+                        }
+                        if (!updateRecipe)
+                            for (IInputItemStack itemStack : inputs) {
+                                if (itemStack instanceof InputItemStack)
+                                    regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), level, ((InputItemStack) itemStack).input));
+                                if (itemStack instanceof InputFluidStack)
+                                    regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addFluidStack(SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), level, ((InputFluidStack) itemStack).getFluid()));
+                                if (itemStack instanceof InputOreDict)
+                                    regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), level, itemStack.getInputs().get(0)));
+
+                            }
+                        return new ColonyRecipe(bodyName, inputs, level);
+                    }
+            );
+
     static Codec<IInputItemStack> singleInputCodec = RecordCodecBuilder.create(inst -> inst.group(
             Codec.STRING.fieldOf("type").forGetter(i -> i instanceof InputFluidStack ? "fluid" : "item"),
             ResourceLocation.CODEC.fieldOf("id").forGetter(i -> BuiltInRegistries.ITEM.getKey(i.getInputs().get(0).getItem())),
@@ -37,31 +98,23 @@ public class ColonySerializer implements RecipeSerializer<ColonyRecipe> {
     }));
     public static final MapCodec<ColonyRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("body").forGetter(c -> c.bodyName),
-            Codec.SHORT.fieldOf("level").forGetter(c -> c.level),
+            Codec.INT.fieldOf("level").forGetter(c -> c.level),
             Codec.list(singleInputCodec).fieldOf("inputs").forGetter(ColonyRecipe::getInputs)
     ).apply(instance, (bodyName, level, inputs) -> {
-        IBody body = SpaceNet.instance.getBodyFromName(bodyName.toLowerCase());
 
-        for (IInputItemStack itemStack : inputs) {
-            if (itemStack instanceof InputItemStack)
-                regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(body, (short) level, ((InputItemStack) itemStack).input));
-            if (itemStack instanceof InputFluidStack)
-                regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addFluidStack(body, (short) level, ((InputFluidStack) itemStack).getFluid()));
-            if (itemStack instanceof InputOreDict)
-                regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(body, (short) level, itemStack.getInputs().get(0)));
+        if (!register)
+            for (IInputItemStack itemStack : inputs) {
+                if (itemStack instanceof InputItemStack)
+                    regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), level, ((InputItemStack) itemStack).input));
+                if (itemStack instanceof InputFluidStack)
+                    regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addFluidStack(SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), level, ((InputFluidStack) itemStack).getFluid()));
+                if (itemStack instanceof InputOreDict)
+                    regColonyBaseResource.add(() -> SpaceNet.instance.getColonieNet().addItemStack(SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), level, itemStack.getInputs().get(0)));
 
-        }
-        return new ColonyRecipe("", Collections.emptyList(), "");
+            }
+        return new ColonyRecipe(bodyName, inputs, level);
     }));
 
-    private static ColonyRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
-
-        return new ColonyRecipe("", new ArrayList<>(), "");
-    }
-
-    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, ColonyRecipe p_320586_) {
-
-    }
 
     @Override
     public MapCodec<ColonyRecipe> codec() {

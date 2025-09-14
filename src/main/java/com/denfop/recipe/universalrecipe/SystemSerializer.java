@@ -5,13 +5,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import static com.denfop.api.space.SpaceInit.regSystem;
+import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
 public class SystemSerializer implements RecipeSerializer<SystemRecipe> {
 
@@ -19,19 +18,25 @@ public class SystemSerializer implements RecipeSerializer<SystemRecipe> {
             Codec.STRING.fieldOf("name").forGetter(SystemRecipe::getName),
             Codec.INT.fieldOf("distance").forGetter(SystemRecipe::getDistanceFromStar)
     ).apply(instance, (name, distanceFromStar) -> {
-        regSystem.add(() -> new System(name, distanceFromStar));
-        return new SystemRecipe("", Collections.emptyList(), "");
+        if (!stringList.contains("system_"+name)) {
+            regSystem.add(() -> new System(name, distanceFromStar));
+            stringList.add("system_"+name);
+        }
+        return new SystemRecipe(name, distanceFromStar);
     }));
-    public static final StreamCodec<RegistryFriendlyByteBuf, SystemRecipe> STREAM_CODEC = StreamCodec.of(SystemSerializer::toNetwork, SystemSerializer::fromNetwork);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SystemRecipe> STREAM_CODEC =
+            StreamCodec.composite(
+                    ByteBufCodecs.STRING_UTF8, SystemRecipe::getName,
+                    ByteBufCodecs.VAR_INT, SystemRecipe::getDistanceFromStar,
+                    (name, distanceFromStar) -> {
+                        if (!stringList.contains("system_"+name)) {
+                            regSystem.add(() -> new System(name, distanceFromStar));
+                            stringList.add("system_"+name);
+                        }
+                        return new SystemRecipe(name, distanceFromStar);
+                    }
+            );
 
-    private static SystemRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
-
-        return new SystemRecipe("", new ArrayList<>(), "");
-    }
-
-    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, SystemRecipe p_320586_) {
-
-    }
 
     @Override
     public MapCodec<SystemRecipe> codec() {

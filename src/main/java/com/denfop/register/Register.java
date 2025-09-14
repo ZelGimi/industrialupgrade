@@ -1264,6 +1264,7 @@ public class Register {
         IUItem.graphite_reactor = new DataBlockEntity<>(BlocksGraphiteReactors.class);
         IUItem.heat_reactor = new DataBlockEntity<>(BlockHeatReactorEntity.class);
         IUItem.creativeBlock = new DataBlockEntity<>(BlockCreativeBlocksEntity.class);
+        IUItem.volcanoChest = new DataBlockEntity<>(BlockVolcanoChest.class);
     }
 
     private static void registerEntity() {

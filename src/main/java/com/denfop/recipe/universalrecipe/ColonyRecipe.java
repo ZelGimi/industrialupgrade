@@ -4,6 +4,7 @@ import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputItemStack;
 import com.denfop.register.Register;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Recipe;
@@ -16,16 +17,15 @@ import java.util.List;
 
 public class ColonyRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
-    public String bodyName;
-    public Short level;
 
-    public ColonyRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+    final String bodyName;
+    final List<IInputItemStack> input;
+    final int level;
+
+    public ColonyRecipe(String bodyName, List<IInputItemStack> input, int level) {
+        this.bodyName = bodyName;
+        this.input = input;
+        this.level = level;
     }
 
     @Override
@@ -51,19 +51,9 @@ public class ColonyRecipe implements Recipe<CraftingInput> {
 
 
     public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
+        return input;
     }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

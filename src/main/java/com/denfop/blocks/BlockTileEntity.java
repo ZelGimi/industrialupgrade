@@ -8,6 +8,8 @@ import com.denfop.blocks.state.HarvestTool;
 import com.denfop.blocks.state.TypeProperty;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.items.energy.ItemGraviTool;
+import com.denfop.items.energy.ItemToolWrench;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -437,11 +439,16 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
     protected ItemInteractionResult useItemOn(ItemStack p_316304_, BlockState p_316362_, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player.isSecondaryUseActive()) {
             BlockEntityBase te = getTe(level, blockPos);
-            return te == null ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
+            return te == null || isWrench(player,interactionHand)? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
         } else {
             BlockEntityBase te = getTe(level, blockPos);
-            return te == null ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return te == null || isWrench(player,interactionHand) ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+    }
+
+    private boolean isWrench(Player player, InteractionHand interactionHand) {
+        ItemStack stack = player.getItemInHand(interactionHand);
+        return stack.getItem() instanceof ItemToolWrench || stack.getItem() instanceof ItemGraviTool;
     }
 
     @Override

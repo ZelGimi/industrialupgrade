@@ -16,14 +16,13 @@ import java.util.List;
 
 public class SystemRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
 
-    public SystemRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+    private String name;
+    private Integer distance;
+
+    public SystemRecipe(String name, Integer distance) {
+        this.name = name;
+        this.distance = distance;
     }
 
     @Override
@@ -48,20 +47,7 @@ public class SystemRecipe implements Recipe<CraftingInput> {
     }
 
 
-    public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
-    }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override
@@ -75,10 +61,10 @@ public class SystemRecipe implements Recipe<CraftingInput> {
     }
 
     public String getName() {
-        return "";
+        return this.name;
     }
 
     public Integer getDistanceFromStar() {
-        return 0;
+        return this.distance;
     }
 }

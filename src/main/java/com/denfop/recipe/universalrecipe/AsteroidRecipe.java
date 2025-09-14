@@ -18,9 +18,7 @@ import java.util.List;
 
 public class AsteroidRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
+
     public String name;
     public String systemName;
     public String texturePath;
@@ -38,10 +36,24 @@ public class AsteroidRecipe implements Recipe<CraftingInput> {
     public Double minLocation;
     public Integer amount;
 
-    public AsteroidRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+
+    public AsteroidRecipe(String name, String systemName, String texturePath, EnumLevels level, String starName, Integer temperature, Double distance, EnumType type, Boolean colonies, Integer angle, Double time, Double size, Double rotation, Double maxLocation, Double minLocation, Integer amount) {
+        this.name = name;
+        this.systemName = systemName;
+        this.texturePath = texturePath;
+        this.level = level;
+        this.starName = starName;
+        this.temperature = temperature;
+        this.distance = distance;
+        this.type = type;
+        this.colonies = colonies;
+        this.angle = angle;
+        this.time = time;
+        this.size = size;
+        this.rotation = rotation;
+        this.maxLocation = maxLocation;
+        this.minLocation = minLocation;
+        this.amount = amount;
     }
 
     @Override
@@ -66,20 +78,6 @@ public class AsteroidRecipe implements Recipe<CraftingInput> {
     }
 
 
-    public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
-    }
-
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

@@ -16,19 +16,19 @@ import java.util.List;
 
 public class StarRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
+
     public String name;
     public String systemName;
     public String texturePath;
     public Integer angle;
     public Double size;
 
-    public StarRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+    public StarRecipe(String name, String systemName, String texturePath, Integer angle, Double size) {
+        this.name = name;
+        this.systemName = systemName;
+        this.texturePath = texturePath;
+        this.angle = angle;
+        this.size = size;
     }
 
     @Override
@@ -53,20 +53,6 @@ public class StarRecipe implements Recipe<CraftingInput> {
     }
 
 
-    public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
-    }
-
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

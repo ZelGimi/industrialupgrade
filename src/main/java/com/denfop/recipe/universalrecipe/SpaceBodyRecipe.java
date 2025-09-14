@@ -16,14 +16,21 @@ import java.util.List;
 
 public class SpaceBodyRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
 
-    public SpaceBodyRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+    public final String bodyName;
+    public final Integer percent;
+    public final Integer chance;
+    public final String roverType;
+    public final String operationType;
+    public final List<IInputItemStack> input;
+
+    public SpaceBodyRecipe(String bodyName, Integer percent, Integer chance, String roverType, String operationType, List<IInputItemStack> input) {
+        this.bodyName = bodyName;
+        this.percent = percent;
+        this.chance = chance;
+        this.roverType = roverType;
+        this.operationType = operationType;
+        this.input = input;
     }
 
     @Override
@@ -48,20 +55,7 @@ public class SpaceBodyRecipe implements Recipe<CraftingInput> {
     }
 
 
-    public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
-    }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override
@@ -93,5 +87,9 @@ public class SpaceBodyRecipe implements Recipe<CraftingInput> {
 
     public Integer percent() {
         return 0;
+    }
+
+    public List<IInputItemStack> getInputs() {
+        return input;
     }
 }

@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.denfop.api.space.SpaceInit.regStar;
+import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
 public class StarSerializer implements RecipeSerializer<StarRecipe> {
 
@@ -25,27 +27,39 @@ public class StarSerializer implements RecipeSerializer<StarRecipe> {
             Codec.INT.fieldOf("angle").forGetter(recipe -> recipe.angle),
             Codec.DOUBLE.fieldOf("size").forGetter(recipe -> recipe.size)
     ).apply(instance, (name, systemStr, textureStr, angle, size) -> {
-        ISystem system = SpaceNet.instance.getSystem().stream()
-                .filter(s -> s.getName().equals(systemStr.toLowerCase()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr));
 
         ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
-
-        regStar.add(() -> new Star(name, system, texture, angle, size));
-
-        return new StarRecipe("", Collections.emptyList(), "");
+        if (!stringList.contains("star_"+name)) {
+            regStar.add(() -> new Star(name, SpaceNet.instance.getSystem().stream()
+                    .filter(s -> s.getName().equals(systemStr.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, angle, size));
+            stringList.add("star_"+name);
+        }
+        return new StarRecipe(name, systemStr, textureStr, angle, size);
     }));
-    public static final StreamCodec<RegistryFriendlyByteBuf, StarRecipe> STREAM_CODEC = StreamCodec.of(StarSerializer::toNetwork, StarSerializer::fromNetwork);
+    public static final StreamCodec<RegistryFriendlyByteBuf, StarRecipe> STREAM_CODEC =
+            StreamCodec.composite(
+                    ByteBufCodecs.STRING_UTF8, recipe -> recipe.name,
+                    ByteBufCodecs.STRING_UTF8, recipe -> recipe.systemName,
+                    ByteBufCodecs.STRING_UTF8, recipe ->recipe.texturePath,
+                    ByteBufCodecs.VAR_INT, recipe -> recipe.angle,
+                    ByteBufCodecs.DOUBLE, recipe -> recipe.size,
+                    (name, systemStr, textureStr, angle, size) -> {
+                        ISystem system = SpaceNet.instance.getSystem().stream()
+                                .filter(s -> s.getName().equals(systemStr.toLowerCase()))
+                                .findFirst()
+                                .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr));
 
-    private static StarRecipe fromNetwork(RegistryFriendlyByteBuf p_319998_) {
+                        ResourceLocation texture = ResourceLocation.parse(textureStr+ ".png");
+                        if (!stringList.contains("star_"+name)) {
+                            regStar.add(() -> new Star(name, system, texture, angle, size));
+                            stringList.add("star_"+name);
+                        }
+                        return new StarRecipe(name, systemStr, textureStr, angle, size);
+                    }
+            );
 
-        return new StarRecipe("", new ArrayList<>(), "");
-    }
-
-    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, StarRecipe p_320586_) {
-
-    }
 
     @Override
     public MapCodec<StarRecipe> codec() {

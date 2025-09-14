@@ -95,12 +95,7 @@ public class TickHandler {
         return p_41436_.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, p_41438_, p_41437_));
     }
 
-    @SubscribeEvent
-    public void initData(LevelTickEvent.Post event) {
-        if (event.getLevel().isClientSide) {
-            IUCore.instance.registerData(event.getLevel());
-        }
-    }
+
 
     public int getOreColor(BlockState state) {
         Block block = state.getBlock();

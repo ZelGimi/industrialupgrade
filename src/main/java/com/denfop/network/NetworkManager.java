@@ -121,6 +121,11 @@ public class NetworkManager {
 
         this.registerPacket(new PacketUpdateSkipQuest());
         this.registerPacket(new PacketUpdateBookMarks());
+        this.registerPacket(new PacketUpdateVeinData());
+        this.registerPacket(new PacketUpdateRecipe());
+        this.registerPacket(new PacketFixerRecipe());
+
+
         if (!reg) {
             reg = true;
             for (IPacket packet : packetMap.values()) {

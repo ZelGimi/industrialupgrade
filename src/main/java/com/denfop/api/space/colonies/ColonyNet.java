@@ -226,14 +226,14 @@ public class ColonyNet implements IColonyNet {
         return this.colonyList;
     }
 
-    public void addFluidStack(IBody body, short level, FluidStack fluidStack) {
+    public void addFluidStack(IBody body, int level, FluidStack fluidStack) {
         List<DataItem<FluidStack>> list = bodyFluidStackList.computeIfAbsent(body, k -> new ArrayList<>());
-        list.add(new DataItem<>(level, fluidStack));
+        list.add(new DataItem<>((short) level, fluidStack));
     }
 
-    public void addItemStack(IBody body, short level, ItemStack fluidStack) {
+    public void addItemStack(IBody body, int level, ItemStack fluidStack) {
         List<DataItem<ItemStack>> list = bodyItemStackList.computeIfAbsent(body, k -> new ArrayList<>());
-        list.add(new DataItem<>(level, fluidStack));
+        list.add(new DataItem<>((short) level, fluidStack));
     }
 
     @Override

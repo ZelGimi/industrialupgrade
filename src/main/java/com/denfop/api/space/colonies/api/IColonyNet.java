@@ -33,9 +33,9 @@ public interface IColonyNet {
 
     List<IColony> getColonies();
 
-    void addFluidStack(IBody body, short level, FluidStack fluidStack);
+    void addFluidStack(IBody body, int level, FluidStack fluidStack);
 
-    void addItemStack(IBody body, short level, ItemStack fluidStack);
+    void addItemStack(IBody body, int level, ItemStack fluidStack);
 
     List<DataItem<FluidStack>> getFluidsFromBody(IBody body);
 

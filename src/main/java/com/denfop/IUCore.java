@@ -65,11 +65,11 @@ import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
+import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.DistExecutor;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
-import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
-import com.denfop.network.packet.PacketUpdateRelocator;
+import com.denfop.network.packet.*;
 import com.denfop.proxy.ClientProxy;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.recipe.IInputHandler;
@@ -93,6 +93,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -113,7 +114,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -123,6 +127,7 @@ import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -135,6 +140,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -145,6 +151,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.denfop.api.Recipes.inputFactory;
 import static com.denfop.api.space.BaseSpaceSystem.fluidToLevel;
+import static com.denfop.utils.ListInformationUtils.mechanism_info;
 import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 
@@ -205,13 +212,15 @@ public class IUCore {
     public static RegistryAccess registryAccess = null;
     public static boolean register1 = false;
     public static Map<Item, ICrop> cropMap = new HashMap<>();
-    static List<String> stringList = new ArrayList<>();
+    public static List<String> stringList = new ArrayList<>();
     static boolean change = false;
-    static boolean register = false;
+    public static boolean register = false;
     public final ModContainer modContainer;
     boolean reg = false;
     List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
     Map<Integer, List<IReactorItem>> levelsReactorItem = new HashMap<>();
+    public static List<LootPool> VOLCANO_LOOT_POOL;
+    public static LootTable VOLCANO_TABLE;
 
     public IUCore(ModContainer container, IEventBus modEventBus) {
         context = modEventBus;
@@ -382,6 +391,8 @@ public class IUCore {
         gen.addProvider(event.includeServer(), blockTags);
         gen.addProvider(event.includeServer(), new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
         gen.addProvider(event.includeServer(), new RecipeProvider(packOutput, lookupProvider));
+        gen.addProvider(event.includeServer(), new IULootTableProvider(packOutput, lookupProvider));
+
         gen.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
 
     }
@@ -415,7 +426,10 @@ public class IUCore {
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
-
+        if (name.equals(IULootTableProvider.VOLCANO_LOOT_TABLE.location())) {
+            VOLCANO_LOOT_POOL = ((LootTableAccessor) event.getTable()).getPools();
+            VOLCANO_TABLE = event.getTable();
+        }
 
         if (name.getPath().startsWith("entities/")) {
             String id = name.toString();
@@ -448,6 +462,7 @@ public class IUCore {
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.getEntity().level().isClientSide()) {
             IUCore.keyboard.removePlayerReferences(event.getEntity());
+            players.remove(event.getEntity().getName().getString());
         }
 
     }
@@ -476,7 +491,7 @@ public class IUCore {
 
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
-        BlockEntityApiary.beeAI =  BeeAI.beeAI;
+        BlockEntityApiary.beeAI = BeeAI.beeAI;
         cropMap.put(Items.WHEAT_SEEDS, CropInit.wheat_seed);
         cropMap.put(Items.SUGAR_CANE, CropInit.reed_seed);
         cropMap.put(Items.POTATO, CropInit.potato);
@@ -917,6 +932,31 @@ public class IUCore {
         });
     }
 
+    boolean regData = false;
+
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void registerData(PlayerTickEvent.Post event) {
+        if (event.getEntity().level() != null && event.getEntity().level().isClientSide && !this.regData) {
+            regData = true;
+            if (mechanism_info.isEmpty()) {
+                ListInformationUtils.init();
+                List<MultiBlockEntity> tiles = TileBlockCreator.instance.getAllTiles();
+                for (MultiBlockEntity tileBlock : tiles)
+
+                    if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
+                        if (!mechanism_info1.containsKey(tileBlock)) {
+                            mechanism_info1.put(tileBlock, tileBlock.getDummyTe().getPickBlock(null, null).getDisplayName());
+                        }
+                    }
+
+                CropInit.initBiomes(event.getEntity().level().registryAccess().registryOrThrow(Registries.BIOME));
+            }
+        }
+    }
+
+    public static List<String> players = new LinkedList<>();
+
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) {
@@ -930,15 +970,23 @@ public class IUCore {
             GuideBookCore.instance.loadOrThrow(event.getEntity().getUUID());
             new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()), event.getEntity());
         }
-
+        if (!players.contains(event.getEntity().getName().getString())) {
+            players.add(event.getEntity().getName().getString());
+            for (String baseRecipe : Recipes.recipes.getMap_recipe_managers())
+                new PacketUpdateRecipe(baseRecipe, false, (ServerPlayer) event.getEntity());
+            for (String baseRecipe : Recipes.recipes.getRecipeFluid().getRecipes())
+                new PacketUpdateRecipe(baseRecipe, true, (ServerPlayer) event.getEntity());
+            new PacketFixerRecipe((ServerPlayer) event.getEntity());
+        }
+        new PacketUpdateVeinData((ServerPlayer) event.getEntity());
         new PacketUpdateRelocator(event.getEntity());
 
     }
 
+
     public void registerData(Level level) {
-        if (!register) {
-            this.getore(new TagsUpdatedEvent(level.registryAccess(), true, true));
-        }
+        if (registryAccess == null)
+            registryAccess = level.registryAccess();
         if (!register1) {
 
             register1 = true;
@@ -1141,10 +1189,119 @@ public class IUCore {
         }
     }
 
+    public static boolean updateRecipe = false;
+
+    @SubscribeEvent
+    public void getore(RecipesUpdatedEvent event) {
+        if (!updateRecipe) {
+            updateRecipe = true;
+            SpaceInit.jsonInit();
+            Recipes.recipes.removeAllRecipesFromList();
+            Recipes.recipes.addAllRecipesFromList();
+            if (!change) {
+                change = true;
+                removeOre("c:gems/Iridium");
+                removeOre("c:gems/Americium");
+                removeOre("c:gems/Neptunium");
+
+                removeOre("c:ores/Redstone");
+                removeOre("c:gems/Curium");
+                removeOre("c:gems/Thorium");
+                removeOre("c:gems/Bor");
+                removeOre("c:gems/CrystalFlux");
+                removeOre("c:gems/Beryllium");
+                removeOre("c:ores/Coal");
+                removeOre("c:ores/sheelite");
+                addOre1(new ItemStack(Items.REDSTONE));
+                addOre1(new ItemStack(Items.COAL));
+                for (String name : RegisterOreDictionary.list_heavyore) {
+                    removeOre("c:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.list_mineral) {
+                    removeOre("c:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.spaceElementList) {
+                    removeOre("c:ores/" + name);
+                }
+
+                removeOre("c:ores/apatite");
+                removeOre("c:ores/uranium");
+                removeOre("c:ores/Thorium");
+                removeOre("c:ores/Sulfur");
+                removeOre("c:ores/Boron");
+                removeOre("c:ores/Beryllium");
+                removeOre("c:ores/Lithium");
+                removeOre("c:ores/Calcium");
+                removeOre("c:ores/Draconium");
+                removeOre("c:ores/netherite_scrap");
+                removeOre("c:ores/saltpeter");
+                IUCore.list_furnace_adding.forEach(this::addOre2);
+                IUCore.list_furnace_removing.forEach(this::removeOre2);
+                IUCore.list_adding.forEach(this::addOre1);
+                IUCore.list_removing.forEach(this::removeOre);
+                IUCore.list_comb_crushed_adding.forEach(this::addOre4);
+                IUCore.list_comb_crushed_removing.forEach(this::removeOre4);
+                IUCore.list_crushed_adding.forEach(this::addOre3);
+                IUCore.list_crushed_removing.forEach(this::removeOre3);
+                IUCore.list.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack.getItemStack().get(0)));
+                IUCore.get_ingot.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack.getItemStack().get(0)));
+                IUCore.get_comb_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack.getItemStack().get(0)));
+                IUCore.get_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                IUCore.get_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        get_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_polisher.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_polisher_quarry.add(new QuarryItem(stack));
+                    }
+                });
+
+                IUCore.list.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                list_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_ingot.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_ingot_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_comb_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_comb_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+            }
+        }
+    }
+
     @SubscribeEvent
     public void getore(TagsUpdatedEvent event) {
-        registryAccess = event.getRegistryAccess();
         if (!register) {
+            registryAccess = event.getRegistryAccess();
             MaceratorRecipe.recipe();
             CompressorRecipe.recipe();
             ExtractorRecipe.init();
@@ -1154,14 +1311,17 @@ public class IUCore {
             MetalFormerRecipe.init();
             BlockEntityPalletGenerator.init();
             BlockEntitySolidCooling.init();
-            SpaceInit.jsonInit();
+            Recipes.recipes.initializationRecipes();
             BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
             IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
             new ScrapboxRecipeManager();
-            Recipes.recipes.initializationRecipes();
-            Recipes.recipes.removeAllRecipesFromList();
-            Recipes.recipes.addAllRecipesFromList();
+            if (IUCore.network.getClient() == null) {
+                SpaceInit.jsonInit();
+                Recipes.recipes.removeAllRecipesFromList();
+                Recipes.recipes.addAllRecipesFromList();
+            }
 
+            register = true;
             final IInputHandler input = com.denfop.api.Recipes.inputFactory;
             for (int i = 0; i < 8; i++) {
                 Recipes.recipes.addRecipe(
@@ -1175,7 +1335,6 @@ public class IUCore {
                 );
             }
 
-            register = true;
             try {
                 Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(ResourceLocation.tryBuild("c", "ores")));
 

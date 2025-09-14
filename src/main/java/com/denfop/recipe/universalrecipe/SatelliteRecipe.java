@@ -18,9 +18,7 @@ import java.util.List;
 
 public class SatelliteRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
+
     public String name;
     public String systemName;
     public String texturePath;
@@ -37,10 +35,22 @@ public class SatelliteRecipe implements Recipe<CraftingInput> {
     public Double size;
     public Double rotation;
 
-    public SatelliteRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+    public SatelliteRecipe(String name, String systemName, String texturePath, EnumLevels level, String planetName, Integer temperature, Boolean pressure, Double distance, EnumType type, Boolean oxygen, Boolean colonies, Integer angle, Double time, Double size, Double rotation) {
+        this.name = name;
+        this.systemName = systemName;
+        this.texturePath = texturePath;
+        this.level = level;
+        this.planetName = planetName;
+        this.temperature = temperature;
+        this.pressure = pressure;
+        this.distance = distance;
+        this.type = type;
+        this.oxygen = oxygen;
+        this.colonies = colonies;
+        this.angle = angle;
+        this.time = time;
+        this.size = size;
+        this.rotation = rotation;
     }
 
     @Override
@@ -65,20 +75,7 @@ public class SatelliteRecipe implements Recipe<CraftingInput> {
     }
 
 
-    public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
-    }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

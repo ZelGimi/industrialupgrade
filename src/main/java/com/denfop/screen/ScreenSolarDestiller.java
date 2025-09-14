@@ -24,7 +24,7 @@ public class ScreenSolarDestiller<T extends ContainerMenuSolarDestiller> extends
         this.imageHeight = 170;
         this.inventory.setY(101);
         this.componentList.clear();
-        this.addWidget(new TankWidget(this, 38, 20, 22, 40, container.base.inputTank, TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 38, 20, 22, 40, container.base.inputTank) {
 
 
             @Override
@@ -34,14 +34,12 @@ public class ScreenSolarDestiller<T extends ContainerMenuSolarDestiller> extends
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 17;
-                        fluidHeight = 45;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 17;
+                    fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
                     TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
@@ -69,7 +67,7 @@ public class ScreenSolarDestiller<T extends ContainerMenuSolarDestiller> extends
                 }
             }
         });
-        this.addWidget(new TankWidget(this, 115, 20, 22, 40, container.base.outputTank, TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 115, 20, 22, 40, container.base.outputTank) {
 
 
             @Override
@@ -79,14 +77,12 @@ public class ScreenSolarDestiller<T extends ContainerMenuSolarDestiller> extends
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 17;
-                        fluidHeight = 45;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 17;
+                    fluidHeight = 45;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

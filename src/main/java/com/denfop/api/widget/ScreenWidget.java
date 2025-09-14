@@ -27,7 +27,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScreenWidget extends AbstractWidget {
 
@@ -75,6 +76,7 @@ public class ScreenWidget extends AbstractWidget {
         this.gui = gui;
         this.widgetDefault = widgetDefault;
     }
+
     public ScreenWidget(ScreenIndustrialUpgrade<?> gui, int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("empty"));
         this.x = x;
@@ -94,6 +96,7 @@ public class ScreenWidget extends AbstractWidget {
         this.gui = gui;
         this.widgetDefault = widgetDefault;
     }
+
     @Override
     public void setX(int x) {
         this.x = x;
@@ -103,6 +106,7 @@ public class ScreenWidget extends AbstractWidget {
     public void setY(int y) {
         this.y = y;
     }
+
     public static void addLines(List<String> list, String str) {
         int startPos;
         int pos;
@@ -215,10 +219,12 @@ public class ScreenWidget extends AbstractWidget {
     protected List<String> getToolTip() {
         if (tooltipProvider != null) {
             String tooltip = tooltipProvider.get();
-            return new ArrayList<>(List.of(tooltip.split("\n")));
+            if (tooltip != null)
+                return new ArrayList<>(List.of(tooltip.split("\n")));
         }
         return new ArrayList<>();
     }
+
     public void drawForeground(GuiGraphics poseStack, int mouseX, int mouseY) {
         if (this.contains(mouseX, mouseY)) {
             List<String> lines = this.getToolTip();

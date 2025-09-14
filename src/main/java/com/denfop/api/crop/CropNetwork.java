@@ -1,5 +1,6 @@
 package com.denfop.api.crop;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.crop.genetics.GeneticsManager;
 import com.denfop.api.crop.genetics.Genome;
@@ -96,7 +97,7 @@ public class CropNetwork {
         if (stack.getItem() instanceof ICropItem) {
             return ((ICropItem) stack.getItem()).getCrop(stack.getDamageValue(), stack);
         } else {
-            return null;
+            return IUCore.cropMap.get(stack.getItem());
         }
     }
 

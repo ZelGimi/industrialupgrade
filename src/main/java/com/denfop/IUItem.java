@@ -844,6 +844,7 @@ public class IUItem {
     public static DataSimpleItem<ItemSmallFluidCell, ResourceLocation> smallFluidCell;
     public static DataSimpleItem<ItemReinforcedFluidCell, ResourceLocation> reinforcedFluidCell;
     public static DataSimpleItem<ItemLatexPipette, ResourceLocation> latexPipette;
+    public static DataBlockEntity<BlockVolcanoChest> volcanoChest;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

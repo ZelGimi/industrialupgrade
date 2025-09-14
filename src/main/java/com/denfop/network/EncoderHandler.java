@@ -2,7 +2,7 @@ package com.denfop.network;
 
 
 import com.denfop.api.pollution.radiation.Radiation;
-import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.recipe.*;
 import com.denfop.api.vein.common.VeinBase;
 import com.denfop.blockentity.base.DataOre;
 import com.denfop.componets.AbstractComponent;
@@ -254,6 +254,29 @@ public class EncoderHandler {
             case DataComponentPatch:
                 DataComponentPatch componentPatch = (DataComponentPatch) o;
                 DataComponentPatch.STREAM_CODEC.encode(os, componentPatch);
+                break;
+            case BaseRecipe:
+                BaseMachineRecipe baseMachineRecipe = (BaseMachineRecipe) o;
+                encode(os, baseMachineRecipe.writeNBT(os.registryAccess()));
+                break;
+            case BaseFluidRecipe:
+                BaseFluidMachineRecipe baseFluidMachineRecipe = (BaseFluidMachineRecipe) o;
+                encode(os, baseFluidMachineRecipe.writeNBT(os.registryAccess()));
+                break;
+            case recipeOutput:
+                RecipeOutput recipeOutput = (RecipeOutput) o;
+                encode(os, recipeOutput.items);
+                encode(os, recipeOutput.metadata != null);
+                if (recipeOutput.metadata != null)
+                    encode(os, recipeOutput.metadata);
+                break;
+            case inputStack:
+                IInput input = (IInput) o;
+                encode(os, input.writeNBT(os.registryAccess()));
+                break;
+            case inputFluidStack:
+                IInputFluid inputFluid = (IInputFluid) o;
+                encode(os, inputFluid.writeNBT(os.registryAccess()));
                 break;
             case FluidStack:
                 FluidStack fs = (FluidStack) o;

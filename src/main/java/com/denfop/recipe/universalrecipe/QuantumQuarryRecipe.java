@@ -16,14 +16,16 @@ import java.util.List;
 
 public class QuantumQuarryRecipe implements Recipe<CraftingInput> {
 
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
 
-    public QuantumQuarryRecipe(String recipeType, List<ItemStack> inputs, String typeOperation) {
+
+    private final String recipeType;
+    private final String recipeOperation;
+    private final List<IInputItemStack> inputs;
+
+    public QuantumQuarryRecipe(String recipeType, String recipeOperation, List<IInputItemStack> inputs) {
         this.recipeType = recipeType;
+        this.recipeOperation = recipeOperation;
         this.inputs = inputs;
-        this.typeOperation = typeOperation;
     }
 
     @Override
@@ -49,13 +51,12 @@ public class QuantumQuarryRecipe implements Recipe<CraftingInput> {
 
 
     public List<IInputItemStack> getInputs() {
-        List<IInputItemStack> inputItemStackList = new ArrayList<>();
-        inputs.forEach(input -> inputItemStackList.add(new InputItemStack(input)));
-        return inputItemStackList;
+
+        return inputs;
     }
 
     public String getTypeOperation() {
-        return typeOperation;
+        return recipeOperation;
     }
 
 
