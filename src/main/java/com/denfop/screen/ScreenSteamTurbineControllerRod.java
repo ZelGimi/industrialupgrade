@@ -55,7 +55,7 @@ public class ScreenSteamTurbineControllerRod<T extends ContainerMenuSteamTurbine
     protected void drawForegroundLayer(PoseStack poseStack, final int par1, final int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
         for (int i = 0; i < this.container.base.getRods().size(); i++) {
-            BlockPos pos = container.base.getRods().get(i).getBlockPos();
+            BlockPos pos = container.base.getRods().get(i).getPos();
             new TooltipWidget(this, 6 + (i) * 21, 34, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
                     ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
 

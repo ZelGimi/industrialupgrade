@@ -294,12 +294,6 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
 
 
     @Override
-    public int getBaseIndex(Inventory var1) {
-        return 0;
-    }
-
-
-    @Override
     public MenuType<?> getMenuType() {
         return inventory_container.get();
     }

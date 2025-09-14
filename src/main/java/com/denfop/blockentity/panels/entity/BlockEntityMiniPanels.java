@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BlockEntityMiniPanels extends BlockEntityInventory implements ISolarTile {
 
@@ -66,7 +68,9 @@ public class BlockEntityMiniPanels extends BlockEntityInventory implements ISola
     public boolean rain;
     public boolean sunIsUp;
     public boolean skyIsVisible;
-    public List<List<EnumState>> listStable = new ArrayList<>(9);
+    public List<List<EnumState>> listStable =  IntStream.range(0, 9)
+            .mapToObj(i -> new ArrayList<EnumState>())
+            .collect(Collectors.toList());;
     public double bonusGeneration;
     public BlockEntitySolarPanel.GenerationState activeState = BlockEntitySolarPanel.GenerationState.NONE;
     public double load;

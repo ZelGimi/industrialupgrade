@@ -1,5 +1,9 @@
 package com.denfop.api.recipe;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -48,6 +52,61 @@ public class BaseFluidMachineRecipe {
 
     public IInputFluid getInput() {
         return input;
+    }
+
+    public static BaseFluidMachineRecipe readNBT(CompoundTag tag) {
+        IInputFluid input = InputFluid.readNBT(tag.getCompound("Input"));
+
+        List<FluidStack> fluids = new ArrayList<>();
+        ListTag fluidsTag = tag.getList("OutputFluids", Tag.TAG_COMPOUND);
+        for (Tag fluidTag : fluidsTag) {
+            if (fluidTag instanceof CompoundTag fluidCompound) {
+                fluids.add(FluidStack.loadFluidStackFromNBT(fluidCompound));
+            }
+        }
+
+        List<ItemStack> items = new ArrayList<>();
+        ListTag itemsTag = tag.getList("OutputItems", Tag.TAG_COMPOUND);
+        for (Tag itemTag : itemsTag) {
+            if (itemTag instanceof CompoundTag itemCompound) {
+                items.add(ItemStack.of(itemCompound));
+            }
+        }
+
+        CompoundTag metadata = tag.contains("Metadata", Tag.TAG_COMPOUND)
+                ? tag.getCompound("Metadata")
+                : null;
+
+        RecipeOutput output = new RecipeOutput(metadata, items);
+
+        return new BaseFluidMachineRecipe(input, output, fluids);
+    }
+
+    public CompoundTag writeNBT() {
+        CompoundTag tag = new CompoundTag();
+
+        tag.put("Input", input.writeNBT());
+
+        ListTag fluidsTag = new ListTag();
+        for (FluidStack fluid : output_fluid) {
+            CompoundTag fluidTag = new CompoundTag();
+            fluid.writeToNBT(fluidTag);
+            fluidsTag.add(fluidTag);
+        }
+        tag.put("OutputFluids", fluidsTag);
+
+        ListTag itemsTag = new ListTag();
+        if (output != null)
+            for (ItemStack stack : output.items) {
+                itemsTag.add(stack.save(new CompoundTag()));
+            }
+        tag.put("OutputItems", itemsTag);
+        if (output != null)
+            if (output.metadata != null) {
+                tag.put("Metadata", output.metadata);
+            }
+
+        return tag;
     }
 
 }

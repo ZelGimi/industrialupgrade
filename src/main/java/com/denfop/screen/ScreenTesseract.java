@@ -69,8 +69,7 @@ public class ScreenTesseract<T extends ContainerMenuTesseract> extends ScreenMai
                 10,
                 16,
                 53,
-                container.base.getTank(),
-                TankWidget.TankGuiStyle.Normal
+                container.base.getTank()
         ) {
 
             protected List<String> getToolTip() {
@@ -103,14 +102,12 @@ public class ScreenTesseract<T extends ContainerMenuTesseract> extends ScreenMai
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 9;
-                        fluidHeight = 46;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 9;
+                    fluidHeight = 46;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

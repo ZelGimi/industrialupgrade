@@ -13,6 +13,7 @@ import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.fluid.IUFluidType;
 import com.denfop.blocks.mechanism.*;
 import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.datagen.IULootTableProvider;
 import com.denfop.datagen.IUPoiTypeTagsProvider;
 import com.denfop.datagen.RecipeProvider;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
@@ -309,16 +310,16 @@ public class Register {
         IUItem.steleticMesh = new DataSimpleItem<>(new ResourceLocation("mesh", "steleticmesh"), () -> new ItemMesh("steleticmesh", 8000, 5));
         IUItem.water_rotor_wood = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_wood"), () -> new ItemWaterRotor("water_rotor_wood", 10800 / 2, 0.25F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor" +
+                "textures/items/rotor" +
                         "/wood_rotor_model.png"
         ), 1, 0, new Color(94, 71, 39)));
         IUItem.water_rotor_bronze = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_bronze"), () -> new ItemWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor/bronze_rotor_model_1.png"
+                "textures/items/rotor/bronze_rotor_model_1.png"
         ), 2, 1, new Color(158, 79, 0)));
         IUItem.water_rotor_iron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_iron"), () -> new ItemWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor/iron_rotor_model_1.png"
+                "textures/items/rotor/iron_rotor_model_1.png"
         ), 3, 2, new Color(159, 159, 159)));
         IUItem.water_rotor_steel = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_rotor_steel"), () -> new ItemWaterRotor(
                 "water_rotor_steel",
@@ -326,7 +327,7 @@ public class Register {
                 0.75F,
                 new ResourceLocation(
                         Constants.MOD_ID,
-                        "textures/item/rotor/steel_rotor_model_1.png"
+                        "textures/items/rotor/steel_rotor_model_1.png"
                 ),
                 4,
                 3, new Color(157, 166, 170)
@@ -336,112 +337,112 @@ public class Register {
                 (int) (604800 / 1.5),
                 1.0F,
                 new ResourceLocation(
-                        Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"),
+                        Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model_1.png"),
                 5,
                 4, new Color(41, 41, 41)
         ));
         IUItem.water_iridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_iridium"), () -> new ItemWaterRotor("water_iridium",
                 (int) (172800 / 1.4D), 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png"), 6, 5, new Color(214, 212, 216)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbo_rotor_model1.png"), 6, 5, new Color(214, 212, 216)
         ));
         IUItem.water_compressiridium = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_compressiridium"), () -> new ItemWaterRotor("water_compressiridium",
                 (int) (172800 / 1.2D), 4.0F,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6, new Color(135, 134, 136)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_2.png"), 7, 6, new Color(135, 134, 136)
         ));
         IUItem.water_spectral = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_spectral"), () -> new ItemWaterRotor("water_spectral",
                 (int) (172800 / 1.1D), 8.0F,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195, 151, 32)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_3.png"), 8, 7, new Color(195, 151, 32)
         ));
         IUItem.water_myphical = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_myphical"), () -> new ItemWaterRotor("water_myphical",
                 3456000, 16,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98, 22, 182)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_4.png"), 9, 8, new Color(98, 22, 182)
         ));
 
         IUItem.water_photon = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_photon"), () -> new ItemWaterRotor("water_photon", 691200,
                 32,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36, 175, 17)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_6.png"), 10, 9, new Color(36, 175, 17)
         ));
         IUItem.water_neutron = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_neutron"), () -> new ItemWaterRotor("water_neutron", 27648000,
                 64,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10, new Color(41, 86, 208)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_5.png"), 11, 10, new Color(41, 86, 208)
         ));
 
         IUItem.water_barionrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_barionrotor"), () -> new ItemWaterRotor("water_barionrotor",
                 27648000 * 4, 64 * 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11, new Color(155, 17, 175)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_7.png"), 12, 11, new Color(155, 17, 175)
         ));
 
         IUItem.water_adronrotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_adronrotor"), () -> new ItemWaterRotor("water_adronrotor",
                 27648000 * 16, 64 * 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12, new Color(0, 179, 192)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_8.png"), 13, 12, new Color(0, 179, 192)
         ));
         IUItem.water_ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("water_rotor", "water_ultramarinerotor"), () -> new ItemWaterRotor("water_ultramarinerotor",
                 27648000 * 64, 64 * 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13, new Color(17, 175, 166)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png"), 14, 13, new Color(17, 175, 166)
         ));
         IUItem.wood_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_wood"), () -> new ItemSteamRod(0, 0.02, 10800 / 2, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor" +
+                "textures/items/rotor" +
                         "/wood_rotor_model.png"
         )));
         IUItem.rotor_wood = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_wood"), () -> new ItemWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor" +
+                "textures/items/rotor" +
                         "/wood_rotor_model.png"
         ), 1, 0, new Color(158, 79, 0)));
         IUItem.rotor_bronze = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_bronze"), () -> new ItemWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor/bronze_rotor_model_1.png"
+                "textures/items/rotor/bronze_rotor_model_1.png"
         ), 2, 1, new Color(158, 79, 0)));
         IUItem.rotor_iron = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_iron"), () -> new ItemWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor/iron_rotor_model_1.png"
+                "textures/items/rotor/iron_rotor_model_1.png"
         ), 3, 2, new Color(159, 159, 159)));
         IUItem.rotor_steel = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_steel"), () -> new ItemWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/item/rotor/steel_rotor_model_1.png"
+                "textures/items/rotor/steel_rotor_model_1.png"
         ), 4, 3, new Color(157, 166, 170)));
         IUItem.rotor_carbon = new DataSimpleItem<>(new ResourceLocation("rotor", "rotor_carbon"), () -> new ItemWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
-                Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png"), 5, 4, new Color(41, 41, 41)));
+                Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model_1.png"), 5, 4, new Color(41, 41, 41)));
 
         IUItem.iridium = new DataSimpleItem<>(new ResourceLocation("rotor", "iridium"), () -> new ItemWindRotor("iridium", 11, (int) (172800 / 1.4D),
                 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_1.png"), 6, 5, new Color(214, 212, 216)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_1.png"), 6, 5, new Color(214, 212, 216)
         ));
         IUItem.compressiridium = new DataSimpleItem<>(new ResourceLocation("rotor", "compressiridium"), () -> new ItemWindRotor("compressiridium", 11,
                 (int) (172800 / 1.2D), 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png"), 7, 6, new Color(135, 134, 136)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_2.png"), 7, 6, new Color(135, 134, 136)
         ));
         IUItem.spectral = new DataSimpleItem<>(new ResourceLocation("rotor", "spectral"), () -> new ItemWindRotor("spectral", 11,
                 (int) (172800 / 1.1D), 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png"), 8, 7, new Color(195, 151, 32)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_3.png"), 8, 7, new Color(195, 151, 32)
         ));
         IUItem.myphical = new DataSimpleItem<>(new ResourceLocation("rotor", "myphical"), () -> new ItemWindRotor("myphical", 11,
                 3456000, 16,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png"), 9, 8, new Color(98, 22, 182)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_4.png"), 9, 8, new Color(98, 22, 182)
         ));
 
         IUItem.photon = new DataSimpleItem<>(new ResourceLocation("rotor", "photon"), () -> new ItemWindRotor("photon", 11, 691200,
                 32,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png"), 10, 9, new Color(36, 175, 17)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_6.png"), 10, 9, new Color(36, 175, 17)
         ));
         IUItem.neutron = new DataSimpleItem<>(new ResourceLocation("rotor", "neutron"), () -> new ItemWindRotor("neutron", 11, 27648000,
                 64,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png"), 11, 10, new Color(41, 86, 208)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_5.png"), 11, 10, new Color(41, 86, 208)
         ));
 
         IUItem.barionrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "barionrotor"), () -> new ItemWindRotor("barionrotor", 11,
                 27648000 * 4, 64 * 2,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png"), 12, 11, new Color(155, 17, 175)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_7.png"), 12, 11, new Color(155, 17, 175)
         ));
 
         IUItem.adronrotor = new DataSimpleItem<>(new ResourceLocation("rotor", "adronrotor"), () -> new ItemWindRotor("adronrotor", 11,
                 27648000 * 16, 64 * 4,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png"), 13, 12, new Color(0, 179, 192)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_8.png"), 13, 12, new Color(0, 179, 192)
         ));
         IUItem.ultramarinerotor = new DataSimpleItem<>(new ResourceLocation("rotor", "ultramarinerotor"), () -> new ItemWindRotor("ultramarinerotor", 11,
                 27648000 * 64, 64 * 8,
-                new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png"), 14, 13, new Color(17, 175, 166)
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png"), 14, 13, new Color(17, 175, 166)
         ));
         IUItem.bronze_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_bronze"), () -> new ItemSteamRod(0, 0.04, 10800, new ResourceLocation(
                 Constants.MOD_ID,
@@ -1247,6 +1248,8 @@ public class Register {
         IUItem.graphite_reactor = new DataBlockEntity<>(BlocksGraphiteReactors.class);
         IUItem.heat_reactor = new DataBlockEntity<>(BlockHeatReactorEntity.class);
         IUItem.creativeBlock = new DataBlockEntity<>(BlockCreativeBlocksEntity.class);
+
+        IUItem.volcanoChest= new DataBlockEntity<>(BlockVolcanoChest.class);
     }
 
     private static void registerEntity() {
@@ -1402,6 +1405,7 @@ public class Register {
         gen.addProvider(event.includeClient(), new ItemTagProvider(gen, blockTags, event.getExistingFileHelper()));
 
         gen.addProvider(event.includeServer(), new IUPoiTypeTagsProvider(gen, event.getExistingFileHelper()));
+        gen.addProvider(event.includeServer(), new IULootTableProvider(gen));
 
 
     }

@@ -23,7 +23,7 @@ public class ScreenSmelteryFuelTank<T extends ContainerMenuSmelteryFuelTank> ext
         super(guiContainer);
         this.componentList.clear();
 
-        this.addWidget(new TankWidget(this, 67, 15, 37, 49, container.base.getFuelTank(), TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 67, 15, 37, 49, container.base.getFuelTank()) {
 
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -55,14 +55,12 @@ public class ScreenSmelteryFuelTank<T extends ContainerMenuSmelteryFuelTank> ext
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 37;
-                        fluidHeight = 49;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 37;
+                    fluidHeight = 49;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

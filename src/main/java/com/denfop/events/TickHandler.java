@@ -788,12 +788,7 @@ public class TickHandler {
 
     }
 
-    @SubscribeEvent
-    public void initData(TickEvent.LevelTickEvent event) {
-        if (event.level.isClientSide && event.phase == TickEvent.Phase.END) {
-            IUCore.instance.registerData(event.level);
-        }
-    }
+
 
     @SubscribeEvent
     public void onRenderOres(RenderLevelStageEvent event) {

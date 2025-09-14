@@ -25,8 +25,8 @@ public class SlotVirtual extends Slot {
                        final int xPosition,
                        final int yPosition,
                        VirtualSlot slotInfo) {
-        super(inventoryIn,
-                slotInfo instanceof Inventory ? inventoryIn.getBaseIndex((Inventory) slotInfo) + index : index,
+        super(slotInfo instanceof Inventory ? ((Inventory) slotInfo) : inventoryIn,
+                index,
                 xPosition,
                 yPosition);
         this.slotInfo = slotInfo;

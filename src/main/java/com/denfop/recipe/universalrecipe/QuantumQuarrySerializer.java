@@ -52,7 +52,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
         switch (recipeOperation) {
             case "default":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_adding.addAll(input);
                         break;
                     case "remove":
@@ -62,7 +62,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
             case "furnace":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_furnace_adding.addAll(input);
                         break;
                     case "remove":
@@ -72,7 +72,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
             case "macerator":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_crushed_adding.addAll(input);
                         break;
                     case "remove":
@@ -82,7 +82,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
             case "comb_macerator":
                 switch (recipeOperation) {
-                    case "add":
+                    case "addAll":
                         IUCore.list_comb_crushed_adding.addAll(input);
                         break;
                     case "remove":
@@ -92,18 +92,77 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
         }
 
-        return new QuantumQuarryRecipe(id, recipeType, input, recipeOperation);
-    }
-
-    @Override
-    public QuantumQuarryRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new QuantumQuarryRecipe(id, "", new ArrayList<>(), "");
+        return new QuantumQuarryRecipe(id,recipeType, recipeOperation, input);
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buf, QuantumQuarryRecipe recipe) {
 
+        buf.writeUtf(recipe.getRecipeType());
+        buf.writeUtf(recipe.getTypeOperation());
 
+
+        List<ItemStack> inputs = recipe.getInputs();
+        buf.writeVarInt(inputs.size());
+        for (ItemStack stack : inputs) {
+            buf.writeItem(stack);
+        }
+    }
+
+    @Override
+    public QuantumQuarryRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        String recipeType = buf.readUtf();
+        String recipeOperation = buf.readUtf();
+
+        int size = buf.readVarInt();
+        List<ItemStack> input = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            input.add(buf.readItem());
+        }
+        if (!IUCore.updateRecipe){
+            switch (recipeOperation) {
+                case "default":
+                    switch (recipeOperation) {
+                        case "addAll":
+                            IUCore.list_adding.addAll(input);
+                            break;
+                        case "remove":
+                            IUCore.list_removing.addAll(input);
+                            break;
+                    }
+                    break;
+                case "furnace":
+                    switch (recipeOperation) {
+                        case "addAll":
+                            IUCore.list_furnace_adding.addAll(input);
+                            break;
+                        case "remove":
+                            IUCore.list_furnace_removing.addAll(input);
+                            break;
+                    }
+                    break;
+                case "macerator":
+                    switch (recipeOperation) {
+                        case "addAll":
+                            IUCore.list_crushed_adding.addAll(input);
+                            break;
+                        case "remove":
+                            IUCore.list_crushed_removing.addAll(input);
+                            break;
+                    }
+                    break;
+                case "comb_macerator":
+                    switch (recipeOperation) {
+                        case "addAll":
+                            IUCore.list_comb_crushed_adding.addAll(input);
+                            break;
+                        case "remove":
+                            IUCore.list_comb_crushed_removing.addAll(input);
+                            break;
+                    }
+                    break;
+            }
+        }
+        return new QuantumQuarryRecipe(id, recipeType, recipeOperation, input);
     }
 }

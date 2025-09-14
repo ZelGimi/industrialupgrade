@@ -22,12 +22,8 @@ public class InputItemStack implements IInputItemStack {
     }
 
     public InputItemStack(ItemStack input, int amount) {
-        if (ModUtils.isEmpty(input)) {
-            throw new IllegalArgumentException("invalid input stack");
-        } else {
-            this.input = input.copy();
-            this.amount = amount;
-        }
+        this.input = input.copy();
+        this.amount = amount;
     }
 
     public InputItemStack(CompoundTag compoundTag) {

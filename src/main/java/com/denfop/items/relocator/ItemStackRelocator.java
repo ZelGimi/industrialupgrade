@@ -71,11 +71,6 @@ public class ItemStackRelocator extends ItemStackInventory {
 
     }
 
-    @Override
-    public int getBaseIndex(final Inventory var1) {
-        return 0;
-    }
-
 
     @Nonnull
     public String getName() {

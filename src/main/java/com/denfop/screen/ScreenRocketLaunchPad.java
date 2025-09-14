@@ -4,6 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.widget.*;
 import com.denfop.containermenu.ContainerMenuRocketLaunchPad;
 import com.denfop.utils.Localization;
+import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,44 @@ public class ScreenRocketLaunchPad<T extends ContainerMenuRocketLaunchPad> exten
         super(guiContainer);
         imageHeight = 220;
         this.componentList.clear();
-        this.addWidget(new TankWidget(this, 106, 15, 12, 35, guiContainer.base.tank, TankWidget.TankGuiStyle.Plain));
+        this.addWidget(new TankWidget(this, 106, 15, 12, 35, guiContainer.base.tank){
+            @Override
+            public void drawBackground(PoseStack poseStack, int mouseX, int mouseY) {
+                bindCommonTexture();
+                FluidStack fs = this.tank.getFluid();
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
+                    int fluidX = this.x;
+                    int fluidY = this.y;
+                    int fluidWidth = 12;
+                    int fluidHeight = 35;
+
+
+                    Fluid fluid = fs.getFluid();
+
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
+                    double renderHeight = (double) fluidHeight * ModUtils.limit(
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
+                            0.0D,
+                            1.0D
+                    );
+                    bindBlockTexture();
+                    this.gui.drawSprite(poseStack,
+                            mouseX + fluidX,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
+                            fluidWidth,
+                            renderHeight,
+                            sprite,
+                            color,
+                            1.0D,
+                            false,
+                            true
+                    );
+                    bindCommonTexture();
+                }
+            }
+        });
 
         this.componentList.add(new ScreenWidget(this, 56, 12, EnumTypeComponent.ENERGY_HEIGHT_1,
                 new WidgetDefault<>(guiContainer.base.energy)

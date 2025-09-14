@@ -311,4 +311,8 @@ public class RecipesFluidCore implements IFluidRecipes {
         }
 
     }
+
+    public List<String> getRecipes() {
+        return map_recipe_managers.keySet().stream().toList();
+    }
 }

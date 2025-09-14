@@ -236,22 +236,6 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
 
 
     @Override
-    public int getBaseIndex(Inventory var1) {
-        int ret = 0;
-
-        Inventory slot;
-        for (Iterator<Inventory> var3 = this.inventories.iterator(); var3.hasNext(); ret += slot.size()) {
-            slot = var3.next();
-            if (slot == var1) {
-                return ret;
-            }
-        }
-
-        return -1;
-    }
-
-
-    @Override
     public MenuType<?> getMenuType() {
         return containerBase.get();
     }

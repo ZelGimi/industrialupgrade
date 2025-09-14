@@ -35,41 +35,23 @@ public class TankWidget extends ScreenWidget {
 
     public static final int v = 100;
     protected final IFluidTank tank;
-    private final TankWidget.TankGuiStyle style;
 
-    public TankWidget(ScreenIndustrialUpgrade<?> gui, int x, int y, int width, int height, IFluidTank tank, TankWidget.TankGuiStyle style) {
+    public TankWidget(ScreenIndustrialUpgrade<?> gui, int x, int y, int width, int height, IFluidTank tank) {
         super(gui, x, y, width, height);
         if (tank == null) {
             throw new NullPointerException("null tank");
         } else {
             this.tank = tank;
-            this.style = style;
         }
     }
 
     public static TankWidget createNormal(ScreenIndustrialUpgrade<?> gui, int x, int y, IFluidTank tank) {
-        return new TankWidget(gui, x, y, 20, 55, tank, TankWidget.TankGuiStyle.Normal);
+        return new TankWidget(gui, x, y, 20, 55, tank);
     }
 
-    public static TankWidget createPlain(ScreenIndustrialUpgrade<?> gui, int x, int y, int width, int height, IFluidTank tank) {
-        return new TankWidget(gui, x, y, width, height, tank, TankWidget.TankGuiStyle.Plain);
-    }
 
-    public static TankWidget createBorderless(ScreenIndustrialUpgrade<?> gui, int x, int y, IFluidTank tank, boolean mirrored) {
-        return new TankWidget(
-                gui,
-                x,
-                y,
-                12,
-                47,
-                tank,
-                mirrored ? TankWidget.TankGuiStyle.BorderlessMirrored : TankWidget.TankGuiStyle.Borderless
-        );
-    }
 
-    public TankGuiStyle getStyle() {
-        return style;
-    }
+
 
     @Override
     public boolean onMouseClick(int mouseX, int mouseY, MouseButton button) {
@@ -97,27 +79,23 @@ public class TankWidget extends ScreenWidget {
         bindCommonTexture();
         FluidStack fs = this.tank.getFluid();
         if (!fs.isEmpty() && fs.getAmount() > 0) {
-            if (this.style.withBorder) {
-                this.gui.drawTexturedModalRect(poseStack,
-                        mouseX + this.x,
-                        mouseY + this.y,
-                        70,
-                        100,
-                        this.width,
-                        this.height
-                );
-            }
+            this.gui.drawTexturedModalRect(poseStack,
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    70,
+                    100,
+                    this.width,
+                    this.height
+            );
 
             int fluidX = this.x;
             int fluidY = this.y;
-            int fluidWidth = this.width;
-            int fluidHeight = this.height;
-            if (this.style.withBorder) {
-                fluidX += 4;
-                fluidY += 4;
-                fluidWidth = 12;
-                fluidHeight = 47;
-            }
+            int fluidWidth;
+            int fluidHeight;
+            fluidX += 4;
+            fluidY += 4;
+            fluidWidth = 12;
+            fluidHeight = 47;
 
             Fluid fluid = fs.getFluid();
 
@@ -141,32 +119,18 @@ public class TankWidget extends ScreenWidget {
                     false,
                     true
             );
-            if (this.style.withGauge) {
-                bindCommonTexture();
-                int gaugeX = this.x;
-                int gaugeY = this.y;
-                if (!this.style.withBorder) {
-                    gaugeX -= 4;
-                    gaugeY -= 4;
-                }
+            bindCommonTexture();
+            int gaugeX = this.x;
+            int gaugeY = this.y;
 
-                this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
-            }
-        } else if (this.style.withBorder) {
+
+            this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
+        } else {
             this.gui.drawTexturedModalRect(poseStack,
                     mouseX + this.x,
                     mouseY + this.y,
                     70,
                     100,
-                    this.width,
-                    this.height
-            );
-        } else if (this.style.withGauge) {
-            this.gui.drawTexturedModalRect(poseStack,
-                    mouseX + this.x,
-                    mouseY + this.y,
-                    74,
-                    104,
                     this.width,
                     this.height
             );
@@ -178,8 +142,7 @@ public class TankWidget extends ScreenWidget {
         List<String> ret = super.getToolTip();
         FluidStack fs = this.tank.getFluid();
         if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
-            if (this.tank instanceof Fluids.InternalFluidTank) {
-                Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
+            if (this.tank instanceof Fluids.InternalFluidTank tank1) {
                 ret.add(Localization.translate("iu.tank.fluids"));
                 ret.addAll(tank1.getFluidList());
             }
@@ -197,21 +160,6 @@ public class TankWidget extends ScreenWidget {
         return ret;
     }
 
-    public enum TankGuiStyle {
-        Normal(true, true, false),
-        Borderless(false, true, false),
-        BorderlessMirrored(false, true, true),
-        Plain(false, false, false);
 
-        public final boolean withBorder;
-        public final boolean withGauge;
-        public final boolean mirrorGauge;
-
-        TankGuiStyle(boolean withBorder, boolean withGauge, boolean mirrorGauge) {
-            this.withBorder = withBorder;
-            this.withGauge = withGauge;
-            this.mirrorGauge = mirrorGauge;
-        }
-    }
 
 }

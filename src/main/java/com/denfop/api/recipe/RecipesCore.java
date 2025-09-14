@@ -508,7 +508,9 @@ public class RecipesCore implements IRecipes {
         }
         return null;
     }
-
+    public List<String> getMap_recipe_managers() {
+        return map_recipe_managers.keySet().stream().toList();
+    }
     @Override
     public void addInitRecipes(final IHasRecipe hasRecipe) {
         if (canAdd) {

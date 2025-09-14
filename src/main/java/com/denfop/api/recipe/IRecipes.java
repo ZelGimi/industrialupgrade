@@ -141,4 +141,5 @@ public interface IRecipes {
     void addInitRecipes(IHasRecipe hasRecipe);
 
 
+    List<String> getMap_recipe_managers();
 }

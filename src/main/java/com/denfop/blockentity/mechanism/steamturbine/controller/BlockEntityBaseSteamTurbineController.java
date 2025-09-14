@@ -240,7 +240,7 @@ public class BlockEntityBaseSteamTurbineController extends BlockEntityMultiBlock
             PoseStack poseStack = event.getPoseStack();
             poseStack.translate(0, -0.5, 0);
             for (IRod rod : this.iRodListMap) {
-                BlockPos pos = rod.getBlockPos();
+                BlockPos pos = rod.getPos();
                 poseStack.pushPose();
                 float angle = this.getAngle();
                 poseStack.translate(pos.getX() - prev.getX(), pos.getY() - prev.getY(), pos.getZ() - prev.getZ());
@@ -597,7 +597,7 @@ public class BlockEntityBaseSteamTurbineController extends BlockEntityMultiBlock
         customPacketBuffer.writeBoolean(isFull());
         if (isFull()) {
             for (IRod rod : iRodListMap) {
-                customPacketBuffer.writeBlockPos(rod.getBlockPos());
+                customPacketBuffer.writeBlockPos(rod.getPos());
                 customPacketBuffer.writeBytes(((BlockEntityMultiBlockElement) rod).writePacket());
             }
         }

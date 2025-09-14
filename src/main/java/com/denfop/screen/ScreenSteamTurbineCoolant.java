@@ -32,8 +32,7 @@ public class ScreenSteamTurbineCoolant<T extends ContainerMenuSteamTurbineCoolan
                 8,
                 117 - 80,
                 73 - 15,
-                container.base.getCoolant(),
-                TankWidget.TankGuiStyle.Normal
+                container.base.getCoolant()
         ) {
 
             protected List<String> getToolTip() {
@@ -66,14 +65,12 @@ public class ScreenSteamTurbineCoolant<T extends ContainerMenuSteamTurbineCoolan
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 6;
-                        fluidY += 6;
-                        fluidWidth = 28;
-                        fluidHeight = 44;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 6;
+                    fluidY += 6;
+                    fluidWidth = 28;
+                    fluidHeight = 44;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

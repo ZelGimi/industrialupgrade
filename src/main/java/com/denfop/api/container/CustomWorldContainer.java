@@ -16,8 +16,6 @@ public interface CustomWorldContainer extends Container, MenuProvider {
     Level getWorld();
     void addInventorySlot(Inventory var1);
 
-    int getBaseIndex(Inventory var1);
-
     MenuType<?> getMenuType();
 
     int getContainerId();

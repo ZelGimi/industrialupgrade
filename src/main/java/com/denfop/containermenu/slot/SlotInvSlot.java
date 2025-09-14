@@ -64,15 +64,10 @@ public class SlotInvSlot extends Slot {
 
     @Override
     public boolean isSameInventory(Slot other) {
-        if (other.container != this.inventory.base) {
+        if (other.container != this.inventory) {
             return false;
         }
-        int baseIndex = this.inventory.base.getBaseIndex(this.inventory);
-        if (baseIndex == -1) {
-            return false;
-        } else {
-            return baseIndex + this.index == other.index;
-        }
+        return this.index == other.index;
     }
 
 

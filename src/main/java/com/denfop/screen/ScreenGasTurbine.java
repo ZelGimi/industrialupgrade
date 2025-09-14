@@ -35,8 +35,7 @@ public class ScreenGasTurbine<T extends ContainerMenuGasTurbineController> exten
                 5,
                 117 - 80,
                 73 - 15,
-                container.base.tank.getTank(),
-                TankWidget.TankGuiStyle.Normal
+                container.base.tank.getTank()
         ) {
 
             protected List<String> getToolTip() {
@@ -69,14 +68,12 @@ public class ScreenGasTurbine<T extends ContainerMenuGasTurbineController> exten
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 8;
-                        fluidY += 12;
-                        fluidWidth = 23;
-                        fluidHeight = 41;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 8;
+                    fluidY += 12;
+                    fluidWidth = 23;
+                    fluidHeight = 41;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

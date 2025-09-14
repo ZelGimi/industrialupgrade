@@ -39,8 +39,7 @@ public class ScreenGasWellController<T extends ContainerMenuGasWellController> e
                 13,
                 26,
                 61,
-                guiContainer.base.tank.getTank(),
-                TankWidget.TankGuiStyle.Normal
+                guiContainer.base.tank.getTank()
         ) {
 
             protected List<String> getToolTip() {
@@ -73,14 +72,12 @@ public class ScreenGasWellController<T extends ContainerMenuGasWellController> e
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 20;
-                        fluidHeight = 55;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 20;
+                    fluidHeight = 55;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

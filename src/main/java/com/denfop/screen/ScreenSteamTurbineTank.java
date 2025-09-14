@@ -29,8 +29,7 @@ public class ScreenSteamTurbineTank<T extends ContainerMenuSteamTurbineTank> ext
                 15,
                 117 - 80,
                 73 - 15,
-                container.base.getTank(),
-                TankWidget.TankGuiStyle.Normal
+                container.base.getTank()
         ) {
 
             protected List<String> getToolTip() {
@@ -65,12 +64,10 @@ public class ScreenSteamTurbineTank<T extends ContainerMenuSteamTurbineTank> ext
                     int fluidY = this.y;
                     int fluidWidth = this.width;
                     int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 6;
-                        fluidY += 6;
-                        fluidWidth = 28;
-                        fluidHeight = 44;
-                    }
+                    fluidX += 6;
+                    fluidY += 6;
+                    fluidWidth = 28;
+                    fluidHeight = 44;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

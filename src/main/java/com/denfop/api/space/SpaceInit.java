@@ -68,16 +68,19 @@ public class SpaceInit {
     private static Star kapteynSun;
     private static Star kepler186Sun;
 
+    static boolean  isRead = false;
     public static void jsonInit() {
-        regSystem.forEach(Runnable::run);
-        regStar.forEach(Runnable::run);
-        regPlanet.forEach(Runnable::run);
-        regSatellite.forEach(Runnable::run);
-        regAsteroid.forEach(Runnable::run);
-        regBaseResource.forEach(Runnable::run);
-        regColonyBaseResource.forEach(Runnable::run);
+        if (!isRead) {
+            regSystem.forEach(Runnable::run);
+            regStar.forEach(Runnable::run);
+            regPlanet.forEach(Runnable::run);
+            regSatellite.forEach(Runnable::run);
+            regAsteroid.forEach(Runnable::run);
+            regBaseResource.forEach(Runnable::run);
+            regColonyBaseResource.forEach(Runnable::run);
+            isRead = true;
+        }
     }
-
     public static void init() {
         solarSystem = new System("solarsystem");
         sextantis24 = new System("sextantis");

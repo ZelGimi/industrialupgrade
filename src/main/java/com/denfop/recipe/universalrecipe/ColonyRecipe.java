@@ -1,5 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -12,17 +13,20 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class ColonyRecipe implements Recipe<Container> {
-    private final ResourceLocation id;
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
 
-    public ColonyRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
+    private final ResourceLocation id;
+    final String bodyName;
+    final List<IInputItemStack> input;
+    final int level;
+
+    public ColonyRecipe(ResourceLocation id, String bodyName, List<IInputItemStack> input, int level) {
         this.id = id;
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+        this.bodyName = bodyName;
+        this.input = input;
+        this.level = level;
     }
+
+
 
     @Override
     public boolean matches(Container inv, Level world) {
@@ -51,18 +55,7 @@ public class ColonyRecipe implements Recipe<Container> {
         return id;
     }
 
-    public List<ItemStack> getInputs() {
-        return inputs;
-    }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

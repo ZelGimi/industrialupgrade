@@ -83,7 +83,7 @@ public class ScreenAdvCokeOven<T extends ContainerMenuAdvCokeOven> extends Scree
         );
 
 
-        this.addWidget(new TankWidget(this, 6, 18, 20, 55, container.base.tank, TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 6, 18, 20, 55, container.base.tank) {
             @Override
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -117,12 +117,10 @@ public class ScreenAdvCokeOven<T extends ContainerMenuAdvCokeOven> extends Scree
                     int fluidY = this.y;
                     int fluidWidth = this.width;
                     int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 12;
-                        fluidHeight = 47;
-                    }
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 47;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -145,22 +143,16 @@ public class ScreenAdvCokeOven<T extends ContainerMenuAdvCokeOven> extends Scree
                             false,
                             true
                     );
-                    if (this.getStyle().withGauge) {
-                        bindCommonTexture();
-                        int gaugeX = this.x;
-                        int gaugeY = this.y;
-                        if (!this.getStyle().withBorder) {
-                            gaugeX -= 4;
-                            gaugeY -= 4;
-                        }
+                    bindCommonTexture();
+                    int gaugeX = this.x;
+                    int gaugeY = this.y;
+                    this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
 
-                        this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
-                    }
                 }
             }
         });
 
-        this.addWidget(new TankWidget(this, 129, 18, 20, 55, container.base.tank1, TankWidget.TankGuiStyle.Normal) {
+        this.addWidget(new TankWidget(this, 129, 18, 20, 55, container.base.tank1) {
             @Override
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -195,12 +187,10 @@ public class ScreenAdvCokeOven<T extends ContainerMenuAdvCokeOven> extends Scree
                     int fluidY = this.y;
                     int fluidWidth = this.width;
                     int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 12;
-                        fluidHeight = 47;
-                    }
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 47;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -223,17 +213,11 @@ public class ScreenAdvCokeOven<T extends ContainerMenuAdvCokeOven> extends Scree
                             false,
                             true
                     );
-                    if (this.getStyle().withGauge) {
-                        bindCommonTexture();
-                        int gaugeX = this.x;
-                        int gaugeY = this.y;
-                        if (!this.getStyle().withBorder) {
-                            gaugeX -= 4;
-                            gaugeY -= 4;
-                        }
+                    bindCommonTexture();
+                    int gaugeX = this.x;
+                    int gaugeY = this.y;
+                    this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
 
-                        this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
-                    }
                 }
             }
         });
