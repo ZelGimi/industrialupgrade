@@ -14,15 +14,13 @@ import java.util.List;
 
 public class SystemRecipe implements Recipe<Container> {
     private final ResourceLocation id;
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
+    public String name;
+    public Integer distance;
 
-    public SystemRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
+    public SystemRecipe(ResourceLocation id, String name, Integer distance) {
         this.id = id;
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+        this.name = name;
+        this.distance = distance;
     }
 
     @Override
@@ -52,17 +50,12 @@ public class SystemRecipe implements Recipe<Container> {
         return id;
     }
 
-    public List<ItemStack> getInputs() {
-        return inputs;
+    public String getName() {
+        return this.name;
     }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
+    public Integer getDistanceFromStar() {
+        return this.distance;
     }
 
 

@@ -80,21 +80,20 @@ public class VeinDataLoader extends SimpleJsonResourceReloadListener {
                 VeinType type = new VeinType(deposit.get(0), TypeVein.SMALL, inputs);
                 veinTypes.add(type);
                 VEIN_DATA.put(entry.getKey(), type);
+                for (ChanceOre chanceOre : type.getOres()) {
+                    BlockState state = chanceOre.getBlock();
+                    if (!idToblockStateMap.containsKey(state.getBlock())) {
+                        idToblockStateMap.put(state.getBlock(), id);
+                        blockStateMap.put(id, state);
+                        id++;
+                    }
+                }
 
             } catch (Exception ex) {
                 System.err.println("[VeinLoader] Error parsing file " + entry.getKey() + ": " + ex.getMessage());
             }
         }
-        for (VeinType veinType : VEIN_DATA.values()) {
-            for (ChanceOre chanceOre : veinType.getOres()) {
-                BlockState state = chanceOre.getBlock();
-                if (!idToblockStateMap.containsKey(state.getBlock())) {
-                    idToblockStateMap.put(state.getBlock(), id);
-                    blockStateMap.put(id, state);
-                    id++;
-                }
-            }
-        }
+
         System.out.println("[VeinLoader] Vein files loaded: " + VEIN_DATA.size());
 
     }

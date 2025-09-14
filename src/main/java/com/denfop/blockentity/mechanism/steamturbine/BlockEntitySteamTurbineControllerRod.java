@@ -48,7 +48,7 @@ public class BlockEntitySteamTurbineControllerRod extends BlockEntityMultiBlockE
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeInt(list.size());
         for (IRod rod : list) {
-            customPacketBuffer.writeBlockPos(rod.getBlockPos());
+            customPacketBuffer.writeBlockPos(rod.getPos());
         }
         return customPacketBuffer;
     }
@@ -72,7 +72,7 @@ public class BlockEntitySteamTurbineControllerRod extends BlockEntityMultiBlockE
     public void updateTileServer(final Player var1, final double var2) {
 
         BlockEntityMultiBlockElement tileMultiBlockBase =
-                (BlockEntityMultiBlockElement) this.getWorld().getBlockEntity(list.get((int) var2).getBlockPos());
+                (BlockEntityMultiBlockElement) this.getWorld().getBlockEntity(list.get((int) var2).getPos());
         if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase
                 .getMain()
                 .isFull() && !tileMultiBlockBase.isRemoved()) {

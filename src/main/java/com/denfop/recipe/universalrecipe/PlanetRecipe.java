@@ -1,5 +1,9 @@
 package com.denfop.recipe.universalrecipe;
 
+import com.denfop.api.space.EnumLevels;
+import com.denfop.api.space.EnumType;
+import com.denfop.api.space.IStar;
+import com.denfop.api.space.ISystem;
 import com.denfop.register.Register;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -13,16 +17,42 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class PlanetRecipe implements Recipe<Container> {
-    private final ResourceLocation id;
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
+    public final ResourceLocation id;
+    public final String name;
+    public final String system;
+    public final ResourceLocation texture;
+    public final EnumLevels level;
+    public final String star;
+    public final int temperature;
+    public final boolean pressure;
+    public final double distance;
+    public final EnumType type;
+    public final boolean oxygen;
+    public final boolean colonies;
+    public final int angle;
+    public final double time;
+    public final double size;
+    public final double rotation;
 
-    public PlanetRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
+    public PlanetRecipe(ResourceLocation id, String name, String system, ResourceLocation texture, EnumLevels level, String star,
+                        int temperature, boolean pressure, double distance, EnumType type,
+                        boolean oxygen, boolean colonies, int angle, double time, double size, double rotation) {
         this.id = id;
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+        this.name = name;
+        this.system = system;
+        this.texture = texture;
+        this.level = level;
+        this.star = star;
+        this.temperature = temperature;
+        this.pressure = pressure;
+        this.distance = distance;
+        this.type = type;
+        this.oxygen = oxygen;
+        this.colonies = colonies;
+        this.angle = angle;
+        this.time = time;
+        this.size = size;
+        this.rotation = rotation;
     }
 
     @Override
@@ -52,18 +82,7 @@ public class PlanetRecipe implements Recipe<Container> {
         return id;
     }
 
-    public List<ItemStack> getInputs() {
-        return inputs;
-    }
 
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

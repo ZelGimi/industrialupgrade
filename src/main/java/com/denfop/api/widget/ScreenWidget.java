@@ -207,6 +207,7 @@ public class ScreenWidget extends AbstractWidget {
     protected List<String> getToolTip() {
         if (tooltipProvider != null) {
             String tooltip = tooltipProvider.get();
+            if (tooltip != null)
             return new ArrayList<>(List.of(tooltip.split("\n")));
         }
         return new LinkedList<>();

@@ -48,8 +48,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                 6,
                 18,
                 42,
-                container.base.getWaterFluid(),
-                TankWidget.TankGuiStyle.Normal
+                container.base.getWaterFluid()
         ) {
 
             protected List<String> getToolTip() {
@@ -82,14 +81,12 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 3;
-                        fluidWidth = 11;
-                        fluidHeight = 35;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 3;
+                    fluidWidth = 11;
+                    fluidHeight = 35;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -127,8 +124,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                 6,
                 18,
                 42,
-                container.base.getSteamFluid(),
-                TankWidget.TankGuiStyle.Normal
+                container.base.getSteamFluid()
         ) {
 
             protected List<String> getToolTip() {
@@ -161,14 +157,12 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                 if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 3;
-                        fluidWidth = 11;
-                        fluidHeight = 35;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 3;
+                    fluidWidth = 11;
+                    fluidHeight = 35;
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
@@ -208,8 +202,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                     6,
                     18,
                     42,
-                    fluidTank,
-                    TankWidget.TankGuiStyle.Normal
+                    fluidTank
             ) {
 
                 protected List<String> getToolTip() {
@@ -242,14 +235,12 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                     if (!fs.isEmpty() && fs.getAmount() > 0) {
                         int fluidX = this.x;
                         int fluidY = this.y;
-                        int fluidWidth = this.width;
-                        int fluidHeight = this.height;
-                        if (this.getStyle().withBorder) {
-                            fluidX += 4;
-                            fluidY += 3;
-                            fluidWidth = 11;
-                            fluidHeight = 35;
-                        }
+                        int fluidWidth;
+                        int fluidHeight;
+                        fluidX += 4;
+                        fluidY += 3;
+                        fluidWidth = 11;
+                        fluidHeight = 35;
 
                         Fluid fluid = fs.getFluid();
                         IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);

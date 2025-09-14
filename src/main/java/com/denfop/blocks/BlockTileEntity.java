@@ -8,6 +8,8 @@ import com.denfop.blocks.state.HarvestTool;
 import com.denfop.blocks.state.TypeProperty;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
+import com.denfop.items.energy.ItemGraviTool;
+import com.denfop.items.energy.ItemToolWrench;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -464,14 +466,17 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
         }
         return blockState;
     }
-
+    private boolean isWrench(Player player, InteractionHand interactionHand) {
+        ItemStack stack = player.getItemInHand(interactionHand);
+        return stack.getItem() instanceof ItemToolWrench || stack.getItem() instanceof ItemGraviTool;
+    }
     public @NotNull InteractionResult use(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, Player player, @NotNull InteractionHand interactionHand, @NotNull BlockHitResult blockHitResult) {
         if (player.isSecondaryUseActive()) {
             BlockEntityBase te = getTe(level, blockPos);
-            return te == null ? InteractionResult.PASS : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
+            return te == null || isWrench(player,interactionHand)? InteractionResult.PASS : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
         } else {
             BlockEntityBase te = getTe(level, blockPos);
-            return te == null ? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
+            return te == null || isWrench(player,interactionHand)? InteractionResult.PASS : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : InteractionResult.PASS;
         }
 
     }

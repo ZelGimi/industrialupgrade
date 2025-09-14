@@ -60,12 +60,10 @@ import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
+import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
-import com.denfop.network.packet.PacketFixerRecipe;
-import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
-import com.denfop.network.packet.PacketUpdateRecipe;
-import com.denfop.network.packet.PacketUpdateRelocator;
+import com.denfop.network.packet.*;
 import com.denfop.proxy.ClientProxy;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.recipe.IInputHandler;
@@ -109,7 +107,11 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -143,6 +145,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.denfop.api.Recipes.inputFactory;
 import static com.denfop.api.space.BaseSpaceSystem.fluidToLevel;
+import static com.denfop.utils.ListInformationUtils.mechanism_info;
 import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
 
@@ -216,6 +219,9 @@ public class IUCore {
 
     boolean reg = false;
     List<RegistryObject<?>> objects = new ArrayList<>();
+    public static List<LootPool> VOLCANO_LOOT_POOL;
+    public static LootTable VOLCANO_TABLE;
+
     public IUCore() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
@@ -318,6 +324,7 @@ public class IUCore {
         gen.addProvider(event.includeServer(), blockTags);
         gen.addProvider(event.includeServer(), new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
         gen.addProvider(event.includeServer(), new RecipeProvider(packOutput));
+        gen.addProvider(event.includeServer(), new IULootTableProvider(packOutput));
         gen.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
 
     }
@@ -351,7 +358,10 @@ public class IUCore {
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
-
+        if (name.equals(IULootTableProvider.VOLCANO_LOOT_TABLE) ) {
+            VOLCANO_LOOT_POOL =  ((LootTableAccessor) event.getTable()).getPools();
+            VOLCANO_TABLE = event.getTable();
+        }
 
         if (name.getPath().startsWith("entities/")) {
             String id = name.toString();
@@ -384,6 +394,7 @@ public class IUCore {
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.getEntity().level().isClientSide()) {
             IUCore.keyboard.removePlayerReferences(event.getEntity());
+            players.remove(event.getEntity().getName().getString());
         }
 
     }
@@ -572,13 +583,13 @@ public class IUCore {
     }
 
     @SubscribeEvent
-    public void updateRecipe(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!update) {
+    public void updateRecipe(TickEvent.PlayerTickEvent event) {
+        if (!update && event.player.level().isClientSide && event.phase == TickEvent.Phase.END) {
             update = true;
 
             Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
             long startTime = System.nanoTime();
-            List<CraftingRecipe> listRecipes = event.getEntity().level().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
+            List<CraftingRecipe> listRecipes =event.player.level().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
             List<MatterRecipe> matterRecipeList = new ArrayList<>();
             IUCore.LOGGER.debug("Checking recipes {} ", listRecipes.size());
 
@@ -593,7 +604,7 @@ public class IUCore {
                     }
                 }
                 ItemStack output = ItemStack.EMPTY;
-                output = r.getResultItem(event.getEntity().level().registryAccess());
+                output = r.getResultItem(event.player.level().registryAccess());
                 if (output == ItemStack.EMPTY)
                     continue;
                 final CompoundTag nbt = ModUtils.nbtOrNull(output);
@@ -604,7 +615,7 @@ public class IUCore {
                 if (Recipes.recipes.getRecipeOutput("converter", false, output) != null) {
                     continue;
                 }
-                MatterRecipe matterRecipe = new MatterRecipe(r.getResultItem(event.getEntity().level().registryAccess()));
+                MatterRecipe matterRecipe = new MatterRecipe(r.getResultItem(event.player.level().registryAccess()));
                 matterRecipeList.add(matterRecipe);
                 itemStackMap1.put(itemStackList, matterRecipe);
             }
@@ -1083,10 +1094,31 @@ public class IUCore {
         }
 
     }
+    boolean regData = false;
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void registerData(TickEvent.PlayerTickEvent event){
+        if (event.player.level() != null && event.player.level().isClientSide && !this.regData){
+            regData = true;
+            if (mechanism_info.isEmpty()) {
+                ListInformationUtils.init();
+                List<MultiBlockEntity> tiles = TileBlockCreator.instance.getAllTiles();
+                for (MultiBlockEntity tileBlock : tiles)
 
+                    if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
+                        if (!mechanism_info1.containsKey(tileBlock)) {
+                            mechanism_info1.put(tileBlock, tileBlock.getDummyTe().getPickBlock(null, null).getDisplayName());
+                        }
+                    }
+
+                CropInit.initBiomes(event.player.level().registryAccess().registryOrThrow(Registries.BIOME));
+            }
+        }
+    }
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) {
+
             return;
         }
         if (!players.contains(event.getEntity().getName().getString())) {
@@ -1105,6 +1137,7 @@ public class IUCore {
             GuideBookCore.instance.loadOrThrow(event.getEntity().getUUID());
             new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.getEntity().getUUID()), event.getEntity());
         }
+        new PacketUpdateVeinData((ServerPlayer) event.getEntity());
         new PacketUpdateRelocator(event.getEntity());
 
     }
@@ -1114,8 +1147,115 @@ public class IUCore {
         registerData(event.getServer().overworld());
 
     }
+    public static boolean updateRecipe = false;
 
+    @SubscribeEvent
+    public void getore(RecipesUpdatedEvent event) {
+        if (!updateRecipe) {
+            updateRecipe = true;
+            SpaceInit.jsonInit();
 
+            Recipes.recipes.removeAllRecipesFromList();
+            Recipes.recipes.addAllRecipesFromList();
+            if (!change) {
+                change = true;
+                removeOre("c:gems/Iridium");
+                removeOre("c:gems/Americium");
+                removeOre("c:gems/Neptunium");
+
+                removeOre("c:ores/Redstone");
+                removeOre("c:gems/Curium");
+                removeOre("c:gems/Thorium");
+                removeOre("c:gems/Bor");
+                removeOre("c:gems/CrystalFlux");
+                removeOre("c:gems/Beryllium");
+                removeOre("c:ores/Coal");
+                removeOre("c:ores/sheelite");
+                addOre1(new ItemStack(Items.REDSTONE));
+                addOre1(new ItemStack(Items.COAL));
+                for (String name : RegisterOreDictionary.list_heavyore) {
+                    removeOre("c:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.list_mineral) {
+                    removeOre("c:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.spaceElementList) {
+                    removeOre("c:ores/" + name);
+                }
+
+                removeOre("c:ores/apatite");
+                removeOre("c:ores/uranium");
+                removeOre("c:ores/Thorium");
+                removeOre("c:ores/Sulfur");
+                removeOre("c:ores/Boron");
+                removeOre("c:ores/Beryllium");
+                removeOre("c:ores/Lithium");
+                removeOre("c:ores/Calcium");
+                removeOre("c:ores/Draconium");
+                removeOre("c:ores/netherite_scrap");
+                removeOre("c:ores/saltpeter");
+                IUCore.list_furnace_adding.forEach(this::addOre2);
+                IUCore.list_furnace_removing.forEach(this::removeOre2);
+                IUCore.list_adding.forEach(this::addOre1);
+                IUCore.list_removing.forEach(this::removeOre);
+                IUCore.list_comb_crushed_adding.forEach(this::addOre4);
+                IUCore.list_comb_crushed_removing.forEach(this::removeOre4);
+                IUCore.list_crushed_adding.forEach(this::addOre3);
+                IUCore.list_crushed_removing.forEach(this::removeOre3);
+                IUCore.list.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack.getItemStack().get(0)));
+                IUCore.get_ingot.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack.getItemStack().get(0)));
+                IUCore.get_comb_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack.getItemStack().get(0)));
+                IUCore.get_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                IUCore.get_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        get_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_polisher.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_polisher_quarry.add(new QuarryItem(stack));
+                    }
+                });
+
+                IUCore.list.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                list_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_ingot.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_ingot_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_comb_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_comb_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+            }
+        }
+    }
     @SubscribeEvent
     public void getore(TagsUpdatedEvent event) {
         if (!register) {
@@ -1130,7 +1270,11 @@ public class IUCore {
             MetalFormerRecipe.init();
             BlockEntityPalletGenerator.init();
             BlockEntitySolidCooling.init();
-            SpaceInit.jsonInit();
+            if (IUCore.network.getClient() == null) {
+                SpaceInit.jsonInit();
+                Recipes.recipes.removeAllRecipesFromList();
+                Recipes.recipes.addAllRecipesFromList();
+            }
             BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
             IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
             final IInputHandler input = com.denfop.api.Recipes.inputFactory;
@@ -1147,8 +1291,6 @@ public class IUCore {
             }
             new ScrapboxRecipeManager();
             Recipes.recipes.initializationRecipes();
-            Recipes.recipes.removeAllRecipesFromList();
-            Recipes.recipes.addAllRecipesFromList();
             for (Holder<Item> holder : tagOres) {
                 get_ore.add(new ItemStack(holder));
                 Item item = holder.value();

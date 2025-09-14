@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.denfop.api.space.SpaceInit.regSatellite;
+import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
 public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
     public static final SatelliteSerializer INSTANCE = new SatelliteSerializer();
@@ -18,10 +19,10 @@ public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
     public SatelliteRecipe fromJson(ResourceLocation id, JsonObject json) {
         String name = json.get("name").getAsString();
 
-        ISystem system = SpaceNet.instance.getSystem().stream().filter(systems -> systems.getName().equals(json.get("system").getAsString().toLowerCase())).toList().get(0);
-        ResourceLocation texture = new ResourceLocation(json.get("texture").getAsString() + ".png");
+        String systemStr = json.get("system").getAsString().toLowerCase();
+        String textureStr = json.get("texture").getAsString();
         EnumLevels level = EnumLevels.valueOf(json.get("level").getAsString().toUpperCase());
-        IPlanet planet = (IPlanet) SpaceNet.instance.getBodyFromName(json.get("planet").getAsString());
+        String planetStr = json.get("planet").getAsString();
         int temperature = json.get("temperature").getAsInt();
         boolean pressure = json.get("pressure").getAsBoolean();
         double distance = json.get("distance").getAsDouble();
@@ -32,20 +33,68 @@ public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
         double time = json.get("time").getAsDouble();
         double size = json.get("size").getAsDouble();
         double rotation = json.get("rotation").getAsDouble();
-        regSatellite.add(() -> new Satellite(name, system, texture, level, planet, temperature, pressure,
-                distance, type, oxygen, colonies, angle, time, size, rotation));
-        return new SatelliteRecipe(id, "", Collections.emptyList(), "");
+        ResourceLocation texture = ResourceLocation.tryParse(textureStr + ".png");
+        if (!stringList.contains("satellite_"+name)) {
+            regSatellite.add(() -> new Satellite(name, SpaceNet.instance.getSystem().stream()
+                    .filter(s -> s.getName().equals(systemStr.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, level, (IPlanet) SpaceNet.instance.getBodyFromName(planetStr), temperature, pressure, distance,
+                    type, oxygen, colonies, angle, time, size, rotation));
+            stringList.add("satellite_"+name);
+        }
+        return new SatelliteRecipe(id,name, systemStr, textureStr, level, planetStr, temperature, pressure, distance, type, oxygen, colonies, angle, time, size, rotation);
+
     }
 
     @Override
     public SatelliteRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new SatelliteRecipe(id, "", new ArrayList<>(), "");
+        String name = buf.readUtf();
+        String systemName = buf.readUtf();
+        String texturePath = buf.readUtf();
+        EnumLevels level = EnumLevels.valueOf(buf.readUtf().toUpperCase());
+        String planetName = buf.readUtf();
+        int temperature = buf.readVarInt();
+        boolean pressure = buf.readBoolean();
+        double distance = buf.readDouble();
+        EnumType type = EnumType.valueOf(buf.readUtf().toUpperCase());
+        boolean oxygen = buf.readBoolean();
+        boolean colonies = buf.readBoolean();
+        int angle = buf.readVarInt();
+        double time = buf.readDouble();
+        double size = buf.readDouble();
+        double rotation = buf.readDouble();
+        ResourceLocation texture = ResourceLocation.tryParse(texturePath + ".png");
+        if (!stringList.contains("satellite_"+name)) {
+            regSatellite.add(() -> new Satellite(name, SpaceNet.instance.getSystem().stream()
+                    .filter(s -> s.getName().equals(systemName.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemName)), texture, level, (IPlanet) SpaceNet.instance.getBodyFromName(planetName), temperature, pressure, distance,
+                    type, oxygen, colonies, angle, time, size, rotation));
+            stringList.add("satellite_"+name);
+        }
+        return new SatelliteRecipe(
+                id, name, systemName, texturePath, level, planetName,
+                temperature, pressure, distance, type, oxygen, colonies,
+                angle, time, size, rotation
+        );
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buf, SatelliteRecipe recipe) {
-
-
+        buf.writeUtf(recipe.name);
+        buf.writeUtf(recipe.systemName);
+        buf.writeUtf(recipe.texturePath);
+        buf.writeUtf(recipe.level.name());
+        buf.writeUtf(recipe.planetName);
+        buf.writeVarInt(recipe.temperature);
+        buf.writeBoolean(recipe.pressure);
+        buf.writeDouble(recipe.distance);
+        buf.writeUtf(recipe.type.name());
+        buf.writeBoolean(recipe.oxygen);
+        buf.writeBoolean(recipe.colonies);
+        buf.writeVarInt(recipe.angle);
+        buf.writeDouble(recipe.time);
+        buf.writeDouble(recipe.size);
+        buf.writeDouble(recipe.rotation);
     }
 }

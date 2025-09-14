@@ -1,0 +1,11 @@
+// 1.20.1	2025-09-09T21:50:52.7802111	Tags for minecraft:block mod id industrialupgrade
+96fd12e961bf7ff91171fb82b7b17db4bb1cd658 data/forge/tags/blocks/needs_wood_tool.json
+b229d6a576e35b6d4980624c31fefcae59c1a8fc data/minecraft/tags/blocks/leaves.json
+a93bea601367478d3c3facfdba1b082f6bdc1530 data/minecraft/tags/blocks/logs.json
+f8e09c9dd50a4e5e0ae827af57d106ef4779e04b data/minecraft/tags/blocks/mineable/axe.json
+706c82305d94c92deb6f02488c31ffacb908eceb data/minecraft/tags/blocks/mineable/pickaxe.json
+7d3763966f01722171e0cf7899f5b854001cc709 data/minecraft/tags/blocks/mineable/shovel.json
+235671c98d47922aa8365d43efc5d0c99787246a data/minecraft/tags/blocks/mineable/wrench.json
+5578001285d3eff4c298b2b2710fd137ca6921fc data/minecraft/tags/blocks/needs_iron_tool.json
+ed74a56b2bbe54ad785f5172c0a47b1da53b682d data/minecraft/tags/blocks/needs_stone_tool.json
+a6d83cd31fcb47cc3ea38155fa4a855a7c23b27c data/minecraft/tags/blocks/saplings.json

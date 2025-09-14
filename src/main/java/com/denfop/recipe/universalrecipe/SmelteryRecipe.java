@@ -1,5 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -15,17 +16,29 @@ import java.util.List;
 
 public class SmelteryRecipe implements Recipe<Container> {
     private final ResourceLocation id;
-    private final String recipeType;
-    private final List<FluidStack> inputs;
-    private final ItemStack stack;
+    private final String operation;
+    private final List<IInputItemStack> inputs;
+    private final List<IInputItemStack> outputs;
 
-    public SmelteryRecipe(ResourceLocation id, String recipeType, List<FluidStack> fluidStacks, ItemStack stack) {
-        this.id = id;
-        this.recipeType = recipeType;
-        this.inputs = fluidStacks;
-        this.stack = stack;
+    public SmelteryRecipe(ResourceLocation id,String operation, List<IInputItemStack> inputs, List<IInputItemStack> outputs) {
+        this.operation = operation;
+        this.id=id;
+        this.inputs = inputs;
+        this.outputs = outputs;
     }
 
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public List<IInputItemStack> getInputs() {
+        return inputs;
+    }
+
+    public List<IInputItemStack> getOutputs() {
+        return outputs;
+    }
     @Override
     public boolean matches(Container inv, Level world) {
         return false;
@@ -53,17 +66,6 @@ public class SmelteryRecipe implements Recipe<Container> {
         return id;
     }
 
-    public List<FluidStack> getInputs() {
-        return inputs;
-    }
-
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IRod extends com.denfop.api.steam.IRod {
 
-    BlockPos getBlockPos();
+    BlockPos getPos();
 
     Inventory getSlot();
 

@@ -83,6 +83,7 @@ public class NetworkManager {
         this.registerPacket(new PacketUpdateRecipe());
         this.registerPacket(new PacketUpdateSkipQuest());
         this.registerPacket(new PacketUpdateBookMarks());
+        this.registerPacket(new PacketUpdateVeinData());
 
         channel.registerMessage(0, CustomPacketBuffer.class,
                 (customPacketBuffer, buf) -> {

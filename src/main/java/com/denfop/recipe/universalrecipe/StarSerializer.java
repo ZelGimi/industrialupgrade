@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.denfop.api.space.SpaceInit.regStar;
+import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
 public class StarSerializer implements RecipeSerializer<StarRecipe> {
     public static final StarSerializer INSTANCE = new StarSerializer();
@@ -20,23 +21,45 @@ public class StarSerializer implements RecipeSerializer<StarRecipe> {
     public StarRecipe fromJson(ResourceLocation id, JsonObject json) {
         String name = json.get("name").getAsString();
 
-        ISystem system = SpaceNet.instance.getSystem().stream().filter(systems -> systems.getName().equals(json.get("system").getAsString().toLowerCase())).toList().get(0);
-        ResourceLocation texture = new ResourceLocation(json.get("texture").getAsString() + ".png");
+        String systemStr = json.get("system").getAsString().toLowerCase();
+        String textureStr = json.get("texture").getAsString();
         int angle = json.get("angle").getAsInt();
         double size = json.get("size").getAsDouble();
-        regStar.add(() -> new Star(name, system, texture, angle, size));
-        return new StarRecipe(id, "", Collections.emptyList(), "");
+        ResourceLocation texture = ResourceLocation.tryParse(textureStr + ".png");
+        if (!stringList.contains("star_"+name)) {
+            regStar.add(() -> new Star(name, SpaceNet.instance.getSystem().stream()
+                    .filter(s -> s.getName().equals(systemStr.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, angle, size));
+            stringList.add("star_"+name);
+        }
+        return new StarRecipe(id,name, systemStr, textureStr, angle, size);
     }
 
     @Override
     public StarRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-
-        return new StarRecipe(id, "", new ArrayList<>(), "");
+        String name = buf.readUtf();
+        String systemName = buf.readUtf();
+        String texturePath = buf.readUtf();
+        int angle = buf.readVarInt();
+        double size = buf.readDouble();
+        ResourceLocation texture = ResourceLocation.tryParse(texturePath + ".png");
+        if (!stringList.contains("star_"+name)) {
+            regStar.add(() -> new Star(name, SpaceNet.instance.getSystem().stream()
+                    .filter(s -> s.getName().equals(systemName.toLowerCase()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemName)), texture, angle, size));
+            stringList.add("star_"+name);
+        }
+        return new StarRecipe(id, name, systemName, texturePath, angle, size);
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buf, StarRecipe recipe) {
-
-
+        buf.writeUtf(recipe.name);
+        buf.writeUtf(recipe.systemName);
+        buf.writeUtf(recipe.texturePath);
+        buf.writeVarInt(recipe.angle);
+        buf.writeDouble(recipe.size);
     }
 }

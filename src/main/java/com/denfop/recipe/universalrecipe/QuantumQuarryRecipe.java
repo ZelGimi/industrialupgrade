@@ -1,5 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -14,15 +15,17 @@ import java.util.List;
 
 public class QuantumQuarryRecipe implements Recipe<Container> {
     private final ResourceLocation id;
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
 
-    public QuantumQuarryRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
+
+    private final String recipeType;
+    private final String recipeOperation;
+    private final List<ItemStack> inputs;
+
+    public QuantumQuarryRecipe(ResourceLocation id, String recipeType, String recipeOperation, List<ItemStack> input) {
         this.id = id;
         this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+        this.recipeOperation = recipeOperation;
+        this.inputs = input;
     }
 
     @Override
@@ -52,18 +55,8 @@ public class QuantumQuarryRecipe implements Recipe<Container> {
         return id;
     }
 
-    public List<ItemStack> getInputs() {
-        return inputs;
-    }
-
-    public String getTypeOperation() {
-        return typeOperation;
-    }
 
 
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override
@@ -74,5 +67,17 @@ public class QuantumQuarryRecipe implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return Register.QUANTUM_QUARRY.get();
+    }
+
+    public String getRecipeType() {
+      return   recipeType;
+    }
+
+    public String getTypeOperation() {
+        return recipeOperation;
+    }
+
+    public List<ItemStack> getInputs() {
+        return inputs;
     }
 }

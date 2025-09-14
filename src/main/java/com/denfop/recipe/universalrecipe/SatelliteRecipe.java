@@ -1,5 +1,7 @@
 package com.denfop.recipe.universalrecipe;
 
+import com.denfop.api.space.EnumLevels;
+import com.denfop.api.space.EnumType;
 import com.denfop.register.Register;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -14,15 +16,39 @@ import java.util.List;
 
 public class SatelliteRecipe implements Recipe<Container> {
     private final ResourceLocation id;
-    private final String recipeType;
-    private final List<ItemStack> inputs;
-    private final String typeOperation;
+    public String name;
+    public String systemName;
+    public String texturePath;
+    public EnumLevels level = EnumLevels.FIVE;
+    public String planetName;
+    public Integer temperature;
+    public Boolean pressure;
+    public Double distance;
+    public EnumType type = EnumType.NEUTRAL;
+    public Boolean oxygen;
+    public Boolean colonies;
+    public Integer angle;
+    public Double time;
+    public Double size;
+    public Double rotation;
 
-    public SatelliteRecipe(ResourceLocation id, String recipeType, List<ItemStack> inputs, String typeOperation) {
-        this.id = id;
-        this.recipeType = recipeType;
-        this.inputs = inputs;
-        this.typeOperation = typeOperation;
+    public SatelliteRecipe(ResourceLocation id, String name, String systemName, String texturePath, EnumLevels level, String planetName, Integer temperature, Boolean pressure, Double distance, EnumType type, Boolean oxygen, Boolean colonies, Integer angle, Double time, Double size, Double rotation) {
+        this.name = name;
+        this.id=id;
+        this.systemName = systemName;
+        this.texturePath = texturePath;
+        this.level = level;
+        this.planetName = planetName;
+        this.temperature = temperature;
+        this.pressure = pressure;
+        this.distance = distance;
+        this.type = type;
+        this.oxygen = oxygen;
+        this.colonies = colonies;
+        this.angle = angle;
+        this.time = time;
+        this.size = size;
+        this.rotation = rotation;
     }
 
     @Override
@@ -52,18 +78,6 @@ public class SatelliteRecipe implements Recipe<Container> {
         return id;
     }
 
-    public List<ItemStack> getInputs() {
-        return inputs;
-    }
-
-    public String getTypeOperation() {
-        return typeOperation;
-    }
-
-
-    public String getRecipeType() {
-        return recipeType;
-    }
 
 
     @Override
