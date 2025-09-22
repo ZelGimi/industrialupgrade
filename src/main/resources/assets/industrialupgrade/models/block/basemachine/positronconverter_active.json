@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/positronconverter_front_active",
+    "down" : "industrialupgrade:blocks/positronconverter_top_active",
+    "up" : "industrialupgrade:blocks/positronconverter_top_active",
+    "north" : "industrialupgrade:blocks/positronconverter_front_active",
+    "east" : "industrialupgrade:blocks/positronconverter_side",
+    "south" : "industrialupgrade:blocks/positronconverter_side",
+    "west" : "industrialupgrade:blocks/positronconverter_side"
+  }
+}

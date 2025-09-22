@@ -7,16 +7,12 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDrainTank;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,8 +27,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -45,10 +39,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
 
     public final boolean[] drain;
     public final boolean[] fill;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final Fluids fluids;
-    public final InvSlotDrainTank[] containerslot;
-    public final InvSlotTank[] fluidSlot;
+    public final InventoryDrainTank[] containerslot;
+    public final InventoryTank[] fluidSlot;
     public final Fluid[] fluid;
     public final int[] old_amount;
     public FluidTank[] fluidTank;
@@ -72,7 +66,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             this.fluidTank[i] = this.fluids.addTank(
                     "fluidTank" + i,
                     8000,
-                    i == 0 ? InvSlot.TypeItemSlot.INPUT : InvSlot.TypeItemSlot.OUTPUT,
+                    i == 0 ? Inventory.TypeItemSlot.INPUT : Inventory.TypeItemSlot.OUTPUT,
                     i == 0 && name1[i].getName().equals(FluidName.fluidneft.getInstance().getName())
                             ? Fluids.fluidPredicate(name1[i],
                             FluidRegistry.getFluid("oil_heavy"), FluidRegistry.getFluid("oil_heavy_heat_1"),
@@ -86,18 +80,18 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             );
 
         }
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         Fluid[] fluid = getFluids(drain, name1);
-        this.containerslot = new InvSlotDrainTank[fluid.length];
+        this.containerslot = new InventoryDrainTank[fluid.length];
         for (int i = 0; i < fluid.length; i++) {
-            this.containerslot[i] = new InvSlotDrainTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                    InvSlotFluid.TypeFluidSlot.OUTPUT, fluid[i]
+            this.containerslot[i] = new InventoryDrainTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                    InventoryFluid.TypeFluidSlot.OUTPUT, fluid[i]
             );
         }
-        this.fluidSlot = new InvSlotTank[1];
+        this.fluidSlot = new InventoryTank[1];
         for (int i = 0; i < fluidSlot.length; i++) {
-            this.fluidSlot[i] = new InvSlotTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                    InvSlotFluid.TypeFluidSlot.INPUT, this.fluidTank[0]
+            this.fluidSlot[i] = new InventoryTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                    InventoryFluid.TypeFluidSlot.INPUT, this.fluidTank[0]
             );
 
 
@@ -106,8 +100,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTagCompound()) {
             NBTTagCompound nbt = ModUtils.nbt(stack);
 
@@ -121,7 +114,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
                 }
             }
             if (fluidStackList.isEmpty()) {
-                super.addInformation(stack, tooltip, advanced);
+                super.addInformation(stack, tooltip);
                 return;
             }
             if (fluidStackList.size() == 1) {
@@ -134,10 +127,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
                 }
 
             }
-            super.addInformation(stack, tooltip, advanced);
+            super.addInformation(stack, tooltip);
             return;
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -176,7 +169,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             NBTTagCompound nbt = ModUtils.nbt(drop);
             nbt.setInteger("size", this.fluidTank.length);
             for (int i = 0; i < this.fluidTank.length; i++) {
@@ -240,7 +236,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
         needsInvUpdate = false;
         for (FluidTank tank : fluidTank) {
             if (!tank.equals(fluidTank[0])) {
-                for (InvSlotDrainTank slot : this.containerslot) {
+                for (InventoryDrainTank slot : this.containerslot) {
                     if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
                         slot.processFromTank(tank, this.outputSlot);
                         needsInvUpdate = true;
@@ -249,7 +245,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             }
         }
 
-        for (final InvSlotTank itemStacks : fluidSlot) {
+        for (final InventoryTank itemStacks : fluidSlot) {
             for (final FluidTank tank : fluidTank) {
                 if (tank.equals(fluidTank[0]) && tank.getFluidAmount() + 1000 <= tank.getCapacity() && !itemStacks
                         .get()
@@ -309,7 +305,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
     ) {
         if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(player.getHeldItem(hand)) != null) {
 
-            return FluidUtil.interactWithFluidHandler(player, hand,
+            return ModUtils.interactWithFluidHandler(player, hand,
                     this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
@@ -320,7 +316,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             } else {
                 stack.shrink(1);
                 this.level++;
-                return false;
+                return true;
             }
         } else {
 
@@ -366,10 +362,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput,
+                UpgradableProperty.FluidInput,
+                UpgradableProperty.FluidExtract
         );
     }
 

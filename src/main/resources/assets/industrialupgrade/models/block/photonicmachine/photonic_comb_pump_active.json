@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/photonic_comb_pump_active_main",
+    "down" : "industrialupgrade:blocks/photonic_comb_pump_sides",
+    "up" : "industrialupgrade:blocks/photonic_comb_pump_sides",
+    "north" : "industrialupgrade:blocks/photonic_comb_pump_active_main",
+    "east" : "industrialupgrade:blocks/photonic_comb_pump_active_left-right",
+    "south" : "industrialupgrade:blocks/photonic_comb_pump_sides",
+    "west" : "industrialupgrade:blocks/photonic_comb_pump_active_left-right"
+  }
+}

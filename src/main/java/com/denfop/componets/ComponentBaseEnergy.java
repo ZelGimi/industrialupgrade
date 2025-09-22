@@ -1,5 +1,6 @@
 package com.denfop.componets;
 
+
 import com.denfop.api.sytem.EnergyEvent;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.sytem.EnumTypeEvent;
@@ -9,22 +10,30 @@ import com.denfop.api.sytem.IEmitter;
 import com.denfop.api.sytem.ISink;
 import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.sytem.InfoTile;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ComponentBaseEnergy extends AbstractComponent {
@@ -39,7 +48,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public int sourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots;
+    public List<Inventory> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
     public ComponentBaseEnergy.EnergyNetDelegate delegate;
@@ -49,9 +58,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public double tick;
     protected double pastEnergy;
     protected double perenergy;
+    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
     private double perenergy1;
     private double pastEnergy1;
     private double tick1;
+    private long id;
 
     public ComponentBaseEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -172,6 +184,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
 
                 this.createDelegate();
+                this.energyConductorMap.clear();
                 MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD, this.type,
                         this.delegate
                 ));
@@ -218,17 +231,18 @@ public class ComponentBaseEnergy extends AbstractComponent {
         buffer.writeDouble(this.storage);
         this.setNetworkUpdate(player, buffer);
     }
+
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer buffer = super.updateComponent();
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         return buffer;
     }
+
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
     }
-
 
     public double getCapacity() {
         return this.capacity;
@@ -236,6 +250,9 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     public void setCapacity(double capacity) {
         this.capacity = capacity;
+        if (this.storage > this.capacity) {
+            this.storage = capacity;
+        }
     }
 
     public double getEnergy() {
@@ -246,13 +263,61 @@ public class ComponentBaseEnergy extends AbstractComponent {
         return this.storage / this.capacity;
     }
 
-
     public double addEnergy(double amount) {
         amount = Math.min(this.capacity - this.storage, amount);
         this.storage += amount;
         return amount;
     }
 
+    public void blockBreak() {
+        if (this.getType() == EnergyType.RADIATION) {
+            new PacketUpdateRadiationValue(new ChunkPos(this.parent.getPos()), (int) this.storage);
+        } else if (this.getType() == EnergyType.EXPERIENCE && this.storage > 0) {
+            double f = 0.7;
+            double dx = (double) this.parent.getWorld().rand.nextFloat() * 1 + (1.0 - f) * 0.5;
+            double dy = (double) this.parent.getWorld().rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dz = (double) this.parent.getWorld().rand.nextFloat() * f + (1.0 - f) * 0.5;
+            int j = EntityXPOrb.getXPSplit((int) this.storage);
+            EntityXPOrb entityItem = new EntityXPOrb(
+                    this.parent.getWorld(),
+                    (double) this.parent.getPos().getX() + dx,
+                    (double) this.parent.getPos().getY() + dy,
+                    (double) this.parent.getPos().getZ() + dz,
+                    j
+            );
+            this.parent.getWorld().spawnEntity(entityItem);
+        }
+    }
+
+    public Map<EnumFacing, ITile> getConductors() {
+        return energyConductorMap;
+    }
+
+    public void RemoveTile(EnergyType type, ITile tile, final EnumFacing facing1) {
+        if (!this.parent.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<ITile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public List<InfoTile<ITile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
+        if (!this.parent.getWorld().isRemote) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+
+        }
+    }
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -291,6 +356,14 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.sourceTier = tier;
     }
 
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
     public void setEnabled(boolean enabled) {
         this.receivingDisabled = this.sendingSidabled = !enabled;
     }
@@ -312,6 +385,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
 
             assert !this.parent.getWorld().isRemote;
+            this.energyConductorMap.clear();
 
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD, this.type,
                     this.delegate
@@ -321,12 +395,14 @@ public class ComponentBaseEnergy extends AbstractComponent {
         if (sinkDirections.isEmpty() && sourceDirections.isEmpty()) {
             this.delegate = null;
         } else if (this.delegate == null && this.loaded) {
+            this.energyConductorMap.clear();
             this.createDelegate();
         }
 
         if (this.delegate != null) {
 
             assert !this.parent.getWorld().isRemote;
+            this.energyConductorMap.clear();
 
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD, this.type,
                     this.delegate
@@ -365,6 +441,11 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     private class EnergyNetDelegateDual extends ComponentBaseEnergy.EnergyNetDelegate implements IDual {
+
+        List<ISource> systemTicks = new LinkedList<>();
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        private int hashCode;
 
         private EnergyNetDelegateDual() {
             super();
@@ -407,7 +488,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
         @Override
         public void receivedEnergy(final double var2) {
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage + var2;
+            ComponentBaseEnergy.this.addEnergy(var2);
         }
 
         @Override
@@ -430,7 +511,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
             ComponentBaseEnergy.this.perenergy1 += setEnergy;
         }
 
-
         @Override
         public void addTick1(final double tick) {
             ComponentBaseEnergy.this.tick1 = tick;
@@ -444,9 +524,8 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public void extractEnergy(double amount) {
             assert amount <= ComponentBaseEnergy.this.storage;
 
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage - amount;
+            ComponentBaseEnergy.this.useEnergy(amount);
         }
-
 
         @Override
         public double getPerEnergy() {
@@ -489,6 +568,51 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
 
         @Override
+        public List<ISource> getEnergyTickList() {
+            return systemTicks;
+        }
+
+        public long getIdNetwork() {
+            return ComponentBaseEnergy.this.getIdNetwork();
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        public void setId(final long id) {
+            ComponentBaseEnergy.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.AddTile(type, tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type, tile, dir);
+        }
+
+        @Override
+        public Map<EnumFacing, ITile> getTiles(EnergyType energyType) {
+            return ComponentBaseEnergy.this.energyConductorMap;
+        }
+
+        @Override
+        public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
+            return validReceivers;
+        }
+
+
+
+        @Override
         public TileEntity getTile() {
             return ComponentBaseEnergy.this.parent;
         }
@@ -496,6 +620,11 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     private class EnergyNetDelegateSink extends ComponentBaseEnergy.EnergyNetDelegate implements ISink {
+
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        List<ISource> systemTicks = new LinkedList<>();
+        private int hashCode;
 
         private EnergyNetDelegateSink() {
             super();
@@ -508,6 +637,51 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean acceptsFrom(IEmitter emitter, EnumFacing dir) {
             return ComponentBaseEnergy.this.sinkDirections.contains(dir);
         }
+
+        public long getIdNetwork() {
+            return ComponentBaseEnergy.this.getIdNetwork();
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        @Override
+        public List<ISource> getEnergyTickList() {
+            return systemTicks;
+        }
+
+        public void setId(final long id) {
+            ComponentBaseEnergy.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.AddTile(type, tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type, tile, dir);
+        }
+
+        @Override
+        public Map<EnumFacing, ITile> getTiles(EnergyType energyType) {
+            return ComponentBaseEnergy.this.energyConductorMap;
+        }
+
+        @Override
+        public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
+            return validReceivers;
+        }
+
+
 
         @Override
         public @NotNull BlockPos getBlockPos() {
@@ -528,7 +702,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
 
         public void receivedEnergy(double amount) {
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage + amount;
+            ComponentBaseEnergy.this.addEnergy(amount);
         }
 
         @Override
@@ -570,6 +744,10 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     private class EnergyNetDelegateSource extends ComponentBaseEnergy.EnergyNetDelegate implements ISource {
 
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        private int hashCode;
+
         private EnergyNetDelegateSource() {
             super();
         }
@@ -581,6 +759,46 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean emitsTo(IAcceptor receiver, EnumFacing dir) {
             return ComponentBaseEnergy.this.sourceDirections.contains(dir);
         }
+
+        public long getIdNetwork() {
+            return ComponentBaseEnergy.this.getIdNetwork();
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        public void setId(final long id) {
+            ComponentBaseEnergy.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.AddTile(type, tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type, tile, dir);
+        }
+
+        @Override
+        public Map<EnumFacing, ITile> getTiles(EnergyType energyType) {
+            return ComponentBaseEnergy.this.energyConductorMap;
+        }
+
+        @Override
+        public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
+            return validReceivers;
+        }
+
+
 
         @Override
         public @NotNull BlockPos getBlockPos() {
@@ -600,8 +818,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
         public void extractEnergy(double amount) {
             assert amount <= ComponentBaseEnergy.this.storage;
-
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage - amount;
+            ComponentBaseEnergy.this.useEnergy(amount);
         }
 
         @Override

@@ -78,12 +78,9 @@ public class WeldingRecipeWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        int temperature = 38 * this.temperature / 5000;
         int temp = this.temperature;
-        if (temperature > 0) {
-            drawTexturedModalRect(99, 42, 176, 35, temperature + 1, 11);
-        }
-        minecraft.fontRenderer.drawString("" + temp + "°C", 72, 44, 4210752);
+
+        minecraft.fontRenderer.drawString("" + temp + "°C", 82, 55, 4210752);
 
     }
 

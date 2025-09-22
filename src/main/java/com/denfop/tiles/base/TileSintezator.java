@@ -4,14 +4,18 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergySource;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSintezator;
+import com.denfop.componets.WirelessComponent;
 import com.denfop.container.ContainerSinSolarPanel;
 import com.denfop.gui.GuiSintezator;
-import com.denfop.invslot.InvSlotSintezator;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventorySintezator;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -19,8 +23,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import com.denfop.tiles.panels.entity.WirelessTransfer;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -28,20 +30,25 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TileSintezator extends TileEntityInventory implements IEnergySource,
         IUpdatableTileEvent {
 
-    public final InvSlotSintezator inputslot;
-    public final InvSlotSintezator inputslotA;
+    public final InventorySintezator inputslot;
+    public final InventorySintezator inputslotA;
+    public final WirelessComponent wirelessComponent;
     public int machineTire1;
     public int solartype;
     public double generating;
@@ -56,15 +63,19 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public double storage;
     public double production;
     public double maxStorage;
-
     public boolean rain = false;
     public double progress;
     public boolean wetBiome;
     public EnumType type;
-    public TileSolarPanel.GenerationState active;
-    public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
+    public TileSolarPanel.GenerationState generationState = TileSolarPanel.GenerationState.NONE;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    int hashCodeSource;
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    private int size;
     private double pastEnergy;
     private double perenergy;
+    private ChunkPos chunkPos;
+    private long id;
 
     public TileSintezator() {
         this.facing = 2;
@@ -76,22 +87,68 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         this.maxStorage = 0;
         this.machineTire = 0;
         this.machineTire1 = 0;
-        this.inputslot = new InvSlotSintezator(this, "input", 0, 9);
-        this.inputslotA = new InvSlotSintezator(this, "input1", 1, 4);
+        this.size = 0;
+        this.inputslot = new InventorySintezator(this, "input", 0, 9);
+        this.inputslotA = new InventorySintezator(this, "input1", 1, 4);
         this.solartype = 0;
         this.type = EnumType.DEFAULT;
+        this.wirelessComponent = this.addComponent(new WirelessComponent(this));
+        wirelessComponent.setEnergySource(this);
     }
 
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
-        this.wirelessTransferList.clear();
         this.inputslot.wirelessmodule();
+    }
+
+    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
+    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+        }
+    }
+
+    public Map<EnumFacing, IEnergyTile> getTiles() {
+        return energyConductorMap;
     }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
+            generationState = TileSolarPanel.GenerationState.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             sunIsUp = (boolean) DecoderHandler.decode(customPacketBuffer);
             skyIsVisible = (boolean) DecoderHandler.decode(customPacketBuffer);
             generating = (double) DecoderHandler.decode(customPacketBuffer);
@@ -116,6 +173,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public CustomPacketBuffer writeContainerPacket() {
         final CustomPacketBuffer packet = super.writeContainerPacket();
         try {
+            EncoderHandler.encode(packet, generationState);
             EncoderHandler.encode(packet, sunIsUp);
             EncoderHandler.encode(packet, skyIsVisible);
             EncoderHandler.encode(packet, generating);
@@ -185,36 +243,30 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
 
         this.rain = this.wetBiome && (this.world.isRaining() || this.world.isThundering());
         this.sunIsUp = this.world.isDaytime();
-        this.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && !this.noSunWorld;
-        if (!this.skyIsVisible) {
-            this.active = TileSolarPanel.GenerationState.NONE;
-        }
-        if (this.sunIsUp && this.skyIsVisible) {
+        this.skyIsVisible = true;
+        if (this.sunIsUp) {
             if (!(this.rain)) {
-                this.active = TileSolarPanel.GenerationState.DAY;
+                this.generationState = TileSolarPanel.GenerationState.DAY;
             } else {
-                this.active = TileSolarPanel.GenerationState.RAINDAY;
+                this.generationState = TileSolarPanel.GenerationState.RAINDAY;
             }
 
         }
-        if (!this.sunIsUp && this.skyIsVisible) {
+        if (!this.sunIsUp) {
             if (!(rain)) {
-                this.active = TileSolarPanel.GenerationState.NIGHT;
+                this.generationState = TileSolarPanel.GenerationState.NIGHT;
             } else {
-                this.active = TileSolarPanel.GenerationState.RAINNIGHT;
+                this.generationState = TileSolarPanel.GenerationState.RAINNIGHT;
             }
         }
         if (this.world.provider.getDimension() == 1) {
-            this.active = TileSolarPanel.GenerationState.END;
+            this.generationState = TileSolarPanel.GenerationState.END;
         }
         if (this.world.provider.getDimension() == -1) {
-            this.active = TileSolarPanel.GenerationState.NETHER;
+            this.generationState = TileSolarPanel.GenerationState.NETHER;
         }
 
     }
-
 
     public void readFromNBT(final NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
@@ -260,15 +312,25 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
 
     }
 
+    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (IUCore.proxy.isSimulating() && !addedToEnergyNet) {
+            this.energyConductorMap.clear();
+            validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = true;
+            new PacketUpdateFieldTile(this, "slot", this.inputslot);
+
         }
+        this.updateVisibility();
         intialize();
         this.inputslot.update();
         this.inputslotA.update();
+
     }
 
     public void onUnloaded() {
@@ -335,6 +397,16 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
                 throw new RuntimeException(e);
             }
         }
+        if (name.equals("slot")) {
+            try {
+                Inventory slot = (Inventory) DecoderHandler.decode(is);
+                for (int i = 0; i < slot.size(); i++) {
+                    this.inputslot.put(i, slot.get(i));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         super.updateField(name, is);
     }
 
@@ -354,23 +426,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
 
         this.gainFuel();
 
-        boolean refresh = false;
-        try {
-            for (WirelessTransfer transfer : this.wirelessTransferList) {
-                if (transfer.getTile().isInvalid()) {
-                    refresh = true;
-                    continue;
-                }
-                double energy = Math.min(this.canExtractEnergy(), transfer.getSink().getDemandedEnergy());
-                transfer.work(energy);
-                this.storage -= energy;
-            }
-        } catch (Exception ignored) {
-        }
-        if (refresh) {
-            this.wirelessTransferList.clear();
-            this.inputslot.wirelessmodule();
-        }
+
         if (this.generating > 0D) {
             if (((this.storage + this.generating)) <= (this.maxStorage)) {
                 this.storage += this.generating;
@@ -386,23 +442,41 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         if (this.maxStorage <= 0D) {
             this.storage = 0D;
         }
-
+        if (this.getWorld().getWorldTime() % 20 == 0) {
+            int size1 = 0;
+            for (ItemStack stack : this.inputslot) {
+                if (!stack.isEmpty()) {
+                    size1 += stack.getCount();
+                }
+            }
+            if (size != size1) {
+                this.inputslot.update();
+                size = size1;
+            }
+        }
     }
 
     public void gainFuel() {
-
-
         if (this.getWorld().provider.getWorldTime() % 80 == 0) {
+            new PacketUpdateFieldTile(this, "slot", this.inputslot);
+        }
+        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             this.updateVisibility();
             int type = this.solartype;
             this.solartype = this.inputslotA.solartype();
             if (type != this.solartype) {
                 this.updateTileEntityField();
             }
+            if (this.solartype == 0) {
+                this.setActive("");
+            } else {
+                this.setActive(EnumType.getFromID(this.solartype).getNameType());
+            }
+
         }
 
 
-        switch (this.active) {
+        switch (this.generationState) {
             case DAY:
                 this.generating = type.coefficient_day * this.genDay;
                 break;

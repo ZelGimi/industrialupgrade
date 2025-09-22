@@ -120,7 +120,7 @@ public class MicrochipRecipeWrapper implements IRecipeWrapper {
         if (temperature > 0) {
             drawTexturedModalRect(67, 60, 176, 21, temperature + 1, 11);
         }
-        minecraft.fontRenderer.drawString("" + temp + "°C", 32, 61, 4210752);
+        minecraft.fontRenderer.drawString("" + temp + "°C", 70, 80, 4210752);
 
     }
 

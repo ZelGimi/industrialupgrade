@@ -75,7 +75,26 @@ public class ItemCrushed extends ItemSubTypes<ItemCrushed.Types> implements IMod
         iron(21),
         lead(22),
         tin(23),
-        uranium(24);
+        uranium(24),
+        osmium(25),
+        tantalum(26),
+        cadmium(27),
+        arsenic(28),
+        barium(29),
+        bismuth(30),
+        gadolinium(31),
+        gallium(32),
+        hafnium(33),
+        yttrium(34),
+        molybdenum(35),
+        neodymium(36),
+        niobium(37),
+        palladium(38),
+        polonium(39),
+        strontium(40),
+        thallium(41),
+        zirconium(42),
+        ;
 
         private final String name;
         private final int ID;

@@ -6,9 +6,12 @@ import com.denfop.tiles.base.IIsMolecular;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -25,10 +28,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Random;
 
-public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpecialRenderer<T> {
+public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> extends TileEntitySpecialRenderer<T> {
 
     private static final ResourceLocation plazmaTextloc = new ResourceLocation(Constants.MOD_ID, "textures/models/plazma.png");
 
@@ -38,6 +44,8 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
     );
 
     private static final Map<List<Serializable>, Integer> textureSizeCache = new HashMap<>();
+    public static int size1 = -1;
+    public static int size2 = -1;
     private final Random random = new Random();
     public int ticker;
     float rotation;
@@ -66,15 +74,17 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
 
     public void renderCore(T te, double x, double y, double z) {
         this.ticker++;
+        if (ticker % 2 != 0) {
+            return;
+        }
         if (this.ticker > 161) {
             this.ticker = 1;
         }
-        int size1 = getTextureSize("textures/models/plazma.png", 64);
-        int size2 = getTextureSize("textures/models/particles.png", 32);
-        if (te instanceof IIsMolecular) {
-            if (((IIsMolecular) te).getMode() != 0) {
-                size2 = getTextureSize("textures/models/particles" + ((IIsMolecular) te).getMode() + ".png", 32);
-            }
+        if (size1 == -1) {
+            size1 = getTextureSize("textures/models/plazma.png", 64);
+        }
+        if (size1 == -2) {
+            size2 = getTextureSize("textures/models/particles.png", 32);
         }
         float f1 = ActiveRenderInfo.getRotationX();
         float f2 = ActiveRenderInfo.getRotationXZ();
@@ -86,11 +96,8 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         float posY = (float) y + 0.5F;
         float posZ = (float) z + 0.5F;
         Color color = new Color(12648447);
-        GL11.glPushMatrix();
-        GL11.glDepthMask(false);
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 1);
-        (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(plazmaTextloc);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
         int i = this.ticker % 16;
         float size4 = (size1 * 4);
         float float_sizeMinus0_01 = size1 - 0.01F;
@@ -98,8 +105,13 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         float x1 = ((i % 4 * size1) + float_sizeMinus0_01) / size4;
         float x2 = ((i / 4F * size1) + 0.0F) / size4;
         float x3 = ((i / 4F * size1) + float_sizeMinus0_01) / size4;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        GL11.glPushMatrix();
+        GL11.glDepthMask(false);
+        GL11.glEnable(3042);
+        GL11.glBlendFunc(770, 1);
+        (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(plazmaTextloc);
+
+
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         buffer
                 .pos((posX - f1 * scaleCore - f4 * scaleCore), (posY - f2 * scaleCore), (posZ - f3 * scaleCore - f5 * scaleCore))
@@ -129,18 +141,16 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         GL11.glDepthMask(false);
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 1);
-        if (te instanceof IIsMolecular) {
-            if (((IIsMolecular) te).getMode() != 0) {
-                (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(new ResourceLocation(
-                        Constants.MOD_ID,
-                        "textures/models/particles" + ((IIsMolecular) te).getMode() + ".png"
-                ));
-            } else {
-                (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(particlesTextloc);
-            }
+
+        if (te.getMode() != 0) {
+            (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(new ResourceLocation(
+                    Constants.MOD_ID,
+                    "textures/models/particles" + te.getMode() + ".png"
+            ));
         } else {
             (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(particlesTextloc);
         }
+
 
         int qq = this.ticker % 16;
         i = 24 + qq;
@@ -177,8 +187,8 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         tessellator.draw();
         GL11.glDisable(3042);
         GL11.glDepthMask(true);
-        GL11.glPopMatrix();
         GL11.glBlendFunc(770, 0);
+        GL11.glPopMatrix();
     }
 
 
@@ -186,19 +196,12 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
 
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-        GL11.glPushMatrix();
         GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
         GL11.glPopMatrix();
-        GL11.glPopMatrix();
         if (te.getActive()) {
-            if (te instanceof IIsMolecular) {
-                GL11.glPushMatrix();
-                renderItem((IIsMolecular) te, x, y, z, partialTicks);
-                GL11.glPopMatrix();
-            }
-            GL11.glPushMatrix();
+
+            renderItem(te, x, y, z, partialTicks);
             renderCore(te, x, y, z);
-            GL11.glPopMatrix();
 
         }
     }
@@ -209,8 +212,7 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
 
     private int transformModelCount(
             IIsMolecular itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_,
-            float p_177077_8_,
-            IBakedModel p_177077_9_
+            float p_177077_8_
     ) {
         ItemStack itemstack = itemIn.getItemStack();
         Item item = itemstack.getItem();
@@ -219,7 +221,7 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
             return 0;
         } else {
             int i = this.getModelCount(itemstack);
-            float f2 = p_177077_9_.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
+            float f2 = 1;
 
             if (!(itemIn instanceof TileCrystallize)) {
                 GlStateManager.translate((float) p_177077_2_ + 0.5, (float) p_177077_4_ + 0.25F * f2 + 0.2,
@@ -232,9 +234,13 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
             }
             GlStateManager.scale(0.5F, 0.5f, 0.5f);
             GL11.glRotatef(rotation, 0F, 1F, 0F);
-            rotation = prevRotation + (rotation - prevRotation) * p_177077_8_;
+            if (!(itemIn instanceof TileCrystallize)) {
+                rotation = (prevRotation + (rotation - prevRotation) * (p_177077_8_ * 0.05F)) % 360;
+            } else {
+                rotation = (prevRotation + (rotation - prevRotation) * (p_177077_8_)) % 360;
+            }
             prevRotation = rotation;
-            rotation += 0.25;
+            rotation += 0.15F;
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             return i;
         }
@@ -257,101 +263,68 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
     }
 
     private void renderItem(IIsMolecular te, double x, double y, double z, float partialTicks) {
+
         ItemStack itemstack = te.getItemStack();
-        int i = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
-        this.random.setSeed(i);
-        boolean flag = false;
-
-        if (this.bindEntityTexture(te.getEntityBlock())) {
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(this.getEntityTexture(te.getEntityBlock()))
-                    .setBlurMipmap(false
-                            , false);
-            flag = true;
+        if (itemstack.isEmpty()) {
+            return;
         }
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.alphaFunc(516, 0.1F);
-        GlStateManager.enableBlend();
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.tryBlendFuncSeparate(
-                GlStateManager.SourceFactor.SRC_ALPHA,
-                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO
-        );
+
+        this.bindEntityTexture();
         GlStateManager.pushMatrix();
-        IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                itemstack,
-                te.getEntityBlock().getWorld(),
-                null
-        );
-        int j = this.transformModelCount(te, x, y, z, partialTicks, ibakedmodel);
-        boolean flag1 = ibakedmodel.isGui3d();
+        RenderHelper.enableStandardItemLighting();
 
-        if (!flag1) {
-            float f3 = -0.0F * (float) (j - 1) * 0.5F;
-            float f4 = -0.0F * (float) (j - 1) * 0.5F;
-            float f5 = -0.09375F * (float) (j - 1) * 0.5F;
-            GlStateManager.translate(f3, f4, f5);
-        }
+        IBakedModel ibakedmodel = te.getBakedModel();
+        if (ibakedmodel != null) {
+            int j = this.transformModelCount(te, x, y, z, partialTicks);
+            boolean flag1 = ibakedmodel.isGui3d();
+
+            if (!flag1) {
+                float f3 = -0.0F * (float) (j - 1) * 0.5F;
+                float f4 = -0.0F * (float) (j - 1) * 0.5F;
+                float f5 = -0.09375F * (float) (j - 1) * 0.5F;
+                GlStateManager.translate(f3, f4 + 0.15, f5);
+                GlStateManager.scale(0.5, 0.5, 0.5);
+            }
 
 
-        for (int k = 0; k < j; ++k) {
-            GlStateManager.pushMatrix();
-            if (flag1) {
+            for (int k = 0; k < j; ++k) {
+                GlStateManager.pushMatrix();
+                if (flag1) {
 
-                if (k > 0) {
-                    float f7 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-                    float f9 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-                    float f6 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
-                    GlStateManager.translate(shouldSpreadItems() ? f7 : 0, shouldSpreadItems() ? f9 : 0, f6);
+                    if (k > 0) {
+                        float f7 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
+                        float f9 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
+                        float f6 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
+                        GlStateManager.translate(shouldSpreadItems() ? f7 : 0, shouldSpreadItems() ? f9 : 0, f6);
+                    }
+
+                    IBakedModel transformedModel = te.getTransformedModel();
+                    Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
+                    GlStateManager.popMatrix();
+                } else {
+
+                    if (k > 0) {
+                        float f8 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
+                        float f10 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
+                        GlStateManager.translate(f8, f10, 0.0F);
+                    }
+
+                    IBakedModel transformedModel = te.getTransformedModel();
+                    Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
+                    GlStateManager.translate(0.0F, 0.0F, 0.09375F);
+                    GlStateManager.popMatrix();
+
                 }
-
-                IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                        ibakedmodel,
-                        ItemCameraTransforms.TransformType.GROUND,
-                        false
-                );
-                Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-                GlStateManager.popMatrix();
-            } else {
-
-                if (k > 0) {
-                    float f8 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
-                    float f10 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
-                    GlStateManager.translate(f8, f10, 0.0F);
-                }
-
-                IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                        ibakedmodel,
-                        ItemCameraTransforms.TransformType.GROUND,
-                        false
-                );
-                Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-                GlStateManager.popMatrix();
-                GlStateManager.translate(0.0F, 0.0F, 0.09375F);
             }
         }
 
-
         GlStateManager.popMatrix();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableBlend();
-        this.bindEntityTexture(te.getEntityBlock());
 
-        if (flag) {
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(this.getEntityTexture(te.getEntityBlock()))
-                    .restoreLastBlurMipmap();
-        }
+
     }
 
-    protected boolean bindEntityTexture(TileEntityBlock entity) {
-        ResourceLocation resourcelocation = this.getEntityTexture(entity);
+    protected boolean bindEntityTexture() {
+        ResourceLocation resourcelocation = this.getEntityTexture();
 
         if (resourcelocation == null) {
             return false;
@@ -361,7 +334,7 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         }
     }
 
-    protected ResourceLocation getEntityTexture(TileEntityBlock entity) {
+    protected ResourceLocation getEntityTexture() {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 

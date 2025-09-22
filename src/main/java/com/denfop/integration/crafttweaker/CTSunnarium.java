@@ -143,10 +143,10 @@ public class CTSunnarium {
         public void apply() {
             Recipes.recipes.addAdderRecipe("sunnurium", new BaseMachineRecipe(
                     new Input(
-                            new IC2InputItemStack(this.container),
-                            new IC2InputItemStack(this.fill),
-                            new IC2InputItemStack(this.fill1),
-                            new IC2InputItemStack(this.fill2)
+                            new InputItemStack(this.container),
+                            new InputItemStack(this.fill),
+                            new InputItemStack(this.fill1),
+                            new InputItemStack(this.fill2)
                     ),
                     new RecipeOutput(null, getItemStack(this.output))
             ));

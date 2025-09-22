@@ -2,18 +2,17 @@ package com.denfop.tiles.mechanism.generator.energy.redstone;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerRedstoneGenerator;
 import com.denfop.gui.GuiRedstoneGenerator;
-import com.denfop.invslot.InvSlotRedstoneGenerator;
+import com.denfop.invslot.InventoryRedstoneGenerator;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -30,7 +29,7 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
 
 
     public final double coef;
-    public final InvSlotRedstoneGenerator slot;
+    public final InventoryRedstoneGenerator slot;
 
 
     public int fuel = 0;
@@ -39,11 +38,11 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
 
     public TileBaseRedstoneGenerator(double coef, int tier) {
         super(0, tier, 0);
-        energy = this.addComponent(AdvEnergy.asBasicSource(this, 150000 * coef, tier));
+        energy = this.addComponent(Energy.asBasicSource(this, 150000 * coef, tier));
 
 
         this.coef = coef;
-        this.slot = new InvSlotRedstoneGenerator(this);
+        this.slot = new InventoryRedstoneGenerator(this);
     }
 
     @SideOnly(Side.CLIENT)
@@ -77,23 +76,16 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.coef);
         }
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
-        }
 
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -117,10 +109,19 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
         if (!this.slot.isEmpty()) {
             if (fuel == 0) {
                 fuel = max_fuel;
+                if (this.slot.get().getItem() == Items.REDSTONE) {
+                    this.redstone_coef = 1;
+                } else {
+                    this.redstone_coef = 9;
+                }
                 this.slot.get().shrink(1);
                 if (!this.getActive()) {
                     this.setActive(true);
                 }
+            }
+        } else {
+            if (fuel == 0) {
+                this.redstone_coef = 0;
             }
         }
         if (fuel == 0) {
@@ -130,13 +131,10 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
         }
         if (this.getActive()) {
             this.energy.addEnergy(25 * this.coef * redstone_coef);
+            fuel = Math.max(0, this.fuel - 1);
         }
-        fuel = Math.max(0, this.fuel - 1);
-        if (fuel == 0) {
-            if (this.slot.get().isEmpty()) {
-                this.redstone_coef = 0;
-            }
-        }
+
+
     }
 
     public int gaugeFuelScaled(int i) {

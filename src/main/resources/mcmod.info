@@ -3,7 +3,7 @@
     "authorList" : [
       "Denfop"
     ],
-    "credits" : "Artists of mods: AlexTM, theBr1z1k, Aslan,IIIap, -frei, FiXrD, texnounit. Translator: MakandIv, VanFek. Support of projects: SimpleMinecraft, MythicalWorld, VictoryCraft. Support of author: Zuxelus, Ultramarine11, Christmas, igorek181,  ",
+    "credits" : "Artists of mods: AlexTM, theBr1z1k, Aslan,IIIap, -frei, FiXrD, texnounit. Translator: MakandIv, VanFek, Tifus, visgod, 狐千雪(Chensyet Gho) . Support of projects: SimpleMinecraft, MythicalWorld, VictoryCraft. Support of author: Zuxelus, Ultramarine11, Christmas, igorek181,  ",
     "dependants" : [],
     "dependencies" : [],
     "description" : "",
@@ -16,6 +16,6 @@
     "screenshots" : [],
     "updateUrl" : "https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade",
     "url" : "https://github.com/ZelGimi/industrialupgrade",
-    "version" : "3.0"
+    "version" : "3.3.0.47"
   }
 ]

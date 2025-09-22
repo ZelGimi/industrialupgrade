@@ -12,6 +12,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,7 @@ public class BlockPreciousOre extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("blockpreciousore");
         setCreativeTab(IUCore.OreTab);
-        setHardness(3.0F);
+        setHardness(1.0F);
         setResistance(5.0F);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.topaz_ore));
@@ -84,8 +85,12 @@ public class BlockPreciousOre extends BlockCore implements IModelRegister {
 
         int count = quantityDropped(fortune, rand);
         for (int i = 0; i < count; i++) {
-
-            drops.add(new ItemStack(IUItem.preciousgem, 1, state.getBlock().getMetaFromState(state)));
+            int meta = state.getBlock().getMetaFromState(state);
+            if (meta != 3) {
+                drops.add(new ItemStack(IUItem.preciousgem, 1, meta));
+            } else {
+                drops.add(new ItemStack(Items.QUARTZ));
+            }
 
         }
 
@@ -158,6 +163,7 @@ public class BlockPreciousOre extends BlockCore implements IModelRegister {
         ruby_ore(0),
         sapphire_ore(1),
         topaz_ore(2),
+        quartz_ore(3),
 
 
         ;

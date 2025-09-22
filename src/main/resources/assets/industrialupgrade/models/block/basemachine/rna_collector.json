@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/rna_collector_main",
+    "down" : "industrialupgrade:blocks/rna_collector_bottom",
+    "up" : "industrialupgrade:blocks/rna_collector_top",
+    "north" : "industrialupgrade:blocks/rna_collector_main",
+    "east" : "industrialupgrade:blocks/rna_collector_side",
+    "south" : "industrialupgrade:blocks/rna_collector_bottom",
+    "west" : "industrialupgrade:blocks/rna_collector_side"
+  }
+}

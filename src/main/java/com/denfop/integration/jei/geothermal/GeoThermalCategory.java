@@ -1,0 +1,144 @@
+package com.denfop.integration.jei.geothermal;
+
+import com.denfop.Constants;
+import com.denfop.IUItem;
+import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.TankGauge;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockGeothermalPump;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.container.ContainerImpOilRefiner;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.JEICompat;
+import com.denfop.tiles.base.TileEntityRefrigeratorFluids;
+import com.denfop.tiles.mechanism.TileImpOilRefiner;
+import mezz.jei.api.IGuiHelper;
+import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IDrawableStatic;
+import mezz.jei.api.gui.IGuiFluidStackGroup;
+import mezz.jei.api.gui.IGuiItemStackGroup;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+public class GeoThermalCategory extends GuiIU implements IRecipeCategory<GeoThermalWrapper> {
+
+    private final IDrawableStatic bg;
+    private final ContainerImpOilRefiner container1;
+    private final GuiComponent progress_bar;
+    private int progress = 0;
+    private int energy = 0;
+
+    public GeoThermalCategory(
+            final IGuiHelper guiHelper
+    ) {
+        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
+                        ".png"), 3, 3, 140,
+                140
+        );
+        this.componentList.clear();
+        this.container1 = (ContainerImpOilRefiner) this.getContainer();
+        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
+                new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
+        );
+        this.componentList.add(progress_bar);
+        this.addElement(TankGauge.createNormal(this, 40, 4,
+                ((TileEntityRefrigeratorFluids) BlockBaseMachine3.refrigerator_fluids.getDummyTe()).fluidTank1
+        ));
+
+        this.addElement(TankGauge.createNormal(this, 100, 4,
+                ((TileEntityRefrigeratorFluids) BlockBaseMachine3.refrigerator_fluids.getDummyTe()).fluidTank2
+        ));
+
+    }
+
+    @Nonnull
+    @Override
+    public String getUid() {
+        return BlockGeothermalPump.geothermal_controller.getName();
+    }
+
+    @Nonnull
+    @Override
+    public String getTitle() {
+        return Localization.translate(JEICompat.getBlockStack(BlockGeothermalPump.geothermal_controller).getUnlocalizedName());
+    }
+
+    @Nonnull
+    @Override
+    public String getModName() {
+        return Constants.MOD_NAME;
+    }
+
+    @Nonnull
+    @Override
+    public IDrawable getBackground() {
+        return bg;
+    }
+
+
+    @Override
+    public void drawExtras(@Nonnull final Minecraft mc) {
+        progress++;
+        if (this.energy < 100) {
+            energy++;
+        }
+        double energylevel = energy / 100D;
+        double xScale = progress / 100D;
+        if (xScale >= 1) {
+            progress = 0;
+        }
+        mc.getTextureManager().bindTexture(getTexture());
+
+        progress_bar.renderBar(0, 0, xScale);
+
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
+            element.drawBackground(this.guiLeft, this.guiTop - 5);
+        }
+
+    }
+
+    @Override
+    public void setRecipe(
+            final IRecipeLayout layout,
+            final GeoThermalWrapper recipes,
+            @Nonnull final IIngredients ingredients
+    ) {
+
+
+        IGuiFluidStackGroup fff = layout.getFluidStacks();
+        fff.init(0, true, 44, 8, 12, 47, 8000, true, null);
+        fff.set(0, recipes.getInputstack());
+
+
+        fff.init(1, false, 104, 8, 12, 47, 8000, true, null);
+        fff.set(1, recipes.getOutputstack());
+
+        IGuiItemStackGroup isg = layout.getItemStacks();
+        isg.init(0, false, 15, 75);
+        isg.set(0, new ItemStack(IUItem.crafting_elements, 1, 457));
+        isg.init(1, false, 15, 93);
+        isg.set(1, new ItemStack(IUItem.crafting_elements, 1, 461));
+        isg.init(2, false, 15, 108);
+        isg.set(2, new ItemStack(IUItem.crafting_elements, 1, 462));
+        isg.init(3, false, 15, 126);
+        isg.set(3, new ItemStack(IUItem.crafting_elements, 1, 463));
+    }
+
+    protected ResourceLocation getTexture() {
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+    }
+
+
+}

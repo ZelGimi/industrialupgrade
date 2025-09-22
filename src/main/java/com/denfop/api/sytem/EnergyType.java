@@ -1,26 +1,27 @@
 package com.denfop.api.sytem;
 
 public enum EnergyType {
-    SOLARIUM(" SE", false, true, false),
-    QUANTUM(" QE", false, true, false),
-    EXPERIENCE(" EXP", false, true, false),
-    RADIATION(" ", false, true, false);
+    SOLARIUM(" SE", false, true),
+    NIGHT(" NE", false, true),
+    QUANTUM(" QE", false, true),
+    EXPERIENCE(" EXP", false, true),
+    POSITRONS(" e⁺", false, true),
+    RADIATION(" ☢", false, true),
+    STEAM(" mb", false, true),
+    BIOFUEL(" mb", false, true),
+    AMPERE(" A", false, true),
+    ;
 
     private final String prefix;
     private final boolean auto_mode;
     private final boolean draw;
-    private final boolean break_conductors;
 
-    EnergyType(String prefix, boolean auto_mode, boolean draw, boolean break_conductors) {
+    EnergyType(String prefix, boolean auto_mode, boolean draw) {
         this.prefix = prefix;
         this.auto_mode = auto_mode;
         this.draw = draw;
-        this.break_conductors = break_conductors;
     }
 
-    public boolean isBreak_conductors() {
-        return break_conductors;
-    }
 
     public String getPrefix() {
         return prefix;

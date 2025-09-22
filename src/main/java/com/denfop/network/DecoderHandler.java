@@ -1,23 +1,27 @@
 package com.denfop.network;
 
 import com.denfop.IUCore;
+import com.denfop.api.Recipes;
 import com.denfop.api.radiationsystem.Radiation;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.space.fakebody.FakePlayer;
+import com.denfop.api.tesseract.Channel;
 import com.denfop.api.vein.Vein;
-import com.denfop.componets.AbstractComponent;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.render.streak.PlayerStreakInfo;
+import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufInputStream;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -36,7 +40,12 @@ import net.minecraftforge.fluids.FluidTank;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class DecoderHandler {
 
@@ -159,7 +168,6 @@ public class DecoderHandler {
     }
 
 
-
     public static Block getBlock(ResourceLocation loc) {
         Block ret = Block.REGISTRY.getObject(loc);
         if (ret != Blocks.AIR) {
@@ -241,11 +249,13 @@ public class DecoderHandler {
             case Block:
                 return getBlock((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case BlockPos:
-                return new BlockPos(is.readInt(), is.readInt(), is.readInt());
+                return is.readBlockPos();
             case Boolean:
                 return is.readBoolean();
             case Byte:
                 return is.readByte();
+            case network_object:
+                return is;
             case Character:
                 return is.readChar();
             case ChunkPos:
@@ -254,7 +264,7 @@ public class DecoderHandler {
                 final Object ret = decode(is, EncodedType.Array);
                 return Arrays.asList((Object[]) ret);
             case Component:
-                return decode(is, EncodedType.NBTTagCompound);
+                return is;
             case Double:
                 return is.readDouble();
             case Enchantment:
@@ -277,7 +287,7 @@ public class DecoderHandler {
                 return is.readInt();
             case InvSlot:
                 ItemStack[] contents = (ItemStack[]) decode(is, EncodedType.Array);
-                InvSlot ret3 = new InvSlot(contents.length);
+                Inventory ret3 = new Inventory(contents.length);
 
                 for (i = 0; i < contents.length; ++i) {
                     ret3.put(i, contents[i]);
@@ -301,8 +311,17 @@ public class DecoderHandler {
                 return is.readLong();
             case NBTTagCompound:
                 return CompressedStreamTools.read(new ByteBufInputStream(is), NBTSizeTracker.INFINITE);
+            case Input:
+                return Recipes.inputFactory.getInput(decode(is));
+            case MachineRecipe:
+                List<ItemStack> itemStackList = (List<ItemStack>) decode(is);
+                NBTTagCompound tagCompound = (NBTTagCompound) decode(is);
+                List<IInputItemStack> list = (List<IInputItemStack>) decode(is);
+                return new BaseMachineRecipe(new Input(list), new RecipeOutput(tagCompound, itemStackList));
             case Null:
                 return null;
+            case channel:
+                return new Channel(is);
             case Object:
                 return new Object();
             case Potion:
@@ -324,6 +343,8 @@ public class DecoderHandler {
                 return new UUID(is.readLong(), is.readLong());
             case Vec3:
                 return new Vec3d(is.readDouble(), is.readDouble(), is.readDouble());
+            case DataOre:
+                return new DataOre(is);
             case Vein:
                 return new Vein(is);
             case RecipeInfo:
@@ -333,8 +354,7 @@ public class DecoderHandler {
             case Radiation:
                 return new Radiation(is);
             case FAKE_PLANET:
-                String planet = is.readString();
-                return new FakePlanet(new FakePlayer(((NBTTagCompound) decode(is))), planet);
+                return new FakePlanet((NBTTagCompound) decode(is));
             case World:
                 inputAmount = is.readInt();
                 return IUCore.proxy.getWorld(inputAmount);

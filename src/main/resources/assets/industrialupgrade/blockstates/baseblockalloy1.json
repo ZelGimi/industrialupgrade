@@ -1,0 +1,100 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "stellite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/stellite_block"
+        }
+      },
+      "hafnium_boride_alloy" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/hafnium_boride_alloy_block"
+        }
+      },
+      "woods" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/woods_block"
+        }
+      },
+      "nimonic" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nimonic_block"
+        }
+      },
+      "tantalum_tungsten_hafnium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/tantalum_tungsten_hafnium_block"
+        }
+      },
+      "permalloy" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/permalloy_block"
+        }
+      },
+      "aluminium_lithium_alloy" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/aluminium_lithium_alloy_block"
+        }
+      },
+      "cobalt_chrome" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/cobalt_chrome_block"
+        }
+      },
+      "hafnium_carbide" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/hafnium_carbide_block"
+        }
+      },
+      "molybdenum_steel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/molybdenum_steel_block"
+        }
+      },
+	  "niobium_titanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/niobium_titanium_block"
+        }
+      },
+      "osmiridium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/osmiridium_block"
+        }
+      },
+      "superalloy_haynes" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/superalloy_haynes_block"
+        }
+      },
+      "superalloy_rene" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/superalloy_rene_block"
+        }
+      },
+      "yttrium_aluminium_garnet" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/yttrium_aluminium_garnet_block"
+        }
+      },
+      "nitenol" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nitenol_block"
+        }
+      },
+      "gallium_arcenic" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/gallium_arsenic_block"
+        }
+      }
+     
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

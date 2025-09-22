@@ -1,0 +1,51 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "gas_turbine_controller" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_controller"
+      },
+      "gas_turbine_socket" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_socket"
+      },
+      "gas_turbine_airbearings" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_airbearings"
+      },
+      "gas_turbine_blower" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_blower"
+      },
+      "gas_turbine_casing" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_casing"
+      },
+      "gas_turbine_recuperator" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_recuperator"
+      },
+      "gas_turbine_tank" : {
+        "model" : "industrialupgrade:gas_turbine/gas_turbine_tank"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

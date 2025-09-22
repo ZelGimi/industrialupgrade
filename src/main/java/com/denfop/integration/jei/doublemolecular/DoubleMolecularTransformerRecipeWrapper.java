@@ -99,7 +99,7 @@ public class DoubleMolecularTransformerRecipeWrapper implements IRecipeWrapper {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int y = 5;
-        int x = 49;
+        int x = 65;
         minecraft.fontRenderer.drawSplitString(this.input, x, y, recipeWidth - x, 16777215);
         y += minecraft.fontRenderer.getWordWrappedHeight(this.input, recipeWidth - x) + 1;
         minecraft.fontRenderer.drawSplitString(this.input1, x, y, recipeWidth - x, 16777215);

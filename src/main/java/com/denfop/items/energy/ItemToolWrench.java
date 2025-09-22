@@ -118,7 +118,9 @@ public class ItemToolWrench extends Item implements IModelRegister {
                         }
 
                         block.onBlockDestroyedByPlayer(world, pos, state);
-                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player, 0);
+                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player,
+                                player.getEntityWorld().rand.nextInt(100)
+                        );
                         if (drops != null && !drops.isEmpty()) {
 
                             for (final ItemStack drop : drops) {
@@ -144,20 +146,6 @@ public class ItemToolWrench extends Item implements IModelRegister {
 
     private static String getTeName(Object te) {
         return te != null ? te.getClass().getSimpleName().replace("TileEntity", "") : "none";
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-    public boolean canTakeDamage(ItemStack stack, int amount) {
-        return true;
     }
 
     public @NotNull EnumActionResult onItemUseFirst(
@@ -189,6 +177,21 @@ public class ItemToolWrench extends Item implements IModelRegister {
             }
         }
     }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name, String extraName) {
+        registerModel(this, meta, name);
+    }
+
+    public boolean canTakeDamage(ItemStack stack, int amount) {
+        return true;
+    }
+
 
     public void damage(ItemStack is, int damage, EntityPlayer player) {
         is.damageItem(damage, player);

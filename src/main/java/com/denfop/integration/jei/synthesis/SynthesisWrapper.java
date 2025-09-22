@@ -7,7 +7,6 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -79,12 +78,11 @@ public class SynthesisWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawSplitString(
-                TextFormatting.GREEN + Localization.translate("chance") + this.getPercent() + "%",
-                59,
-                65,
-                recipeWidth - 69,
-                ModUtils.convertRGBcolorToInt(217, 217, 217)
+        minecraft.fontRenderer.drawString(
+                Localization.translate("chance") + this.getPercent() + "%",
+                64,
+                64,
+                ModUtils.convertRGBcolorToInt(255, 255, 255)
         );
 
 

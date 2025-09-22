@@ -102,11 +102,11 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 34, 6);
+        isg.init(0, true, 34, 18);
         isg.set(0, recipes.getInput());
         isg.init(1, true, 34, 46);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 86, 4);
+        isg.init(2, false, 86, 5);
         isg.set(2, recipes.getOutput());
     }
 

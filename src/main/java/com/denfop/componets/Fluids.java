@@ -1,6 +1,7 @@
 package com.denfop.componets;
 
-import com.denfop.invslot.InvSlot;
+import com.denfop.Localization;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -29,6 +31,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Fluids extends AbstractComponent {
 
@@ -46,7 +49,6 @@ public class Fluids extends AbstractComponent {
         } else {
             acceptedFluids = Arrays.asList(fluids);
         }
-
         return acceptedFluids::contains;
     }
 
@@ -76,36 +78,45 @@ public class Fluids extends AbstractComponent {
             int capacity,
             Predicate<Fluid> acceptedFluids
     ) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT, acceptedFluids);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.INPUT, acceptedFluids);
     }
 
     public Fluids.InternalFluidTank addTankExtract(String name, int capacity) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.OUTPUT, Predicates.alwaysTrue());
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.OUTPUT, Predicates.alwaysTrue());
     }
 
+    public Fluids.InternalFluidTank addTankExtract(String name, int capacity, Predicate<Fluid> acceptedFluids) {
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.OUTPUT, acceptedFluids);
+    }
 
     public Fluids.InternalFluidTank addTank(String name, int capacity) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT_OUTPUT);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.INPUT_OUTPUT);
     }
 
-    public Fluids.InternalFluidTank addTank(String name, int capacity, InvSlot.TypeItemSlot typeItemSlot) {
+    public Fluids.InternalFluidTank addTank(String name, int capacity, Inventory.TypeItemSlot typeItemSlot) {
         return this.addTank(name, capacity, typeItemSlot, Predicates.alwaysTrue());
     }
 
     public Fluids.InternalFluidTank addTank(String name, int capacity, Predicate<Fluid> acceptedFluids) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT_OUTPUT, acceptedFluids);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.INPUT_OUTPUT, acceptedFluids);
     }
 
+    public Fluids.InternalFluidTank addTank(
+            String name, int capacity, Predicate<Fluid> acceptedFluids,
+            Inventory.TypeItemSlot slot
+    ) {
+        return this.addTank(name, capacity, slot, acceptedFluids);
+    }
 
     public Fluids.InternalFluidTank addTank(
             String name,
             int capacity,
-            InvSlot.TypeItemSlot typeItemSlot,
+            Inventory.TypeItemSlot typeItemSlot,
             Predicate<Fluid> acceptedFluids
     ) {
         return this.addTank(name, capacity,
                 typeItemSlot.isInput() ? ModUtils.allFacings : Collections.emptySet(),
-                typeItemSlot.isOutput() ? ModUtils.allFacings : Collections.emptySet(), acceptedFluids
+                typeItemSlot.isOutput() ? ModUtils.allFacings : Collections.emptySet(), acceptedFluids, typeItemSlot
         );
     }
 
@@ -114,9 +125,9 @@ public class Fluids extends AbstractComponent {
             int capacity,
             Collection<EnumFacing> inputSides,
             Collection<EnumFacing> outputSides,
-            Predicate<Fluid> acceptedFluids
+            Predicate<Fluid> acceptedFluids, Inventory.TypeItemSlot typeItemSlot
     ) {
-        return this.addTank(new Fluids.InternalFluidTank(name, inputSides, outputSides, acceptedFluids, capacity));
+        return this.addTank(new Fluids.InternalFluidTank(name, inputSides, outputSides, acceptedFluids, capacity, typeItemSlot));
     }
 
     public Fluids.InternalFluidTank addTank(Fluids.InternalFluidTank tank) {
@@ -136,7 +147,7 @@ public class Fluids extends AbstractComponent {
         this.unmanagedTanks.add(suppl);
     }
 
-    public void changeConnectivity(Fluids.InternalFluidTank tank, InvSlot.TypeItemSlot typeItemSlot) {
+    public void changeConnectivity(Fluids.InternalFluidTank tank, Inventory.TypeItemSlot typeItemSlot) {
         this.changeConnectivity(
                 tank,
                 typeItemSlot.isInput() ? ModUtils.allFacings : Collections.emptySet(),
@@ -151,8 +162,8 @@ public class Fluids extends AbstractComponent {
     ) {
         assert this.managedTanks.contains(tank);
 
-        tank.inputSides = inputSides;
-        tank.outputSides = outputSides;
+        tank.inputSides = new ArrayList<>(inputSides);
+        tank.outputSides = new ArrayList<>(outputSides);
     }
 
     public FluidTank getFluidTank(String name) {
@@ -240,6 +251,11 @@ public class Fluids extends AbstractComponent {
         );
     }
 
+    public List<InternalFluidTank> getManagedTanks() {
+        return managedTanks;
+    }
+
+
     public Iterable<Fluids.InternalFluidTank> getAllTanks() {
         if (this.unmanagedTanks.isEmpty()) {
             return this.managedTanks;
@@ -258,26 +274,76 @@ public class Fluids extends AbstractComponent {
     public static class InternalFluidTank extends FluidTank {
 
         protected final String identifier;
+        List<String> fluidList = new ArrayList<>();
+        private Inventory.TypeItemSlot typeItemSlot;
         private Predicate<Fluid> acceptedFluids;
-        private Collection<EnumFacing> inputSides;
-        private Collection<EnumFacing> outputSides;
+        private List<EnumFacing> inputSides;
+        private List<EnumFacing> outputSides;
+        private boolean canAccept = true;
 
         protected InternalFluidTank(
                 String identifier,
                 Collection<EnumFacing> inputSides,
                 Collection<EnumFacing> outputSides,
                 Predicate<Fluid> acceptedFluids,
-                int capacity
+                int capacity, Inventory.TypeItemSlot typeItemSlot
         ) {
             super(capacity);
             this.identifier = identifier;
             this.acceptedFluids = acceptedFluids;
-            this.inputSides = inputSides;
-            this.outputSides = outputSides;
+            this.inputSides = new ArrayList<>(inputSides);
+            this.outputSides = new ArrayList<>(outputSides);
+            this.typeItemSlot = typeItemSlot;
+            List<Fluid> fluidList1 = FluidRegistry.getRegisteredFluids().values().stream().filter(acceptedFluids).collect(
+                    Collectors.toList());
+            for (Fluid fluid1 : fluidList1) {
+                fluidList.add(Localization.translate(fluid1.getUnlocalizedName()));
+            }
+
         }
 
-        public void setAcceptedFluids(final Predicate<Fluid> acceptedFluids) {
-            this.acceptedFluids = acceptedFluids;
+        public CustomPacketBuffer writePacket() {
+            CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
+            packetBuffer.writeBoolean(fluid != null);
+            if (fluid != null) {
+                packetBuffer.writeString(fluid.getFluid().getName());
+                packetBuffer.writeInt(fluid.amount);
+            }
+            return packetBuffer;
+        }
+
+        public void readPacket(CustomPacketBuffer packetBuffer) {
+            boolean hasFluid = packetBuffer.readBoolean();
+            if (hasFluid) {
+                String name = packetBuffer.readString();
+                int amount = packetBuffer.readInt();
+                Fluid fluid = FluidRegistry.getFluid(name);
+                this.fluid = new FluidStack(fluid, amount);
+            } else {
+                fluid = null;
+            }
+        }
+
+        public List<String> getFluidList() {
+            return fluidList;
+        }
+
+        public void setTypeItemSlot(final Inventory.TypeItemSlot typeItemSlot) {
+            this.typeItemSlot = typeItemSlot;
+            if (inputSides != null && outputSides != null) {
+                inputSides.clear();
+                outputSides.clear();
+                this.inputSides.addAll(typeItemSlot.isInput() ? ModUtils.allFacings : Collections.emptySet());
+                this.outputSides.addAll(typeItemSlot.isOutput() ? ModUtils.allFacings : Collections.emptySet());
+            }
+        }
+
+        public boolean isInput() {
+            return this.typeItemSlot.isInput();
+        }
+
+        public boolean isOutput() {
+            return this.typeItemSlot.isOutput();
         }
 
         public boolean canFillFluidType(FluidStack fluid) {
@@ -290,6 +356,21 @@ public class Fluids extends AbstractComponent {
 
         public boolean acceptsFluid(Fluid fluid) {
             return this.acceptedFluids.apply(fluid);
+        }
+
+        public Predicate<Fluid> getAcceptedFluids() {
+            return acceptedFluids;
+        }
+
+        public void setAcceptedFluids(final Predicate<Fluid> acceptedFluids) {
+            this.acceptedFluids = acceptedFluids;
+            List<Fluid> fluidList1 = FluidRegistry.getRegisteredFluids().values().stream().filter(acceptedFluids).collect(
+                    Collectors.toList());
+            fluidList.clear();
+            for (Fluid fluid1 : fluidList1) {
+                fluidList.add(Localization.translate(fluid1.getUnlocalizedName()));
+            }
+
         }
 
         IFluidTankProperties getTankProperties(final EnumFacing side) {
@@ -333,11 +414,15 @@ public class Fluids extends AbstractComponent {
         }
 
         public boolean canFill(EnumFacing side) {
-            return this.inputSides.contains(side);
+            return canAccept && this.inputSides.contains(side);
         }
 
         public boolean canDrain(EnumFacing side) {
             return this.outputSides.contains(side);
+        }
+
+        public void setCanAccept(boolean b) {
+            this.canAccept = b;
         }
 
     }
@@ -369,6 +454,7 @@ public class Fluids extends AbstractComponent {
         }
 
         public int fill(FluidStack resource, boolean doFill) {
+
             if (resource != null && resource.amount > 0) {
                 int total = 0;
                 FluidStack missing = resource.copy();

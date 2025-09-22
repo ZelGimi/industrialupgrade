@@ -6,8 +6,11 @@ import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,11 +35,50 @@ public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> impleme
 
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+        if (meta >= 9 && meta <= 11 || meta == 21) {
+            ModelLoader.setCustomMeshDefinition(this, stack -> {
+                final NBTTagCompound nbt = ModUtils.nbt(stack);
+                int level = nbt.getInteger("level");
+                switch (stack.getItemDamage()) {
+                    case 9:
+                        level = level - 5;
+                        break;
+                    case 10:
+                        level = level - 7;
+                        break;
+                    case 11:
+                        level = level - 9;
+                        break;
+                    case 21:
+                        level = level - 11;
+                        break;
+                }
+                return new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(stack.getItemDamage()).getName() + (level == 1
+                                ? "_1"
+                                : ""),
+                        null
+                );
+
+            });
+            String[] mode = {"", "_1"};
+            for (final String s : mode) {
+                ModelBakery.registerItemVariants(
+                        this,
+                        new ModelResourceLocation(
+                                Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName() + s,
+                                null
+                        )
+                );
+
+            }
+        } else {
+            ModelLoader.setCustomModelResourceLocation(
+                    this,
+                    meta,
+                    new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
+            );
+        }
     }
 
     public enum Types implements ISubEnum {

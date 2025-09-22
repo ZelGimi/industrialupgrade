@@ -4,12 +4,15 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IEnergyController;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.Path;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerController;
 import com.denfop.gui.GuiEnergyController;
 import com.denfop.network.DecoderHandler;
@@ -18,20 +21,24 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TileEnergyController extends TileEntityInventory implements
         IUpdatableTileEvent, IEnergyController {
@@ -39,9 +46,14 @@ public class TileEnergyController extends TileEntityInventory implements
     public List<Path> energyPathList = new ArrayList<>();
     public boolean work = false;
     public int size;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    private ChunkPos chunkPos;
+    private long id;
 
     public TileEnergyController() {
-
+        this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -53,9 +65,56 @@ public class TileEnergyController extends TileEntityInventory implements
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.controller.info"));
         tooltip.add(Localization.translate("iu.controller.info1"));
+    }
+
+    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
+    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+        }
+    }
+
+    public Map<EnumFacing, IEnergyTile> getTiles() {
+        return energyConductorMap;
     }
 
     @SideOnly(Side.CLIENT)
@@ -109,7 +168,10 @@ public class TileEnergyController extends TileEntityInventory implements
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
+            this.energyConductorMap.clear();
+            validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
+
         }
 
     }

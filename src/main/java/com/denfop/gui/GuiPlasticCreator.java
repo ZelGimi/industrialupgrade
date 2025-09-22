@@ -10,15 +10,17 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.api.upgrades.UpgradeRegistry;
+import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
+import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerPlasticCreator;
-import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -30,10 +32,32 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
     public GuiPlasticCreator(ContainerPlasticCreator container1) {
         super(container1);
         this.container = container1;
-        this.componentList.clear();
+        componentList.clear();
+        this.inventoryList.add(container.base.outputSlot);
+        inventory = new GuiComponent(this, 7, 83, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
+        );
+        this.slots = new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.inventoryList))
+        );
+
+        componentList.add(inventory);
+        componentList.add(slots);
+        this.addComponent(new GuiComponent(this, 80, 35, EnumTypeComponent.PROCESS,
+                new Component<>(this.container.base.componentProgress)
+        ));
         this.addComponent(new GuiComponent(this, 117, 60, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        componentList.add(new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(
+                        EnumTypeComponentSlot.SLOT,
+                        Collections.singletonList(this.container.base.input_slot)
+                ))
+        ));
+        this.addComponent(new GuiComponent(this, 58, 35, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+
+        this.addElement(TankGauge.createNormal(this, 6, 5, container.base.fluidTank));
     }
 
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
@@ -52,23 +76,8 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        TankGauge.createNormal(this, 6, 5, container.base.fluidTank).drawForeground(par1, par2);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EF";
-        new AdvArea(this, 58, 35, 69, 50)
-                .withTooltip(tooltip2)
-                .drawForeground(par1, par2);
+
         this.handleUpgradeTooltip(par1, par2);
-        new AdvArea(this, 80, 35, 101, 49)
-                .withTooltip(Localization.translate("gui.MolecularTransformer.progress") + ": " + (int) (Math.min(
-                        this.container.base.componentProgress.getBar(),
-                        1D
-                ) * 100) + "%")
-                .drawForeground(par1, par2);
     }
 
     public void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -87,20 +96,7 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
-        int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (24.0F * this.container.base.componentProgress.getBar());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 56 + 1, yoffset + 36 + 14 - chargeLevel, 176, 14 - chargeLevel,
-                    14, chargeLevel
-            );
-        }
-        if (progress > 0) {
-            drawTexturedModalRect(xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);
-        }
 
-        TankGauge.createNormal(this, 6, 5, container.base.fluidTank).drawBackground(xoffset, yoffset);
         this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
@@ -108,7 +104,7 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIPlastic.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

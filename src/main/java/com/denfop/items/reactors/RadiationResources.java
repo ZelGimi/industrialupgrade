@@ -80,7 +80,9 @@ public class RadiationResources extends ItemSubTypes<RadiationResources.Types> i
         berkelium_gem(6),
         einsteinium_gem(7),
         uran233_gem(8),
-
+        lawrencium(9),
+        nobelium(10),
+        fermium(11),
         ;
 
         private final String name;

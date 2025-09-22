@@ -39,7 +39,7 @@ public class ItemModuleTypePanel extends ItemSubTypes<ItemModuleTypePanel.Crafti
     }
 
     public static EnumSolarPanels getSolarType(int meta) {
-        return EnumSolarPanels.getFromID(meta);
+        return EnumSolarPanels.getFromID(meta + 1);
     }
 
 

@@ -1,20 +1,18 @@
 package com.denfop.recipe;
 
-import com.denfop.utils.ModUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class InputOreDict implements IInputItemStack {
 
     public final String input;
-    public final int amount;
     public final Integer meta;
+    public int amount;
     private List<ItemStack> ores;
 
     InputOreDict(String input) {
@@ -49,22 +47,16 @@ public class InputOreDict implements IInputItemStack {
         return this.amount;
     }
 
-    public List<ItemStack> getInputs() {
-        List<ItemStack> ores = this.getOres();
-        boolean allSuitableEntries = ores.stream().allMatch(stack -> ModUtils.getSize(stack) == this.getAmount());
-
-        if (allSuitableEntries) {
-            return ores;
-        } else {
-            List<ItemStack> ret = ores.stream()
-                    .filter(stack -> stack.getItem() != ItemStack.EMPTY.getItem())
-                    .map(stack -> ModUtils.getSize(stack) == this.getAmount() ? stack : ModUtils.setSize(
-                            stack,
-                            this.getAmount()
-                    )).collect(Collectors.toList());
-
-            return Collections.unmodifiableList(ret);
+    @Override
+    public void growAmount(final int col) {
+        amount += col;
+        for (ItemStack stack : getOres()) {
+            stack.setCount(this.getAmount());
         }
+    }
+
+    public List<ItemStack> getInputs() {
+        return this.getOres();
 
 
     }
@@ -83,12 +75,18 @@ public class InputOreDict implements IInputItemStack {
         if (this.ores != null) {
             return this.ores;
         } else {
+            ores = new ArrayList<>();
             List<ItemStack> ret = OreDictionary.getOres(this.input);
             if (ret != OreDictionary.EMPTY_LIST) {
-                this.ores = ret;
+                for (ItemStack stack : ret) {
+                    stack = stack.copy();
+                    stack.setCount(this.getAmount());
+                    this.ores.add(stack);
+                }
+
             }
 
-            return ret;
+            return ores;
         }
     }
 

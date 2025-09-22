@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockradpur_side",
-    "down" : "industrialupgrade:blocks/blockradpur_side",
-    "up" : "industrialupgrade:blocks/blockradpur_top",
-    "north" : "industrialupgrade:blocks/blockradpur_main",
-    "east" : "industrialupgrade:blocks/blockradpur_side",
-    "south" : "industrialupgrade:blocks/blockradpur_side",
-    "west" : "industrialupgrade:blocks/blockradpur_side"
+    "particle" : "industrialupgrade:blocks/radiation_purifier_main",
+    "down" : "industrialupgrade:blocks/radiation_purifier_all",
+    "up" : "industrialupgrade:blocks/radiation_purifier_up",
+    "north" : "industrialupgrade:blocks/radiation_purifier_main",
+    "east" : "industrialupgrade:blocks/radiation_purifier_all",
+    "south" : "industrialupgrade:blocks/radiation_purifier_all",
+    "west" : "industrialupgrade:blocks/radiation_purifier_all"
   }
 }

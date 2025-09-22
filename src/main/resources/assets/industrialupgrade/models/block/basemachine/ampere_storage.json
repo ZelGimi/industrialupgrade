@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/ampere_storage_bottom",
+    "down" : "industrialupgrade:blocks/ampere_storage_bottom",
+    "up" : "industrialupgrade:blocks/ampere_storage_up",
+    "north" : "industrialupgrade:blocks/ampere_storage_front",
+    "east" : "industrialupgrade:blocks/ampere_storage_front",
+    "south" : "industrialupgrade:blocks/ampere_storage_front",
+    "west" : "industrialupgrade:blocks/ampere_storage_front"
+  }
+}

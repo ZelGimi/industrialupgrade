@@ -2,6 +2,7 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.EnumTripleElectricMachine;
 import com.denfop.tiles.base.TileTripleElectricMachine;
+import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerTripleElectricMachine extends ContainerFullInv<TileTripleElectricMachine> {
@@ -77,7 +78,9 @@ public class ContainerTripleElectricMachine extends ContainerFullInv<TileTripleE
             ));
         }
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.dischargeSlot, 0, dischargeX, dischargeY));
-
+        addSlotToContainer(new SlotInvSlot(((TileAdvAlloySmelter) tileEntity1).input_slot,
+                0, -20, 84
+        ));
     }
 
 

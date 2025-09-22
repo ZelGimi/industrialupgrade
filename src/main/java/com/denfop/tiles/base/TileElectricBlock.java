@@ -1,6 +1,5 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
@@ -11,21 +10,20 @@ import com.denfop.api.energy.IEnergySource;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.MultiTileBlock;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Redstone;
+import com.denfop.componets.WirelessComponent;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.gui.GuiElectricBlock;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotElectricBlock;
+import com.denfop.invslot.InventoryCharge;
+import com.denfop.invslot.InventoryDischarge;
+import com.denfop.invslot.InventoryElectricBlock;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,18 +51,18 @@ public class TileElectricBlock extends TileEntityInventory implements
         IUpdatableTileEvent,
         IStorage {
 
-    public static EnumElectricBlock electricblock;
+    public final WirelessComponent wirelessComponent;
     public final double tier;
     public final boolean chargepad;
     public final String name;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final double maxStorage2;
     public final double l;
-    public final InvSlotCharge inputslotA;
-    public final InvSlotDischarge inputslotB;
-    public final InvSlotElectricBlock inputslotC;
+    public final InventoryCharge inputslotA;
+    public final InventoryDischarge inputslotB;
+    public final InventoryElectricBlock inputslotC;
     private final Redstone redstone;
-    public boolean wireless;
+    public EnumElectricBlock electricblock;
     public double output;
     public boolean rfeu = false;
     public boolean needsInvUpdate = false;
@@ -73,9 +71,9 @@ public class TileElectricBlock extends TileEntityInventory implements
     public short temp;
     public boolean load = false;
     public boolean movementchargeitem = false;
-    public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
+    public boolean addedToEnergyNet = false;
     private byte redstoneMode = 0;
     private EntityPlayer player;
 
@@ -87,16 +85,15 @@ public class TileElectricBlock extends TileEntityInventory implements
         this.maxStorage2 = maxStorage1 * 4;
         this.chargepad = chargepad;
         this.name = name;
-        this.inputslotA = new InvSlotCharge(this, (int) tier);
+        this.inputslotA = new InventoryCharge(this, (int) tier);
 
-        this.inputslotB = new InvSlotDischarge(this, (int) tier);
-        this.inputslotC = new InvSlotElectricBlock(this, 3, 2);
+        this.inputslotB = new InventoryDischarge(this, (int) tier);
+        this.inputslotC = new InventoryElectricBlock(this, 3, 2);
         this.output_plus = 0;
         this.temp = 0;
-        this.wireless = false;
         this.l = output1;
         this.player = null;
-        this.energy = this.addComponent((new AdvEnergy(
+        this.energy = this.addComponent((new Energy(
                 this,
                 maxStorage1,
                 Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
@@ -108,15 +105,16 @@ public class TileElectricBlock extends TileEntityInventory implements
         this.energy.addManagedSlot(this.inputslotA);
         this.energy.addManagedSlot(this.inputslotB);
         this.redstone = this.addComponent(new Redstone(this));
-    }
+        this.wirelessComponent = this.addComponent(new WirelessComponent(this));
 
+    }
 
     public TileElectricBlock(EnumElectricBlock electricBlock) {
         this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1);
         electricblock = electricBlock;
     }
 
-    public static EnumElectricBlock getElectricBlock() {
+    public EnumElectricBlock getElectricBlock() {
 
         return electricblock;
     }
@@ -184,27 +182,29 @@ public class TileElectricBlock extends TileEntityInventory implements
         }
     }
 
-
     public SoundEvent getSound() {
         return EnumSound.pen.getSoundEvent();
     }
-
 
     public List<ItemStack> getDrop() {
         return getAuxDrops(0);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack itemStack, final List<String> info) {
 
 
         info.add(Localization.translate("iu.item.tooltip.Output") + " " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(
                 this.energy.getSourceTier())) + " EF/t ");
         info.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.energy.getCapacity()) + " EF ");
         NBTTagCompound nbttagcompound = ModUtils.nbt(itemStack);
-        info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(nbttagcompound.getDouble("energy"))
-                + " EF ");
+        if (this.energy == null || this.energy.getEnergy() == 0) {
+            info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(nbttagcompound.getDouble("energy"))
+                    + " EF ");
+        } else {
+            info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(this.energy.getEnergy())
+                    + " EF ");
+        }
         info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
 
 
@@ -229,26 +229,26 @@ public class TileElectricBlock extends TileEntityInventory implements
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.chargepad) {
-            this.energy.setDirections(
+        if (!addedToEnergyNet) {
+            this.addedToEnergyNet = true;
+            if (!this.chargepad) {
+                this.energy.setDirections(
 
-                    Arrays
-                            .asList(EnumFacing.VALUES)
-                            .stream()
-                            .filter(facing -> facing != this.getFacing())
-                            .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
+                        Arrays.stream(EnumFacing.VALUES)
+                                .filter(facing -> facing != this.getFacing())
+                                .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
-        } else {
-            this.energy.setDirections(
+            } else {
+                this.energy.setDirections(
 
-                    Arrays
-                            .asList(EnumFacing.VALUES)
-                            .stream()
-                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
-                            .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
+                        Arrays.stream(EnumFacing.VALUES)
+                                .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                                .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
 
+            }
         }
+        wirelessComponent.setEnergySource((IEnergySource) this.energy.getDelegate());
     }
 
     public boolean shouldEmitEnergy() {
@@ -328,17 +328,18 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
     protected void chargeitems(ItemStack itemstack, double chargefactor) {
-        if (!(itemstack.getItem() instanceof IEnergyItem || itemstack.getItem() instanceof IEnergyContainerItem)) {
+        if (!(itemstack.getItem() instanceof IEnergyItem)) {
             return;
         }
         double freeamount = ElectricItem.manager.charge(itemstack, Double.POSITIVE_INFINITY, Integer.MAX_VALUE, true, true);
         double charge;
         if (freeamount > 0.0D) {
             charge = Math.min(freeamount, chargefactor);
+            charge = Math.min(charge, ((IEnergyItem) itemstack.getItem()).getTransferEnergy(itemstack));
             if (this.energy.getEnergy() < charge) {
                 charge = this.energy.getEnergy();
             }
-            this.energy.useEnergy(ElectricItem.manager.charge(itemstack, charge, Integer.MAX_VALUE, true, false));
+            this.energy.useEnergy(ElectricItem.manager.charge(itemstack, charge, (int) this.tier, true, false));
         }
 
     }
@@ -445,36 +446,14 @@ public class TileElectricBlock extends TileEntityInventory implements
     public void updateEntityServer() {
         super.updateEntityServer();
         if (!load) {
-            this.wirelessTransferList.clear();
+
             this.inputslotC.wirelessmodule();
-            this.wireless = !this.wirelessTransferList.isEmpty();
             this.load = true;
         }
         this.needsInvUpdate = false;
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
         this.energy.receivingDisabled = false;
-        if (this.wireless) {
-            boolean refresh = false;
-            try {
-                for (WirelessTransfer transfer : this.wirelessTransferList) {
-                    if (transfer.getTile().isInvalid()) {
-                        refresh = true;
-                        continue;
-                    }
-                    double energy = Math.min(
-                            ((IEnergySource) this.energy.getDelegate()).canExtractEnergy(),
-                            transfer.getSink().getDemandedEnergy()
-                    );
-                    transfer.work(energy);
-                    this.energy.useEnergy(energy);
-                }
-            } catch (Exception ignored) {
-            }
-            if (refresh) {
-                this.wirelessTransferList.clear();
-                this.inputslotC.wirelessmodule();
-            }
-        }
+
         if (chargepad) {
             if (this.player != null && this.energy.getEnergy() >= 1.0D) {
                 if (!getActive()) {
@@ -535,9 +514,12 @@ public class TileElectricBlock extends TileEntityInventory implements
         return drop == null ? Collections.emptyList() : Collections.singletonList(drop);
     }
 
-    private ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
-        drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+    public ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
+        drop = super.adjustDrop(drop, wrench, fortune);
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             double retainedRatio = 0.8;
             if (fortune == 100) {
                 retainedRatio = 1;

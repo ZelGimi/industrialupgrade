@@ -24,10 +24,6 @@ import java.util.Objects;
 @ZenRegister
 public class CTMatterRecipe {
 
-    @ZenMethod
-    public static void removeRecipe(IItemStack output) {
-        CraftTweakerAPI.apply(new Remove(output));
-    }
 
     @ZenMethod
     public static void addRecipe(

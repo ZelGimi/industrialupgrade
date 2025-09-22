@@ -3,7 +3,10 @@ package com.denfop.tiles.transport.tiles;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.transport.ITransportConductor;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.state.TileEntityBlockStateContainer;
+import com.denfop.blocks.state.UnlistedProperty;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.container.ContainerCable;
 import com.denfop.gui.GuiCable;
@@ -19,6 +22,7 @@ import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -30,7 +34,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -38,17 +44,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TileEntityMultiCable extends TileEntityInventory implements IUpdatableTileEvent {
 
-    private final ICableItem cableItem;
+    public static final IUnlistedProperty<RenderState> renderStateProperty = new UnlistedProperty(
+            "renderstate",
+            RenderState.class
+    );
+    public ICableItem cableItem;
     public byte connectivity;
-    private ResourceLocation texture;
-    private List<EnumFacing> blackList = new ArrayList<>();
     public ItemStack stackFacade = ItemStack.EMPTY;
     @SideOnly(Side.CLIENT)
     public DataCable dataCable;
+    private ResourceLocation texture;
+    private List<EnumFacing> blackList = new ArrayList<>();
+    private RenderState renderState;
 
 
     public TileEntityMultiCable(ICableItem name) {
@@ -68,8 +80,8 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         if (this.texture == null) {
             this.texture = new ResourceLocation(
                     Constants.MOD_ID,
-                    "textures/blocks/wiring/" + getCableItem().getMainPath() + "/" + getCableItem()
-                            .getNameCable() + ".png"
+                    "blocks/wiring/" + getCableItem().getMainPath() + "/" + getCableItem()
+                            .getNameCable()
             );
         }
         return this.texture;
@@ -137,18 +149,35 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     @Override
     public void onLoaded() {
         super.onLoaded();
-        new PacketUpdateFieldTile(this, "stackFacade", this.stackFacade);
+        if (!this.getWorld().isRemote) {
+            new PacketUpdateFieldTile(this, "stackFacade", this.stackFacade);
+            this.updateConnectivity();
+        }
+    }
+
+    @Override
+    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return super.getPickBlock(player, target);
+    }
+
+    public List<ItemStack> getAuxDrops(int fortune) {
+        return Collections.emptyList();
     }
 
     public SoundType getBlockSound(Entity entity) {
         return SoundType.CLOTH;
     }
 
+    public AxisAlignedBB getVisualBoundingBox() {
+        return super.getVisualBoundingBox();
+
+    }
+
     public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        if (this.stackFacade == null || this.stackFacade.isEmpty()) {
-            float th = 0.25F;
+        if (this.stackFacade == null || this.stackFacade.isEmpty() && !forCollision) {
+            float th = this.cableItem.getThickness();
             float sp = (1.0F - th) / 2.0F;
-            List<AxisAlignedBB> ret = new ArrayList<>(7);
+            List<AxisAlignedBB> ret = new ArrayList<>();
             ret.add(new AxisAlignedBB(
                     sp,
                     sp,
@@ -206,6 +235,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         }
     }
 
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return null;
@@ -246,8 +276,12 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
             this.connectivity = connectivity;
             new PacketUpdateFieldTile(this, "connectivity", this.connectivity);
             new PacketUpdateFieldTile(this, "texture", this.texture);
-
+            this.rerender();
         }
+    }
+
+    public void updateConnectivity() {
+
     }
 
     @Override
@@ -279,6 +313,14 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         } else if (stack.getItem() == IUItem.connect_item) {
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
+        if (this instanceof ITransportConductor) {
+            boolean can = ((ITransportConductor) this).isInput() || ((ITransportConductor) this).isOutput();
+            if (can) {
+                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            } else {
+                return false;
+            }
+        }
         return false;
 
 
@@ -295,7 +337,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
 
     @Override
     @SideOnly(Side.CLIENT)
-    public GuiCable getGui(final EntityPlayer var1, final boolean var2) {
+    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiCable(getGuiContainer(var1));
     }
 
@@ -331,6 +373,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         if (name.equals("connectivity")) {
             try {
                 this.connectivity = (byte) DecoderHandler.decode(is);
+                this.renderState = new RenderState(this.getTexture(), this.connectivity, this.getCableItem());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -338,6 +381,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         if (name.equals("texture")) {
             try {
                 this.texture = (ResourceLocation) DecoderHandler.decode(is);
+                this.renderState = new RenderState(this.getTexture(), this.connectivity, this.getCableItem());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -391,6 +435,22 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean hasSpecialModel() {
+        return true;
+    }
+
+    public TileEntityBlockStateContainer.PropertiesStateInstance getExtendedState(TileEntityBlockStateContainer.PropertiesStateInstance state) {
+        state = super.getExtendedState(state);
+        if (this.renderState == null) {
+
+            this.renderState = new RenderState(this.getTexture(), this.connectivity, this.getCableItem());
+
+        }
+        state = state.withProperties(renderStateProperty, this.renderState);
+
+        return state;
     }
 
     @Override

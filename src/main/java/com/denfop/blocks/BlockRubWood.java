@@ -1,6 +1,7 @@
 package com.denfop.blocks;
 
 
+import com.denfop.IUItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -85,7 +86,7 @@ public class BlockRubWood extends BlockBase {
                     spawnAsEntity(world, pos, new ItemStack(item, 1, 0));
 
                     if (!state.getValue(stateProperty).isPlain() && world.rand.nextInt(6) == 0) {
-                        // spawnAsEntity(world, pos, IUItem.misc_res.getItemStack(ItemMiscResource.Types.resin));
+                        spawnAsEntity(world, pos, new ItemStack(IUItem.rawLatex));
                     }
                 }
             }
@@ -113,7 +114,7 @@ public class BlockRubWood extends BlockBase {
     }
 
     public void randomTick(World world, BlockPos pos, IBlockState state, Random random) {
-        if (random.nextInt(7) == 0) {
+        if (random.nextInt(9) == 0) {
             RubberWoodState rwState = state.getValue(stateProperty);
             if (!rwState.canRegenerate()) {
                 return;

@@ -41,6 +41,14 @@ public class FakePlayer implements IFakePlayer {
     }
 
     @Override
+    public NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setString("name", this.getName());
+        tag.setTag("tag", this.getTag());
+        return tag;
+    }
+
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;

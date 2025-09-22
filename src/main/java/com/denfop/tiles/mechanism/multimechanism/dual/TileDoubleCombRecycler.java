@@ -5,18 +5,24 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import net.minecraft.util.SoundEvent;
 
 public class TileDoubleCombRecycler extends TileMultiMachine {
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+
     public TileDoubleCombRecycler() {
         super(
                 EnumMultiMachine.DOUBLE_COMB_RECYCLER.usagePerTick,
-                EnumMultiMachine.DOUBLE_COMB_RECYCLER.lenghtOperation,
-                1
+                EnumMultiMachine.DOUBLE_COMB_RECYCLER.lenghtOperation
         );
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
     public IMultiTileBlock getTeBlock() {

@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.IUCore;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
@@ -130,9 +130,6 @@ public class CTCQuarry {
             }
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.input);
-        }
 
     }
 

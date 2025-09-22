@@ -3,12 +3,11 @@ package com.denfop.tiles.mechanism.generator.energy;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBase;
-import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.InventoryCharge;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,8 +18,8 @@ import java.util.List;
 
 public abstract class TileEntityBaseGenerator extends TileEntityInventory {
 
-    public final InvSlotCharge chargeSlot;
-    public final AdvEnergy energy;
+    public final InventoryCharge chargeSlot;
+    public final Energy energy;
 
     public int fuel = 0;
     protected double production;
@@ -30,23 +29,23 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory {
     public TileEntityBaseGenerator(double production, int tier, int maxStorage) {
         this.production = production;
         this.ticksSinceLastActiveUpdate = IUCore.random.nextInt(256);
-        this.chargeSlot = new InvSlotCharge(this, 1);
+        this.chargeSlot = new InventoryCharge(this, 1);
         this.energy =
-                this.addComponent(AdvEnergy.asBasicSource(this, maxStorage, tier).addManagedSlot(this.chargeSlot));
+                this.addComponent(Energy.asBasicSource(this, maxStorage, tier).addManagedSlot(this.chargeSlot));
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
 
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

@@ -1,0 +1,26 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "industrialupgrade:models/blastfurnace_left",
+		"1": "industrialupgrade:models/blastfurnace_front",
+		"2": "industrialupgrade:models/blastfurnace_back",
+		"3": "industrialupgrade:models/blastfurnace_top",
+		"4": "industrialupgrade:models/blastfurnace_right",
+		"5": "industrialupgrade:models/blastfurnace_bottom",
+		"particle": "industrialupgrade:models/blastfurnace_left"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#4"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#3"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#5"}
+			}
+		}
+	]
+}

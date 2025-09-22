@@ -12,9 +12,9 @@ import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.items.energy.instruments.EnumVarietyInstruments;
 import com.denfop.items.energy.instruments.ItemEnergyInstruments;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lib.LibOreDict;
@@ -108,13 +108,29 @@ public class BotaniaIntegration {
         );
         Recipes.recipe.addRecipe(new ItemStack(elementium_core),
                 "KLM", "DOD", "CHC", 'C', elementium_plate, 'D', IUItem.photoniy_ingot, 'O',
-                manasteel_core, 'L', IUItem.advancedCircuit, 'K', rune_night, 'M', rune_sun, 'H',
+                manasteel_core, 'L',
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3), 'K', rune_night, 'M', rune_sun, 'H',
                 rune_energy
         );
-        Recipes.recipe.addRecipe(new ItemStack(manasteel_core),
-                "KLM", "DOD", "CHC", 'C', manasteel_plate, 'D', IUItem.photoniy_ingot, 'O',
-                IUItem.core, 'L', IUItem.advancedCircuit, 'K', rune_night, 'M', rune_sun,
-                'H', rune_energy
+        Recipes.recipe.addRecipe(
+                new ItemStack(manasteel_core),
+                "KLM",
+                "DOD",
+                "CHC",
+                'C',
+                manasteel_plate,
+                'D',
+                IUItem.photoniy_ingot,
+                'O',
+                IUItem.core,
+                'L',
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                'K',
+                rune_night,
+                'M',
+                rune_sun,
+                'H',
+                rune_energy
         );
         Recipes.recipe.addRecipe(new ItemStack(blockBotSolarPanel, 1, 0), " B ", "BAB", " B ", 'A',
                 manasteel_core, 'B', new ItemStack(IUItem.blockpanel, 1, 0)
@@ -136,7 +152,6 @@ public class BotaniaIntegration {
         );
 
         //
-
 
 
     }

@@ -2,33 +2,31 @@ package com.denfop.tiles.base;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneHandler;
 import com.denfop.container.ContainerMultiMatter;
 import com.denfop.gui.GuiMultiMatter;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,17 +35,21 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
 public abstract class TileMultiMatter extends TileElectricMachine implements IUpgradableBlock,
-        IUpdatableTileEvent, IType, IUpdateTick {
+        IUpdatableTileEvent, IType, IUpdateTick, IMatter {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes amplifierSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public static Map<Integer, Map<ChunkPos, List<IMatter>>> worldMatterMap = new HashMap<>();
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes amplifierSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     public final FluidTank fluidTank;
     public final float energycost;
     protected final Fluids fluids;
@@ -63,28 +65,29 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
 
     public TileMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy) {
         super(Math.round(maxtempEnergy * 1), 3, 1);
-        this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
+        this.amplifierSlot = new InventoryRecipes(this, "matterAmplifier", this);
 
         this.energycost = storageEnergy * 1;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.containerslot = new InvSlotFluidByList(
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.containerslot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluiduu_matter.getInstance()
         );
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", sizeTank * 1000,
-                Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance())
+                Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance()), Inventory.TypeItemSlot.OUTPUT
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.redstone = this.addComponent(new Redstone(this));
         this.redstone.subscribe(new RedstoneHandler() {
                                     @Override
                                     public void action(final int input) {
                                         energy.setEnabled(input == 0);
                                         work = input != 0;
+                                        energy.setReceivingEnabled(work);
                                     }
                                 }
         );
@@ -100,8 +103,7 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
         return null;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -109,15 +111,15 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
             tooltip.add(Localization.translate("iu.matter_work_info") + (int) this.energycost);
         }
 
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -175,7 +177,28 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
         if (!this.getWorld().isRemote) {
             this.setUpgradestat();
             this.amplifierSlot.load();
+
             getOutput();
+            energy.setReceivingEnabled(work);
+            Map<ChunkPos, List<IMatter>> chunkPosListMap = worldMatterMap.get(this.world.provider.getDimension());
+            if (chunkPosListMap == null) {
+                chunkPosListMap = new HashMap<>();
+                ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
+                List<IMatter> matters = new LinkedList<>();
+                matters.add(this);
+                chunkPosListMap.put(chunkPos, matters);
+                worldMatterMap.put(this.world.provider.getDimension(), chunkPosListMap);
+            } else {
+                ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
+                List<IMatter> matters = chunkPosListMap.get(chunkPos);
+                if (matters == null) {
+                    matters = new LinkedList<>();
+                    matters.add(this);
+                    chunkPosListMap.put(chunkPos, matters);
+                } else {
+                    matters.add(this);
+                }
+            }
         }
 
     }
@@ -184,10 +207,31 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
 
 
         super.onUnloaded();
+        if (!this.getWorld().isRemote) {
+            Map<ChunkPos, List<IMatter>> chunkPosListMap = worldMatterMap.get(this.world.provider.getDimension());
+            if (chunkPosListMap == null) {
+                chunkPosListMap = new HashMap<>();
+                ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
+                List<IMatter> matters = new LinkedList<>();
+                chunkPosListMap.put(chunkPos, matters);
+                worldMatterMap.put(this.world.provider.getDimension(), chunkPosListMap);
+            } else {
+                ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
+                List<IMatter> matters = chunkPosListMap.get(chunkPos);
+                if (matters == null) {
+                    matters = new LinkedList<>();
+                    chunkPosListMap.put(chunkPos, matters);
+                } else {
+                    matters.remove(this);
+                }
+            }
+        }
     }
 
     private void getOutput() {
         this.recipe = this.amplifierSlot.process();
+        this.setRecipeOutput(recipe);
+        this.onUpdate();
     }
 
     public void updateEntityServer() {
@@ -262,6 +306,10 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
         return new GuiMultiMatter(new ContainerMultiMatter(entityPlayer, this));
     }
 
+    @Override
+    public FluidTank getMatterTank() {
+        return this.fluidTank;
+    }
 
     public void setUpgradestat() {
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
@@ -271,9 +319,8 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
         return EnumSet.of(
 
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.ItemInput,
+                UpgradableProperty.FluidExtract
         );
     }
 

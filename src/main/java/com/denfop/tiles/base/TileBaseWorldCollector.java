@@ -4,19 +4,24 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerWorldCollector;
 import com.denfop.gui.GuiWolrdCollector;
-import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.invslot.InvSlotWorldCollector;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.InventoryWorldCollector;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,9 +38,9 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
         IHasRecipe {
 
     public final EnumTypeCollector enumTypeCollector;
-    public final InvSlotRecipes inputSlot;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotWorldCollector MatterSlot;
+    public final InventoryRecipes inputSlot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryWorldCollector MatterSlot;
     public final double max_matter_energy;
     private final double defaultEnergyConsume;
     private final int defaultOperationLength;
@@ -53,27 +58,26 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     public TileBaseWorldCollector(EnumTypeCollector enumTypeCollector1) {
         super(0, 1, 1);
         enumTypeCollector = enumTypeCollector1;
-        this.MatterSlot = new InvSlotWorldCollector(this);
-        this.inputSlot = new InvSlotRecipes(this, enumTypeCollector1.name().toLowerCase() + "collector", this);
+        this.MatterSlot = new InventoryWorldCollector(this);
+        this.inputSlot = new InventoryRecipes(this, enumTypeCollector1.name().toLowerCase() + "collector", this);
         this.machineRecipe = null;
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.defaultEnergyConsume = this.energyConsume = 40;
         this.defaultOperationLength = this.operationLength = 800;
         this.operationsPerTick = 1;
         this.matter_energy = 0;
-        this.max_matter_energy = 1000;
+        this.max_matter_energy = 10000;
         Recipes.recipes.addInitRecipes(this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.need_info") + new ItemStack(
                 IUItem.matter,
                 1,
                 enumTypeCollector.getMeta()
         ).getDisplayName());
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     @Override
@@ -184,7 +188,7 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
 
         this.matter_energy -= this.need_matter;
         this.inputSlot.consume();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
         this.getrequiredmatter(this.machineRecipe.getRecipe().getOutput());
 
 
@@ -308,8 +312,8 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Processing,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

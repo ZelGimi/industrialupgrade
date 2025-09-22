@@ -4,19 +4,21 @@ import com.denfop.ElectricItem;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerHydrogenGenerator;
 import com.denfop.gui.GuiHydrogenGenerator;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.InventoryCharge;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -39,12 +41,14 @@ import java.io.IOException;
 public class TileHydrogenGenerator extends TileEntityLiquidTankInventory implements
         IAudioFixer, IUpdatableTileEvent {
 
-    public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput outputSlot;
+    public final InventoryCharge chargeSlot = new InventoryCharge(this, 1);
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput outputSlot;
     public final double coef;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final int production = Math.round(20.0F * 1);
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
@@ -53,10 +57,12 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
     public TileHydrogenGenerator() {
         super(12);
         this.coef = 1;
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidhyd.getInstance());
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(this, (double) 25000 * coef, 1));
+        this.fluidSlot = new InventoryFluidByList(this, 1, FluidName.fluidhyd.getInstance());
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.energy = this.addComponent(Energy.asBasicSource(this, (double) 25000 * coef, 1));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidhyd.getInstance()));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.3));
     }
 
     @Override
@@ -65,7 +71,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -116,7 +122,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         return nbttagcompound;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -130,7 +136,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

@@ -32,8 +32,8 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockAdvSolarEnergy(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -49,6 +49,18 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
@@ -94,7 +106,6 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasActive() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -106,7 +117,7 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0f;
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.denfop.componets.EnumTypeStyle;
 
 public class TileAdvWaterGenerator extends TileBaseWaterGenerator {
 
+
     public TileAdvWaterGenerator() {
         super(EnumLevelGenerators.TWO);
     }

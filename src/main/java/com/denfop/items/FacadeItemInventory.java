@@ -1,11 +1,6 @@
 package com.denfop.items;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerLeadBox;
-import com.denfop.gui.GuiLeadBox;
-import com.denfop.invslot.InvSlot;
-import com.denfop.items.ItemStackInventory;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.invslot.Inventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,20 +57,10 @@ public class FacadeItemInventory extends ItemStackInventory {
         return new GuiFacadeItem(new ContainerFacadeItem(player, this), itemStack1);
     }
 
-    @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

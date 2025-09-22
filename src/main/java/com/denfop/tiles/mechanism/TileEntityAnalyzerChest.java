@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityAnalyzerChest extends TileEntityInventory {
 
-    public InvSlotOutput outputSlot = new InvSlotOutput(this, "output", 36);
+    public InventoryOutput outputSlot = new InventoryOutput(this, 36);
 
     public TileEntityAnalyzerChest() {
 

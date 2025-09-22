@@ -160,12 +160,12 @@ public class CTMolecularTransformer {
         public void apply() {
             final IInputHandler input = com.denfop.api.Recipes.inputFactory;
             if (oreDictionary) {
-                ItemStack stack = new IC2InputItemStack(this.ingredient).getInputs().get(0);
+                ItemStack stack = new InputItemStack(this.ingredient).getInputs().get(0);
                 String ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
                 Recipes.recipes.addAdderRecipe("molecular", new BaseMachineRecipe(
                         new Input(
                                 OreDictionary.getOres(ore).isEmpty()
-                                        ? new IC2InputItemStack(this.ingredient)
+                                        ? new InputItemStack(this.ingredient)
                                         : input.getInput(ore)),
                         new RecipeOutput(tag, output)
                 ));
@@ -174,7 +174,7 @@ public class CTMolecularTransformer {
             } else {
                 Recipes.recipes.addAdderRecipe("molecular", new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(this.ingredient)),
+                                new InputItemStack(this.ingredient)),
                         new RecipeOutput(tag, output)
                 ));
 

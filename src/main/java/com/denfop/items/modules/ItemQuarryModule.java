@@ -99,6 +99,9 @@ public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingType
             case 15:
                 info.add(TextFormatting.DARK_PURPLE + Localization.translate("iu.comb_macerator"));
                 break;
+            case 16:
+                info.add(TextFormatting.DARK_RED + Localization.translate("iu.polisher"));
+                break;
         }
         EnumQuarryModules enumQuarryModules = EnumQuarryModules.values()[meta];
         if (enumQuarryModules.cost < 0) {
@@ -132,6 +135,7 @@ public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingType
         whitemodule(13),
         macerator(14),
         comb_macerator(15),
+        polisher(16),
         ;
 
         private final String name;

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/peat_generator_front_active",
+    "down" : "industrialupgrade:blocks/peat_generator_sides",
+    "up" : "industrialupgrade:blocks/peat_generator_top_active",
+    "north" : "industrialupgrade:blocks/peat_generator_front_active",
+    "east" : "industrialupgrade:blocks/peat_generator_sides",
+    "south" : "industrialupgrade:blocks/peat_generator_sides",
+    "west" : "industrialupgrade:blocks/peat_generator_sides"
+  }
+}

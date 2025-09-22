@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blockpetrol_bottom",
     "north" : "industrialupgrade:blocks/blockpetrol_main_active",
     "east" : "industrialupgrade:blocks/blockpetrol_side_active",
-    "south" : "industrialupgrade:blocks/blockpetrol_top",
+    "south" : "industrialupgrade:blocks/blockpetrol_bottom",
     "west" : "industrialupgrade:blocks/blockpetrol_side_active"
   }
 }

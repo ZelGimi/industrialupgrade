@@ -10,6 +10,8 @@ import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.container.ContainerUpgrade;
+import com.denfop.items.bags.BagsDescription;
 import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
@@ -21,10 +23,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -134,13 +139,13 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
             case energy_storage:
                 return types.contains(UpgradableProperty.EnergyStorage);
             case ejector:
-                return types.contains(UpgradableProperty.ItemConsuming);
+                return types.contains(UpgradableProperty.ItemExtract);
             case pulling:
-                return types.contains(UpgradableProperty.ItemProducing);
+                return types.contains(UpgradableProperty.ItemInput);
             case fluid_ejector:
-                return types.contains(UpgradableProperty.FluidConsuming);
+                return types.contains(UpgradableProperty.FluidExtract);
             case fluid_pulling:
-                return types.contains(UpgradableProperty.FluidProducing);
+                return types.contains(UpgradableProperty.FluidInput);
 
         }
         return false;
@@ -173,9 +178,9 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         }
         switch (type) {
             case overclocker:
-                return 0.6D;
+                return 0.8D;
             case Overclocker1:
-                return 0.5D;
+                return 0.6D;
             case Overclocker2:
                 return 0.4D;
         }
@@ -212,10 +217,11 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         }
         switch (type) {
             case overclocker:
+                return 1.11D;
             case Overclocker1:
                 return 1.3D;
             case Overclocker2:
-                return 1.2D;
+                return 1.5D;
         }
         return 1.0D;
     }
@@ -251,13 +257,54 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
             case fluid_ejector: {
                 final String side = getSideName(stack);
                 list.add(Localization.translate("iu.tooltip.upgrade.ejector", Localization.translate(side)));
+                if (type == Type.ejector) {
+                    final NBTTagCompound nbt = ModUtils.nbt(stack);
+                    List<BagsDescription> list1 = new ArrayList<>();
+                    NBTTagList contentList = nbt.getTagList("Items", 10);
+
+                    for (int i = 0; i < contentList.tagCount(); ++i) {
+                        NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
+                        int slot = slotNbt.getByte("Slot");
+                        if (slot >= 0 && slot < 6) {
+                            final ItemStack stack1 = new ItemStack(slotNbt);
+                            if (!stack1.isEmpty()) {
+                                list1.add(new BagsDescription(stack1));
+                            }
+                        }
+                    }
+
+                    for (BagsDescription description : list1) {
+                        list.add(TextFormatting.GREEN + description.getStack().getDisplayName());
+                    }
+                }
                 break;
             }
             case pulling:
             case fluid_pulling: {
                 final String side = getSideName(stack);
                 list.add(Localization.translate("iu.tooltip.upgrade.pulling", Localization.translate(side)));
+                if (type == Type.pulling) {
+                    final NBTTagCompound nbt = ModUtils.nbt(stack);
+                    List<BagsDescription> list1 = new ArrayList<>();
+                    NBTTagList contentList = nbt.getTagList("Items", 10);
+
+                    for (int i = 0; i < contentList.tagCount(); ++i) {
+                        NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
+                        int slot = slotNbt.getByte("Slot");
+                        if (slot >= 0 && slot < 6) {
+                            final ItemStack stack1 = new ItemStack(slotNbt);
+                            if (!stack1.isEmpty()) {
+                                list1.add(new BagsDescription(stack1));
+                            }
+                        }
+                    }
+
+                    for (BagsDescription description : list1) {
+                        list.add(TextFormatting.GREEN + description.getStack().getDisplayName());
+                    }
+                }
                 break;
+
             }
             case transformer_simple:
             case transformer:
@@ -295,12 +342,26 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         );
     }
 
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
+        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerUpgrade) {
+            ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.openContainer).base;
+            if (toolbox.isThisContainer(stack)) {
+                toolbox.saveAsThrown(stack);
+                player.closeScreen();
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public IAdvInventory getInventory(final EntityPlayer var1, final ItemStack var2) {
         if (var2.getItemDamage() < 11) {
             return null;
         } else {
             return new ItemStackUpgradeModules(var1, var2);
+
+
         }
     }
 
@@ -313,7 +374,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
     @Nonnull
     public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
-        if (IUCore.proxy.isSimulating() && stack.getItemDamage() >= 11) {
+        if (IUCore.proxy.isSimulating() && stack.getItemDamage() >= 11 && stack.getCount() == 1) {
             save(stack, player);
             player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));

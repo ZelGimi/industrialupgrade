@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/earth_analyzer",
+    "down" : "industrialupgrade:blocks/earth_casing",
+    "up" : "industrialupgrade:blocks/earth_casing",
+    "north" : "industrialupgrade:blocks/earth_analyzer",
+    "east" : "industrialupgrade:blocks/earth_casing",
+    "south" : "industrialupgrade:blocks/earth_casing",
+    "west" : "industrialupgrade:blocks/earth_casing"
+  }
+}

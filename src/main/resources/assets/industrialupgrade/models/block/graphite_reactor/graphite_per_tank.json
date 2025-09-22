@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_left-right-front-back",
+    "down" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_top-bottom",
+    "up" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_top-bottom",
+    "north" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_left-right-front-back",
+    "east" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_left-right-front-back",
+    "south" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_left-right-front-back",
+    "west" : "industrialupgrade:blocks/graphite_reactor/tank/per_tank_left-right-front-back"
+  }
+}

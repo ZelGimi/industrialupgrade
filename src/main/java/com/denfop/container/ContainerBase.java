@@ -2,6 +2,9 @@ package com.denfop.container;
 
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.invslot.Inventory;
+import com.denfop.items.ItemStackInventory;
+import com.denfop.network.packet.PacketUpdateFieldContainerItemStack;
 import com.denfop.network.packet.PacketUpdateFieldContainerTile;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -38,38 +41,89 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         } else if (!requireInputOnly) {
             return true;
         } else {
-            return slot instanceof SlotInvSlot && ((SlotInvSlot) slot).invSlot.canInput();
+            return slot instanceof SlotInvSlot && ((SlotInvSlot) slot).inventory.canInput();
         }
 
+    }
+
+    public SlotInvSlot findClassSlot(Class<? extends Inventory> invSlotClass) {
+        for (Slot slot : this.inventorySlots) {
+            if (slot instanceof SlotInvSlot) {
+                if (((SlotInvSlot) slot).inventory.getClass().equals(invSlotClass)) {
+                    return (SlotInvSlot) slot;
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<SlotInvSlot> getSlots() {
+        List<SlotInvSlot> list = new ArrayList<>();
+        for (Slot slot : this.inventorySlots) {
+            if (slot instanceof SlotInvSlot) {
+                list.add((SlotInvSlot) slot);
+            }
+        }
+        return list;
+    }
+
+    public List<SlotInvSlot> findClassSlots(Class<? extends Inventory> invSlotClass) {
+        List<SlotInvSlot> list = new ArrayList<>();
+        for (Slot slot : this.inventorySlots) {
+            if (slot instanceof SlotInvSlot) {
+                if (((SlotInvSlot) slot).inventory.getClass().equals(invSlotClass)) {
+                    list.add((SlotInvSlot) slot);
+                }
+            }
+        }
+        return list;
     }
 
     protected void addPlayerInventorySlots(EntityPlayer player, int height) {
-        this.addPlayerInventorySlots(player, 178, height);
+        if (player != null) {
+            this.addPlayerInventorySlots(player, 178, height);
+        }
     }
 
     protected void addPlayerInventorySlots(EntityPlayer player, int width, int height) {
-        int xStart = (width - 162) / 2;
+        if (player != null) {
+            int xStart = (width - 162) / 2;
 
-        int col;
-        for (col = 0; col < 3; ++col) {
-            for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(
-                        player.inventory,
-                        col1 + col * 9 + 9,
-                        xStart + col1 * 18,
-                        height + -82 + col * 18
-                ));
+            int col;
+            for (col = 0; col < 3; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(
+                            player.inventory,
+                            col1 + col * 9 + 9,
+                            xStart + col1 * 18,
+                            height + -82 + col * 18
+                    ));
+                }
+            }
+
+            for (col = 0; col < 9; ++col) {
+                this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
             }
         }
-
-        for (col = 0; col < 9; ++col) {
-            this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
-        }
-
     }
 
     public @NotNull ItemStack slotClick(int slotId, int dragType, @NotNull ClickType clickType, @NotNull EntityPlayer player) {
-        return super.slotClick(slotId, dragType, clickType, player);
+        if (slotId < 0) {
+            return super.slotClick(slotId, dragType, clickType, player);
+        }
+        Slot slot = this.inventorySlots.get(slotId);
+        if (!(slot instanceof SlotVirtual)) {
+            if (slot instanceof SlotInvSlot) {
+                SlotInvSlot slot1 = (SlotInvSlot) slot;
+                if (!slot1.inventory.canShift() && clickType == ClickType.QUICK_MOVE) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            return super.slotClick(slotId, dragType, clickType, player);
+        } else {
+            ((SlotVirtual) slot).slotClick(slotId, dragType, clickType, player);
+        }
+        return ItemStack.EMPTY;
     }
 
     public final @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int sourceSlotIndex) {
@@ -100,6 +154,10 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         for (int run = 0; run < 4 && !ModUtils.isEmpty(sourceItemStack); ++run) {
 
             for (final Slot targetSlot : this.inventorySlots) {
+                if (targetSlot instanceof SlotVirtual) {
+                    continue;
+                }
+
                 if (targetSlot.inventory != player.inventory && isValidTargetSlot(
                         targetSlot,
                         sourceItemStack,
@@ -123,6 +181,9 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
 
             while (it.hasPrevious()) {
                 Slot targetSlot = it.previous();
+                if (targetSlot instanceof SlotVirtual) {
+                    continue;
+                }
                 if (targetSlot.inventory == player.inventory && isValidTargetSlot(targetSlot, sourceItemStack, run == 1, false)) {
                     sourceItemStack = this.transfer(sourceItemStack, targetSlot);
                     if (ModUtils.isEmpty(sourceItemStack)) {
@@ -141,6 +202,13 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
 
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
+        if (this.base instanceof ItemStackInventory) {
+            for (IContainerListener crafter : this.listeners) {
+                if (crafter instanceof EntityPlayerMP) {
+                    new PacketUpdateFieldContainerItemStack((ItemStackInventory) this.base, (EntityPlayerMP) crafter);
+                }
+            }
+        }
         if (this.base instanceof TileEntity) {
             for (IContainerListener crafter : this.listeners) {
                 if (crafter instanceof EntityPlayerMP) {
@@ -194,7 +262,5 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         return amount;
     }
 
-    protected List<String> getNetworkedFields() {
-        return new ArrayList<>();
-    }
+
 }

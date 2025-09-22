@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockbeehive_winter",
+    "down" : "industrialupgrade:blocks/blockbeehive_top_winter",
+    "up" : "industrialupgrade:blocks/blockbeehive_top_winter",
+    "north" : "industrialupgrade:blocks/blockbeehive_winter",
+    "east" : "industrialupgrade:blocks/blockbeehive_winter",
+    "south" : "industrialupgrade:blocks/blockbeehive_winter",
+    "west" : "industrialupgrade:blocks/blockbeehive_winter"
+  }
+}

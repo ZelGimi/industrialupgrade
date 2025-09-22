@@ -1,15 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.Localization;
+import com.denfop.api.gui.GuiSlider;
 import com.denfop.network.packet.PacketColorPicker;
-import com.denfop.render.streak.EventSpectralSuitEffect;
 import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.render.streak.RGB;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSlider;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -26,34 +26,34 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
     protected final EntityPlayer player;
     protected final int xSize = 176;
 
-    protected final int ySize = 166;
+    protected final int ySize = 196;
     private final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/Color.png");
     private PlayerStreakInfo colorPicker;
 
     public GuiColorPicker(EntityPlayer player) {
         this.player = player;
-        this.colorPicker = EventSpectralSuitEffect.mapStreakInfo.get(this.player.getName());
+        this.colorPicker = IUCore.mapStreakInfo.get(this.player.getName());
     }
 
     @Override
     public void initGui() {
-        this.colorPicker = EventSpectralSuitEffect.mapStreakInfo.get(this.player.getName());
+        this.colorPicker = IUCore.mapStreakInfo.get(this.player.getName());
         if (this.colorPicker == null) {
-            this.colorPicker = new PlayerStreakInfo(new RGB((short) 0, (short) 0, (short) 0), false);
-            EventSpectralSuitEffect.mapStreakInfo.put(this.player.getName(), colorPicker);
+            this.colorPicker = new PlayerStreakInfo(new RGB((short) 0, (short) 0, (short) 0), false, true, true);
+            IUCore.mapStreakInfo.put(this.player.getName(), colorPicker);
             new PacketColorPicker(colorPicker, this.player.getName());
 
         }
-        this.buttonList.add(new GuiSlider(this, 0, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 65,
+        this.buttonList.add(new GuiSlider(this, 0, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 80,
                 Localization.translate("iu.red"),
                 0, 255, colorPicker.getRgb().getRed(), this
         ));
 
-        this.buttonList.add(new GuiSlider(this, 1, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 95,
+        this.buttonList.add(new GuiSlider(this, 1, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 110,
                 Localization.translate("iu.green"),
                 0, 255, colorPicker.getRgb().getGreen(), this
         ));
-        this.buttonList.add(new GuiSlider(this, 2, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 125,
+        this.buttonList.add(new GuiSlider(this, 2, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 140,
                 Localization.translate("iu.blue"),
                 0, 255, colorPicker.getRgb().getBlue(), this
         ));
@@ -62,7 +62,12 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
         this.buttonList.add(new GuiCheckBox(3, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 155,
                 Localization.translate("iu.rgb"), colorPicker.isRainbow()
         ));
-
+        this.buttonList.add(new GuiCheckBox(4, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 165,
+                Localization.translate("iu.renderstreak"), colorPicker.isRender()
+        ));
+        this.buttonList.add(new GuiCheckBox(5, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 175,
+                Localization.translate("iu.renderstreakplayers"), colorPicker.isRenderPlayer()
+        ));
     }
 
     @Override
@@ -86,9 +91,9 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
             if (this.buttonList.get(i) instanceof GuiSlider) {
                 GuiSlider slider = (GuiSlider) this.buttonList.get(i);
                 name[i] = slider.getSliderValue();
+
             }
         }
-
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -149,8 +154,15 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
             }
             if (guibutton instanceof GuiCheckBox) {
                 GuiCheckBox checkbox = (GuiCheckBox) guibutton;
-                this.colorPicker.setRainbow(checkbox.isChecked());
-
+                if (checkbox.id == 3) {
+                    this.colorPicker.setRainbow(checkbox.isChecked());
+                }
+                if (checkbox.id == 4) {
+                    this.colorPicker.setRender(checkbox.isChecked());
+                }
+                if (checkbox.id == 5) {
+                    this.colorPicker.setRenderPlayer(checkbox.isChecked());
+                }
             }
             new PacketColorPicker(colorPicker, this.player.getName());
 
@@ -178,6 +190,7 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
                 break;
 
         }
+        new PacketColorPicker(colorPicker, this.player.getName());
     }
 
     @Override

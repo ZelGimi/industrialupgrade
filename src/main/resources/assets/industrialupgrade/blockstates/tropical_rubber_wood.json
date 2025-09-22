@@ -1,0 +1,23 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"state": {
+			"plain_y": { "model": "industrialupgrade:tropical_rubber_wood" },
+			"plain_x": { "model": "industrialupgrade:tropical_rubber_wood", "x": 90, "y": 90 },
+			"plain_z": { "model": "industrialupgrade:tropical_rubber_wood", "x": 90 },
+			"dry_north": { "model": "industrialupgrade:tropical_rubber_wood_dry" },
+			"dry_south": { "model": "industrialupgrade:tropical_rubber_wood_dry", "y": 180 },
+			"dry_west": { "model": "industrialupgrade:tropical_rubber_wood_dry", "y": 270 },
+			"dry_east": { "model": "industrialupgrade:tropical_rubber_wood_dry", "y": 90 },
+			"wet_north": { "model": "industrialupgrade:tropical_rubber_wood_wet" },
+			"wet_south": { "model": "industrialupgrade:tropical_rubber_wood_wet", "y": 180 },
+			"wet_west": { "model": "industrialupgrade:tropical_rubber_wood_wet", "y": 270 },
+			"wet_east": { "model": "industrialupgrade:tropical_rubber_wood_wet", "y": 90 }
+		},
+		"inventory": [{}]
+	}
+}
+

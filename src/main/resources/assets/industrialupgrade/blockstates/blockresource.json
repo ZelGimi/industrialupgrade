@@ -14,7 +14,18 @@
 			"uranium_block": { "model": "industrialupgrade:resource/uranium_block" },
 			"reinforced_stone": { "model": "industrialupgrade:resource/reinforced_stone" },
 			"machine": { "model": "industrialupgrade:resource/machine" },
-			"advanced_machine": { "model": "industrialupgrade:resource/advanced_machine" }
+			"peat": { "model": "industrialupgrade:resource/peat" },
+			"cryogen": { "model": "industrialupgrade:resource/cryogen" },
+			"untreated_peat": { "model": "industrialupgrade:resource/untreated_peat" },
+			"steam_machine": { "model": "industrialupgrade:resource/steam_machine" },
+			"basalt_magma": { "model": "industrialupgrade:resource/basalt_magma" },
+			"basalt_pylon": { "model": "industrialupgrade:resource/basalt_pylon" },
+			"basalt_sulfur_ore": { "model": "industrialupgrade:resource/basalt_sulfur_ore" },
+			"basalt_boron_ore": { "model": "industrialupgrade:resource/basalt_boron_ore" },
+			"advanced_machine": { "model": "industrialupgrade:resource/advanced_machine" },
+			"bio_machine": { "model": "industrialupgrade:resource/bio_machine" },
+			"tempered_glass": { "model": "industrialupgrade:resource/tempered_glass" },
+			"asphalt": { "model": "industrialupgrade:resource/asphalt" }
 			
 		},
 		"inventory": [{}]

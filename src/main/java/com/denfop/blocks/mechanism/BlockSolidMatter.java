@@ -41,8 +41,8 @@ public enum BlockSolidMatter implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockSolidMatter(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -57,6 +57,18 @@ public enum BlockSolidMatter implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     public void buildDummies() {
@@ -104,7 +116,7 @@ public enum BlockSolidMatter implements IMultiTileBlock {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override

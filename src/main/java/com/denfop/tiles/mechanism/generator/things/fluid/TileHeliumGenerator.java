@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -9,13 +9,15 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerHeliumGenerator;
 import com.denfop.gui.GuiHeliumGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,33 +33,36 @@ import java.util.Set;
 
 public class TileHeliumGenerator extends TileElectricMachine implements IUpgradableBlock {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     private double lastEnergy;
 
     public TileHeliumGenerator() {
-        super(50000, 14, 1);
+        super(50000, 1, 1);
 
         this.energycost = 1000;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.containerslot = new InvSlotFluidByList(
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.containerslot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
 
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidHelium.getInstance()
         );
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.TypeItemSlot.OUTPUT,
+        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, Inventory.TypeItemSlot.OUTPUT,
                 Fluids.fluidPredicate(FluidName.fluidHelium.getInstance())
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
-
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
     private static int applyModifier(int extra) {
@@ -165,9 +170,7 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
         return EnumSet.of(
 
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidExtract
         );
     }
 

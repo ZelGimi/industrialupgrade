@@ -2,6 +2,7 @@ package com.denfop.items.panel;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.solar.EnumSolarType;
@@ -75,6 +76,9 @@ public class ItemNightSolarPanelGlass extends ItemSubTypes<ItemNightSolarPanelGl
             final ITooltipFlag flagIn
     ) {
         tooltip.add(Localization.translate("iu.minipanel.generating_night") + this.getGenerationValue(stack.getItemDamage()) + " EF/t");
+        tooltip.add(Localization.translate("iu.minipanel.jei"));
+        tooltip.add(Localization.translate("iu.minipanel.jei1") + Localization.translate(new ItemStack(IUItem.basemachine2, 1
+                , 91).getUnlocalizedName()));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 

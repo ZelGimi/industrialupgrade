@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/steam_generator_main",
+    "down" : "industrialupgrade:blocks/steam_generator_side1",
+    "up" : "industrialupgrade:blocks/steam_generator_side1",
+    "north" : "industrialupgrade:blocks/steam_generator_main",
+    "east" : "industrialupgrade:blocks/steam_generator_side",
+    "south" : "industrialupgrade:blocks/steam_generator_side1",
+    "west" : "industrialupgrade:blocks/steam_generator_side"
+  }
+}

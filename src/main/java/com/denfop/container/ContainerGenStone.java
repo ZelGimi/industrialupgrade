@@ -17,7 +17,7 @@ public class ContainerGenStone extends ContainerFullInv<TileBaseGenStone> {
         super(entityPlayer, tileEntity1, height);
         if (tileEntity1.inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA, 1,
-                    38, 10
+                    38, 22
             ));
         }
 
@@ -29,14 +29,14 @@ public class ContainerGenStone extends ContainerFullInv<TileBaseGenStone> {
         if (tileEntity1.outputSlot != null) {
             for (int i = 0; i < tileEntity1.outputSlot.size(); i++) {
                 int count = i / 3;
-                addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, i, 90 + (i - (3 * count)) * 18, 8 + count * 18));
+                addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, i, 90 + (i - (3 * count)) * 18, 9 + count * 18));
 
 
             }
         }
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                    i, upgradeX, upgradeY + i * 18
+                    i, upgradeX, upgradeY + i * 18 + 1
             ));
         }
     }

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/autofuse_left-right-back-front",
+    "down" : "industrialupgrade:blocks/autofuse_bottom",
+    "up" : "industrialupgrade:blocks/autofuse_top",
+    "north" : "industrialupgrade:blocks/autofuse_left-right-back-front",
+    "east" : "industrialupgrade:blocks/autofuse_left-right-back-front",
+    "south" : "industrialupgrade:blocks/autofuse_left-right-back-front",
+    "west" : "industrialupgrade:blocks/autofuse_left-right-back-front"
+  }
+}

@@ -36,6 +36,7 @@ public class MultiMachineAdapter extends AbstractManagedEnvironment implements M
 
         switch (method) {
             case "getProgressFromIndex":
+
                 if (args.isInteger(0)) {
                     return new Object[]{multiMachine.multi_process.getProgress(args.checkInteger(0))};
                 }

@@ -3,7 +3,7 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockhydgen_bottom",
     "down" : "industrialupgrade:blocks/blockhydgen_bottom",
-    "up" : "industrialupgrade:blocks/blockhydgen_top_active",
+    "up" : "industrialupgrade:blocks/blockhydgen_bottom",
     "north" : "industrialupgrade:blocks/blockhydgen_main_active",
     "east" : "industrialupgrade:blocks/blockhydgen_main_active",
     "south" : "industrialupgrade:blocks/blockhydgen_main_active",

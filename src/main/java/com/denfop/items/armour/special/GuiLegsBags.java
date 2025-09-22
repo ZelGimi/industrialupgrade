@@ -1,14 +1,19 @@
 package com.denfop.items.armour.special;
 
 import com.denfop.Constants;
-import com.denfop.gui.GuiCore;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
+import com.denfop.gui.GuiIU;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiLegsBags extends GuiCore<ContainerLegsBags> {
+public class GuiLegsBags extends GuiIU<ContainerLegsBags> {
 
     private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png");
     private final String name;
@@ -18,6 +23,13 @@ public class GuiLegsBags extends GuiCore<ContainerLegsBags> {
 
         this.name = itemStack1.getDisplayName();
         this.ySize = 232;
+        this.componentList.clear();
+        this.slots = new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
+        );
+
+        componentList.add(slots);
+        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
     }
 
     protected void drawForegroundLayer(int par1, int par2) {

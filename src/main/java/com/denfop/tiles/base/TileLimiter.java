@@ -8,10 +8,10 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.gui.GuiBlockLimiter;
-import com.denfop.invslot.InvSlotLimiter;
+import com.denfop.invslot.InventoryLimiter;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -33,15 +33,15 @@ import java.util.stream.Collectors;
 
 public class TileLimiter extends TileEntityInventory implements IUpdatableTileEvent, IAudioFixer {
 
-    private final AdvEnergy energy;
+    private final Energy energy;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio;
     public boolean sound = true;
-    public InvSlotLimiter slot;
+    public InventoryLimiter slot;
     public double max_value;
 
     public TileLimiter() {
-        this.energy = this.addComponent(new AdvEnergy(
+        this.energy = this.addComponent(new Energy(
                 this,
                 Double.MAX_VALUE,
                 Arrays
@@ -54,7 +54,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
                 false
         ));
         this.energy.setLimit(true);
-        this.slot = new InvSlotLimiter(this);
+        this.slot = new InventoryLimiter(this);
         valuesAudio = EnumTypeAudio.values();
     }
 
@@ -88,7 +88,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
         return IUItem.basemachine2;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -107,7 +107,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -180,7 +180,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
         this.max_value = nbtTagCompound.getDouble("max_value");
     }
 
-    public AdvEnergy getEnergy() {
+    public Energy getEnergy() {
         return energy;
     }
 

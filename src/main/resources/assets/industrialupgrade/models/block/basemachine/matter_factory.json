@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/matter_factory_main",
+    "down" : "industrialupgrade:blocks/matter_factory_all",
+    "up" : "industrialupgrade:blocks/matter_factory_up",
+    "north" : "industrialupgrade:blocks/matter_factory_main",
+    "east" : "industrialupgrade:blocks/matter_factory_all",
+    "south" : "industrialupgrade:blocks/matter_factory_all",
+    "west" : "industrialupgrade:blocks/matter_factory_all"
+  }
+}

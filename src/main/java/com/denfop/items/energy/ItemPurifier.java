@@ -65,6 +65,10 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.PURIFIER.list;
+    }
+
     public int getItemEnchantability() {
         return 0;
     }
@@ -159,6 +163,8 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                 ItemStack stack_modulesize = ItemStack.EMPTY;
                 ItemStack stack_modulestorage = ItemStack.EMPTY;
                 ItemStack panel = ItemStack.EMPTY;
+                ItemStack module_infinity_water = ItemStack.EMPTY;
+                ItemStack module_separate = ItemStack.EMPTY;
                 if (base.multi_process.quickly) {
                     stack_quickly = new ItemStack(IUItem.module_quickly);
                 }
@@ -168,10 +174,16 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                 if (base.multi_process.modulestorage) {
                     stack_modulestorage = new ItemStack(IUItem.module_storage);
                 }
+                if (base.multi_process.modulestorage) {
+                    module_infinity_water = new ItemStack(IUItem.module_infinity_water);
+                }
+                if (base.multi_process.module_separate) {
+                    module_separate = new ItemStack(IUItem.module_separate);
+                }
                 if (base.solartype != null) {
                     panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
                 }
-                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
+                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                     final EntityItem item = new EntityItem(world);
                     if (!stack_quickly.isEmpty()) {
                         item.setItem(stack_quickly);
@@ -180,6 +192,14 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                     } else if (!stack_modulesize.isEmpty()) {
                         item.setItem(stack_modulesize);
                         base.multi_process.setModulesize(false);
+                        base.multi_process.shrinkModule(1);
+                    } else if (!module_infinity_water.isEmpty()) {
+                        item.setItem(module_infinity_water);
+                        base.multi_process.module_infinity_water = false;
+                        base.multi_process.shrinkModule(1);
+                    } else if (!module_separate.isEmpty()) {
+                        item.setItem(module_separate);
+                        base.multi_process.module_separate = false;
                         base.multi_process.shrinkModule(1);
                     } else if (!panel.isEmpty()) {
                         item.setItem(panel);
@@ -224,6 +244,18 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                     base.multi_process.shrinkModule(1);
 
                 }
+                if (base.multi_process.module_infinity_water) {
+                    stack_list.add(new ItemStack(IUItem.module_infinity_water));
+                    base.multi_process.module_infinity_water = false;
+                    base.multi_process.shrinkModule(1);
+
+                }
+                if (base.multi_process.module_separate) {
+                    stack_list.add(new ItemStack(IUItem.module_separate));
+                    base.multi_process.module_separate = false;
+                    base.multi_process.shrinkModule(1);
+
+                }
                 for (ItemStack stack : stack_list) {
                     final EntityItem item = new EntityItem(world);
                     if (!player.getEntityWorld().isRemote) {
@@ -231,10 +263,11 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                         item.setPickupDelay(0);
                         item.setItem(stack);
                         world.spawnEntity(item);
-                        if (IUCore.proxy.isRendering()) {
-                            player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
 
-                        }
+
+                    }
+                    if (IUCore.proxy.isRendering()) {
+                        player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
 
                     }
                 }

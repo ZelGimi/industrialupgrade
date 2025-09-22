@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiElementItemFluid extends GuiElement<GuiElementFluidToFluids> {
+public class GuiElementItemFluid extends GuiElement {
 
 
     private BaseMachineRecipe recipe;

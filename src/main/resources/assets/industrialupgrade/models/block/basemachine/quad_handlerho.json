@@ -3,10 +3,10 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockperhandlerho_bottom",
     "down" : "industrialupgrade:blocks/blockperhandlerho_bottom",
-    "up" : "industrialupgrade:blocks/blockperhandlerho_bottom",
+    "up" : "industrialupgrade:blocks/blockperhandlerho_top",
     "north" : "industrialupgrade:blocks/blockperhandlerho_main",
     "east" : "industrialupgrade:blocks/blockperhandlerho_side",
-    "south" : "industrialupgrade:blocks/blockperhandlerho_side2",
+    "south" : "industrialupgrade:blocks/blockperhandlerho_bottom",
     "west" : "industrialupgrade:blocks/blockperhandlerho_side"
   }
 }

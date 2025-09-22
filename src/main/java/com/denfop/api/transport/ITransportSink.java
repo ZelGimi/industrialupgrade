@@ -7,18 +7,14 @@ import java.util.List;
 
 public interface ITransportSink<T, E> extends ITransportAcceptor<T, E> {
 
-    List<Integer> getDemanded();
+    List<Integer> getDemanded(EnumFacing facing);
 
     boolean isSink();
 
-    List<T> getItemStackFromFacing(EnumFacing facing);
+    List<Integer> getEnergyTickList();
 
-    boolean canAccept(EnumFacing facing);
+    boolean isItemSink();
 
-    void removeFacing(EnumFacing facing);
-
-    boolean canAdd(EnumFacing facing);
-
-    List<EnumFacing> getFacingList();
+    boolean isFluidSink();
 
 }

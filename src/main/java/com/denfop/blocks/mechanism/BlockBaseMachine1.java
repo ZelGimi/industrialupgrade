@@ -49,8 +49,8 @@ public enum BlockBaseMachine1 implements IMultiTileBlock, IMultiBlockItem {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockBaseMachine1(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -65,6 +65,18 @@ public enum BlockBaseMachine1 implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
@@ -122,7 +134,7 @@ public enum BlockBaseMachine1 implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0F;
     }
 
     @Override

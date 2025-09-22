@@ -2,11 +2,12 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityMatterGenerator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 
 public class ContainerSolidMatter extends ContainerFullInv<TileEntityMatterGenerator> {
 
     public ContainerSolidMatter(EntityPlayer entityPlayer, TileEntityMatterGenerator tileEntity1) {
-        this(entityPlayer, tileEntity1, 166, 152, 8);
+        this(entityPlayer, tileEntity1, 167, 152, 8);
     }
 
     public ContainerSolidMatter(
@@ -16,16 +17,35 @@ public class ContainerSolidMatter extends ContainerFullInv<TileEntityMatterGener
             int upgradeX,
             int upgradeY
     ) {
-        super(entityPlayer, tileEntity1, height);
+        super(null, tileEntity1, height);
         if (tileEntity1.outputSlot != null) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot,
-                    0, 69, 32
+                    0, 80, 26
             ));
         }
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                    i, upgradeX, upgradeY + i * 18
+                    i, upgradeX, upgradeY + i * 18 + 1
             ));
+        }
+        final int width = 178;
+        height = 167;
+        int xStart = (width - 162) / 2;
+
+        int col;
+        for (col = 0; col < 3; ++col) {
+            for (int col1 = 0; col1 < 9; ++col1) {
+                this.addSlotToContainer(new Slot(
+                        entityPlayer.inventory,
+                        col1 + col * 9 + 9,
+                        xStart + col1 * 18,
+                        height + -82 + col * 18
+                ));
+            }
+        }
+
+        for (col = 0; col < 9; ++col) {
+            this.addSlotToContainer(new Slot(entityPlayer.inventory, col, xStart + col * 18, -1 + height + -24));
         }
     }
 

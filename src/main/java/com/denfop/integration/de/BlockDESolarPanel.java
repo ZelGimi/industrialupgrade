@@ -32,8 +32,8 @@ public enum BlockDESolarPanel implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockDESolarPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
@@ -48,6 +48,18 @@ public enum BlockDESolarPanel implements IMultiTileBlock {
     public static BlockDESolarPanel getFromID(final int ID) {
         return values()[ID % values().length];
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();

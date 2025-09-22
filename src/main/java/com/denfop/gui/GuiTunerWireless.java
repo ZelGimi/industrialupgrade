@@ -2,8 +2,8 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerTunerWireless;
-import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,20 +13,20 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiTunerWireless extends GuiCore<ContainerTunerWireless> {
+public class GuiTunerWireless extends GuiIU<ContainerTunerWireless> {
 
     public final ContainerTunerWireless container;
 
     public GuiTunerWireless(ContainerTunerWireless container1) {
         super(container1);
         this.container = container1;
+        this.addElement(new CustomButton(this, 103, 21, 68, 17, container1.base, 0, Localization.translate("button.rf")));
+
     }
 
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 21,
-                68, 17, Localization.translate("button.rf")
-        ));
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -38,14 +38,11 @@ public class GuiTunerWireless extends GuiCore<ContainerTunerWireless> {
 
     protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
-        if (guibutton.id == 0) {
-            new PacketUpdateServerTile(this.container.base, 0);
 
-        }
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiTunerWireless.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

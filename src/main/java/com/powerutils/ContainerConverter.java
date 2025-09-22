@@ -10,10 +10,10 @@ public class ContainerConverter extends ContainerFullInv<TileConverter> {
     public final EntityPlayer entityPlayer;
 
     public ContainerConverter(EntityPlayer entityPlayer, TileConverter tileEntity) {
-        super(entityPlayer, tileEntity, 176);
+        super(entityPlayer, tileEntity, 176,183);
         this.entityPlayer = entityPlayer;
         for (int k = 0; k < 4; k++) {
-            addSlotToContainer(new SlotInvSlot(tileEntity.upgradeSlot, k, 152, 17 + k * 18));
+            addSlotToContainer(new SlotInvSlot(tileEntity.upgradeSlot, k, 151, 19 + k * 18));
         }
     }
 

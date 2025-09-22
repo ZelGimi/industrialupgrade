@@ -1,19 +1,20 @@
 package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerWaterGenerator;
 import com.denfop.gui.GuiWaterGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,32 +31,35 @@ import java.util.Set;
 
 public class TileWaterGenerator extends TileElectricMachine implements IUpgradableBlock {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
     private double lastEnergy;
 
     public TileWaterGenerator() {
-        super(10000, 14, 1);
+        super(10000, 1, 1);
 
         this.energycost = 40;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.containerslot = new InvSlotFluidByList(
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.containerslot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidRegistry.WATER
         );
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.TypeItemSlot.OUTPUT,
+        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, Inventory.TypeItemSlot.OUTPUT,
                 Fluids.fluidPredicate(FluidRegistry.WATER)
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.25));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+
     }
 
     private static int applyModifier(int extra) {
@@ -160,9 +164,7 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidExtract
         );
     }
 

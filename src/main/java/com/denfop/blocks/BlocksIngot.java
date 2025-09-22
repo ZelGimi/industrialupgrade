@@ -36,7 +36,7 @@ public class BlocksIngot extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("baseblockingot");
         setCreativeTab(IUCore.RecourseTab);
-        setHardness(3.0F);
+        setHardness(1.0F);
         setResistance(5.0F);
         setSoundType(SoundType.METAL);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.titanium));

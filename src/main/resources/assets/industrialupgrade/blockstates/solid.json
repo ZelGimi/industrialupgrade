@@ -25,6 +25,30 @@
       },
       "sun_solidmatter" : {
         "model" : "industrialupgrade:solid/sun_solidmatter"
+      },
+	  "aer_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/aer_solidmatter_active"
+      },
+      "aqua_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/aqua_solidmatter_active"
+      },
+      "earth_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/earth_solidmatter_active"
+      },
+      "end_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/end_solidmatter_active"
+      },
+      "solidmatter_active" : {
+        "model" : "industrialupgrade:solid/solidmatter_active"
+      },
+      "nether_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/nether_solidmatter_active"
+      },
+      "night_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/night_solidmatter_active"
+      },
+      "sun_solidmatter_active" : {
+        "model" : "industrialupgrade:solid/sun_solidmatter_active"
       }
     },
     "facing" : {

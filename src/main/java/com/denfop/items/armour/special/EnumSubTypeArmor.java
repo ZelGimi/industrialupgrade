@@ -12,7 +12,7 @@ public enum EnumSubTypeArmor {
             EnumCapability.NIGHT_VISION_WITHOUT,
             EnumCapability.ACTIVE_EFFECT,
             EnumCapability.FOOD,
-            EnumCapability.ALL_ACTIVE_EFFECT,EnumCapability.NIGHT_VISION_AUTO
+            EnumCapability.ALL_ACTIVE_EFFECT, EnumCapability.NIGHT_VISION_AUTO
     ),
     CHESTPLATE(
             EntityEquipmentSlot.CHEST,

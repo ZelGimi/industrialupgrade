@@ -3,12 +3,18 @@ package com.denfop;
 import com.denfop.api.Recipes;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.guidebook.GuideBookCore;
 import com.denfop.api.heat.HeatNet;
+import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pressure.PressureNet;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeInputStack;
 import com.denfop.api.recipe.RecipesCore;
+import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.tesseract.TesseractSystem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.upgrade.BaseUpgradeSystem;
@@ -21,15 +27,21 @@ import com.denfop.blocks.BlockIUFluid;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
+import com.denfop.events.WorldSavedDataIU;
 import com.denfop.heat.HeatNetGlobal;
+import com.denfop.integration.crafttweaker.CTVein;
 import com.denfop.items.energy.EntityAdvArrow;
 import com.denfop.items.energy.ItemNanoSaber;
 import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.modules.EnumModule;
+import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
+import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
+import com.denfop.network.packet.PacketUpdateRelocator;
+import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.render.streak.PlayerStreakInfo;
@@ -39,17 +51,26 @@ import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.Keys;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
+import com.denfop.world.WorldBaseGen;
+import com.denfop.world.vein.VeinType;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -57,10 +78,12 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -74,10 +97,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
@@ -94,11 +117,18 @@ public final class IUCore {
     public static final CreativeTabs UpgradeTab = new TabCore(7, "UpgradeTab");
     public static final CreativeTabs BlueprintTab = new TabCore(8, "BlueprintTab");
     public static final CreativeTabs ElementsTab = new TabCore(9, "CraftingElementsTab");
-
+    public static final CreativeTabs ReactorsBlockTab = new TabCore(10, "ReactorsBlockTab");
+    public static final CreativeTabs FluidBlockTab = new TabCore(11, "FluidBlockTab");
+    public static final CreativeTabs CropsTab = new TabCore(12, "CropsTab");
+    public static final CreativeTabs BeesTab = new TabCore(13, "BeesTab");
+    public static final CreativeTabs GenomeTab = new TabCore(14, "GenomeTab");
+    public static final CreativeTabs SpaceTab = new TabCore(15, "SpaceTab");
     public static final List<IMultiTileBlock> list_teBlocks = new ArrayList<>();
     public static final Map<Integer, EnumModule> modules = new HashMap<>();
     public static final List<ItemStack> list = new ArrayList<>();
     public static final List<ItemStack> get_ore = new ArrayList<>();
+    public static final List<ItemStack> get_polisher = new ArrayList<>();
+    public static final List<ItemStack> get_separator = new ArrayList<>();
     public static final List<ItemStack> get_ingot = new ArrayList<>();
     public static final List<ItemStack> get_crushed = new ArrayList<>();
     public static final List<ItemStack> get_comb_crushed = new ArrayList<>();
@@ -108,6 +138,7 @@ public final class IUCore {
     public static final List<ItemStack> list_removing = new ArrayList<>();
     public static final List<ItemStack> list_furnace_adding = new ArrayList<>();
     public static final List<ItemStack> list_furnace_removing = new ArrayList<>();
+    public static final ResourceLocation VOLCANO_LOOT_TABLE = new ResourceLocation(Constants.MOD_ID, "chests/volcano");
 
     public static final List<ItemStack> list_crushed_adding = new ArrayList<>();
     public static final List<ItemStack> list_crushed_removing = new ArrayList<>();
@@ -119,6 +150,8 @@ public final class IUCore {
     public static final List<QuarryItem> get_ingot_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_crushed_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_comb_crushed_quarry = new ArrayList<>();
+    public static final List<QuarryItem> get_polisher_quarry = new ArrayList<>();
+    public static final List<QuarryItem> get_separator_quarry = new ArrayList<>();
     public static final List<List<ItemStack>> removing_list = new ArrayList<>();
     public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
 
@@ -159,7 +192,6 @@ public final class IUCore {
         return !FMLCommonHandler.instance().getEffectiveSide().isClient();
     }
 
-
     public static ResourceLocation getIdentifier(final String name) {
         return new ResourceLocation(Constants.MOD_ID, name);
     }
@@ -169,12 +201,16 @@ public final class IUCore {
 
         HeatNet.instance = HeatNetGlobal.initialize();
         CoolNet.instance = CoolNetGlobal.initialize();
+        PressureNet.instance = PressureNetGlobal.initialize();
+
         EnergyBase.init();
         TransportNetGlobal.initialize();
         new VeinSystem();
+        new GasVeinSystem();
         new RadiationSystem();
         new WindSystem();
-
+        TesseractSystem.init();
+        PollutionManager.pollutionManager = new PollutionManager();
     }
 
     public static boolean isHasVersion(String modid, String version) {
@@ -193,12 +229,52 @@ public final class IUCore {
 
     @SubscribeEvent
     public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-        if (proxy.isRendering()) {
-            Sounds.registerSounds(event.getRegistry());
-        }
+        Sounds.registerSounds(event.getRegistry());
 
     }
 
+    @SubscribeEvent
+    public void onGenerateMinable(OreGenEvent.GenerateMinable event) {
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.IRON) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.COAL) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.GOLD) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.LAPIS) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.REDSTONE) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.DIAMOND) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.EMERALD) {
+            event.setResult(Event.Result.DENY);
+        }
+
+    }
+    @SubscribeEvent
+    public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player.getEntityWorld().isRemote) {
+            return;
+        }
+
+        if (!GuideBookCore.uuidGuideMap.containsKey(event.player.getUniqueID())){
+            GuideBookCore.instance.load(event.player.getUniqueID(),event.player);
+            event.player.addItemStackToInventory(new ItemStack(IUItem.book));
+            event.player.addItemStackToInventory(new ItemStack(IUItem.veinsencor));
+        }else{
+            GuideBookCore.instance.loadOrThrow(event.player.getUniqueID());
+            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.player.getUniqueID()),event.player);
+        }
+
+        new PacketUpdateRelocator(event.player);
+    }
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (IUCore.proxy.isSimulating()) {
@@ -209,11 +285,9 @@ public final class IUCore {
 
     @Mod.EventHandler
     public void load(final FMLPreInitializationEvent event) {
-        if (Loader.isModLoaded("ic2")) {
-            throw new RuntimeException("Uninstall Industrial Craft 2. Industrial Upgrade can't run through the big problem in " +
-                    "that mod. Industrial Upgrade is much better than the old version of Industrial Craft 2");
-        }
+
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.ORE_GEN_BUS.register(this);
         ModUtils.log = event.getModLog();
         IUCore.log = event.getModLog();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
@@ -226,12 +300,14 @@ public final class IUCore {
         Recipes.recipes = new RecipesCore();
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
 
-
         Keys.instance = IUCore.keyboard;
+        RelocatorNetwork.init();
         IUPotion.radiation = new IUPotion("radiation", true, 5149489, new ItemStack[0]);
+        IUPotion.frostbite = new IUPotion("frostbite", true, 5149489, new ItemStack[0]);
+        IUPotion.poison_gas = new IUPotion("poison_gas", true, 5149489, new ItemStack[0]);
         proxy.preInit(event);
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
-
+        LootTableList.register(VOLCANO_LOOT_TABLE);
 
     }
 
@@ -323,8 +399,44 @@ public final class IUCore {
     }
 
     @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
+            if (!world.isRemote && world.provider.getDimension() == 0) {
+                EventHandlerPlanet.data = (WorldSavedDataIU) world.loadData(WorldSavedDataIU.class, Constants.MOD_ID);
+                if (EventHandlerPlanet.data == null) {
+                    EventHandlerPlanet.data = new WorldSavedDataIU();
+                    EventHandlerPlanet.data.setWorld(world);
+                    world.setData(Constants.MOD_ID, EventHandlerPlanet.data);
+                }
+            }
+        }
+    }
+    int tickCounter = 0;
+
+
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        if (FMLCommonHandler
+                .instance()
+                .getEffectiveSide() == Side.SERVER && EventHandlerPlanet.data != null) {
+            EventHandlerPlanet.data.setDirty(true);
+        }
+    }
+
+    @Mod.EventHandler
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
+        for (Map.Entry<String, VeinType> entry : CTVein.veinTypeMap.entrySet()) {
+            if (entry.getValue() != null) {
+                WorldBaseGen.veinTypes.add(entry.getValue());
+            }
+        }
+        final Iterator<Block> iter = CTVein.veinList.iterator();
+        while (iter.hasNext()) {
+            Block block = iter.next();
+            WorldBaseGen.remove(block);
+        }
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
         addInList1(new ItemStack(Items.DIAMOND));
         addInList1(new ItemStack(Items.EMERALD));
@@ -357,6 +469,9 @@ public final class IUCore {
         removeOre("oreEndEmerald");
         removeOre("oreEndDiamond");
         removeOre("oreEndGold");
+        for (String s : RegisterOreDictionary.list_mineral) {
+            removeOre("ore" + s);
+        }
         removeOre("oreEndIron");
         removeOre("oreNetherGold");
         removeOre("oreNetherIron");
@@ -384,9 +499,22 @@ public final class IUCore {
         removeOre("gemNeptunium");
         removeOre("gemCurium");
         removeOre("gemThorium");
+        removeOre("gemBor");
+        removeOre("gemCrystalFlux");
+        removeOre("gemBeryllium");
         for (String name : RegisterOreDictionary.list_heavyore) {
             removeOre("ore" + name);
         }
+        for (String name : RegisterOreDictionary.spaceElementList) {
+            removeOre("ore" + name);
+        }
+        removeOre("oreSulfur");
+        removeOre("oreBoron");
+        removeOre("oreLithium");
+        removeOre("oreClathrateEnder");
+        removeOre("oreClathrateGlowstone");
+        removeOre("oreClathrateRedstone");
+        removeOre("oreCalcium");
         removeOre("oreDraconium");
         removeOre("oreClathrateOilShale");
         removeOre("oreClathrateOilSand");
@@ -416,6 +544,29 @@ public final class IUCore {
             } else {
                 this.get_ingot.add(stack);
             }
+        }
+        get_polisher.clear();
+        final List<BaseMachineRecipe> recipes = Recipes.recipes.getRecipeList("laser");
+        for (ItemStack stack : IUCore.list) {
+            BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("laser", false, stack);
+            if (recipe != null) {
+                this.get_polisher.add(recipe.getOutput().items.get(0));
+            } else {
+                boolean can = true;
+                for (BaseMachineRecipe recipe1 : recipes) {
+                    if (recipe1.getOutput().items.get(0).isItemEqual(stack)) {
+                        final ItemStack stack1 = stack.copy();
+                        stack1.setCount(recipe1.getOutput().items.get(0).getCount());
+                        this.get_polisher.add(stack1);
+                        can = false;
+                        break;
+                    }
+                }
+                if (can) {
+                    this.get_polisher.add(stack);
+                }
+            }
+
         }
 
         IUCore.list_adding.forEach(stack -> addOre1(stack));
@@ -453,6 +604,13 @@ public final class IUCore {
                         get_crushed_quarry.add(new QuarryItem(stack));
             }
         });
+        IUCore.get_polisher.forEach(stack -> {
+            if (!stack.isEmpty()) {
+                this.
+                        get_polisher_quarry.add(new QuarryItem(stack));
+            }
+        });
+
         IUCore.list.forEach(stack -> {
             if (!stack.isEmpty()) {
                 this.
@@ -471,26 +629,8 @@ public final class IUCore {
                         get_comb_crushed_quarry.add(new QuarryItem(stack));
             }
         });
-        fish_rodding.add(new ItemStack(Items.FISH));
-        fish_rodding.add(new ItemStack(Items.FISH, 1, 1));
-        fish_rodding.add(new ItemStack(Items.FISH, 1, 2));
-        fish_rodding.add(new ItemStack(Items.FISH, 1, 3));
-        fish_rodding.add(new ItemStack(Items.BONE));
-        fish_rodding.add(new ItemStack(Items.ENCHANTED_BOOK));
-        fish_rodding.add(new ItemStack(Items.POTIONITEM));
-        fish_rodding.add(new ItemStack(Items.LEATHER_BOOTS));
-        fish_rodding.add(new ItemStack(Items.BOW));
-        fish_rodding.add(new ItemStack(Items.SADDLE));
-        fish_rodding.add(new ItemStack(Items.FISHING_ROD));
-        fish_rodding.add(new ItemStack(Blocks.WATERLILY));
-        fish_rodding.add(new ItemStack(Blocks.TRIPWIRE_HOOK));
-        fish_rodding.add(new ItemStack(Items.NAME_TAG));
-        fish_rodding.add(new ItemStack(Items.STICK));
-        fish_rodding.add(new ItemStack(Items.BOWL));
-        fish_rodding.add(new ItemStack(Items.ROTTEN_FLESH));
-        fish_rodding.add(new ItemStack(Items.STRING));
-        fish_rodding.add(new ItemStack(Items.LEATHER));
-        fish_rodding.add(new ItemStack(Items.DYE));
+        new GuideBookCore();
+        GuideBookCore.init();
     }
 
 
@@ -512,6 +652,15 @@ public final class IUCore {
             ++ItemSpectralSaber.ticker;
             ++ItemNanoSaber.ticker;
         }
+        if (event.phase == TickEvent.Phase.END && FMLCommonHandler
+                .instance()
+                .getEffectiveSide() == Side.SERVER &&  EventHandlerPlanet.data != null) {
+            tickCounter++;
+            if (tickCounter >= 6000) {
+                tickCounter = 0;
+                EventHandlerPlanet.data.setDirty(true);
+            }
+        }
 
     }
 
@@ -528,7 +677,9 @@ public final class IUCore {
             ++ListInformationUtils.tick;
             if (ListInformationUtils.tick % 40 == 0) {
                 ListInformationUtils.index = (ListInformationUtils.index + 1) % ListInformationUtils.mechanism_info.size();
-                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1.size();
+                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1
+                        .values()
+                        .size();
                 ListInformationUtils.index2 = (ListInformationUtils.index2 + 1) % ListInformationUtils.mechanism_info2.size();
 
             }
@@ -536,14 +687,6 @@ public final class IUCore {
 
     }
 
-    @Mod.EventHandler
-    public void init(final FMLFingerprintViolationEvent event) {
-        java.util.logging.Logger.getLogger(this.getClass().getName()).log(
-                Level.SEVERE,
-                "Invalid fingerprint detected! The file " + event.getSource().getName() +
-                        " may have been tampered with. This version will NOT be supported by the author!"
-        );
-    }
 
     public void addOre(String name) {
         if (OreDictionary.getOres(name).size() >= 1) {

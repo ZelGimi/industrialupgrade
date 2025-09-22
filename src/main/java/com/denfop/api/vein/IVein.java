@@ -10,6 +10,8 @@ public interface IVein {
 
     void setMeta(int meta);
 
+    boolean isOldMineral();
+
     Type getType();
 
     void setType(Type type);
@@ -32,7 +34,6 @@ public interface IVein {
 
     CustomPacketBuffer writePacket();
 
-    boolean equals(Object o);
 
     boolean get();
 

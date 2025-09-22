@@ -3,14 +3,20 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBaseDoubleMolecular;
 import com.denfop.gui.GuiDoubleMolecularTransformer;
 import com.denfop.network.DecoderHandler;
@@ -20,7 +26,10 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -56,13 +65,17 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     public int operationLength;
     public boolean need_put_check = false;
     public int operationsPerTick;
-    public InvSlotRecipes inputSlot;
+    public InventoryRecipes inputSlot;
     public double perenergy;
     public double differenceenergy;
     protected double progress;
     protected double guiProgress;
     protected int size_recipe = 0;
     protected ItemStack output_stack;
+    @SideOnly(Side.CLIENT)
+    private IBakedModel bakedModel;
+    @SideOnly(Side.CLIENT)
+    private IBakedModel transformedModel;
 
     public TileDoubleMolecular() {
         super(0, 14, 1);
@@ -70,7 +83,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         this.time = new ArrayList<>();
         this.queue = false;
         this.redstoneMode = 0;
-        this.inputSlot = new InvSlotRecipes(this, "doublemolecular", this) {
+        this.inputSlot = new InventoryRecipes(this, "doublemolecular", this) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -120,7 +133,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 }
             }
         };
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
         this.output = null;
         this.need = false;
         Recipes.recipes.addInitRecipes(this);
@@ -162,6 +175,12 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     @Override
     public TileEntityBlock getEntityBlock() {
         return this;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IBakedModel getBakedModel() {
+        return bakedModel;
     }
 
     public void init() {
@@ -536,10 +555,11 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 new ItemStack(IUItem.upgrademodule, 1, 39),
                 1500000
         );
+
     }
 
     public ItemStack getBlockStack(IMultiTileBlock block) {
-        return TileBlockCreator.instance.get(block.getIdentifier()).getItemStack(block);
+        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack(block);
     }
 
     @Override
@@ -566,7 +586,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         final CustomPacketBuffer packet = super.writePacket();
         try {
             EncoderHandler.encode(packet, redstoneMode);
-            EncoderHandler.encode(packet, energy,false);
+            EncoderHandler.encode(packet, energy, false);
             EncoderHandler.encode(packet, output_stack);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -580,6 +600,17 @@ public class TileDoubleMolecular extends TileElectricMachine implements
             redstoneMode = (byte) DecoderHandler.decode(customPacketBuffer);
             energy.onNetworkUpdate(customPacketBuffer);
             output_stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+
+            this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                    output_stack,
+                    this.getWorld(),
+                    null
+            );
+            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                    this.bakedModel,
+                    ItemCameraTransforms.TransformType.GROUND,
+                    false
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -589,7 +620,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
-            progress = (double) DecoderHandler.decode(customPacketBuffer);
+            guiProgress = (double) DecoderHandler.decode(customPacketBuffer);
             queue = (boolean) DecoderHandler.decode(customPacketBuffer);
             redstoneMode = (byte) DecoderHandler.decode(customPacketBuffer);
             perenergy = (double) DecoderHandler.decode(customPacketBuffer);
@@ -673,6 +704,13 @@ public class TileDoubleMolecular extends TileElectricMachine implements
             }
             new PacketUpdateFieldTile(this, "redstoneMode", this.redstoneMode);
         }
+        if (event == -1) {
+            this.redstoneMode = (byte) (this.redstoneMode - 1);
+            if (this.redstoneMode < 0) {
+                this.redstoneMode = 7;
+            }
+            new PacketUpdateFieldTile(this, "redstoneMode", this.redstoneMode);
+        }
         if (event == 1) {
             this.queue = !this.queue;
             if (this.need) {
@@ -692,7 +730,32 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 throw new RuntimeException(e);
             }
         }
+        if (name.equals("output")) {
+            try {
+                this.output_stack = (ItemStack) DecoderHandler.decode(is);
+                if (!output_stack.isEmpty()) {
+                    this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                            output_stack,
+                            this.getWorld(),
+                            null
+                    );
+                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                            this.bakedModel,
+                            ItemCameraTransforms.TransformType.GROUND,
+                            false
+                    );
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         super.updateField(name, is);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IBakedModel getTransformedModel() {
+        return transformedModel;
     }
 
     public void markDirty() {
@@ -778,7 +841,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     public void operateOnce(List<ItemStack> processResult) {
         if (this.outputSlot.canAdd(processResult)) {
             this.inputSlot.consume();
-            this.outputSlot.add(processResult);
+            this.outputSlot.addAll(processResult);
         }
     }
 
@@ -786,7 +849,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         for (int i = 0; i < size; i++) {
             if (this.outputSlot.canAdd(processResult)) {
                 this.inputSlot.consume();
-                this.outputSlot.add(processResult);
+                this.outputSlot.addAll(processResult);
             }
         }
     }
@@ -874,7 +937,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
 
                 this.progress = this.energy.getEnergy();
                 double k = this.progress;
-                this.guiProgress = (k / this.energy.getCapacity());
+                this.guiProgress = (Math.ceil(k) / this.energy.getCapacity());
                 if (this.energy.getEnergy() >= this.energy.getCapacity()) {
                     operate(output);
 
@@ -1018,6 +1081,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
             output_stack = new ItemStack(Items.AIR);
         }
 
+        new PacketUpdateFieldTile(this, "output", this.output_stack);
         this.setOverclockRates();
 
     }

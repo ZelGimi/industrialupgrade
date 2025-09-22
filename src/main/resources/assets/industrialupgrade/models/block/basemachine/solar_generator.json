@@ -1,8 +1,8 @@
 {
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"side": "industrialupgrade:blocks/solar_generator_sides",
-		"bottom": "industrialupgrade:blocks/solar_generator_bottom",
-		"top": "industrialupgrade:blocks/solar_generator_top"
-	}
+  "parent" : "industrialupgrade:block/solar_side",
+  "textures" : {
+    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:blocks/solar_panels/basic/glass",
+    "side" : "industrialupgrade:blocks/solar_panels/basic/side"
+  }
 }

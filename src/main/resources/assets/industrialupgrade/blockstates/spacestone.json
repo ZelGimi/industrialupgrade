@@ -1,0 +1,58 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "ariel_stone" : {
+         "model" : "industrialupgrade:spacestone/ariel_stone"
+      },
+      "asteroids_stone" : {
+         "model" : "industrialupgrade:spacestone/asteroids_stone"
+      },
+      "callisto_stone" : {
+         "model" : "industrialupgrade:spacestone/callisto_stone"
+      },
+      "ceres_stone" : {
+         "model" : "industrialupgrade:spacestone/ceres_stone"
+      },
+      "charon_stone" : {
+         "model" : "industrialupgrade:spacestone/charon_stone"
+      },
+      "deimos_stone" : {
+         "model" : "industrialupgrade:spacestone/deimos_stone"
+      },
+      "dione_stone" : {
+         "model" : "industrialupgrade:spacestone/dione_stone"
+      },
+      "enceladus_stone" : {
+         "model" : "industrialupgrade:spacestone/enceladus_stone"
+      },
+      "eris_stone" : {
+         "model" : "industrialupgrade:spacestone/eris_stone"
+      },
+      "europe_stone" : {
+         "model" : "industrialupgrade:spacestone/europe_stone"
+      },
+      "ganymede_stone" : {
+         "model" : "industrialupgrade:spacestone/ganymede_stone"
+      },
+      "haumea_stone" : {
+         "model" : "industrialupgrade:spacestone/haumea_stone"
+      },
+      "io_stone" : {
+         "model" : "industrialupgrade:spacestone/io_stone"
+      },
+      "makemake_stone" : {
+         "model" : "industrialupgrade:spacestone/makemake_stone"
+      },
+      "mars_stone" : {
+         "model" : "industrialupgrade:spacestone/mars_stone"
+      },
+      "mercury_stone" : {
+         "model" : "industrialupgrade:spacestone/mercury_stone"
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

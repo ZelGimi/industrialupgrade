@@ -31,8 +31,8 @@ public enum BlockUniversalCable implements IMultiTileBlock {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockUniversalCable(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -58,6 +58,18 @@ public enum BlockUniversalCable implements IMultiTileBlock {
             }
         }
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public float getHardness() {
         return 0.5F;
@@ -130,7 +142,7 @@ public enum BlockUniversalCable implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(UniversalType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);

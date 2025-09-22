@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/enchanter_books_main",
+    "down" : "industrialupgrade:blocks/enchanter_books_all",
+    "up" : "industrialupgrade:blocks/enchanter_books_up",
+    "north" : "industrialupgrade:blocks/enchanter_books_main",
+    "east" : "industrialupgrade:blocks/enchanter_books_all",
+    "south" : "industrialupgrade:blocks/enchanter_books_all",
+    "west" : "industrialupgrade:blocks/enchanter_books_all"
+  }
+}

@@ -14,9 +14,12 @@ import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.register.Register;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,6 +31,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -36,6 +40,7 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -74,11 +79,13 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
         this.tier = 4;
         this.name = name;
         this.damage1 = 13;
+        this.efficiency = 1;
         setMaxStackSize(1);
         setNoRepair();
+        this.setMaxDamage(0);
         setUnlocalizedName(name);
         setCreativeTab(IUCore.EnergyTab);
-        this.setHarvestLevel("sword", 3);
+        this.setHarvestLevel("sword", 1);
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list);
@@ -92,6 +99,10 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
                 "energy_tools" + "/" + name + extraName;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.SABERS.list;
     }
 
     public boolean showDurabilityBar(final ItemStack stack) {
@@ -126,6 +137,8 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.changemode_key") + Localization.translate(
                     "iu.changemode_rcm1"));
+            tooltip.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(Math.abs(KeyboardClient.changemode.getKeyCode())) + Localization.translate(
+                    "iu.changemode_rcm"));
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
@@ -146,19 +159,23 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
             @Nonnull final EnumHand handIn
     ) {
         final NBTTagCompound nbt = ModUtils.nbt(playerIn.getHeldItem(handIn));
-        switch (nbt.getString("type")) {
-            case "":
-                nbt.setString("type", "yellow");
-                break;
-            case "yellow":
-                nbt.setString("type", "green");
-                break;
-            case "green":
-                nbt.setString("type", "pink");
-                break;
-            case "pink":
-                nbt.setString("type", "");
-                break;
+        if (!IUCore.keyboard.isChangeKeyDown(playerIn)) {
+            switch (nbt.getString("type")) {
+                case "":
+                    nbt.setString("type", "yellow");
+                    break;
+                case "yellow":
+                    nbt.setString("type", "green");
+                    break;
+                case "green":
+                    nbt.setString("type", "pink");
+                    break;
+                case "pink":
+                    nbt.setString("type", "");
+                    break;
+            }
+        } else {
+            nbt.setBoolean("iaidoMode", !nbt.getBoolean("iaidoMode"));
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
@@ -205,12 +222,16 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
     }
 
     public float getDestroySpeed(@Nonnull ItemStack itemStack, @Nonnull IBlockState state) {
+        Block block = state.getBlock();
 
-        this.soundTicker++;
-        if (this.soundTicker % 4 == 0) {
-            IUCore.proxy.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
+        if (block == Blocks.WEB) {
+            return 15.0F;
+        } else {
+            Material material = state.getMaterial();
+            return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD
+                    ? 1.0F
+                    : 1.5F;
         }
-        return 4.0F;
 
 
     }
@@ -227,6 +248,16 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
             int saberdamage = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0);
             int dmg = (int) (this.damage1 + this.damage1 * 0.15 * saberdamage);
+            NBTTagCompound nbtData = ModUtils.nbt(stack);
+            boolean iaidoActive = nbtData.getBoolean("iaidoMode");
+            boolean cooldown = nbtData.getBoolean("cooldown");
+
+            if (iaidoActive) {
+                dmg *= 3;
+            }
+            if (cooldown) {
+                dmg = 4;
+            }
             HashMultimap<String, AttributeModifier> hashMultimap = HashMultimap.create();
             hashMultimap.put(
                     SharedMonsterAttributes.ATTACK_SPEED.getName(),
@@ -268,6 +299,12 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
             }
             if (source instanceof EntityPlayerMP) {
                 new PacketSoundPlayer("katana", (EntityPlayer) source);
+                NBTTagCompound nbtData = ModUtils.nbt(stack);
+                boolean iaidoActive = nbtData.getBoolean("iaidoMode");
+                if (iaidoActive) {
+
+                    ((EntityPlayerMP) source).getCooldownTracker().setCooldown(this, 60);
+                }
             }
             Iterator<EntityEquipmentSlot> var4;
             if (!(source instanceof EntityPlayerMP) || !(target instanceof EntityPlayer) || ((EntityPlayerMP) source).canAttackPlayer(
@@ -335,6 +372,10 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
             nbt.setBoolean("hasID", false);
             MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+        }
+        if (entity instanceof EntityPlayer && !world.isRemote) {
+            CooldownTracker cooldownTracker = ((EntityPlayer) entity).getCooldownTracker();
+            nbt.setBoolean("cooldown", cooldownTracker.hasCooldown(itemStack.getItem()));
         }
     }
 

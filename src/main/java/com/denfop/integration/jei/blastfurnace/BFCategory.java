@@ -26,7 +26,7 @@ public class BFCategory extends Gui implements IRecipeCategory<BFWrapper> {
     public BFCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png"), 3, 3, 200,
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
                 150
         );
     }

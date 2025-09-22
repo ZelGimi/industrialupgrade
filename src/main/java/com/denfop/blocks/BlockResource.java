@@ -3,6 +3,8 @@ package com.denfop.blocks;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -10,12 +12,15 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -29,8 +34,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Random;
+
+import static com.denfop.blocks.BlockResource.Type.tempered_glass;
 
 public class BlockResource extends BlockCore implements IModelRegister {
 
@@ -41,11 +50,26 @@ public class BlockResource extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("blockresource");
         setCreativeTab(IUCore.IUTab);
-        setHardness(3.0F);
-        setResistance(10.0F);
+        setHardness(1.0F);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.bronze_block));
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("shovel", 1, this.blockState.getBaseState().withProperty(VARIANT, Type.peat));
+        setHarvestLevel("shovel", 1, this.blockState.getBaseState().withProperty(VARIANT, Type.untreated_peat));
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            final ItemStack stack,
+            @Nullable final World player,
+            final List<String> tooltip,
+            final ITooltipFlag advanced
+    ) {
+        if (stack.getItemDamage() == 10) {
+            tooltip.add(Localization.translate("iu.ore_spawn.info"));
+        }
     }
 
     public ItemStack getItemStack(Type type) {
@@ -91,6 +115,28 @@ public class BlockResource extends BlockCore implements IModelRegister {
         }
     }
 
+    @Override
+    public void getDrops(
+            final NonNullList<ItemStack> drops,
+            final IBlockAccess world,
+            final BlockPos pos,
+            final IBlockState state,
+            final int fortune
+    ) {
+        if (getMetaFromState(state) != 10) {
+            super.getDrops(drops, world, pos, state, fortune);
+        } else {
+            Random rand = world instanceof World ? ((World) world).rand : RANDOM;
+
+            int count = rand.nextInt(3) + 1;
+            for (int i = 0; i < 1; i++) {
+
+                drops.add(new ItemStack(IUItem.peat_balls, count));
+
+            }
+        }
+    }
+
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
         if (meta >= (Type.values()).length) {
@@ -130,6 +176,51 @@ public class BlockResource extends BlockCore implements IModelRegister {
         return state.getValue(VARIANT).getLight();
     }
 
+    public int quantityDropped(Random random) {
+        return 1;
+    }
+
+    public boolean isOpaqueCube(IBlockState state) {
+
+        return !(state.getValue(VARIANT) == tempered_glass);
+    }
+
+    public boolean isFullBlock(IBlockState state) {
+        return state.getValue(VARIANT) == tempered_glass;
+    }
+
+    public boolean isFullCube(IBlockState state) {
+        return !(state.getValue(VARIANT) == tempered_glass);
+    }
+
+    public boolean isTopSolid(IBlockState state) {
+        return !(state.getValue(VARIANT) == tempered_glass);
+    }
+
+
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        if ((state.getValue(VARIANT) != tempered_glass)) {
+            return super.shouldSideBeRendered(
+                    state,
+                    world,
+                    pos,
+                    side
+            );
+        }
+        return world.getBlockState(pos.offset(side)).getBlock() != this && super.shouldSideBeRendered(
+                state,
+                world,
+                pos,
+                side
+        );
+    }
+
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (int i = 0; i < (Type.values()).length; i++) {
@@ -157,6 +248,7 @@ public class BlockResource extends BlockCore implements IModelRegister {
         return true;
     }
 
+
     @Override
     public SoundType getSoundType(final IBlockState state, final World world, final BlockPos pos, @Nullable final Entity entity) {
         return state.getValue(VARIANT).metal ? SoundType.METAL : SoundType.STONE;
@@ -168,7 +260,7 @@ public class BlockResource extends BlockCore implements IModelRegister {
     }
 
     public enum Type implements IStringSerializable {
-        basalt(20.0F, 45.0F, false),
+        cryogen(8.0F, 10.0F, true),
         bronze_block(5.0F, 10.0F, true),
         copper_block(4.0F, 10.0F, true),
         lead_block(4.0F, 10.0F, true),
@@ -178,7 +270,12 @@ public class BlockResource extends BlockCore implements IModelRegister {
         reinforced_stone(80.0F, 180.0F, false),
         machine(5.0F, 10.0F, true),
         advanced_machine(8.0F, 10.0F, true),
-
+        peat(1.0F, 1.0F, false),
+        untreated_peat(1.0F, 1.0F, false),
+        steam_machine(8.0F, 10.0F, true),
+        tempered_glass(0.1F, 7, false),
+        bio_machine(8.1F, 7, true),
+        asphalt(0.1F, 1, false),
         ;
         private final float hardness;
         private final float explosionResistance;

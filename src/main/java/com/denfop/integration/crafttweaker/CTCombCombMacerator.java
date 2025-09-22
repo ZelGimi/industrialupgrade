@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -25,7 +25,7 @@ public class CTCombCombMacerator {
                 "comb_macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )
@@ -55,9 +55,6 @@ public class CTCombCombMacerator {
 
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.output);
-        }
 
     }
 

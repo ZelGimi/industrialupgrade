@@ -6,7 +6,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -16,12 +16,13 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockConverterMatter;
 import com.denfop.container.ContainerConverterSolidMatter;
 import com.denfop.gui.GuiConverterSolidMatter;
-import com.denfop.invslot.InvSlotConverterSolidMatter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryConverterSolidMatter;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Precision;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,9 +46,9 @@ import java.util.Set;
 public class TileConverterSolidMatter extends TileElectricMachine
         implements IUpgradableBlock, IUpdateTick, IHasRecipe {
 
-    public final InvSlotConverterSolidMatter MatterSlot;
-    public final InvSlotRecipes inputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryConverterSolidMatter MatterSlot;
+    public final InventoryRecipes inputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final int defaultOperationLength;
     public final int defaultEnergyConsume;
     public double[] quantitysolid = new double[8];
@@ -63,9 +64,9 @@ public class TileConverterSolidMatter extends TileElectricMachine
 
     public TileConverterSolidMatter() {
         super(50000, 14, 1);
-        this.MatterSlot = new InvSlotConverterSolidMatter(this);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 3);
-        this.inputSlot = new InvSlotRecipes(this, "converter", this);
+        this.MatterSlot = new InventoryConverterSolidMatter(this);
+        this.upgradeSlot = new InventoryUpgrade(this, 3);
+        this.inputSlot = new InventoryRecipes(this, "converter", this);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultEnergyStorage = 50000;
@@ -265,17 +266,36 @@ public class TileConverterSolidMatter extends TileElectricMachine
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.iuingot, 1, i), 12, 0, 0, 0, 0, 36, 0, 0);
         }
+        addrecipe(new ItemStack(IUItem.iuingot, 1, 25), 12, 0, 0, 0, 0, 36, 0, 0);
+        addrecipe(new ItemStack(IUItem.iuingot, 1, 26), 12, 0, 0, 0, 0, 36, 0, 0);
+        addrecipe(new ItemStack(IUItem.iuingot, 1, 27), 12, 0, 0, 0, 0, 36, 0, 0);
+
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.iuingot, 1, i + 28), 12, 0, 0, 0, 0, 36, 0, 0);
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.stik, 1, i + 22), 6, 0, 0, 0, 0, 18, 0, 0);
+        }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.stik, 1, i), 6, 0, 0, 0, 0, 18, 0, 0);
         }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.plate, 1, i + 31), 12, 0, 0, 0, 0, 36, 0, 0);
+        }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.plate, 1, i), 12, 0, 0, 0, 0, 36, 0, 0);
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.doubleplate, 1, i + 31), 108, 0, 0, 0, 0, 288, 0, 0);
         }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.doubleplate, 1, i), 108, 0, 0, 0, 0, 288, 0, 0);
         }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.casing, 1, i), 6, 0, 0, 0, 0, 18, 0, 0);
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.casing, 1, i + 29), 6, 0, 0, 0, 0, 18, 0, 0);
         }
         IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
     }
@@ -284,6 +304,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
 
+        this.energyConsume = (int) this.upgradeSlot.getEnergyDemand(2);
 
     }
 
@@ -371,7 +392,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
     public void operateOnce(List<ItemStack> processResult) {
 
         useMatter();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
         this.getrequiredmatter(this.output.getRecipe().getOutput());
 
 
@@ -380,6 +401,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
     @Override
     public void onLoaded() {
         super.onLoaded();
+        this.inputSlots.remove(inputSlot);
         inputSlot.load();
         this.getOutput();
         if (this.output != null) {
@@ -480,8 +502,8 @@ public class TileConverterSolidMatter extends TileElectricMachine
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

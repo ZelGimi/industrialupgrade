@@ -7,26 +7,30 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRotorAssembler;
 import com.denfop.gui.GuiRotorAssembler;
+import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -36,13 +40,15 @@ import java.util.List;
 
 public class TileEntityRotorAssembler extends TileEntityInventory implements IUpdateTick, IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
-    public final AdvEnergy energy;
+    public final InventoryRecipes inputSlotA;
+    public final Energy energy;
     public final int defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final int defaultEnergyStorage;
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public MachineRecipe recipe;
     public short progress;
     public double guiProgress;
@@ -51,20 +57,23 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
     public int operationsPerTick = 1;
 
     public TileEntityRotorAssembler() {
-        this.inputSlotA = new InvSlotRecipes(this, "rotor_assembler", this);
-        inputSlotA.setStackSizeLimit(1);
+        this.inputSlotA = new InventoryRecipes(this, "rotor_assembler", this);
+        inputSlotA.setInventoryStackLimit(1);
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 14;
         this.defaultEnergyStorage = 2 * 100;
         this.recipe = null;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, defaultEnergyStorage, defaultTier));
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.energy = this.addComponent(Energy.asBasicSink(this, defaultEnergyStorage, defaultTier));
         Recipes.recipes.addInitRecipes(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
 
     public static void addRecipe(int meta, int meta1, ItemStack stack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        ((ItemDamage) stack.getItem()).setCustomDamage(stack, ((ItemDamage) stack.getItem()).getMaxCustomDamage(stack));
         Recipes.recipes.addRecipe("rotor_assembler", new BaseMachineRecipe(
                 new Input(
                         input.getInput(new ItemStack(IUItem.windrod, 1, meta)),
@@ -76,6 +85,20 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
                 ),
                 new RecipeOutput(null, stack)
         ));
+    }
+
+    public boolean doesSideBlockRendering(EnumFacing side) {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+        return false;
+    }
+
+    @Override
+    public boolean isNormalCube() {
+        return false;
     }
 
     @Override
@@ -130,8 +153,7 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
         addRecipe(13, 13, IUItem.ultramarinerotor);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -140,14 +162,16 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
+
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -196,7 +220,7 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
 
         this.inputSlotA.consume();
 
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
 
     @Override
@@ -204,7 +228,6 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
         super.updateEntityServer();
         if (this.recipe != null && this.energy.canUseEnergy(energyConsume) && !this.inputSlotA.isEmpty() && this.outputSlot.canAdd(
                 this.recipe.getRecipe().getOutput().items)) {
-            setActive(true);
 
             this.progress += 1;
             this.energy.useEnergy(energyConsume);
@@ -215,14 +238,12 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
                 this.guiProgress = 0;
                 operate(this.recipe);
                 this.progress = 0;
-                setActive(false);
 
             }
 
         } else {
             if (this.recipe == null) {
                 this.progress = 0;
-                setActive(false);
             }
 
 

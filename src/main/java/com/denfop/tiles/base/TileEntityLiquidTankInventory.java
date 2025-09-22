@@ -1,14 +1,12 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Localization;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
-import net.minecraft.client.util.ITooltipFlag;
+import com.denfop.invslot.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -18,14 +16,14 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
 
     public TileEntityLiquidTankInventory(int tanksize) {
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000);
+        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000, Inventory.TypeItemSlot.INPUT);
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComp(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.hasComp(Energy.class)) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -33,6 +31,7 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
             }
         }
 
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

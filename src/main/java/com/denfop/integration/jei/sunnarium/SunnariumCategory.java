@@ -64,7 +64,7 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = (int) (17.0F * progress / 100);
-
+        int xScale1 = (int) (13.0F * progress / 100);
         if (xScale > 17.0F) {
             progress = 0;
         }
@@ -77,7 +77,8 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
         );
 
 
-        drawTexturedModalRect(+52, +17, 176, 31, xScale + 1, 31);
+        drawTexturedModalRect(+46, +21, 177, 20, xScale + 1, 33);
+        drawTexturedModalRect(+82, +21, 177, 56, xScale1 + 1, 33);
 
 
     }
@@ -89,17 +90,17 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 34, 13);
+        isg.init(0, true, 28, 17);
 
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 70, 13);
+        isg.init(1, true, 64, 17);
         isg.set(1, recipes.getInput1());
-        isg.init(2, true, 34, 35);
+        isg.init(2, true, 28, 39);
         isg.set(2, recipes.getInput2());
-        isg.init(3, true, 70, 35);
+        isg.init(3, true, 64, 39);
         isg.set(3, recipes.getInput3());
 
-        isg.init(4, false, 111, 30);
+        isg.init(4, false, 99, 28);
         isg.set(4, recipes.getOutput());
     }
 

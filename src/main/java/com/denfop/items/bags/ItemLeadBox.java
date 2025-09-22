@@ -67,9 +67,7 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IModelRegi
         boolean rod = nbt.getBoolean("rod");
         if (stack1.getItem() instanceof IRadioactiveItemType) {
             if (!rod) {
-                if (stack1.getItem() instanceof ItemBaseRod) {
-                    return false;
-                }
+                return !(stack1.getItem() instanceof ItemBaseRod);
             } else {
                 return box.canAdd(stack1);
             }

@@ -20,11 +20,15 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.render.oilquarry.DataBlock;
 import com.denfop.utils.ModUtils;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -44,13 +48,16 @@ import java.util.List;
 public class TileQuarryVein extends TileElectricMachine implements
         IUpdatableTileEvent, IType {
 
-
+    @SideOnly(Side.CLIENT)
+    public DataBlock dataBlock;
     public int level;
     public int time;
     public int progress;
     public IVein vein;
     public boolean start = true;
+    public int col;
     private int count;
+    private boolean work;
 
     public TileQuarryVein() {
         super(400, 14, 1);
@@ -72,10 +79,28 @@ public class TileQuarryVein extends TileElectricMachine implements
     public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
         ItemStack stack = new ItemStack(IUItem.oilquarry);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
+        nbt.setString("state", "active_" + this.level);
         nbt.setInteger("level", this.level);
         return stack;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateEntityClient() {
+        super.updateEntityClient();
+        if (this.vein == null || !this.vein.get()) {
+            if (this.getWorld().provider.getWorldTime() % 6 == 0) {
+                if (this.work) {
+                    final BlockPos pos1 = pos.down();
+                    IBlockState state = world.getBlockState(pos1);
+                    if (state.getMaterial() == Material.AIR) {
+                        state = Blocks.STONE.getDefaultState();
+                    }
+                    Minecraft.getMinecraft().effectRenderer.addBlockDestroyEffects(pos, state);
+                }
+            }
+        }
+    }
 
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
@@ -93,7 +118,6 @@ public class TileQuarryVein extends TileElectricMachine implements
     public String getStartSoundFile() {
         return "Machines/rig.ogg";
     }
-
 
     public boolean isSideSolid(EnumFacing side) {
         return false;
@@ -123,9 +147,11 @@ public class TileQuarryVein extends TileElectricMachine implements
                     this.level++;
                     player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
                     updateTileEntityField();
+                    this.setActive("active_" + level);
                     return true;
                 } else if (this.level < 4 && player.getHeldItem(hand).getItemDamage() == 3) {
                     this.level = 4;
+                    this.setActive("active_" + level);
                     player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
                     updateTileEntityField();
                     return true;
@@ -134,11 +160,16 @@ public class TileQuarryVein extends TileElectricMachine implements
                 if (this.vein != VeinSystem.system.getEMPTY() && this.vein.get() && this.vein.getType() != Type.EMPTY) {
                     final NBTTagCompound nbt = ModUtils.nbt(player.getHeldItem(hand));
                     if (this.vein.getType() == Type.VEIN) {
-                        String s = getType(this.vein.getMeta());
+                        String s = getType(this.vein.getMeta(), this.vein.isOldMineral());
                         nbt.setString("type", s);
                     } else {
-                        String s = "oil";
-                        nbt.setString("type", s);
+                        if (this.vein.getType() == Type.OIL) {
+                            String s = "oil";
+                            nbt.setString("type", s);
+                        } else {
+                            String s = "gas";
+                            nbt.setString("type", s);
+                        }
                     }
                     nbt.setInteger("x", this.pos.getX());
                     nbt.setInteger("z", this.pos.getZ());
@@ -149,12 +180,18 @@ public class TileQuarryVein extends TileElectricMachine implements
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
-    private String getType(int meta) {
-        String[] s = {"magnetite", "calaverite", "galena", "nickelite", "pyrite", "quartzite", "uranite", "azurite",
-                "rhodonite", "alfildit", "euxenite", "smithsonite", "ilmenite", "todorokite", "ferroaugite", "sheelite"};
-
-        return s[meta % s.length];
+    private String getType(int meta, boolean oldMineral) {
+        if (oldMineral) {
+            String[] s = {"magnetite", "calaverite", "galena", "nickelite", "pyrite", "quartzite", "uranite", "azurite",
+                    "rhodonite", "alfildit", "euxenite", "smithsonite", "ilmenite", "todorokite", "ferroaugite", "sheelite"};
+            return s[meta % s.length];
+        } else {
+            String[] s = {"arsenopyrite", "braggite", "wolframite", "germanite", "coltan", "crocoite", "xenotime", "iridosmine",
+                    "theoprastite", "tetrahedrite", "fergusonite", "celestine", "zircon", "crystal"};
+            return s[meta % s.length];
+        }
     }
+
 
     @Override
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
@@ -162,6 +199,9 @@ public class TileQuarryVein extends TileElectricMachine implements
         final NBTTagCompound nbt = ModUtils.nbt(stack);
 
         this.level = nbt.getInteger("level") != 0 ? nbt.getInteger("level") : 1;
+        if (level != 1) {
+            this.setActive("active_" + level);
+        }
         if (getWorld().provider.getDimension() != 0) {
             this.vein = VeinSystem.system.getEMPTY();
         } else {
@@ -182,7 +222,6 @@ public class TileQuarryVein extends TileElectricMachine implements
         }
 
     }
-
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -265,8 +304,7 @@ public class TileQuarryVein extends TileElectricMachine implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -274,7 +312,7 @@ public class TileQuarryVein extends TileElectricMachine implements
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -283,6 +321,20 @@ public class TileQuarryVein extends TileElectricMachine implements
         if (name.equals("count")) {
             try {
                 this.count = (int) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (name.equals("progress")) {
+            try {
+                this.progress = (int) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (name.equals("work")) {
+            try {
+                this.work = (boolean) DecoderHandler.decode(is);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -316,9 +368,21 @@ public class TileQuarryVein extends TileElectricMachine implements
             }
         }
         if (this.vein.get()) {
+            if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+                if (this.col != vein.getCol()) {
+                    new PacketUpdateFieldTile(this, "vein", this.vein);
+                    col = vein.getCol();
+                }
+            }
+
             return;
         }
+
         if (this.progress < 1200 && this.energy.getEnergy() >= 5 && !this.vein.get()) {
+            if (!work) {
+                work = true;
+                new PacketUpdateFieldTile(this, "work", this.work);
+            }
             if (progress == 0) {
                 initiate(2);
                 time = 0;
@@ -332,7 +396,7 @@ public class TileQuarryVein extends TileElectricMachine implements
                 initiate(0);
             }
             time++;
-            progress += Math.pow(2, this.level - 1);
+            progress += (int) Math.pow(2, this.level - 1);
             this.energy.useEnergy(5);
             if (progress >= 1200) {
                 initiate(2);
@@ -343,6 +407,10 @@ public class TileQuarryVein extends TileElectricMachine implements
 
 
         } else {
+            if (work) {
+                work = false;
+                new PacketUpdateFieldTile(this, "work", this.work);
+            }
             if (this.time > 0) {
                 initiate(2);
                 this.time = 0;

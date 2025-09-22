@@ -58,6 +58,25 @@ public class ItemGear extends ItemSubTypes<ItemGear.Types> implements IModelRegi
         manganese(16),
         iridium(17),
         germanium(18),
+        osmium(19),
+        tantalum(20),
+        cadmium(21),
+        arsenic(22),
+        barium(23),
+        bismuth(24),
+        gadolinium(25),
+        gallium(26),
+        hafnium(27),
+        yttrium(28),
+        molybdenum(29),
+        neodymium(30),
+        niobium(31),
+        palladium(32),
+        polonium(33),
+        strontium(34),
+        thallium(35),
+        zirconium(36),
+
         ;
 
         private final String name;

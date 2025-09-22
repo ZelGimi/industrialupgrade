@@ -36,8 +36,7 @@ public class BlockPrecious extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("BlockPrecious".toLowerCase());
         setCreativeTab(IUCore.RecourseTab);
-        setHardness(3.0F);
-        setResistance(5.0F);
+        setHardness(1.0F);
         setSoundType(SoundType.METAL);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.topaz_block));
         setHarvestLevel("pickaxe", 1);
@@ -116,7 +115,12 @@ public class BlockPrecious extends BlockCore implements IModelRegister {
         ruby_block(0),
         sapphire_block(1),
         topaz_block(2),
-
+        adamantite_block(3),
+        bloodstone_block(4),
+        draconid_block(5),
+        meteoric_iron_block(6),
+        mythril_block(7),
+        orichalcum_block(8),
         ;
 
         private final int metadata;

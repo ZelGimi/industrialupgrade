@@ -50,9 +50,34 @@ public class OreWashingRecipe {
                 new ItemStack(IUItem.smallLeadDust.getItem(), 2, IUItem.smallCopperDust.getItemDamage())
         );
         addrecipe("crushedLead", "crushedPurifiedLead",
-                new ItemStack(IUItem.smallLeadDust.getItem(), 2, IUItem.smallSulfurDust.getItemDamage())
+                new ItemStack(IUItem.smallLeadDust.getItem(), 2, 14)
+        );
+        addrecipe("crushedOsmium", "crushedPurifiedOsmium",
+                new ItemStack(IUItem.smalldust, 1, 17)
+        );
+        addrecipe("crushedTantalum", "crushedPurifiedTantalum",
+                new ItemStack(IUItem.smalldust, 1, 11)
+        );
+        addrecipe("crushedCadmium", "crushedPurifiedCadmium",
+                new ItemStack(IUItem.smalldust, 1, 18)
         );
 
+
+        addrecipe(28, new ItemStack(IUItem.smalldust, 2, 26));
+        addrecipe(29, new ItemStack(IUItem.smalldust, 2, 27));
+        addrecipe(30, new ItemStack(IUItem.smalldust, 2, 24));
+        addrecipe(31, new ItemStack(IUItem.smalldust, 2, 46));
+        addrecipe(32, new ItemStack(IUItem.smalldust, 2, 27));
+        addrecipe(33, new ItemStack(IUItem.smalldust, 2, 10));
+        addrecipe(34, new ItemStack(IUItem.smalldust, 2, 26));
+        addrecipe(35, new ItemStack(IUItem.smalldust, 2, 24));
+        addrecipe(36, new ItemStack(IUItem.smalldust, 2, 35));
+        addrecipe(37, new ItemStack(IUItem.smalldust, 2, 45));
+        addrecipe(38, new ItemStack(IUItem.smalldust, 2, 9));
+        addrecipe(39, new ItemStack(IUItem.smalldust, 2, 42));
+        addrecipe(40, new ItemStack(IUItem.smalldust, 2, 1));
+        addrecipe(41, new ItemStack(IUItem.smalldust, 2, 14));
+        addrecipe(42, new ItemStack(IUItem.smalldust, 2, 27));
     }
 
     public static void addrecipe(ItemStack input) {

@@ -10,4 +10,6 @@ public interface IBaseRecipe {
 
     boolean require();
 
+    boolean workbench();
+
 }

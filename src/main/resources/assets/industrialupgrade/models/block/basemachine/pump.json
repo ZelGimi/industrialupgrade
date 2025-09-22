@@ -3,10 +3,10 @@
 	"textures": {
 		"particle": "industrialupgrade:blocks/pump_leftright",
 		"down": "industrialupgrade:blocks/pump_bottom",
-		"up": "industrialupgrade:blocks/pump_top",
+		"up": "industrialupgrade:blocks/pump_bottom",
 		"north": "industrialupgrade:blocks/pump_front",
 		"east": "industrialupgrade:blocks/pump_leftright",
-		"south": "industrialupgrade:blocks/pump_back",
+		"south": "industrialupgrade:blocks/pump_bottom",
 		"west": "industrialupgrade:blocks/pump_leftright"
 	}
 }

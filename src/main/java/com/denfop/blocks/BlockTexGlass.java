@@ -25,7 +25,7 @@ public class BlockTexGlass extends BlockBase {
 
     public BlockTexGlass() {
         super("glass", Material.GLASS);
-        this.setHardness(5.0F);
+        this.setHardness(2.0F);
         this.setResistance(180.0F);
         this.setSoundType(SoundType.GLASS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(stateProperty, GlassType.reinforced));
@@ -48,7 +48,7 @@ public class BlockTexGlass extends BlockBase {
     }
 
     public int quantityDropped(Random random) {
-        return 0;
+        return 1;
     }
 
     public boolean isOpaqueCube(IBlockState state) {
@@ -88,8 +88,6 @@ public class BlockTexGlass extends BlockBase {
     public enum GlassType implements ISubEnum, IStringSerializable {
         reinforced;
 
-        GlassType() {
-        }
 
         public String getName() {
             return this.name();

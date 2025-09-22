@@ -2,7 +2,9 @@ package com.denfop.events;
 
 import com.denfop.IUCore;
 import com.denfop.network.WorldData;
+import com.denfop.world.GeneratorVolcano;
 import com.denfop.world.IWorldTickCallback;
+import com.denfop.world.WorldGenVolcano;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -29,6 +31,17 @@ public class TickHandlerIU {
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         World world = event.world;
         WorldData worldData = WorldData.get(world, false);
+        if (event.phase == TickEvent.Phase.START) {
+            if (world.provider.getDimension() == 0 && !world.isRemote) {
+                if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
+                    GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
+                    generatorVolcano.generate();
+                    if (generatorVolcano.isEnd()) {
+                        WorldGenVolcano.generatorVolcanoList.remove(0);
+                    }
+                }
+            }
+        }
         if (worldData != null) {
             if (event.phase == TickEvent.Phase.START) {
                 processUpdates(world, worldData);
@@ -38,6 +51,7 @@ public class TickHandlerIU {
                     IUCore.network.getClient().onTickEnd(worldData);
                 } else {
                     IUCore.network.getServer().onTickEnd(worldData);
+
                 }
             }
 

@@ -1,7 +1,8 @@
 package com.denfop.tiles.panels.entity;
 
 
-import com.denfop.Config;
+import com.denfop.ElectricItem;
+import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.EnergyNetGlobal;
@@ -11,25 +12,33 @@ import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.SunCoef;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IWrenchable;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.componets.ComponentPollution;
 import com.denfop.componets.ComponentTimer;
+import com.denfop.componets.WirelessComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolarPanels;
+import com.denfop.container.ContainerSolarPanels1;
 import com.denfop.gui.GuiSolarPanels;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotPanel;
+import com.denfop.gui.GuiSolarPanels1;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryPanel;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketChangeSolarPanel;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,9 +53,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TileSolarPanel extends TileEntityInventory implements IEnergySource,
         IWrenchable, IUpdatableTileEvent {
@@ -54,18 +66,17 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
 
     public final ComponentTimer timer;
     public final ComponentPollution pollution;
+    public final WirelessComponent wirelessComponent;
+    public final Inventory slotDept;
     public double coef;
-    public List<IEnergyTile> list;
     public EnumSolarPanels solarpanels;
     public int tier;
-    public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
-    public InvSlotPanel inputslot;
+    public InventoryPanel inputslot;
     public Biome biome;
     public int solarType;
     public EnumType type;
 
     public boolean charge;
-    public boolean wireless = false;
     public GenerationState activeState = GenerationState.NONE;
     public boolean wetBiome;
     public boolean noSunWorld;
@@ -76,23 +87,31 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public double genDay;
     public double genNight;
     public double storage;
-    public double production;
+    public double output;
     public double maxStorage;
-    public double p;
-    public double k;
-    public double m;
-    public double u;
-    public double o;
+    public double defaultMaxStorage;
+    public double defaultDay;
+    public double defaultNight;
+    public double defaultOutoput;
+    public double defaultTier;
     public double moonPhase = 1;
-    public double tick;
     public SunCoef sunCoef;
+    public byte percent = 0;
+    public double debt;
+    public double debtMax;
     public int level = 0;
     public boolean canRain;
     public boolean hasSky;
-    protected double tierPower;
-    protected boolean addedToEnet;
+    public double deptPercent;
+    public double deptGenerate = 0;
+    public boolean addedToEnergyNet = false;
+    public boolean twoContainer = false;
     protected double pastEnergy;
     protected double perenergy;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    private long id;
 
     public TileSolarPanel(
             final int tier, final double gDay,
@@ -101,25 +120,29 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         this.solarType = 0;
         this.genDay = gDay;
         this.genNight = gDay / 2;
+        if (genNight < 1D) {
+            genNight = 0;
+        }
         this.storage = 0;
         this.generating = 0;
         this.maxStorage = gmaxStorage;
-        this.p = gmaxStorage;
-        this.k = gDay;
-        this.m = gDay / 2;
-        this.production = gOutput;
-        this.u = gOutput;
+        this.defaultMaxStorage = gmaxStorage;
+        this.defaultDay = gDay;
+        this.defaultNight = gDay / 2;
+        if (defaultNight < 1D) {
+            defaultNight = 0;
+        }
+        this.debtMax = maxStorage * 4;
+        this.output = gOutput;
+        this.defaultOutoput = gOutput;
         this.tier = tier;
-        this.o = tier;
-        this.inputslot = new InvSlotPanel(this, tier, 9, InvSlot.TypeItemSlot.INPUT_OUTPUT);
-        this.tierPower = EnergyNetGlobal.instance.getPowerFromTier(tier);
+        this.defaultTier = tier;
+        this.inputslot = new InventoryPanel(this, tier, 9, Inventory.TypeItemSlot.INPUT_OUTPUT);
         this.type = EnumType.DEFAULT;
         this.solarpanels = type;
-        this.list = new ArrayList<>();
         this.coef = 0;
         this.pastEnergy = 0;
         this.perenergy = 0;
-        this.tick = 0;
         this.pollution = this.addComponent(new ComponentPollution(this));
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(8, 0, 0), new Timer(4, 0, 0), new Timer(4, 0, 0)) {
             @Override
@@ -128,7 +151,21 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             }
         });
         this.pollution.setTimer(timer);
+        this.wirelessComponent = this.addComponent(new WirelessComponent(this));
+        wirelessComponent.setEnergySource(this);
+        this.slotDept = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
+            @Override
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+                return stack.getItem() instanceof IEnergyItem && ((IEnergyItem) stack.getItem()).canProvideEnergy(stack);
+            }
+
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.BATTERY;
+            }
+        };
     }
+
 
     public TileSolarPanel(EnumSolarPanels solarpanels) {
         this(solarpanels.tier, solarpanels.genday, solarpanels.producing, solarpanels.maxstorage, solarpanels);
@@ -136,11 +173,61 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     }
 
     @Override
+    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
+    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            if (!this.energyConductorMap.containsKey(facing1)) {
+                this.energyConductorMap.put(facing1, tile);
+                validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+            }
+        }
+    }
+
+    public Map<EnumFacing, IEnergyTile> getTiles() {
+        return energyConductorMap;
+    }
+
+    @Override
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
         try {
-            EncoderHandler.encode(packet, this.pollution,false);
-            EncoderHandler.encode(packet, this.timer,false);
+            EncoderHandler.encode(packet, this.pollution, false);
+            EncoderHandler.encode(packet, this.timer, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -167,6 +254,9 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
+
+            deptPercent = customPacketBuffer.readDouble();
+            debt = customPacketBuffer.readDouble();
             sunIsUp = (boolean) DecoderHandler.decode(customPacketBuffer);
             skyIsVisible = (boolean) DecoderHandler.decode(customPacketBuffer);
             generating = (double) DecoderHandler.decode(customPacketBuffer);
@@ -174,20 +264,20 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             genNight = (double) DecoderHandler.decode(customPacketBuffer);
             storage = (double) DecoderHandler.decode(customPacketBuffer);
             maxStorage = (double) DecoderHandler.decode(customPacketBuffer);
-            production = (double) DecoderHandler.decode(customPacketBuffer);
+            output = (double) DecoderHandler.decode(customPacketBuffer);
             rain = (boolean) DecoderHandler.decode(customPacketBuffer);
             solarType = (int) DecoderHandler.decode(customPacketBuffer);
             type = EnumType.values()[(int) DecoderHandler.decode(customPacketBuffer)];
-            u = (double) DecoderHandler.decode(customPacketBuffer);
-            p = (double) DecoderHandler.decode(customPacketBuffer);
-            k = (double) DecoderHandler.decode(customPacketBuffer);
-            m = (double) DecoderHandler.decode(customPacketBuffer);
+            defaultOutoput = (double) DecoderHandler.decode(customPacketBuffer);
+            defaultMaxStorage = (double) DecoderHandler.decode(customPacketBuffer);
+            defaultDay = (double) DecoderHandler.decode(customPacketBuffer);
+            defaultNight = (double) DecoderHandler.decode(customPacketBuffer);
             tier = (int) DecoderHandler.decode(customPacketBuffer);
             boolean isNull = (boolean) DecoderHandler.decode(customPacketBuffer);
-            if(!isNull)
-            solarpanels = EnumSolarPanels.values()[(int) DecoderHandler.decode(customPacketBuffer)];
+            if (!isNull) {
+                solarpanels = EnumSolarPanels.values()[(int) DecoderHandler.decode(customPacketBuffer)];
+            }
             activeState = GenerationState.values()[(int) DecoderHandler.decode(customPacketBuffer)];
-            wireless = (boolean) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -198,6 +288,8 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public CustomPacketBuffer writeContainerPacket() {
         final CustomPacketBuffer packet = super.writeContainerPacket();
         try {
+            packet.writeDouble(deptPercent);
+            packet.writeDouble(debt);
             EncoderHandler.encode(packet, sunIsUp);
             EncoderHandler.encode(packet, skyIsVisible);
             EncoderHandler.encode(packet, generating);
@@ -205,43 +297,35 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             EncoderHandler.encode(packet, genNight);
             EncoderHandler.encode(packet, storage);
             EncoderHandler.encode(packet, maxStorage);
-            EncoderHandler.encode(packet, production);
+            EncoderHandler.encode(packet, output);
             EncoderHandler.encode(packet, rain);
             EncoderHandler.encode(packet, solarType);
             EncoderHandler.encode(packet, type);
-            EncoderHandler.encode(packet, u);
-            EncoderHandler.encode(packet, p);
-            EncoderHandler.encode(packet, k);
-            EncoderHandler.encode(packet, m);
+            EncoderHandler.encode(packet, defaultOutoput);
+            EncoderHandler.encode(packet, defaultMaxStorage);
+            EncoderHandler.encode(packet, defaultDay);
+            EncoderHandler.encode(packet, defaultNight);
             EncoderHandler.encode(packet, tier);
             EncoderHandler.encode(packet, solarpanels == null);
-            if(solarpanels != null)
-            EncoderHandler.encode(packet, solarpanels);
+            if (solarpanels != null) {
+                EncoderHandler.encode(packet, solarpanels);
+            }
             EncoderHandler.encode(packet, activeState);
-            EncoderHandler.encode(packet, wireless);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return packet;
     }
 
-
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
-        this.wirelessTransferList.clear();
         this.inputslot.wirelessmodule();
-        this.wireless = !this.wirelessTransferList.isEmpty();
-    }
-
-    public String getStartSoundFile() {
-        return "Machines/pen.ogg";
     }
 
     @Override
     public int getInventoryStackLimit() {
         return 1;
     }
-
 
     public List<ItemStack> getDrop() {
         List<ItemStack> list = new ArrayList<>();
@@ -254,23 +338,32 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack itemStack, final List<String> info) {
 
 
-        if (Config.promt) {
+        if (this.getWorld() == null) {
             info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
                     + ModUtils.getString(this.genDay) + " EF/t ");
             info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
                     + ModUtils.getString(this.genNight) + " EF/t ");
-
-            info.add(Localization.translate("iu.item.tooltip.Output") + " "
-                    + ModUtils.getString(this.production) + " EF/t ");
-            info.add(Localization.translate("iu.item.tooltip.Capacity") + " "
-                    + ModUtils.getString(this.maxStorage) + " EF ");
-            info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
-
+        } else {
+            if (this.world.isDaytime()) {
+                info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                        + ModUtils.getString(this.generating) + " EF/t ");
+                info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                        + ModUtils.getString(this.genNight) + " EF/t ");
+            } else {
+                info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                        + ModUtils.getString(this.genDay) + " EF/t ");
+                info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                        + ModUtils.getString(this.generating) + " EF/t ");
+            }
         }
+        info.add(Localization.translate("iu.item.tooltip.Output") + " "
+                + ModUtils.getString(this.output) + " EF/t ");
+        info.add(Localization.translate("iu.item.tooltip.Capacity") + " "
+                + ModUtils.getString(this.maxStorage) + " EF ");
+        info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
 
 
     }
@@ -329,7 +422,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         this.generating *= coefpollution * coefficient_phase * coef;
     }
 
-
     public List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
         List<ItemStack> drop = super.getSelfDrops(fortune, wrench);
         drop = Collections.singletonList(this.adjustDrop(drop.get(0), wrench, fortune));
@@ -337,7 +429,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     }
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
-        drop = super.adjustDrop(drop, wrench);
+        drop = super.adjustDrop(drop, wrench, fortune);
         if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
             NBTTagCompound nbt = ModUtils.nbt(drop);
             if (fortune == 100) {
@@ -350,25 +442,35 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+        if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+            this.addedToEnergyNet = false;
+        }
 
     }
-
 
     public void onLoaded() {
         super.onLoaded();
         if (!this.world.isRemote) {
-            this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
-            this.hasSky = !this.world.provider.isNether();
             this.biome = this.world.getBiome(this.pos);
+            this.canRain = (biome.canRain() || biome.getRainfall() > 0.0F);
+            this.hasSky = !this.world.provider.isNether();
+
             updateVisibility();
             this.inputslot.checkmodule();
             this.solarType = this.inputslot.solartype();
             IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
             this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
+            if (!addedToEnergyNet) {
+                this.energyConductorMap.clear();
+                this.addedToEnergyNet = true;
+                validReceivers.clear();
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            }
+
+
         }
-        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+
     }
 
     private double experimental_generating() {
@@ -380,24 +482,31 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
 
     }
 
-
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
 
         this.storage = nbttagcompound.getDouble("storage");
+        this.debt = nbttagcompound.getDouble("debt");
+        this.deptPercent = nbttagcompound.getDouble("deptPercent");
 
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.setDouble("storage", this.storage);
+        nbttagcompound.setDouble("debt", this.debt);
+        nbttagcompound.setDouble("deptPercent", this.deptPercent);
         return nbttagcompound;
     }
 
-
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (this.debt > 0) {
+            if (!this.slotDept.isEmpty()) {
+                final double amount = ElectricItem.manager.discharge(this.slotDept.get(), debt, this.tier, false, false, false);
+                this.debt -= amount;
+            }
+        }
         if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             updateVisibility();
             this.solarType = this.inputslot.solartypeFast();
@@ -416,31 +525,31 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             this.generating = 0;
             return;
         }
-        if (this.wireless) {
-            boolean refresh = false;
-            try {
-                for (WirelessTransfer transfer : this.wirelessTransferList) {
-                    if (transfer.getTile().isInvalid()) {
-                        refresh = true;
-                        continue;
-                    }
-                    double energy = Math.min(this.canExtractEnergy(), transfer.getSink().getDemandedEnergy());
-                    transfer.work(energy);
-                    this.storage -= energy;
-                }
-            } catch (Exception ignored) {
-            }
-            if (refresh) {
-                this.wirelessTransferList.clear();
-                this.inputslot.wirelessmodule();
-            }
-        }
         gainFuel();
 
 
         if (this.generating > 0) {
             if (this.storage + this.generating <= this.maxStorage) {
-                this.storage += this.generating;
+                double tempGenerate = this.generating + this.generating * deptPercent / 100D;
+                if (deptPercent < 0) {
+                    this.debt += this.generating * deptPercent / 100D;
+                    if (this.debt < 0) {
+                        this.debt = 0;
+                    }
+                } else {
+                    this.debt += this.generating * deptPercent / 200D;
+                    if (debt >= debtMax) {
+                        debt = debtMax;
+                    }
+                }
+                this.generating = tempGenerate;
+                if (debt < debtMax) {
+                    this.storage += generating;
+                } else {
+                    if (solarpanels != null && solarpanels.solarold != null) {
+                        new PacketChangeSolarPanel(solarpanels, this);
+                    }
+                }
             } else {
                 this.storage = this.maxStorage;
             }
@@ -449,12 +558,15 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     }
 
     public void updateVisibility() {
+        if (biome == null) {
+            this.biome = this.world.getBiome(this.pos);
+        }
         this.wetBiome = this.biome.getRainfall() > 0.0F;
         this.noSunWorld = this.world.provider.isNether();
 
         this.rain = this.wetBiome && (this.world.isRaining() || this.world.isThundering());
         this.sunIsUp = this.world.isDaytime();
-        this.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
+        this.skyIsVisible = this.world.canSeeSky(this.pos) &&
                 (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
                         MapColor.AIR) && !this.noSunWorld;
         if (!this.skyIsVisible) {
@@ -496,7 +608,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         return this.tier;
     }
 
-
     @Override
     public List<ItemStack> getWrenchDrops(
             World world,
@@ -506,7 +617,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             EntityPlayer entityPlayer,
             int i
     ) {
-        return new ArrayList<>(Arrays.asList(inputslot.gets()));
+        return inputslot;
     }
 
     @Override
@@ -525,36 +636,47 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     }
 
     @Override
-    public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
-        return true;
+    public boolean canEntityDestroy(final Entity entity) {
+        return super.canEntityDestroy(entity) && debt == 0;
     }
 
+    @Override
+    public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
+        return getComponentPrivate().wrenchCanRemove(entityPlayer) && debt == 0;
+    }
 
-    public ContainerSolarPanels getGuiContainer(EntityPlayer player) {
+    public ContainerBase<TileSolarPanel> getGuiContainer(EntityPlayer player) {
+        if (twoContainer) {
+            twoContainer = false;
+            return new ContainerSolarPanels1(player, this);
+        }
         return new ContainerSolarPanels(player, this);
     }
 
     public double canExtractEnergy() {
 
-        return Math.min(this.production, this.storage);
+        return Math.min(this.output, this.storage);
     }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
+        if (twoContainer) {
+            twoContainer = false;
+            return new GuiSolarPanels1(new ContainerSolarPanels1(player, this));
+        }
         return new GuiSolarPanels(new ContainerSolarPanels(player, this));
     }
 
     public double gaugeEnergyScaled(final float i) {
 
-        if ((this.storage * i / this.maxStorage) > 24) {
-            return 24;
+        if ((this.storage * i / this.maxStorage) > 84) {
+            return 84;
         }
 
         return (float) (this.storage * i / (this.maxStorage));
 
 
     }
-
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -577,7 +699,12 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
 
     @Override
     public void updateTileServer(EntityPlayer player, double event) {
-
+        if (event == 1000) {
+            this.twoContainer = true;
+            this.onActivated(player, player.getActiveHand(), EnumFacing.NORTH, 0, 0, 0);
+        } else {
+            deptPercent = event;
+        }
     }
 
     public EnumType getType() {

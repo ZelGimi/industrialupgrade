@@ -8,13 +8,12 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerAntiUpgrade;
 import com.denfop.gui.GuiAntiUpgradeBlock;
-import com.denfop.invslot.InvSlotAntiUpgradeBlock;
+import com.denfop.invslot.InventoryAntiUpgradeBlock;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +29,7 @@ import java.util.List;
 
 public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdatableTileEvent {
 
-    public final InvSlotAntiUpgradeBlock input;
+    public final InventoryAntiUpgradeBlock input;
     public int index;
     public int progress;
     public boolean need;
@@ -39,7 +38,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
         super(1000, 14, 4);
         this.need = false;
         this.progress = 0;
-        this.input = new InvSlotAntiUpgradeBlock(this);
+        this.input = new InventoryAntiUpgradeBlock(this);
         this.index = 0;
     }
 
@@ -51,8 +50,8 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
         return IUItem.basemachine2;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -60,7 +59,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     @Override
@@ -124,7 +123,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
                         if (this.outputSlot.canAdd(list.get(this.index))) {
                             this.outputSlot.add(list.get(this.index));
                         }
-                        UpgradeSystem.system.removeUpdate(this.input.get(), this.getWorld(), index);
+                        UpgradeSystem.system.removeUpdate(this.input.get(), this.getWorld(), list.get(index).getItemDamage());
                         this.need = false;
                         this.progress = 0;
 

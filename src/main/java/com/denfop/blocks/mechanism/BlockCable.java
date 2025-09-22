@@ -32,8 +32,8 @@ public enum BlockCable implements IMultiTileBlock, IItemIgnoringNull {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockCable(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -43,6 +43,18 @@ public enum BlockCable implements IMultiTileBlock, IItemIgnoringNull {
 
 
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
@@ -70,7 +82,7 @@ public enum BlockCable implements IMultiTileBlock, IItemIgnoringNull {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(CableType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);
@@ -104,7 +116,6 @@ public enum BlockCable implements IMultiTileBlock, IItemIgnoringNull {
 
     @Override
     public boolean hasActive() {
-        // TODO Auto-generated method stub
         return false;
     }
 

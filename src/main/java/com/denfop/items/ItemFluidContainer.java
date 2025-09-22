@@ -50,9 +50,14 @@ public abstract class ItemFluidContainer extends Item implements ISubItem<FluidN
             }
 
             public boolean canDrainFluidType(FluidStack fluid) {
-                return fluid != null && ItemFluidContainer.this.canfill(fluid.getFluid());
+                return fluid != null && ItemFluidContainer.this.canfill(fluid.getFluid()) && ItemFluidContainer.this.canDrain(
+                        fluid);
             }
         };
+    }
+
+    public boolean canDrain(FluidStack fluid) {
+        return true;
     }
 
     public ItemStack getItemStack(FluidName type) {
@@ -61,6 +66,19 @@ public abstract class ItemFluidContainer extends Item implements ISubItem<FluidN
 
     public ItemStack getItemStack(Fluid fluid) {
         ItemStack ret = new ItemStack(this);
+        if (fluid == null) {
+            return ret;
+        } else {
+            IFluidHandlerItem handler = FluidUtil.getFluidHandler(ret);
+            if (handler == null) {
+                return null;
+            } else {
+                return handler.fill(new FluidStack(fluid, Integer.MAX_VALUE), true) > 0 ? handler.getContainer() : null;
+            }
+        }
+    }
+
+    public ItemStack getItemStack(ItemStack ret, Fluid fluid) {
         if (fluid == null) {
             return ret;
         } else {

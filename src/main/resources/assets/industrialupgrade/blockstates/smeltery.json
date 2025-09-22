@@ -1,0 +1,54 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "smeltery_controller" : {
+        "model" : "industrialupgrade:smeltery/smeltery_controller"
+      },
+      "smeltery_controller_active" : {
+        "model" : "industrialupgrade:smeltery/smeltery_controller_active"
+      },
+      "smeltery_casing" : {
+        "model" : "industrialupgrade:smeltery/smeltery_casing"
+      },
+      "smeltery_fuel_tank" : {
+        "model" : "industrialupgrade:smeltery/smeltery_fuel_tank"
+      },
+	  "smeltery_tank" : {
+        "model" : "industrialupgrade:smeltery/smeltery_tank"
+      },
+      "smeltery_furnace" : {
+        "model" : "industrialupgrade:smeltery/smeltery_furnace"
+      },
+      "smeltery_furnace_active" : {
+        "model" : "industrialupgrade:smeltery/smeltery_furnace_active"
+      },
+      "smeltery_casting" : {
+        "model" : "industrialupgrade:smeltery/smeltery_casting"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

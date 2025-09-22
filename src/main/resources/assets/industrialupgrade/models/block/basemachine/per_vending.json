@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/per_vending_main",
+    "down" : "industrialupgrade:blocks/per_vending_up-down",
+    "up" : "industrialupgrade:blocks/per_vending_up-down",
+    "north" : "industrialupgrade:blocks/per_vending_main",
+    "east" : "industrialupgrade:blocks/per_vending_left-right-back",
+    "south" : "industrialupgrade:blocks/per_vending_left-right-back",
+    "west" : "industrialupgrade:blocks/per_vending_left-right-back"
+  }
+}

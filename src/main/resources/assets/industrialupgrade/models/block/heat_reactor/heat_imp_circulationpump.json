@@ -1,0 +1,6 @@
+{
+  "parent" : "block/cube_all",
+  "textures" : {
+    "all" : "industrialupgrade:blocks/heat_reactor/circulation_pump/imp_circulation_pump_side"
+  }
+}

@@ -68,19 +68,17 @@ public class HandlerHORecipeWrapper implements IRecipeWrapper {
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int size = this.getOutputs().size();
-        int y = 11;
-        int x = 122;
-        int temperature = 38 * this.nbt.getShort("temperature") / 5000;
+        int y = 17;
+        int x = 128;
+
         int temp = this.nbt.getShort("temperature");
-        if (temperature > 0) {
-            drawTexturedModalRect(48, 49, 176, 50, temperature + 1, 11);
-        }
+
 
         for (int i = 0; i < size; i++) {
             minecraft.fontRenderer.drawSplitString("" + this.nbt.getInteger("input" + i) + "%", x, y, recipeWidth - x, 4210752);
-            y += 18;
+            y += 19;
         }
-        minecraft.fontRenderer.drawString("" + temp + "°C", 56, 67, 4210752);
+        minecraft.fontRenderer.drawString("" + temp + "°C", 62, 75, 4210752);
 
     }
 

@@ -50,7 +50,7 @@ public class MatterWrapper implements IRecipeWrapper {
         minecraft.fontRenderer.drawSplitString(
                 Localization.translate("cost.name") + " " + ModUtils.getString((double) percent) + "EF",
                 10,
-                60,
+                67,
                 recipeWidth - 10,
                 4210752
         );

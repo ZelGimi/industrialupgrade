@@ -8,5 +8,7 @@ public enum EnumQuarryType {
     DEPTH(),
     FURNACE(),
     MACERATOR(),
-    COMB_MAC()
+    COMB_MAC(),
+
+    POLISHER()
 }

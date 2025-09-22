@@ -3,19 +3,18 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.gui.GuiGenStone;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -36,7 +35,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final ItemStack sand;
     private final ItemStack gravel;
     public double energyConsume;
@@ -44,7 +43,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     public int operationLength;
 
     public int operationsPerTick;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     protected short progress;
     protected double guiProgress;
@@ -60,7 +59,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
         this.defaultOperationLength = this.operationLength = length;
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.mode = Mode.COBBLESTONE;
         this.sand = new ItemStack(Blocks.SAND, 8);
@@ -141,13 +140,11 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract
         );
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -156,7 +153,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -188,7 +185,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
         super.updateEntityServer();
 
         MachineRecipe output = this.output;
-        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
+        if (output != null && canAdd() && this.energy.getEnergy() >= this.energyConsume) {
             if (!this.getActive()) {
                 setActive(true);
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
@@ -204,14 +201,14 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
                 this.guiProgress = 0;
                 operate(output);
                 this.progress = 0;
-                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[2 % valuesAudio.length])) {
+                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getTypeAudio() != valuesAudio[2 % valuesAudio.length])) {
                     initiate(2);
                 }
             }
         } else {
             if (output == null && this.getActive()) {
                 this.progress = 0;
-                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[1 % valuesAudio.length])) {
+                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getTypeAudio() != valuesAudio[1 % valuesAudio.length])) {
                     initiate(1);
                 }
             }
@@ -223,6 +220,19 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
             setOverclockRates();
         }
 
+    }
+
+    private boolean canAdd() {
+        switch (this.getMode()) {
+            default:
+                return this.outputSlot.canAdd(this.output.getRecipe().output.items);
+            case SAND:
+                return this.outputSlot.canAdd(this.sand);
+
+            case GRAVEL:
+                return this.outputSlot.canAdd(this.gravel);
+
+        }
     }
 
     public void setOverclockRates() {
@@ -249,7 +259,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
         switch (this.getMode()) {
             default:
-                this.outputSlot.add(processResult);
+                this.outputSlot.addAll(processResult);
                 break;
             case SAND:
                 this.outputSlot.add(this.sand);

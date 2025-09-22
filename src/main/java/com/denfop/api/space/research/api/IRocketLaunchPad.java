@@ -1,0 +1,40 @@
+package com.denfop.api.space.research.api;
+
+
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.space.rovers.api.IRoversItem;
+import com.denfop.invslot.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+
+import java.util.UUID;
+
+public interface IRocketLaunchPad {
+
+    void addDataRocket(ItemStack roversItem);
+
+    InventoryOutput getSlotOutput();
+
+    void addFluidStack(FluidStack fluidStack);
+
+    IRoversItem getRover();
+
+    void consumeRover();
+
+    void refuel(ItemStack itemStack, IRoversItem roversItem);
+
+    void charge(ItemStack itemStack);
+
+    ItemStack getRoverStack();
+
+    Inventory getRoverSlot();
+
+    UUID getPlayer();
+
+    World getWorldPad();
+
+    BlockPos getBlockPos();
+
+}

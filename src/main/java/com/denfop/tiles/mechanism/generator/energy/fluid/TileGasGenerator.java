@@ -4,19 +4,21 @@ import com.denfop.ElectricItem;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerGasGenerator;
 import com.denfop.gui.GuiGasGenerator;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.InventoryCharge;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -39,11 +41,13 @@ import java.io.IOException;
 public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         IAudioFixer, IUpdatableTileEvent {
 
-    public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 14);
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput outputSlot;
-    public final AdvEnergy energy;
-    public final int production = Math.round(200.0F);
+    public final InventoryCharge chargeSlot = new InventoryCharge(this, 14);
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput outputSlot;
+    public final Energy energy;
+    public final int production = Math.round(450.0F);
+    private final AirPollutionComponent pollutionAir;
+    private final SoilPollutionComponent pollutionSoil;
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
@@ -51,12 +55,14 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
 
     public TileGasGenerator() {
         super(24);
-        this.fluidSlot = new InvSlotFluidByList(this, "fluidSlot", 1, FluidName.fluidgas.getInstance(),
-                InvSlotFluid.TypeFluidSlot.INPUT
+        this.fluidSlot = new InventoryFluidByList(this, "fluidSlot", 1, FluidName.fluidgas.getInstance(),
+                InventoryFluid.TypeFluidSlot.INPUT
         );
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(this, 50000000, 14));
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.energy = this.addComponent(Energy.asBasicSource(this, 50000000, 3));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidgas.getInstance()));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.3));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -73,7 +79,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -94,7 +100,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -155,7 +161,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         return packet;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 

@@ -19,6 +19,7 @@ public class ItemTreetapEnergy extends ItemEnergyTool {
         super("electric_treetap", 50);
         this.maxCharge = 10000;
         this.transferLimit = 100;
+        this.efficiency = 0.5F;
         this.tier = 1;
     }
 
@@ -37,6 +38,20 @@ public class ItemTreetapEnergy extends ItemEnergyTool {
         ItemStack stack = ModUtils.get(player, hand);
         if (block == IUItem.rubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
             if (ItemTreetap.attemptExtract(player, world, pos, side, state, null)) {
+                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
+                return EnumActionResult.SUCCESS;
+            } else {
+                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+            }
+        } else if (block == IUItem.swampRubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
+            if (ItemTreetap.attemptSwampExtract(player, world, pos, side, state, null)) {
+                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
+                return EnumActionResult.SUCCESS;
+            } else {
+                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+            }
+        } else if (block == IUItem.tropicalRubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
+            if (ItemTreetap.attemptTropicalExtract(player, world, pos, side, state, null)) {
                 ElectricItem.manager.use(stack, this.operationEnergyCost, player);
                 return EnumActionResult.SUCCESS;
             } else {

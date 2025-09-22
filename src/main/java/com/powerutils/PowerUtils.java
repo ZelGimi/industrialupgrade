@@ -2,15 +2,29 @@ package com.powerutils;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.energy.event.TileLoadEvent;
+import com.denfop.api.energy.event.TileUnLoadEvent;
+import com.denfop.api.energy.event.TilesUpdateEvent;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.TileBlockCreator;
+import com.denfop.integration.ae.AEIntegration;
+import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
@@ -61,7 +75,7 @@ public final class PowerUtils {
 
                 Character.valueOf('B'), new ItemStack(IUItem.tranformer, 1, 8),
 
-                Character.valueOf('C'), IUItem.electronicCircuit,
+                Character.valueOf('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
                 Character.valueOf('D'),
                 new ItemStack(IUItem.electricblock, 1, 3)});
@@ -95,7 +109,7 @@ public final class PowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), IUItem.advancedCircuit,
+                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 Character.valueOf('C'), new ItemStack(PowerItem.module_ic),
 
@@ -108,7 +122,7 @@ public final class PowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), IUItem.advancedCircuit,
+                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 Character.valueOf('C'), new ItemStack(PowerItem.module_ic),
 
@@ -121,7 +135,7 @@ public final class PowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), IUItem.advancedCircuit,
+                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 Character.valueOf('C'), new ItemStack(PowerItem.module_ic),
 
@@ -134,7 +148,7 @@ public final class PowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), IUItem.advancedCircuit,
+                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 Character.valueOf('C'), new ItemStack(PowerItem.module_ic),
 
@@ -161,5 +175,65 @@ public final class PowerUtils {
 
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void load(TileLoadEvent event) {
+        if (PowerConfig.multi) {
+            if (event.tileentity.hasCapability(CapabilityEnergy.ENERGY, null)) {
+                final IEnergyStorage energy = event.tileentity.getCapability(CapabilityEnergy.ENERGY, null);
+                if (energy.canExtract()) {
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(event.getWorld(), new SourceEnergy(
+                            event.tileentity,
+                            energy
+                    )));
+                } else if (energy.canReceive()) {
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(event.getWorld(), new SinkEnergy(
+                            event.tileentity,
+                            energy
+                    )));
+                }
+
+            }
+        }
+
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void unLoad(TileUnLoadEvent event) {
+        if (PowerConfig.multi) {
+            if (event.tileentity.hasCapability(CapabilityEnergy.ENERGY, null)) {
+                final IEnergyStorage energy = event.tileentity.getCapability(CapabilityEnergy.ENERGY, null);
+                MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
+                        event.getWorld(),
+                        EnergyNetGlobal.instance.getTile(event.getWorld(), event.tileentity.getPos())
+                ));
+
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void update(TilesUpdateEvent event) {
+        if (PowerConfig.multi) {
+            for (TileEntity entity : event.tiles) {
+                    if (entity.hasCapability(CapabilityEnergy.ENERGY, null)) {
+                        final IEnergyStorage energy = entity.getCapability(CapabilityEnergy.ENERGY, null);
+                        if (energy.canExtract()) {
+                            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(event.getWorld(), new SourceEnergy(
+                                    entity,
+                                    energy
+                            )));
+                        } else if (energy.canReceive()) {
+                            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(event.getWorld(), new SinkEnergy(
+                                    entity,
+                                    energy
+                            )));
+                        }
+
+
+                }
+
+            }
+        }
+    }
 
 }

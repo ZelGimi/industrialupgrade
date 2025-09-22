@@ -1,13 +1,19 @@
 package com.denfop.network;
 
 import com.denfop.api.radiationsystem.Radiation;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.api.research.main.BaseLevelSystem;
+import com.denfop.api.space.fakebody.FakePlanet;
+import com.denfop.api.tesseract.Channel;
 import com.denfop.api.vein.Vein;
 import com.denfop.componets.AbstractComponent;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
+import com.denfop.network.packet.INetworkObject;
+import com.denfop.recipe.IInputItemStack;
+import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufOutputStream;
@@ -204,9 +210,11 @@ public class EncoderHandler {
                 break;
             case BlockPos:
                 BlockPos pos = (BlockPos) o;
-                os.writeInt(pos.getX());
-                os.writeInt(pos.getY());
-                os.writeInt(pos.getZ());
+                os.writeBlockPos(pos);
+
+                break;
+            case network_object:
+                os.writeBytes(((INetworkObject) o).writePacket());
                 break;
             case Boolean:
                 os.writeBoolean((Boolean) o);
@@ -221,6 +229,9 @@ public class EncoderHandler {
                 ChunkPos chunkpos = (ChunkPos) o;
                 os.writeInt(chunkpos.x);
                 os.writeInt(chunkpos.z);
+                break;
+            case DataOre:
+                os.writeBytes(((DataOre) o).getCustomPacket());
                 break;
             case Collection:
                 encode(os, ((Collection) o).toArray(), false);
@@ -263,7 +274,7 @@ public class EncoderHandler {
                 os.writeInt((Integer) o);
                 break;
             case InvSlot:
-                InvSlot slot = (InvSlot) o;
+                Inventory slot = (Inventory) o;
                 ItemStack[] contents = new ItemStack[slot.size()];
 
                 for (i = 0; i < slot.size(); ++i) {
@@ -338,6 +349,19 @@ public class EncoderHandler {
             case World:
                 os.writeInt(((World) o).provider.getDimension());
                 break;
+            case channel:
+                os.writeBytes(((Channel) o).writePacket());
+                break;
+            case Input:
+                IInputItemStack input = (IInputItemStack) o;
+                encode(os, input.getInputs(), true);
+                break;
+            case MachineRecipe:
+                BaseMachineRecipe machineRecipe = (BaseMachineRecipe) o;
+                encode(os, machineRecipe.output.items, true);
+                encode(os, machineRecipe.output.metadata, true);
+                encode(os, machineRecipe.input.getInputs(), true);
+                break;
             case Vein:
                 Vein vein = (Vein) o;
                 os.writeBytes(vein.writePacket());
@@ -351,6 +375,7 @@ public class EncoderHandler {
                 os.writeBytes(radiation.writePacket());
                 break;
             case FAKE_PLANET:
+                encode(os, ((FakePlanet) o).writeNBTTagCompound(new NBTTagCompound()));
                 break;
 
 

@@ -1,7 +1,9 @@
 package com.denfop.tiles.mechanism.multiblocks.base;
 
+import com.denfop.IUItem;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.multiblock.IMultiElement;
+import com.denfop.items.energy.ItemToolWrench;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -10,6 +12,7 @@ import net.minecraft.util.EnumHand;
 public class TileEntityMultiBlockElement extends TileEntityInventory implements IMultiElement {
 
     IMainMultiBlock mainMultiBlock;
+
 
     public TileEntityMultiBlockElement() {
 
@@ -35,6 +38,13 @@ public class TileEntityMultiBlockElement extends TileEntityInventory implements 
             final float hitY,
             final float hitZ
     ) {
+        if (player != null && hand != null && player
+                .getHeldItem(hand)
+                .getItem() instanceof ItemToolWrench || player != null && hand != null && player
+                .getHeldItem(hand)
+                .getItem() == IUItem.GraviTool) {
+            return false;
+        }
         if (this.getMain() != null && !this.hasOwnInventory()) {
             if (this.getMain() instanceof TileEntityInventory) {
                 return ((TileEntityInventory) this.getMain()).onActivated(player, hand, side, hitX, hitY, hitZ);
@@ -42,18 +52,27 @@ public class TileEntityMultiBlockElement extends TileEntityInventory implements 
                 return true;
             }
         } else {
+            if (this.getMain() == null && !this.hasOwnInventory()) {
+                return false;
+            }
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
     }
 
     @Override
-    public void onUnloaded() {
-        if (this.getMain() != null && !this.getWorld().isRemote) {
+    public void onBlockBreak(final boolean wrench) {
+        super.onBlockBreak(wrench);
+        if (this.getMain() != null) {
             if (this.getMain().isFull()) {
-                getMain().setFull(false);
                 getMain().setActivated(false);
+                getMain().setFull(false);
             }
         }
+    }
+
+    @Override
+    public void onUnloaded() {
+
         super.onUnloaded();
     }
 

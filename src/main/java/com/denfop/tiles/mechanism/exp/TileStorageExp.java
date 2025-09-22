@@ -14,7 +14,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerStorageExp;
 import com.denfop.gui.GuiStorageExp;
-import com.denfop.invslot.InvSlotExpStorage;
+import com.denfop.invslot.InventoryExpStorage;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -24,7 +24,6 @@ import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -41,7 +40,7 @@ import java.util.List;
 public class TileStorageExp extends TileEntityInventory implements
         IUpdatableTileEvent, IAudioFixer {
 
-    public final InvSlotExpStorage inputSlot;
+    public final InventoryExpStorage inputSlot;
     public final ComponentBaseEnergy energy;
     public int expirencelevel;
     public int expirencelevel1;
@@ -51,9 +50,11 @@ public class TileStorageExp extends TileEntityInventory implements
     private boolean sound = true;
 
     public TileStorageExp() {
-        this.inputSlot = new InvSlotExpStorage(this);
-        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
-
+        this.inputSlot = new InventoryExpStorage(this);
+        this.energy = this.addComponent(new ComponentBaseEnergy(EnergyType.EXPERIENCE, this, 4000000000d, ModUtils.allFacings,
+                ModUtils.allFacings, 14
+        ));
+        this.energy.setDirections(ModUtils.allFacings, ModUtils.allFacings);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class TileStorageExp extends TileEntityInventory implements
         return nbttagcompound;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -111,7 +112,7 @@ public class TileStorageExp extends TileEntityInventory implements
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
@@ -211,7 +212,7 @@ public class TileStorageExp extends TileEntityInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -274,7 +275,7 @@ public class TileStorageExp extends TileEntityInventory implements
         this.expirencelevel = ExperienceUtils.getLevelForExperience((int) Math.min(this.energy.getEnergy(), 2000000000));
         this.expirencelevel1 =
                 ExperienceUtils.getLevelForExperience((int) Math.min(
-                        Math.min(this.energy.getEnergy() - 2000000000, 0),
+                        Math.max(this.energy.getEnergy() - 2000000000, 0),
                         2000000000
                 ));
 

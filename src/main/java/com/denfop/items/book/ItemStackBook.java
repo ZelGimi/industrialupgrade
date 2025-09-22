@@ -1,9 +1,8 @@
 package com.denfop.items.book;
 
 import com.denfop.container.ContainerBase;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -33,18 +32,8 @@ public class ItemStackBook extends ItemStackInventory {
     }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
+    public void addInventorySlot(final Inventory var1) {
 
-    @Override
-    public void addInventorySlot(final InvSlot var1) {
-
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

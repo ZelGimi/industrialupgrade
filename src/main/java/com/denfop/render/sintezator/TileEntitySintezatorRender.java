@@ -1,46 +1,33 @@
 package com.denfop.render.sintezator;
 
-import com.denfop.Constants;
-import com.denfop.IUItem;
-import com.denfop.api.render.IModelCustom;
-import com.denfop.render.base.AdvancedModelLoader;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
 import com.denfop.tiles.base.TileSintezator;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileSintezator> {
 
-    public static final ResourceLocation texture = new ResourceLocation(
-            Constants.TEXTURES,
-            "textures/models/sintezator.png"
-    );
-    static final IModelCustom model = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/sintezator.obj"));
-    static final IModelCustom model_panel1 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_1.obj"));
-    static final IModelCustom model_panel2 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_2.obj"));
-    static final IModelCustom model_panel3 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_3.obj"));
-    static final IModelCustom model_panel4 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_4.obj"));
-    static final IModelCustom model_panel5 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_5.obj"));
-    static final IModelCustom model_panel6 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_6.obj"));
-    static final IModelCustom model_panel7 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_7.obj"));
-    static final IModelCustom model_panel8 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_8.obj"));
-    static final IModelCustom model_panel9 = AdvancedModelLoader
-            .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel_model_9.obj"));
-    final IModelCustom[] panels = {model_panel1, model_panel2, model_panel3, model_panel4, model_panel5, model_panel6, model_panel7, model_panel8, model_panel9};
-
+    public static Map<IBlockState, IBakedModel> modelMap = new HashMap<>();
 
     public void render(
             @Nonnull TileSintezator tile,
@@ -52,70 +39,80 @@ public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileSi
             float alpha
     ) {
         GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
-        GL11.glTranslatef(0.5F, 0F, 0.5F);
         GL11.glRotatef(0F, 0.0F, 0F, 0F);
-        bindTexture(texture);
-        model.renderAll();
         for (int i = 0; i < 9; i++) {
+            GL11.glPushMatrix();
+            GL11.glTranslated(x + 0.25 + 0.189 * (i % 3), y + 0.3125, z + 0.25 + 0.189 * (i / 3));
+            GlStateManager.scale(0.125, 0.125, 0.125);
             if (!tile.inputslot.get(i).isEmpty()) {
-                if (IUItem.map3.get(tile.inputslot.get(i).getUnlocalizedName()) != null) {
-                    EnumSolarPanels solar = IUItem.map3.get(tile.inputslot.get(i).getUnlocalizedName());
-                    ResourceLocation texture1;
-                    if (solar.rendertype) {
-                        if (tile.solartype != 0) {
-                            texture1 = new ResourceLocation(
-                                    Constants.TEXTURES,
-                                    "textures/models/panels/" + solar.texturesmodels + "_" + tile.solartype + ".png"
-                            );
-                        } else {
-                            texture1 = new ResourceLocation(
-                                    Constants.TEXTURES,
-                                    "textures/models/panels/" + solar.texturesmodels + ".png"
-                            );
-                        }
-                    } else {
-                        texture1 = new ResourceLocation(
-                                Constants.TEXTURES,
-                                "textures/models/panels/" + solar.texturesmodels + ".png"
-                        );
-                    }
-                    bindTexture(texture1);
-                    panels[i].renderAll();
+                ItemStack stack = tile.inputslot.get(i);
+                Item item = stack.getItem();
+                Block block = Block.getBlockFromItem(item);
+                if (block != Blocks.AIR) {
+                    if (block instanceof BlockTileEntity) {
+                        BlockTileEntity blockTileEntity = (BlockTileEntity) block;
 
-
-                } else if (IUItem.panel_list.get(tile.inputslot.get(i).getUnlocalizedName() + ".name") != null) {
-                    List solar = IUItem.panel_list.get(tile.inputslot.get(i).getUnlocalizedName() + ".name");
-                    ResourceLocation texture1;
-                    if ((boolean) solar.get(6)) {
-                        if (tile.solartype != 0) {
-                            texture1 = new ResourceLocation(
-                                    ((ResourceLocation) solar.get(5)).getResourceDomain(),
-                                    ((ResourceLocation) solar.get(5))
-                                            .getResourcePath()
-                                            .substring(
-                                                    0,
-                                                    ((ResourceLocation) solar.get(5)).getResourcePath().lastIndexOf(".")
-                                            ) + "_" + tile.solartype + ".png"
-                            );
-                        } else {
-                            texture1 = new ResourceLocation(
-                                    ((ResourceLocation) solar.get(5)).getResourceDomain(),
-                                    ((ResourceLocation) solar).getResourcePath()
-                            );
-                        }
-                    } else {
-                        texture1 = new ResourceLocation(
-                                ((ResourceLocation) solar.get(5)).getResourceDomain(),
-                                ((ResourceLocation) solar).getResourcePath()
+                        IMultiTileBlock teBlock = blockTileEntity.teInfo.getIdMap().isEmpty() ? null :
+                                blockTileEntity.teInfo.getIdMap().get(stack.getItemDamage());
+                        IBlockState state = blockTileEntity.getDefaultState().withProperty(
+                                blockTileEntity.typeProperty,
+                                blockTileEntity.typeProperty.getState(teBlock, tile.active)
                         );
+                        IBakedModel model = modelMap.get(state);
+                        if (model == null) {
+                            model = Minecraft
+                                    .getMinecraft()
+                                    .getBlockRendererDispatcher()
+                                    .getModelForState(state);
+                            modelMap.put(state, model);
+                        }
+                        for (EnumFacing enumfacing : EnumFacing.values()) {
+                            render(model, state, enumfacing);
+                        }
+
+                        render(model, state, null);
+                    } else {
+                        IBlockState state = block.getStateFromMeta(stack.getItemDamage());
+                        IBakedModel model = modelMap.get(state);
+                        if (model == null) {
+                            model = Minecraft
+                                    .getMinecraft()
+                                    .getBlockRendererDispatcher()
+                                    .getModelForState(state);
+                            modelMap.put(state, model);
+                        }
+                        for (EnumFacing enumfacing : EnumFacing.values()) {
+                            render(model, state, enumfacing);
+                        }
+
+                        render(model, state, null);
                     }
-                    bindTexture(texture1);
-                    panels[i].renderAll();
                 }
             }
+            GL11.glPopMatrix();
         }
         GL11.glPopMatrix();
+
+    }
+
+    public void render(IBakedModel model, IBlockState state, EnumFacing enumfacing) {
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        int i = 0;
+        final List<BakedQuad> listQuads = model.getQuads(state, enumfacing, 0L);
+        for (int j = listQuads.size(); i < j; ++i) {
+            BakedQuad bakedquad = listQuads.get(i);
+
+
+            bufferbuilder.begin(7, DefaultVertexFormats.ITEM);
+            bufferbuilder.addVertexData(bakedquad.getVertexData());
+
+
+            Vec3i vec3i = bakedquad.getFace().getDirectionVec();
+            bufferbuilder.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
+            tessellator.draw();
+        }
 
     }
 

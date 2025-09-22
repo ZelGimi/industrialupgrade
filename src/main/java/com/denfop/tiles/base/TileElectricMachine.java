@@ -4,12 +4,11 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
+import com.denfop.componets.Energy;
+import com.denfop.invslot.InventoryDischarge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -17,7 +16,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,8 +23,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,10 +35,10 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     public double guiChargeLevel = 0;
 
 
-    public InvSlotOutput outputSlot = null;
+    public InventoryOutput outputSlot = null;
 
-    public AdvEnergy energy = null;
-    public InvSlotDischarge dischargeSlot;
+    public Energy energy = null;
+    public InventoryDischarge dischargeSlot;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio;
     public boolean sound = true;
@@ -50,13 +46,15 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     public TileElectricMachine(double MaxEnergy, int tier, int count) {
 
         this.tier = tier;
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, tier, false);
+
         if (MaxEnergy != 0) {
-            energy = this.addComponent(AdvEnergy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
+            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier));
+            dischargeSlot = new InventoryDischarge(this, 14);
+            energy.addManagedSlot(dischargeSlot);
         }
 
         if (count != 0) {
-            this.outputSlot = new InvSlotOutput(this, "output", count);
+            this.outputSlot = new InventoryOutput(this, count);
         }
         if (MaxEnergy != 0) {
             this.guiChargeLevel = this.energy.getFillRatio();
@@ -70,7 +68,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final AdvEnergy component = this.getComp(AdvEnergy.class);
+                    final Energy component = this.getComp(Energy.class);
                     if (component != null) {
                         if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -88,7 +86,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
                     return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComp(AdvEnergy.class);
+        final Energy component = this.getComp(Energy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -135,7 +133,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 new PacketStopSound(getWorld(), this.pos);
 
@@ -166,10 +164,9 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -184,9 +181,10 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             }
 
         }
+        super.addInformation(stack, tooltip);
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -205,7 +203,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

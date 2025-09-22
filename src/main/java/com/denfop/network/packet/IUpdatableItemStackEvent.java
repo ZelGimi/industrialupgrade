@@ -8,4 +8,5 @@ public interface IUpdatableItemStackEvent {
 
     void updateEvent(int event, ItemStack stack);
 
+
 }

@@ -31,6 +31,7 @@ public abstract class BaseEnergyItem extends Item implements IEnergyItem {
         this.tier = tier;
         this.setMaxStackSize(1);
         this.setNoRepair();
+        this.setMaxDamage(0);
         this.setCreativeTab(IUCore.EnergyTab);
         this.name = name;
         setUnlocalizedName(name);

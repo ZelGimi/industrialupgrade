@@ -1,0 +1,7 @@
+{
+	"parent" : "industrialupgrade:item/default",
+	"textures" : {
+	  "layer0" : "industrialupgrade:items/wood_fluid_pipe_output"
+	}
+  }
+  

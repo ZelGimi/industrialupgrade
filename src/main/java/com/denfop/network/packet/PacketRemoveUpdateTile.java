@@ -5,28 +5,30 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.io.IOException;
 
-public class PacketRemoveUpdateTile implements IPacket{
-    public PacketRemoveUpdateTile(){
+public class PacketRemoveUpdateTile implements IPacket {
+
+    public PacketRemoveUpdateTile() {
 
     }
-    public PacketRemoveUpdateTile(TileEntityBlock te){
+
+    public PacketRemoveUpdateTile(TileEntityBlock te) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(64);
         buffer.writeByte(this.getId());
 
         try {
-            EncoderHandler.encode(buffer,te.getWorld());
-            EncoderHandler.encode(buffer,te.getPos());
+            EncoderHandler.encode(buffer, te.getWorld());
+            EncoderHandler.encode(buffer, te.getPos());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         IUCore.network.getServer().sendPacket(buffer);
     }
+
     @Override
     public byte getId() {
         return 60;
@@ -36,7 +38,7 @@ public class PacketRemoveUpdateTile implements IPacket{
     public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
         World world1;
         try {
-             world1 = (World) DecoderHandler.decode(is);
+            world1 = (World) DecoderHandler.decode(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

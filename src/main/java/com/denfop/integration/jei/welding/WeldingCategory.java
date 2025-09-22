@@ -2,8 +2,19 @@ package com.denfop.integration.jei.welding;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
+import com.denfop.container.ContainerEnchanterBooks;
+import com.denfop.container.SlotInvSlot;
+import com.denfop.gui.GuiIU;
+import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -12,24 +23,40 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 
-public class WeldingCategory extends Gui implements IRecipeCategory<WeldingRecipeWrapper> {
+public class WeldingCategory extends GuiIU implements IRecipeCategory<WeldingRecipeWrapper> {
 
     private final IDrawableStatic bg;
+    private final ContainerEnchanterBooks container1;
+    private final GuiComponent progress_bar;
     private int progress = 0;
     private int energy = 0;
 
     public WeldingCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guialloysmelter" +
-                        ".png"), 5, 16, 140,
-                65
+        super(((TileEntityEnchanterBooks) BlockBaseMachine3.enchanter_books.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+                        ".png"), 3, 3, 140,
+                77
         );
+        this.componentList.clear();
+        this.slots = new GuiComponent(this, 3, 3, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
+        );
+        this.container1 = (ContainerEnchanterBooks) this.getContainer();
+        this.componentList.add(slots);
+        progress_bar = new GuiComponent(this, 85, 35, EnumTypeComponent.PROCESS,
+                new Component<>(this.container1.base.componentProgress)
+        );
+        this.componentList.add(progress_bar);
     }
 
     @Nonnull
@@ -42,7 +69,7 @@ public class WeldingCategory extends Gui implements IRecipeCategory<WeldingRecip
     @Override
     public String getTitle() {
         return Localization.translate(TileBlockCreator.instance
-                .get(BlockBaseMachine3.welding.getIdentifier())
+                .get(BlockBaseMachine3.welding.getIDBlock())
                 .getItemStack(BlockBaseMachine3.welding)
                 .getUnlocalizedName());
     }
@@ -63,19 +90,18 @@ public class WeldingCategory extends Gui implements IRecipeCategory<WeldingRecip
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        energy++;
-        double energylevel = Math.min(14.0F * energy / 100, 14);
-        double xScale = 24.0F * progress / 100;
-        if (xScale > 24.0F) {
+        if (this.energy < 100) {
+            energy++;
+        }
+        double energylevel = energy / 100D;
+        double xScale = progress / 100D;
+        if (xScale >= 1) {
             progress = 0;
         }
+        this.slots.drawBackground(0, 0);
 
+        progress_bar.renderBar(-10, 0, xScale);
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(51 + 1, 20 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
-                14, (int) energylevel
-        );
-        drawTexturedModalRect(74, 18, 176, 14, (int) (xScale + 1), 16);
-
     }
 
     @Override
@@ -85,12 +111,20 @@ public class WeldingCategory extends Gui implements IRecipeCategory<WeldingRecip
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 32, 0);
-        isg.set(0, recipes.getInput());
-        isg.init(1, true, 68, 0);
-        isg.set(1, recipes.getInput1());
-        isg.init(2, false, 110, 17);
-        isg.set(2, recipes.getOutput());
+
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
+        final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1());
+        int i = 0;
+        for (; i < inputs.size(); i++) {
+
+            isg.init(i, true, slots1.get(i).getJeiX(), slots1.get(i).getJeiY());
+            isg.set(i, inputs.get(i));
+
+        }
+
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
+        isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
+        isg.set(i, recipes.getOutput());
     }
 
     protected ResourceLocation getTexture() {

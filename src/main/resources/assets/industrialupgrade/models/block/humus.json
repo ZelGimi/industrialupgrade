@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_column",
+	"textures": {
+		"side": "industrialupgrade:blocks/humus",
+		"end": "industrialupgrade:blocks/humus"
+	}
+}

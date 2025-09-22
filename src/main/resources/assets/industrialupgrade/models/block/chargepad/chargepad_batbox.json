@@ -7,6 +7,6 @@
 		"north": "industrialupgrade:blocks/chargepad_batbox_front",
 		"east": "industrialupgrade:blocks/chargepad_batbox_left",
 		"south": "industrialupgrade:blocks/chargepad_batbox_back",
-		"west": "industrialupgrade:blocks/chargepad_batbox_right"
+		"west": "industrialupgrade:blocks/chargepad_batbox_left"
 	}
 }

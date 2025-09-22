@@ -2,6 +2,8 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.IUpdatableItemStack;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,12 +14,12 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.util.Arrays;
 
-public abstract class ItemStackInventory implements IAdvInventory {
+public abstract class ItemStackInventory implements IAdvInventory, IUpdatableItemStack {
 
     public final EntityPlayer player;
     protected final ItemStack[] inventory;
     protected ItemStack containerStack;
-    private boolean cleared;
+    protected boolean cleared;
 
     public ItemStackInventory(EntityPlayer player, ItemStack containerStack, int inventorySize) {
         this.containerStack = containerStack;
@@ -43,6 +45,21 @@ public abstract class ItemStackInventory implements IAdvInventory {
 
     }
 
+
+    @Override
+    public CustomPacketBuffer writeContainer() {
+        return new CustomPacketBuffer();
+    }
+
+    @Override
+    public void readContainer(final CustomPacketBuffer buffer) {
+
+    }
+
+    public ItemStack[] getInventory() {
+        return inventory;
+    }
+
     public int getSizeInventory() {
         return this.inventory.length;
     }
@@ -56,6 +73,10 @@ public abstract class ItemStackInventory implements IAdvInventory {
         }
 
         return true;
+    }
+
+    public ItemStack getContainerStack() {
+        return containerStack;
     }
 
     public ItemStack getStackInSlot(int slot) {
@@ -153,6 +174,11 @@ public abstract class ItemStackInventory implements IAdvInventory {
     protected int getUid() {
         NBTTagCompound nbt = ModUtils.nbt(this.containerStack);
         return nbt.getInteger("uid");
+    }
+
+    public NBTTagCompound getNBT() {
+        NBTTagCompound nbt = ModUtils.nbt(this.containerStack);
+        return nbt;
     }
 
     protected int getPlayerInventoryIndex() {

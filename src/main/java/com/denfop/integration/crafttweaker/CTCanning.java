@@ -125,7 +125,7 @@ public class CTCanning {
                     new Input(
                             (FluidStack) this.container.getInternal(),
                             com.denfop.api.Recipes.inputFactory.getInput(IUItem.FluidCell),
-                            new IC2InputItemStack(this.fill)
+                            new InputItemStack(this.fill)
                     ),
                     new RecipeOutput(null, ModUtils.getCellFromFluid(((FluidStack) this.container.getInternal()).getFluid()))
             ));

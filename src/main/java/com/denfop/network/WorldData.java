@@ -1,5 +1,6 @@
 package com.denfop.network;
 
+import com.denfop.items.ItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.world.IWorldTickCallback;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class  WorldData {
+public class WorldData {
 
     public static Map<Integer, WorldData> idxClient = FMLCommonHandler.instance().getSide().isClient()
             ? new HashMap<>()
@@ -23,6 +24,7 @@ public class  WorldData {
     public static Map<Integer, WorldData> idxServer = new HashMap<>();
     public final Queue<IWorldTickCallback> singleUpdates = new LinkedList<>();
     public final Map<TileEntityBlock, Map<EntityPlayer, CustomPacketBuffer>> mapUpdateContainer = new HashMap<>();
+    public final Map<ItemStackInventory, Map<EntityPlayer, CustomPacketBuffer>> mapUpdateItemStackContainer = new HashMap<>();
 
     public final List<TileEntityBlock> listUpdateTile = new ArrayList<>();
     public final Map<TileEntityBlock, List<CustomPacketBuffer>> mapUpdateField = new HashMap<>();
@@ -39,18 +41,21 @@ public class  WorldData {
     }
 
     public static WorldData get(World world, boolean load) {
-        Map<Integer, WorldData> index = getIndex(!world.isRemote);
-        WorldData ret = index.get(world.provider.getDimension());
-        if (ret == null && load) {
-            ret = new WorldData(world);
-            WorldData prev = index.putIfAbsent(world.provider.getDimension(), ret);
-            if (prev != null) {
-                ret = prev;
+        if (world == null) {
+            return null;
+        } else {
+            Map<Integer, WorldData> index = getIndex(!world.isRemote);
+            WorldData ret = index.get(world.provider.getDimension());
+            if (ret == null && load) {
+                ret = new WorldData(world);
+                WorldData prev = index.putIfAbsent(world.provider.getDimension(), ret);
+                if (prev != null) {
+                    ret = prev;
+                }
+
             }
-
+            return ret;
         }
-        return ret;
-
     }
 
     public static void onWorldUnload(World world) {

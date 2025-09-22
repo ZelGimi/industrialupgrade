@@ -3,11 +3,12 @@ package com.denfop.tiles.base;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -16,6 +17,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSunnariumPanelMaker;
 import com.denfop.container.ContainerSunnariumMaker;
 import com.denfop.gui.GuiSunnariumMaker;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,12 +36,34 @@ import java.util.Set;
 public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdateTick, IHasRecipe {
 
 
+    public final Inventory input_slot;
+
     public TileSunnariumMaker() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotRecipes(this, "sunnurium", this);
+        this.inputSlotA = new InventoryRecipes(this, "sunnurium", this);
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
+            @Override
+            public void put(final int index, final ItemStack content) {
+                super.put(index, content);
+                if (this.get().isEmpty()) {
+                    ((TileSunnariumMaker) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
+                } else {
+                    ((TileSunnariumMaker) this.base).inputSlotA.changeAccepts(this.get());
+                }
+            }
 
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.RECIPE_SCHEDULE;
+            }
+
+            @Override
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+                return stack.getItem() == IUItem.recipe_schedule;
+            }
+        };
     }
 
     public static void addSunnariumMaker(
@@ -81,6 +105,18 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
         );
 
 
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        if (!this.getWorld().isRemote) {
+            if (this.input_slot.isEmpty()) {
+                (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
+            } else {
+                (this).inputSlotA.changeAccepts(this.input_slot.get());
+            }
+        }
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -164,7 +200,7 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
         );
         addSunnariumMaker(
                 new ItemStack(IUItem.core, 1, 9),
-                IUItem.RTGPellets,
+                new ItemStack(IUItem.nuclear_res, 1, 9),
                 new ItemStack(IUItem.photoniy),
                 new ItemStack(IUItem.sunnarium, 1, 0),
                 new ItemStack(IUItem.excitednucleus, 1, 9)
@@ -198,6 +234,15 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
                 new ItemStack(IUItem.sunnarium, 1, 0),
                 new ItemStack(IUItem.excitednucleus, 1, 13)
         );
+        addSunnariumMaker(
+                new ItemStack(IUItem.crafting_elements, 4, 282),
+                new ItemStack(IUItem.crafting_elements, 1, 319),
+                new ItemStack(IUItem.crafting_elements, 2, 386),
+                new ItemStack(IUItem.crafting_elements, 1, 434),
+                new ItemStack(IUItem.crafting_elements, 1, 320)
+        );
+
+
     }
 
     @Override
@@ -240,6 +285,10 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
         return new GuiSunnariumMaker(new ContainerSunnariumMaker(entityPlayer, this));
     }
 
+    public ContainerSunnariumMaker getGuiContainer(EntityPlayer entityPlayer) {
+        return new ContainerSunnariumMaker(entityPlayer, this);
+    }
+
     public String getStartSoundFile() {
         return null;
     }
@@ -254,7 +303,7 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
 

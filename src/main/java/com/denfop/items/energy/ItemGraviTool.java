@@ -1,7 +1,11 @@
 package com.denfop.items.energy;
 
 
-import com.denfop.*;
+import com.denfop.Constants;
+import com.denfop.ElectricItem;
+import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.tile.IWrenchable;
@@ -10,7 +14,6 @@ import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
-import com.denfop.blocks.BlockRubWood;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.proxy.CommonProxy;
@@ -47,9 +50,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -117,7 +125,6 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
 
         if (ElectricItem.manager.use(stack, usage * coef, player)) {
             if (!supressSound && player.world.isRemote) {
-                player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
 
             }
 
@@ -137,92 +144,8 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
         return stack.getTagCompound().hasKey("toolMode", 4);
     }
 
-    private static void ejectResin(World world, BlockPos pos, EnumFacing side, int quantity) {
-        double ejectX = (double) pos.getX() + 0.5D + (double) side.getFrontOffsetX() * 0.3D;
-        double ejectY = (double) pos.getY() + 0.5D + (double) side.getFrontOffsetY() * 0.3D;
-        double ejectZ = (double) pos.getZ() + 0.5D + (double) side.getFrontOffsetZ() * 0.3D;
-
-
-        EntityItem entityitem = new EntityItem(
-                world,
-                ejectX,
-                ejectY,
-                ejectZ,
-                IUItem.latex.copy()
-        );
-        entityitem.setDefaultPickupDelay();
-        entityitem.getItem().setCount(quantity);
-        world.spawnEntity(entityitem);
-
-
-    }
-
-    public static boolean attemptExtract(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumFacing side,
-            IBlockState state,
-            List<ItemStack> stacks,
-            final ItemStack stack
-    ) {
-        assert state.getBlock() == IUItem.rubWood;
-
-        BlockRubWood.RubberWoodState rwState = state.getValue(BlockRubWood.stateProperty);
-        boolean max = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
-        if (!rwState.isPlain() && rwState.facing == side) {
-            if (rwState.wet) {
-                if (!world.isRemote) {
-                    world.setBlockState(pos, state.withProperty(BlockRubWood.stateProperty, rwState.getDry()));
-                    if (stacks != null) {
-                        stacks.add(ModUtils.setSize(
-                                IUItem.latex,
-                                world.rand.nextInt(3) + 1
-                        ));
-                    } else {
-                        ejectResin(world, pos, side, !max ? world.rand.nextInt(3) + 1 : 3);
-                    }
-
-                }
-
-                if (world.isRemote && player != null) {
-                    player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
-
-
-                }
-
-                return true;
-            } else {
-                if (!world.isRemote && world.rand.nextInt(5) == 0) {
-                    world.setBlockState(
-                            pos,
-                            state.withProperty(BlockRubWood.stateProperty, BlockRubWood.RubberWoodState.plain_y)
-                    );
-                }
-
-                if (world.rand.nextInt(5) == 0) {
-                    if (!world.isRemote) {
-                        ejectResin(world, pos, side, 1);
-                        if (stacks != null) {
-                            stacks.add(IUItem.latex);
-                        } else {
-                            ejectResin(world, pos, side, 1);
-                        }
-                    }
-
-                    if (world.isRemote && player != null) {
-                        player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
-
-                    }
-
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.GRAVITOOL.list;
     }
 
     public boolean showDurabilityBar(final ItemStack stack) {
@@ -401,6 +324,8 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         ItemStack stack_modulesize = ItemStack.EMPTY;
                         ItemStack panel = ItemStack.EMPTY;
                         ItemStack stack_modulestorage = ItemStack.EMPTY;
+                        ItemStack module_infinity_water = ItemStack.EMPTY;
+                        ItemStack module_separate = ItemStack.EMPTY;
                         if (base.multi_process.quickly) {
                             stack_quickly = new ItemStack(IUItem.module_quickly);
                         }
@@ -413,7 +338,13 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         if (base.multi_process.modulestorage) {
                             stack_modulestorage = new ItemStack(IUItem.module_storage);
                         }
-                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
+                        if (base.multi_process.module_infinity_water) {
+                            module_infinity_water = new ItemStack(IUItem.module_infinity_water);
+                        }
+                        if (base.multi_process.module_separate) {
+                            module_separate = new ItemStack(IUItem.module_separate);
+                        }
+                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                             final EntityItem item = new EntityItem(world);
                             if (!stack_quickly.isEmpty()) {
                                 item.setItem(stack_quickly);
@@ -422,6 +353,14 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                             } else if (!stack_modulesize.isEmpty()) {
                                 item.setItem(stack_modulesize);
                                 base.multi_process.setModulesize(false);
+                                base.multi_process.shrinkModule(1);
+                            } else if (!module_separate.isEmpty()) {
+                                item.setItem(module_separate);
+                                base.multi_process.module_separate = false;
+                                base.multi_process.shrinkModule(1);
+                            } else if (!module_infinity_water.isEmpty()) {
+                                item.setItem(module_infinity_water);
+                                base.multi_process.module_infinity_water = false;
                                 base.multi_process.shrinkModule(1);
                             } else if (!panel.isEmpty()) {
                                 item.setItem(panel);
@@ -455,6 +394,11 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                             base.multi_process.setModulesize(false);
                             base.multi_process.shrinkModule(1);
                         }
+                        if (base.multi_process.module_separate) {
+                            stack_list.add(new ItemStack(IUItem.module_separate));
+                            base.multi_process.module_separate = false;
+                            base.multi_process.shrinkModule(1);
+                        }
                         if (base.solartype != null) {
                             stack_list.add(new ItemStack(IUItem.module6, 1, base.solartype.meta));
                             base.solartype = null;
@@ -462,6 +406,12 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         if (base.multi_process.modulestorage) {
                             stack_list.add(new ItemStack(IUItem.module_storage));
                             base.multi_process.setModulestorage(false);
+                            base.multi_process.shrinkModule(1);
+
+                        }
+                        if (base.multi_process.module_infinity_water) {
+                            stack_list.add(new ItemStack(IUItem.module_infinity_water));
+                            base.multi_process.module_infinity_water = false;
                             base.multi_process.shrinkModule(1);
 
                         }
@@ -591,11 +541,32 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
     protected boolean onTreeTapUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
         IBlockState state = world.getBlockState(pos);
         state = state.getActualState(world, pos);
-        return state.getBlock() == IUItem.rubWood && hasNecessaryPower(
+        return hasNecessaryPower(
                 stack,
                 TAP,
                 player
-        ) && attemptExtract(player, world, pos, side, state, null, stack) && checkNecessaryPower(stack, TAP, player);
+        ) && (state.getBlock() == IUItem.rubWood && ItemTreetap.attemptExtract(
+                player,
+                world,
+                pos,
+                side,
+                state,
+                null
+        ) || state.getBlock() == IUItem.swampRubWood && ItemTreetap.attemptSwampExtract(
+                player,
+                world,
+                pos,
+                side,
+                state,
+                null
+        ) || state.getBlock() == IUItem.tropicalRubWood && ItemTreetap.attemptTropicalExtract(
+                player,
+                world,
+                pos,
+                side,
+                state,
+                null
+        )) && checkNecessaryPower(stack, TAP, player);
     }
 
     protected boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
@@ -609,6 +580,7 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
             IWrenchable wrenchable = (IWrenchable) block;
             EnumFacing current = wrenchable.getFacing(world, pos);
             EnumFacing newFacing;
+
             if (!IUCore.keyboard.isChangeKeyDown(player)) {
                 if (player.isSneaking()) {
                     newFacing = side.getOpposite();
@@ -630,15 +602,15 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                 }
 
                 if (wrenchable.setFacing(world, pos, newFacing, player)) {
+                    player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
                     return checkNecessaryPower(stack, ROTATE, player);
                 }
             }
-
             if (wrenchable.wrenchCanRemove(world, pos, player)) {
                 if (!hasNecessaryPower(stack, ROTATE, player)) {
                     return false;
                 }
-
+                player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
                 if (!world.isRemote) {
                     TileEntity te = world.getTileEntity(pos);
                     int experience;
@@ -665,7 +637,7 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
 
                     block.onBlockDestroyedByPlayer(world, pos, state);
 
-                    int fortune = 0;
+                    int fortune = player.getEntityWorld().rand.nextInt(100);
                     if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WRENCH, stack)) {
                         fortune = 100;
                     }

@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
@@ -14,6 +15,7 @@ import com.denfop.blocks.mechanism.BlockSunnariumMaker;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiSunnariumPanelMaker;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
@@ -34,6 +36,7 @@ import java.util.Set;
 public class TileSunnariumPanelMaker extends TileDoubleElectricMachine implements IHasRecipe {
 
     public final ComponentBaseEnergy sunenergy;
+    public final Inventory input_slot;
 
     public TileSunnariumPanelMaker() {
         super(1, 300, 1, EnumDoubleElectricMachine.SUNNARIUM_PANEL);
@@ -41,6 +44,27 @@ public class TileSunnariumPanelMaker extends TileDoubleElectricMachine implement
                 .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));
         this.componentProcess.setHasAudio(false);
         Recipes.recipes.addInitRecipes(this);
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
+            @Override
+            public void put(final int index, final ItemStack content) {
+                super.put(index, content);
+                if (this.get().isEmpty()) {
+                    ((TileSunnariumPanelMaker) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
+                } else {
+                    ((TileSunnariumPanelMaker) this.base).inputSlotA.changeAccepts(this.get());
+                }
+            }
+
+            @Override
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+                return stack.getItem() == IUItem.recipe_schedule;
+            }
+
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.RECIPE_SCHEDULE;
+            }
+        };
     }
 
     public static void addsunnuriumpanel(ItemStack container, ItemStack fill, ItemStack output) {
@@ -69,6 +93,18 @@ public class TileSunnariumPanelMaker extends TileDoubleElectricMachine implement
                             new RecipeOutput(null, output)
                     )
             );
+        }
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        if (!this.getWorld().isRemote) {
+            if (this.input_slot.isEmpty()) {
+                (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
+            } else {
+                (this).inputSlotA.changeAccepts(this.input_slot.get());
+            }
         }
     }
 
@@ -208,7 +244,7 @@ public class TileSunnariumPanelMaker extends TileDoubleElectricMachine implement
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
 

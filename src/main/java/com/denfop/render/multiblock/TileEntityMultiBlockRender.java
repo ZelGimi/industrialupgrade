@@ -1,14 +1,34 @@
 package com.denfop.render.multiblock;
 
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 public class TileEntityMultiBlockRender<T extends TileMultiBlockBase> extends TileEntitySpecialRenderer<T> {
 
+
+    public static Function createFunction(TileMultiBlockBase te) {
+        Function function = o -> {
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(te.getBlockPos().getX() + 0.5f, te.getBlockPos().getY(), te.getBlockPos().getZ() + 0.5f);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            te.render(te);
+
+            GlStateManager.popMatrix();
+
+            return 0;
+        };
+        return function;
+    }
 
     public void render(
             @Nonnull TileMultiBlockBase te,
@@ -20,11 +40,6 @@ public class TileEntityMultiBlockRender<T extends TileMultiBlockBase> extends Ti
             float alpha
     ) {
 
-        GlStateManager.pushMatrix(); // Push the matrix to avoid unexpected behavior (we don't want to move an entire world)
-        GlStateManager.translate(x + 0.5f, y, z + 0.5f); // The base model has an offset by default, so we move it a little
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        te.render(te, x, y, z, partialTicks, destroyStage, alpha);
-        GlStateManager.popMatrix(); // Pop the matrix
 
     }
 

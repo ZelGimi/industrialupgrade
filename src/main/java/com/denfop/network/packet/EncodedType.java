@@ -4,7 +4,12 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.space.fakebody.FakeAsteroid;
 import com.denfop.api.space.fakebody.FakePlanet;
 import com.denfop.api.space.fakebody.FakeSatellite;
+import com.denfop.api.tesseract.Channel;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.invslot.Inventory;
+import com.denfop.recipe.IInputItemStack;
+import com.denfop.tiles.base.DataOre;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.IdentityHashMap;
@@ -40,9 +45,10 @@ public enum EncodedType {
     Fluid(net.minecraftforge.fluids.Fluid.class),
     Vein(com.denfop.api.vein.Vein.class),
     MachineRecipe(BaseMachineRecipe.class),
+    Input(IInputItemStack.class),
     FluidStack(net.minecraftforge.fluids.FluidStack.class),
     FluidTank(net.minecraftforge.fluids.FluidTank.class),
-    InvSlot(com.denfop.invslot.InvSlot.class),
+    InvSlot(Inventory.class),
     FAKE_PLANET(FakePlanet.class),
     FAKE_SATELLITE(FakeSatellite.class),
     FAKE_ASTEROID(FakeAsteroid.class),
@@ -54,6 +60,10 @@ public enum EncodedType {
     BaseResearch(com.denfop.api.research.main.BaseResearch.class),
     RecipeInfo(com.denfop.api.recipe.RecipeInfo.class),
     PlayerStreakInfo(com.denfop.render.streak.PlayerStreakInfo.class),
+    DataOre(DataOre.class),
+    channel(Channel.class),
+    network_object(INetworkObject.class),
+    player(EntityPlayer.class),
     Object(Object.class);
 
     public static final EncodedType[] types = values();

@@ -1,17 +1,17 @@
 package com.denfop.componets;
 
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 
 public class ComponentUpgradeSlots extends AbstractComponent {
 
-    protected final InvSlotUpgrade invSlot;
+    protected final InventoryUpgrade invSlot;
     public boolean update = false;
 
     protected ComponentProcess componentProcess;
-    private AdvEnergy advEnergy;
+    protected Energy energy;
 
-    public ComponentUpgradeSlots(final TileEntityInventory parent, InvSlotUpgrade invSlotUpgrade) {
+    public ComponentUpgradeSlots(final TileEntityInventory parent, InventoryUpgrade invSlotUpgrade) {
         super(parent);
         this.invSlot = invSlotUpgrade;
     }
@@ -20,7 +20,7 @@ public class ComponentUpgradeSlots extends AbstractComponent {
         return true;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
         invSlotUpgrade.isUpdate = true;
         if (this.parent instanceof IComponentUpdate) {
             ((IComponentUpdate) parent).setOverclockRates();
@@ -28,8 +28,8 @@ public class ComponentUpgradeSlots extends AbstractComponent {
         if (this.componentProcess != null) {
             this.componentProcess.setOverclockRates(this.invSlot);
         }
-        if (this.advEnergy != null) {
-            this.advEnergy.setOverclockRates(this.invSlot);
+        if (this.energy != null) {
+            this.energy.setOverclockRates(this.invSlot);
         }
         invSlotUpgrade.isUpdate = false;
     }
@@ -38,7 +38,7 @@ public class ComponentUpgradeSlots extends AbstractComponent {
     public void onLoaded() {
         super.onLoaded();
         this.componentProcess = this.getParent().getComp(ComponentProcess.class);
-        this.advEnergy = this.getParent().getComp(AdvEnergy.class);
+        this.energy = this.getParent().getComp(Energy.class);
         this.setOverclockRates(this.invSlot);
     }
 

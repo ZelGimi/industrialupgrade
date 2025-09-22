@@ -46,6 +46,20 @@ public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileWind
             GlStateManager.translate(0.5F, 0.5F, 0.5F);
             switch (facing) {
                 case NORTH:
+                    GlStateManager.translate(0F, 0F, -0.25F);
+                    break;
+                case EAST:
+                    GlStateManager.translate(0.25F, 0F, 0);
+                    break;
+                case SOUTH:
+                    GlStateManager.translate(0F, 0F, 0.25F);
+                    break;
+                case WEST:
+                    GlStateManager.translate(-0.25F, 0F, 0);
+                    break;
+            }
+            switch (facing) {
+                case NORTH:
                     GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                     break;
                 case EAST:

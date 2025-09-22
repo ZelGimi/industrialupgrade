@@ -3,14 +3,22 @@ package com.denfop.utils;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.items.CellType;
+import com.denfop.api.radiationsystem.EnumCoefficient;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
+import com.denfop.world.WorldBaseGen;
+import com.denfop.world.vein.ChanceOre;
+import com.denfop.world.vein.VeinType;
+import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -19,6 +27,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
@@ -28,11 +37,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -72,6 +86,54 @@ public class ModUtils {
         allFacings = Collections.unmodifiableSet(EnumSet.allOf(EnumFacing.class));
     }
 
+    public static EnumFacing getFacingFromTwoPositions(BlockPos fromPos, BlockPos toPos) {
+        int dx = toPos.getX() - fromPos.getX();
+        int dy = toPos.getY() - fromPos.getY();
+        int dz = toPos.getZ() - fromPos.getZ();
+        if (dx > 0) {
+            return EnumFacing.EAST;
+        } else if (dx < 0) {
+            return EnumFacing.WEST;
+        } else if (dy > 0) {
+            return EnumFacing.DOWN;
+        } else if (dy < 0) {
+            return EnumFacing.UP;
+        } else if (dz > 0) {
+            return EnumFacing.SOUTH;
+        } else if (dz < 0) {
+            return EnumFacing.NORTH;
+        }
+
+
+        return EnumFacing.DOWN;
+    }
+
+    public static boolean inChanceOre(VeinType veinType, IBlockState state) {
+        for (ChanceOre chanceOre : veinType.getOres()) {
+            if (chanceOre.getBlock() == state) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<String> getInformationFromOre(IBlockState state) {
+        List<String> stringList = new ArrayList<>();
+        for (VeinType vein : WorldBaseGen.veinTypes) {
+            if ((vein.getHeavyOre() != null && vein.getHeavyOre().getStateMeta(vein.getMeta()) == state) || inChanceOre(
+                    vein,
+                    state
+            )) {
+                final String s = (vein.getHeavyOre() != null ?
+                        new ItemStack(vein.getHeavyOre().getBlock(), 1, vein.getMeta()).getDisplayName() :
+                        new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1,
+                                vein.getOres().get(0).getMeta()
+                        ).getDisplayName());
+                stringList.add(s);
+            }
+        }
+        return stringList;
+    }
 
     public static double getEnergyValue(ItemStack stack) {
         if (ModUtils.isEmpty(stack)) {
@@ -98,6 +160,56 @@ public class ModUtils {
         }
     }
 
+    public static boolean interactWithFluidHandler(
+            @Nonnull EntityPlayer player,
+            @Nonnull EnumHand hand,
+            @Nonnull IFluidHandler handler
+    ) {
+        Preconditions.checkNotNull(player);
+        Preconditions.checkNotNull(hand);
+        Preconditions.checkNotNull(handler);
+
+        ItemStack heldItem = player.getHeldItem(hand);
+        if (!heldItem.isEmpty()) {
+            IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            if (playerInventory != null) {
+                FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(heldItem, handler, playerInventory,
+                        Integer.MAX_VALUE, player, true
+                );
+                if (!fluidActionResult.isSuccess()) {
+                    final FluidStack stack = null;
+                    final IFluidTankProperties[] tanks = handler.getTankProperties();
+                    int capacity = -1;
+                    IFluidHandlerItem containerFluidHandler =
+                            FluidUtil.getFluidHandler(ItemHandlerHelper.copyStackWithSize(heldItem, 1));
+                    for (IFluidTankProperties fluidTankProperties : tanks) {
+                        if ((fluidTankProperties.getContents() == null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(
+                                containerFluidHandler.drain(Integer.MAX_VALUE,
+                                        false))) || (fluidTankProperties.getContents() != null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(
+                                containerFluidHandler.drain(Integer.MAX_VALUE, false)))) {
+                            capacity = fluidTankProperties.getCapacity() - (fluidTankProperties.getContents() == null ? 0 :
+                                    fluidTankProperties.getContents().amount);
+
+                        }
+                    }
+                    if (capacity <= 0) {
+                        fluidActionResult = FluidActionResult.FAILURE;
+                    } else {
+                        fluidActionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, handler, playerInventory,
+                                capacity, player,
+                                true
+                        );
+                    }
+                }
+
+                if (fluidActionResult.isSuccess()) {
+                    player.setHeldItem(hand, fluidActionResult.getResult());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public static ItemStack get(EntityPlayer player, EnumHand hand) {
         return player.getHeldItem(hand);
@@ -154,6 +266,25 @@ public class ModUtils {
         }
     }
 
+    public static void dropAsEntity(World world, BlockPos pos, ItemStack stack, int count) {
+        if (!isEmpty(stack)) {
+            double f = 0.7;
+            double dx = (double) world.rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dy = (double) world.rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dz = (double) world.rand.nextFloat() * f + (1.0 - f) * 0.5;
+            final ItemStack stack1 = stack.copy();
+            stack1.setCount(count);
+            EntityItem entityItem = new EntityItem(
+                    world,
+                    (double) pos.getX() + dx,
+                    (double) pos.getY() + dy,
+                    (double) pos.getZ() + dz,
+                    stack1
+            );
+            entityItem.setDefaultPickupDelay();
+            world.spawnEntity(entityItem);
+        }
+    }
 
     public static boolean checkItemEquality(ItemStack a, ItemStack b) {
         return isEmpty(a) && isEmpty(b) || !isEmpty(a) && !isEmpty(b) && a.getItem() == b.getItem() && (!a.getHasSubtypes() || a.getMetadata() == b.getMetadata()) && checkNbtEquality(
@@ -180,6 +311,9 @@ public class ModUtils {
         } else {
             Set<String> keysA = a != null ? a.getKeySet() : Collections.emptySet();
             Set<String> keysB = b != null ? b.getKeySet() : Collections.emptySet();
+            if (keysA.isEmpty() && keysB.isEmpty()) {
+                return true;
+            }
             Set<String> toCheck = new HashSet(Math.max(keysA.size(), keysB.size()));
             Iterator<String> var5 = keysA.iterator();
 
@@ -274,27 +408,22 @@ public class ModUtils {
     }
 
     public static ItemStack getCellFromFluid(String name) {
-        for (CellType cellType : CellType.values()) {
-            if (cellType.getFluid() == null) {
-                continue;
-            }
-            if (cellType.getFluid().getName().trim().equals(name.trim())) {
-                return new ItemStack(IUItem.cell_all, 1, cellType.ordinal());
-            }
-        }
-        return new ItemStack(IUItem.cell_all, 1, 0);
+        final ItemStack stack = new ItemStack(IUItem.fluidCell, 1, 0);
+        final IFluidHandlerItem fluidDestination = FluidUtil.getFluidHandler(
+                stack);
+        Fluid liquid = FluidRegistry.getFluid(name);
+        final FluidStack drainable = new FluidStack(liquid, 1000);
+        fluidDestination.fill(drainable, true);
+        return stack;
     }
 
-    public static ItemStack getCellFromFluid(Fluid name) {
-        for (CellType cellType : CellType.values()) {
-            if (cellType.getFluid() == null) {
-                continue;
-            }
-            if (cellType.getFluid().equals(name)) {
-                return new ItemStack(IUItem.cell_all, 1, cellType.ordinal());
-            }
-        }
-        return new ItemStack(IUItem.cell_all, 1, 0);
+    public static ItemStack getCellFromFluid(Fluid liquid) {
+        final ItemStack stack = new ItemStack(IUItem.fluidCell, 1, 0);
+        final IFluidHandlerItem fluidDestination = FluidUtil.getFluidHandler(
+                stack);
+        final FluidStack drainable = new FluidStack(liquid, 1000);
+        fluidDestination.fill(drainable, true);
+        return stack;
     }
 
     public static List<ItemStack> getListFromModule(ItemStack stack) {
@@ -557,6 +686,21 @@ public class ModUtils {
 
     }
 
+    public static String getUnit(EnumCoefficient coefficient) {
+        switch (coefficient) {
+            case MICRO:
+                return "µ";
+            case MILI:
+                return "m";
+            case KILO:
+                return "k";
+            case DEFAULT:
+                return "";
+            default:
+                return "n";
+        }
+    }
+
     public static String getString1(double number) {
         double gg;
         int i;
@@ -775,44 +919,112 @@ public class ModUtils {
         return handler;
     }
 
-    public static void tick(InvSlotOutput slot, TileEntityBlock tile) {
+    public static void tick(InventoryOutput slot, TileEntityBlock tile) {
 
         for (EnumFacing facing1 : facings) {
             BlockPos pos = tile.getPos().offset(facing1);
             final TileEntity tile1 = tile.getWorld().getTileEntity(pos);
-            final IItemHandler handler = getItemHandler(tile1, facing1.getOpposite());
-            if (handler == null) {
-                continue;
-            }
-            final int slots = handler.getSlots();
-            for (int j = 0; j < slot.size(); j++) {
-                ItemStack took = slot.get(j);
-                if (took.isEmpty()) {
+            if (tile1 instanceof TileEntityInventory) {
+                TileEntityInventory inventory = (TileEntityInventory) tile1;
+                for (Inventory invSlot : inventory.getInputSlots()) {
+                    if (invSlot.acceptAllOrIndex()) {
+                        cycle2:
+                        for (int j = 0; j < slot.size(); j++) {
+                            ItemStack output = slot.get(j);
+                            if (output.isEmpty()) {
+                                continue;
+                            }
+                            if (invSlot.isItemValidForSlot(0, output)) {
+                                for (int jj = 0; jj < invSlot.size(); jj++) {
+                                    if (output.isEmpty()) {
+                                        continue cycle2;
+                                    }
+                                    ItemStack input = invSlot.get(jj);
+                                    if (input.isEmpty()) {
+                                        if (invSlot.add(output)) {
+                                            slot.put(j, ItemStack.EMPTY);
+                                            output = ItemStack.EMPTY;
+                                        }
+                                    } else {
+                                        if (!ModUtils.checkItemEquality(input, output)) {
+                                            continue;
+                                        }
+                                        int maxCount = Math.min(input.getMaxStackSize() - input.getCount(), output.getCount());
+                                        if (maxCount > 0) {
+                                            input.grow(maxCount);
+                                            output.shrink(maxCount);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        cycle3:
+                        for (int jj = 0; jj < slot.size(); jj++) {
+
+                            for (int j = 0; j < invSlot.size(); j++) {
+                                ItemStack output = slot.get(jj);
+                                if (output.isEmpty()) {
+                                    continue cycle3;
+                                }
+                                ItemStack input = invSlot.get(j);
+
+                                if (input.isEmpty()) {
+                                    if (invSlot.isItemValidForSlot(j, output)) {
+                                        if (invSlot.add(output)) {
+                                            slot.put(jj, ItemStack.EMPTY);
+                                            output = ItemStack.EMPTY;
+                                        }
+                                    }
+                                } else {
+                                    if (!ModUtils.checkItemEquality(input, output)) {
+                                        continue;
+                                    }
+                                    int maxCount = Math.min(input.getMaxStackSize() - input.getCount(), output.getCount());
+                                    if (maxCount > 0) {
+                                        input.grow(maxCount);
+                                        output.shrink(maxCount);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                final IItemHandler handler = getItemHandler(tile1, facing1.getOpposite());
+                if (handler == null) {
                     continue;
                 }
+                final int slots = handler.getSlots();
+                for (int j = 0; j < slot.size(); j++) {
+                    ItemStack took = slot.get(j);
+                    if (took.isEmpty()) {
+                        continue;
+                    }
 
-                ItemStack stack1;
-                if (!(handler instanceof ISidedInventory)) {
-                    took = took.copy();
-                    stack1 = insertItem(handler, took, true, slots);
-                    if (stack1.isEmpty()) {
-                        slot.put(j, ItemStack.EMPTY);
-                        insertItem(handler, took, false, slots);
-                    } else if (stack1 != took) {
-                        slot.get(j).shrink(stack1.getCount());
-                        insertItem(handler, stack1, false, slots);
+                    ItemStack stack1;
+                    if (!(handler instanceof ISidedInventory)) {
+                        took = took.copy();
+                        stack1 = insertItem(handler, took, true, slots);
+                        if (stack1.isEmpty()) {
+                            slot.put(j, ItemStack.EMPTY);
+                            insertItem(handler, took, false, slots);
+                        } else if (stack1 != took) {
+                            slot.get(j).shrink(stack1.getCount());
+                            insertItem(handler, stack1, false, slots);
+                        }
+                    } else {
+                        stack1 = insertItem1(handler, took, true, slots);
+                        if (stack1.isEmpty()) {
+                            slot.put(j, ItemStack.EMPTY);
+                            insertItem1(handler, took, false, slots);
+                        } else if (stack1 != took) {
+                            slot.get(j).shrink(stack1.getCount());
+                            insertItem1(handler, stack1, false, slots);
+                        }
                     }
-                } else {
-                    stack1 = insertItem1(handler, took, true, slots);
-                    if (stack1.isEmpty()) {
-                        slot.put(j, ItemStack.EMPTY);
-                        insertItem1(handler, took, false, slots);
-                    } else if (stack1 != took) {
-                        slot.get(j).shrink(stack1.getCount());
-                        insertItem1(handler, stack1, false, slots);
-                    }
+
                 }
-
             }
         }
 
@@ -1027,6 +1239,7 @@ public class ModUtils {
             return true;
         } else {
             Iterator<String> var2 = target.getKeySet().iterator();
+            Set<String> var3 = subject.getKeySet();
 
             NBTBase targetNBT;
             NBTBase subjectNBT;
@@ -1061,6 +1274,28 @@ public class ModUtils {
 
             world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 0.0, 0.0, 0.0);
             world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0.0, 0.0, 0.0);
+        }
+    }
+
+    public static void dropAsEntity(World world, BlockPos pos, ItemStack stack, EntityPlayer player) {
+        if (!isEmpty(stack)) {
+            double f = 0.7;
+            double dx = (double) world.rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dy = (double) world.rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dz = (double) world.rand.nextFloat() * f + (1.0 - f) * 0.5;
+            EntityItem entityItem = new EntityItem(
+                    world,
+                    (double) pos.getX() + dx,
+                    (double) pos.getY() + dy,
+                    (double) pos.getZ() + dz,
+                    stack.copy()
+            );
+            entityItem.setDefaultPickupDelay();
+            world.spawnEntity(entityItem);
+            if (!player.world.isRemote) {
+                ((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(entityItem));
+            }
+            entityItem.setPickupDelay(0);
         }
     }
 

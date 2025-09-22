@@ -1,0 +1,23 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"basalt": { "model": "industrialupgrade:resource/basalt" },
+			"basalt_cobblestone": { "model": "industrialupgrade:resource/basalt_cobblestone" },
+			"basalt_smooth": { "model": "industrialupgrade:resource/basalt_smooth" },
+			"basalt_melted": { "model": "industrialupgrade:resource/basalt_melted" },
+			"basalt_blocked": { "model": "industrialupgrade:resource/basalt_blocked" },
+			"basalt_magma": { "model": "industrialupgrade:resource/basalt_magma" },
+			"basalt_pylon": { "model": "industrialupgrade:resource/basalt_pylon" },
+			"basalt_sulfur_ore": { "model": "industrialupgrade:resource/basalt_sulfur_ore" },
+			"basalt_boron_ore": { "model": "industrialupgrade:resource/basalt_boron_ore" },
+			"basalt_spongy": { "model": "industrialupgrade:resource/basalt_spongy" }
+			
+		},
+		"inventory": [{}]
+	}
+}
+

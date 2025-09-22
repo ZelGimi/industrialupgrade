@@ -6,10 +6,14 @@ import java.util.Map;
 public class MultiBlockSystem {
 
     public static MultiBlockSystem instance;
-    private final Map<String, MultiBlockStructure> mapMultiBlocks = new HashMap<>();
+    public final Map<String, MultiBlockStructure> mapMultiBlocks = new HashMap<>();
 
     public MultiBlockSystem() {
         instance = this;
+    }
+
+    public static MultiBlockSystem getInstance() {
+        return instance;
     }
 
     public MultiBlockStructure add(String structure) {

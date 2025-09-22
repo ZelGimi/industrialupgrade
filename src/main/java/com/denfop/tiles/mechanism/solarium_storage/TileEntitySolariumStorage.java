@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism.solarium_storage;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
@@ -13,7 +14,6 @@ import com.denfop.gui.GuiSolariumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TileEntitySolariumStorage extends TileEntityInventory implements IType {
 
@@ -33,16 +36,25 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IT
     public TileEntitySolariumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
         this.se = this.addComponent((new ComponentBaseEnergy(EnergyType.SOLARIUM, this, maxStorage1,
 
-                Arrays.asList(EnumFacing.values()),
-                Arrays.asList(EnumFacing.values()),
+                Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
+                Collections.singletonList(this.getFacing()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
                 EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
         this.enumTypeStyle = enumTypeStyle;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void onLoaded() {
+        super.onLoaded();
+        if (IUCore.proxy.isSimulating()) {
+            this.se.setDirections(
+                    new HashSet<>(Arrays.stream(EnumFacing.VALUES)
+                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                            .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
+        }
+    }
+
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         tooltip.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.se.getCapacity()) + " " +
@@ -96,6 +108,19 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IT
         if (energy1 != 0) {
             this.se.addEnergy(energy1);
         }
+    }
+
+    public void setFacing(EnumFacing facing) {
+        super.setFacing(facing);
+        this.se.setDirections(
+
+                new HashSet<>(Arrays
+                        .asList(EnumFacing.VALUES)
+                        .stream()
+                        .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                        .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
+
+
     }
 
     @Override

@@ -3,6 +3,9 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Area;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.ListInformationUtils;
@@ -14,45 +17,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiSolarPanels extends GuiCore<ContainerSolarPanels> {
+public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
 
 
     public final TileSolarPanel tileentity;
-    private ResourceLocation res;
 
     public GuiSolarPanels(ContainerSolarPanels container) {
         super(container);
+        this.componentList.clear();
         this.tileentity = container.tileentity;
-        this.xSize = 194;
-        this.ySize = 238;
+        this.xSize = 198;
+        this.ySize = 232;
+        this.componentList.add(new GuiComponent(this, 63, 96, 18, 18,
+                new Component<>(new ComponentButton(tileentity, 1000, "") {
+                    @Override
+                    public void ClickEvent() {
+                        super.ClickEvent();
+                        tileentity.twoContainer = true;
+                    }
+                })
+        ));
 
     }
 
 
     protected void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        String formatPanelName = Localization.translate("blockAdministatorSolarPanel.name");
-        if (tileentity.getPanels() != null) {
-            formatPanelName = Localization.translate(tileentity.getPanels().name1);
-        }
-        int nmPos = (this.xSize - this.fontRenderer.getStringWidth(formatPanelName)) / 2;
-        this.fontRenderer.drawString(formatPanelName, nmPos, 6, 7718655);
+        final String formatPanelName = Localization.translate(container.base.getName());
+        int nmPos = (this.xSize - this.fontRenderer.getStringWidth(formatPanelName)) / 2 + 10;
+        this.fontRenderer.drawString(formatPanelName, nmPos, 15, 7718655);
 
         String storageString = Localization.translate("gui.SuperSolarPanel.storage") + ": ";
-        String maxOutputString = Localization.translate("gui.SuperSolarPanel.maxOutput") + ": ";
-        String generatingString = Localization.translate("gui.SuperSolarPanel.generating") + ": ";
-        String energyPerTickString = Localization.translate("gui.SuperSolarPanel.energyPerTick");
-        String energyPerTickString1 = Localization.translate("gui.SuperSolarPanel.energyPerTick1");
-        String tierString = Localization.translate("gui.iu.tier") + ": ";
-        String ModulesString = Localization.translate("iu.genday");
-        String ModulesString1 = Localization.translate("iu.gennight");
-        String ModulesString2 = Localization.translate("iu.storage");
-        String ModulesString3 = Localization.translate("iu.output");
-        String ModulesString4 = Localization.translate("iu.tier1");
-        String ModulesString5 = Localization.translate("iu.tier2");
+
+        new AdvArea(this, 63, 97, 80, 113).withTooltip(Localization.translate("iu.panel_upgrade.info0")).drawForeground(
+                mouseX,
+                mouseY
+        );
+
+
         String ModulesString6 = Localization.translate("iu.moduletype1");
         String ModulesString61 = Localization.translate("iu.moduletype2");
         String ModulesString62 = Localization.translate("iu.moduletype3");
@@ -60,8 +66,6 @@ public class GuiSolarPanels extends GuiCore<ContainerSolarPanels> {
         String ModulesString64 = Localization.translate("iu.moduletype5");
         String ModulesString65 = Localization.translate("iu.moduletype6");
         String ModulesString66 = Localization.translate("iu.moduletype7");
-        String ModulesString8 = Localization.translate("iu.modulewirelles");
-        String ModulesString10 = Localization.translate("iu.modulewirelles2");
 
         String Time1 = Localization.translate("iu.time");
         String Time4 = Localization.translate("iu.time1");
@@ -72,127 +76,60 @@ public class GuiSolarPanels extends GuiCore<ContainerSolarPanels> {
         String maxstorage_2 = ModUtils.getString(this.tileentity.storage);
 
 
-        if ((this.tileentity.maxStorage / this.tileentity.p) != 1) {
-            this.fontRenderer.drawString(
-                    ModulesString2 + ModUtils.getString(((this.tileentity.maxStorage / this.tileentity.p) - 1) * 100) + "%",
-                    15,
-                    182 - 2,
-                    13487565
-            );
-        }
-
-
-        if ((this.tileentity.production / this.tileentity.u) != 1) {
-            this.fontRenderer.drawString(
-                    ModulesString3 + ModUtils.getString(((this.tileentity.production / this.tileentity.u) - 1) * 100) + "%",
-                    15,
-                    175 - 2,
-                    13487565
-            );
-        }
-        String generation = ModUtils.getString(this.tileentity.generating);
-        String generation1 = ModUtils.getString(this.tileentity.generating * 4);
-
-        String tooltip2 = generatingString + generation + " " + energyPerTickString;
-
-
         String tooltip = storageString + maxstorage_2 + "/" + maxstorage_1;
         if (this.tileentity.solarType != 0) {
 
             if (this.tileentity.solarType == 1) {
-                this.fontRenderer.drawString(ModulesString6, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString6).drawForeground(mouseX, mouseY);
             }
             if (this.tileentity.solarType == 2) {
-                this.fontRenderer.drawString(ModulesString61, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString61).drawForeground(mouseX, mouseY);
             }
             if (this.tileentity.solarType == 3) {
-                this.fontRenderer.drawString(ModulesString62, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString62).drawForeground(mouseX, mouseY);
             }
             if (this.tileentity.solarType == 4) {
-                this.fontRenderer.drawString(ModulesString63, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString63).drawForeground(mouseX, mouseY);
             }
             if (this.tileentity.solarType == 5) {
-                this.fontRenderer.drawString(ModulesString64, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString64).drawForeground(mouseX, mouseY);
             }
             if (this.tileentity.solarType == 6) {
-                this.fontRenderer.drawString(ModulesString65, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString65).drawForeground(mouseX, mouseY);
             }
             if (this.tileentity.solarType == 7) {
-                this.fontRenderer.drawString(ModulesString66, 15, 196 - 2, 13487565);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString66).drawForeground(mouseX, mouseY);
             }
 
         }
 
-        this.fontRenderer.drawString(
 
-                maxOutputString + ModUtils.getString(this.tileentity.production) + " " + energyPerTickString,
-                50,
-                26 - 4 - 12 + 8 - 6 + 4,
-                13487565
-        );
-
-        this.fontRenderer.drawString(Localization.translate("pollutioninformation"), 50,
-                30 + 7, 13487565
-        );
         String temptime = Localization.translate("pollutionpnale");
 
 
-        if ((this.tileentity.genDay / this.tileentity.k) != 1 && this.tileentity.sunIsUp) {
-            this.fontRenderer.drawString(
-                    ModulesString + ModUtils.getString(((this.tileentity.genDay / this.tileentity.k) - 1) * 100) + "%",
-                    15,
-                    189 - 2,
-                    13487565
-            );
-        }
-        if ((this.tileentity.genNight / this.tileentity.m) != 1 && !this.tileentity.sunIsUp) {
-            this.fontRenderer.drawString(
-                    ModulesString1 + ModUtils.getString(((this.tileentity.genNight / this.tileentity.m) - 1) * 100) + "%",
-                    15,
-                    189 - 2,
-                    13487565
-            );
-        }
-        this.fontRenderer.drawString(tierString + ModUtils.getString(this.tileentity.tier), 50, 46 - 4 - 12 - 8 + 10 - 6,
-                13487565
-        );
         switch (this.tileentity.timer.getIndexWork()) {
             case 0:
-                temptime = Time1 + this.tileentity.timer.getTime() + Time4;
+                temptime = Time1 + this.tileentity.timer.getTime() + "\n" + Time4;
                 break;
             case 1:
-                temptime = Time1 + this.tileentity.timer.getTime() + Time5;
+                temptime = Time1 + this.tileentity.timer.getTime() + "\n" + Time5;
                 break;
             case 2:
-                temptime = Time1 + this.tileentity.timer.getTime() + Time6;
+                temptime = Time1 + this.tileentity.timer.getTime() + "\n" + Time6;
                 break;
             case -1:
                 temptime = Time7;
                 break;
         }
-        double temp = this.tileentity.tier - this.tileentity.o;
-        if (temp > 0) {
-            this.fontRenderer.drawString(ModulesString4 + ModUtils.getString(temp), 15, 209 - 2 + 6 + 6, 13487565);
-        } else if (temp < 0) {
 
-            this.fontRenderer.drawString(ModulesString5 + ModUtils.getString(temp), 15, 209 - 2 + 6 + 6, 13487565);
-        }
         handleUpgradeTooltip(mouseX, mouseY);
+        handleUpgradeTooltip1(mouseX, mouseY);
 
-        new Area(this, 18, 40, 43 - 18, 58 - 40).withTooltip(tooltip2).drawForeground(mouseX, mouseY);
+        new Area(this, 181, 72, 10, 22).withTooltip(temptime).drawForeground(mouseX, mouseY);
+
+        new Area(this, 28, 51, 84, 17).withTooltip(tooltip).drawForeground(mouseX, mouseY);
 
 
-        new Area(this, 50, 37, 144 - 50, 42 - 30 + 7).withTooltip(temptime).drawForeground(mouseX, mouseY);
-
-        new Area(this, 18, 24, 43 - 18, 38 - 24).withTooltip(tooltip).drawForeground(mouseX, mouseY);
-        if (this.tileentity.wireless) {
-            this.fontRenderer.drawString(ModulesString8, 15, 209 - 2, 13487565);
-
-        } else {
-            this.fontRenderer.drawString(ModulesString10, 15, 209 - 2, 13487565);
-
-        }
-//par1 - this.guiLeft, par2 - this.guiTop, temptime, 50, 30, 144, 42
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -211,60 +148,99 @@ public class GuiSolarPanels extends GuiCore<ContainerSolarPanels> {
         }
     }
 
-    private void DrawModel(int h, int k) {
-
-        if (!this.tileentity.rain) {
-
-            if (this.tileentity.sunIsUp || (this.tileentity.solarType == 3 || this.tileentity.solarType == 4)) {
-                drawTexturedModalRect(h + 24, k + 42, 195, 15, 14, 14);
-
-            } else {
-                drawTexturedModalRect(h + 24, k + 42, 210, 15, 14, 14);
-            }
-        } else {
-            if (this.tileentity.sunIsUp || (this.tileentity.solarType == 3 || this.tileentity.solarType == 4)) {
-                drawTexturedModalRect(h + 24, k + 42, 225, 15, 14, 14);
-            } else {
-                drawTexturedModalRect(h + 24, k + 42, 240, 15, 14, 14);
-            }
+    private void handleUpgradeTooltip1(int mouseX, int mouseY) {
+        if (mouseX >= 57 && mouseX <= 86 && mouseY >= 81 && mouseY <= 94) {
+            List<String> text = new LinkedList<>();
+            String maxOutputString = Localization.translate("gui.SuperSolarPanel.maxOutput") + ": ";
+            String generatingString = Localization.translate("gui.SuperSolarPanel.generating") + ": ";
+            String energyPerTickString = Localization.translate("gui.SuperSolarPanel.energyPerTick");
+            String generation = ModUtils.getString(this.tileentity.generating);
+            String tooltip2 = generatingString + generation + " " + energyPerTickString;
+            String tierString = Localization.translate("gui.iu.tier") + ": ";
+            text.add(tooltip2);
+            text.add(maxOutputString + ModUtils.getString(this.tileentity.output) + " " + energyPerTickString);
+            text.add(tierString + ModUtils.getString(this.tileentity.tier));
+            this.drawTooltip(mouseX, mouseY, text);
         }
-
-
     }
 
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        setResourceLocation(this.tileentity.getType().texture);
+        this.bindTexture();
         int h = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
         drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
         this.mc.getTextureManager()
                 .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         drawTexturedModalRect(h, k, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getResourceLocation());
+        this.bindTexture();
 
         if (this.tileentity.storage > 0) {
-            double l = this.tileentity.gaugeEnergyScaled(24.0F);
-            drawTexturedModalRect(h + 18, k + 24, 194, 0, (int) (l + 1), 14);
+            double l = this.tileentity.gaugeEnergyScaled(84.0F);
+            drawTexturedModalRect(h + 29, k + 52, 18, 238, (int) l, 16);
         }
+        if (this.tileentity.sunIsUp) {
+            drawTexturedModalRect(h + 154, k + 45, 222, 14, (int) 12, 12);
+            drawTexturedModalRect(h + 154, k + 58, 222, 1, (int) 12, 12);
+            if (this.tileentity.rain) {
+                drawTexturedModalRect(h + 141, k + 45, 209, 1, (int) 12, 12);
+            }
+        } else {
+            drawTexturedModalRect(h + 154, k + 45, 222, 1, (int) 12, 12);
+            drawTexturedModalRect(h + 154, k + 58, 222, 14, (int) 12, 12);
+            if (this.tileentity.rain) {
+                drawTexturedModalRect(h + 141, k + 58, 209, 14, (int) 12, 12);
+            }
+        }
+        int pollution =
+                (int) Math.min(21F * (this.container.base.pollution.getAllTime() - this.container.base.pollution.getTime())
+                        / (this.container.base.pollution.getAllTime() * 1D), 75F);
+        if (pollution > 0) {
+            drawTexturedModalRect(h + 182, k + 73 + 21 - pollution, 236,
+                    2 + 21 - pollution, 8, pollution
+            );
+        }
+        if (this.tileentity.wirelessComponent.isHasUpdate()) {
+            drawTexturedModalRect(h + 154, k + 84, 222, 14, (int) 12, 12);
+        } else {
+            drawTexturedModalRect(h + 154, k + 84, 222, 1, (int) 12, 12);
+        }
+        if (this.tileentity.pollution.isActive()) {
+            drawTexturedModalRect(h + 154, k + 71, 222, 14, (int) 12, 12);
+        } else {
+            drawTexturedModalRect(h + 154, k + 71, 222, 1, (int) 12, 12);
+        }
+        if (this.tileentity.solarType != 0) {
 
-        if (this.tileentity.skyIsVisible || (this.tileentity.solarType == 3 || this.tileentity.solarType == 4)) {
-            DrawModel(h, k);
+            if (this.tileentity.solarType == 1) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 80, (int) 25, 25);
+            }
+            if (this.tileentity.solarType == 2) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 184, (int) 25, 25);
+            }
+            if (this.tileentity.solarType == 3) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 132, (int) 25, 25);
+            }
+            if (this.tileentity.solarType == 4) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 158, (int) 25, 25);
+            }
+            if (this.tileentity.solarType == 5) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 54, (int) 25, 25);
+            }
+            if (this.tileentity.solarType == 6) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 28, (int) 25, 25);
+            }
+            if (this.tileentity.solarType == 7) {
+                drawTexturedModalRect(h + 167, k + 45, 209, 106, (int) 25, 25);
+            }
+
         }
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIAdvancedSolarPanel.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisolarpanel.png");
     }
 
-    private ResourceLocation getResourceLocation() {
-        return res;
-    }
-
-    private void setResourceLocation(ResourceLocation res) {
-        this.res = res;
-        this.mc.getTextureManager().bindTexture(res);
-    }
 
 }

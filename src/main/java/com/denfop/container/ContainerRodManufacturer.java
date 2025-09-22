@@ -22,6 +22,9 @@ public class ContainerRodManufacturer extends ContainerFullInv<TileEntityRodManu
                     i, 152, 8 + i * 18
             ));
         }
+        addSlotToContainer(new SlotInvSlot(tile.input_slot,
+                0, -20, 84
+        ));
 
     }
 

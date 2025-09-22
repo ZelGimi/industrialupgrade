@@ -17,26 +17,42 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ItemItemPipes extends Item implements ISubItem<ItemType>, IModelRegister {
 
     public static final List<ItemStack> variants = new ArrayList<>();
     protected static final String NAME = "itempipes_iu";
-    String[] name = {"itempipes", "itempipes1", "itempipes2", "itempipes3"};
+    String[] name = {
+            "itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4", "itempipes5",
+            "itempipes6", "itempipes7", "itempipes8", "itempipes9", "itempipes10", "itempipes11",
+            "itempipes12", "itempipes13", "itempipes14", "itempipes15", "itempipes16", "itempipes17",
+            "itempipes18", "itempipes19", "itempipes20", "itempipes21", "itempipes22", "itempipes23",
+            "itempipes24", "itempipes25", "itempipes26", "itempipes27", "itempipes28", "itempipes29"
+    };
 
 
     public ItemItemPipes() {
@@ -77,6 +93,19 @@ public class ItemItemPipes extends Item implements ISubItem<ItemType>, IModelReg
 
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            final ItemStack stack,
+            @Nullable final World worldIn,
+            final List<String> tooltip,
+            final ITooltipFlag flagIn
+    ) {
+        final ItemType type = ItemType.values()[stack.getItemDamage()];
+        tooltip.add("Maximum: " + type.getMax() + (type.isItem() ? " item/t" : " mb/t"));
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @SideOnly(Side.CLIENT)
@@ -230,8 +259,6 @@ public class ItemItemPipes extends Item implements ISubItem<ItemType>, IModelReg
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
             List<ItemStack> variants = new ArrayList<>(ItemItemPipes.variants);
-
-
             itemList.addAll(variants);
         }
     }

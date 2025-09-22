@@ -5,6 +5,7 @@ import com.denfop.Config;
 import com.denfop.api.IAdvEnergyNet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -160,6 +161,11 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     @Override
     public boolean getTransformerMode() {
         return this.transformer;
+    }
+
+    @Override
+    public Map<ChunkPos, List<IEnergySink>> getChunkPosListMap(final World world) {
+        return getForWorld(world).getChunkPosListMap();
     }
 
     @Override

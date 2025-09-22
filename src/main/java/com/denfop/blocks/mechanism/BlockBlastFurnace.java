@@ -12,9 +12,8 @@ import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityFluidInput;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityHeatBlock;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityOtherPart;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -40,8 +39,8 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockBlastFurnace(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -56,6 +55,23 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    @Override
+    public Material getMaterial() {
+        return Material.IRON;
     }
 
     public void buildDummies() {
@@ -74,9 +90,6 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
         }
     }
 
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
-    }
 
     @Override
     public String getName() {
@@ -118,7 +131,7 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0F;
     }
 
     @Override
@@ -135,11 +148,19 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
 
     @Override
     public boolean allowWrenchRotating() {
-        return true;
+        return false;
     }
 
     @Override
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
+    }
+
+    @Override
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        if (this == blast_furnace_main) {
+            return new String[]{"global", "global_active"};
+        }
+        return IMultiTileBlock.super.getMultiModels(teBlock);
     }
 }

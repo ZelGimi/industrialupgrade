@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/solid_side",
-    "down" : "industrialupgrade:blocks/solid_down",
+    "particle" : "industrialupgrade:blocks/end_solid",
+    "down" : "industrialupgrade:blocks/end_solid",
     "up" : "industrialupgrade:blocks/end_solid",
-    "north" : "industrialupgrade:blocks/solid_side",
-    "east" : "industrialupgrade:blocks/solid_side",
-    "south" : "industrialupgrade:blocks/solid_side",
-    "west" : "industrialupgrade:blocks/solid_side"
+    "north" : "industrialupgrade:blocks/end_solid",
+    "east" : "industrialupgrade:blocks/end_solid",
+    "south" : "industrialupgrade:blocks/end_solid",
+    "west" : "industrialupgrade:blocks/end_solid"
   }
 }

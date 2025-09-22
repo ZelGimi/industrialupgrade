@@ -74,7 +74,7 @@ public class GasGeneratorCategory extends Gui implements IRecipeCategory<GasGene
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
 
-        fff.init(0, false, 95, 21, 12, 47, 10000, true, null);
+        fff.init(0, true, 95, 21, 12, 47, 10000, true, null);
         fff.set(0, recipes.getInput2());
 
 

@@ -5,7 +5,7 @@ import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.register.Register;
 import com.denfop.tiles.base.TileElectricBlock;
@@ -72,7 +72,7 @@ public class ItemAdditionModule extends ItemSubTypes<ItemAdditionModule.Crafting
             if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityInventory) {
                 TileEntityInventory tile = (TileEntityInventory) world.getTileEntity(pos);
                 assert tile != null;
-                if (tile.getComp(AdvEnergy.class) != null) {
+                if (tile.getComp(Energy.class) != null) {
                     NBTTagCompound nbttagcompound = ModUtils.nbt(player.getHeldItem(hand));
                     boolean charge = nbttagcompound.getBoolean("change");
                     if (tile instanceof TileElectricBlock && charge) {
@@ -81,7 +81,7 @@ public class ItemAdditionModule extends ItemSubTypes<ItemAdditionModule.Crafting
                     nbttagcompound.setInteger("Xcoord", tile.getPos().getX());
                     nbttagcompound.setInteger("Ycoord", tile.getPos().getY());
                     nbttagcompound.setInteger("Zcoord", tile.getPos().getZ());
-                    nbttagcompound.setInteger("tier", tile.getComp(AdvEnergy.class).getSinkTier());
+                    nbttagcompound.setInteger("tier", tile.getComp(Energy.class).getSinkTier());
                     nbttagcompound.setInteger("World1", tile.getWorld().provider.getDimension());
                     nbttagcompound.setString("World", tile.getWorld().provider.getDimensionType().getName());
                     nbttagcompound.setString(
@@ -145,8 +145,6 @@ public class ItemAdditionModule extends ItemSubTypes<ItemAdditionModule.Crafting
 
                 break;
             case 4:
-                info.add(Localization.translate("modulerfinfo"));
-                info.add(Localization.translate("modulerfinfo1"));
                 break;
             case 5:
             case 8:

@@ -1,5 +1,8 @@
 package com.denfop.api.space.rovers;
 
+import com.denfop.api.space.rovers.api.IRovers;
+import com.denfop.api.space.rovers.api.IRoversItem;
+import com.denfop.api.space.rovers.enums.EnumTypeRovers;
 import net.minecraft.item.ItemStack;
 
 public class Rovers implements IRovers {
@@ -10,6 +13,10 @@ public class Rovers implements IRovers {
     public Rovers(IRoversItem item, ItemStack stack) {
         this.item = item;
         this.stack = stack;
+    }
+
+    public IRoversItem getItem() {
+        return item;
     }
 
     @Override

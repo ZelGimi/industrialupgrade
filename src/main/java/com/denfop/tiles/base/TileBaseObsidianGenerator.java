@@ -3,18 +3,18 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerObsidianGenerator;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,8 +24,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.lwjgl.input.Keyboard;
 
@@ -35,14 +33,14 @@ import java.util.List;
 public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         implements IUpgradableBlock, IFluidHandler {
 
-    public final InvSlotOutput outputSlot1;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
+    public final InventoryOutput outputSlot1;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final FluidTank fluidTank1;
     public final FluidTank fluidTank2;
     private final FluidHandlerRecipe fluid_handler;
@@ -63,16 +61,24 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         this.defaultOperationLength = this.operationLength = length;
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.outputSlot1 = new InvSlotOutput(this, "output1", 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.outputSlot1 = new InventoryOutput(this, 1);
 
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, FluidRegistry.LAVA);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, FluidRegistry.WATER);
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, FluidRegistry.LAVA);
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.WATER)
+        this.fluidTank1 = fluids.addTank(
+                "fluidTank1",
+                12 * 1000,
+                Fluids.fluidPredicate(FluidRegistry.WATER),
+                Inventory.TypeItemSlot.INPUT
 
         );
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
+        this.fluidTank2 = fluids.addTank(
+                "fluidTank2",
+                12 * 1000,
+                Fluids.fluidPredicate(FluidRegistry.LAVA),
+                Inventory.TypeItemSlot.INPUT
 
         );
         this.fluid_handler = new FluidHandlerRecipe("obsidian", fluids);
@@ -90,8 +96,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -100,7 +105,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -176,12 +181,17 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
             }
             check = true;
         }
-        if (check || (this.fluid_handler.output() == null && this.fluidTank2.getFluidAmount() >= 1000 && this.fluidTank1.getFluidAmount() >= 1000)) {
+        if (check || (this.fluid_handler.output() == null && this.fluidTank2.getFluidAmount() > 0 && this.fluidTank1.getFluidAmount() > 0)) {
             this.fluid_handler.getOutput();
+        } else {
+            if (this.fluid_handler.output() != null && !this.fluid_handler.checkFluids()) {
+                this.fluid_handler.setOutput(null);
+            }
         }
 
 
-        if (this.fluid_handler.output() != null && this.energy.canUseEnergy(energyConsume)) {
+        if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.energy.canUseEnergy(energyConsume) && this.outputSlot.canAdd(
+                this.fluid_handler.output().getOutput().items.get(0))) {
             if (!this.getActive()) {
                 setActive(true);
             }
@@ -244,7 +254,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     public void operateOnce(List<ItemStack> processResult) {
         this.fluid_handler.consume();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
 
 

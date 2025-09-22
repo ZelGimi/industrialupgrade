@@ -71,14 +71,14 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(+21, 53 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(+129, 32 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
 
-        drawTexturedModalRect(+36, +34, 177, 35, xScale + 1, 9);
+        drawTexturedModalRect(+39, +32, 177, 33, xScale + 1, 14);
 
-        drawTexturedModalRect(+79, +27, 177, 52, xScale1 + 1, 23);
+        drawTexturedModalRect(+75, +30, 177, 52, xScale1 + 1, 23);
 
     }
 
@@ -89,11 +89,11 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 10, 30);
+        isg.init(0, true, 19, 30);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 60, 30);
+        isg.init(1, true, 55, 30);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 106, 30);
+        isg.init(2, false, 107, 30);
         isg.set(2, recipes.getOutput());
     }
 

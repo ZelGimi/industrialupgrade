@@ -3,14 +3,14 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerHeliumGenerator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiHeliumGenerator extends GuiCore<ContainerHeliumGenerator> {
+public class GuiHeliumGenerator extends GuiIU<ContainerHeliumGenerator> {
 
     public final ContainerHeliumGenerator container;
     public final String progressLabel;
@@ -22,6 +22,9 @@ public class GuiHeliumGenerator extends GuiCore<ContainerHeliumGenerator> {
         this.progressLabel = Localization.translate("Matter.gui.info.progress");
         this.amplifierLabel = Localization.translate("Matter.gui.info.amplifier");
         addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
+        this.componentList.add(new GuiComponent(this, 117, 41, EnumTypeComponent.FLUID_PART,
+                new Component<>(new ComponentEmpty())
+        ));
     }
 
 
@@ -40,7 +43,7 @@ public class GuiHeliumGenerator extends GuiCore<ContainerHeliumGenerator> {
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

@@ -8,4 +8,15 @@ public interface IUpdateTick {
 
     void setRecipeOutput(MachineRecipe output);
 
+    ;
+
+    default MachineRecipe getRecipeOutput(int i) {
+        return getRecipeOutput();
+    }
+
+    default void setRecipeOutput(int i, MachineRecipe output) {
+        setRecipeOutput(output);
+    }
+
+    ;
 }

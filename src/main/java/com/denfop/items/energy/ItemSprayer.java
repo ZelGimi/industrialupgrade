@@ -7,13 +7,16 @@ import com.denfop.blocks.BlockFoam;
 import com.denfop.blocks.FluidName;
 import com.denfop.items.ItemFluidContainer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
@@ -26,7 +29,11 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 
 public class ItemSprayer extends ItemFluidContainer {
 
@@ -39,10 +46,9 @@ public class ItemSprayer extends ItemFluidContainer {
         if (Objects.requireNonNull(target) == Target.Any) {
             return IUItem.foam.canPlaceBlockOnSide(world, pos, EnumFacing.DOWN);
         } else {
-            assert false;
+            return false;
         }
 
-        return false;
     }
 
     public String getItemStackDisplayName(ItemStack stack) {
@@ -100,8 +106,6 @@ public class ItemSprayer extends ItemFluidContainer {
                 maxFoamBlocks += fluid.amount / this.getFluidPerFoam();
             }
 
-            ItemStack pack = player.inventory.armorInventory.get(2);
-
 
             if (maxFoamBlocks == 0) {
                 return EnumActionResult.FAIL;
@@ -125,23 +129,12 @@ public class ItemSprayer extends ItemFluidContainer {
                 amount *= this.getFluidPerFoam();
                 if (amount > 0) {
                     IFluidHandlerItem handler;
-                    if (!pack.isEmpty()) {
-                        handler = (IFluidHandlerItem) this.initCapabilities(stack, new NBTTagCompound());
+                    handler = FluidUtil.getFluidHandler(stack);
 
+                    assert handler != null;
 
-                        fluid = handler.drain(amount, true);
-                        amount -= fluid.amount;
-                        player.inventory.armorInventory.set(2, handler.getContainer());
-                    }
-
-                    if (amount > 0) {
-                        handler = FluidUtil.getFluidHandler(stack);
-
-                        assert handler != null;
-
-                        handler.drain(amount, true);
-                        player.inventory.mainInventory.set(player.inventory.currentItem, handler.getContainer());
-                    }
+                    handler.drain(amount, true);
+                    player.inventory.mainInventory.set(player.inventory.currentItem, handler.getContainer());
 
                     return EnumActionResult.SUCCESS;
                 } else {
@@ -175,7 +168,6 @@ public class ItemSprayer extends ItemFluidContainer {
             int failedPlacements = 0;
 
             for (final BlockPos targetPos : positions) {
-                IBlockState state = world.getBlockState(targetPos);
                 if (!world.setBlockState(targetPos, IUItem.foam.getState(BlockFoam.FoamType.reinforced))) {
                     ++failedPlacements;
                 }

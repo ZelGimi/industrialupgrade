@@ -10,7 +10,7 @@ public enum EnumHorizonSide {
     N(),
     S(),
     NW(N, W),
-    SW(S, W),
+    SW(W, S),
     EN(N, E),
     ES(S, E),
     EW(E, W),

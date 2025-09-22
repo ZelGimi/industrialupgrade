@@ -31,8 +31,8 @@ public enum BlockHeatColdPipes implements IMultiTileBlock {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockHeatColdPipes(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -42,6 +42,18 @@ public enum BlockHeatColdPipes implements IMultiTileBlock {
 
 
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
@@ -65,7 +77,7 @@ public enum BlockHeatColdPipes implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(HeatColdType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);

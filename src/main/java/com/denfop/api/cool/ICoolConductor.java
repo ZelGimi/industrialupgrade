@@ -11,6 +11,9 @@ public interface ICoolConductor extends ICoolAcceptor, ICoolEmitter {
 
     void update_render();
 
+    InfoCable getCoolCable();
+
+    void setCoolCable(InfoCable cable);
 
 }
 

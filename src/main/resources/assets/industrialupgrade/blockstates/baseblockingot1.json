@@ -20,6 +20,21 @@
         "textures" : {
           "all" : "industrialupgrade:blocks/germanium_block"
         }
+      },
+	  "tantalum" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/tantalum_block"
+        }
+      },
+      "osmium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/osmium_block"
+        }
+      },
+      "cadmium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/cadmium_block"
+        }
       }
     },
     "inventory" : [

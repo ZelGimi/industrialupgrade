@@ -141,7 +141,7 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
             int mode = ModUtils.NBTGetInteger(itemStack, "mode");
             EntityPlayer entityplayer = (EntityPlayer) p_77663_3_;
             if (mode == 1) {
-                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
+                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < 9; i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
@@ -168,7 +168,7 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
                     }
                 }
             } else if (mode == 2) {
-                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
+                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
@@ -196,7 +196,7 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
                 }
 
             } else if (mode == 3) {
-                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
+                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.armorInventory.get(i);
@@ -224,7 +224,7 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
                 }
 
             } else if (mode == 4) {
-                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
+                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.armorInventory.get(i);

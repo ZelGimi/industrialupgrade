@@ -37,7 +37,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
             String name,
             int operationEnergyCost
     ) {
-        this(name, 2.0F, -3.0F, operationEnergyCost, new HashSet());
+        this(name, 2.0F, 0.5F, operationEnergyCost, new HashSet());
     }
 
     private ItemEnergyTool(
@@ -49,7 +49,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
     ) {
         super(name, damage, speed, mineableBlocks);
         this.operationEnergyCost = operationEnergyCost;
-        this.setMaxDamage(27);
+        this.setMaxDamage(0);
         this.setNoRepair();
     }
 
@@ -90,12 +90,10 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
             float yOffset,
             float zOffset
     ) {
-        ElectricItem.manager.use(ModUtils.get(player, hand), 0.0, player);
         return super.onItemUse(player, world, pos, hand, side, xOffset, yOffset, zOffset);
     }
 
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        ElectricItem.manager.use(ModUtils.get(player, hand), 0.0, player);
         return super.onItemRightClick(world, player, hand);
     }
 

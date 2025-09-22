@@ -62,17 +62,15 @@ public class CanningCategory extends Gui implements IRecipeCategory<CanningRecip
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
-        double energylevel = Math.min(14.0F * energy / 100, 14);
+
         double xScale = 24.0F * progress / 100;
         if (xScale > 24.0F) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(14 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
-                14, (int) energylevel
-        );
-        drawTexturedModalRect(74 - 5, 22 - 16, 232, 0, (int) (xScale), 16);
+
+        drawTexturedModalRect(69, 22 - 15, 178, 9, (int) (xScale), 16);
 
     }
 
@@ -83,15 +81,15 @@ public class CanningCategory extends Gui implements IRecipeCategory<CanningRecip
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 40 - 5, 0);
+        isg.init(0, true, 40 - 4, 1);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 79 - 5, 43 - 16);
+        isg.init(1, true, 79 - 5, 43 - 15);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 118 - 5, 0);
+        isg.init(2, false, 118 - 5, 1);
         isg.set(2, recipes.getOutput());
         if (recipes.getFluidstack() != null) {
             IGuiFluidStackGroup fff = layout.getFluidStacks();
-            fff.init(0, true, 43 - 5, 39 - 16, 12, 47, 10000, true, null);
+            fff.init(0, true, 43 - 4, 39 - 12, 12, 47, 10000, true, null);
             fff.set(0, recipes.getFluidstack());
         }
     }

@@ -24,6 +24,8 @@ public class ComponentClientEffectRender extends AbstractComponent {
 
     @SideOnly(Side.CLIENT)
     public void render() {
+
+
         switch (effectType) {
             case HEAT:
                 CoolComponent comp = parent.getComp(CoolComponent.class);

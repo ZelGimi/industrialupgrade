@@ -5,10 +5,14 @@ import com.denfop.api.item.IItemIgnoringNull;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.tile.IWrenchable;
+import com.denfop.blocks.state.State;
 import com.denfop.blocks.state.TileEntityBlockStateContainer;
+import com.denfop.blocks.state.TypeProperty;
 import com.denfop.items.block.ItemBlockTileEntity;
 import com.denfop.network.packet.PacketLandEffect;
 import com.denfop.network.packet.PacketRunParticles;
+import com.denfop.render.base.ISpecialParticleModel;
+import com.denfop.tiles.base.CooldownTracker;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.ParticleBaseBlockDust;
@@ -27,21 +31,21 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -51,27 +55,29 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class BlockTileEntity extends BlockBase implements IWrenchable, ITileEntityProvider {
+public final class BlockTileEntity extends BlockBase implements IWrenchable, ITileEntityProvider, IPlantable {
 
     public static final Map<BlockPos, TileEntityBlock> teBlockDrop = new HashMap<>();
     public static final IProperty<EnumFacing> facingProperty = PropertyDirection.create("facing");
+
     public static TypeProperty currentTypeProperty;
     public final ItemBlockTileEntity item;
     public final TileBlockCreator.InfoAboutTile<?> teInfo;
     private final CreativeTabs tab;
-    private StateMapperIU stateMapper;    public final TypeProperty typeProperty = this.getTypeProperty();
+
     public BlockTileEntity(String name, final ResourceLocation identifier, final TileBlockCreator.InfoAboutTile<?> value) {
         super(null, value.getDefaultMaterial());
         this.item = new ItemBlockTileEntity(this, identifier);
@@ -82,8 +88,9 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                 .withProperty(facingProperty, EnumFacing.DOWN));
         this.teInfo = value;
         this.tab = value.getTab();
-        this.setSoundType(value.getDefaultMaterial() == Material.CLOTH ? SoundType.CLOTH : SoundType.STONE);
 
+
+        this.setSoundType(value.getDefaultMaterial() == Material.CLOTH ? SoundType.CLOTH : SoundType.STONE);
     }
 
     static BlockTileEntity create(String name, ResourceLocation identifier, final TileBlockCreator.InfoAboutTile<?> value) {
@@ -100,7 +107,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         } else {
             return !supported.isEmpty() ? supported.iterator().next() : EnumFacing.DOWN;
         }
-    }
+    }    public final TypeProperty typeProperty = this.getTypeProperty();
 
     private static TileEntityBlock getTe(IBlockAccess world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
@@ -109,9 +116,8 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
-        this.stateMapper = new StateMapperIU();
-        final ModelResourceLocation invalidLocation = stateMapper.getModelResourceLocation(
-                ModUtils.getName(IUItem.invalid),
+        StateMapperIU stateInvalid = new StateMapperIU(ModUtils.getName(IUItem.invalid));
+        final ModelResourceLocation invalidLocation = stateInvalid.getModelResourceLocation(
                 this.blockState
                         .getBaseState()
                         .withProperty(this.typeProperty, TypeProperty.invalid)
@@ -124,11 +130,12 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                         state -> {
                             State stateProperty = state.getValue(this.typeProperty);
                             EnumFacing facing = state.getValue(BlockTileEntity.facingProperty);
+                            StateMapperIU stateMapper = new StateMapperIU(stateProperty.teBlock.getIdentifier());
                             if (!stateProperty.teBlock.getSupportedFacings().contains(facing) &&
                                     (facing != EnumFacing.DOWN || !stateProperty.teBlock.getSupportedFacings().isEmpty())) {
                                 return invalidLocation;
                             } else {
-                                return stateMapper.getModelResourceLocation(stateProperty.teBlock.getIdentifier(), state);
+                                return stateMapper.getModelResourceLocation(state);
                             }
                         }
                 )));
@@ -139,21 +146,60 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                 return invalidLocation;
             } else if (teInfo.getListBlock().get(0) instanceof IItemIgnoringNull) {
                 teBlock = teInfo.getListBlock().get(0);
+                StateMapperIU stateMapper = new StateMapperIU(teBlock.getIdentifier());
+
                 IBlockState state = BlockTileEntity.this.getDefaultState().withProperty(
                         BlockTileEntity.this.typeProperty,
                         BlockTileEntity.this.typeProperty.getState(teBlock)
-                ).withProperty(BlockTileEntity.facingProperty, EnumFacing.UP);
-                return stateMapper.getModelResourceLocation(teBlock.getIdentifier(), state);
+                );
+                if (stack.stackTagCompound == null) {
+                    return stateMapper.getModelResourceLocation(state);
+                }
+                final NBTTagCompound nbt = ModUtils.nbt(stack);
+                if (nbt.hasKey("state")) {
+                    state = BlockTileEntity.this.getDefaultState().withProperty(
+                            BlockTileEntity.this.typeProperty,
+                            BlockTileEntity.this.typeProperty.getState(teBlock, nbt.getString("state"))
+                    );
+                }
+                return stateMapper.getModelResourceLocation(state);
 
             } else if (teBlock instanceof IMultiBlockItem && ((IMultiBlockItem) teBlock).hasUniqueRender(stack)) {
                 ModelResourceLocation location = ((IMultiBlockItem) teBlock).getModelLocation(stack);
                 return location == null ? invalidLocation : location;
             } else {
-                IBlockState state = BlockTileEntity.this.getDefaultState().withProperty(
-                        BlockTileEntity.this.typeProperty,
-                        BlockTileEntity.this.typeProperty.getState(teBlock)
-                ).withProperty(BlockTileEntity.facingProperty, BlockTileEntity.getItemFacing(teBlock));
-                return stateMapper.getModelResourceLocation(teBlock.getIdentifier(), state);
+                try {
+                    IBlockState state = BlockTileEntity.this.getDefaultState().withProperty(
+                            BlockTileEntity.this.typeProperty,
+                            BlockTileEntity.this.typeProperty.getState(teBlock)
+                    );
+                    StateMapperIU stateMapper = new StateMapperIU(teBlock.getIdentifier());
+
+                    if (state != null) {
+                        final NBTTagCompound nbt = ModUtils.nbt(stack);
+                        if (nbt.hasKey("state")) {
+                            state = BlockTileEntity.this.getDefaultState().withProperty(
+                                    BlockTileEntity.this.typeProperty,
+                                    BlockTileEntity.this.typeProperty.getState(teBlock, nbt.getString("state"))
+                            );
+                        }
+                        return stateMapper.getModelResourceLocation(state);
+                    } else {
+                        stateMapper = new StateMapperIU(ModUtils.getName(IUItem.invalid));
+                        return stateMapper.getModelResourceLocation(
+                                this.blockState
+                                        .getBaseState()
+                                        .withProperty(this.typeProperty, TypeProperty.invalid)
+                        );
+                    }
+                } catch (Exception e) {
+                    final StateMapperIU stateMapper = new StateMapperIU(ModUtils.getName(IUItem.invalid));
+                    return stateMapper.getModelResourceLocation(
+                            this.blockState
+                                    .getBaseState()
+                                    .withProperty(this.typeProperty, TypeProperty.invalid)
+                    );
+                }
             }
         });
 
@@ -163,17 +209,21 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
             if (statesBlocks.hasItem()) {
                 ModelResourceLocation model = checkSpecialModels ? this.getSpecialModel(statesBlocks) : null;
                 if (model == null) {
-                    IBlockState state = this.blockState
-                            .getBaseState()
-                            .withProperty(this.typeProperty, statesBlocks.statesBlocks.get(0))
-                            .withProperty(facingProperty, getItemFacing(statesBlocks.getBlock()));
-                    model = stateMapper.getModelResourceLocation(statesBlocks.getIdentifier(), state);
+                    IBlockState state = BlockTileEntity.this.getDefaultState()
+                            .withProperty(this.typeProperty, statesBlocks.statesBlocks.get(0));
+                    StateMapperIU stateMapper = new StateMapperIU(statesBlocks.getIdentifier());
+                    model = stateMapper.getModelResourceLocation(state);
                 }
                 ModelBakery.registerItemVariants(this.item, model);
             }
         }
 
 
+    }
+
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntityBlock te = getTe(world, pos);
+        return (te == null ? state : te.getExtendedState((TileEntityBlockStateContainer.PropertiesStateInstance) state));
     }
 
     @SideOnly(Side.CLIENT)
@@ -186,7 +236,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return layer == BlockRenderLayer.SOLID;
+        return layer == BlockRenderLayer.CUTOUT;
     }
 
     public boolean hasTileEntity() {
@@ -198,7 +248,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public BlockStateContainer createBlockState() {
-        return new TileEntityBlockStateContainer(this, this.getTypeProperty(), facingProperty);
+        return new TileEntityBlockStateContainer(this, this.blockMaterial, this.getTypeProperty(), facingProperty);
     }
 
     public TileEntity createTileEntity(World world, IBlockState state) {
@@ -278,10 +328,6 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
 
     }
 
-    public Set<IMultiTileBlock> getAllTypes() {
-        return Collections.unmodifiableSet(teInfo.getTeBlocks());
-    }
-
     public @NotNull ItemStack getItem(World world, BlockPos pos, IBlockState state) {
         TileEntityBlock te = getTe(world, pos);
         return te == null ? ModUtils.emptyStack : te.getItem(null, null);
@@ -338,7 +384,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public boolean isOpaqueCube(IBlockState state) {
-        return true;
+        return false;
     }
 
     public boolean canReplace(World world, BlockPos pos, EnumFacing side, ItemStack stack) {
@@ -364,6 +410,45 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     public boolean addRunningEffects(IBlockState state, World world, BlockPos pos, Entity entity) {
         new PacketRunParticles(world, pos, entity);
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean addDestroyEffects(final World world, final BlockPos pos, final ParticleManager manager) {
+
+        final TileEntityBlock te = getTe(world, pos);
+        if (te != null && te.hasSpecialModel()) {
+            IBakedModel model = Minecraft
+                    .getMinecraft()
+                    .getBlockRendererDispatcher()
+                    .getBlockModelShapes()
+                    .getModelForState(te.getBlockState());
+            final IBlockState state = te.getBlockState().getBlock().getExtendedState(te.getBlockState(), world, pos);
+            int i = 4;
+
+            for (int j = 0; j < 4; ++j) {
+                for (int k = 0; k < 4; ++k) {
+                    for (int l = 0; l < 4; ++l) {
+                        double d0 = ((double) j + 0.5D) / 4.0D;
+                        double d1 = ((double) k + 0.5D) / 4.0D;
+                        double d2 = ((double) l + 0.5D) / 4.0D;
+                        ParticleDigging particle = new ParticleBaseBlockDust(world, pos.getX() + d0, (double) pos.getY() + d1,
+                                (double) pos.getZ() + d2, 0, 0, 0, state
+                        );
+                        ((ISpecialParticleModel) model).enhanceParticle(
+                                particle,
+                                (TileEntityBlockStateContainer.PropertiesStateInstance) state
+                        );
+                        particle.init();
+                        Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     @SideOnly(Side.CLIENT)
@@ -404,6 +489,23 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         particle.setBlockPos(pos);
         particle.multiplyVelocity(0.2F);
         particle.multipleParticleScaleBy(0.6F);
+        if (pos != null && te.hasSpecialModel()) {
+            IBakedModel model = Minecraft
+                    .getMinecraft()
+                    .getBlockRendererDispatcher()
+                    .getBlockModelShapes()
+                    .getModelForState(te.getBlockState());
+            if (model instanceof ISpecialParticleModel) {
+
+                state = te.getBlockState().getBlock().getExtendedState(te.getBlockState(), world, pos);
+
+
+                ((ISpecialParticleModel) model).enhanceParticle(
+                        particle,
+                        (TileEntityBlockStateContainer.PropertiesStateInstance) state
+                );
+            }
+        }
         particle.init();
 
         Minecraft.getMinecraft().effectRenderer.addEffect(particle);
@@ -411,7 +513,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public Material getMaterial(IBlockState state) {
-        return blockMaterial;
+        return teInfo.getDefaultMaterial();
     }
 
     public boolean causesSuffocation(IBlockState state) {
@@ -516,11 +618,13 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return 0;
+        TileEntityBlock te = getTe(world, pos);
+        return te == null ? 0 : te.getLightOpacity();
     }
 
     public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return 0;
+        TileEntityBlock te = getTe(world, pos);
+        return te == null ? 0 : te.getLightValue();
     }
 
     public boolean onBlockActivated(
@@ -539,7 +643,11 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
             return te != null && te.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
         } else {
             TileEntityBlock te = getTe(world, pos);
-            return te != null && te.onActivated(player, hand, side, hitX, hitY, hitZ);
+            if (te == null) {
+                return false;
+            }
+            CooldownTracker cooldownTracker = te.getCooldownTracker();
+            return cooldownTracker.getTick() == 0 && te.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
     }
 
@@ -624,11 +732,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
             final IBlockState p_176208_3_,
             final EntityPlayer p_176208_4_
     ) {
-        p_176208_1_.playSound(null, p_176208_2_,
-                this.getMaterial(p_176208_3_) == MultiTileBlock.MACHINE ? SoundEvents.BLOCK_STONE_BREAK :
-                        SoundEvents.BLOCK_CLOTH_BREAK,
-                SoundCategory.BLOCKS, 1F, 1
-        );
+
 
         super.onBlockHarvested(p_176208_1_, p_176208_2_, p_176208_3_, p_176208_4_);
     }
@@ -642,29 +746,71 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
             if (te == null) {
                 return false;
             } else {
-                switch (te.teBlock.getHarvestTool()) {
-                    case None:
-                        return true;
-                    case Wrench:
-                        ItemStack stack = player.getHeldItemMainhand();
-                        if (!stack.isEmpty()) {
-                            String tool = MultiTileBlock.HarvestTool.Pickaxe.toolClass;
-                            return stack.getItem().getHarvestLevel(
-                                    stack,
-                                    tool,
-                                    player,
-                                    world.getBlockState(pos)
-                            ) >= MultiTileBlock.HarvestTool.Pickaxe.level;
-                        }
-                    default:
-                        return false;
+                if (te.canEntityDestroy(player)) {
+                    switch (te.teBlock.getHarvestTool()) {
+                        case None:
+                            return true;
+                        case Axe:
+                            ItemStack stack = player.getHeldItemMainhand();
+                            if (!stack.isEmpty()) {
+                                String tool = MultiTileBlock.HarvestTool.Axe.toolClass;
+                                return stack.getItem().getHarvestLevel(
+                                        stack,
+                                        tool,
+                                        player,
+                                        world.getBlockState(pos)
+                                ) >= MultiTileBlock.HarvestTool.Axe.level;
+                            }
+                            break;
+                        case Pickaxe:
+                            stack = player.getHeldItemMainhand();
+                            if (!stack.isEmpty()) {
+                                String tool = MultiTileBlock.HarvestTool.Pickaxe.toolClass;
+                                return stack.getItem().getHarvestLevel(
+                                        stack,
+                                        tool,
+                                        player,
+                                        world.getBlockState(pos)
+                                ) >= MultiTileBlock.HarvestTool.Pickaxe.level;
+                            }
+                            break;
+                        case Shovel:
+                            stack = player.getHeldItemMainhand();
+                            if (!stack.isEmpty()) {
+                                String tool = MultiTileBlock.HarvestTool.Shovel.toolClass;
+                                return stack.getItem().getHarvestLevel(
+                                        stack,
+                                        tool,
+                                        player,
+                                        world.getBlockState(pos)
+                                ) >= MultiTileBlock.HarvestTool.Shovel.level;
+                            }
+                            break;
+                        case Wrench:
+                            stack = player.getHeldItemMainhand();
+                            if (!stack.isEmpty()) {
+                                String tool = MultiTileBlock.HarvestTool.Wrench.toolClass;
+                                return stack.getItem().getHarvestLevel(
+                                        stack,
+                                        tool,
+                                        player,
+                                        world.getBlockState(pos)
+                                ) >= MultiTileBlock.HarvestTool.Wrench.level;
+                            }
+                            break;
+                        default:
+                            return false;
+                    }
                 }
             }
         }
+        return false;
     }
 
     public String getHarvestTool(IBlockState state) {
-        return state.getBlock() != this ? null : state.getValue(this.typeProperty).teBlock.getHarvestTool().toolClass;
+        return state.getBlock() != this
+                ? ""
+                : state.getValue(this.typeProperty).teBlock.getHarvestTool().toolClass.toLowerCase();
     }
 
     public int getHarvestLevel(IBlockState state) {
@@ -697,14 +843,14 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                         ) >= MultiTileBlock.HarvestTool.Wrench.level;
                     }
                 }
-
-                ret.addAll(te.getSelfDrops(fortune, wasWrench));
-                ret.addAll(te.getAuxDrops(fortune));
+                final int chance = te.getWorld().rand.nextInt(100);
+                ret.addAll(te.getSelfDrops(chance, wasWrench));
+                ret.addAll(te.getAuxDrops(chance));
                 teBlockDrop.remove(pos);
                 return ret;
             }
         }
-        List<ItemStack> ret = new ArrayList();
+        List<ItemStack> ret = new ArrayList<>();
         boolean wasWrench = false;
         EntityPlayer player = this.harvesters.get();
         if (player != null) {
@@ -719,19 +865,27 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                 ) >= MultiTileBlock.HarvestTool.Wrench.level;
             }
         }
-
-        ret.addAll(te.getSelfDrops(fortune, wasWrench));
-        ret.addAll(te.getAuxDrops(fortune));
+        final int chance = te.getWorld().rand.nextInt(100);
+        ret.addAll(te.getSelfDrops(chance, wasWrench));
+        ret.addAll(te.getAuxDrops(chance));
         return ret;
     }
 
     public float getBlockHardness(IBlockState state, World world, BlockPos pos) {
         TileEntityBlock te = getTe(world, pos);
-        return te == null ? 5.0F : te.getHardness();
+        return te == null ? 1.0F : te.getHardness();
     }
 
     public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
         return 5;
+    }
+
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        TileEntityBlock te = getTe(worldIn, pos);
+        if (te != null) {
+            te.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+        }
+
     }
 
     public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
@@ -783,7 +937,6 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public SoundType getSoundType(IBlockState state, World world, BlockPos pos, Entity entity) {
-        TileEntityBlock te = getTe(world, pos);
         return this.getSoundType();
     }
 
@@ -818,6 +971,15 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         return this.typeProperty != null ? this.typeProperty : currentTypeProperty;
     }
 
+    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+        TileEntityBlock te = getTe(world, pos);
+        return te == null ? TileEntityBlock.noCrop : te.getPlantType();
+    }
+
+    @Override
+    public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+        return world.getBlockState(pos);
+    }
 
 
 

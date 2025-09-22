@@ -43,7 +43,6 @@ public class BlockFoam extends BlockBase {
         int light = world.getLightFromNeighbors(pos);
         if (!state.useNeighborBrightness() && state.getBlock().getLightOpacity(state, world, pos) == 0) {
             EnumFacing[] var5 = EnumFacing.VALUES;
-            int var6 = var5.length;
 
             for (EnumFacing side : var5) {
                 light = Math.max(light, world.getLight(pos.offset(side), false));

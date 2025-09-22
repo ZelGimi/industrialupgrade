@@ -7,7 +7,7 @@ import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -16,7 +16,7 @@ import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
 import com.denfop.componets.EnumTypeStyle;
@@ -36,7 +36,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -70,16 +69,16 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
 
     public final String name;
     public final int index;
-    public final InvSlotBaseQuarry input;
+    public final InventoryBaseQuarry input;
     public final double constenergyconsume;
     public final double speed;
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public final ComponentBaseEnergy exp;
     public final CoolComponent cold;
     public int min_y;
     public int max_y;
     public double energyconsume;
-    public AdvEnergy energy;
+    public Energy energy;
     public BlockPos blockpos = null;
     public FakePlayerSpawner player;
     public boolean work;
@@ -107,19 +106,20 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
     public int chunkx;
     public int chunkz;
     private boolean sound = true;
+    int rotating = 0;
 
     public TileBaseQuarry(String name, double coef, int index) {
         this.name = name;
         this.energyconsume = 450 * coef;
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 5E7D, 14));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 5E7D, 14));
         this.energy1 = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 200000, 14));
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
 
-        this.outputSlot = new InvSlotOutput(this, "output", 24);
+        this.outputSlot = new InventoryOutput(this, 24);
         this.work = true;
         this.index = index;
         this.speed = Math.pow(2, index - 1);
-        this.input = new InvSlotBaseQuarry(this, index);
+        this.input = new InventoryBaseQuarry(this, Math.min(4, index));
         this.constenergyconsume = 450 * coef;
         this.min_y = 0;
         this.max_y = 256;
@@ -164,7 +164,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -177,8 +177,8 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         }
 
 
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -212,7 +212,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final AdvEnergy component = this.energy;
+                    final Energy component = this.energy;
                     if (component != null) {
                         if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -251,7 +251,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
                     return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComp(AdvEnergy.class);
+        final Energy component = this.getComp(Energy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -282,7 +282,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         return drop;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -301,7 +301,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
@@ -329,6 +329,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         this.vein_need = nbttagcompound.getBoolean("vein_need");
         this.need_work = nbttagcompound.getBoolean("need_work");
         this.sound = nbttagcompound.getBoolean("sound");
+        this.rotating = nbttagcompound.getInteger("rotating");
 
     }
 
@@ -343,6 +344,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
 
         nbttagcompound.setInteger("min_y", this.min_y);
         nbttagcompound.setInteger("max_y", this.max_y);
+        nbttagcompound.setInteger("rotating", this.rotating);
         nbttagcompound.setBoolean("work", work);
         nbttagcompound.setBoolean("vein_need", vein_need);
         nbttagcompound.setBoolean("need_work", need_work);
@@ -389,13 +391,51 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         this.chunkx = chunk.x * 16;
         this.chunkz = chunk.z * 16;
         this.default_pos = new BlockPos(chunkx, this.min_y, chunkz);
-        this.chunkx1 = this.chunkx;
-        this.chunkz1 = this.chunkz;
-        this.chunkx2 = this.chunkx + 15;
-        this.chunkz2 = this.chunkz + 15;
-        if (col != 1) {
-            this.chunkx1 = chunkx - 16 * (col - 1);
-            this.chunkz1 = chunkz - 16 * (col - 1);
+        switch (rotating) {
+            case 0:
+                this.chunkx1 = this.chunkx;
+                this.chunkz1 = this.chunkz;
+                this.chunkx2 = this.chunkx + 15;
+                this.chunkz2 = this.chunkz + 15;
+                if (col != 1) {
+                    this.chunkx1 = chunkx - 16 * (col - 1);
+                    this.chunkz1 = chunkz - 16 * (col - 1);
+                }
+                this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                break;
+            case 1:
+                this.chunkx1 = this.chunkx;
+                this.chunkz1 = this.chunkz;
+                this.chunkx2 = this.chunkx + 15;
+                this.chunkz2 = this.chunkz + 15;
+                if (col != 1) {
+                    this.chunkx2 = chunkx + 16 * (col - 1);
+                    this.chunkz2 = chunkz + 16 * (col - 1);
+                }
+                this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                break;
+            case 2:
+                this.chunkx1 = this.chunkx;
+                this.chunkz1 = this.chunkz;
+                this.chunkx2 = this.chunkx + 15;
+                this.chunkz2 = this.chunkz + 15;
+                if (col != 1) {
+                    this.chunkx1 = chunkx - 16 * (col - 1);
+                    this.chunkz2 = chunkz + 16 * (col - 1);
+                }
+                this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                break;
+            case 3:
+                this.chunkx1 = this.chunkx;
+                this.chunkz1 = this.chunkz;
+                this.chunkx2 = this.chunkx + 15;
+                this.chunkz2 = this.chunkz + 15;
+                if (col != 1) {
+                    this.chunkx2 = chunkx + 16 * (col - 1);
+                    this.chunkz1 = chunkz - 16 * (col - 1);
+                }
+                this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                break;
         }
 
         this.vein = VeinSystem.system.getVein(chunk.getPos());
@@ -446,6 +486,9 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
     public void updateEntityServer() {
         super.updateEntityServer();
         if (!this.work || !this.need_work) {
+            if (this.getActive()) {
+                this.setActive(false);
+            }
             return;
         }
         if (this.cold.getEnergy() >= 100) {
@@ -457,7 +500,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
 
 
         if (this.blockpos == null) {
-            this.blockpos = new BlockPos(chunkx, this.min_y, chunkz);
+            this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
         }
 
         if (vein_need) {
@@ -465,7 +508,12 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
                 if (vein.get()) {
                     if (this.energy.getEnergy() > this.energyconsume) {
                         if (this.vein.getCol() > 0 && this.vein.getType() == Type.VEIN) {
-                            final ItemStack stack1 = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                            final ItemStack stack1;
+                            if (vein.isOldMineral())
+                                stack1   = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                            else
+                                stack1   = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+
                             if (this.outputSlot.add(stack1)) {
                                 this.energy.useEnergy(this.energyconsume);
                                 this.vein.removeCol(1);
@@ -715,7 +763,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemInput
         );
     }
 
@@ -781,11 +829,64 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
                 new PacketUpdateFieldTile(this, "sound", this.sound);
 
                 if (!sound) {
-                    if (this.getType() == EnumTypeAudio.ON) {
+                    if (this.getTypeAudio() == EnumTypeAudio.ON) {
                         setType(EnumTypeAudio.OFF);
                         initiate(2);
                     }
                 }
+                break;
+            case 8:
+                rotating = rotating + 1;
+                if (rotating > 3) {
+                    rotating = 0;
+                }
+                switch (rotating) {
+                    case 0:
+                        this.chunkx1 = this.chunkx;
+                        this.chunkz1 = this.chunkz;
+                        this.chunkx2 = this.chunkx + 15;
+                        this.chunkz2 = this.chunkz + 15;
+                        if (col != 1) {
+                            this.chunkx1 = chunkx - 16 * (col - 1);
+                            this.chunkz1 = chunkz - 16 * (col - 1);
+                        }
+                        this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                        break;
+                    case 1:
+                        this.chunkx1 = this.chunkx;
+                        this.chunkz1 = this.chunkz;
+                        this.chunkx2 = this.chunkx + 15;
+                        this.chunkz2 = this.chunkz + 15;
+                        if (col != 1) {
+                            this.chunkx2 = chunkx + 16 * (col - 1) + 15;
+                            this.chunkz2 = chunkz + 16 * (col - 1) + 15;
+                        }
+                        this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                        break;
+                    case 2:
+                        this.chunkx1 = this.chunkx;
+                        this.chunkz1 = this.chunkz;
+                        this.chunkx2 = this.chunkx + 15;
+                        this.chunkz2 = this.chunkz + 15;
+                        if (col != 1) {
+                            this.chunkx1 = chunkx - 16 * (col - 1);
+                            this.chunkz2 = chunkz + 16 * (col - 1)+ 15;
+                        }
+                        this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                        break;
+                    case 3:
+                        this.chunkx1 = this.chunkx;
+                        this.chunkz1 = this.chunkz;
+                        this.chunkx2 = this.chunkx + 15;
+                        this.chunkz2 = this.chunkz + 15;
+                        if (col != 1) {
+                            this.chunkx2 = chunkx + 16 * (col - 1)+ 15;
+                            this.chunkz1 = chunkz - 16 * (col - 1);
+                        }
+                        this.blockpos = new BlockPos(chunkx1, this.min_y, chunkz1);
+                        break;
+                }
+
                 break;
         }
 

@@ -3,19 +3,20 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.componets.*;
-import com.denfop.container.ContainerSunnariumMaker;
-import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.client.util.ITooltipFlag;
+import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
+import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.TypeUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -24,13 +25,13 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
         implements IUpgradableBlock {
 
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
     private final ComponentUpgrade componentUpgrades;
     public ComponentBaseEnergy sunenergy;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
 
     public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots) {
@@ -39,7 +40,7 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
 
     public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
         super(energyPerTick * length, 1, outputSlots);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));
@@ -70,21 +71,20 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.solarium_energy_sink.info"));
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate(
                     "iu.machines_work_energy_type_se"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
 
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -96,10 +96,6 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
         return this.output;
     }
 
-
-    public ContainerSunnariumMaker getGuiContainer(EntityPlayer entityPlayer) {
-        return new ContainerSunnariumMaker(entityPlayer, this);
-    }
 
     @Override
     public SoundEvent getSound() {

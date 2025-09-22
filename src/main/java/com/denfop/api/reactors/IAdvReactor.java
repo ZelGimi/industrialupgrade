@@ -1,53 +1,96 @@
 package com.denfop.api.reactors;
 
-import com.denfop.tiles.reactors.ReactorsItem;
+import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.utils.Timer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-
-import java.util.List;
 
 public interface IAdvReactor {
 
-    List<ReactorsItem> getReactorsItems();
 
     boolean isWork();
 
     void setWork(final boolean work);
 
-    boolean isFull();
+    double getHeat();
 
-    TileEntity getCoreTe();
+    void setHeat(double var1);
 
-    int getHeat();
+    void setUpdate();
 
-    void setHeat(int var1);
+    void setItemAt(final int x, final int y);
 
-    int addHeat(int var1);
+    void setRad(double rad);
 
     int getMaxHeat();
 
-    void setMaxHeat(int var1);
+    int getStableMaxHeat();
 
-    void addEmitHeat(int var1);
+    double getOutput();
 
-    float getHeatEffectModifier();
-
-    void setHeatEffectModifier(float var1);
-
-    float getReactorEnergyOutput();
-
-    double getReactorEUEnergyOutput();
-
-    float addOutput(float var1);
+    void setOutput(double output);
 
     ItemStack getItemAt(int var1, int var2);
 
-    void setItemAt(int var1, int var2, ItemStack var3);
-
     void explode();
 
-    int getTickRate();
+    ITypeRector getTypeRector();
 
-    boolean produceEnergy();
+    Timer getTimer();
+
+    void setTime(EnumTypeSecurity enumTypeSecurity);
+
+    void workTimer();
+
+    EnumTypeSecurity getSecurity();
+
+    void setSecurity(EnumTypeSecurity enumTypeSecurity);
+
+    int getBlockLevel();
+
+    int getWidth();
+
+    int getHeight();
+
+    int getLevelReactor();
+
+    int getMaxLevelReactor();
+
+    void increaseLevelReactor();
+
+    ComponentBaseEnergy getRadiation();
+
+    default double getMulHeat(final int x, final int y, ItemStack stack) {
+        return 1;
+    }
+
+    ;
+
+    default double getMulOutput(final int x, final int y, ItemStack stack) {
+        return 1;
+    }
+
+    default double getMulDamage(final int x, final int y, ItemStack stack) {
+        return 1;
+    }
+
+    default double getMulHeatRod(int x, int y, ItemStack stack) {
+        return 1;
+    }
+
+    ;
+
+    double getModuleStableHeat();
+
+    double getModuleRadiation();
+
+    double getModuleGeneration();
+
+    double getModuleVent();
+
+    double getModuleComponentVent();
+
+    double getModuleCapacitor();
+
+    double getModuleExchanger();
 
 }

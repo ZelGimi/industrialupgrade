@@ -90,6 +90,11 @@ public class InputFluidStack implements IInputItemStack {
         return 1;
     }
 
+    @Override
+    public void growAmount(final int col) {
+
+    }
+
     public List<ItemStack> getInputs() {
         return getFluidContainer(this.fluid);
     }

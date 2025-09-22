@@ -1,6 +1,7 @@
 {
-  "parent" : "industrialupgrade:item/default",
-  "textures" : {
-    "layer0" : "industrialupgrade:items/itemcable3_pipes"
+	"parent" : "industrialupgrade:item/default",
+	"textures" : {
+	  "layer0" : "industrialupgrade:items/stellit_fluid_pipe_input"
+	}
   }
-}
+  

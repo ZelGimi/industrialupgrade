@@ -10,6 +10,8 @@ public interface IAsteroid extends IBody {
 
     List<IBaseResource> getResources();
 
+    List<MiniAsteroid> getMiniAsteroid();
+
     EnumLevels getLevels();
 
     IStar getStar();
@@ -21,5 +23,9 @@ public interface IAsteroid extends IBody {
     EnumType getType();
 
     boolean canHaveColonies();
+
+    double getMinDistance();
+
+    double getMaxDistance();
 
 }

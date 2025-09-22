@@ -25,14 +25,23 @@ public interface IMultiTileBlock extends ISubEnum {
         {
             setRequiresTool();
             setImmovableMobility();
+
         }
 
+        @Override
+        public boolean isSolid() {
+            return false;
+        }
     };
     Material CABLE = new Material(MapColor.IRON) {
         {
             setImmovableMobility();
         }
 
+        @Override
+        public boolean isSolid() {
+            return false;
+        }
     };
 
     ResourceLocation getIdentifier();
@@ -71,12 +80,18 @@ public interface IMultiTileBlock extends ISubEnum {
         return IUCore.IUTab;
     }
 
-    default String[] getMultiModels() {
+    default String[] getMultiModels(final IMultiTileBlock teBlock) {
         return new String[0];
     }
 
     default Material getMaterial() {
         return MACHINE;
     }
+
+    int ordinal();
+
+    int getIDBlock();
+
+    void setIdBlock(int id);
 
 }

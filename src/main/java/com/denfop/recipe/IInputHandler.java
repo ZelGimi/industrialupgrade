@@ -7,6 +7,12 @@ public interface IInputHandler {
 
     IInputItemStack getInput(ItemStack var1);
 
+    IInputItemStack getInput(ItemStack[] var1);
+
+    IInputItemStack getInput(Object var1);
+
+    IInputItemStack getInput(Object var1, int var2);
+
     IInputItemStack getInput(ItemStack var1, int var2);
 
     IInputItemStack getInput(String var1);

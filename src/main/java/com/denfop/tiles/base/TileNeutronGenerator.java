@@ -2,20 +2,23 @@ package com.denfop.tiles.base;
 
 import com.denfop.Config;
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.Redstone;
+import com.denfop.componets.RedstoneHandler;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerNeutronGenerator;
 import com.denfop.gui.GuiNeutronGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -35,32 +38,46 @@ import java.util.Set;
 public class TileNeutronGenerator extends TileElectricMachine implements IUpgradableBlock,
         IUpdatableTileEvent {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
+    private final Redstone redstone;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public boolean work = true;
 
     public TileNeutronGenerator() {
         super((int) (Config.energy * 128), 14, 1);
 
         this.energycost = (float) Config.energy / 100;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.containerslot = new InvSlotFluidByList(
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.containerslot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidNeutron.getInstance()
         );
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 9 * 1000,
-                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance()), Inventory.TypeItemSlot.OUTPUT
         );
-
+        this.redstone = this.addComponent(new Redstone(this));
+        this.redstone.subscribe(new RedstoneHandler() {
+                                    @Override
+                                    public void action(final int input) {
+                                        energy.setEnabled(input == 0);
+                                        work = input != 0;
+                                        energy.setReceivingEnabled(work);
+                                    }
+                                }
+        );
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.005));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
     }
 
     private static int applyModifier(int extra) {
@@ -102,6 +119,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         super.onLoaded();
         if (!this.getWorld().isRemote) {
             this.setUpgradestat();
+            energy.setReceivingEnabled(work);
         }
 
     }
@@ -189,9 +207,9 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidExtract,
+
+                UpgradableProperty.ItemExtract
         );
     }
 
@@ -200,6 +218,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
         if (i != 10) {
             this.work = !this.work;
+            energy.setReceivingEnabled(work);
         } else {
             super.updateTileServer(entityPlayer, i);
         }

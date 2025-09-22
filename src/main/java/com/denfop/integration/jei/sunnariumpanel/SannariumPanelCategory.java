@@ -77,7 +77,7 @@ public class SannariumPanelCategory extends Gui implements IRecipeCategory<Sanna
         );
 
 
-        drawTexturedModalRect(+71, +31, 177, 32, xScale + 1, 15);
+        drawTexturedModalRect(+74, +33, 177, 15, xScale + 1, 15);
 
     }
 
@@ -88,11 +88,11 @@ public class SannariumPanelCategory extends Gui implements IRecipeCategory<Sanna
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 10, 30);
+        isg.init(0, true, 25, 32);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 32, 30);
+        isg.init(1, true, 47, 32);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 102, 30);
+        isg.init(2, false, 102, 32);
         isg.set(2, recipes.getOutput());
     }
 

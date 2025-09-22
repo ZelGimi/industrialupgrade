@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public final class RecipeOutput {
+public class RecipeOutput {
 
     public final List<ItemStack> items;
     public final NBTTagCompound metadata;
@@ -17,6 +17,16 @@ public final class RecipeOutput {
         assert !items1.contains(ItemStack.EMPTY);
 
         this.metadata = metadata1;
+        this.items = items1;
+    }
+
+    public RecipeOutput(NBTTagCompound metadata1, List<ItemStack> items1, int count) {
+        assert !items1.contains(ItemStack.EMPTY);
+
+        this.metadata = metadata1;
+        items1.forEach(item -> {
+            item.setCount(count);
+        });
         this.items = items1;
     }
 

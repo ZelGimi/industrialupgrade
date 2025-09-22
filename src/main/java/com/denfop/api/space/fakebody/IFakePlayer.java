@@ -12,4 +12,6 @@ public interface IFakePlayer {
 
     NBTTagCompound writeNBT();
 
+    NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound);
+
 }

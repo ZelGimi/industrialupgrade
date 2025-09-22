@@ -7,7 +7,7 @@ import com.denfop.api.hadroncollider.IOverclockingBlock;
 import com.denfop.api.hadroncollider.IPurifierBlock;
 import com.denfop.api.hadroncollider.Protons;
 import com.denfop.api.hadroncollider.Structures;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public class MainController extends TileEntityInventory implements IMainControll
 
     private final EnumLevelCollider enumLevelCollider;
     private final boolean work;
-    AdvEnergy advEnergy;
+    Energy energy;
     List<Protons> protonsList;
     private IExtractBlock extractBlock;
     private IOverclockingBlock OverclockingBlock;
@@ -32,7 +32,7 @@ public class MainController extends TileEntityInventory implements IMainControll
         this.OverclockingBlock = null;
         this.PurifierBlock = null;
         this.enumLevelCollider = enumLevelCollider;
-        advEnergy = this.addComponent(AdvEnergy.asBasicSink(this, 100000000D, true));
+        energy = this.addComponent(Energy.asBasicSink(this, 100000000D, true));
         protonsList = new ArrayList<>();
         this.work = false;
 
@@ -76,8 +76,8 @@ public class MainController extends TileEntityInventory implements IMainControll
     }
 
     @Override
-    public AdvEnergy getEnergy() {
-        return advEnergy;
+    public Energy getEnergy() {
+        return energy;
     }
 
     @Override

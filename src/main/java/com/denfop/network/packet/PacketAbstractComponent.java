@@ -31,9 +31,8 @@ public class PacketAbstractComponent implements IPacket {
         CustomPacketBuffer buffer = new CustomPacketBuffer(64);
         try {
             buffer.writeByte(this.getId());
-            EncoderHandler.encode(buffer, te, false);
+            EncoderHandler.encode(buffer, te.getPos(), false);
             buffer.writeString(componentName);
-            buffer.writeVarInt(data.writerIndex());
             buffer.writeBytes(data);
         } catch (IOException var7) {
             throw new RuntimeException(var7);
@@ -50,7 +49,6 @@ public class PacketAbstractComponent implements IPacket {
     @Override
     @SideOnly(Side.CLIENT)
     public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
-        final int state = is.readInt();
         final BlockPos pos1;
         try {
             pos1 = DecoderHandler.decode(is, BlockPos.class);
@@ -58,35 +56,28 @@ public class PacketAbstractComponent implements IPacket {
             throw new RuntimeException(e);
         }
         String componentName = is.readString();
-        final int dataLen = is.readVarInt();
-        if (dataLen > 65536) {
-            try {
-                throw new IOException("data length limit exceeded");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
-        final byte[] data = new byte[dataLen];
+
+        final byte[] data = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(data);
         IUCore.proxy.requestTick(false, () -> {
             World world = Minecraft.getMinecraft().world;
-            if (world.provider.getDimension() == state) {
-                TileEntity teRaw = world.getTileEntity(pos1);
-                if (teRaw instanceof TileEntityBlock) {
-                    TileEntityBlock tile = (TileEntityBlock) teRaw;
-                    AbstractComponent component = tile.getComp(componentName);
 
-                    if (component != null) {
-                        try {
+            TileEntity teRaw = world.getTileEntity(pos1);
+            if (teRaw instanceof TileEntityBlock) {
+                TileEntityBlock tile = (TileEntityBlock) teRaw;
+                AbstractComponent component = tile.getComp(componentName);
 
-                            component.onNetworkUpdate(new CustomPacketBuffer(data));
-                        } catch (IOException var6) {
-                            throw new RuntimeException(var6);
-                        }
+                if (component != null) {
+                    try {
+
+                        component.onNetworkUpdate(new CustomPacketBuffer(data));
+                    } catch (IOException var6) {
+                        throw new RuntimeException(var6);
                     }
                 }
             }
+
         });
     }
 

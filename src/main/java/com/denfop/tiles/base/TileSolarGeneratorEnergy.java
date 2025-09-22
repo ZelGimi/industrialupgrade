@@ -6,23 +6,21 @@ import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
-import com.denfop.invslot.InvSlotGenSunarrium;
+import com.denfop.invslot.InventoryGenSunarrium;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,8 +34,8 @@ import java.util.List;
 public class TileSolarGeneratorEnergy extends TileEntityInventory implements
         IUpdatableTileEvent, IType {
 
-    public final InvSlotGenSunarrium input;
-    public final InvSlotOutput outputSlot;
+    public final InventoryGenSunarrium input;
+    public final InventoryOutput outputSlot;
     public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
     public final double maxSunEnergy;
     public final double cof;
@@ -57,8 +55,8 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
 
         this.maxSunEnergy = 6500;
         this.cof = cof;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.input = new InvSlotGenSunarrium(this);
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.input = new InventoryGenSunarrium(this);
         this.lst = new ArrayList<>();
         this.lst.add(0D);
         this.lst.add(0D);
@@ -76,8 +74,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -86,7 +83,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.cof);
 
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -143,7 +140,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, sunenergy,false);
+            EncoderHandler.encode(packet, sunenergy, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -178,6 +175,9 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
                 (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
                         MapColor.AIR) && !this.noSunWorld;
         this.sunIsUp = this.world.isDaytime();
+        this.coef_day = this.lst.get(0);
+        this.coef_night = this.lst.get(1);
+        this.update_night = this.lst.get(2);
     }
 
     public void updateEntityServer() {
@@ -189,10 +189,10 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
         this.generation = 0;
         if (this.skyIsVisible) {
             energy();
-            if (this.sunenergy.getEnergy() >= 6500) {
+            if (this.sunenergy.getEnergy() >= 9000) {
                 if (this.outputSlot.get().getCount() < 64 || this.outputSlot.isEmpty()) {
                     if (this.outputSlot.add(itemstack)) {
-                        this.sunenergy.addEnergy(-6500);
+                        this.sunenergy.addEnergy(-9000);
                     }
                 }
             }

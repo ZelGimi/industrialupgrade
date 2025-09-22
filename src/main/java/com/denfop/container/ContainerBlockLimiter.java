@@ -7,7 +7,7 @@ public class ContainerBlockLimiter extends ContainerFullInv<TileLimiter> {
 
     public ContainerBlockLimiter(TileLimiter tileEntityLimiter, EntityPlayer entityPlayer) {
         super(entityPlayer, tileEntityLimiter, 166);
-        addSlotToContainer(new SlotInvSlot(tileEntityLimiter.slot, 0, 105, 25));
+        addSlotToContainer(new SlotInvSlot(tileEntityLimiter.slot, 0, 105, 27));
 
 
     }

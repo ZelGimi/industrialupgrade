@@ -2,11 +2,11 @@
 	"parent": "block/cube",
 	"textures": {
 		"particle": "industrialupgrade:blocks/mfe_leftright",
-		"down": "industrialupgrade:blocks/mfe_bottomtop",
-		"up": "industrialupgrade:blocks/mfe_bottomtop",
+		"down": "industrialupgrade:blocks/mfe_leftright",
+		"up": "industrialupgrade:blocks/mfe_leftright",
 		"north": "industrialupgrade:blocks/mfe_front",
 		"east": "industrialupgrade:blocks/mfe_leftright",
-		"south": "industrialupgrade:blocks/mfe_back",
+		"south": "industrialupgrade:blocks/mfe_leftright",
 		"west": "industrialupgrade:blocks/mfe_leftright"
 	}
 }

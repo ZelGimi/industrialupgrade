@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blockdiesel_bottom",
     "north" : "industrialupgrade:blocks/blockdiesel_main_active",
     "east" : "industrialupgrade:blocks/blockdiesel_side_active",
-    "south" : "industrialupgrade:blocks/blockdiesel_top",
+    "south" : "industrialupgrade:blocks/blockdiesel_bottom",
     "west" : "industrialupgrade:blocks/blockdiesel_side_active"
   }
 }

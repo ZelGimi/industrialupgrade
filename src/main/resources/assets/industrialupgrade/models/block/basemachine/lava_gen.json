@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blocklavagen_top",
     "north" : "industrialupgrade:blocks/blocklavagen_main",
     "east" : "industrialupgrade:blocks/blocklavagen_side",
-    "south" : "industrialupgrade:blocks/blocklavagen_side3",
+    "south" : "industrialupgrade:blocks/blocklavagen_bottom",
     "west" : "industrialupgrade:blocks/blocklavagen_side"
   }
 }

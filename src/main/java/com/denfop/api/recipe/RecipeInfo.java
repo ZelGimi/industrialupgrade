@@ -22,6 +22,7 @@ public class RecipeInfo {
         this.stack = new ItemStack(tagCompound.getCompoundTag("stack"));
         this.col = tagCompound.getDouble("matter");
     }
+
     public RecipeInfo(CustomPacketBuffer packetBuffer) {
         this.col = packetBuffer.readDouble();
         try {
@@ -31,7 +32,8 @@ public class RecipeInfo {
         }
 
     }
-    public CustomPacketBuffer getPacket(){
+
+    public CustomPacketBuffer getPacket() {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
         packetBuffer.writeDouble(this.col);
         try {
@@ -41,6 +43,7 @@ public class RecipeInfo {
         }
         return packetBuffer;
     }
+
     public double getCol() {
         return col;
     }

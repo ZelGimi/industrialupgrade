@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.denfop.IUCore.random;
+
 public class Asteroid implements IAsteroid {
 
     private final String name;
@@ -17,12 +19,21 @@ public class Asteroid implements IAsteroid {
     private final int temperature;
     private final EnumType type;
     private final boolean colonies;
+    private final int angle;
+    private final double time;
+    private final double size;
+    private final double rotation;
+    private final double maxLocation;
+    private final double minLocation;
     List<IBaseResource> baseResourceList;
+    List<MiniAsteroid> miniAsteroids;
 
     public Asteroid(
             String name, ISystem system, ResourceLocation textureLocation, EnumLevels levels, IStar star, int temperature
-            , double distance, EnumType type, boolean colonies
+            , double distance, EnumType type, boolean colonies, int angle, double time, double size, double rotation,
+            double minLocation, double maxLocation, int amount
     ) {
+
         this.name = name;
         this.system = system;
         this.textureLocation = textureLocation;
@@ -33,6 +44,69 @@ public class Asteroid implements IAsteroid {
         this.temperature = temperature;
         this.type = type;
         this.colonies = colonies;
+        this.angle = angle;
+        this.time = time;
+        this.size = size;
+        this.rotation = rotation;
+        this.minLocation = minLocation;
+        this.maxLocation = maxLocation;
+        this.miniAsteroids = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+
+            float radius1 = (float) (minLocation + (maxLocation - minLocation) * random.nextFloat());
+
+            float angle1 = (float) (2 * Math.PI * random.nextFloat());
+
+
+            float asteroidSize1 = 0.005f + random.nextFloat() * 0.01f;
+
+
+            float orbitalSpeed1 = 0.1f + random.nextFloat() * 0.4f;
+
+
+            miniAsteroids.add(new MiniAsteroid(asteroidSize1, radius1, angle1, 0.5f, orbitalSpeed1));
+        }
+        SpaceNet.instance.addAsteroid(this);
+    }
+
+    @Override
+    public ResourceLocation getLocation() {
+        return textureLocation;
+    }
+
+    @Override
+    public int getRotationAngle() {
+        return angle;
+    }
+
+    @Override
+    public double getRotationTimeX(final double time) {
+        return 0;
+    }
+
+    @Override
+    public double getOrbitPeriod() {
+        return time;
+    }
+
+    @Override
+    public double getRotationTimeZ(final double time) {
+        return 0;
+    }
+
+    @Override
+    public double getSize() {
+        return size;
+    }
+
+    @Override
+    public double getRotation(double time) {
+        return time;
+    }
+
+    @Override
+    public double getDistance() {
+        return distance;
     }
 
     @Override
@@ -43,6 +117,11 @@ public class Asteroid implements IAsteroid {
     @Override
     public List<IBaseResource> getResources() {
         return this.baseResourceList;
+    }
+
+    @Override
+    public List<MiniAsteroid> getMiniAsteroid() {
+        return miniAsteroids;
     }
 
     @Override
@@ -73,6 +152,16 @@ public class Asteroid implements IAsteroid {
     @Override
     public boolean canHaveColonies() {
         return this.colonies;
+    }
+
+    @Override
+    public double getMinDistance() {
+        return minLocation;
+    }
+
+    @Override
+    public double getMaxDistance() {
+        return maxLocation;
     }
 
     @Override

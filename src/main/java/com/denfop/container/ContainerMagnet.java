@@ -6,7 +6,17 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerMagnet extends ContainerFullInv<TileMagnet> {
 
     public ContainerMagnet(EntityPlayer entityPlayer, TileMagnet tileEntity1) {
-        super(entityPlayer, tileEntity1, 166);
+        super(entityPlayer, tileEntity1, 186);
+        for (int j = 0; j < 9; ++j) {
+            addSlotToContainer(new SlotVirtual(tileEntity1, j, 175, 18 + j * 18,
+                    tileEntity1.slot
+            ));
+        }
+        for (int j = 9; j < 18; ++j) {
+            addSlotToContainer(new SlotVirtual(tileEntity1, j, 202, 18 + (j - 9) * 18,
+                    tileEntity1.slot
+            ));
+        }
         if (tileEntity1.outputSlot != null) {
 
             for (int j = 0; j < 6; ++j) {

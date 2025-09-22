@@ -1,0 +1,33 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "mini_smeltery" : {
+        "model" : "industrialupgrade:mini_smeltery/mini_smeltery"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

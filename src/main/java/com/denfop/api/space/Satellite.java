@@ -19,24 +19,33 @@ public class Satellite implements ISatellite {
     private final EnumType type;
     private final boolean oxygen;
     private final boolean colonies;
+    private final int angle;
+    private final double time;
+    private final double size;
+    private final double rotation;
     List<IBaseResource> baseResourceList;
 
     public Satellite(
             String name, ISystem system, ResourceLocation textureLocation, EnumLevels levels, IPlanet planet, int temperature
-            , boolean pressure, double distance, EnumType type, boolean oxygen, boolean colonies
+            , boolean pressure, double distance, EnumType type, boolean oxygen, boolean colonies, int angle, double time,
+            double size, double rotation
     ) {
         this.name = name;
         this.system = system;
         this.textureLocation = textureLocation;
         this.levels = levels;
         this.baseResourceList = new ArrayList<>();
+        this.time = time;
         this.planet = planet;
         this.distance = distance;
         this.pressure = pressure;
         this.temperature = temperature;
         this.type = type;
         this.oxygen = oxygen;
+        this.angle = angle;
+        this.size = size;
         this.colonies = colonies;
+        this.rotation = rotation;
         SpaceNet.instance.addSatellite(this);
     }
 
@@ -50,6 +59,46 @@ public class Satellite implements ISatellite {
         }
         Satellite asteroid = (Satellite) o;
         return Objects.equals(name, asteroid.name);
+    }
+
+    @Override
+    public double getSize() {
+        return size;
+    }
+
+    @Override
+    public double getRotation(final double time) {
+        return rotation * time;
+    }
+
+    @Override
+    public int getRotationAngle() {
+        return angle;
+    }
+
+    @Override
+    public double getDistance() {
+        return distance;
+    }
+
+    @Override
+    public ResourceLocation getLocation() {
+        return textureLocation;
+    }
+
+    @Override
+    public double getRotationTimeX(final double time) {
+        return planet.getRotationTimeX(time) + getDistance() * Math.cos(time * this.time);
+    }
+
+    @Override
+    public double getOrbitPeriod() {
+        return time;
+    }
+
+    @Override
+    public double getRotationTimeZ(final double time) {
+        return planet.getRotationTimeZ(time) + getDistance() * Math.sin(time * this.time);
     }
 
     @Override

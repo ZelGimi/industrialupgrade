@@ -14,7 +14,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -31,8 +30,8 @@ public class BlastFCategory extends Gui implements IRecipeCategory<BlastFWrapper
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiblastfurnace_jei" +
-                        ".png"), 5, 5, 140,
-                75
+                        ".png"), 5, 5, 168,
+                92
         );
     }
 
@@ -64,14 +63,14 @@ public class BlastFCategory extends Gui implements IRecipeCategory<BlastFWrapper
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        int xScale = 24 * progress / 100;
+        int xScale = (int) (38.0 * progress / 100D);
 
-        if (xScale > 24) {
+        if (xScale >= 38.0) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+74, +29, 176, 14, xScale + 1, 16);
+        drawTexturedModalRect(+83, +41, 177, 19, xScale, 11);
 
 
     }
@@ -83,17 +82,17 @@ public class BlastFCategory extends Gui implements IRecipeCategory<BlastFWrapper
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 50, 34 - 6);
+        isg.init(0, true, 57, 38);
 
-        isg.set(0, new ItemStack(Items.IRON_INGOT));
+        isg.set(0, recipes.getInput());
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
 
-        fff.init(1, true, 5, 4, 12, 47, 10000, true, null);
+        fff.init(1, true, 5, 17, 12, 47, 10000, true, null);
         fff.set(1, new FluidStack(FluidRegistry.WATER, 1000));
 
-        isg.init(2, false, 110, 28);
-        isg.set(2, IUItem.advIronIngot);
+        isg.init(2, false, 133, 39);
+        isg.set(2, recipes.getOutput());
     }
 
     protected ResourceLocation getTexture() {

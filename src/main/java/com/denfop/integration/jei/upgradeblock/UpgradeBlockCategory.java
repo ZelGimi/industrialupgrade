@@ -61,25 +61,20 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        energy++;
-        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
-        int xScale = 31 * progress / 100;
+
+        int xScale = 27 * progress / 100;
         int xScale1 = 27 * progress / 100;
-        if (xScale > 31) {
+        if (xScale > 27) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(+28, +33, 176, 17, xScale + 1, 11);
+        drawTexturedModalRect(+33, +35, 180, 7, xScale + 1, 16);
 
 
-        drawTexturedModalRect(+78, +31, 176, 29, xScale1 + 1, 15);
+        drawTexturedModalRect(+78, +35, 225, 7, xScale1 + 1, 16);
 
-
-        drawTexturedModalRect(+21, 53 + 14 - energylevel, 176, 14 - energylevel,
-                14, energylevel
-        );
 
     }
 
@@ -90,11 +85,11 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 10, 30);
+        isg.init(0, true, 15, 34);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 60, 30);
+        isg.init(1, true, 60, 34);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 106, 30);
+        isg.init(2, false, 109, 34);
         isg.set(2, recipes.getOutput());
     }
 

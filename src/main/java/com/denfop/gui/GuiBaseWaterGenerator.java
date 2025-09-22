@@ -3,42 +3,126 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.GuiSlider;
+import com.denfop.api.gui.GuiVerticalSlider;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.api.gui.ImageScreen;
+import com.denfop.api.gui.ItemStackImage;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.WindSystem;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerBaseWaterGenerator;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiPageButtonList;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
+public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> implements GuiPageButtonList.GuiResponder,
+        GuiVerticalSlider.FormatHelper {
 
     private final ResourceLocation background;
+    float scaled = -1;
+    private int prevText;
 
     public GuiBaseWaterGenerator(ContainerBaseWaterGenerator guiContainer) {
         super(guiContainer, guiContainer.base.getStyle());
-        this.ySize = 236;
+        this.ySize = 245;
         this.xSize = 211;
-        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guiwatergenerator.png");
-        this.addComponent(new GuiComponent(this, 167, 98, EnumTypeComponent.ENERGY_WEIGHT,
+        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guiwindgenerator.png");
+        this.addComponent(new GuiComponent(this, 183, 98, EnumTypeComponent.ENERGY_HEIGHT,
                 new Component<>(this.container.base.energy)
         ));
-        this.inventory.setY(153);
+        this.addComponent(new GuiComponent(this, 33, 44, EnumTypeComponent.HYDRO,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 160, 43, EnumTypeComponent.BUTTON1,
+                        new Component<>(new ComponentButton(container.base, 0, Localization.translate("iu.wind_change_side")))
+                )
+        );
+        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.elements.add(new ImageScreen(this, 27, 40, 130, 20));
+        this.elements.add(new ImageScreen(this, 27, 65, 150, 80));
+        EnumTypeComponent component;
+        switch (guiContainer.base.getStyle()) {
+            case ADVANCED:
+                component = EnumTypeComponent.ADVANCED;
+                break;
+            case IMPROVED:
+                component = EnumTypeComponent.IMPROVED;
+                break;
+            case PERFECT:
+                component = EnumTypeComponent.PERFECT;
+                break;
+            default:
+                component = EnumTypeComponent.DEFAULT;
+                break;
+        }
+        for (int i = 0; i < 4; i++) {
+            componentList.add(new GuiComponent(this, 180,
+                    18 + i * 18, component,
+                    new Component<>(new ComponentEmpty())
+            ));
+        }
+        this.inventory.setY(163);
         this.inventory.setX(7);
+    }
+
+    @Override
+    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
+        super.actionPerformed(guibutton);
+        if (guibutton instanceof GuiSlider) {
+            GuiSlider slider = (GuiSlider) guibutton;
+            this.setEntryValue(guibutton.id, slider.getSliderValue());
+        }
+
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        this.buttonList.add(new GuiVerticalSlider(this, 0, (this.width - this.xSize) / 2 + 8,
+                (this.height - this.ySize) / 2 + 70,
+                "",
+                (float) 100, (float) 150, (float) this.container.base.coefficient_power, this, 75
+        ));
+
+
+    }
+
+    @Override
+    public String getText(final int var1, final String var2, final float var3) {
+        return this.container.base.coefficient_power + "%";
+    }
+
+    @Override
+    public void setEntryValue(final int i, final boolean b) {
+
+    }
+
+    @Override
+    public void setEntryValue(final int i, final float v) {
+        new PacketUpdateServerTile(this.container.base, v);
+
+    }
+
+    @Override
+    public void setEntryValue(final int i, final String s) {
+
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -63,9 +147,6 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 12 && x <= 25 && y >= 45 && y <= 68) {
-            new PacketUpdateServerTile(this.container.base, 0);
-        }
 
 
     }
@@ -90,28 +171,7 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
                     i++;
                     continue;
                 }
-                RenderHelper.enableGUIStandardItemLighting();
-                GL11.glPushMatrix();
-                GL11.glColor4f(1F, 1, 1F, 1);
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-                GlStateManager.disableLighting();
-                GlStateManager.enableDepth();
-                this.zLevel = 100.0F;
-                mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-                itemRender.renderItemAndEffectIntoGUI(
-                        stack,
-                        xoffset + 181,
-                        yoffset + 19 + i * 18
-                );
-
-
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GlStateManager.enableLighting();
-                RenderHelper.enableStandardItemLighting();
-                GL11.glColor4f(1F, 1, 1F, 1);
-                GL11.glPopMatrix();
+                new ItemStackImage(this, 181, 19 + i * 18, () -> stack).drawBackground(xoffset, yoffset);
                 i++;
 
             }
@@ -125,32 +185,29 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
         super.drawForegroundLayer(mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
         if (this.container.base.getWorld().provider.getDimension() == 0) {
+            float scale = (float) (2D / new ScaledResolution(mc).getScaleFactor());
+            String fields = "";
             if (this.container.base.getMinWind() != 0) {
-                this.fontRenderer.drawString(Localization.translate("iu.water_meter.info") + String.format(
-                                "%.1f",
-                                Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromWaterPower(
-                                                this.container.base.getBlockPos(),
-                                                this.container.base,
-                                                this.container.base.generation
-                                        ) / this.container.base.getCoefficient()
-                                )
-                        ) + " m/s",
-                        53, 48, ModUtils.convertRGBcolorToInt(13, 229, 34)
-                );
+                fields += Localization.translate("iu.water_meter.info") + String.format(
+                        "%.1f",
+                        Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromPower(
+                                        this.container.base.getBlockPos(),
+                                        this.container.base,
+                                        this.container.base.generation
+                                ) / this.container.base.getCoefficient()
+                        )
+                ) + " m/s";
             } else {
-                this.fontRenderer.drawString(Localization.translate("iu.water_meter.info") + String.format(
-                                "%.1f",
-                                this.container.base.wind_speed + this.container.base.mind_speed
-                        ) + " m/s",
-                        53, 48, ModUtils.convertRGBcolorToInt(13, 229, 34)
-                );
+                fields += Localization.translate("iu.water_meter.info") + String.format(
+                        "%.1f",
+                        this.container.base.wind_speed + this.container.base.mind_speed
+                ) + " m/s";
             }
+            scale = adjustTextScale(fields, 125 - 10, 20, scale, 0.8F);
+            drawTextInCanvas(fields, 27 + 30, 48, 125 - 10, 20, scale * 0.8f, ModUtils.convertRGBcolorToInt(13, 229, 34));
+
         }
-        String tooltip2 =
-                Localization.translate("iu.wind_change_side");
-        new AdvArea(this, 12, 45, 25, 58)
-                .withTooltip(tooltip2)
-                .drawForeground(mouseX, mouseY);
+
 
         if (!this.container.base.slot.isEmpty()) {
             final List<ItemStack> list = RotorUpgradeSystem.instance.getListStack(this.container.base.slot.get());
@@ -168,74 +225,74 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
             }
         }
         if (this.container.base.getRotor() != null) {
-            this.fontRenderer.drawString(Localization.translate("iu.water_side") + Localization.translate(("iu.wind." + container.base.wind_side
-                            .name()
-                            .toLowerCase())),
-                    33, 70, ModUtils.convertRGBcolorToInt(13, 229, 34)
-            );
-            this.fontRenderer.drawString(Localization.translate("iu.wind_mec_side") + Localization.translate(("iu.wind." + this.container.base
-                            .getRotorSide()
-                            .name()
-                            .toLowerCase())),
-                    33, 80, ModUtils.convertRGBcolorToInt(13, 229, 34)
-            );
-            this.fontRenderer.drawString(Localization.translate("iu.wind_gen") +
-                            ModUtils.getString(this.container.base.generation) + " EF/t",
-                    33, 90, ModUtils.convertRGBcolorToInt(13, 229, 34)
-            );
-            this.fontRenderer.drawString(Localization.translate("iu.water_coef") + String.format(
-                            "%.2f",
-                            this.container.base.getCoefficient()
-                    ),
-                    33, 100, ModUtils.convertRGBcolorToInt(13, 229, 34)
-            );
-            this.fontRenderer.drawString(Localization.translate("iu.wind_tier") + String.format(
-                            "%d",
-                            this.container.base.getRotor().getLevel()
-                    ),
-                    33, 110, ModUtils.convertRGBcolorToInt(13, 229, 34)
-            );
+            String fields = Localization.translate("iu.water_side") + Localization.translate(("iu.wind." + container.base.wind_side
+                    .name()
+                    .toLowerCase()));
+            if (this.container.base.getRotorSide() != null) {
+                fields += "\n" + Localization.translate("iu.wind_mec_side") + Localization.translate(("iu.wind." + this.container.base
+                        .getRotorSide()
+                        .name()
+                        .toLowerCase()));
 
-            int meta = Math.min(this.container.base.enumTypeWind.ordinal() + this.container.base.getMinWind(), 9);
-            EnumTypeWind enumTypeWinds = WindSystem.windSystem.getEnumTypeWind().values()[meta];
-
-
-            this.fontRenderer.drawString(Localization.translate("iu.water_level_info") + String.format(
-                            "%d",
-                            enumTypeWinds.ordinal() + 1
-                    ),
-                    33, 120, ModUtils.convertRGBcolorToInt(13, 229, 34)
-            );
-
-            double hours = 0;
-            double minutes = 0;
-            double seconds = 0;
-            final List<Double> time = ModUtils.Time(this.container.base.timers / 20D);
-            if (time.size() > 0) {
-                hours = time.get(0);
-                minutes = time.get(1);
-                seconds = time.get(2);
             }
-            String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") + "" : "";
-            String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
-            String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
-            this.fontRenderer.drawString(Localization.translate("iu.water_change_time") + time1 + time2 + time3
-                    ,
-                    33, 130, ModUtils.convertRGBcolorToInt(13, 229, 34)
+            fields += "\n" + Localization.translate("iu.wind_gen") +
+                    ModUtils.getString(this.container.base.generation) + " EF/t";
+            fields += "\n" + Localization.translate("iu.water_coef") + String.format(
+                    "%.2f",
+                    this.container.base.getCoefficient()
             );
-            String tooltip3 = Localization.translate("iu.water_meter.info") +
-                    String.format(
-                            "%.1f",
-                            enumTypeWinds.getMin() + this.container.base.getMinWindSpeed()
-                    ) + "-" + String.format(
-                    "%.1f",
-                    enumTypeWinds.getMax() + this.container.base.getMinWindSpeed()
-            ) + " m/s";
-            new AdvArea(this, 33, 120, 123, 130)
-                    .withTooltip(tooltip3)
-                    .drawForeground(mouseX, mouseY);
-        }
+            fields += "\n" + Localization.translate("iu.wind_tier") + String.format(
+                    "%d",
+                    this.container.base.getRotor().getLevel()
+            );
+            if (this.container.base.enumTypeWind != null) {
+                int meta = Math.min(this.container.base.enumTypeWind.ordinal() + this.container.base.getMinWind(), 9);
+                EnumTypeWind enumTypeWinds = WindSystem.windSystem.getEnumTypeWind().values()[meta];
 
+
+                fields += "\n" + Localization.translate("iu.wind_level_info") + String.format(
+                        "%d",
+                        enumTypeWinds.ordinal() + 1
+                );
+
+                double hours = 0;
+                double minutes = 0;
+                double seconds = 0;
+                final List<Double> time = ModUtils.Time(this.container.base.timers / 20D);
+                if (!time.isEmpty()) {
+                    hours = time.get(0);
+                    minutes = time.get(1);
+                    seconds = time.get(2);
+                }
+                String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") + "" : "";
+                String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
+                String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
+                fields += "\n" + Localization.translate("iu.wind_change_time") + time1 + time2 + time3;
+                String tooltip3 = Localization.translate("iu.water_meter.info") +
+                        String.format(
+                                "%.1f",
+                                enumTypeWinds.getMin() + this.container.base.getMinWindSpeed()
+                        ) + "-" + String.format(
+                        "%.1f",
+                        enumTypeWinds.getMax() + this.container.base.getMinWindSpeed()
+                ) + " m/s";
+                new AdvArea(this, 33, 120, 123, 130)
+                        .withTooltip(tooltip3)
+                        .drawForeground(mouseX, mouseY);
+            }
+            float scale = (float) (2D / new ScaledResolution(mc).getScaleFactor());
+            if (prevText != fields.length()) {
+                scaled = -1;
+                prevText = fields.length();
+            }
+            if (scaled == -1) {
+                scale = adjustTextScale(fields, 150 - 10, 80 - 10, scale, 0.8F);
+                scaled = scale;
+            } else {
+                scale = scaled;
+            }
+            drawTextInCanvas(fields, 27 + 4, 65 + 4, 150 - 4, 80 - 4, scale * 1.3f, ModUtils.convertRGBcolorToInt(13, 229, 34));
+        }
     }
 
     @Override

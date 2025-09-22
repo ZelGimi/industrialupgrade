@@ -10,6 +10,8 @@ public interface IInputItemStack {
 
     int getAmount();
 
+    void growAmount(int col);
+
     List<ItemStack> getInputs();
 
 

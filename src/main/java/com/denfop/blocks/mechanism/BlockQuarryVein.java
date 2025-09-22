@@ -32,8 +32,8 @@ public enum BlockQuarryVein implements IMultiTileBlock, IMultiBlockItem {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockQuarryVein(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -49,6 +49,18 @@ public enum BlockQuarryVein implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
 
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
@@ -133,7 +145,11 @@ public enum BlockQuarryVein implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasUniqueRender(final ItemStack itemStack) {
-        return true;
+        return false;
+    }
+
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        return new String[]{"active_2", "active_3", "active_4"};
     }
 
     @Override

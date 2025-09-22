@@ -27,8 +27,8 @@ public class DoubleMolecularTransformerCategory extends Gui implements IRecipeCa
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew" +
-                        ".png"), 8, 22, 155,
-                70
+                        ".png"), 10, 49, 216,
+                73
         );
     }
 
@@ -60,12 +60,12 @@ public class DoubleMolecularTransformerCategory extends Gui implements IRecipeCa
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        double xScale = 15.0D * progress / 100;
-        if (xScale > 15) {
+        double xScale = 18.0D * progress / 100;
+        if (xScale > 18) {
             progress = 0;
         }
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(15, 26, 221, 7, 10, (int) xScale);
+        drawTexturedModalRect(31 - 11, 75 - 49, 43, 237, 14, (int) xScale);
 
     }
 
@@ -76,11 +76,11 @@ public class DoubleMolecularTransformerCategory extends Gui implements IRecipeCa
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 2, 4);
+        isg.init(0, true, 8, 7);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 20, 4);
+        isg.init(1, true, 28, 7);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 11, 45);
+        isg.init(2, false, 18, 47);
         isg.set(2, recipes.getOutput());
     }
 

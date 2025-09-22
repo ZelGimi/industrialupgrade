@@ -56,8 +56,8 @@ public enum BlockSolarPanels implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockSolarPanels(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
@@ -72,6 +72,18 @@ public enum BlockSolarPanels implements IMultiTileBlock {
 
     public static BlockSolarPanels getFromID(final int ID) {
         return values()[ID % values().length];
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     public void buildDummies() {
@@ -156,7 +168,7 @@ public enum BlockSolarPanels implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
-        return new String[]{"aer", "earth", "nether", "end", "night", "day", "rain"};
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        return new String[]{"aer", "earth", "nether", "end", "night", "sun", "rain"};
     }
 }

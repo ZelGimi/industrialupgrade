@@ -1,12 +1,8 @@
 {
-  "parent" : "block/cube",
+  "parent" : "industrialupgrade:block/solar_side",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/terasteel_bottom",
-    "down" : "industrialupgrade:blocks/terasteel_bottom",
-    "up" : "industrialupgrade:blocks/terasteel_top",
-    "north" : "industrialupgrade:blocks/terasteel_side",
-    "east" : "industrialupgrade:blocks/terasteel_side",
-    "south" : "industrialupgrade:blocks/terasteel_side",
-    "west" : "industrialupgrade:blocks/terasteel_side"
+    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:blocks/solar_panels/terrasteel/glass",
+    "side" : "industrialupgrade:blocks/solar_panels/terrasteel/side"
   }
 }

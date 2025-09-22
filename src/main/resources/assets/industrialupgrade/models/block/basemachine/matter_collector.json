@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/matter_collector_side",
+    "down" : "industrialupgrade:blocks/matter_collector_side",
+    "up" : "industrialupgrade:blocks/matter_collector_side",
+    "north" : "industrialupgrade:blocks/matter_collector_main",
+    "east" : "industrialupgrade:blocks/matter_collector_main",
+    "south" : "industrialupgrade:blocks/matter_collector_main",
+    "west" : "industrialupgrade:blocks/matter_collector_main"
+  }
+}

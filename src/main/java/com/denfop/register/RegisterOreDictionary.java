@@ -1,15 +1,20 @@
 package com.denfop.register;
 
 import com.denfop.IUItem;
-import com.denfop.integration.exnihilo.ExNihiloIntegration;
+import com.denfop.blocks.BlockSpace;
+import com.denfop.blocks.BlockSpace1;
+import com.denfop.blocks.BlockSpace2;
+import com.denfop.blocks.BlockSpace3;
+import com.denfop.items.resource.ItemRawMetals;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RegisterOreDictionary {
@@ -26,6 +31,20 @@ public class RegisterOreDictionary {
             "purifiedcrushed", "smalldust", "stick", "verysmalldust", "block", "gear"};
     public static final String[] string2 = {"heavyore", "baseore", "radiationore", "radiationresources", "preciousore", "preciousgem"};
 
+    public static final List<String> list_baseore1 = itemNames7();
+    public static final List<String> standardList = Arrays.asList("Copper", "Tin", "Lead", "Iron", "Gold", "Osmium", "Tantalum",
+            "Cadmium"
+    );
+    public static final List<String> spaceElementList = Arrays.asList("Adamantium", "Bloodstone",
+            "Draconid", "Meteoric", "Mithril", "Orichalcum"
+    );
+    public static final List<String> list_mineral = itemNames8();
+    public static final List<Item> list_item2 = new ArrayList<>();
+    public static final int[] meta_item = {29, 28, 31, 44, 28, 22, 31, 28, 32, 22, 0, 22};
+
+    public static final String[] string3 = {"casing", "crushed", "doubleplate", "dust", "ingot", "nugget", "plate",
+            "purifiedcrushed", "smalldust", "stick", "block", "gear"};
+
     public static void writelist() {
         list_item.add(IUItem.casing);
         list_item.add(IUItem.crushed);
@@ -40,6 +59,21 @@ public class RegisterOreDictionary {
         list_item.add(IUItem.verysmalldust);
         list_item.add(Item.getItemFromBlock(IUItem.block));
         list_item.add(IUItem.gear);
+    }
+
+    public static void writelist2() {
+        list_item2.add(IUItem.casing);
+        list_item2.add(IUItem.crushed);
+        list_item2.add(IUItem.doubleplate);
+        list_item2.add(IUItem.iudust);
+        list_item2.add(IUItem.iuingot);
+        list_item2.add(IUItem.nugget);
+        list_item2.add(IUItem.plate);
+        list_item2.add(IUItem.purifiedcrushed);
+        list_item2.add(IUItem.smalldust);
+        list_item2.add(IUItem.stik);
+        list_item2.add(Item.getItemFromBlock(IUItem.block2));
+        list_item2.add(IUItem.gear);
     }
 
     public static void writelist1() {
@@ -101,7 +135,49 @@ public class RegisterOreDictionary {
         list.add("Vitalium");//7
         list.add("Duralumin");//8
         list.add("Ferromanganese");//9
+        list.add("AluminiumSilicon");//10
+        list.add("BerylliumBronze");//11
+        list.add("Zeliber");//12
+        list.add("StainlessSteel");//13
+        list.add("Inconel");//14
+        list.add("Nitenol");//15
+        list.add("Stellite");//16
+        list.add("HafniumBoride");//17
+        list.add("Woods");//18
+        list.add("Nimonic");//19
+        list.add("TantalumTungstenHafnium");//20
+        list.add("Permalloy");//21
+        list.add("AluminiumLithium");//22
+        list.add("CobaltChrome");//23
+        list.add("HafniumCarbide");//24
+        list.add("MolybdenumSteel");//25
+        list.add("NiobiumTitanium");//26
+        list.add("Osmiridium");//27
+        list.add("SuperalloyHaynes");//28
+        list.add("SuperalloyRene");//29
+        list.add("YttriumAluminiumGarnet");//30
+        list.add("GalliumArsenic");//31
+        return list;
+    }
 
+    public static List<String> itemNames4() {
+        List<String> list = new ArrayList<>();
+        list.add("Mikhail");//0
+        list.add("Aluminium");//1
+        list.add("Vanadium");//2
+        list.add("Tungsten");//3
+        list.add("Cobalt");//6
+        list.add("Magnesium");//7
+        list.add("Nickel");//8
+        list.add("Platinum");//9
+        list.add("Titanium");//10
+        list.add("Chromium");//11
+        list.add("Spinel");//12
+        list.add("Silver");//14
+        list.add("Zinc");//15
+        list.add("Manganese");//16
+        list.add("Iridium");//17
+        list.add("Germanium");//18
         return list;
     }
 
@@ -127,6 +203,45 @@ public class RegisterOreDictionary {
         list.add("Iridium");//17
         list.add("Germanium");//18
         return list;
+    }
+
+    public static List<String> itemNames7() {
+        return Arrays.asList(
+                "Arsenic",
+                "Barium",
+                "Bismuth",
+                "Gadolinium",
+                "Gallium",
+                "Hafnium",
+                "Yttrium",
+                "Molybdenum",
+                "Neodymium",
+                "Niobium",
+                "Palladium",
+                "Polonium",
+                "Strontium",
+                "Thallium",
+                "Zirconium"
+        );
+    }
+
+    public static List<String> itemNames8() {
+        return Arrays.asList(
+                "ArsenoPyrite",
+                "Braggite",
+                "Wolframite",
+                "Germanite",
+                "Coltan",
+                "Crocoite",
+                "Xenotime",
+                "Iridosmine",
+                "Theophrastite",
+                "Tetrahedrite",
+                "Fergusonite",
+                "Celestine",
+                "Zircon",
+                "Crystal"
+        );
     }
 
     public static List<String> itemNames6() {
@@ -162,13 +277,16 @@ public class RegisterOreDictionary {
     public static void oredict() {
         writelist();
         writelist1();
-
+        writelist2();
         OreDictionary.registerOre("oreThorium", IUItem.toriyore);
         OreDictionary.registerOre("gemThorium", new ItemStack(IUItem.toriy, 1, 0));
         OreDictionary.registerOre("ingotUranium", new ItemStack(IUItem.itemiu, 1, 2));
         OreDictionary.registerOre("oreRedstone", Blocks.REDSTONE_ORE);
         OreDictionary.registerOre("casingBronze", IUItem.casingbronze);
         OreDictionary.registerOre("casingIron", IUItem.casingiron);
+        OreDictionary.registerOre("casingGold", IUItem.casinggold);
+        OreDictionary.registerOre("casingCopper", IUItem.casingcopper);
+        OreDictionary.registerOre("casingTin", IUItem.casingtin);
         OreDictionary.registerOre("casingSteel", IUItem.casingadviron);
         OreDictionary.registerOre("crystalProton", IUItem.proton);
         OreDictionary.registerOre("crystalPhoton", IUItem.photoniy);
@@ -177,14 +295,58 @@ public class RegisterOreDictionary {
         OreDictionary.registerOre("nuggetNeutron", IUItem.neutronium);
         OreDictionary.registerOre("casingLead", IUItem.casinglead);
         OreDictionary.registerOre("woodRubber", IUItem.rubWood);
-
+        Item testItem = Item.getItemFromBlock(IUItem.alloysblock);
+        for (int j = 0; j < spaceElementList.size(); j++) {
+            OreDictionary.registerOre(
+                    "plate" + spaceElementList.get(j),
+                    new ItemStack(IUItem.plate, 1, 46 + j)
+            );
+            OreDictionary.registerOre(
+                    "ingot" + spaceElementList.get(j),
+                    new ItemStack(IUItem.iuingot, 1, 43 + j)
+            );
+            OreDictionary.registerOre(
+                    "doubleplate" + spaceElementList.get(j),
+                    new ItemStack(IUItem.doubleplate, 1, 46 + j)
+            );
+            OreDictionary.registerOre(
+                    "casing" + spaceElementList.get(j),
+                    new ItemStack(IUItem.casing, 1, 44 + j)
+            );
+            OreDictionary.registerOre(
+                    "block" + spaceElementList.get(j),
+                    new ItemStack(IUItem.preciousblock, 1, 3 + j)
+            );
+        }
+        for (int j = 0; j < list_item2.size(); j++) {
+            for (int i = 0; i < list_baseore1.size(); i++) {
+                OreDictionary.registerOre(
+                        string3[j] + list_baseore1.get(i),
+                        new ItemStack(list_item2.get(j), 1, meta_item[j] + i)
+                );
+            }
+        }
         for (int j = 0; j < list_item1.size(); j++) {
             for (int i = 0; i < list_string1.size(); i++) {
-
-                OreDictionary.registerOre(
-                        string1[j] + list_string1.get(i),
-                        new ItemStack(list_item1.get(j), 1, i)
-                );
+                Item item = list_item1.get(j);
+                if (item == testItem) {
+                    if (i < 16) {
+                        OreDictionary.registerOre(
+                                string1[j] + list_string1.get(i),
+                                new ItemStack(item, 1, i)
+                        );
+                    } else {
+                        OreDictionary.registerOre(
+                                string1[j] + list_string1.get(i),
+                                new ItemStack(IUItem.alloysblock1, 1, i - 16)
+                        );
+                    }
+                } else {
+                    OreDictionary.registerOre(
+                            string1[j] + list_string1.get(i),
+                            new ItemStack(item, 1, i)
+                    );
+                }
 
 
             }
@@ -197,6 +359,29 @@ public class RegisterOreDictionary {
             );
 
         }
+        for (int i = 0; i < list_mineral.size(); i++) {
+            OreDictionary.registerOre(
+                    "ore" + list_mineral.get(i),
+                    new ItemStack(Item.getItemFromBlock(IUItem.mineral), 1, i)
+            );
+
+        }
+        OreDictionary.registerOre(
+                "oreQuartz",
+                new ItemStack(Item.getItemFromBlock(IUItem.preciousore), 1, 3)
+        );
+        for (int i = 0; i < ItemRawMetals.Types.values().length; i++) {
+            String s = ItemRawMetals.Types.values()[i].getName();
+            s = s.substring(0, 1).toUpperCase() + s.substring(1);
+            OreDictionary.registerOre(
+                    "raw" + s,
+                    new ItemStack(IUItem.rawMetals, 1, i)
+            );
+            OreDictionary.registerOre(
+                    "rawIngot" + s,
+                    new ItemStack(IUItem.rawIngot, 1, i)
+            );
+        }
         for (int i = 0; i < list_baseore.size(); i++) {
             OreDictionary.registerOre(
                     "ore" + list_baseore.get(i),
@@ -206,6 +391,17 @@ public class RegisterOreDictionary {
             );
 
         }
+        for (int i = 0; i < list_baseore1.size(); i++) {
+            OreDictionary.registerOre(
+                    "ore" + list_baseore1.get(i),
+                    new ItemStack(Item.getItemFromBlock((IUItem.ore3)), 1,
+                            i
+                    )
+            );
+
+        }
+
+
         for (int j = 0; j < list_item.size(); j++) {
             for (int i = 0; i < list_string.size(); i++) {
 
@@ -257,9 +453,7 @@ public class RegisterOreDictionary {
                 "oreCurium",
                 new ItemStack(Item.getItemFromBlock(IUItem.radiationore).setUnlocalizedName(string2[2]), 1, 2)
         );
-        if (Loader.isModLoaded("exnihilocreatio")) {
-            ExNihiloIntegration.oredictionary();
-        }
+
         OreDictionary.registerOre("ingotAluminum", new ItemStack(IUItem.iuingot, 1, 1));
 
         OreDictionary.registerOre("gemAmericium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 0));
@@ -282,7 +476,8 @@ public class RegisterOreDictionary {
         OreDictionary.registerOre("gemSapphire", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 1));
         OreDictionary.registerOre("gemTopaz", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 2));
 
-
+        add("oreSulfur", new ItemStack(IUItem.ore3, 1, 15));
+        add("oreSulfur", new ItemStack(IUItem.basalts, 1, 6));
         add("casingCopper", IUItem.casingcopper);
         add("casingIron", IUItem.casingiron);
         add("casingTin", IUItem.casingtin);
@@ -377,7 +572,128 @@ public class RegisterOreDictionary {
         add("machineBlockAdvanced", IUItem.advancedMachine);
         add("machineBlockAdvancedCasing", IUItem.advancedMachine);
         add("dustSiliconDioxide", IUItem.silicondioxideDust);
+        add("ingotLithium", new ItemStack(IUItem.crafting_elements, 1, 447));
+        add("gemBor", new ItemStack(IUItem.crafting_elements, 1, 448));
+        add("gemBeryllium", new ItemStack(IUItem.crafting_elements, 1, 449));
+        add("plateLithium", new ItemStack(IUItem.crafting_elements, 1, 450));
+        add("plateBor", new ItemStack(IUItem.crafting_elements, 1, 451));
+        add("plateBeryllium", new ItemStack(IUItem.crafting_elements, 1, 452));
 
+        add("gearOsmium", new ItemStack(IUItem.gear, 1, 19));
+        add("gearTantalum", new ItemStack(IUItem.gear, 1, 20));
+        add("gearCadmium", new ItemStack(IUItem.gear, 1, 21));
+        add("ingotOsmium", new ItemStack(IUItem.iuingot, 1, 25));
+        add("ingotTantalum", new ItemStack(IUItem.iuingot, 1, 26));
+        add("ingotCadmium", new ItemStack(IUItem.iuingot, 1, 27));
+        add("dustOsmium", new ItemStack(IUItem.iudust, 1, 34));
+        add("dustTantalum", new ItemStack(IUItem.iudust, 1, 35));
+        add("dustCadmium", new ItemStack(IUItem.iudust, 1, 36));
+
+        add("casingOsmium", new ItemStack(IUItem.casing, 1, 26));
+        add("casingTantalum", new ItemStack(IUItem.casing, 1, 27));
+        add("casingCadmium", new ItemStack(IUItem.casing, 1, 28));
+
+        add("crushedOsmium", new ItemStack(IUItem.crushed, 1, 25));
+        add("crushedTantalum", new ItemStack(IUItem.crushed, 1, 26));
+        add("crushedCadmium", new ItemStack(IUItem.crushed, 1, 27));
+
+        add("nuggetOsmium", new ItemStack(IUItem.nugget, 1, 19));
+        add("nuggetTantalum", new ItemStack(IUItem.nugget, 1, 20));
+        add("nuggetCadmium", new ItemStack(IUItem.nugget, 1, 21));
+
+        add("plateOsmium", new ItemStack(IUItem.plate, 1, 28));
+        add("plateTantalum", new ItemStack(IUItem.plate, 1, 29));
+        add("plateCadmium", new ItemStack(IUItem.plate, 1, 30));
+
+        add("crushedPurifiedOsmium", new ItemStack(IUItem.purifiedcrushed, 1, 25));
+        add("crushedPurifiedTantalum", new ItemStack(IUItem.purifiedcrushed, 1, 26));
+        add("crushedPurifiedCadmium", new ItemStack(IUItem.purifiedcrushed, 1, 27));
+
+        add("stickOsmium", new ItemStack(IUItem.stik, 1, 19));
+        add("stickTantalum", new ItemStack(IUItem.stik, 1, 20));
+        add("stickCadmium", new ItemStack(IUItem.stik, 1, 21));
+
+        add("doubleplateOsmium", new ItemStack(IUItem.doubleplate, 1, 28));
+        add("doubleplateTantalum", new ItemStack(IUItem.doubleplate, 1, 29));
+        add("doubleplateCadmium", new ItemStack(IUItem.doubleplate, 1, 30));
+
+        add("blockOsmium", new ItemStack(IUItem.block1, 1, 3));
+        add("blockTantalum", new ItemStack(IUItem.block1, 1, 4));
+        add("blockCadmium", new ItemStack(IUItem.block1, 1, 5));
+        add("oreOsmium", new ItemStack(IUItem.ore2, 1, 3));
+        add("oreTantalum", new ItemStack(IUItem.ore2, 1, 4));
+        add("oreCadmium", new ItemStack(IUItem.ore2, 1, 5));
+
+        add("smalldustOsmium", new ItemStack(IUItem.smalldust, 1, 29));
+        add("smalldustTantalum", new ItemStack(IUItem.smalldust, 1, 30));
+        add("smalldustCadmium", new ItemStack(IUItem.smalldust, 1, 31));
+        add("dustQuartz", new ItemStack(IUItem.iudust, 1, 76));
+        add("dustNetherQuartz", new ItemStack(IUItem.iudust, 1, 76));
+
+        add("verysmalldustOsmium", new ItemStack(IUItem.verysmalldust, 1, 19));
+        add("verysmalldustTantalum", new ItemStack(IUItem.verysmalldust, 1, 20));
+        add("verysmalldustCadmium", new ItemStack(IUItem.verysmalldust, 1, 21));
+        add("gemCoal", new ItemStack(Items.COAL));
+        for (int i = 0; i < BlockSpace.Type.values().length; i++) {
+            BlockSpace.Type type = BlockSpace.Type.values()[i];
+            String name = type.getName().split("_")[1];
+            name = name.substring(0, 1).toUpperCase() + name
+                    .substring(1)
+                    .toLowerCase();
+            OreDictionary.registerOre(
+                    "ore" + name,
+                    new ItemStack(Item.getItemFromBlock((IUItem.space_ore)), 1,
+                            i
+                    )
+            );
+            type.setRaw(name);
+
+        }
+        for (int i = 0; i < BlockSpace1.Type.values().length; i++) {
+            BlockSpace1.Type type = BlockSpace1.Type.values()[i];
+            String name = type.getName().split("_")[1];
+            name = name.substring(0, 1).toUpperCase() + name
+                    .substring(1)
+                    .toLowerCase();
+            OreDictionary.registerOre(
+                    "ore" + name,
+                    new ItemStack(Item.getItemFromBlock((IUItem.space_ore1)), 1,
+                            i
+                    )
+            );
+            type.setRaw(name);
+
+        }
+        for (int i = 0; i < BlockSpace2.Type.values().length; i++) {
+            BlockSpace2.Type type = BlockSpace2.Type.values()[i];
+            String name = type.getName().split("_")[1];
+            name = name.substring(0, 1).toUpperCase() + name
+                    .substring(1)
+                    .toLowerCase();
+            type.setRaw(name);
+            OreDictionary.registerOre(
+                    "ore" + name,
+                    new ItemStack(Item.getItemFromBlock((IUItem.space_ore2)), 1,
+                            i
+                    )
+            );
+
+        }
+        for (int i = 0; i < BlockSpace3.Type.values().length; i++) {
+            BlockSpace3.Type type = BlockSpace3.Type.values()[i];
+            String name = type.getName().split("_")[1];
+            name = name.substring(0, 1).toUpperCase() + name
+                    .substring(1)
+                    .toLowerCase();
+            type.setRaw(name);
+            OreDictionary.registerOre(
+                    "ore" + name,
+                    new ItemStack(Item.getItemFromBlock((IUItem.space_ore3)), 1,
+                            i
+                    )
+            );
+
+        }
     }
 
 }

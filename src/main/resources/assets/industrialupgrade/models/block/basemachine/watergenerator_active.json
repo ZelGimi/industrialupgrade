@@ -1,80 +1,12 @@
 {
-  "texture_size" : [
-    32,
-    32
-  ],
+  "parent" : "block/cube",
   "textures" : {
-    "0" : "industrialupgrade:blocks/water_generator_active",
-    "particle" : "industrialupgrade:blocks/water_generator_active"
-  },
-  "elements" : [
-    {
-      "from" : [
-        0,
-        0,
-        0
-      ],
-      "to" : [
-        16,
-        16,
-        16
-      ],
-      "faces" : {
-        "north" : {
-          "uv" : [
-            0,
-            0,
-            4,
-            4
-          ],
-          "texture" : "#0"
-        },
-        "east" : {
-          "uv" : [
-            0,
-            4,
-            4,
-            8
-          ],
-          "texture" : "#0"
-        },
-        "south" : {
-          "uv" : [
-            4,
-            0,
-            8,
-            4
-          ],
-          "texture" : "#0"
-        },
-        "west" : {
-          "uv" : [
-            4,
-            4,
-            8,
-            8
-          ],
-          "texture" : "#0"
-        },
-        "up" : {
-          "uv" : [
-            4,
-            12,
-            0,
-            8
-          ],
-          "texture" : "#0"
-        },
-        "down" : {
-          "uv" : [
-            12,
-            0,
-            8,
-            4
-          ],
-          "texture" : "#0"
-        }
-      }
-    }
-  ]
+    "particle" : "industrialupgrade:blocks/watergenerator-bottom",
+    "down" : "industrialupgrade:blocks/watergenerator-bottom",
+    "up" : "industrialupgrade:blocks/watergenerator_top_active",
+    "north" : "industrialupgrade:blocks/watergenerator_main_active",
+    "east" : "industrialupgrade:blocks/watergenerator_left-right_active",
+    "south" : "industrialupgrade:blocks/watergenerator_left-right",
+    "west" : "industrialupgrade:blocks/watergenerator_left-right"
+  }
 }

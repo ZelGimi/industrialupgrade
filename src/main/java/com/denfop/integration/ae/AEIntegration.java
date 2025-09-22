@@ -1,17 +1,30 @@
 package com.denfop.integration.ae;
 
 import appeng.core.Api;
+import appeng.tile.powersink.AEBasePoweredTile;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.recipes.MaceratorRecipe;
 import com.denfop.tiles.base.TileSunnariumMaker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraftforge.common.MinecraftForge;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class AEIntegration {
 
-    public static void init() {
+    public static Map<Integer, Map<ChunkPos, List<DataAE>>> worldAE = new HashMap<>();
+    public static List<AEBasePoweredTile> basePoweredTileAdderList = new LinkedList<>();
+    public static List<AEBasePoweredTile> basePoweredTileRemoverList = new LinkedList<>();
 
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(new AEIntegration());
         MaceratorRecipe.addmacerator(
                 new ItemStack(Items.QUARTZ),
                 Api.INSTANCE.definitions().materials().netherQuartzDust().maybeStack(1).get()
@@ -40,6 +53,10 @@ public class AEIntegration {
         IUCore.list.add(Api.INSTANCE.definitions().materials().certusQuartzCrystal().maybeStack(1).get());
         IUCore.list.add(Api.INSTANCE.definitions().materials().certusQuartzCrystalCharged().maybeStack(1).get());
 
+    }
+
+    public static boolean isTile(TileEntity tileentity) {
+        return tileentity instanceof AEBasePoweredTile;
     }
 
 

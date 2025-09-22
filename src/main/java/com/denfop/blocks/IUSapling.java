@@ -38,7 +38,7 @@ public class IUSapling extends BlockSaplingCore implements IModelRegister, IGrow
 
     @Override
     public IBlockState getStateFromMeta(final int meta) {
-        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
+        return getDefaultState().withProperty(VARIANT, Type.values()[0]);
     }
 
 

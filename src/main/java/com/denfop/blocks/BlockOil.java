@@ -36,8 +36,7 @@ public class BlockOil extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("veinoil");
         setCreativeTab(IUCore.OreTab);
-        setHardness(3.0F);
-        setResistance(5.0F);
+        setHardness(1.0F);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.oil));
         setHarvestLevel("pickaxe", 2);

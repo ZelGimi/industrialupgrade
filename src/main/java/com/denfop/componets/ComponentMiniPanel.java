@@ -5,7 +5,8 @@ import com.denfop.api.energy.IEnergySource;
 import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.api.sytem.InfoTile;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -25,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,11 +53,15 @@ public class ComponentMiniPanel extends AbstractComponent {
     protected double bonusCapacity;
     protected double bonusProdution;
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
     private double prodution;
+    private ChunkPos chunkPos;
 
     public ComponentMiniPanel(TileEntityMiniPanels parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), 1);
     }
+
 
     public ComponentMiniPanel(
             TileEntityInventory parent,
@@ -84,7 +93,6 @@ public class ComponentMiniPanel extends AbstractComponent {
         this.defaultCapacity = capacity;
         this.prodution = 0;
     }
-
 
     public static ComponentMiniPanel asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
@@ -134,7 +142,6 @@ public class ComponentMiniPanel extends AbstractComponent {
         }
     }
 
-
     @Override
     public void updateEntityServer() {
         if (!this.energyStorageMap.isEmpty() && this.getDelegate() != null && !this.sourceDirections.isEmpty()) {
@@ -158,7 +165,6 @@ public class ComponentMiniPanel extends AbstractComponent {
         return true;
     }
 
-
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
     }
@@ -168,6 +174,10 @@ public class ComponentMiniPanel extends AbstractComponent {
         ret.setDouble("storage", this.storage);
 
         return ret;
+    }
+
+    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        return validReceivers;
     }
 
     public void onLoaded() {
@@ -201,6 +211,8 @@ public class ComponentMiniPanel extends AbstractComponent {
 
         if (!this.parent.getWorld().isRemote) {
             if (!(this.sourceDirections.isEmpty())) {
+                this.energyConductorMap.clear();
+                validReceivers.clear();
                 this.createDelegate();
                 MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
             }
@@ -212,7 +224,6 @@ public class ComponentMiniPanel extends AbstractComponent {
     public int getComparatorValue() {
         return Math.min((int) (this.storage * 15.0 / this.capacity), 15);
     }
-
 
     private void createDelegate() {
         if (this.delegate != null) {
@@ -245,6 +256,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
+
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer buffer = super.updateComponent();
         buffer.writeDouble(this.capacity);
@@ -254,6 +266,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         buffer.writeDouble(this.prodution);
         return buffer;
     }
+
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
         this.capacity = is.readDouble();
@@ -262,7 +275,6 @@ public class ComponentMiniPanel extends AbstractComponent {
         this.bonusProdution = is.readDouble();
         this.prodution = is.readDouble();
     }
-
 
     public double getCapacity() {
         return this.capacity * (1 + this.bonusCapacity);
@@ -333,10 +345,9 @@ public class ComponentMiniPanel extends AbstractComponent {
         return ret;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
 
     }
-
 
     public int getSourceTier() {
         return this.sourceTier;
@@ -357,7 +368,6 @@ public class ComponentMiniPanel extends AbstractComponent {
     public void setSendingEnabled(boolean enabled) {
         this.sendingSidabled = !enabled;
     }
-
 
     public void setDirections(Set<EnumFacing> sourceDirections) {
         if (this.delegate != null) {
@@ -384,10 +394,16 @@ public class ComponentMiniPanel extends AbstractComponent {
 
     }
 
+    public ChunkPos getChunkPos() {
+        if (this.chunkPos == null) {
+            this.chunkPos = new ChunkPos(getParent().getPos().getX() >> 4, getParent().getPos().getZ() >> 4);
+        }
+        return chunkPos;
+    }
+
     public Set<EnumFacing> getSourceDirs() {
         return Collections.unmodifiableSet(this.sourceDirections);
     }
-
 
     public IEnergyTile getDelegate() {
         return this.delegate;
@@ -397,6 +413,30 @@ public class ComponentMiniPanel extends AbstractComponent {
         return Math.min(this.storage, this.getProdution());
     }
 
+    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!parent.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!parent.getWorld().isRemote) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+        }
+    }
+
+    public Map<EnumFacing, IEnergyTile> getTiles() {
+        return energyConductorMap;
+    }
 
     private abstract static class EnergyNetDelegate extends TileEntity implements IEnergyTile {
 
@@ -405,13 +445,55 @@ public class ComponentMiniPanel extends AbstractComponent {
 
     }
 
-
     private class EnergyNetDelegateSource extends ComponentMiniPanel.EnergyNetDelegate implements IEnergySource {
 
+
+        int hashCodeSource;
+        private long id;
 
         private EnergyNetDelegateSource() {
             super();
 
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        public long getIdNetwork() {
+            return this.id;
+        }
+
+        public void setId(final long id) {
+            this.id = id;
+        }
+
+        public List<InfoTile<IEnergyTile>> getValidReceivers() {
+            return validReceivers;
+        }
+
+        public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
+            if (!parent.getWorld().isRemote) {
+                ComponentMiniPanel.this.RemoveTile(tile, facing1);
+
+            }
+        }
+
+
+        public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
+            if (!parent.getWorld().isRemote) {
+                ComponentMiniPanel.this.AddTile(tile, facing1);
+            }
+        }
+
+        public Map<EnumFacing, IEnergyTile> getTiles() {
+            return ComponentMiniPanel.this.energyConductorMap;
         }
 
         @Override

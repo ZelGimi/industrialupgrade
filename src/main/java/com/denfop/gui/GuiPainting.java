@@ -5,19 +5,16 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ItemStackImage;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.ItemPaints;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,9 +29,40 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         super(container1);
         this.container = container1;
         this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+        this.addComponent(new GuiComponent(this, 5, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 42, 58, EnumTypeComponent.ENERGY,
+                new Component<>(this.container.base.energy)
+        ));
+        this.addElement(new ItemStackImage(this, 62, 57, () -> ItemStack.EMPTY) {
+            @Override
+            public void drawForeground(final int mouseX, final int mouseY) {
+
+            }
+
+            @Override
+            public void drawBackground(final int mouseX, final int mouseY) {
+                if (container.base.output == null) {
+                    return;
+                }
+                super.drawBackground(mouseX, mouseY);
+                ItemStack stack = container.base.inputSlotA.get(0).getItem() instanceof ItemPaints
+                        ? container.base.inputSlotA.get(1) : container.base.inputSlotA.get(0);
+                stack = ModUtils.mode(container.base.output.getRecipe().output.metadata, stack);
+                if (!ModUtils.isEmpty(stack)) {
+                    RenderHelper.enableGUIStandardItemLighting();
+                    this.gui.drawItemStack(this.x, this.y, stack);
+                    RenderHelper.disableStandardItemLighting();
+                }
+
+            }
+
+            @Override
+            public boolean visible() {
+                return container.base.output != null;
+            }
+        });
     }
 
     private static List<String> getInformation() {
@@ -53,19 +81,11 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         super.drawForegroundLayer(par1, par2);
 
         handleUpgradeTooltip1(par1, par2);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EF";
-        new AdvArea(this, 26, 56, 37, 71)
-                .withTooltip(tooltip2)
-                .drawForeground(par1, par2);
+
         if (!this.container.base.inputSlotA.get(1).isEmpty() && !this.container.base.inputSlotA
                 .get(0)
                 .isEmpty() && this.container.base.output != null) {
-            this.fontRenderer.drawString(ModUtils.mode(this.container.base.output.getRecipe().output.metadata), 41, 70, 4210752);
+            this.fontRenderer.drawString(ModUtils.mode(this.container.base.output.getRecipe().output.metadata), 80, 63, 4210752);
         }
     }
 
@@ -81,7 +101,7 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX, mouseY, text);
+            this.drawTooltip(mouseX - 80, mouseY, text);
         }
     }
 
@@ -94,56 +114,15 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         this.drawTexturedModalRect(this.guiLeft + 165, this.guiTop, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(this.getTexture());
 
-        int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (14 * this.container.base.componentProgress.getBar());
 
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(this.guiLeft + 25, this.guiTop + 57 + 14 - chargeLevel, 176, 14 - chargeLevel,
-                    14, chargeLevel
-            );
-        }
-        int down;
-        ItemStack stack = ItemStack.EMPTY;
-        if (!this.container.base.inputSlotA.get(0).isEmpty() && this.container.base.output != null) {
-            stack = this.container.base.inputSlotA.get(0).getItem() instanceof ItemPaints
-                    ? this.container.base.inputSlotA.get(0) : this.container.base.inputSlotA.get(1);
-        }
-        if (stack.isEmpty()) {
-            down = 0;
-        } else {
-            down = 14 * (stack.getItemDamage() - 1);
+        int progress = (int) (9 * this.container.base.componentProgress.getBar());
+
+
+        if (progress > 0) {
+            drawTexturedModalRect(this.guiLeft + 79, this.guiTop + 39, 179, 34, progress, 13);
         }
 
-        if (progress > 0 && down >= 0 && !stack.isEmpty()) {
-            drawTexturedModalRect(this.guiLeft + 75, this.guiTop + 35, 178, 33 + down, progress + 1, 13);
-        }
-        if (this.container.base.output != null) {
-            stack = this.container.base.inputSlotA.get(0).getItem() instanceof ItemPaints
-                    ? this.container.base.inputSlotA.get(1) : this.container.base.inputSlotA.get(0);
 
-            RenderHelper.enableGUIStandardItemLighting();
-            GL11.glPushMatrix();
-            GL11.glColor4f(0.1F, 1, 0.1F, 1);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GlStateManager.disableLighting();
-            GlStateManager.enableDepth();
-            this.zLevel = 100.0F;
-            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            itemRender.renderItemAndEffectIntoGUI(
-                    ModUtils.mode(this.container.base.output.getRecipe().output.metadata, stack),
-                    this.guiLeft + 106,
-                    this.guiTop + 52
-            );
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GlStateManager.enableLighting();
-
-            RenderHelper.enableStandardItemLighting();
-            GL11.glColor4f(0.1F, 1, 0.1F, 1);
-            GL11.glPopMatrix();
-        }
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
     }
 
 

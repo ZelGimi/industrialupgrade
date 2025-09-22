@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/smeltery_casing",
+    "down" : "industrialupgrade:blocks/smeltery_casing",
+    "up" : "industrialupgrade:blocks/smeltery_casing",
+    "north" : "industrialupgrade:blocks/smeltery_casing",
+    "east" : "industrialupgrade:blocks/smeltery_casing",
+    "south" : "industrialupgrade:blocks/smeltery_casing",
+    "west" : "industrialupgrade:blocks/smeltery_casing"
+  }
+}

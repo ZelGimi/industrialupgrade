@@ -15,8 +15,6 @@ public interface ILocalNet {
 
     ITile getTileEntity(BlockPos pos);
 
-    void update(BlockPos pos);
-
     NodeStats getNodeStats(final ITile tile);
 
     void removeTile(ITile tile1);

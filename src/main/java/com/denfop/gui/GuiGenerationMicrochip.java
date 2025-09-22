@@ -1,7 +1,6 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -22,11 +21,11 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
         super(container1);
         this.container = container1;
         this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 7, 48, EnumTypeComponent.SOUND_BUTTON,
+        this.addComponent(new GuiComponent(this, 127, 52, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
         this.addComponent(new GuiComponent(this, 7, 62, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
-        this.addComponent(new GuiComponent(this, 70, 62, EnumTypeComponent.HEAT,
+        this.addComponent(new GuiComponent(this, 68, 60, EnumTypeComponent.HEAT,
                 new Component<>(container1.base.heat)
         ));
     }
@@ -41,8 +40,7 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
     protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 0, name, 4210752, false);
+        this.drawTexturedModalRect(this.guiLeft - 22, this.guiTop + 82, 8, 7, 20, 20);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -52,16 +50,16 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
         this.mc.getTextureManager().bindTexture(getTexture());
         int progress = (int) (15.0F * this.container.base.componentProgress.getBar());
         int progress1 = (int) (10.0F * this.container.base.componentProgress.getBar());
-        int progress2 = (int) (19.0F * this.container.base.componentProgress.getBar());
+        int progress2 = (int) (20F * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 27, yoffset + 13, 176, 34, progress + 1, 28);
+            drawTexturedModalRect(xoffset + 28, yoffset + 12, 176, 34, progress + 1, 32);
         }
         if (progress1 > 0) {
-            drawTexturedModalRect(xoffset + 60, yoffset + 17, 176, 64, progress1 + 1, 19);
+            drawTexturedModalRect(xoffset + 60, yoffset + 16, 176, 65, progress1 + 1, 21);
         }
         if (progress2 > 0) {
-            drawTexturedModalRect(xoffset + 88, yoffset + 23, 176, 85, progress2 + 1, 7);
+            drawTexturedModalRect(xoffset + 89, yoffset + 22, 176, 86, progress2 + 1, 8);
         }
 
 

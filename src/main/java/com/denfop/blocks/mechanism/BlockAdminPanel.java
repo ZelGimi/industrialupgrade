@@ -28,9 +28,8 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
-    private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockAdminPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -40,7 +39,6 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
     BlockAdminPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
-        this.rarity = rarity;
 
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
@@ -57,6 +55,19 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
             }
         }
     }
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
+    }
+
+    ;
+
 
     @Override
     public String getName() {
@@ -97,7 +108,7 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0f;
     }
 
     @Override
@@ -124,7 +135,7 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasUniqueRender(final ItemStack itemStack) {
-        return true;
+        return false;
     }
 
     @Override

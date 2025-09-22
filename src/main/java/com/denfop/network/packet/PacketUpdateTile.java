@@ -7,9 +7,10 @@ import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import java.io.IOException;
 
@@ -20,16 +21,19 @@ public class PacketUpdateTile implements IPacket {
     }
 
     public PacketUpdateTile(TileEntityBlock te) {
-
+        final Chunk chunk = te.getWorld().getChunkFromBlockCoords(te.getPos());
+        ExtendedBlockStorage extendedblockstorage = chunk.storageArrays[te.getPos().getY() >> 4];
+        int i = te.getPos().getX() & 15;
+        int j = te.getPos().getY();
+        int k = te.getPos().getZ() & 15;
+        extendedblockstorage.set(i, j & 15, k, te.getBlockState());
         IUCore.network.getServer().addTileToUpdate(te);
 
     }
 
     public PacketUpdateTile(CustomPacketBuffer data, EntityPlayerMP player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16384);
-        buffer.writeByte(getId());
-        buffer.writeBytes(data);
-        IUCore.network.getServer().sendPacket(buffer, player);
+
+        IUCore.network.getServer().sendPacket(data, player);
     }
 
     private static void apply(BlockPos pos, Class<? extends TileEntityBlock> teClass, World world, byte[] is) {
@@ -49,7 +53,7 @@ public class PacketUpdateTile implements IPacket {
                     return;
                 }
 
-
+                new PacketUpdateTe(world, pos);
                 if (te.isInvalid() || te.getWorld() != world) {
                     return;
                 }
@@ -59,7 +63,6 @@ public class PacketUpdateTile implements IPacket {
             final CustomPacketBuffer buf = new CustomPacketBuffer();
             buf.writeBytes(is);
             ((TileEntityBlock) te).readPacket(buf);
-
         }
     }
 
@@ -77,17 +80,12 @@ public class PacketUpdateTile implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String fieldName = is.readString();
-        String[] parts = fieldName.split("=");
-        String firstPart = parts[0];
-        String secondPart = parts[1];
-
-        String[] subParts = firstPart.split(":");
-        String prefix = subParts[0];
-        String identifier = subParts[1];
-        final ResourceLocation res = new ResourceLocation(prefix, identifier);
-        Class<? extends TileEntityBlock> teClass = TileBlockCreator.instance.get(res).teInfo.getClassFromName(secondPart);
-
+        int firstPart = is.readShort();
+        int secondPart = is.readShort();
+        Class<? extends TileEntityBlock> teClass = TileBlockCreator.instance.get(firstPart).teInfo
+                .getListBlock()
+                .get(secondPart)
+                .getTeClass();
         byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(bytes);
         if (!(is.readerIndex() < is.writerIndex())) {

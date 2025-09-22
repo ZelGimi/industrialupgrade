@@ -1,11 +1,11 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
@@ -25,7 +25,7 @@ public class CTExtruder {
                 "extruding",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )
@@ -37,7 +37,8 @@ public class CTExtruder {
 
     @ZenMethod
     public static void remove(IItemStack output) {
-        ModTweaker.LATE_REMOVALS.add(new Remove(output));
+
+        CraftTweakerAPI.apply(new Remove(output));
     }
 
 
@@ -56,9 +57,6 @@ public class CTExtruder {
 
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.output);
-        }
 
     }
 

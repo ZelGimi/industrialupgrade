@@ -2,12 +2,8 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -38,7 +34,7 @@ public class TileWitherMaker extends TileBaseWitherMaker implements IHasRecipe {
 
     public TileWitherMaker() {
         super(1, 1500, 1);
-        this.inputSlotA = new InvSlotRecipes(this, "wither", this);
+        this.inputSlotA = new InventoryRecipes(this, "wither", this);
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
     }
@@ -123,7 +119,7 @@ public class TileWitherMaker extends TileBaseWitherMaker implements IHasRecipe {
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
 

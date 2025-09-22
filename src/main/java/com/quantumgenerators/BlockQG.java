@@ -45,7 +45,14 @@ public enum BlockQG implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
 
         for (final BlockQG block : BlockQG.values()) {

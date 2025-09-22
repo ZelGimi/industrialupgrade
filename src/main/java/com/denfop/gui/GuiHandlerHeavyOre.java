@@ -19,13 +19,14 @@ public class GuiHandlerHeavyOre extends GuiIU<ContainerHandlerHeavyOre> {
     public GuiHandlerHeavyOre(ContainerHandlerHeavyOre container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+        this.addComponent(new GuiComponent(this, 37, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
-        this.addComponent(new GuiComponent(this, 51, 52, EnumTypeComponent.HEAT,
+        this.addComponent(new GuiComponent(this, 61, 61, EnumTypeComponent.HEAT,
                 new Component<>(container1.base.heat)
         ));
-        this.addComponent(new GuiComponent(this, 26, 56, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+        this.addComponent(new GuiComponent(this, 39, 62, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+
     }
 
     protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
@@ -45,10 +46,10 @@ public class GuiHandlerHeavyOre extends GuiIU<ContainerHandlerHeavyOre> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.bindTexture();
 
-        int progress = (int) (44 * this.container.base.componentProgress.getBar());
+        int progress = (int) ((218 - 178) * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
-            drawTexturedModalRect(this.guiLeft + 48, this.guiTop + 31, 177, 32, progress + 1, 14);
+            drawTexturedModalRect(this.guiLeft + 62, this.guiTop + 37, 178, 34, progress + 1, 14);
         }
 
 

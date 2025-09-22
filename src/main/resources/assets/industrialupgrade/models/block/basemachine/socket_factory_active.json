@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/socket_factory_active_all",
+    "down" : "industrialupgrade:blocks/socket_factory_active_all",
+    "up" : "industrialupgrade:blocks/socket_factory_active_up",
+    "north" : "industrialupgrade:blocks/socket_factory_active_main",
+    "east" : "industrialupgrade:blocks/socket_factory_active_all",
+    "south" : "industrialupgrade:blocks/socket_factory_active_all",
+    "west" : "industrialupgrade:blocks/socket_factory_active_all"
+  }
+}

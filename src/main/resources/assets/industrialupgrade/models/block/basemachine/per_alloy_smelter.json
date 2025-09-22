@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockperalloy_bottom",
+    "down" : "industrialupgrade:blocks/blockperalloy_bottom",
+    "up" : "industrialupgrade:blocks/blockperalloy_bottom",
+    "north" : "industrialupgrade:blocks/blockperalloy_main",
+    "east" : "industrialupgrade:blocks/blockperalloy_side",
+    "south" : "industrialupgrade:blocks/blockperalloy_bottom",
+    "west" : "industrialupgrade:blocks/blockperalloy_side"
+  }
+}

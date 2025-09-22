@@ -3,20 +3,21 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDieselGenerator;
 import com.denfop.gui.GuiDieselGenerator;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryCharge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -30,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -39,13 +41,15 @@ import java.io.IOException;
 public class TileDieselGenerator extends TileEntityLiquidTankInventory implements IAudioFixer,
         IUpdatableTileEvent {
 
-    public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput outputSlot;
-    public final double coef;
+    public final InventoryCharge chargeSlot = new InventoryCharge(this, 1);
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput outputSlot;
     public final String name = null;
-    public final AdvEnergy energy;
-    public final int production = 120;
+    public final Energy energy;
+    public final int production = 200;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+    public double coef;
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
@@ -54,15 +58,23 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
     public TileDieselGenerator() {
         super(12);
         this.coef = 1;
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluiddizel.getInstance());
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(
+        this.fluidSlot = new InventoryFluidByList(this, Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.INPUT,
+                FluidName.fluiddizel.getInstance(),
+                FluidName.fluida_diesel.getInstance(), FluidName.fluidaa_diesel.getInstance(),
+                FluidName.fluidaaa_diesel.getInstance(), FluidName.fluidaaaa_diesel.getInstance()
+        );
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.energy = this.addComponent(Energy.asBasicSource(
                 this,
-                (double) 50000 * coef,
-                EnergyNetGlobal.instance.getTierFromPower(this.production)
+                (double) 10000000,
+                4
         ).addManagedSlot(chargeSlot));
-        ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluiddizel.getInstance()));
-
+        ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluiddizel.getInstance(),
+                FluidName.fluida_diesel.getInstance(), FluidName.fluidaa_diesel.getInstance(),
+                FluidName.fluidaaa_diesel.getInstance(), FluidName.fluidaaaa_diesel.getInstance()
+        ));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.45));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
     }
 
     @Override
@@ -87,7 +99,7 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
         return packet;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -109,7 +121,7 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -156,6 +168,24 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.fluidTank.getFluid() != null) {
+            Fluid fluid = this.fluidTank.getFluid().getFluid();
+            if (fluid == FluidName.fluiddizel.getInstance()) {
+                coef = 1;
+            } else if (fluid == FluidName.fluida_diesel.getInstance()) {
+                coef = 2;
+
+            } else if (fluid == FluidName.fluidaa_diesel.getInstance()) {
+                coef = 4;
+
+            } else if (fluid == FluidName.fluidaaa_diesel.getInstance()) {
+                coef = 8;
+
+            } else if (fluid == FluidName.fluidaaaa_diesel.getInstance()) {
+                coef = 16;
+
+            }
+        }
         if (this.needsFluid()) {
             MutableObject<ItemStack> output = new MutableObject<>();
             if (this.fluidSlot.transferToTank(
@@ -198,7 +228,7 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
     }
 
     public boolean isConverting() {
-        return this.getTankAmount() > 0 && this.energy.getEnergy() + (double) this.production <= this.energy.getCapacity();
+        return this.getTankAmount() > 1 && this.energy.getEnergy() + (double) this.production * coef <= this.energy.getCapacity();
     }
 
 
@@ -218,7 +248,7 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 

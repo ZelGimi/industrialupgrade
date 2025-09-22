@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:blocks/blockelecfurnace_side",
     "up" : "industrialupgrade:blocks/blockelecfurnace_side2_active",
     "north" : "industrialupgrade:blocks/blockelecfurnace_main_active",
-    "east" : "industrialupgrade:blocks/blockelecfurnace_side1_active",
+    "east" : "industrialupgrade:blocks/blockelecfurnace_side",
     "south" : "industrialupgrade:blocks/blockelecfurnace_side",
-    "west" : "industrialupgrade:blocks/blockelecfurnace_side1_active"
+    "west" : "industrialupgrade:blocks/blockelecfurnace_side"
   }
 }

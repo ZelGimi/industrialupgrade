@@ -12,129 +12,92 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
+@SideOnly(Side.CLIENT)
 public class SoundHandler {
 
-    @SideOnly(Side.CLIENT)
+    private static final SoundManager soundManager = Minecraft.getMinecraft().getSoundHandler().sndManager;
+
+
     public static void stopSound(BlockPos pos) {
-        pos = pos.add(0.5, 0.5, 0.5);
-        final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
-        ISound sound = null;
-        if (man.loaded) {
-            for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
-                BlockPos pos1 = new BlockPos(map.getKey().getXPosF() - 0.5, map.getKey().getYPosF() - 0.5,
-                        map.getKey().getZPosF() - 0.5
-                );
-                if (pos1.equals(pos)) {
-                    sound = map.getKey();
-                    break;
-                }
-            }
+        getSoundAtPosition(pos).ifPresent(soundManager::stopSound);
+    }
+
+
+    public static void stopAllSounds() {
+        getAllSoundsFromMod().forEach(soundManager::stopSound);
+    }
+
+
+    public static void stopSound(EnumSound sound) {
+        getSoundsMatching(sound.getNameSounds().toLowerCase()).forEach(soundManager::stopSound);
+    }
+
+
+    public static void playSound(EntityPlayer player, Object sound) {
+        if (player == null || sound == null) {
+            return;
         }
-        if (sound != null) {
-            man.stopSound(sound);
+
+        String soundName = (sound instanceof EnumSound)
+                ? ((EnumSound) sound).getNameSounds().toLowerCase()
+                : sound.toString().toLowerCase();
+
+        if (!isSoundPlaying(soundName)) {
+            Minecraft.getMinecraft().getSoundHandler().playSound(new PlayerSound(
+                    player,
+                    EnumSound.getSondFromString(soundName).getSoundName()
+            ));
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void stopSound() {
-        final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
-        ISound sound = null;
-        if (man.loaded) {
-            for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
 
-                if (map.getKey().getCategory() == SoundCategory.PLAYERS && map
-                        .getKey()
-                        .getSoundLocation()
-                        .getResourceDomain()
-                        .equals(
-                                Constants.MOD_ID)) {
-                    sound = map.getKey();
-                    break;
-                }
-            }
-        }
-        if (sound != null) {
-            man.stopSound(sound);
-        }
+    private static boolean isSoundPlaying(String soundName) {
+        return soundManager.invPlayingSounds.keySet().stream()
+                .anyMatch(sound -> isSoundFromMod(sound) && sound.getSoundLocation().getResourcePath().contains(soundName));
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void stopSound(EnumSound sound1) {
-        final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
+    private static List<ISound> getAllSoundsFromMod() {
         List<ISound> sounds = new ArrayList<>();
-        if (man.loaded) {
-            for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
-
-                if (map.getKey().getCategory() == SoundCategory.PLAYERS && map
-                        .getKey()
-                        .getSoundLocation()
-                        .getResourceDomain()
-                        .equals(
-                                Constants.MOD_ID) && map.getKey().getSoundLocation().getResourcePath().contains(sound1
-                        .getNameSounds()
-                        .toLowerCase())) {
-                    sounds.add(map.getKey());
-                    break;
-                }
-            }
-        }
-        sounds.forEach(man::stopSound);
+        soundManager.invPlayingSounds.keySet().stream()
+                .filter(SoundHandler::isSoundFromMod)
+                .forEach(sounds::add);
+        return sounds;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void playSound(EntityPlayer player, EnumSound sound1) {
-        final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
-        boolean can = true;
-        if (man.loaded) {
-            for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
 
-                if (map.getKey().getCategory() == SoundCategory.PLAYERS && map
-                        .getKey()
-                        .getSoundLocation()
-                        .getResourceDomain()
-                        .equals(
-                                Constants.MOD_ID) && map.getKey().getSoundLocation().getResourcePath().contains(sound1
-                        .getNameSounds()
-                        .toLowerCase())) {
-                    can = false;
-                    break;
-                }
-            }
-        }
-        if (can) {
-            player.playSound(sound1.getSoundEvent(), 1, 1);
-
-        }
+    private static List<ISound> getSoundsMatching(String soundName) {
+        List<ISound> sounds = new ArrayList<>();
+        soundManager.invPlayingSounds.keySet().stream()
+                .filter(sound -> isSoundFromMod(sound) && sound.getSoundLocation().getResourcePath().contains(soundName))
+                .forEach(sounds::add);
+        return sounds;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void playSound(EntityPlayer player, String sound1) {
-        final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
-        boolean can = true;
-        if (man.loaded) {
-            for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
 
-                if (map.getKey().getCategory() == SoundCategory.PLAYERS && map
-                        .getKey()
-                        .getSoundLocation()
-                        .getResourceDomain()
-                        .equals(
-                                Constants.MOD_ID) && map
-                        .getKey()
-                        .getSoundLocation()
-                        .getResourcePath()
-                        .contains(sound1.toLowerCase())) {
-                    can = false;
-                    break;
-                }
-            }
+    private static Optional<ISound> getSoundAtPosition(BlockPos pos) {
+        if (pos.getX() < 0){
+            pos = pos.add(-1,0,0);
         }
-        if (can) {
-            player.playSound(EnumSound.getSondFromString(sound1), 1, 1);
+        if (pos.getZ() < 0){
+            pos = pos.add(0,0,-1);
+        }
+        final BlockPos finalPos = pos;
+        return soundManager.invPlayingSounds.keySet().stream()
+                .filter(sound -> isSoundFromMod(sound) && isSoundAtPosition(sound, finalPos))
+                .findFirst();
+    }
 
-        }
+
+    private static boolean isSoundFromMod(ISound sound) {
+        return sound.getCategory() == SoundCategory.PLAYERS &&
+                sound.getSoundLocation().getResourceDomain().equals(Constants.MOD_ID);
+    }
+
+
+    private static boolean isSoundAtPosition(ISound sound, BlockPos pos) {
+        return new BlockPos(sound.getXPosF(), sound.getYPosF(), sound.getZPosF()).equals(pos);
     }
 
 }

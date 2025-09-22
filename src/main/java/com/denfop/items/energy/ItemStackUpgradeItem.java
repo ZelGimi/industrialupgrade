@@ -3,9 +3,8 @@ package com.denfop.items.energy;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeldUpgradeItem;
 import com.denfop.gui.GuiUpgradeItem;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -38,20 +37,10 @@ public class ItemStackUpgradeItem extends ItemStackInventory {
         return new GuiUpgradeItem(new ContainerHeldUpgradeItem(this), itemStack1);
     }
 
-    @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

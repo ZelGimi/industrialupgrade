@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdate {
+public class GUIEFReader extends GuiIU<ContainerEFReader> implements IGuiUpdate {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.TEXTURES,
@@ -34,10 +34,11 @@ public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdat
 
     public GUIEFReader(ContainerEFReader container, final ItemStack itemStack1) {
         super(container);
-
+        this.componentList.clear();
         this.name = itemStack1.getDisplayName();
         this.itemStack = itemStack1;
-        this.ySize = 218;
+        this.ySize = 121;
+        this.xSize = 188;
 
     }
 
@@ -45,70 +46,70 @@ public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdat
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 0);
         this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode") + " Sink",
-                (160 + this.fontRenderer.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 42,
+                (169 + this.fontRenderer.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 18,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
         this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode") + " Source",
-                (160 + this.fontRenderer.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 99,
+                (169 + this.fontRenderer.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 78,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
 
         if (this.mode == 0) {
             this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode.EnergyIn") + ":",
-                    16, 42,
+                    12, 18,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(ModUtils.getString(this.energySink) + " EF/t",
-                    16, 52,
+                    12, 28,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
                             " " +
                             "EF/t",
-                    12, 62,
+                    8, 38,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(Localization.translate("itemToolMEter.max/min") + ": ",
-                    16, 72,
+                    12, 48,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(ModUtils.getString(this.min) + "/" + ModUtils.getString(this.max),
-                    16, 82,
+            this.fontRenderer.drawString(ModUtils.getString(this.max) + "/" + ModUtils.getString(this.min),
+                    12, 58,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
         }
         if (this.mode == 1) {
 
             this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode.EnergyOut") + ":",
-                    16, 42,
+                    12, 18,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(ModUtils.getString(this.energySource) + " EF/t",
-                    16, 52,
+                    12, 28,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
                             " " +
                             "EF/t",
-                    12, 62,
+                    8, 38,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(Localization.translate("itemToolMEter.max/min") + ": ",
-                    16, 72,
+                    12, 48,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(ModUtils.getString(this.min) + "/" + ModUtils.getString(this.max),
-                    16, 82,
+            this.fontRenderer.drawString(ModUtils.getString(this.max) + "/" + ModUtils.getString(this.min),
+                    12, 58,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
         }
-        this.fontRenderer.drawString(Localization.translate("itemToolMEter.cycle", ModUtils.getString(this.tick / 20D)),
-                17, 99,
+        this.fontRenderer.drawString(Localization.translate("itemToolMEter.cycle", ModUtils.getString(this.tick / 40D)),
+                12, 78,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
         this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode.reset"),
-                36, 113,
-                ModUtils.convertRGBcolorToInt(13, 229, 34)
+                38, 101,
+                ModUtils.convertRGBcolorToInt(0, 0, 0)
         );
 
     }
@@ -117,10 +118,10 @@ public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdat
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         if (this.mode == 0) {
-            this.drawTexturedModalRect(this.guiLeft + 127, this.guiTop + 61, 191, 6, 10, 19);
+            this.drawTexturedModalRect(this.guiLeft + 130, this.guiTop + 34, 198, 35, 19, 17);
 
         } else {
-            this.drawTexturedModalRect(this.guiLeft + 127, this.guiTop + 70, 191, 55, 10, 19);
+            this.drawTexturedModalRect(this.guiLeft + 130, this.guiTop + 54, 198, 55, 19, 17);
 
         }
     }
@@ -132,7 +133,7 @@ public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdat
         int yMin = (this.height - this.ySize) / 2;
         int x = mouseX - xMin;
         int y = mouseY - yMin;
-        if (x >= 112 && y >= 55 && x <= 151 && y <= 74) {
+        if (x >= 130 && y >= 34 && x <= 130 + 19 && y <= 34 + 17) {
             this.mode = 0;
             this.average = 0;
             this.min = Double.MAX_VALUE;
@@ -140,7 +141,7 @@ public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdat
             this.tick = 0;
             this.col = 0;
         }
-        if (x >= 112 && y >= 75 && x <= 151 && y <= 94) {
+        if (x >= 130 && y >= 54 && x <= 130 + 19 && y <= 54 + 17) {
             this.mode = 1;
             this.average = 0;
             this.min = Double.MAX_VALUE;
@@ -148,7 +149,7 @@ public class GUIEFReader extends GuiCore<ContainerEFReader> implements IGuiUpdat
             this.tick = 0;
             this.col = 0;
         }
-        if (x >= 25 && y >= 110 && x <= 84 && y <= 124) {
+        if (x >= 18 && y >= 96 && x <= 82 && y <= 113) {
             this.average = 0;
             this.min = Double.MAX_VALUE;
             this.max = 0;

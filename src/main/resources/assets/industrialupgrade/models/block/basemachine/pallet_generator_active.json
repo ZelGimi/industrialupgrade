@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/pallet_generator_active_main",
+    "down" : "industrialupgrade:blocks/pallet_generator_all",
+    "up" : "industrialupgrade:blocks/pallet_generator_active_up",
+    "north" : "industrialupgrade:blocks/pallet_generator_active_main",
+    "east" : "industrialupgrade:blocks/pallet_generator_all",
+    "south" : "industrialupgrade:blocks/pallet_generator_all",
+    "west" : "industrialupgrade:blocks/pallet_generator_all"
+  }
+}

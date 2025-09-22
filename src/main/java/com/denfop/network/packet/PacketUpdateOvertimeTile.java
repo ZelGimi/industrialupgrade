@@ -18,10 +18,7 @@ public class PacketUpdateOvertimeTile implements IPacket {
     }
 
     public PacketUpdateOvertimeTile(CustomPacketBuffer data, EntityPlayerMP player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16384);
-        buffer.writeByte(getId());
-        buffer.writeBytes(data);
-        IUCore.network.getServer().sendPacket(buffer, player);
+        IUCore.network.getServer().sendPacket(data, player);
     }
 
     public static void apply(BlockPos pos, World world, byte[] is) {

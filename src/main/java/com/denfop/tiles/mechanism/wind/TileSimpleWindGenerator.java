@@ -8,6 +8,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 
 public class TileSimpleWindGenerator extends TileWindGenerator {
 
+
     public TileSimpleWindGenerator() {
         super(EnumLevelGenerators.ONE);
     }

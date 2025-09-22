@@ -2,6 +2,7 @@ package com.denfop.utils;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.mechanism.BlockMoreMachine;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
 import com.denfop.blocks.mechanism.BlockMoreMachine2;
@@ -22,7 +23,7 @@ public class ListInformationUtils {
     public static final List<String> analyzeinform = new ArrayList<>();
     public static final List<String> quarryinform = new ArrayList<>();
     public static final List<String> mechanism_info = new ArrayList<>();
-    public static final List<String> mechanism_info1 = new ArrayList<>();
+    public static final Map<IMultiTileBlock, String> mechanism_info1 = new HashMap<>();
     public static final List<String> mechanism_info2 = new ArrayList<>();
     public static final List<String> limiter_info = new ArrayList<>();
     public static final List<String> cooling = new ArrayList<>();
@@ -30,6 +31,7 @@ public class ListInformationUtils {
     public static final List<String> wind_generator = new ArrayList<>();
     public static final List<String> water_generator = new ArrayList<>();
     public static final List<String> blast_furnace = new ArrayList<>();
+    public static final List<String> coke_oven = new ArrayList<>();
     public static final List<String> anti_upgrade_block = new ArrayList<>();
     public static final List<String> quarry = new ArrayList<>();
     public static final List<String> quarryvein = new ArrayList<>();
@@ -55,18 +57,16 @@ public class ListInformationUtils {
         for (int i = 0; i < BlockMoreMachine3.values().length; i++) {
             mechanism_info.add(Localization.translate(new ItemStack(IUItem.machines_base3, 1, i).getUnlocalizedName()));
         }
-        mechanism_info1.add(Localization.translate(new ItemStack(IUItem.oilrefiner).getUnlocalizedName()));
-        mechanism_info1.add(Localization.translate(new ItemStack(IUItem.oiladvrefiner).getUnlocalizedName()));
-        mechanism_info1.add(Localization.translate(new ItemStack(IUItem.oilgetter).getUnlocalizedName()));
-        mechanism_info1.add(Localization.translate(new ItemStack(IUItem.basemachine1, 1, 15).getUnlocalizedName()));
-        mechanism_info1.add(Localization.translate(new ItemStack(IUItem.basemachine1, 1, 1).getUnlocalizedName()));
-        mechanism_info1.add(Localization.translate(new ItemStack(IUItem.basemachine2, 1, 11).getUnlocalizedName()));
+
 
         mechanism_info2.add(Localization.translate(new ItemStack(IUItem.machines, 1, 4).getUnlocalizedName()));
         mechanism_info2.add(Localization.translate(new ItemStack(IUItem.basemachine, 1, 3).getUnlocalizedName()));
         mechanism_info2.add(Localization.translate(new ItemStack(IUItem.basemachine, 1, 12).getUnlocalizedName()));
         mechanism_info2.add(Localization.translate(new ItemStack(IUItem.machines, 1, 6).getUnlocalizedName()));
-
+        mechanism_info2.add(Localization.translate(new ItemStack(IUItem.machines_base3, 1, 12).getUnlocalizedName()));
+        mechanism_info2.add(Localization.translate(new ItemStack(IUItem.machines_base3, 1, 13).getUnlocalizedName()));
+        mechanism_info2.add(Localization.translate(new ItemStack(IUItem.machines_base3, 1, 14).getUnlocalizedName()));
+        mechanism_info2.add(Localization.translate(new ItemStack(IUItem.machines_base3, 1, 15).getUnlocalizedName()));
 
         quarryinform.add(Localization.translate("iu.quarryinformation1"));
         quarryinform.add(Localization.translate("iu.quarryinformation2"));
@@ -146,6 +146,14 @@ public class ListInformationUtils {
         blast_furnace.add(Localization.translate("iu.blast_furnace_recipe.info5"));
         blast_furnace.add(Localization.translate("iu.blast_furnace_recipe.info6"));
         blast_furnace.add(Localization.translate("iu.blast_furnace_recipe.info7"));
+
+        coke_oven.add(Localization.translate("iu.coke_oven_recipe.info1"));
+        coke_oven.add(Localization.translate("iu.coke_oven_recipe.info2"));
+        coke_oven.add(Localization.translate("iu.coke_oven_recipe.info3"));
+        coke_oven.add(Localization.translate("iu.coke_oven_recipe.info4"));
+        coke_oven.add(Localization.translate("iu.coke_oven_recipe.info5"));
+        coke_oven.add(Localization.translate("iu.coke_oven_recipe.info6"));
+
 
         anti_upgrade_block.add(Localization.translate("iu.anti_modification.info1"));
         anti_upgrade_block.add(Localization.translate("iu.anti_modification.info2"));

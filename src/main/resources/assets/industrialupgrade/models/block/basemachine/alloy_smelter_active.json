@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blockalloy_bottom",
     "north" : "industrialupgrade:blocks/blockalloy_main_active",
     "east" : "industrialupgrade:blocks/blockalloy_side_active",
-    "south" : "industrialupgrade:blocks/blockalloy_side2",
+    "south" : "industrialupgrade:blocks/blockalloy_bottom",
     "west" : "industrialupgrade:blocks/blockalloy_side_active"
   }
 }

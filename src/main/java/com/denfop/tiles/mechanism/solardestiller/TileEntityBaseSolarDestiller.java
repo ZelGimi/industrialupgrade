@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.solardestiller;
 
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
@@ -9,11 +9,8 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSolarDestiller;
 import com.denfop.gui.GuiSolarDestiller;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -38,11 +35,11 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
 
     public final FluidTank inputTank;
     public final FluidTank outputTank;
-    public final InvSlotOutput wateroutputSlot;
-    public final InvSlotOutput destiwateroutputSlott;
-    public final InvSlotFluidByList waterinputSlot;
-    public final InvSlotTank destiwaterinputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput wateroutputSlot;
+    public final InventoryOutput destiwateroutputSlott;
+    public final InventoryFluidByList waterinputSlot;
+    public final InventoryTank destiwaterinputSlot;
+    public final InventoryUpgrade upgradeSlot;
     protected final Fluids fluids = this.addComponent(new Fluids(this));
     private final EnumTypeStyle style;
     private int tickrate;
@@ -52,24 +49,28 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     public TileEntityBaseSolarDestiller(EnumTypeStyle style) {
         this.style = style;
         this.inputTank = this.fluids.addTankInsert("inputTank", 10000, Fluids.fluidPredicate(FluidRegistry.WATER));
-        this.outputTank = this.fluids.addTankExtract("outputTank", 10000);
-        this.waterinputSlot = new InvSlotFluidByList(
+        this.outputTank = this.fluids.addTankExtract(
+                "outputTank",
+                10000,
+                Fluids.fluidPredicate(FluidName.fluiddistilled_water.getInstance())
+        );
+        this.waterinputSlot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.INPUT,
+                InventoryFluid.TypeFluidSlot.INPUT,
                 FluidRegistry.WATER
         );
-        this.destiwaterinputSlot = new InvSlotTank(
+        this.destiwaterinputSlot = new InventoryTank(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 this.outputTank
         );
-        this.wateroutputSlot = new InvSlotOutput(this, "waterOutput", 1);
-        this.destiwateroutputSlott = new InvSlotOutput(this, "destilledWaterOutput", 1);
-        this.upgradeSlot = new InvSlotUpgrade(this, 3);
+        this.wateroutputSlot = new InventoryOutput(this, 1);
+        this.destiwateroutputSlott = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 3);
     }
 
     public void onLoaded() {
@@ -121,7 +122,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         if (this.getWorld().provider.getWorldTime() % this.tickrate == 0) {
 
             if (this.canWork()) {
-                this.inputTank.drainInternal(1, true);
+                this.inputTank.drainInternal(getAmountWater(), true);
                 this.outputTank.fillInternal(new FluidStack(FluidName.fluiddistilled_water.getInstance(), 1), true);
             }
 
@@ -142,7 +143,21 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         return new GuiSolarDestiller(new ContainerSolarDestiller(player, this));
     }
 
-
+    public int getAmountWater() {
+        switch (style) {
+            case DEFAULT:
+                return 4;
+            case ADVANCED:
+                return 4;
+            case IMPROVED:
+                return 3;
+            case PERFECT:
+                return 2;
+            case PHOTONIC:
+                return 1;
+        }
+        return 4;
+    }
 
     public int getTickRate() {
         Biome biome = world.getBiome(pos);
@@ -151,22 +166,26 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                 case DEFAULT:
                     return 36;
                 case ADVANCED:
-                    return 30;
+                    return 20;
                 case IMPROVED:
-                    return 24;
+                    return 11;
                 case PERFECT:
-                    return 15;
+                    return 6;
+                case PHOTONIC:
+                    return 4;
             }
         } else {
             switch (style) {
                 case DEFAULT:
                     return BiomeDictionary.hasType(biome, Type.COLD) ? 144 : 72;
                 case ADVANCED:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 120 : 60;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 80 : 40;
                 case IMPROVED:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 96 : 48;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 44 : 22;
                 case PERFECT:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 60 : 30;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 24 : 12;
+                case PHOTONIC:
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 16 : 8;
             }
 
         }
@@ -193,12 +212,12 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
     public boolean canWork() {
-        return this.inputTank.getFluidAmount() > 0 && this.outputTank.getFluidAmount() < this.outputTank.getCapacity() && this.skyLight;
+        return this.inputTank.getFluidAmount() >= getAmountWater() && this.outputTank.getFluidAmount() < this.outputTank.getCapacity() && this.skyLight;
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
-                , UpgradableProperty.FluidConsuming);
+        return EnumSet.of(UpgradableProperty.FluidInput
+                , UpgradableProperty.FluidExtract);
     }
 
     @Override

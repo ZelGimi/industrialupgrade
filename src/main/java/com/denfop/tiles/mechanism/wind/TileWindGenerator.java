@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.wind;
 
 import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.api.windsystem.EnumRotorSide;
@@ -8,7 +9,7 @@ import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.EnumWindSide;
 import com.denfop.api.windsystem.IWindMechanism;
 import com.denfop.api.windsystem.IWindRotor;
-import com.denfop.api.windsystem.InvSlotWindRotor;
+import com.denfop.api.windsystem.InventoryWindRotor;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
@@ -16,12 +17,12 @@ import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeItemInform;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerWindGenerator;
 import com.denfop.gui.GuiWindGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotRotorBlades;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryRotorBlades;
 import com.denfop.items.ItemWindRod;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
@@ -29,12 +30,12 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.DamageHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,6 +44,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,13 +56,14 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         IUpdatableTileEvent {
 
 
-    public final AdvEnergy energy;
-    public final InvSlotRotorBlades slot_blades;
+    public final Energy energy;
+    public final InventoryRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
-    public InvSlotWindRotor slot;
+    public InventoryWindRotor slot;
     public double generation = 0;
     public boolean need_repair;
     public int mind_wind;
+    public int coefficient_power = 100;
     public boolean can_repair;
     public int mind_speed;
     public int timers;
@@ -71,24 +74,24 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     private int tick;
     private boolean change_facing;
     private boolean min_level;
-    private int addition_power;
-    private int addition_efficient;
+    private double addition_power;
+    private double addition_efficient;
     private int addition_strength;
     private double coefficient;
     private EnumRotorSide rotorSide;
     private float speed;
     private float angle;
     private long lastcheck;
-    private boolean work;
+    private boolean work = true;
     private int time;
-    private boolean can_work;
+    private boolean can_work = true;
 
     public TileWindGenerator(EnumLevelGenerators levelGenerators) {
         this.levelGenerators = levelGenerators;
-        this.slot = new InvSlotWindRotor(this);
-        this.slot_blades = new InvSlotRotorBlades(this);
+        this.slot = new InventoryWindRotor(this);
+        this.slot_blades = new InventoryRotorBlades(this);
         this.energy =
-                this.addComponent(AdvEnergy.asBasicSource(this, 500000 * (levelGenerators.ordinal() + 1),
+                this.addComponent(Energy.asBasicSource(this, 500000 * (levelGenerators.ordinal() + 1),
                         1
                 ));
         this.change_facing = false;
@@ -106,10 +109,11 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
+            coefficient_power = (int) DecoderHandler.decode(customPacketBuffer);
             wind_speed = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             mind_wind = (int) DecoderHandler.decode(customPacketBuffer);
@@ -119,6 +123,20 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
             throw new RuntimeException(e);
         }
 
+    }
+
+    public boolean doesSideBlockRendering(EnumFacing side) {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+        return false;
+    }
+
+    @Override
+    public boolean isNormalCube() {
+        return false;
     }
 
     @Override
@@ -131,6 +149,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
             EncoderHandler.encode(packet, rotorSide);
             EncoderHandler.encode(packet, generation);
             EncoderHandler.encode(packet, timers);
+            EncoderHandler.encode(packet, coefficient_power);
             EncoderHandler.encode(packet, wind_speed);
             EncoderHandler.encode(packet, wind_side);
             EncoderHandler.encode(packet, mind_wind);
@@ -143,9 +162,24 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     }
 
     @Override
+    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
+        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.setInteger("coef", this.coefficient_power);
+        nbtTagCompound.setBoolean("work", this.work);
+        return nbtTagCompound;
+    }
+
+    @Override
+    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+        super.readFromNBT(nbtTagCompound);
+        this.coefficient_power = nbtTagCompound.getInteger("coef");
+        this.work = nbtTagCompound.getBoolean("work");
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
-        super.addInformation(stack, tooltip, advanced);
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("wind.need_level") + this.levelGenerators.getMin() + " " + Localization.translate(
                 "wind.need_level1") + this.levelGenerators.getMax() + " " + Localization.translate("wind.need_level2"));
     }
@@ -211,7 +245,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
 
     public boolean setFacingWrench(EnumFacing facing, EntityPlayer player) {
         boolean fac = super.setFacingWrench(facing, player);
-        new PacketUpdateFieldTile(this, "facing", this.facing);
+        new PacketUpdateFieldTile(this, "facing", (byte) this.facing);
         return fac;
     }
 
@@ -225,31 +259,9 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
                         continue;
                     }
                     final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof TileWindGenerator) {
+                    if (tile instanceof IWindMechanism) {
                         this.work = false;
-                        ((TileWindGenerator) tile).work = false;
-                    }
-                }
-            }
-        }
-        new PacketUpdateFieldTile(this, "work", this.work);
-    }
-
-    public void update_generator(BlockPos pos) {
-        this.work = true;
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-                    if (this.pos.getX() == i && this.pos.getY() == j && this.pos.getZ() == k) {
-                        continue;
-                    }
-                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
-                        continue;
-                    }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof TileWindGenerator) {
-                        this.work = false;
-                        ((TileWindGenerator) tile).work = false;
+                        ((IWindMechanism) tile).setWork(false);
                     }
                 }
             }
@@ -290,7 +302,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     }
 
     @Override
-    public EnumLevelGenerators getLevel() {
+    public EnumLevelGenerators getLevelGenerator() {
         return this.levelGenerators;
     }
 
@@ -355,23 +367,74 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
             this.wind_speed = WindSystem.windSystem.getWind_Strength();
             if (this.getMinWind() != 0) {
                 if (world.getWorldTime() % 40 == 0) {
-                    generation = WindSystem.windSystem.getPowerFromWindRotor(this.world, this.pos, this, this.getItemStack());
+                    generation = WindSystem.windSystem.getPowerFromWindRotor(
+                            this.world,
+                            this.pos,
+                            this,
+                            this.getItemStack()
+                    ) * (coefficient_power / 100D);
                 }
             } else {
-                generation = WindSystem.windSystem.getPowerFromWindRotor(this.world, this.pos, this, this.getItemStack());
+                generation = WindSystem.windSystem.getPowerFromWindRotor(
+                        this.world,
+                        this.pos,
+                        this,
+                        this.getItemStack()
+                ) * (coefficient_power / 100D);
             }
             this.energy.addEnergy(generation);
-            if (this.world.getWorldTime() % 20 == 0) {
-                this.slot.damage(1, this.addition_strength);
+            this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
+
+            if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
+                this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
         } else {
             generation = 0;
         }
     }
 
+    private int getDamageTimeFromWind() {
+        switch (this.enumTypeWind) {
+            case ONE:
+                return 60;
+            case TWO:
+                return 55;
+            case THREE:
+                return 50;
+            case FOUR:
+                return 45;
+            case FIVE:
+                return 40;
+            case SIX:
+                return 35;
+            case SEVEN:
+                return 30;
+            case EIGHT:
+                return 25;
+            case NINE:
+                return 20;
+            case TEN:
+                return 10;
+        }
+        return 20;
+    }
+
+    private int getDamageRotor() {
+        if (coefficient_power == 100) {
+            return 1;
+        }
+        return (int) ((int) (this.getRotor().getLevel() * this.coefficient_power / 100D) * Math.pow(
+                this.coefficient_power / 100D,
+                this.getRotor().getLevel() - 1
+        ));
+    }
+
     @Override
     public void onLoaded() {
         super.onLoaded();
+        if (this.getWorld().isRemote) {
+            return;
+        }
         this.timers = WindSystem.windSystem.getTime();
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
@@ -384,14 +447,14 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         this.setRotorSide(WindSystem.windSystem.getRotorSide(this.getFacing()));
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), true));
         new PacketUpdateFieldTile(this, "speed", speed);
-        new PacketUpdateFieldTile(this, "slot", slot);
         new PacketUpdateFieldTile(this, "space", space);
         new PacketUpdateFieldTile(this, "coefficient", coefficient);
         new PacketUpdateFieldTile(this, "wind_side", wind_side);
         new PacketUpdateFieldTile(this, "angle", angle);
         new PacketUpdateFieldTile(this, "mind_speed", mind_speed);
         new PacketUpdateFieldTile(this, "generation", generation);
-        update_generator();
+        new PacketUpdateFieldTile(this, "work", this.work);
+        new PacketUpdateFieldTile(this, "slot", slot);
         if (this.getRotor() != null) {
             this.energy.setSourceTier(this.getRotor().getSourceTier());
         }
@@ -411,17 +474,23 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     }
 
     @Override
-    public void onBlockBreak(boolean wrench) {
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof TileWindGenerator) {
-                        ((TileWindGenerator) tile).update_generator(this.pos);
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+        for (int i = pos.getX() - 8; i <= pos.getX() + 8; i++) {
+            for (int j = pos.getY() - 8; j <= pos.getY() + 8; j++) {
+                for (int k = pos.getZ() - 8; k <= pos.getZ() + 8; k++) {
+                    final TileEntity tile = world.getTileEntity(new BlockPos(i, j, k));
+                    if (tile instanceof IWindMechanism) {
+                        return false;
                     }
                 }
             }
         }
+        return true;
+    }
+
+    @Override
+    public void onBlockBreak(boolean wrench) {
+
         super.onBlockBreak(wrench);
     }
 
@@ -445,6 +514,9 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
             EncoderHandler.encode(packet, angle);
             EncoderHandler.encode(packet, mind_speed);
             EncoderHandler.encode(packet, generation);
+            EncoderHandler.encode(packet, work);
+            EncoderHandler.encode(packet, coefficient_power);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -455,13 +527,15 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             angle = (float) DecoderHandler.decode(customPacketBuffer);
             mind_speed = (int) DecoderHandler.decode(customPacketBuffer);
             generation = (double) DecoderHandler.decode(customPacketBuffer);
+            work = (boolean) DecoderHandler.decode(customPacketBuffer);
+            coefficient_power = (int) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -477,14 +551,14 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
                 .getItem()).getCustomDamage(this.slot.get(0)) > 0)) {
             final long k = (System.currentTimeMillis() - this.lastcheck);
             if (this.mind_wind != 0) {
-                this.angle += (float) k * WindSystem.windSystem.getSpeed(Math.min(
+                this.angle += (float) ((float) k * WindSystem.windSystem.getSpeed(Math.min(
                         24.7 + this.mind_speed,
                         WindSystem.windSystem.getSpeedFromPower(this.getBlockPos(), this,
                                 this.generation
                         )
-                ) * this.getCoefficient());
+                ) * this.getCoefficient()));
             } else {
-                this.angle += (float) k * this.speed * this.getCoefficient();
+                this.angle += (float) ((float) k * this.speed * this.getCoefficient());
             }
             this.angle %= 360.0F;
         }
@@ -530,7 +604,8 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
             for (int i = 0; i < 3; i++) {
                 final RotorUpgradeItemInform modules = RotorUpgradeSystem.instance.getModules(EnumInfoRotorUpgradeModules.getFromID(
                         i), list);
-                this.addition_strength += modules == null ? 0 : modules.number * modules.upgrade.getCoef();
+                this.addition_strength += modules == null ? 0 : (int) (modules.number * modules.upgrade.getCoef() * 100);
+
             }
             for (int i = 3; i < 6; i++) {
                 final RotorUpgradeItemInform modules = RotorUpgradeSystem.instance.getModules(EnumInfoRotorUpgradeModules.getFromID(
@@ -568,8 +643,9 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         }
     }
 
-    public void updateField(String name, CustomPacketBuffer is) {
 
+    public void updateField(String name, CustomPacketBuffer is) {
+        super.updateField(name, is);
         if (name.equals("speed")) {
             try {
                 this.speed = (float) DecoderHandler.decode(is);
@@ -594,7 +670,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
                 throw new RuntimeException(e);
             }
         }
-        if (name.equals("work")) {
+        if (name.trim().equals("work")) {
             try {
                 this.work = (boolean) DecoderHandler.decode(is);
             } catch (IOException e) {
@@ -657,7 +733,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
                 throw new RuntimeException(e);
             }
         }
-        super.updateField(name, is);
+
     }
 
     @Override
@@ -716,6 +792,11 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     }
 
     @Override
+    public void setWork(final boolean work) {
+        this.work = work;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
         return new GuiWindGenerator(getGuiContainer(entityPlayer));
@@ -724,9 +805,22 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
 
     @Override
     public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
-        if (this.tick >= 20) {
-            WindSystem.windSystem.getNewFacing(this.getFacing(), this);
-            this.tick = 0;
+        if (i == 0) {
+            if (this.tick >= 20) {
+                WindSystem.windSystem.getNewFacing(this.getFacing(), this);
+                if (this.getAuto()) {
+                    WindSystem.windSystem.getNewPositionOfMechanism(this);
+                }
+                this.tick = 0;
+            }
+        } else {
+            this.coefficient_power = (int) i;
+            if (this.coefficient_power < 100) {
+                coefficient_power = 100;
+            }
+            if (this.coefficient_power > 150) {
+                coefficient_power = 150;
+            }
         }
     }
 

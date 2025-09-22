@@ -2,9 +2,9 @@ package com.denfop.tiles.base;
 
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.PacketStopSound;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,21 +15,21 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
         IUpdatableTileEvent {
 
 
-    public InvSlotOutput outputSlot = null;
+    public InventoryOutput outputSlot = null;
 
-    public AdvEnergy energy;
+    public Energy energy;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
 
     public TileStandartMachine(int count) {
         if (count != 0) {
-            this.outputSlot = new InvSlotOutput(this, "output", count);
+            this.outputSlot = new InventoryOutput(this, count);
         }
 
 
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -38,7 +38,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

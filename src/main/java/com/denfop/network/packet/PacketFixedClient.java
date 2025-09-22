@@ -10,21 +10,24 @@ import net.minecraft.world.World;
 
 import java.io.IOException;
 
-public class PacketFixedClient implements IPacket{
-    public PacketFixedClient(){
+public class PacketFixedClient implements IPacket {
+
+    public PacketFixedClient() {
 
     }
-    public PacketFixedClient(World world, BlockPos pos){
+
+    public PacketFixedClient(World world, BlockPos pos) {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
         buffer.writeBlockPos(pos);
         try {
-            EncoderHandler.encode(buffer,world);
+            EncoderHandler.encode(buffer, world);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         IUCore.network.getClient().sendPacket(buffer);
     }
+
     @Override
     public byte getId() {
         return 50;
@@ -35,12 +38,12 @@ public class PacketFixedClient implements IPacket{
         BlockPos pos = customPacketBuffer.readBlockPos();
         World world;
         try {
-             world = (World) DecoderHandler.decode(customPacketBuffer);
+            world = (World) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(world != null){
-            if(world.getTileEntity(pos) != null){
+        if (world != null) {
+            if (world.getTileEntity(pos) != null) {
                 new PacketUpdateTile((TileEntityBlock) world.getTileEntity(pos));
             }
         }

@@ -83,7 +83,6 @@ public class TileEntityTeleporter extends TileElectricMachine {
         return nbt;
     }
 
-
     public void onLoaded() {
         super.onLoaded();
     }

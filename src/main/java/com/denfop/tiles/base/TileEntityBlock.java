@@ -2,13 +2,18 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockResource;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.TileEntityBlockStateContainer;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Redstone;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.events.TickHandlerIU;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketRemoveUpdateTile;
@@ -16,11 +21,11 @@ import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateTile;
 import com.denfop.utils.ModUtils;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,10 +44,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -55,8 +63,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class TileEntityBlock extends TileEntity implements ITickable {
+import static com.denfop.utils.ListInformationUtils.mechanism_info1;
 
+public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public static final List<AxisAlignedBB> defaultAabbs = Collections.singletonList(new AxisAlignedBB(
             0.0,
@@ -66,6 +75,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             1.0,
             1.0
     ));
+    public static final EnumPlantType noCrop = EnumPlantType.getPlantType("noCrop");
     public final IMultiTileBlock teBlock;
     public final BlockTileEntity block;
     public Map<Capability<?>, AbstractComponent> capabilityComponents;
@@ -74,10 +84,15 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public List<AbstractComponent> updateServerList = new ArrayList<>();
     public List<AbstractComponent> updateClientList = new ArrayList<>();
     public Map<String, AbstractComponent> advComponentMap = new HashMap<>();
-
     public String active = "";
     public byte facing;
     public boolean isLoaded;
+    CooldownTracker cooldownTracker = new CooldownTracker();
+    boolean hasHashCode = false;
+    boolean isLoadedFirst = false;
+    boolean init = false;
+    private boolean isClientLoaded;
+    private int hashCode;
 
     public TileEntityBlock() {
         this.facing = (byte) EnumFacing.DOWN.ordinal();
@@ -163,20 +178,36 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     @Override
+    public int hashCode() {
+        if (!hasHashCode) {
+
+            hasHashCode = true;
+            this.hashCode = super.hashCode();
+            return hashCode;
+        } else {
+            return hashCode;
+        }
+    }
+
+    public EnumPlantType getPlantType() {
+        return noCrop;
+    }
+
+    @Override
     public void setWorld(final World worldIn) {
         super.setWorld(worldIn);
-        new PacketUpdateTile(this);
+
     }
 
     @Override
     public void setPos(final BlockPos posIn) {
         super.setPos(posIn);
-        new PacketUpdateTile(this);
+
     }
 
     public NBTTagCompound getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
         try {
-            InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
+            Inventory slot = (Inventory) DecoderHandler.decode(customPacketBuffer);
             return slot.writeToNbt(new NBTTagCompound());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -186,7 +217,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     @Override
     public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState, final IBlockState newSate) {
-        if((oldState.getBlock() instanceof BlockTileEntity)){
+        if ((oldState.getBlock() instanceof BlockTileEntity)) {
             return false;
         }
         return newSate.getBlock() != oldState.getBlock();
@@ -207,11 +238,8 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             }
         }
         if (name.equals("facing")) {
-            try {
-                this.facing = (byte) DecoderHandler.decode(is);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            is.readUnsignedByte();
+            this.facing = is.readByte();
         }
         this.onNetworkUpdate(name);
     }
@@ -219,7 +247,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public boolean hasCustomName() {
         return false;
     }
-
 
     public abstract IMultiTileBlock getTeBlock();
 
@@ -236,20 +263,19 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public final IBlockState getBlockState() {
         if (this.blockState == null) {
-            if (!this.teBlock.hasActive()) {
-                if (this.active.contains("active")) {
-                    this.active = "";
-                }
+            try {
+                this.blockState = this.block
+                        .getDefaultState()
+                        .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                        .withProperty(
+                                BlockTileEntity.facingProperty,
+                                this.getFacing()
+                        )
+                ;
+            } catch (Exception e) {
+                this.blockState = this.block
+                        .getDefaultState();
             }
-
-            this.blockState = this.block
-                    .getDefaultState()
-                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
-                    .withProperty(
-                            BlockTileEntity.facingProperty,
-                            this.getFacing()
-                    )
-            ;
             return this.blockState;
         }
         return this.blockState;
@@ -276,41 +302,37 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-
     public void onLoaded() {
-        this.componentList.forEach(AbstractComponent::onLoaded);
-        this.rerender();
-        if (!this.getWorld().isRemote && this.needUpdate()) {
-            IUCore.network.getServer().addTileToOvertimeUpdate(this);
+        if (!isLoadedFirst) {
+            this.componentList.forEach(AbstractComponent::onLoaded);
+            this.rerender();
+            if (!this.getWorld().isRemote && this.needUpdate()) {
+                IUCore.network.getServer().addTileToOvertimeUpdate(this);
+            }
+            this.hashCode();
+            isLoadedFirst = true;
         }
     }
 
     public void onUnloaded() {
-        IUCore.network.getServer().removeTileToOvertimeUpdate(this);
-        this.componentList.forEach(AbstractComponent::onUnloaded);
-        try {
+        if (isLoadedFirst) {
+            isLoadedFirst = false;
+            IUCore.network.getServer().removeTileToOvertimeUpdate(this);
+            this.componentList.forEach(AbstractComponent::onUnloaded);
+            try {
 
-            new PacketStopSound(getWorld(), this.pos);
-        } catch (Exception ignored) {
-        }
-        new PacketRemoveUpdateTile(this);
-    }
-
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-        if (!this.getSupportedFacings().isEmpty()) {
-            byte facingValue = nbt.getByte("facing");
-            if (facingValue >= 0 && facingValue < EnumFacing.VALUES.length && this
-                    .getSupportedFacings()
-                    .contains(EnumFacing.VALUES[facingValue])) {
-                this.facing = facingValue;
-            } else if (!this.getSupportedFacings().isEmpty()) {
-                this.facing = (byte) this.getSupportedFacings().iterator().next().ordinal();
-            } else {
-                this.facing = (byte) EnumFacing.DOWN.ordinal();
+                new PacketStopSound(getWorld(), this.pos);
+            } catch (Exception ignored) {
+            }
+            if (!this.getWorld().isRemote) {
+                new PacketRemoveUpdateTile(this);
             }
         }
+    }
 
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        this.facing = nbt.getByte("facing");
         this.active = nbt.getString("active");
         if (!this.componentList.isEmpty() && nbt.hasKey("components", 10)) {
             NBTTagCompound componentsNbt = nbt.getCompoundTag("components");
@@ -324,9 +346,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        if (!this.getSupportedFacings().isEmpty()) {
-            nbt.setByte("facing", this.facing);
-        }
+        nbt.setByte("facing", this.facing);
 
         nbt.setString("active", this.active);
         if (!this.componentList.isEmpty()) {
@@ -370,7 +390,16 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
         this.updateClientList.forEach(AbstractComponent::updateEntityClient);
+        if (!isClientLoaded) {
+            this.loadBeforeFirstClientUpdate();
+        }
+        if (cooldownTracker.getTick() > 0) {
+            cooldownTracker.removeTick();
+        }
+    }
 
+    public void loadBeforeFirstClientUpdate() {
+        isClientLoaded = true;
     }
 
     public void updateEntityServer() {
@@ -380,7 +409,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         if (!isLoaded) {
             this.loadBeforeFirstUpdate();
         }
-
+        if (cooldownTracker.getTick() > 0) {
+            cooldownTracker.removeTick();
+        }
     }
 
     public void loadBeforeFirstUpdate() {
@@ -401,14 +432,12 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-
     public void onNetworkUpdate(String field) {
         if (field.equals("active") || field.equals("facing")) {
             this.rerender();
         }
 
     }
-
 
     public boolean canEntityDestroy(final Entity entity) {
         for (AbstractComponent component : this.componentList) {
@@ -421,7 +450,14 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
         ItemStack drop = this.getPickBlock(null, null);
-        drop = this.adjustDrop(drop, wrench);
+        drop = this.adjustDrop(drop, wrench, fortune);
+        if (drop == null) {
+            drop = ItemStack.EMPTY;
+        }
+        for (AbstractComponent component : this.getComponentList()) {
+            component.getAuxDrops(Collections.singletonList(drop));
+
+        }
         if (!drop.isEmpty()) {
             for (AbstractComponent component : this.componentList) {
                 if (component.needWriteNBTToDrops()) {
@@ -439,7 +475,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
                 return false;
             }
         }
-        return true;
+        return this.getTeBlock().getHarvestTool() == MultiTileBlock.HarvestTool.Wrench;
     }
 
     public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
@@ -587,7 +623,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     public int getLightOpacity() {
-        return this.isNormalCube() ? 255 : 0;
+        return 0;
     }
 
     public int getLightValue() {
@@ -596,6 +632,10 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         return false;
+    }
+
+    public CooldownTracker getCooldownTracker() {
+        return cooldownTracker;
     }
 
     public CustomPacketBuffer writeUpdatePacket() {
@@ -618,7 +658,8 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = new CustomPacketBuffer();
-        packet.writeString(this.teBlock.getIdentifier() + "=" + this.teBlock.getName());
+        packet.writeShort(this.teBlock.getIDBlock());
+        packet.writeShort(this.teBlock.ordinal());
         packet.writeString(this.active);
         packet.writeByte(this.facing);
         return packet;
@@ -627,6 +668,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         this.active = customPacketBuffer.readString();
         this.facing = customPacketBuffer.readByte();
+
         this.rerender();
     }
 
@@ -663,7 +705,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return null;
     }
 
-
     public boolean hasComponent(Class<? extends AbstractComponent> cls) {
         for (final AbstractComponent component : componentList) {
             if (component.getClass() == cls) {
@@ -676,7 +717,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public List<AbstractComponent> getComponentList() {
         return componentList;
     }
-
 
     public <T extends AbstractComponent> T getComponent(String cls) {
         for (AbstractComponent component : this.componentList) {
@@ -795,7 +835,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     public void onBlockBreak(boolean wrench) {
-
+        for (AbstractComponent component : this.componentList) {
+            component.blockBreak();
+        }
     }
 
     public void wrenchBreak() {
@@ -805,7 +847,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public boolean onRemovedByPlayer(EntityPlayer player, boolean willHarvest) {
         return true;
     }
-
 
     public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return this.block.getItemStack(this.teBlock);
@@ -819,7 +860,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return this.teBlock.getHardness();
     }
 
-
     public EnumFacing getFacing() {
         return EnumFacing.VALUES[this.facing];
     }
@@ -828,9 +868,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         if (facing == null) {
             throw new NullPointerException("null facing");
         } else if (this.facing == facing.ordinal()) {
-            throw new IllegalArgumentException("unchanged facing");
+            return;
         } else if (!this.getSupportedFacings().contains(facing)) {
-            throw new IllegalArgumentException("invalid facing: " + facing + ", supported: " + this.getSupportedFacings());
+            return;
         } else {
             this.facing = (byte) facing.ordinal();
             if (!this.getWorld().isRemote) {
@@ -859,14 +899,12 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-
     public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
         List<ItemStack> ret = new ArrayList();
         ret.addAll(this.getSelfDrops(fortune, true));
         ret.addAll(this.getAuxDrops(fortune));
         return ret;
     }
-
 
     public SoundType getBlockSound(Entity entity) {
         return SoundType.STONE;
@@ -908,21 +946,55 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
+        return this.adjustDrop(drop, wrench, WorldBaseGen.random.nextInt(100));
+    }
+
+    public ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
         if (!wrench) {
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
+                    drop = getPickBlock(null, null);
                     break;
                 case Generator:
+
                     drop = new ItemStack(IUItem.basemachine2, 1, 78);
+
                     break;
                 case None:
                     drop = null;
                     break;
                 case Machine:
+
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
+
                 case AdvMachine:
+
                     return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
+
+            }
+        } else {
+            switch (this.teBlock.getDefaultDrop()) {
+                case Self:
+                default:
+                    drop = getPickBlock(null, null);
+                    break;
+                case Generator:
+                    if (fortune < 3) {
+                        drop = new ItemStack(IUItem.basemachine2, 1, 78);
+                    }
+                    break;
+                case None:
+                    drop = null;
+                    break;
+                case Machine:
+                    if (fortune < 3) {
+                        return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
+                    }
+                case AdvMachine:
+                    if (fortune < 3) {
+                        return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
+                    }
             }
         }
 
@@ -945,11 +1017,15 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         if (active) {
             if (!this.active.equals("active")) {
                 this.active = "active";
-                new PacketUpdateFieldTile(this, "active", this.active);
+                if (!this.getWorld().isRemote) {
+                    new PacketUpdateFieldTile(this, "active", this.active);
+                }
             }
         } else {
             this.active = "";
-            new PacketUpdateFieldTile(this, "active", this.active);
+            if (!this.getWorld().isRemote) {
+                new PacketUpdateFieldTile(this, "active", this.active);
+            }
         }
     }
 
@@ -959,12 +1035,37 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
 
         this.active = active;
-        new PacketUpdateFieldTile(this, "active", this.active);
+        if (!this.getWorld().isRemote) {
+            new PacketUpdateFieldTile(this, "active", this.active);
+        }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.world == null && !init) {
+            init = true;
+            if (this instanceof IManufacturerBlock) {
+                if (!mechanism_info1.containsKey(this.getTeBlock())) {
+                    mechanism_info1.put(this.getTeBlock(), this.getPickBlock(null, null).getDisplayName());
+                }
+            }
+        }
+        if (world == null) {
+            AirPollutionComponent air = this.getComp(AirPollutionComponent.class);
+            SoilPollutionComponent soil = this.getComp(SoilPollutionComponent.class);
+            if (air != null || soil != null) {
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    tooltip.add(Localization.translate("iu.pollution.info1"));
+                    tooltip.add(Localization.translate("iu.pollution.info2"));
+                    tooltip.add(Localization.translate("iu.pollution.info3"));
+                }
+                tooltip.add(Localization.translate("iu.pollution.info"));
 
+            }
+
+        }
+        for (AbstractComponent component : this.componentList) {
+            component.addInformation(stack, tooltip);
+        }
 
     }
 
@@ -975,7 +1076,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         if (state1 == null) {
             state1 = state;
         }
-        this.getWorld().notifyBlockUpdate(this.pos, state, state, 2);
+        this.getWorld().notifyBlockUpdate(this.pos, state1, state, 2);
     }
 
     public boolean clientNeedsExtraModelInfo() {
@@ -996,5 +1097,21 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return null;
     }
 
+
+    public TileEntityBlockStateContainer.PropertiesStateInstance getExtendedState(TileEntityBlockStateContainer.PropertiesStateInstance state) {
+        return state;
+    }
+
+    public boolean hasSpecialModel() {
+        return false;
+    }
+
+    public boolean canPlace(TileEntityBlock te, BlockPos pos, World world) {
+        return true;
+    }
+
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+
+    }
 
 }

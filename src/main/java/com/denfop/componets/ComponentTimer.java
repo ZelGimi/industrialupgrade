@@ -16,8 +16,8 @@ public class ComponentTimer extends AbstractComponent {
 
     private final List<Timer> defaultTimers;
     private final List<Timer> timers;
+    double percent = 1;
     private int indexWork;
-
     private boolean canWork = true;
 
     public ComponentTimer(TileEntityInventory inventory, Timer... timers) {
@@ -39,15 +39,19 @@ public class ComponentTimer extends AbstractComponent {
         return true;
     }
 
+    public int getTickFromSecond() {
+        return 20;
+    }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean need = true;
-        if (this.getParent().getWorld().provider.getWorldTime() % 20 == 0 && this.canWork) {
+        if (this.getParent().getWorld().provider.getWorldTime() % getTickFromSecond() == 0 && this.canWork) {
             for (int i = 0; i < this.timers.size(); i++) {
                 Timer timer = this.timers.get(i);
                 if (timer.canWork()) {
-                    timer.work();
+                    timer.work(percent);
                     this.indexWork = i;
                     need = false;
                     break;
@@ -65,10 +69,15 @@ public class ComponentTimer extends AbstractComponent {
     }
 
     public void setCanWork(final boolean canWork) {
+        boolean oldWork = this.canWork;
         this.canWork = canWork;
-        if (!this.canWork) {
+        if (oldWork && !this.canWork) {
             this.resetTime();
         }
+    }
+
+    public void setCanWorkWithOut(final boolean canWork) {
+        this.canWork = canWork;
     }
 
     public void resetTime() {
@@ -80,9 +89,20 @@ public class ComponentTimer extends AbstractComponent {
 
     public String getTime() {
         if (this.indexWork != -1) {
-            return this.timers.get(this.indexWork).getDisplay();
+            return this.timers.get(this.indexWork % this.timers.size()).getDisplay();
         } else {
             return this.timers.get(this.timers.size() - 1).getDisplay();
+        }
+
+    }
+
+    public double getTimes() {
+        if (this.indexWork != -1) {
+            final int max = this.getDefaultTimers().get(this.indexWork).getBar();
+            return (max - this.timers.get(this.indexWork).getBar()) / (max * 1D);
+        } else {
+            final int max = this.getDefaultTimers().get(this.timers.size() - 1).getBar();
+            return (max - this.timers.get(this.timers.size() - 1).getBar()) / (max * 1D);
         }
 
     }
@@ -94,12 +114,14 @@ public class ComponentTimer extends AbstractComponent {
         }
         return tagCompound;
     }
+
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer packet = super.updateComponent();
         this.timers.forEach(timer -> timer.writeBuffer(packet));
         packet.writeInt(this.indexWork);
         return packet;
     }
+
     @Override
     public NBTTagCompound writeToNbt() {
         NBTTagCompound nbtTagCompound = super.writeToNbt();

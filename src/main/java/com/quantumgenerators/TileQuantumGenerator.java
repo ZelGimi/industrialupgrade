@@ -14,7 +14,6 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -70,8 +69,8 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
-        super.addInformation(stack, tooltip, advanced);
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -82,6 +81,11 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
                     "iu.machines_work_energy_type_qe"));
 
         }
+    }
+
+    @Override
+    public boolean wrenchCanRemove(final EntityPlayer player) {
+        return super.wrenchCanRemove(player) &&this.genmax >= 5 * Math.pow(4, (tier - 1)) / 16;
     }
 
     @Override
@@ -164,8 +168,10 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
                     this.upgrade += 1;
                     this.gen = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
                     this.genmax = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
+                    this.energy.setCapacity(genmax * 32);
+                    this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(this.gen));
                     stack.setCount(stack.getCount() - 1);
-                    return false;
+                    return true;
                 }
             } else if (stack.getItem() instanceof ItemPurifier) {
                 if (!ElectricItem.manager.canUse(stack, 500)) {
@@ -179,7 +185,10 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
                 this.upgrade -= 1;
                 this.gen = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
                 this.genmax = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
+                this.energy.setCapacity(genmax * 32);
+                this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(this.gen));
                 player.inventory.addItemStackToInventory(new ItemStack(IUItem.core, 1, this.meta));
+                return true;
             }
         }
 
@@ -188,65 +197,11 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
 
     @Override
     public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
-        if (i == 0) {
-            if (this.gen + 1000 <= this.genmax) {
-                this.gen += 1000;
-            } else {
-                this.gen = this.genmax;
-            }
-            this.energy.setCapacity(gen * 32);
-        } else if (i == 1) {
-            if (this.gen + 10000 <= this.genmax) {
-                this.gen += 10000;
-            } else {
-                this.gen = this.genmax;
-            }
-            this.energy.setCapacity(gen * 32);
-        } else if (i == 2) {
-            if (this.gen + 100000 <= this.genmax) {
-                this.gen += 100000;
-            } else {
-                this.gen = this.genmax;
-            }
-            this.energy.setCapacity(gen * 32);
-        } else if (i == 3) {
-            if (this.gen + 1000000 <= this.genmax) {
-                this.gen += 1000000;
-            } else {
-                this.gen = this.genmax;
-            }
-            this.energy.setCapacity(gen * 32);
+        this.gen = i;
+        if (this.gen  >= this.genmax) {
+            this.gen = this.genmax;
         }
-        if (i == 4) {
-            if (this.gen - 1000 >= 0) {
-                this.gen -= 1000;
-            } else {
-                this.gen = 0;
-            }
-            this.energy.setCapacity(gen * 32);
-        } else if (i == 5) {
-            if (this.gen - 10000 >= 0) {
-                this.gen -= 10000;
-            } else {
-                this.gen = 0;
-            }
-            this.energy.setCapacity(gen * 32);
-        } else if (i == 6) {
-            if (this.gen - 100000 >= 0) {
-                this.gen -= 100000;
-            } else {
-                this.gen = 0;
-            }
-            this.energy.setCapacity(gen * 32);
-        } else if (i == 7) {
-            if (this.gen - 1000000 >= 0) {
-                this.gen -= 1000000;
-            } else {
-                this.gen = 0;
-            }
-            this.energy.setCapacity(gen * 32);
-        }
-
+        this.energy.setCapacity(genmax * 32);
         this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(this.gen));
     }
 

@@ -78,7 +78,7 @@ public class UpgradeBlockWrapper implements IRecipeWrapper {
                 this.nbt.getString("type").isEmpty() ?
                         Localization.translate("upgradeblock_upgrade") : Localization.translate("upgradeblock_modification"),
                 64,
-                52,
+                58,
                 4210752
         );
 

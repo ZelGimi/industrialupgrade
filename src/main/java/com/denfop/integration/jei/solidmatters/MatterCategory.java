@@ -68,7 +68,7 @@ public class MatterCategory extends Gui implements IRecipeCategory<MatterWrapper
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, false, 65, 27);
+        isg.init(0, false, 76, 22);
         isg.set(0, recipes.getInput());
     }
 

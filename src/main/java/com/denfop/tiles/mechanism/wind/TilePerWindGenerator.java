@@ -9,9 +9,11 @@ import com.denfop.componets.EnumTypeStyle;
 
 public class TilePerWindGenerator extends TileWindGenerator {
 
+
     public TilePerWindGenerator() {
         super(EnumLevelGenerators.FOUR);
     }
+
 
     @Override
     public EnumTypeStyle getStyle() {

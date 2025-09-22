@@ -102,7 +102,7 @@ public abstract class BlockSaplingCore extends BlockBush implements IModelRegist
     }
 
     public boolean canBeReplacedByLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return false;
+        return true;
     }
 
     public EnumRarity getRarity(ItemStack stack) {

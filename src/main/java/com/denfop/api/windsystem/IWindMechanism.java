@@ -20,7 +20,7 @@ public interface IWindMechanism {
 
     ItemStack getItemStack();
 
-    EnumLevelGenerators getLevel();
+    EnumLevelGenerators getLevelGenerator();
 
     float getAngle();
 
@@ -53,5 +53,7 @@ public interface IWindMechanism {
     int getMinWind();
 
     int getMinWindSpeed();
+
+    void setWork(boolean work);
 
 }

@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -26,7 +26,7 @@ public class CTFermer {
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )
@@ -42,7 +42,7 @@ public class CTFermer {
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                 )
@@ -59,7 +59,7 @@ public class CTFermer {
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                 )
@@ -87,9 +87,6 @@ public class CTFermer {
 
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.output);
-        }
 
     }
 

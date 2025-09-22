@@ -10,6 +10,9 @@ import java.util.List;
 
 public interface IUpgradeSystem {
 
+
+    List<Integer> getPositiveUpgradeFromLevel(ItemStack stack);
+
     void addModification();
 
     void addModificate(ItemStack container, String name);
@@ -30,6 +33,8 @@ public interface IUpgradeSystem {
 
     List<UpgradeItemInform> getInformation(ItemStack item);
 
+    List<String> getAvailableUpgrade(IUpgradeItem iUpgradeItem, final ItemStack item);
+
     UpgradeItemInform getModules(EnumInfoUpgradeModules module, ItemStack item);
 
     UpgradeItemInform getModules(final EnumInfoUpgradeModules module, final ItemStack item, List<UpgradeItemInform> list);
@@ -39,6 +44,8 @@ public interface IUpgradeSystem {
     boolean hasModules(EnumInfoUpgradeModules module, ItemStack item);
 
     void updateListFromNBT(IUpgradeItem item, ItemStack stack);
+
+    List<Integer> getUpgradeFromList(ItemStack stack);
 
     void setInformation(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack);
 
@@ -55,5 +62,7 @@ public interface IUpgradeSystem {
     boolean shouldUpdate(EnumInfoUpgradeModules type, ItemStack stack1);
 
     void updateBlackListFromStack(final ItemStack stack);
+
+    void updateLevel(ItemStack stack);
 
 }

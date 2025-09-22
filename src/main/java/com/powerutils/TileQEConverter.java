@@ -10,9 +10,9 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -20,7 +20,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,8 +37,8 @@ public class TileQEConverter extends TileEntityInventory implements
         IUpdatableTileEvent, IUpgradableBlock {
 
 
-    public final AdvEnergy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final Energy energy;
+    public final InventoryUpgrade upgradeSlot;
     public final int defaultEnergyRFStorage;
     public final int defaultEnergyStorage;
     public double capacity;
@@ -56,7 +55,7 @@ public class TileQEConverter extends TileEntityInventory implements
     public TileQEConverter() {
 
         this.rf = true;
-        this.energy = this.addComponent((new AdvEnergy(this, 40000, ModUtils.allFacings,
+        this.energy = this.addComponent((new Energy(this, 40000, ModUtils.allFacings,
                 ModUtils.allFacings,
                 5,
                 5, false
@@ -68,7 +67,7 @@ public class TileQEConverter extends TileEntityInventory implements
                 5, false
         ));
         this.energy2.setDirections(ModUtils.allFacings, ModUtils.allFacings);
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.defaultEnergyStorage = 40000;
         this.defaultEnergyRFStorage = 40000 / 16;
         this.capacity = this.energy.getCapacity();
@@ -84,9 +83,9 @@ public class TileQEConverter extends TileEntityInventory implements
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComp(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.hasComp(Energy.class)) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {

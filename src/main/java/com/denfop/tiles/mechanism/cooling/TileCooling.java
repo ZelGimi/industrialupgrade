@@ -6,7 +6,9 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerCoolMachine;
@@ -17,7 +19,6 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +33,8 @@ import java.util.List;
 public class TileCooling extends TileElectricMachine implements IUpdatableTileEvent {
 
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public CoolComponent cold;
     public int max;
     public boolean work;
@@ -42,7 +45,8 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, tier));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
-
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
 
     @Override
@@ -54,7 +58,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
         try {
-            EncoderHandler.encode(packet, cold,false);
+            EncoderHandler.encode(packet, cold, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -98,7 +102,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, cold,false);
+            EncoderHandler.encode(packet, cold, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -167,7 +171,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -175,7 +179,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
             tooltip.add(Localization.translate("iu.machines_work_energy") + 30 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     @Override
@@ -191,6 +195,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
                 this.cold.addEnergy(1);
                 this.energy.useEnergy(30 * this.coef);
                 initiate(0);
+                this.setActive(true);
 
             }
             if (this.world.provider.getWorldTime() % 400 == 0) {
@@ -199,12 +204,14 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
 
             if (this.energy.getEnergy() < 30 * this.coef) {
                 initiate(2);
+                this.setActive(false);
             } else {
                 initiate(0);
             }
 
         } else {
             initiate(2);
+            this.setActive(false);
         }
         if (this.world.provider.getWorldTime() % 20 == 0 && this.cold.getEnergy() >= 1) {
             this.cold.addEnergy(-1);

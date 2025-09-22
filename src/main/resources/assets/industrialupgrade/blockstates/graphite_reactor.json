@@ -1,0 +1,150 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "graphite_casing" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_casing"
+      },
+      "graphite_adv_casing" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_casing"
+      },
+      "graphite_imp_casing" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_casing"
+      },
+      "graphite_per_casing" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_casing"
+      },
+      "graphite_chamber" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_chamber"
+      },
+      "graphite_adv_chamber" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_chamber"
+      },
+      "graphite_imp_chamber" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_chamber"
+      },
+      "graphite_per_chamber" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_chamber"
+      },
+      "graphite_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_controller"
+      },
+      "graphite_adv_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_controller"
+      },
+      "graphite_imp_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_controller"
+      },
+      "graphite_per_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_controller"
+      },
+      "graphite_graphite_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_graphite_controller"
+      },
+      "graphite_adv_graphite_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_graphite_controller"
+      },
+      "graphite_imp_graphite_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_graphite_controller"
+      },
+      "graphite_per_graphite_controller" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_graphite_controller"
+      },
+      "graphite_capacitor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_capacitor"
+      },
+      "graphite_adv_capacitor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_capacitor"
+      },
+      "graphite_imp_capacitor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_capacitor"
+      },
+      "graphite_per_capacitor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_capacitor"
+      },
+      "graphite_cooling" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_cooling"
+      },
+      "graphite_adv_cooling" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_cooling"
+      },
+      "graphite_imp_cooling" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_cooling"
+      },
+      "graphite_per_cooling" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_cooling"
+      },
+      "graphite_exchanger" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_exchanger"
+      },
+      "graphite_adv_exchanger" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_exchanger"
+      },
+      "graphite_imp_exchanger" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_exchanger"
+      },
+      "graphite_per_exchanger" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_exchanger"
+      },
+      "graphite_socket" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_socket"
+      },
+      "graphite_adv_socket" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_socket"
+      },
+      "graphite_imp_socket" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_socket"
+      },
+      "graphite_per_socket" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_socket"
+      },
+      "graphite_tank" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_tank"
+      },
+      "graphite_adv_tank" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_tank"
+      },
+      "graphite_imp_tank" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_tank"
+      },
+      "graphite_per_tank" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_tank"
+      },
+      "graphite_reactor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_reactor"
+      },
+      "graphite_adv_reactor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_adv_reactor"
+      },
+      "graphite_imp_reactor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_imp_reactor"
+      },
+      "graphite_per_reactor" : {
+        "model" : "industrialupgrade:graphite_reactor/graphite_per_reactor"
+      }
+    },
+     "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

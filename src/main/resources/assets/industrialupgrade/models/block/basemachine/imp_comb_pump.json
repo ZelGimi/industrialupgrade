@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/imp_comb_pump_main",
+    "down" : "industrialupgrade:blocks/imp_comb_pump_side1",
+    "up" : "industrialupgrade:blocks/imp_comb_pump_side1",
+    "north" : "industrialupgrade:blocks/imp_comb_pump_main",
+    "east" : "industrialupgrade:blocks/imp_comb_pump_side",
+    "south" : "industrialupgrade:blocks/imp_comb_pump_side1",
+    "west" : "industrialupgrade:blocks/imp_comb_pump_side"
+  }
+}

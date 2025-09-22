@@ -3,18 +3,21 @@ package com.denfop.tiles.mechanism.energy;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.EnergyNetLocal;
 import com.denfop.api.energy.IEnergyConductor;
 import com.denfop.api.energy.IEnergyController;
-import com.denfop.api.energy.Path;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerSubstitute;
 import com.denfop.gui.GuiEnergySubstitute;
 import com.denfop.invslot.CableItem;
-import com.denfop.invslot.InvSlotSubstitute;
+import com.denfop.invslot.InventorySubstitute;
 import com.denfop.items.block.ItemBlockTileEntity;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -25,28 +28,31 @@ import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TileEnergySubstitute extends TileEntityInventory implements
         IUpdatableTileEvent, IEnergyController {
 
-    public final InvSlotSubstitute slot;
-    public List<Path> energyPathList = new ArrayList<>();
+    public final InventorySubstitute slot;
     public Set<IEnergyConductor> conductorList = new HashSet<>();
     public boolean work = false;
     public int size;
@@ -54,11 +60,64 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     List<CableItem> cableItemList = new ArrayList<>();
     CableItem main_cableItem = null;
     FakePlayerSpawner fakePlayer;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    private ChunkPos chunkPos;
+    private long id;
+
 
     public TileEnergySubstitute() {
-        slot = new InvSlotSubstitute(this);
+        slot = new InventorySubstitute(this);
+        this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
+    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<IEnergyTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public List<InfoTile<IEnergyTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
+        if (!this.getWorld().isRemote) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+        }
+    }
+
+    public Map<EnumFacing, IEnergyTile> getTiles() {
+        return energyConductorMap;
+    }
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.substitute;
@@ -74,7 +133,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.controller_cables.info"));
         tooltip.add(Localization.translate("iu.controller_cables.info1"));
     }
@@ -91,9 +150,12 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
+            this.energyConductorMap.clear();
+            validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
-            this.slot.onChanged();
+            this.slot.markDirty();
+
         }
 
     }
@@ -178,6 +240,34 @@ public class TileEnergySubstitute extends TileEntityInventory implements
 
     }
 
+    public void discover() {
+        conductorList.clear();
+        size = 0;
+        final List<IEnergyConductor> reachedTileEntities = new ArrayList<>();
+        final List<IEnergyTile> tileEntitiesToCheck = new ArrayList<>();
+        tileEntitiesToCheck.add(this.getComp(Energy.class).delegate);
+        EnergyNetLocal energyNetLocal = EnergyNetGlobal.getForWorld(this.getWorld());
+        while (!tileEntitiesToCheck.isEmpty()) {
+            final IEnergyTile currentTileEntity = tileEntitiesToCheck.remove(0);
+            final List<InfoTile<IEnergyTile>> validReceivers = energyNetLocal.getValidReceiversSubstitute(currentTileEntity);
+
+            for (final InfoTile<IEnergyTile> validReceiver : validReceivers) {
+                if (validReceiver.tileEntity != this && validReceiver.tileEntity instanceof IEnergyConductor) {
+                    if (reachedTileEntities.contains((IEnergyConductor) validReceiver.tileEntity)) {
+                        continue;
+                    }
+
+                    reachedTileEntities.add((IEnergyConductor) validReceiver.tileEntity);
+                    tileEntitiesToCheck.add(validReceiver.tileEntity);
+                }
+            }
+
+
+        }
+        conductorList.addAll(reachedTileEntities);
+        size = conductorList.size();
+    }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -185,9 +275,9 @@ public class TileEnergySubstitute extends TileEntityInventory implements
             if (main_cableItem != null) {
                 List<ItemStack> itemStackList = new ArrayList<>();
                 for (IEnergyConductor conductor : this.conductorList) {
-                    if (conductor.getConductorBreakdownEnergy() - 1 < this.max_value) {
+                    if (conductor.getConductorBreakdownEnergy() - 1 < this.main_cableItem.getProvider()) {
 
-                        for (ItemStack stack : this.slot.gets()) {
+                        for (ItemStack stack : this.slot) {
 
                             if (stack.isItemEqual(main_cableItem.getStack()) && (ModUtils.nbt(main_cableItem.getStack()).equals(
                                     ModUtils.nbt(stack)))) {
@@ -208,6 +298,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
                                     if (!drops.isEmpty()) {
                                         itemStackList.add(drops.get(0));
                                     }
+                                    tile.onUnloaded();
                                     conductor.removeConductor();
                                     BlockPos pos = tile.getPos();
 
@@ -221,20 +312,16 @@ public class TileEnergySubstitute extends TileEntityInventory implements
                                     )) {
                                         stack.shrink(1);
                                         main_cableItem.shrink(1);
-                                        EnergyNetGlobal.getForWorld(this.getWorld()).update(pos);
                                         com.denfop.tiles.transport.tiles.TileEntityCable cable =
                                                 (com.denfop.tiles.transport.tiles.TileEntityCable) this.getWorld().getTileEntity(
                                                         pos);
-                                        if (cable != null) {
-                                            cable.update_render();
-                                        }
                                         break;
                                     }
                                 }
                             }
                         }
                         if (main_cableItem.getCount() == 0) {
-                            this.slot.onChanged();
+                            this.slot.markDirty();
                             if (main_cableItem == null) {
                                 break;
                             }
@@ -246,27 +333,11 @@ public class TileEnergySubstitute extends TileEntityInventory implements
                     this.slot.add(stack);
                 }
             }
-            energyPathList.clear();
-            conductorList.clear();
             this.size = 0;
             this.work = false;
-            for (EnumFacing facing : EnumFacing.values()) {
-                final List<Path> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
-                        this.getWorld(),
-                        this.getBlockPos().offset(facing)
-                );
-
-                for (Path path : energyPathList1) {
-                    if (!energyPathList.contains(path)) {
-                        energyPathList.add(path);
-                    }
-                }
-            }
-            energyPathList.forEach(energyPath -> this.conductorList.addAll(energyPath.getConductors()));
-            this.size = conductorList.size();
+            discover();
             this.main_cableItem = null;
-            this.max_value = 0;
-            this.slot.onChanged();
+            this.slot.markDirty();
         }
     }
 
@@ -276,25 +347,9 @@ public class TileEnergySubstitute extends TileEntityInventory implements
             return;
         }
         if (i == 0) {
-            energyPathList.clear();
-            conductorList.clear();
-            for (EnumFacing facing : EnumFacing.values()) {
-                final List<Path> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
-                        this.getWorld(),
-                        this.getBlockPos().offset(facing)
-                );
-
-                for (Path path : energyPathList1) {
-                    if (!energyPathList.contains(path)) {
-                        energyPathList.add(path);
-                    }
-                }
-            }
-            energyPathList.forEach(energyPath -> this.conductorList.addAll(energyPath.getConductors()));
-            this.size = conductorList.size();
+            discover();
             this.main_cableItem = null;
-            this.max_value = 0;
-            this.slot.onChanged();
+            this.slot.markDirty();
         } else if (i == 1) {
             this.work = true;
 
@@ -310,30 +365,15 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     @Override
     public void work() {
         if (this.getWork()) {
-            energyPathList.clear();
-            conductorList.clear();
-            for (EnumFacing facing : EnumFacing.values()) {
-                final List<Path> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
-                        this.getWorld(),
-                        this.getBlockPos().offset(facing)
-                );
-
-                for (Path path : energyPathList1) {
-                    if (!energyPathList.contains(path)) {
-                        energyPathList.add(path);
-                    }
-                }
-            }
-            energyPathList.forEach(energyPath -> this.conductorList.addAll(energyPath.getConductors()));
-            this.size = conductorList.size();
+            discover();
 
         }
     }
 
     @Override
     public void unload() {
-        this.energyPathList.clear();
         this.conductorList.clear();
+        this.size = 0;
     }
 
 

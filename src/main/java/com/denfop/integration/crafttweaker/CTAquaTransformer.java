@@ -70,7 +70,7 @@ public class CTAquaTransformer {
 
             final NBTTagCompound nbt = ModUtils.nbt();
             nbt.setDouble("need", this.matter);
-            final IC2InputItemStack stack = new IC2InputItemStack(this.container);
+            final InputItemStack stack = new InputItemStack(this.container);
 
             Recipes.recipes.addAdderRecipe("aquacollector", new BaseMachineRecipe(
                     new Input(

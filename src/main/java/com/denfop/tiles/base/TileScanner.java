@@ -8,8 +8,8 @@ import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.container.ContainerScanner;
 import com.denfop.gui.GuiScanner;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotScannable;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryScannable;
 import com.denfop.items.ItemCrystalMemory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -38,17 +38,17 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         IUpdatableTileEvent {
 
     public final int maxprogress;
-    public final InvSlotScannable inputSlot;
-    public final InvSlot diskSlot;
+    public final InventoryScannable inputSlot;
+    public final Inventory diskSlot;
     public int progress;
     public double patternUu;
     public double patternEu;
     public ItemStack pattern;
     public BaseMachineRecipe recipe;
+    public TileScanner.State state;
     Map<BlockPos, IPatternStorage> iPatternStorageMap = new HashMap<>();
     List<IPatternStorage> iPatternStorageList = new ArrayList<>();
     private ItemStack currentStack;
-    private TileScanner.State state;
 
     public TileScanner(int maxprogress) {
         super(512000, 14, 0);
@@ -57,14 +57,14 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         this.progress = 0;
         this.maxprogress = maxprogress;
         this.state = TileScanner.State.IDLE;
-        this.inputSlot = new InvSlotScannable(this, 1);
-        this.diskSlot = new InvSlot(
+        this.inputSlot = new InventoryScannable(this, 1);
+        this.diskSlot = new Inventory(
                 this,
-                InvSlot.TypeItemSlot.INPUT_OUTPUT,
+                Inventory.TypeItemSlot.INPUT_OUTPUT,
                 1
         ) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.crystalMemory;
             }
         };
@@ -161,10 +161,12 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
                 } else {
                     this.state = TileScanner.State.IDLE;
                     this.reset();
+
                 }
             } else if (ModUtils.isEmpty(this.pattern)) {
                 this.state = TileScanner.State.IDLE;
                 this.progress = 0;
+
             }
         }
 
@@ -288,15 +290,17 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     }
 
     public void updateTileServer(EntityPlayer player, double event) {
-        switch ((int) event) {
-            case 0:
-                this.reset();
-                break;
-            case 1:
-                if (this.state == State.COMPLETED) {
-                    this.record();
-                    this.state = TileScanner.State.IDLE;
-                }
+        if (!this.iPatternStorageList.isEmpty() || !this.diskSlot.isEmpty()) {
+            switch ((int) event) {
+                case 0:
+                    this.reset();
+                    break;
+                case 1:
+                    if (this.state == State.COMPLETED) {
+                        this.record();
+                        this.state = TileScanner.State.IDLE;
+                    }
+            }
         }
 
     }

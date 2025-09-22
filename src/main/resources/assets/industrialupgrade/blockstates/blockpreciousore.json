@@ -11,6 +11,11 @@
           "all" : "industrialupgrade:blocks/ruby_ore"
         }
       },
+      "quartz_ore" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/quartz_ore"
+        }
+      },
       "sapphire_ore" : {
         "textures" : {
           "all" : "industrialupgrade:blocks/sapphire_ore"

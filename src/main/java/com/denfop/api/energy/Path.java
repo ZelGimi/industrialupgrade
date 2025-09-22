@@ -2,26 +2,24 @@ package com.denfop.api.energy;
 
 import net.minecraft.util.EnumFacing;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class Path {
 
-    final List<IEnergyConductor> conductors;
     final IEnergySink target;
     final EnumFacing targetDirection;
-    long totalEnergyConducted;
     double min = Double.MAX_VALUE;
     double loss = 0.0D;
     boolean hasController = false;
     boolean isLimit = false;
     double limit_amount = Double.MAX_VALUE;
+    double adding = 0;
+    List<IEnergyConductor> conductorList = new LinkedList<>();
 
     Path(IEnergySink sink, EnumFacing facing) {
         this.target = sink;
-        this.conductors = new ArrayList<>();
-        this.totalEnergyConducted = 0L;
         this.targetDirection = facing;
     }
 
@@ -46,9 +44,6 @@ public class Path {
         return Objects.hash(target);
     }
 
-    public List<IEnergyConductor> getConductors() {
-        return conductors;
-    }
 
     public void setHasController(final boolean hasController) {
         this.hasController = hasController;
@@ -72,6 +67,10 @@ public class Path {
             this.target.addPerEnergy(adding);
         }
 
+    }
+
+    public List<IEnergyConductor> getConductorList() {
+        return conductorList;
     }
 
 }

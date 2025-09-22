@@ -2,20 +2,19 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCombinerSolid;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerCombinerSolidMatter;
 import com.denfop.gui.GuiCombinerSolidMatter;
-import com.denfop.invslot.InvSlotSolidMatter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventorySolidMatter;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,20 +41,20 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
             1.5D,
             1.5625
     ));
-    public final InvSlotSolidMatter inputSlot;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput outputSlot;
-    public final AdvEnergy energy;
+    public final InventorySolidMatter inputSlot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final Energy energy;
     public EnumSolidMatter[] solid;
     public int[] solid_col;
 
     public TileEntityCombinerSolidMatter() {
-        this.inputSlot = new InvSlotSolidMatter(this);
+        this.inputSlot = new InventorySolidMatter(this);
 
-        this.outputSlot = new InvSlotOutput(this, "output", 9);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot = new InventoryOutput(this, 9);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
         this.solid = new EnumSolidMatter[9];
         this.solid_col = new int[9];
     }
@@ -68,10 +67,10 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         return IUItem.combinersolidmatter;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -185,14 +184,10 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.Transformer, UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.Transformer, UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
-
-
-
-
 
 
 }
