@@ -1,7 +1,7 @@
 package com.denfop.api.space.research.api;
 
 
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 
 public interface IContainerBlock {
 
@@ -9,6 +9,6 @@ public interface IContainerBlock {
 
     void setResearchTable(IResearchTable table);
 
-    InvSlotOutput getSlotOutput();
+    InventoryOutput getSlotOutput();
 
 }

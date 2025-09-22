@@ -5,7 +5,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerTank;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileEntityLiquedTank;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,7 @@ public class TileEntityOakTank extends TileEntityLiquedTank {
 
     public TileEntityOakTank() {
         super(4);
-        this.containerslot1.setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
+        this.containerslot1.setTypeItemSlot(Inventory.TypeItemSlot.NONE);
     }
 
     @Override

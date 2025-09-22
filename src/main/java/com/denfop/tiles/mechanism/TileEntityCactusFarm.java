@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -14,7 +14,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerCactusFarm;
 import com.denfop.gui.GuiCactusFarm;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCactus;
@@ -33,17 +33,17 @@ import java.util.Set;
 public class TileEntityCactusFarm extends TileEntityInventory implements IUpgradableBlock {
 
     private static final int RADIUS = 4;
-    public final InvSlotOutput slot;
+    public final InventoryOutput slot;
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
 
     public TileEntityCactusFarm() {
-        this.slot = new InvSlotOutput(this, 9);
+        this.slot = new InventoryOutput(this, 9);
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 5));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));

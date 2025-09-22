@@ -8,7 +8,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -26,8 +26,8 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerElectricElectronicsAssembler;
 import com.denfop.gui.GuiElectricElectronicsAssembler;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -49,22 +49,22 @@ import java.util.Set;
 public class TileEntityElectronicsAssembler extends TileElectricMachine implements IUpdateTick, IHasRecipe, IUpgradableBlock {
 
 
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
     private final ComponentUpgrade componentUpgrades;
 
 
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
 
     public TileEntityElectronicsAssembler() {
         super(300, 1, 1);
-        this.inputSlotA = new InvSlotRecipes(this, "electronics", this);
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.inputSlotA = new InventoryRecipes(this, "electronics", this);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -80,7 +80,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
 
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -92,7 +92,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

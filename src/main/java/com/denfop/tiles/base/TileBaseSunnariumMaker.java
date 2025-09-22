@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -13,7 +13,7 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.TypeUpgrade;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
@@ -25,13 +25,13 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
         implements IUpgradableBlock {
 
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
     private final ComponentUpgrade componentUpgrades;
     public ComponentBaseEnergy sunenergy;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
 
     public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots) {
@@ -40,7 +40,7 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
 
     public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
         super(energyPerTick * length, 1, outputSlots);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));

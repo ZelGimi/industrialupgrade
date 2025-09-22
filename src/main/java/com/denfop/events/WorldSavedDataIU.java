@@ -27,14 +27,18 @@ import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
+import com.denfop.world.vein.noise.ShellCluster;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -43,6 +47,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.denfop.api.guidebook.GuideBookCore.uuidGuideMap;
+import static com.denfop.world.vein.AlgorithmVein.shellClusterChuncks;
+import static com.denfop.world.vein.AlgorithmVein.veinCoordination;
+import static com.denfop.world.vein.AlgorithmVein.volcano;
 
 public class WorldSavedDataIU extends WorldSavedData {
 
@@ -65,9 +72,145 @@ public class WorldSavedDataIU extends WorldSavedData {
     public void setWorld(final World world) {
         this.world = world;
     }
+    public static void loadShellClusterChunks(NBTTagCompound tag) {
+        Map<Integer, Map<Integer, Tuple<Color, Integer>>> result = new HashMap<>();
+        ShellCluster cluster = new ShellCluster();
+        cluster.point = new com.denfop.world.vein.noise.Point(tag.getCompoundTag("volcano").getInteger("x"),
+                tag.getCompoundTag("volcano").getInteger(
+                "z"));
+        volcano = cluster;
+        NBTTagList outerList = tag.getTagList("shellClusterChunks", 10);
 
+        for (int i = 0; i < outerList.tagCount(); i++) {
+            NBTTagCompound outerTag = outerList.getCompoundTagAt(i);
+            int outerKey = outerTag.getInteger("outer");
+
+            Map<Integer, Tuple<Color, Integer>> innerMap = new HashMap<>();
+            NBTTagList innerList = outerTag.getTagList("innerList", 10);
+
+            for (int j = 0; j < innerList.tagCount(); j++) {
+                NBTTagCompound innerTag = innerList.getCompoundTagAt(j);
+                int innerKey = innerTag.getInteger("inner");
+
+                int r = innerTag.getInteger("r");
+                int g = innerTag.getInteger("g");
+                int b = innerTag.getInteger("b");
+                int a = innerTag.getInteger("a");
+                int value = innerTag.getInteger("value");
+
+                Color color = new Color(r, g, b, a);
+                innerMap.put(innerKey, new Tuple<>(color, value));
+            }
+
+            result.put(outerKey, innerMap);
+        }
+        shellClusterChuncks = result;
+        Map<Integer, Map<Integer, List<Integer>>> veinMap = new HashMap<>();
+        NBTTagList outerVeinList = tag.getTagList("veinCoordination", 10);
+
+        for (int i = 0; i < outerVeinList.tagCount(); i++) {
+            NBTTagCompound outerTag = outerVeinList.getCompoundTagAt(i);
+            int outerKey = outerTag.getInteger("outer");
+
+            Map<Integer, List<Integer>> innerMap = new HashMap<>();
+            NBTTagList innerList = outerTag.getTagList("innerList", 10);
+
+            for (int j = 0; j < innerList.tagCount(); j++) {
+                NBTTagCompound innerTag = innerList.getCompoundTagAt(j);
+                int innerKey = innerTag.getInteger("inner");
+
+                NBTTagList coordsList = innerTag.getTagList("coords", 3);
+                List<Integer> coords = new ArrayList<>();
+                for (int k = 0; k < coordsList.tagCount(); k++) {
+                    coords.add(coordsList.getIntAt(k));
+                }
+
+                innerMap.put(innerKey, coords);
+            }
+
+            veinMap.put(outerKey, innerMap);
+        }
+
+        veinCoordination = veinMap;
+    }
+
+    public static NBTTagCompound saveShellClusterChunks() {
+        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagList outerList = new NBTTagList();
+        NBTTagCompound volcanoTag = new NBTTagCompound();
+        if (volcano != null) {
+            volcanoTag.setInteger("x", volcano.point.x);
+            volcanoTag.setInteger("z", volcano.point.y);
+            tag.setTag("volcano", volcanoTag);
+        }
+        for (Map.Entry<Integer, Map<Integer, Tuple<Color, Integer>>> outer : shellClusterChuncks.entrySet()) {
+            int outerKey = outer.getKey();
+            NBTTagCompound outerTag = new NBTTagCompound();
+            outerTag.setInteger("outer", outerKey);
+
+            NBTTagList innerList = new NBTTagList();
+            for (Map.Entry<Integer, Tuple<Color, Integer>> inner : outer.getValue().entrySet()) {
+                int innerKey = inner.getKey();
+                Tuple<Color, Integer> tuple = inner.getValue();
+                Color color = tuple.getFirst();
+                int number = tuple.getSecond();
+
+                NBTTagCompound innerTag = new NBTTagCompound();
+                innerTag.setInteger("inner", innerKey);
+                innerTag.setInteger("r", color.getRed());
+                innerTag.setInteger("g", color.getGreen());
+                innerTag.setInteger("b", color.getBlue());
+                innerTag.setInteger("a", color.getAlpha());
+                innerTag.setInteger("value", number);
+
+                innerList.appendTag(innerTag);
+            }
+
+            outerTag.setTag("innerList", innerList);
+            outerList.appendTag(outerTag);
+        }
+
+        tag.setTag("shellClusterChunks", outerList);
+        NBTTagList veinOuterList = new NBTTagList();
+        for (Map.Entry<Integer, Map<Integer, List<Integer>>> outer : veinCoordination.entrySet()) {
+            int outerKey = outer.getKey();
+            NBTTagCompound outerTag = new NBTTagCompound();
+            outerTag.setInteger("outer", outerKey);
+
+            NBTTagList innerList = new NBTTagList();
+            for (Map.Entry<Integer, List<Integer>> inner : outer.getValue().entrySet()) {
+                int innerKey = inner.getKey();
+                List<Integer> coords = inner.getValue();
+
+                NBTTagCompound innerTag = new NBTTagCompound();
+                innerTag.setInteger("inner", innerKey);
+
+                NBTTagList coordsList = new NBTTagList();
+                for (Integer coord : coords) {
+                    coordsList.appendTag(new NBTTagInt(coord));
+                }
+
+                innerTag.setTag("coords", coordsList);
+                innerList.appendTag(innerTag);
+            }
+
+            outerTag.setTag("innerList", innerList);
+            veinOuterList.appendTag(outerTag);
+        }
+
+        tag.setTag("veinCoordination", veinOuterList);
+        return tag;
+    }
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound compound) {
+        shellClusterChuncks = new HashMap<>();
+
+        if (volcano != null)
+            volcano = null;
+        if (compound.hasKey("shells")) {
+            loadShellClusterChunks(compound.getCompoundTag("shells"));
+        }
+
         SpaceNet.instance.getFakeSpaceSystem().unload();
         if (compound.hasKey("fakePlayers")) {
             NBTTagList fakePlayersList = compound.getTagList("fakePlayers", 10);
@@ -450,7 +593,7 @@ public class WorldSavedDataIU extends WorldSavedData {
         }
         compound.setTag("relocator", relocatorTag);
 
-
+        compound.setTag("shells", saveShellClusterChunks());
         this.tagCompound = compound;
         return compound;
     }

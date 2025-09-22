@@ -279,7 +279,7 @@ public class TileEntityAmpereCable extends TileEntityMultiCable implements ICond
 
     @Override
     public EnergyType getEnergyType() {
-        return EnergyType.QUANTUM;
+        return EnergyType.AMPERE;
     }
 
     @Override

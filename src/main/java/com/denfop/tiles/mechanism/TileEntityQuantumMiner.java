@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -22,13 +22,13 @@ import java.util.Random;
 
 public class TileEntityQuantumMiner extends TileEntityInventory {
 
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public final ComponentBaseEnergy qe;
     public final ComponentProgress progress;
     private int[] metas = new int[]{637, 638, 639, 640, 643, 644, 648, 649};
 
     public TileEntityQuantumMiner() {
-        this.outputSlot = new InvSlotOutput(this, 18);
+        this.outputSlot = new InventoryOutput(this, 18);
         this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
         this.progress = this.addComponent(new ComponentProgress(this, 1, 1000));
     }

@@ -1,10 +1,9 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Localization;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -14,8 +13,8 @@ import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.TypeUpgrade;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
@@ -30,23 +29,23 @@ import java.util.Set;
 public class TileBasePlasticCreator extends TileElectricLiquidTankInventory
         implements IUpdateTick, IUpgradableBlock {
 
-    public final InvSlotFluidByList fluidSlot;
+    public final InventoryFluidByList fluidSlot;
 
-    public final InvSlotOutput outputSlot1;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot1;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
     private final ComponentUpgrade componentUpgrades;
 
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
 
     public TileBasePlasticCreator(int energyPerTick, int length, int aDefaultTier) {
         super(energyPerTick * length, aDefaultTier, 12, Fluids.fluidPredicate(FluidRegistry.WATER));
-        this.outputSlot1 = new InvSlotOutput(this, 1);
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot1 = new InventoryOutput(this, 1);
+        this.fluidSlot = new InventoryFluidByList(this, 1, FluidRegistry.WATER);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,

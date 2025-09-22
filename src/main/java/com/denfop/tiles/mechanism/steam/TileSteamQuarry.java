@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism.steam;
 
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -11,7 +11,7 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamQuarry;
 import com.denfop.gui.GuiSteamQuarry;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.block.ItemBlockTileEntity;
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.tiles.base.FakePlayerSpawner;
@@ -50,9 +50,9 @@ public class TileSteamQuarry extends TileEntityInventory {
     public final Fluids fluids;
     public final Fluids.InternalFluidTank fluidTank1;
     public final ComponentSteamEnergy steam;
-    public final InvSlot invSlot;
-    public final InvSlot invSlot1;
-    public final InvSlotOutput output;
+    public final Inventory inventory;
+    public final Inventory inventory1;
+    public final InventoryOutput output;
     public final ItemStack stackPipe;
     public int y;
     public int x;
@@ -64,16 +64,16 @@ public class TileSteamQuarry extends TileEntityInventory {
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
-        ), InvSlot.TypeItemSlot.NONE);
-        this.output = new InvSlotOutput(this, 24);
+        ), Inventory.TypeItemSlot.NONE);
+        this.output = new InventoryOutput(this, 24);
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank1);
         this.y = 0;
         this.x = 0;
         this.z = 0;
-        this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.inventory = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 508;
             }
 
@@ -83,14 +83,14 @@ public class TileSteamQuarry extends TileEntityInventory {
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
         };
         this.stackPipe = new ItemStack(IUItem.basemachine2, 1, 197);
-        this.invSlot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.inventory1 = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.basemachine2.item && stack.getItemDamage() == 197;
             }
 
@@ -214,7 +214,7 @@ public class TileSteamQuarry extends TileEntityInventory {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (!this.invSlot.isEmpty() && steam.canUseEnergy(2) && work && !invSlot1.isEmpty() && y > 4) {
+        if (!this.inventory.isEmpty() && steam.canUseEnergy(2) && work && !inventory1.isEmpty() && y > 4) {
             BlockPos pos1 = new BlockPos(x, y, z);
             final IBlockState state = world.getBlockState(pos1);
             Block block1 = state.getBlock();
@@ -225,7 +225,7 @@ public class TileSteamQuarry extends TileEntityInventory {
                     entity, pos1
             ) != -1) {
                 if (x == pos.getX() && z == pos.getZ()) {
-                    invSlot1.get().shrink(1);
+                    inventory1.get().shrink(1);
                     ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) stackPipe.getItem();
                     IBlockState iblockstate1 = blockTileEntity.getBlock().getStateForPlacement(world, pos1,
                             EnumFacing.NORTH, 0,
@@ -295,7 +295,7 @@ public class TileSteamQuarry extends TileEntityInventory {
                     blockTileEntity.placeBlockAt(stackPipe, entity, world, pos1, EnumFacing.NORTH, 0,
                             0, 0, iblockstate1
                     );
-                    invSlot1.get().shrink(1);
+                    inventory1.get().shrink(1);
                 }
             } else {
                 if (x == this.getPos().getX() && z == this

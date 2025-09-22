@@ -11,15 +11,15 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockStrongAnvil;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.resource.ItemRawMetals;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -59,25 +59,25 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     private static final List<AxisAlignedBB> aabbs1 = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 2, 1.0D,
             1
     ));
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotOutput outputSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryOutput outputSlot;
     public int progress;
     public MachineRecipe output;
     public Map<UUID, Double> data;
 
     public TileEntityStrongAnvil() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "strong_anvil", this) {
+        this.inputSlotA = new InventoryRecipes(this, "strong_anvil", this) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 if (index == 4) {
-                    return super.accepts(itemStack, 0);
+                    return super.isItemValidForSlot(0, itemStack);
                 }
                 return false;
             }
         };
         this.progress = 0;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -172,14 +172,14 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -196,8 +196,8 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -272,7 +272,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
             return this.getWorld().isRemote;
         } else {
             if (!stack.isEmpty()) {
-                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
+                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.isItemValidForSlot(4, stack)) {
                     this.inputSlotA.put(0, stack.copy());
                     stack.setCount(0);
                     if (!world.isRemote) {

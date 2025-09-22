@@ -12,7 +12,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPatternStorage;
 import com.denfop.gui.GuiPatternStorage;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemCrystalMemory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -39,7 +39,7 @@ import java.util.List;
 public class TilePatternStorage extends TileEntityInventory implements IUpdatableTileEvent,
         IPatternStorage {
 
-    public final InvSlot diskSlot;
+    public final Inventory diskSlot;
     private final List<RecipeInfo> patterns = new ArrayList<>();
     public int index = 0;
     public int maxIndex;
@@ -48,13 +48,13 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
     public double patternEu;
 
     public TilePatternStorage() {
-        this.diskSlot = new InvSlot(
+        this.diskSlot = new Inventory(
                 this,
-                InvSlot.TypeItemSlot.INPUT_OUTPUT,
+                Inventory.TypeItemSlot.INPUT_OUTPUT,
                 1
         ) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.crystalMemory;
             }
         };

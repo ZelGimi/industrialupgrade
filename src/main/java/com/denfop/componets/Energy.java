@@ -11,10 +11,9 @@ import com.denfop.api.energy.IMultiDual;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryDischarge;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
@@ -56,7 +55,7 @@ public class Energy extends AbstractComponent {
     public int defaultSourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots = new ArrayList<>();
+    public List<Inventory> managedSlots = new ArrayList<>();
     public boolean multiSource;
     public int sourcePackets;
     public Energy.EnergyNetDelegate delegate;
@@ -174,9 +173,9 @@ public class Energy extends AbstractComponent {
     public void updateEntityServer() {
 
         if (!managedSlots.isEmpty()) {
-            for (InvSlot slot : managedSlots) {
-                if (slot instanceof InvSlotDischarge) {
-                    InvSlotDischarge discharge = (InvSlotDischarge) slot;
+            for (Inventory slot : managedSlots) {
+                if (slot instanceof InventoryDischarge) {
+                    InventoryDischarge discharge = (InventoryDischarge) slot;
                     if (!discharge.isEmpty()) {
                         if (discharge.get().getItem() == Items.REDSTONE) {
                             double energy = discharge.dischargeWithRedstone(this.capacity, this.getFreeEnergy());
@@ -186,8 +185,8 @@ public class Energy extends AbstractComponent {
                             this.addEnergy(energy);
                         }
                     }
-                } else if (slot instanceof InvSlotCharge) {
-                    InvSlotCharge charge = (InvSlotCharge) slot;
+                } else if (slot instanceof InventoryCharge) {
+                    InventoryCharge charge = (InventoryCharge) slot;
                     if (!charge.isEmpty()) {
                         double energy = charge.charge(this.storage);
                         this.useEnergy(energy);
@@ -209,7 +208,7 @@ public class Energy extends AbstractComponent {
         return true;
     }
 
-    public Energy addManagedSlot(InvSlot slot) {
+    public Energy addManagedSlot(Inventory slot) {
         if (this.managedSlots == null) {
             this.managedSlots = new ArrayList<>(4);
         }
@@ -405,13 +404,13 @@ public class Energy extends AbstractComponent {
         return ret;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
         if (this.getDelegate() instanceof IEnergySink) {
             int tier = invSlotUpgrade.getTier(this.defaultSinkTier);
             this.setSinkTier(tier);
-            for (InvSlot slot : this.managedSlots) {
-                if (slot instanceof InvSlotDischarge) {
-                    InvSlotDischarge discharge = (InvSlotDischarge) slot;
+            for (Inventory slot : this.managedSlots) {
+                if (slot instanceof InventoryDischarge) {
+                    InventoryDischarge discharge = (InventoryDischarge) slot;
                     discharge.setTier(tier);
                 }
             }
@@ -419,9 +418,9 @@ public class Energy extends AbstractComponent {
         if (this.getDelegate() instanceof IEnergySource) {
             int tier = invSlotUpgrade.getTier(this.defaultSourceTier);
             this.setSourceTier(tier);
-            for (InvSlot slot : this.managedSlots) {
-                if (slot instanceof InvSlotCharge) {
-                    InvSlotCharge discharge = (InvSlotCharge) slot;
+            for (Inventory slot : this.managedSlots) {
+                if (slot instanceof InventoryCharge) {
+                    InventoryCharge discharge = (InventoryCharge) slot;
                     discharge.setTier(tier);
                 }
             }
@@ -437,9 +436,9 @@ public class Energy extends AbstractComponent {
 
     public void setSinkTier(int tier) {
         this.sinkTier = tier;
-        for (InvSlot slot : this.managedSlots) {
-            if (slot instanceof InvSlotDischarge) {
-                InvSlotDischarge discharge = (InvSlotDischarge) slot;
+        for (Inventory slot : this.managedSlots) {
+            if (slot instanceof InventoryDischarge) {
+                InventoryDischarge discharge = (InventoryDischarge) slot;
                 discharge.setTier(tier);
             }
         }
@@ -450,9 +449,9 @@ public class Energy extends AbstractComponent {
     }
 
     public void setSourceTier(int tier) {
-        for (InvSlot slot : this.managedSlots) {
-            if (slot instanceof InvSlotCharge) {
-                InvSlotCharge discharge = (InvSlotCharge) slot;
+        for (Inventory slot : this.managedSlots) {
+            if (slot instanceof InventoryCharge) {
+                InventoryCharge discharge = (InventoryCharge) slot;
                 discharge.setTier(tier);
             }
         }

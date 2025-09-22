@@ -4,13 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -26,8 +21,8 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerCanner;
 import com.denfop.gui.GuiCanner;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,9 +44,9 @@ import java.util.Set;
 public class TileCanner extends TileElectricLiquidTankInventory
         implements IUpgradableBlock, IUpdateTick, IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank outputTank;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProcess componentProcess;
     public final ComponentProgress componentProgress;
@@ -63,11 +58,11 @@ public class TileCanner extends TileElectricLiquidTankInventory
 
     public TileCanner() {
         super(300, 1, 10);
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
-        this.inputSlotA = new InvSlotRecipes(this, "cannerenrich", this, this.fluidTank);
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
+        this.inputSlotA = new InventoryRecipes(this, "cannerenrich", this, this.fluidTank);
         Recipes.recipes.addInitRecipes(this);
         this.outputTank = this.fluids.addTankExtract("outputTank", 10000);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300

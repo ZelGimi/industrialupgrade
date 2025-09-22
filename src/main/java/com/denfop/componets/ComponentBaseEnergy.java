@@ -11,7 +11,7 @@ import com.denfop.api.sytem.ISink;
 import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -48,7 +48,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public int sourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots;
+    public List<Inventory> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
     public ComponentBaseEnergy.EnergyNetDelegate delegate;

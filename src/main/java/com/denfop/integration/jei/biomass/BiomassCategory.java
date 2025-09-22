@@ -7,7 +7,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
@@ -106,7 +106,7 @@ public class BiomassCategory extends GuiIU implements IRecipeCategory<BiomassWra
         this.slots.drawBackground(0, -10);
         progress_bar.renderBar(0, 0, xScale);
 
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
             element.drawBackground(this.guiLeft, this.guiTop - 5);
         }
 
@@ -122,7 +122,7 @@ public class BiomassCategory extends GuiIU implements IRecipeCategory<BiomassWra
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
         IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInputstack());
         int i = 0;
         for (; i < inputs.size(); i++) {

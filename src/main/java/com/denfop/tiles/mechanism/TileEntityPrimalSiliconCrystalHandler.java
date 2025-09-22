@@ -5,7 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -14,7 +14,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalSiliconCrystalHandler;
 import com.denfop.componets.ComponentTimer;
 import com.denfop.container.ContainerSiliconCrystalHandler;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -46,8 +46,8 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
     public final ComponentTimer timer;
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
     public int col;
     private MachineRecipe output;
     private int level;
@@ -56,14 +56,14 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
     public TileEntityPrimalSiliconCrystalHandler() {
         super(0, 0, 1);
         Recipes.recipes.addInitRecipes(this);
-        inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this) {
+        inputSlotA = new InventoryRecipes(this, "silicon_recipe", this) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 return false;
             }
         };
 
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 12, 30)));
         this.level = 0;
     }

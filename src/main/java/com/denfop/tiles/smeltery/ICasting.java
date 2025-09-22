@@ -2,9 +2,9 @@ package com.denfop.tiles.smeltery;
 
 import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 
 public interface ICasting extends IMultiElement {
 
@@ -12,8 +12,8 @@ public interface ICasting extends IMultiElement {
 
     FluidHandlerRecipe getFluid_handler();
 
-    InvSlotOutput getOutputSlot();
+    InventoryOutput getOutputSlot();
 
-    InvSlot getInputSlotB();
+    Inventory getInputSlotB();
 
 }

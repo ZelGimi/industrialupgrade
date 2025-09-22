@@ -20,10 +20,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerFluidMixer;
 import com.denfop.gui.GuiFluidMixer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -50,17 +49,17 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank2;
     public final Fluids.InternalFluidTank fluidTank1;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
     public final Fluids.InternalFluidTank fluidTank3;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
     public final Fluids.InternalFluidTank fluidTank4;
-    public final InvSlotFluidByList fluidSlot4;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotFluidByList fluidSlot3;
+    public final InventoryFluidByList fluidSlot4;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryFluidByList fluidSlot3;
     public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
@@ -84,21 +83,21 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
         this.fluidTank2 = fluids.addTankInsert("fluidTank2", 12 * 1000);
 
 
-        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.fluidTank4 = fluids.addTank("fluidTank4", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.fluidTank4 = fluids.addTank("fluidTank4", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("fluid_mixer", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(1)));
         this.fluidTank3.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
         this.fluidTank4.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(1)));
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getFluids(0));
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, this.fluid_handler.getFluids(1));
-        this.fluidSlot3 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot4 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
-        this.fluidSlot3.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.fluidSlot4.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getFluids(0));
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getFluids(1));
+        this.fluidSlot3 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot4 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
+        this.fluidSlot3.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.fluidSlot4.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
     }

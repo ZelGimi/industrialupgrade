@@ -12,10 +12,10 @@ public class ContainerSteamQuarry extends ContainerFullInv<TileSteamQuarry> {
                     i, 28 + (i % 8) * 18, 20 + (i / 8) * 18
             ));
         }
-        addSlotToContainer(new SlotInvSlot(tileEntity1.invSlot,
+        addSlotToContainer(new SlotInvSlot(tileEntity1.inventory,
                 0, 8, 20
         ));
-        addSlotToContainer(new SlotInvSlot(tileEntity1.invSlot1,
+        addSlotToContainer(new SlotInvSlot(tileEntity1.inventory1,
                 0, 8, 42
         ));
     }

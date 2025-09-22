@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -15,9 +15,9 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerTripleElectricMachine;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryDischarge;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.packet.PacketStopSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -32,9 +32,9 @@ import java.util.Set;
 public abstract class TileTripleElectricMachine extends TileStandartMachine
         implements IUpgradableBlock, IUpdateTick {
 
-    public final InvSlotDischarge dischargeSlot;
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryDischarge dischargeSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
@@ -62,11 +62,11 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
             EnumTripleElectricMachine type
     ) {
         super(outputSlots);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.name = name;
-        this.inputSlotA = new InvSlotRecipes(this, type.recipe_name, this);
+        this.inputSlotA = new InventoryRecipes(this, type.recipe_name, this);
         this.type = type;
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
+        this.dischargeSlot = new InventoryDischarge(this, Inventory.TypeItemSlot.INPUT, aDefaultTier, false);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) length

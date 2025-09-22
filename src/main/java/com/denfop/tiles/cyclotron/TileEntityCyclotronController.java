@@ -12,7 +12,7 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockCyclotron;
 import com.denfop.container.ContainerCyclotronController;
 import com.denfop.gui.GuiCyclotronController;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -99,12 +99,12 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
             quantum.getQuantum().onNetworkUpdate(customPacketBuffer);
             bombardmentChamber
                     .getInputSlot()
-                    .readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+                    .readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             boolean empty = customPacketBuffer.readBoolean();
             if (empty && !bombardmentChamber.getInputSlot().isEmpty()) {
                 bombardmentChamber.getInputSlot().put(0, ItemStack.EMPTY);
             }
-            electrostaticDeflector.getOutputSlot().readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(
+            electrostaticDeflector.getOutputSlot().readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(
                     new NBTTagCompound()));
             empty = customPacketBuffer.readBoolean();
             if (empty && !electrostaticDeflector.getOutputSlot().isEmpty()) {
@@ -153,7 +153,7 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
                 if (this.progress >= 1000) {
                     this.progress = 0;
                     if (this.bombardmentChamber.getChance() == 100) {
-                        this.electrostaticDeflector.getOutputSlot().add(this.bombardmentChamber
+                        this.electrostaticDeflector.getOutputSlot().addAll(this.bombardmentChamber
                                 .getRecipeOutput()
                                 .getRecipe()
                                 .getOutput().items);
@@ -161,7 +161,7 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
                         this.bombardmentChamber.getOutput();
                     } else {
                         if (WorldBaseGen.random.nextInt(this.bombardmentChamber.getChance()) < this.bombardmentChamber.getChance()) {
-                            this.electrostaticDeflector.getOutputSlot().add(this.bombardmentChamber
+                            this.electrostaticDeflector.getOutputSlot().addAll(this.bombardmentChamber
                                     .getRecipeOutput()
                                     .getRecipe()
                                     .getOutput().items);

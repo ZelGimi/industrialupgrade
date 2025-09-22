@@ -17,10 +17,9 @@ import com.denfop.blocks.mechanism.BlockPetrolQuarry;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerOilPump;
 import com.denfop.gui.GuiOilPump;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -57,8 +56,8 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             2.0
     ));
     public final int defaultTier;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryFluid containerslot;
     public int level;
     public boolean find;
     public int count;
@@ -72,19 +71,19 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
                 FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
                 FluidName.fluidsweet_heavy_oil.getInstance()
         ));
-        this.containerslot = new InvSlotFluidByList(this,
-                InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT,
+        this.containerslot = new InventoryFluidByList(this,
+                Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidneft.getInstance(),
                 FluidName.fluidsour_light_oil.getInstance(), FluidName.fluidsour_heavy_oil.getInstance(),
                 FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
                 FluidName.fluidsweet_heavy_oil.getInstance()
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.defaultTier = 14;
         this.level = 0;
 
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
-        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
+        this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
     }
 
     private static int applyModifier(int extra) {

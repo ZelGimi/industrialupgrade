@@ -3,9 +3,8 @@ package com.denfop.tiles.mechanism;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
-import com.denfop.api.space.research.event.ResearchTableReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
 import com.denfop.api.space.research.event.RocketPadReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
@@ -19,7 +18,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerRocketLaunchPad;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.gui.GuiRocketLaunchPad;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.space.ItemRover;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.render.rocketpad.DataRocket;
@@ -55,8 +54,8 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, -1, 2, 2.0D,
             2
     ));
-    public final InvSlotOutput outputSlot;
-    public final InvSlot roverSlot;
+    public final InventoryOutput outputSlot;
+    public final Inventory roverSlot;
     public final Energy energy;
     public final Fluids fluids;
     public final Fluids.InternalFluidTank tank;
@@ -68,10 +67,10 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     private RocketPadRender render;
 
     public TileEntityRocketLaunchPad() {
-        this.outputSlot = new InvSlotOutput(this, 27);
-        this.roverSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.outputSlot = new InventoryOutput(this, 27);
+        this.roverSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof IRoversItem;
             }
         };
@@ -220,7 +219,7 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     }
 
     @Override
-    public InvSlot getRoverSlot() {
+    public Inventory getRoverSlot() {
         return roverSlot;
     }
 
@@ -280,7 +279,7 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     }
 
     @Override
-    public InvSlotOutput getSlotOutput() {
+    public InventoryOutput getSlotOutput() {
         return outputSlot;
     }
 

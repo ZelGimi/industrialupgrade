@@ -8,7 +8,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -25,7 +25,7 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerSocket;
 import com.denfop.gui.GuiSocketFactory;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -43,11 +43,11 @@ import java.util.Set;
 public class TileEntitySocketFactory extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentUpgrade componentUpgrades;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
@@ -56,12 +56,12 @@ public class TileEntitySocketFactory extends TileElectricMachine implements
     public TileEntitySocketFactory() {
         super(400, 1, 1);
         Recipes.recipes.addInitRecipes(this);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 200
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "socket_factory", this);
+        this.inputSlotA = new InventoryRecipes(this, "socket_factory", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1));
         this.componentProcess.setHasAudio(false);
         this.componentProcess.setSlotOutput(outputSlot);

@@ -12,7 +12,7 @@ import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IGasReactor;
 import com.denfop.api.reactors.IReactorItem;
 import com.denfop.api.reactors.ITypeRector;
-import com.denfop.api.reactors.InvSlotReactorModules;
+import com.denfop.api.reactors.InventoryReactorModules;
 import com.denfop.api.reactors.LogicGasReactor;
 import com.denfop.api.reactors.LogicReactor;
 import com.denfop.api.sytem.EnergyType;
@@ -22,8 +22,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGasMainController;
 import com.denfop.gui.GuiGasController;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotScheduleReactor;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryScheduleReactor;
 import com.denfop.items.reactors.ItemComponentVent;
 import com.denfop.items.reactors.ItemsFan;
 import com.denfop.items.reactors.ItemsPumps;
@@ -65,9 +65,9 @@ import java.util.Map;
 public class TileEntityMainController extends TileMultiBlockBase implements IGasReactor, IUpdatableTileEvent {
 
     public final EnumGasReactors enumFluidReactors;
-    public final InvSlot reactorsElements;
-    public final InvSlotReactorModules<TileEntityMainController> reactorsModules;
-    public final InvSlotScheduleReactor scheduleReactor;
+    public final Inventory reactorsElements;
+    public final InventoryReactorModules<TileEntityMainController> reactorsModules;
+    public final InventoryScheduleReactor scheduleReactor;
     private final ComponentBaseEnergy rad;
     public Timer timer = new Timer(9999, 0, 0);
     public Timer red_timer = new Timer(0, 2, 30);
@@ -94,12 +94,12 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
     public TileEntityMainController(final MultiBlockStructure multiBlockStructure, EnumGasReactors enumFluidReactors) {
         super(multiBlockStructure);
         this.enumFluidReactors = enumFluidReactors;
-        this.reactorsModules = new InvSlotReactorModules<>(this);
-        this.reactorsElements = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,
+        this.reactorsModules = new InventoryReactorModules<>(this);
+        this.reactorsElements = new Inventory(this, Inventory.TypeItemSlot.INPUT,
                 enumFluidReactors.getHeight() * enumFluidReactors.getWidth()
         ) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (scheduleReactor.getAccepts().isEmpty()) {
                     if (stack.getItem() instanceof IReactorItem) {
                         IReactorItem iReactorItem = (IReactorItem) stack.getItem();
@@ -122,8 +122,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
                 reactor = null;
             }
         };
-        this.reactorsElements.setStackSizeLimit(1);
-        this.scheduleReactor = new InvSlotScheduleReactor(this, 2, enumFluidReactors.ordinal() + 1, enumFluidReactors.getWidth(),
+        this.reactorsElements.setInventoryStackLimit(1);
+        this.scheduleReactor = new InventoryScheduleReactor(this, 2, enumFluidReactors.ordinal() + 1, enumFluidReactors.getWidth(),
                 enumFluidReactors.getHeight()
         );
         this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation() * 100));

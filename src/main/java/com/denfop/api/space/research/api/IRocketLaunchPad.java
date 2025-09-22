@@ -1,9 +1,9 @@
 package com.denfop.api.space.research.api;
 
 
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.space.rovers.api.IRoversItem;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -15,7 +15,7 @@ public interface IRocketLaunchPad {
 
     void addDataRocket(ItemStack roversItem);
 
-    InvSlotOutput getSlotOutput();
+    InventoryOutput getSlotOutput();
 
     void addFluidStack(FluidStack fluidStack);
 
@@ -29,7 +29,7 @@ public interface IRocketLaunchPad {
 
     ItemStack getRoverStack();
 
-    InvSlot getRoverSlot();
+    Inventory getRoverSlot();
 
     UUID getPlayer();
 

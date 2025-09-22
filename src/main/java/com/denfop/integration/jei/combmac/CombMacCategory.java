@@ -6,8 +6,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
 import com.denfop.blocks.mechanism.BlockSimpleMachine;
 import com.denfop.componets.ComponentProcessRender;
@@ -65,7 +65,7 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacRec
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
+                if (slotInv.inventory instanceof InventoryMultiRecipes) {
                     this.progress_bar.setIndex(0);
                     this.progress_bar.setX(xX);
                     this.progress_bar.setY(yY + 19);
@@ -125,7 +125,7 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacRec
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryMultiRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
@@ -134,7 +134,7 @@ public class CombMacCategory extends GuiIU implements IRecipeCategory<CombMacRec
 
         }
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i, recipes.getOutput());
     }

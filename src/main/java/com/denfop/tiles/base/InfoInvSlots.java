@@ -1,14 +1,14 @@
 package com.denfop.tiles.base;
 
 
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 
 public class InfoInvSlots {
 
-    private final InvSlot slot;
+    private final Inventory slot;
     private final int index;
 
-    public InfoInvSlots(InvSlot slot, int index) {
+    public InfoInvSlots(Inventory slot, int index) {
         this.slot = slot;
         this.index = index;
     }
@@ -17,7 +17,7 @@ public class InfoInvSlots {
         return index;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

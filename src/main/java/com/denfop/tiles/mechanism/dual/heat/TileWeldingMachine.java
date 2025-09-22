@@ -15,7 +15,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiWelding;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileWeldingMachine extends TileDoubleElectricMachine implements IHasRecipe {
 
 
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
@@ -40,7 +40,7 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -52,7 +52,7 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

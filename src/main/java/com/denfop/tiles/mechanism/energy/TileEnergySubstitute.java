@@ -17,7 +17,7 @@ import com.denfop.componets.Energy;
 import com.denfop.container.ContainerSubstitute;
 import com.denfop.gui.GuiEnergySubstitute;
 import com.denfop.invslot.CableItem;
-import com.denfop.invslot.InvSlotSubstitute;
+import com.denfop.invslot.InventorySubstitute;
 import com.denfop.items.block.ItemBlockTileEntity;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -52,7 +52,7 @@ import java.util.Set;
 public class TileEnergySubstitute extends TileEntityInventory implements
         IUpdatableTileEvent, IEnergyController {
 
-    public final InvSlotSubstitute slot;
+    public final InventorySubstitute slot;
     public Set<IEnergyConductor> conductorList = new HashSet<>();
     public boolean work = false;
     public int size;
@@ -68,7 +68,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
 
 
     public TileEnergySubstitute() {
-        slot = new InvSlotSubstitute(this);
+        slot = new InventorySubstitute(this);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
@@ -154,7 +154,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
             validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
             fakePlayer = new FakePlayerSpawner(this.getWorld());
-            this.slot.onChanged();
+            this.slot.markDirty();
 
         }
 
@@ -321,7 +321,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
                             }
                         }
                         if (main_cableItem.getCount() == 0) {
-                            this.slot.onChanged();
+                            this.slot.markDirty();
                             if (main_cableItem == null) {
                                 break;
                             }
@@ -337,7 +337,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
             this.work = false;
             discover();
             this.main_cableItem = null;
-            this.slot.onChanged();
+            this.slot.markDirty();
         }
     }
 
@@ -349,7 +349,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
         if (i == 0) {
             discover();
             this.main_cableItem = null;
-            this.slot.onChanged();
+            this.slot.markDirty();
         } else if (i == 1) {
             this.work = true;
 

@@ -6,7 +6,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerRedstoneGenerator;
 import com.denfop.gui.GuiRedstoneGenerator;
-import com.denfop.invslot.InvSlotRedstoneGenerator;
+import com.denfop.invslot.InventoryRedstoneGenerator;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -29,7 +29,7 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
 
 
     public final double coef;
-    public final InvSlotRedstoneGenerator slot;
+    public final InventoryRedstoneGenerator slot;
 
 
     public int fuel = 0;
@@ -42,7 +42,7 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
 
 
         this.coef = coef;
-        this.slot = new InvSlotRedstoneGenerator(this);
+        this.slot = new InventoryRedstoneGenerator(this);
     }
 
     @SideOnly(Side.CLIENT)

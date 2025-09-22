@@ -2,10 +2,10 @@ package com.denfop.componets;
 
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -14,10 +14,10 @@ import java.util.List;
 public class ComponentFluidProcess extends AbstractComponent {
 
     private final FluidHandlerRecipe fluid_handler;
-    private final InvSlotFluidByList[] outputsSlot;
-    private final InvSlotFluidByList[] inputSlot;
-    private final InvSlotRecipes inputSlotA;
-    private final InvSlotOutput output1;
+    private final InventoryFluidByList[] outputsSlot;
+    private final InventoryFluidByList[] inputSlot;
+    private final InventoryRecipes inputSlotA;
+    private final InventoryOutput output1;
     private final boolean needConsumeFluid;
     private final IUpdateTick updateTick;
 
@@ -30,19 +30,19 @@ public class ComponentFluidProcess extends AbstractComponent {
         this.fluid_handler = new FluidHandlerRecipe(recipe, fluids);
         final List<FluidTank> inputTanks = fluid_handler.getInputTank();
         final List<FluidTank> outputTanks = fluid_handler.getOutputTank();
-        outputsSlot = new InvSlotFluidByList[outputTanks.size()];
-        inputSlot = new InvSlotFluidByList[inputTanks.size()];
+        outputsSlot = new InventoryFluidByList[outputTanks.size()];
+        inputSlot = new InventoryFluidByList[inputTanks.size()];
         for (int i = 0; i < inputTanks.size(); i++) {
             ((Fluids.InternalFluidTank) inputTanks.get(i)).setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(i)));
-            inputSlot[i] = new InvSlotFluidByList(parent, 1, this.fluid_handler.getFluids(i));
+            inputSlot[i] = new InventoryFluidByList(parent, 1, this.fluid_handler.getFluids(i));
         }
         for (int i = 0; i < outputTanks.size(); i++) {
             ((Fluids.InternalFluidTank) outputTanks.get(i)).setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(
                     i)));
-            outputsSlot[i] = new InvSlotFluidByList(parent, 1, this.fluid_handler.getOutputFluids(i));
+            outputsSlot[i] = new InventoryFluidByList(parent, 1, this.fluid_handler.getOutputFluids(i));
         }
         if (hasItem) {
-            this.inputSlotA = new InvSlotRecipes(parent, recipe, updateTick);
+            this.inputSlotA = new InventoryRecipes(parent, recipe, updateTick);
         } else {
             this.inputSlotA = null;
         }
@@ -55,7 +55,7 @@ public class ComponentFluidProcess extends AbstractComponent {
             size += outputTanks.size();
         }
         if (size > 0) {
-            this.output1 = new InvSlotOutput(parent, size);
+            this.output1 = new InventoryOutput(parent, size);
         } else {
             this.output1 = null;
         }
@@ -81,11 +81,11 @@ public class ComponentFluidProcess extends AbstractComponent {
         return this.inputSlotA.process();
     }
 
-    public InvSlotFluidByList[] getInputSlot() {
+    public InventoryFluidByList[] getInputSlot() {
         return inputSlot;
     }
 
-    public InvSlotFluidByList[] getOutputsSlot() {
+    public InventoryFluidByList[] getOutputsSlot() {
         return outputsSlot;
     }
 

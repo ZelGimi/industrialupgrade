@@ -13,7 +13,7 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerFluidCoolMachine;
 import com.denfop.gui.GuiFluidCoolMachine;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -40,7 +40,7 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
 
 
     public final Fluids.InternalFluidTank tank;
-    public final InvSlotFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot1;
     private final Fluids fluid;
     public CoolComponent cold;
     public int max;
@@ -55,7 +55,7 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
         this.tank = this.fluid.addTankInsert("insert", 5000, Fluids.fluidPredicate(FluidName.fluidazot.getInstance(),
                 FluidName.fluidhyd.getInstance(), FluidName.fluidHelium.getInstance()
         ));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, Arrays.asList(FluidName.fluidazot.getInstance(),
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, Arrays.asList(FluidName.fluidazot.getInstance(),
                 FluidName.fluidhyd.getInstance(), FluidName.fluidHelium.getInstance()
         ));
 

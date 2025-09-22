@@ -2,14 +2,8 @@ package com.denfop.tiles.smeltery;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -32,14 +26,14 @@ import java.util.Arrays;
 public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement implements IFurnace, IHasRecipe {
 
 
-    public final InvSlotRecipes smeltery;
+    public final InventoryRecipes smeltery;
     public final ComponentProgress progress;
     private MachineRecipe output;
     private boolean changeRecipe;
 
     public TileEntitySmelteryFurnace() {
-        this.smeltery = new InvSlotRecipes(this, "smeltery", this);
-        this.progress = this.addComponent(new ComponentProgress(this, 1, 180));
+        this.smeltery = new InventoryRecipes(this, "smeltery", this);
+        this.progress = this.addComponent(new ComponentProgress(this, 1, 108));
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -127,7 +121,7 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public InvSlotRecipes getInvSlot() {
+    public InventoryRecipes getInvSlot() {
         return smeltery;
     }
 

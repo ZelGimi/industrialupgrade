@@ -6,7 +6,7 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
@@ -115,7 +115,7 @@ public class FishMCategory extends GuiIU implements IRecipeCategory<FishMWrapper
         isg.init(i, true, slots1.get(i).getJeiX(), slots1.get(i).getJeiY());
         isg.set(i, new ItemStack(Items.FISHING_ROD));
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         isg.init(i + 1, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i + 1, recipes.getOutput());
 

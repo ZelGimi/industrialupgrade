@@ -7,7 +7,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -17,7 +17,7 @@ import com.denfop.blocks.mechanism.BlockSolderingMechanism;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerSolderingMechanism;
 import com.denfop.gui.GuiSolderingMechanism;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -56,8 +56,8 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
     public final ComponentProgress componentProgress;
     private final int MIN_DISTANCE = 5;
     private final int MAX_ATTEMPTS = 100;
-    public InvSlot solderingIronSlot;
-    public InvSlotRecipes inputSlotA;
+    public Inventory solderingIronSlot;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     public boolean start;
     public int[] data;
@@ -69,9 +69,9 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
     public TileEntityPrimalSolderingMechanism() {
         super(0, 0, 1);
         this.output = null;
-        solderingIronSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        solderingIronSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.solderingIron;
             }
         };
@@ -80,7 +80,7 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
         ));
 
 
-        this.inputSlotA = new InvSlotRecipes(this, "microchip", this);
+        this.inputSlotA = new InventoryRecipes(this, "microchip", this);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -630,7 +630,7 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
             this.componentProgress.setProgress(0, (short) 0);
             this.data = generateColorStrip();
             failed = 0;
-            this.outputSlot.add(this.output.getRecipe().getOutput().items);
+            this.outputSlot.addAll(this.output.getRecipe().getOutput().items);
             this.getOutput();
         }
     }

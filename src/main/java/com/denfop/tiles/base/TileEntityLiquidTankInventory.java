@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.Localization;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidTank;
@@ -16,7 +16,7 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
 
     public TileEntityLiquidTankInventory(int tanksize) {
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000, InvSlot.TypeItemSlot.INPUT);
+        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000, Inventory.TypeItemSlot.INPUT);
 
     }
 

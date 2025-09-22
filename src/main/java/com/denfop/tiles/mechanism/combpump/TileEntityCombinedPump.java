@@ -3,7 +3,7 @@ package com.denfop.tiles.mechanism.combpump;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -12,9 +12,9 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerCombPump;
 import com.denfop.gui.GuiCompPump;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -45,9 +45,9 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
     public final double defaultEnergyStorage;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
-    public final InvSlotFluid containerSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryFluid containerSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentBaseEnergy energyQe;
     public final EnumTypePump typePump;
     public double energyConsume;
@@ -62,21 +62,21 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
 
     public TileEntityCombinedPump(int size, int operationLength, EnumTypePump typePump) {
         super(0, 0, size);
-        this.containerSlot = new InvSlotFluid(
+        this.containerSlot = new InventoryFluid(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT
+                InventoryFluid.TypeFluidSlot.OUTPUT
         );
         this.typePump = typePump;
         this.energyQe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 100));
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.defaultEnergyConsume = this.energyConsume = (this.getStyle().ordinal() + 1);
         this.defaultOperationLength = this.operationLength = operationLength;
         this.defaultTier = 1;
         this.defaultEnergyStorage = this.operationLength;
-        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
 
     }
 

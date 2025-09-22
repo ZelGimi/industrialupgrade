@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerTunerRecipe;
 import com.denfop.gui.GuiRecipeTuner;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
@@ -20,13 +20,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityRecipeTuner extends TileEntityInventory implements IUpdatableTileEvent {
 
-    public final InvSlot slot;
-    public final InvSlot input_slot;
+    public final Inventory slot;
+    public final Inventory input_slot;
 
     public TileEntityRecipeTuner() {
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 
@@ -35,7 +35,7 @@ public class TileEntityRecipeTuner extends TileEntityInventory implements IUpdat
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9);
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 9);
     }
 
     @Override

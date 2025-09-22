@@ -12,7 +12,7 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamAmpereGenerator;
 import com.denfop.gui.GuiSteamAmpereGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -54,7 +54,7 @@ public class TileEntitySteamAmpereGenerator extends TileElectricMachine implemen
 
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank = this.fluids.addTank("fluidTank1", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));

@@ -3,10 +3,9 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -20,11 +19,8 @@ import com.denfop.componets.RedstoneHandler;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerCombinerMatter;
 import com.denfop.gui.GuiCombinerMatter;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotMatter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -51,11 +47,11 @@ import java.util.Set;
 public class TileCombinerMatter extends TileElectricLiquidTankInventory implements IUpgradableBlock,
         IUpdateTick, IMatter {
 
-    public final InvSlotMatter inputSlot;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes amplifierSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryMatter inputSlot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes amplifierSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     protected final Redstone redstone;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
@@ -68,15 +64,15 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
     public TileCombinerMatter() {
         super(0, 14, 12);
         this.energycost = 0;
-        this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.amplifierSlot = new InventoryRecipes(this, "matterAmplifier", this);
+        this.outputSlot = new InventoryOutput(this, 1);
 
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
-        this.containerslot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluiduu_matter.getInstance()
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
+        this.containerslot = new InventoryFluidByList(this, Inventory.TypeItemSlot.INPUT, 1,
+                InventoryFluid.TypeFluidSlot.OUTPUT, FluidName.fluiduu_matter.getInstance()
         );
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.inputSlot = new InvSlotMatter(this);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.inputSlot = new InventoryMatter(this);
         this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
 
         this.redstone = this.addComponent(new Redstone(this));
@@ -88,7 +84,7 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
                                 }
         );
 
-        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }

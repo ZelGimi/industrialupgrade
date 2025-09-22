@@ -5,8 +5,8 @@ import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -19,9 +19,9 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryDischarge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -43,10 +43,10 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
         IAudioFixer, IUpgradableBlock, IUpdateTick, IUpdatableTileEvent {
 
     public final Energy energy;
-    public final InvSlotDischarge dischargeSlot;
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryDischarge dischargeSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryOutput outputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final HeatComponent heat;
     protected final EnumDoubleElectricMachine type;
     private final ComponentUpgrade componentUpgrades;
@@ -83,13 +83,13 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
             int aDefaultTier,
             EnumDoubleElectricMachine type, boolean register
     ) {
-        this.outputSlot = new InvSlotOutput(this, outputSlots);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
+        this.outputSlot = new InventoryOutput(this, outputSlots);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.dischargeSlot = new InventoryDischarge(this, Inventory.TypeItemSlot.INPUT, aDefaultTier, false);
         this.energy = this.addComponent(Energy
                 .asBasicSink(this, (double) energyPerTick * length, aDefaultTier)
                 .addManagedSlot(this.dischargeSlot));
-        this.inputSlotA = new InvSlotRecipes(this, type.recipe_name, this);
+        this.inputSlotA = new InventoryRecipes(this, type.recipe_name, this);
         this.type = type;
         this.output = null;
         if (type.heat) {

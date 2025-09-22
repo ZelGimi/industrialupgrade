@@ -631,17 +631,18 @@ public class GuideBookCore {
                 "advancedElectricTab");
         Quest.Builder.create().name("imp_alloy_smelter").itemStack(getBlockStack(BlockBaseMachine3.imp_alloy_smelter)).localizationItem().noDescription().tab(advancedElectricTab)
                .position(0, 0).build();
-        Quest.Builder.create().name("relocator").itemStack(new ItemStack(IUItem.relocator)).localizationItem().noDescription().tab(advancedElectricTab)
-                .prev("imp_alloy_smelter") .position(40, -80).build();
+
         Quest.Builder.create().name("graviTool").itemStack(new ItemStack(IUItem.GraviTool)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("imp_alloy_smelter") .position(40, -40).build();
+        Quest.Builder.create().name("relocator").itemStack(new ItemStack(IUItem.relocator)).localizationItem().noDescription().tab(advancedElectricTab)
+                .prev("graviTool") .position(40, -80).build();
         Quest.Builder.create().name("cooling").itemStack(getBlockStack(BlockBaseMachine3.cooling)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("imp_alloy_smelter") .position(40, 0).build();
         Quest.Builder.create().name("antiairpollution1").itemStack(new ItemStack(IUItem.antiairpollution1)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("cooling") .position(0, 40).build();
         Quest.Builder.create().name("antisoilpollution1").itemStack(new ItemStack(IUItem.antisoilpollution1)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("cooling") .position(80, 40).build();
-        Quest.Builder.create().name("substitute").itemStack(getBlockStack(BlockBaseMachine3.cooling)).localizationItem().noDescription().tab(advancedElectricTab)
+        Quest.Builder.create().name("substitute").itemStack(getBlockStack(BlockBaseMachine3.substitute)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("cooling") .position(80, 0).build();
         Quest.Builder.create().name("energy_remover").itemStack(getBlockStack(BlockBaseMachine3.energy_remover)).localizationItem().noDescription().tab(advancedElectricTab)
                 .prev("substitute") .position(80, -40).build();

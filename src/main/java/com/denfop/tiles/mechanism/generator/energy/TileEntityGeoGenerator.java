@@ -2,15 +2,15 @@ package com.denfop.tiles.mechanism.generator.energy;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGeoGenerator;
 import com.denfop.gui.GuiGeoGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotTank;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryTank;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,8 +27,8 @@ import java.util.List;
 
 public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements IType {
 
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput outputSlot;
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput outputSlot;
 
     public final FluidTank fluidTank;
     public final Fluids fluids = this.addComponent(new Fluids(this));
@@ -39,14 +39,14 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
         super(20.0D * coef, tier, (int) (2400 * coef));
         this.fluidTank = this.fluids.addTankInsert("fluid", size * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA));
         this.production = Math.round(20.0F * coef * 1);
-        this.fluidSlot = new InvSlotTank(
+        this.fluidSlot = new InventoryTank(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.INPUT,
+                InventoryFluid.TypeFluidSlot.INPUT,
                 this.fluidTank
         );
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         this.coef = coef;
     }
 

@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -13,8 +13,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoOpenBox;
 import com.denfop.gui.GuiAutoOpenBox;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,18 +30,18 @@ import java.util.Set;
 
 public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgradableBlock {
 
-    public final InvSlot slot;
-    public final InvSlot slot1;
+    public final Inventory slot;
+    public final Inventory slot1;
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public int timer = 20;
     private boolean doublescrap;
 
     public TileEntityAutoOpenBox() {
-        this.slot = new InvSlotOutput(this, 15);
-        this.slot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new InventoryOutput(this, 15);
+        this.slot1 = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.isItemEqual(IUItem.scrapBox) || stack.getItem() == (IUItem.doublescrapBox);
             }
 
@@ -56,7 +56,7 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 100, 1));
-        this.upgradeSlot = new InvSlotUpgrade(this, 2);
+        this.upgradeSlot = new InventoryUpgrade(this, 2);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
 

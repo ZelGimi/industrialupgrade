@@ -9,14 +9,14 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalLaserPolisher;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -44,8 +44,8 @@ import java.util.UUID;
 
 public class TileEntityPrimalLaserPolisher extends TileEntityInventory implements IUpdateTick, IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotOutput outputSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryOutput outputSlot;
     public int progress;
     public MachineRecipe output;
     public int tick = 0;
@@ -53,9 +53,9 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
 
     public TileEntityPrimalLaserPolisher() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "primal_laser_polisher", this);
+        this.inputSlotA = new InventoryRecipes(this, "primal_laser_polisher", this);
         this.progress = 0;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -110,14 +110,14 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -134,8 +134,8 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -199,7 +199,7 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
             return true;
         } else {
             if (!stack.isEmpty()) {
-                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 0)) {
+                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.isItemValidForSlot(0, stack)) {
                     ItemStack stack1 = stack.copy();
                     stack1.setCount(1);
                     this.inputSlotA.put(0, stack1);

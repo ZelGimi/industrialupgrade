@@ -17,7 +17,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerSteamDryer;
 import com.denfop.gui.GuiSteamDryer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -67,7 +67,7 @@ public class TileEntitySteamDryer extends TileElectricMachine implements IHasRec
         this.defaultEnergyStorage = 100;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
-        this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank = fluids.addTank("fluidTank2", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 2));
@@ -224,7 +224,7 @@ public class TileEntitySteamDryer extends TileElectricMachine implements IHasRec
 
     public void operateOnce() {
         this.fluid_handler.consume();
-        this.outputSlot.add(this.fluid_handler.output().getOutput().items);
+        this.outputSlot.addAll(this.fluid_handler.output().getOutput().items);
     }
 
 

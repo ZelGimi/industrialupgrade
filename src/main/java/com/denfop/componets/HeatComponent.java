@@ -10,7 +10,7 @@ import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
@@ -47,7 +47,7 @@ public class HeatComponent extends AbstractComponent {
     public int sourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots;
+    public List<Inventory> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
     public HeatComponent.EnergyNetDelegate delegate;

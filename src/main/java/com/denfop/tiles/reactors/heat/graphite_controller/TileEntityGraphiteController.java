@@ -3,7 +3,7 @@ package com.denfop.tiles.reactors.heat.graphite_controller;
 import com.denfop.api.reactors.IHeatReactor;
 import com.denfop.container.ContainerHeatGraphiteController;
 import com.denfop.gui.GuiHeatGraphiteGraphiteController;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
 
-    public final InvSlot slot;
+    public final Inventory slot;
     private final int level;
     public double fuel;
     public int levelGraphite = 1;
@@ -27,9 +27,9 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
     public TileEntityGraphiteController(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
@@ -62,7 +62,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
         return fuel;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

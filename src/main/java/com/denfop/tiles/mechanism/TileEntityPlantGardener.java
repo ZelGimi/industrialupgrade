@@ -15,8 +15,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPlantGardener;
 import com.denfop.gui.GuiPlantGardener;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,8 +39,8 @@ public class TileEntityPlantGardener extends TileEntityInventory implements IUpg
 
     private static final int RADIUS = 8;
     public final Energy energy;
-    public final InvSlot output;
-    public final InvSlotUpgrade upgradeSlot;
+    public final Inventory output;
+    public final InventoryUpgrade upgradeSlot;
     private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
@@ -50,14 +50,14 @@ public class TileEntityPlantGardener extends TileEntityInventory implements IUpg
     List<Chunk> chunks;
 
     public TileEntityPlantGardener() {
-        this.output = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
+        this.output = new Inventory(this, Inventory.TypeItemSlot.INPUT, 9) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ICropItem;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));

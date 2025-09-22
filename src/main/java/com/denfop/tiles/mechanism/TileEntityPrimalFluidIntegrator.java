@@ -11,7 +11,7 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -22,7 +22,7 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockPrimalFluidIntegrator;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerFluidIntegrator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -58,7 +58,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
     public final Fluids.InternalFluidTank fluidTank2;
     public final FluidHandlerRecipe fluid_handler;
@@ -85,18 +85,18 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         this.defaultOperationLength = this.operationLength = 200;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 1000);
-        this.fluidTank2 = fluids.addTank("fluidTank2", 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.inputSlotA = new InvSlotRecipes(this, "primal_fluid_integrator", this, this.fluidTank1) {
+        this.fluidTank2 = fluids.addTank("fluidTank2", 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.inputSlotA = new InventoryRecipes(this, "primal_fluid_integrator", this, this.fluidTank1) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 if (index == 4) {
-                    return super.accepts(itemStack, 0);
+                    return super.isItemValidForSlot(0, itemStack);
                 }
                 return false;
             }
         };
 
-        inputSlotA.setStackSizeLimit(1);
+        inputSlotA.setInventoryStackLimit(1);
         this.fluid_handler = new FluidHandlerRecipe("primal_fluid_integrator", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
@@ -164,12 +164,12 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
                 this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
             }
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -218,14 +218,14 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         }
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -257,7 +257,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         } else {
             ItemStack stack = player.getHeldItem(hand);
             if (!stack.isEmpty()) {
-                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
+                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.isItemValidForSlot(4, stack)) {
                     ItemStack stack1 = stack.copy();
                     stack1.setCount(1);
                     this.inputSlotA.put(0, stack1);
@@ -521,7 +521,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
 
     public void operateOnce() {
         this.inputSlotA.consume();
-        this.outputSlot.add(this.output.getRecipe().getOutput().items);
+        this.outputSlot.addAll(this.output.getRecipe().getOutput().items);
         this.fluid_handler.fillFluid();
         new PacketUpdateFieldTile(this, "slot3", false);
         new PacketUpdateFieldTile(this, "slot1", this.outputSlot);

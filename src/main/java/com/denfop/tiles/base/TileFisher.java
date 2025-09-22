@@ -16,7 +16,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerFisher;
 import com.denfop.gui.GuiFisher;
-import com.denfop.invslot.InvSlotFisher;
+import com.denfop.invslot.InventoryFisher;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -66,7 +66,7 @@ public class TileFisher extends TileElectricMachine
     }
 
     public final int energyconsume;
-    public final InvSlotFisher inputslot;
+    public final InventoryFisher inputslot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public int progress;
@@ -85,7 +85,7 @@ public class TileFisher extends TileElectricMachine
         this.progress = 0;
         this.energyconsume = 100;
         this.checkwater = false;
-        this.inputslot = new InvSlotFisher(this);
+        this.inputslot = new InventoryFisher(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }

@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerItemManipulator;
 import com.denfop.gui.GuiItemManipulator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.network.IUpdatableTileEvent;
@@ -23,19 +23,19 @@ public class TileEntityItemManipulator extends TileElectricMachine
         implements IUpdatableTileEvent {
 
 
-    public final InvSlot inputslot;
-    public final InvSlot inputslot1;
-    public final InvSlot inputslot2;
-    public final InvSlot outputSlot1;
+    public final Inventory inputslot;
+    public final Inventory inputslot1;
+    public final Inventory inputslot2;
+    public final Inventory outputSlot1;
     int type = 0;
 
     public TileEntityItemManipulator() {
         super(0, 0, 0);
 
 
-        this.inputslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.inputslot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemEnergyBags;
             }
 
@@ -49,21 +49,21 @@ public class TileEntityItemManipulator extends TileElectricMachine
                 }
             }
         };
-        this.inputslot2 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 27) {
+        this.inputslot2 = new Inventory(this, Inventory.TypeItemSlot.INPUT, 27) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return !(stack.getItem() instanceof ItemEnergyBags);
             }
         };
-        this.outputSlot1 = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 27) {
+        this.outputSlot1 = new Inventory(this, Inventory.TypeItemSlot.OUTPUT, 27) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return false;
             }
         };
-        this.inputslot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.inputslot1 = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemEnergyBags;
             }
 

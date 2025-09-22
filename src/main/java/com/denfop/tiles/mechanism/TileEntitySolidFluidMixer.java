@@ -4,17 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -27,10 +18,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerSolidFluidMixer;
 import com.denfop.gui.GuiSolidFluidMixer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.InventoryFluid;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -58,15 +48,15 @@ import java.util.Set;
 public class TileEntitySolidFluidMixer extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
     public final Fluids.InternalFluidTank fluidTank2;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
-    public final InvSlotOutput output1;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
+    public final InventoryOutput output1;
     public final Fluids.InternalFluidTank fluidTank3;
-    public final InvSlotFluidByList fluidSlot3;
+    public final InventoryFluidByList fluidSlot3;
     public final FluidHandlerRecipe fluid_handler;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
@@ -92,22 +82,22 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
         this.defaultEnergyStorage = 100;
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
-        this.output1 = new InvSlotOutput(this, 3);
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.inputSlotA = new InvSlotRecipes(this, "solid_fluid_mixer", this, this.fluidTank1);
+        this.output1 = new InventoryOutput(this, 3);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.inputSlotA = new InventoryRecipes(this, "solid_fluid_mixer", this, this.fluidTank1);
 
 
         this.fluid_handler = new FluidHandlerRecipe("solid_fluid_mixer", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
         this.fluidTank3.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(1)));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getFluids(0));
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot3 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
-        this.fluidSlot2.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.fluidSlot3.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getFluids(0));
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot3 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
+        this.fluidSlot2.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.fluidSlot3.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
     }
 

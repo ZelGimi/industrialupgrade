@@ -20,7 +20,7 @@ import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.gui.GuiAdvAlloySmelter;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
@@ -42,7 +42,7 @@ import java.io.IOException;
 public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IHasRecipe, IType {
 
     public final HeatComponent heat;
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
@@ -51,7 +51,7 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
         this.heat = this.addComponent(HeatComponent
                 .asBasicSink(this, 5000));
         Recipes.recipes.addInitRecipes(this);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -63,7 +63,7 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

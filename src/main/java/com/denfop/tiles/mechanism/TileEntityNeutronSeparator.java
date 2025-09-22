@@ -8,7 +8,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
@@ -20,7 +20,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerNeutronSeparator;
 import com.denfop.gui.GuiNeutronSeparator;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -43,8 +43,8 @@ import java.util.Set;
 public class TileEntityNeutronSeparator extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
     public final ComponentBaseEnergy qe;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
@@ -66,8 +66,8 @@ public class TileEntityNeutronSeparator extends TileElectricMachine implements
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
-        this.inputSlotA = new InvSlotRecipes(this, "neutron_separator", this);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.inputSlotA = new InventoryRecipes(this, "neutron_separator", this);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
     }
 
@@ -242,7 +242,7 @@ public class TileEntityNeutronSeparator extends TileElectricMachine implements
 
     public void operateOnce() {
         this.inputSlotA.consume();
-        this.outputSlot.add(this.output.getRecipe().getOutput().items);
+        this.outputSlot.addAll(this.output.getRecipe().getOutput().items);
     }
 
     @Override

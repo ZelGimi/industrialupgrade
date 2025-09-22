@@ -14,7 +14,7 @@ import com.denfop.componets.PressureComponent;
 import com.denfop.componets.SteamProcessMultiComponent;
 import com.denfop.container.ContainerSteamMultiMachine;
 import com.denfop.gui.GuiSteamMultiMachine;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -70,7 +70,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 1000));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 1));
         fluid = this.addComponent(new Fluids(this));
-        this.fluidTank = fluid.addTank("tank", OperationsPerTick * energyconsume, InvSlot.TypeItemSlot.NONE);
+        this.fluidTank = fluid.addTank("tank", OperationsPerTick * energyconsume, Inventory.TypeItemSlot.NONE);
         steam.setFluidTank(fluidTank);
         this.type = type;
         this.sound = true;

@@ -6,7 +6,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSteamBoiler;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,11 +32,11 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.isFull()) {
-            if (this.exchanger.isWork() && this.heater.isWork() && this.waterTank.getTank().getFluidAmount() > 0 && this.steamTank
+            if (this.exchanger.isWork() && this.heater.isWork() && this.waterTank.getTank().getFluidAmount() >= 4 && this.steamTank
                     .getTank()
-                    .getFluidAmount() + 2 < this.steamTank.getTank().getCapacity()) {
-                this.steamTank.getSteam().addEnergy(2);
-                this.waterTank.getTank().drain(1, true);
+                    .getFluidAmount() + 8 <= this.steamTank.getTank().getCapacity()) {
+                this.steamTank.getSteam().addEnergy(8);
+                this.waterTank.getTank().drain(4, true);
                 this.setActive(true);
             } else {
                 this.setActive(false);
@@ -66,12 +66,12 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
             if (steamTank != null) {
                 this.steamTank.setMainMultiElement(null);
                 this.steamTank.getTank().setAcceptedFluids(Fluids.fluidPredicate());
-                this.steamTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
+                this.steamTank.getTank().setTypeItemSlot(Inventory.TypeItemSlot.NONE);
                 this.steamTank = null;
             }
             if (waterTank != null) {
                 this.waterTank.getTank().setAcceptedFluids(Fluids.fluidPredicate());
-                this.waterTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
+                this.waterTank.getTank().setTypeItemSlot(Inventory.TypeItemSlot.NONE);
                 this.waterTank = null;
             }
             this.exchanger = null;
@@ -104,7 +104,7 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
                         ITank.class
                 );
         this.waterTank = (ITank) this.getWorld().getTileEntity(pos1.get(0));
-        this.waterTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
+        this.waterTank.getTank().setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
         this.waterTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(FluidRegistry.WATER));
         if (this.waterTank.getTank().getFluidAmount() > 0 && this.waterTank
                 .getTank()
@@ -119,7 +119,7 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
                 .getFluid() != FluidName.fluidsteam.getInstance()) {
             this.steamTank.getTank().drain(this.steamTank.getTank().getFluidAmount(), true);
         }
-        this.steamTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        this.steamTank.getTank().setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
         this.steamTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance()));
         this.waterTank.setUnloaded();
         this.steamTank.setSteam();

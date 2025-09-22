@@ -16,7 +16,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerFieldCleaner;
 import com.denfop.gui.GuiFieldCleaner;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
 import com.denfop.utils.ModUtils;
@@ -44,7 +44,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
     private static final int RADIUS = 8;
     public final Energy energy;
     public final Fluids.InternalFluidTank tank;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final Fluids fluids;
     private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
@@ -58,7 +58,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTankInsert("tank", 10000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance()));
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));

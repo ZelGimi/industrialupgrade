@@ -3,11 +3,12 @@ package com.denfop.world.vein;
 import com.denfop.IUItem;
 import com.denfop.api.pollution.Vec2f;
 import com.denfop.world.WorldBaseGen;
+import com.denfop.world.vein.noise.ShellCluster;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -16,9 +17,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeHills;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.IChunkGenerator;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,15 +32,17 @@ public class AlgorithmVein {
     static Random random = new Random();
     private static Map<ChunkPos, Chunk> chunkPosChunkMap = new HashMap<>();
     private static HashSet<Vec2f> poses = new HashSet<>();
+    public static List<ShellCluster> shellClusterList = new ArrayList<>();
+    public static ShellCluster volcano;
+    public static Map<Integer, Map<Integer, Tuple<Color, Integer>>> shellClusterChuncks = new HashMap<>();
+    public static Map<Integer, Map<Integer, List<Integer>>> veinCoordination = new HashMap<>();
 
     public static void generate(World world, VeinType veinType, BlockPos pos, Chunk chunk, int meta1,
                                 final IChunkProvider chunkProvider,
                                 final IChunkGenerator chunkGenerator
     ) {
 
-        if (random.nextInt(3) > 0) {
-            return;
-        }
+
         Biome biome = chunk.getBiome(pos, world.provider.getBiomeProvider());
         final int value = random.nextInt(101 + ((biome instanceof BiomeHills) ? 20 : 0));
         if (value <= 55) {
@@ -622,7 +625,7 @@ public class AlgorithmVein {
         final boolean can =
                 block == Blocks.GRASS || block == Blocks.GRAVEL || block == Blocks.DIRT || block == Blocks.SAND || block == Blocks.COBBLESTONE || block == Blocks.STONE;
         if (can) {
-            if (state.getMaterial() == Material.AIR || state.getBlock() == Blocks.TALLGRASS || state.getBlock() == Blocks.DOUBLE_PLANT || state.getBlock() == Blocks.RED_FLOWER) {
+            if (state.getMaterial() == Material.AIR|| block == Blocks.SNOW_LAYER || state.getBlock() == Blocks.TALLGRASS || state.getBlock() == Blocks.DOUBLE_PLANT || state.getBlock() == Blocks.RED_FLOWER) {
                 return true;
             }
             return state.getMaterial().isLiquid() && upState.getMaterial().isLiquid();

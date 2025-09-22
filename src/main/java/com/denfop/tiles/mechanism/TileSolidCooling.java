@@ -11,7 +11,7 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerSolidCoolMachine;
 import com.denfop.gui.GuiSolidCoolMachine;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -40,7 +40,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
 
     public static boolean init = false;
     static Map<ItemStack, Integer> timerItem = new HashMap<>();
-    public final InvSlot slot;
+    public final Inventory slot;
     public int time;
     public CoolComponent cold;
     public int max;
@@ -52,9 +52,9 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
         this.time = 0;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 boolean find = false;
                 for (Map.Entry<ItemStack, Integer> entry : timerItem.entrySet()) {
                     if (entry.getKey().isItemEqual(stack)) {

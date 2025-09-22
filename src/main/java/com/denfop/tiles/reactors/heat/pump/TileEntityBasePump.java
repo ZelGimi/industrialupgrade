@@ -2,7 +2,7 @@ package com.denfop.tiles.reactors.heat.pump;
 
 import com.denfop.container.ContainerHeatPump;
 import com.denfop.gui.GuiHeatPump;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.IPump;
@@ -15,20 +15,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityBasePump extends TileEntityMultiBlockElement implements IPump {
 
     private final int level;
-    private final InvSlot slot;
+    private final Inventory slot;
     private int power;
     private int energy;
 
     public TileEntityBasePump(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
@@ -146,7 +146,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
         this.power = power;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

@@ -13,7 +13,7 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamPeatGenerator;
 import com.denfop.gui.GuiSteamPeatGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -39,7 +39,7 @@ import java.util.List;
 public class TileSteamPeatGenerator extends TileElectricMachine implements IType {
 
 
-    public final InvSlot slot;
+    public final Inventory slot;
     public final Fluids.InternalFluidTank fluidTank1;
     public final ComponentSteamEnergy steam;
     public FluidTank fluidTank;
@@ -50,17 +50,17 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
 
     public TileSteamPeatGenerator() {
         super(0, 1, 0);
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.cultivated_peat_balls;
             }
         };
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 4000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
+        this.fluidTank = this.fluids.addTank("fluidTank", 4000, Inventory.TypeItemSlot.INPUT, Fluids.fluidPredicate(
                 FluidRegistry.WATER
         ));
-        this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
@@ -148,9 +148,9 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
         }
 
         if (fuel > 0 &&
-                this.fluidTank.getFluid() != null && this.fluidTank.getFluid().amount >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
-            this.steam.addEnergy(2);
-            this.fluidTank.drain(1, true);
+                this.fluidTank.getFluid() != null && this.fluidTank.getFluid().amount >= 4 && this.steam.getEnergy() + 4 <= this.steam.getCapacity()) {
+            this.steam.addEnergy(4);
+            this.fluidTank.drain(4, true);
             this.setActive(true);
             fuel = Math.max(0, this.fuel - 1);
         } else {

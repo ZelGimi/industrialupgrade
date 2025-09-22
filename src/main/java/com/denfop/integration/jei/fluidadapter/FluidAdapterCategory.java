@@ -97,7 +97,7 @@ public class FluidAdapterCategory extends GuiIU implements IRecipeCategory<Fluid
         }
         this.slots.drawBackground(-20, 0);
         progress_bar.renderBar(20, 10, xScale);
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
             element.drawBackground(this.guiLeft, this.guiTop);
         }
 

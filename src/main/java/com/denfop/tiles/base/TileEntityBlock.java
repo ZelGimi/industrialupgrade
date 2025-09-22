@@ -13,7 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.events.TickHandlerIU;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketRemoveUpdateTile;
@@ -207,7 +207,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public NBTTagCompound getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
         try {
-            InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
+            Inventory slot = (Inventory) DecoderHandler.decode(customPacketBuffer);
             return slot.writeToNbt(new NBTTagCompound());
         } catch (IOException e) {
             throw new RuntimeException(e);

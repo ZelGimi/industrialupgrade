@@ -6,13 +6,13 @@ import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
-import com.denfop.invslot.InvSlotGenSunarrium;
+import com.denfop.invslot.InventoryGenSunarrium;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -34,8 +34,8 @@ import java.util.List;
 public class TileSolarGeneratorEnergy extends TileEntityInventory implements
         IUpdatableTileEvent, IType {
 
-    public final InvSlotGenSunarrium input;
-    public final InvSlotOutput outputSlot;
+    public final InventoryGenSunarrium input;
+    public final InventoryOutput outputSlot;
     public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
     public final double maxSunEnergy;
     public final double cof;
@@ -55,8 +55,8 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
 
         this.maxSunEnergy = 6500;
         this.cof = cof;
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.input = new InvSlotGenSunarrium(this);
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.input = new InventoryGenSunarrium(this);
         this.lst = new ArrayList<>();
         this.lst.add(0D);
         this.lst.add(0D);

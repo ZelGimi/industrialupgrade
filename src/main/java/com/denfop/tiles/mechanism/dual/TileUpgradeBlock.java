@@ -104,7 +104,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         double newCharge = ElectricItem.manager.getCharge(stack1);
                         final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
                         this.invSlotRecipes.consume();
-                        this.outputSlot.add(processResult);
+                        this.outputSlot.addAll(processResult);
                         ItemStack stack = this.outputSlot.get();
                         stack.setTagCompound(nbt1);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -125,7 +125,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         double newCharge = ElectricItem.manager.getCharge(stack1);
                         final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
                         this.invSlotRecipes.consume();
-                        this.outputSlot.add(processResult);
+                        this.outputSlot.addAll(processResult);
                         ItemStack stack = this.outputSlot.get();
                         stack.setTagCompound(nbt1);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -166,7 +166,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
 
                         this.invSlotRecipes.consume();
-                        this.outputSlot.add(processResult);
+                        this.outputSlot.addAll(processResult);
                         ItemStack stack = this.outputSlot.get();
                         stack.setTagCompound(nbt1);
                         UpgradeSystem.system.addModificate(

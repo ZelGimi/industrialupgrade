@@ -7,7 +7,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerRocketLaunchPad;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -22,7 +24,65 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
         super(guiContainer);
         ySize = 220;
         this.componentList.clear();
-        this.addElement(new TankGauge(this, 106, 15, 12, 35, guiContainer.base.tank, TankGauge.TankGuiStyle.Plain));
+        this.addElement(new TankGauge(this, 106, 15, 12, 35, guiContainer.base.tank){
+            public void drawBackground(int mouseX, int mouseY) {
+                bindCommonTexture();
+                FluidStack fs = this.tank.getFluid();
+                if (fs != null && fs.amount > 0) {
+                    this.gui.drawTexturedRect(
+                            this.x,
+                            this.y,
+                            this.width,
+                            this.height,
+                            6.0D,
+                            100.0D
+                    );
+
+                    int fluidX = this.x;
+                    int fluidY = this.y;
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 35;
+
+                    Fluid fluid = fs.getFluid();
+                    TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(FluidName
+                            .isFluid(fluid)
+                            .getStill(fs)
+                            .toString()) : null;
+                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    double renderHeight = (double) fluidHeight * ModUtils.limit(
+                            (double) fs.amount / (double) this.tank.getCapacity(),
+                            0.0D,
+                            1.0D
+                    );
+                    bindBlockTexture();
+                    this.gui.drawSprite(
+                            fluidX,
+                            (double) (fluidY + fluidHeight) - renderHeight,
+                            fluidWidth,
+                            renderHeight,
+                            sprite,
+                            color,
+                            1.0D,
+                            false,
+                            true
+                    );
+                } else  {
+                    this.gui.drawTexturedRect(
+                            this.x,
+                            this.y,
+                            this.width,
+                            this.height,
+                            70.0D,
+                            100.0D
+                    );
+                }
+
+            }
+        });
 
         this.componentList.add(new GuiComponent(this, 56, 12, EnumTypeComponent.ENERGY_HEIGHT_1,
                 new Component<>(guiContainer.base.energy)

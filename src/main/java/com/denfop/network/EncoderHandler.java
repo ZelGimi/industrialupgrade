@@ -8,7 +8,7 @@ import com.denfop.api.space.fakebody.FakePlanet;
 import com.denfop.api.tesseract.Channel;
 import com.denfop.api.vein.Vein;
 import com.denfop.componets.AbstractComponent;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
 import com.denfop.network.packet.INetworkObject;
@@ -274,7 +274,7 @@ public class EncoderHandler {
                 os.writeInt((Integer) o);
                 break;
             case InvSlot:
-                InvSlot slot = (InvSlot) o;
+                Inventory slot = (Inventory) o;
                 ItemStack[] contents = new ItemStack[slot.size()];
 
                 for (i = 0; i < slot.size(); ++i) {

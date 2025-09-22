@@ -6,7 +6,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -16,8 +16,8 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockConverterMatter;
 import com.denfop.container.ContainerConverterSolidMatter;
 import com.denfop.gui.GuiConverterSolidMatter;
-import com.denfop.invslot.InvSlotConverterSolidMatter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryConverterSolidMatter;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -46,9 +46,9 @@ import java.util.Set;
 public class TileConverterSolidMatter extends TileElectricMachine
         implements IUpgradableBlock, IUpdateTick, IHasRecipe {
 
-    public final InvSlotConverterSolidMatter MatterSlot;
-    public final InvSlotRecipes inputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryConverterSolidMatter MatterSlot;
+    public final InventoryRecipes inputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final int defaultOperationLength;
     public final int defaultEnergyConsume;
     public double[] quantitysolid = new double[8];
@@ -64,9 +64,9 @@ public class TileConverterSolidMatter extends TileElectricMachine
 
     public TileConverterSolidMatter() {
         super(50000, 14, 1);
-        this.MatterSlot = new InvSlotConverterSolidMatter(this);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 3);
-        this.inputSlot = new InvSlotRecipes(this, "converter", this);
+        this.MatterSlot = new InventoryConverterSolidMatter(this);
+        this.upgradeSlot = new InventoryUpgrade(this, 3);
+        this.inputSlot = new InventoryRecipes(this, "converter", this);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultEnergyStorage = 50000;
@@ -392,7 +392,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
     public void operateOnce(List<ItemStack> processResult) {
 
         useMatter();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
         this.getrequiredmatter(this.output.getRecipe().getOutput());
 
 

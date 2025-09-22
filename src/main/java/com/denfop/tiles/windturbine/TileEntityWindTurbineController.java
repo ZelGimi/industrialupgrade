@@ -11,7 +11,7 @@ import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.EnumWindSide;
 import com.denfop.api.windsystem.IWindMechanism;
 import com.denfop.api.windsystem.IWindRotor;
-import com.denfop.api.windsystem.InvSlotWindTurbineRotor;
+import com.denfop.api.windsystem.InventoryWindTurbineRotor;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
@@ -24,8 +24,8 @@ import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerWindTurbine;
 import com.denfop.gui.GuiWindTurbine;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotTurbineRotorBlades;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryTurbineRotorBlades;
 import com.denfop.items.ItemWindRod;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
@@ -68,10 +68,10 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         IUpdatableTileEvent {
 
 
-    public final InvSlotTurbineRotorBlades slot_blades;
+    public final InventoryTurbineRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
     public ISocket energy;
-    public InvSlotWindTurbineRotor slot;
+    public InventoryWindTurbineRotor slot;
     public double generation = 0;
     public boolean need_repair;
     public int mind_wind;
@@ -99,8 +99,8 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     public TileEntityWindTurbineController() {
         super(InitMultiBlockSystem.WindTurbineMultiBlock);
         this.levelGenerators = EnumLevelGenerators.FOUR;
-        this.slot = new InvSlotWindTurbineRotor(this);
-        this.slot_blades = new InvSlotTurbineRotorBlades(this);
+        this.slot = new InventoryWindTurbineRotor(this);
+        this.slot_blades = new InventoryTurbineRotorBlades(this);
 
         this.addition_power = 0;
         this.addition_efficient = 0;
@@ -125,7 +125,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -615,7 +615,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];

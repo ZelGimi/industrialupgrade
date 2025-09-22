@@ -8,8 +8,8 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
@@ -27,7 +27,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRadioactiveOreHandler;
 import com.denfop.gui.GuiRadioactiveOreHandler;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -48,20 +48,20 @@ import java.util.Set;
 public class TileEntityRadioactiveOreHandler extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentBaseEnergy componentRadiation;
-    public final InvSlotOutput outputSlot1;
+    public final InventoryOutput outputSlot1;
     public MachineRecipe output;
 
     public TileEntityRadioactiveOreHandler() {
         super(200, 1, 1);
         Recipes.recipes.addInitRecipes(this);
-        this.outputSlot1 = new InvSlotOutput(this, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot1 = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
             public void onLoaded() {
@@ -77,7 +77,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
                 (short) 100
         ));
 
-        this.inputSlotA = new InvSlotRecipes(this, "radioactive_handler", this);
+        this.inputSlotA = new InventoryRecipes(this, "radioactive_handler", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1) {
             @Override
             public boolean checkRecipe() {
@@ -133,7 +133,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
                 size = Math.min(size, this.operationsPerTick);
                 size = Math.min(this.getSESize(size), this.getRadiationSize(size));
                 this.invSlotRecipes.consume(size, output);
-                this.outputSlot.add(output.getRecipe().getOutput().items.get(0), size);
+                this.outputSlot.addAll(output.getRecipe().getOutput().items.get(0), size);
                 for (int i = 0; i < size; i++) {
                     if (WorldBaseGen.random.nextInt(100) < output.getRecipe().output.metadata.getInteger("random")) {
                         outputSlot1.add(output.getRecipe().getOutput().items.get(1));

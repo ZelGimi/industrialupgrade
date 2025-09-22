@@ -6,7 +6,7 @@ import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
@@ -345,7 +345,7 @@ public class ComponentMiniPanel extends AbstractComponent {
         return ret;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
 
     }
 

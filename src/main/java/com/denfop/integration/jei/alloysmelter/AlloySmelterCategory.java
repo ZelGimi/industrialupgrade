@@ -6,8 +6,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
@@ -110,7 +110,7 @@ public class AlloySmelterCategory extends GuiIU implements IRecipeCategory<Alloy
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
 
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
@@ -120,7 +120,7 @@ public class AlloySmelterCategory extends GuiIU implements IRecipeCategory<Alloy
 
         }
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i, recipes.getOutput());
     }

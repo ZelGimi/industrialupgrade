@@ -17,7 +17,7 @@ public class ContainerMiniPanels extends ContainerFullInv<TileEntityMiniPanels> 
         }
         for (int j = 0; j < 2; ++j) {
 
-            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotCore, j, 43 + j * 100, 118));
+            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.inventoryCore, j, 43 + j * 100, 118));
 
         }
         for (int j = 0; j < 4; ++j) {

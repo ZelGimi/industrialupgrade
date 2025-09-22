@@ -85,7 +85,7 @@ public class GuiAdvCokeOven extends GuiIU<ContainerAdvCokeOven> {
         );
 
 
-        this.addElement(new TankGauge(this, 6, 18, 20, 55, container.base.tank, TankGauge.TankGuiStyle.Normal) {
+        this.addElement(new TankGauge(this, 6, 18, 20, 55, container.base.tank) {
             @Override
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -117,14 +117,12 @@ public class GuiAdvCokeOven extends GuiIU<ContainerAdvCokeOven> {
                 if (fs != null && fs.amount > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 12;
-                        fluidHeight = 47;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 47;
 
                     Fluid fluid = fs.getFluid();
                     TextureAtlasSprite sprite = fluid != null
@@ -148,22 +146,17 @@ public class GuiAdvCokeOven extends GuiIU<ContainerAdvCokeOven> {
                             false,
                             true
                     );
-                    if (this.getStyle().withGauge) {
-                        bindCommonTexture();
-                        int gaugeX = this.x;
-                        int gaugeY = this.y;
-                        if (!this.getStyle().withBorder) {
-                            gaugeX -= 4;
-                            gaugeY -= 4;
-                        }
+                    bindCommonTexture();
+                    int gaugeX = this.x;
+                    int gaugeY = this.y;
 
-                        this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D, this.getStyle().mirrorGauge);
-                    }
+                    this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D);
+
                 }
             }
         });
 
-        this.addElement(new TankGauge(this, 129, 18, 20, 55, container.base.tank1, TankGauge.TankGuiStyle.Normal) {
+        this.addElement(new TankGauge(this, 129, 18, 20, 55, container.base.tank1) {
             @Override
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -195,14 +188,12 @@ public class GuiAdvCokeOven extends GuiIU<ContainerAdvCokeOven> {
                 if (fs != null && fs.amount > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 4;
-                        fluidY += 4;
-                        fluidWidth = 12;
-                        fluidHeight = 47;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 4;
+                    fluidY += 4;
+                    fluidWidth = 12;
+                    fluidHeight = 47;
 
                     Fluid fluid = fs.getFluid();
                     TextureAtlasSprite sprite = fluid != null
@@ -226,17 +217,12 @@ public class GuiAdvCokeOven extends GuiIU<ContainerAdvCokeOven> {
                             false,
                             true
                     );
-                    if (this.getStyle().withGauge) {
-                        bindCommonTexture();
-                        int gaugeX = this.x;
-                        int gaugeY = this.y;
-                        if (!this.getStyle().withBorder) {
-                            gaugeX -= 4;
-                            gaugeY -= 4;
-                        }
+                    bindCommonTexture();
+                    int gaugeX = this.x;
+                    int gaugeY = this.y;
 
-                        this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D, this.getStyle().mirrorGauge);
-                    }
+                    this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D);
+
                 }
             }
         });

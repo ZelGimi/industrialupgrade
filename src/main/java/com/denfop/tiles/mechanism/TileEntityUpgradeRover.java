@@ -97,7 +97,7 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
                     int Damage = stack1.getItemDamage();
                     final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
                     this.invSlotRecipes.consume();
-                    this.outputSlot.add(processResult);
+                    this.outputSlot.addAll(processResult);
                     ItemStack stack = this.outputSlot.get();
                     stack.setTagCompound(nbt1);
                     NBTTagCompound nbt = ModUtils.nbt(stack);

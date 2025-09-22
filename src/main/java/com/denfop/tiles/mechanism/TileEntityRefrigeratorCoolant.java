@@ -13,10 +13,10 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRefrigerator;
 import com.denfop.gui.GuiRefrigerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryTank;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.items.reactors.ItemReactorCoolant;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -31,15 +31,15 @@ import java.util.Set;
 
 public class TileEntityRefrigeratorCoolant extends TileElectricMachine implements IUpgradableBlock, IUpdatableTileEvent {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final Fluids fluids;
     public final Fluids.InternalFluidTank tank;
-    public final InvSlot slot;
-    public final InvSlotTank fluidSlot;
+    public final Inventory slot;
+    public final InventoryTank fluidSlot;
 
     public TileEntityRefrigeratorCoolant() {
         super(400, 14, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = fluids.addTankInsert("input", 10000, Fluids.fluidPredicate(
                 FluidName.fluidHelium.getInstance(),
@@ -48,15 +48,15 @@ public class TileEntityRefrigeratorCoolant extends TileElectricMachine implement
         ));
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemReactorCoolant;
             }
         };
-        this.slot.setStackSizeLimit(1);
-        this.fluidSlot = new InvSlotTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.INPUT, this.tank
+        this.slot.setInventoryStackLimit(1);
+        this.fluidSlot = new InventoryTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                InventoryFluid.TypeFluidSlot.INPUT, this.tank
         );
     }
 

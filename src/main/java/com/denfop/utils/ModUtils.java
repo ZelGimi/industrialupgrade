@@ -4,8 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.radiationsystem.EnumCoefficient;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.invslot.InvSlot;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -919,14 +919,14 @@ public class ModUtils {
         return handler;
     }
 
-    public static void tick(InvSlotOutput slot, TileEntityBlock tile) {
+    public static void tick(InventoryOutput slot, TileEntityBlock tile) {
 
         for (EnumFacing facing1 : facings) {
             BlockPos pos = tile.getPos().offset(facing1);
             final TileEntity tile1 = tile.getWorld().getTileEntity(pos);
             if (tile1 instanceof TileEntityInventory) {
                 TileEntityInventory inventory = (TileEntityInventory) tile1;
-                for (InvSlot invSlot : inventory.getInputSlots()) {
+                for (Inventory invSlot : inventory.getInputSlots()) {
                     if (invSlot.acceptAllOrIndex()) {
                         cycle2:
                         for (int j = 0; j < slot.size(); j++) {
@@ -934,7 +934,7 @@ public class ModUtils {
                             if (output.isEmpty()) {
                                 continue;
                             }
-                            if (invSlot.accepts(output, 0)) {
+                            if (invSlot.isItemValidForSlot(0, output)) {
                                 for (int jj = 0; jj < invSlot.size(); jj++) {
                                     if (output.isEmpty()) {
                                         continue cycle2;
@@ -970,7 +970,7 @@ public class ModUtils {
                                 ItemStack input = invSlot.get(j);
 
                                 if (input.isEmpty()) {
-                                    if (invSlot.accepts(output, j)) {
+                                    if (invSlot.isItemValidForSlot(j, output)) {
                                         if (invSlot.add(output)) {
                                             slot.put(jj, ItemStack.EMPTY);
                                             output = ItemStack.EMPTY;

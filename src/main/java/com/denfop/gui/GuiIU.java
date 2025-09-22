@@ -8,7 +8,7 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,7 +26,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
     public boolean isBlack = false;
     protected GuiComponent inventory;
     protected GuiComponent slots;
-    protected List<InvSlot> invSlotList = new ArrayList<>();
+    protected List<Inventory> inventoryList = new ArrayList<>();
     protected List<GuiComponent> componentList = new ArrayList<>();
 
     public GuiIU(final T container) {

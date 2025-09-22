@@ -5,8 +5,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -20,8 +20,8 @@ import com.denfop.componets.HeatComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerHandlerHeavyOre;
 import com.denfop.gui.GuiHandlerHeavyOre;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,17 +40,17 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         implements IUpgradableBlock, IUpdateTick, IType {
 
 
-    public final InvSlotOutput outputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final HeatComponent heat;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProcess componentProcess;
     public final ComponentProgress componentProgress;
     private final EnumTypeStyle enumTypeSlot;
     private final double coef;
-    private final InvSlot input_slot;
+    private final Inventory input_slot;
     private final ComponentUpgrade componentUpgrades;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     private boolean auto;
     private int[] col;
@@ -68,9 +68,9 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
     ) {
         super(energyPerTick * length, 1, 1);
         this.enumTypeSlot = enumTypeSlot;
-        this.outputSlot = new InvSlotOutput(this, outputSlots + 2 * Math.min(3, enumTypeSlot.ordinal()));
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
-        this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
+        this.outputSlot = new InventoryOutput(this, outputSlots + 2 * Math.min(3, enumTypeSlot.ordinal()));
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.inputSlotA = new InventoryRecipes(this, "handlerho", this);
         this.heat = this.addComponent(HeatComponent
                 .asBasicSink(this, 5000));
         this.col = new int[0];
@@ -117,7 +117,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -134,7 +134,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
         };

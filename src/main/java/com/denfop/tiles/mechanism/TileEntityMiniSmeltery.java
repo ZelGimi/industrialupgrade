@@ -8,7 +8,7 @@ import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -18,7 +18,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerOilPurifier;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.gui.GuiOilPurifier;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -49,7 +49,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
 
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank1;
-    public InvSlotOutput outputSlot;
+    public InventoryOutput outputSlot;
     protected short progress;
     private int amount;
 
@@ -59,7 +59,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
 
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 2 * 8 * 144);
-        outputSlot = new InvSlotOutput(this, 1);
+        outputSlot = new InventoryOutput(this, 1);
 
         this.fluid_handler = new FluidHandlerRecipe("mini_smeltery", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
@@ -358,7 +358,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
                 this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
@@ -395,7 +395,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
                 .getOutput().items) && this.fluid_handler.canOperate()) {
 
 
-            this.progress = (short) (this.progress + 1);
+            this.progress = (short) (this.progress + 2);
             double k = this.progress;
 
             if (this.progress >= 100) {
@@ -421,7 +421,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -455,7 +455,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasR
 
     public void operateOnce() {
         this.fluid_handler.consume();
-        this.outputSlot.add(this.fluid_handler.output().getOutput().items);
+        this.outputSlot.addAll(this.fluid_handler.output().getOutput().items);
         new PacketUpdateFieldTile(this, "slot", outputSlot);
         new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
     }

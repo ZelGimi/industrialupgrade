@@ -3,7 +3,7 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -15,7 +15,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPlantCollector;
 import com.denfop.gui.GuiPlantCollector;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
 import com.denfop.utils.ModUtils;
@@ -40,8 +40,8 @@ public class TileEntityPlantCollector extends TileEntityInventory implements IUp
 
     private static final int RADIUS = 8;
     public final Energy energy;
-    public final InvSlotOutput output;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput output;
+    public final InventoryUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
@@ -53,9 +53,9 @@ public class TileEntityPlantCollector extends TileEntityInventory implements IUp
     List<Chunk> chunks;
 
     public TileEntityPlantCollector() {
-        this.output = new InvSlotOutput(this, 18);
+        this.output = new InventoryOutput(this, 18);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
@@ -155,7 +155,7 @@ public class TileEntityPlantCollector extends TileEntityInventory implements IUp
                                     .getId() != 3) {
                                 final List<ItemStack> listItems = crop.harvest(false);
                                 this.energy.useEnergy(50);
-                                this.output.add(listItems);
+                                this.output.addAll(listItems);
                                 if (WorldBaseGen.random.nextInt(100) <= 4) {
                                     this.output.add(ModUtils.setSize(crop.getCropItem(), crop.getCrop().getSizeSeed()));
                                 }

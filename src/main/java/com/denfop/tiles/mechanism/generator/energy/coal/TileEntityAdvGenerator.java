@@ -5,7 +5,7 @@ import com.denfop.api.gui.IType;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerGenerator;
 import com.denfop.gui.GuiGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -25,9 +25,9 @@ import java.util.List;
 
 public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements IType {
 
-    public final InvSlot fuelSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+    public final Inventory fuelSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
         @Override
-        public boolean accepts(final ItemStack stack, final int index) {
+        public boolean isItemValidForSlot(final int index, final ItemStack stack) {
             return ModUtils.getFuelValue(stack, false) > 0;
         }
     };

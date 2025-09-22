@@ -53,7 +53,7 @@ public class GuiMagnet extends GuiIU<ContainerMagnet> {
         this.addElement(new ImageInterface(this, 0, 0, 176, ySize));
         this.addElement(new CustomButton(this, 10, 10, 18, 18, null, 2, "") {
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     this.getGui().mc
                             .getSoundHandler()

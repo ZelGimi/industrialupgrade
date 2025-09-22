@@ -4,11 +4,11 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.Energy;
-import com.denfop.invslot.InvSlotDischarge;
+import com.denfop.invslot.InventoryDischarge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -35,10 +35,10 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     public double guiChargeLevel = 0;
 
 
-    public InvSlotOutput outputSlot = null;
+    public InventoryOutput outputSlot = null;
 
     public Energy energy = null;
-    public InvSlotDischarge dischargeSlot;
+    public InventoryDischarge dischargeSlot;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio;
     public boolean sound = true;
@@ -49,12 +49,12 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
 
         if (MaxEnergy != 0) {
             energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier));
-            dischargeSlot = new InvSlotDischarge(this, 14);
+            dischargeSlot = new InventoryDischarge(this, 14);
             energy.addManagedSlot(dischargeSlot);
         }
 
         if (count != 0) {
-            this.outputSlot = new InvSlotOutput(this, count);
+            this.outputSlot = new InventoryOutput(this, count);
         }
         if (MaxEnergy != 0) {
             this.guiChargeLevel = this.energy.getFillRatio();

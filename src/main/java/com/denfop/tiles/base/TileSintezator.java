@@ -14,8 +14,8 @@ import com.denfop.blocks.mechanism.BlockSintezator;
 import com.denfop.componets.WirelessComponent;
 import com.denfop.container.ContainerSinSolarPanel;
 import com.denfop.gui.GuiSintezator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotSintezator;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventorySintezator;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -46,8 +46,8 @@ import java.util.Map;
 public class TileSintezator extends TileEntityInventory implements IEnergySource,
         IUpdatableTileEvent {
 
-    public final InvSlotSintezator inputslot;
-    public final InvSlotSintezator inputslotA;
+    public final InventorySintezator inputslot;
+    public final InventorySintezator inputslotA;
     public final WirelessComponent wirelessComponent;
     public int machineTire1;
     public int solartype;
@@ -88,8 +88,8 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         this.machineTire = 0;
         this.machineTire1 = 0;
         this.size = 0;
-        this.inputslot = new InvSlotSintezator(this, "input", 0, 9);
-        this.inputslotA = new InvSlotSintezator(this, "input1", 1, 4);
+        this.inputslot = new InventorySintezator(this, "input", 0, 9);
+        this.inputslotA = new InventorySintezator(this, "input1", 1, 4);
         this.solartype = 0;
         this.type = EnumType.DEFAULT;
         this.wirelessComponent = this.addComponent(new WirelessComponent(this));
@@ -399,7 +399,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         }
         if (name.equals("slot")) {
             try {
-                InvSlot slot = (InvSlot) DecoderHandler.decode(is);
+                Inventory slot = (Inventory) DecoderHandler.decode(is);
                 for (int i = 0; i < slot.size(); i++) {
                     this.inputslot.put(i, slot.get(i));
                 }

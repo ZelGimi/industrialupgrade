@@ -8,9 +8,8 @@ import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.container.ContainerBeeAnalyzer;
 import com.denfop.gui.GuiBeeAnalyzer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -180,20 +179,10 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
         return new GuiBeeAnalyzer(getGuiContainer(player), itemStack1);
     }
 
-    @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

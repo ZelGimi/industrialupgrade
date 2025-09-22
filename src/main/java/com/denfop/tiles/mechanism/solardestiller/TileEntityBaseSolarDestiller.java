@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.solardestiller;
 
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
@@ -9,11 +9,8 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSolarDestiller;
 import com.denfop.gui.GuiSolarDestiller;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -38,11 +35,11 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
 
     public final FluidTank inputTank;
     public final FluidTank outputTank;
-    public final InvSlotOutput wateroutputSlot;
-    public final InvSlotOutput destiwateroutputSlott;
-    public final InvSlotFluidByList waterinputSlot;
-    public final InvSlotTank destiwaterinputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput wateroutputSlot;
+    public final InventoryOutput destiwateroutputSlott;
+    public final InventoryFluidByList waterinputSlot;
+    public final InventoryTank destiwaterinputSlot;
+    public final InventoryUpgrade upgradeSlot;
     protected final Fluids fluids = this.addComponent(new Fluids(this));
     private final EnumTypeStyle style;
     private int tickrate;
@@ -57,23 +54,23 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                 10000,
                 Fluids.fluidPredicate(FluidName.fluiddistilled_water.getInstance())
         );
-        this.waterinputSlot = new InvSlotFluidByList(
+        this.waterinputSlot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.INPUT,
+                InventoryFluid.TypeFluidSlot.INPUT,
                 FluidRegistry.WATER
         );
-        this.destiwaterinputSlot = new InvSlotTank(
+        this.destiwaterinputSlot = new InventoryTank(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 this.outputTank
         );
-        this.wateroutputSlot = new InvSlotOutput(this, 1);
-        this.destiwateroutputSlott = new InvSlotOutput(this, 1);
-        this.upgradeSlot = new InvSlotUpgrade(this, 3);
+        this.wateroutputSlot = new InventoryOutput(this, 1);
+        this.destiwateroutputSlott = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 3);
     }
 
     public void onLoaded() {

@@ -20,10 +20,9 @@ import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerHeatFluids;
 import com.denfop.gui.GuiFluidHeater;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -49,13 +48,13 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank2;
     public final Fluids.InternalFluidTank fluidTank1;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final HeatComponent heat;
     public double energyConsume;
     public int operationLength;
@@ -77,18 +76,18 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
 
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
 
         this.fluid_handler = new FluidHandlerRecipe("heat", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
 
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getFluids(0));
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getFluids(0));
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
-        this.fluidSlot2.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.fluidSlot2.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
     }

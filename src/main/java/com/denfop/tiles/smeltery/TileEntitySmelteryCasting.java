@@ -7,7 +7,7 @@ import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -16,7 +16,7 @@ import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerSmelteryCasting;
 import com.denfop.gui.GuiSmelteryCasting;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.client.gui.GuiScreen;
@@ -32,19 +32,19 @@ public class TileEntitySmelteryCasting extends TileEntityMultiBlockElement imple
 
 
     public final ComponentProgress progress;
-    public final InvSlot inputSlotB;
+    public final Inventory inputSlotB;
     public final FluidHandlerRecipe fluid_handler;
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
 
     public TileEntitySmelteryCasting() {
         super();
-        this.progress = this.addComponent(new ComponentProgress(this, 1, 180));
+        this.progress = this.addComponent(new ComponentProgress(this, 1, 108));
         this.fluid_handler = new FluidHandlerRecipe("ingot_casting");
 
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.inputSlotB = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.inputSlotB = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (stack.getItem() != IUItem.crafting_elements) {
                     return false;
                 }
@@ -112,11 +112,11 @@ public class TileEntitySmelteryCasting extends TileEntityMultiBlockElement imple
         return fluid_handler;
     }
 
-    public InvSlotOutput getOutputSlot() {
+    public InventoryOutput getOutputSlot() {
         return outputSlot;
     }
 
-    public InvSlot getInputSlotB() {
+    public Inventory getInputSlotB() {
         return inputSlotB;
     }
 

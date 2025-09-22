@@ -20,10 +20,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerOilRefiner;
 import com.denfop.gui.GuiOilRefiner;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
@@ -61,10 +60,10 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
     public final Fluids.InternalFluidTank fluidTank1;
     public final Fluids.InternalFluidTank fluidTank3;
     public final FluidHandlerRecipe fluid_handler;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
-    public final InvSlotFluidByList fluidSlot3;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
+    public final InventoryFluidByList fluidSlot3;
+    public final InventoryUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final Fluids fluids;
@@ -80,24 +79,24 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
     public TileOilRefiner() {
         super(24000, 14, 2);
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.INPUT);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.INPUT);
         this.needUpdate = false;
 
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
-        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("oil_refiner", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
         this.fluidTank3.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(1)));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getFluids(0));
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot3 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
-        this.fluidSlot2.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.fluidSlot3.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getFluids(0));
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot3 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
+        this.fluidSlot2.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.fluidSlot3.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
     @Override

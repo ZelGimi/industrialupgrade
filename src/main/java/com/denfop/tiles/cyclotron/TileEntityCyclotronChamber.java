@@ -2,7 +2,7 @@ package com.denfop.tiles.cyclotron;
 
 import com.denfop.IUItem;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -18,14 +18,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement implements IBombardmentChamber, IUpdateTick {
 
 
-    private final InvSlotRecipes inputSlotA;
+    private final InventoryRecipes inputSlotA;
     private MachineRecipe output;
     private int chance;
     private int cryogen;
     private int positrons;
 
     public TileEntityCyclotronChamber() {
-        this.inputSlotA = new InvSlotRecipes(this, "cyclotron", this);
+        this.inputSlotA = new InventoryRecipes(this, "cyclotron", this);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement impl
     }
 
     @Override
-    public InvSlotRecipes getInputSlot() {
+    public InventoryRecipes getInputSlot() {
         return inputSlotA;
     }
 

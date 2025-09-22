@@ -1,7 +1,7 @@
 package com.denfop.componets;
 
 import com.denfop.Localization;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -78,32 +78,32 @@ public class Fluids extends AbstractComponent {
             int capacity,
             Predicate<Fluid> acceptedFluids
     ) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT, acceptedFluids);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.INPUT, acceptedFluids);
     }
 
     public Fluids.InternalFluidTank addTankExtract(String name, int capacity) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.OUTPUT, Predicates.alwaysTrue());
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.OUTPUT, Predicates.alwaysTrue());
     }
 
     public Fluids.InternalFluidTank addTankExtract(String name, int capacity, Predicate<Fluid> acceptedFluids) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.OUTPUT, acceptedFluids);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.OUTPUT, acceptedFluids);
     }
 
     public Fluids.InternalFluidTank addTank(String name, int capacity) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT_OUTPUT);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.INPUT_OUTPUT);
     }
 
-    public Fluids.InternalFluidTank addTank(String name, int capacity, InvSlot.TypeItemSlot typeItemSlot) {
+    public Fluids.InternalFluidTank addTank(String name, int capacity, Inventory.TypeItemSlot typeItemSlot) {
         return this.addTank(name, capacity, typeItemSlot, Predicates.alwaysTrue());
     }
 
     public Fluids.InternalFluidTank addTank(String name, int capacity, Predicate<Fluid> acceptedFluids) {
-        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT_OUTPUT, acceptedFluids);
+        return this.addTank(name, capacity, Inventory.TypeItemSlot.INPUT_OUTPUT, acceptedFluids);
     }
 
     public Fluids.InternalFluidTank addTank(
             String name, int capacity, Predicate<Fluid> acceptedFluids,
-            InvSlot.TypeItemSlot slot
+            Inventory.TypeItemSlot slot
     ) {
         return this.addTank(name, capacity, slot, acceptedFluids);
     }
@@ -111,7 +111,7 @@ public class Fluids extends AbstractComponent {
     public Fluids.InternalFluidTank addTank(
             String name,
             int capacity,
-            InvSlot.TypeItemSlot typeItemSlot,
+            Inventory.TypeItemSlot typeItemSlot,
             Predicate<Fluid> acceptedFluids
     ) {
         return this.addTank(name, capacity,
@@ -125,7 +125,7 @@ public class Fluids extends AbstractComponent {
             int capacity,
             Collection<EnumFacing> inputSides,
             Collection<EnumFacing> outputSides,
-            Predicate<Fluid> acceptedFluids, InvSlot.TypeItemSlot typeItemSlot
+            Predicate<Fluid> acceptedFluids, Inventory.TypeItemSlot typeItemSlot
     ) {
         return this.addTank(new Fluids.InternalFluidTank(name, inputSides, outputSides, acceptedFluids, capacity, typeItemSlot));
     }
@@ -147,7 +147,7 @@ public class Fluids extends AbstractComponent {
         this.unmanagedTanks.add(suppl);
     }
 
-    public void changeConnectivity(Fluids.InternalFluidTank tank, InvSlot.TypeItemSlot typeItemSlot) {
+    public void changeConnectivity(Fluids.InternalFluidTank tank, Inventory.TypeItemSlot typeItemSlot) {
         this.changeConnectivity(
                 tank,
                 typeItemSlot.isInput() ? ModUtils.allFacings : Collections.emptySet(),
@@ -275,7 +275,7 @@ public class Fluids extends AbstractComponent {
 
         protected final String identifier;
         List<String> fluidList = new ArrayList<>();
-        private InvSlot.TypeItemSlot typeItemSlot;
+        private Inventory.TypeItemSlot typeItemSlot;
         private Predicate<Fluid> acceptedFluids;
         private List<EnumFacing> inputSides;
         private List<EnumFacing> outputSides;
@@ -286,7 +286,7 @@ public class Fluids extends AbstractComponent {
                 Collection<EnumFacing> inputSides,
                 Collection<EnumFacing> outputSides,
                 Predicate<Fluid> acceptedFluids,
-                int capacity, InvSlot.TypeItemSlot typeItemSlot
+                int capacity, Inventory.TypeItemSlot typeItemSlot
         ) {
             super(capacity);
             this.identifier = identifier;
@@ -328,7 +328,7 @@ public class Fluids extends AbstractComponent {
             return fluidList;
         }
 
-        public void setTypeItemSlot(final InvSlot.TypeItemSlot typeItemSlot) {
+        public void setTypeItemSlot(final Inventory.TypeItemSlot typeItemSlot) {
             this.typeItemSlot = typeItemSlot;
             if (inputSides != null && outputSides != null) {
                 inputSides.clear();

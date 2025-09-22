@@ -59,7 +59,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.denfop.invslot.InvSlotUpgrade.getDirection;
+import static com.denfop.invslot.InventoryUpgrade.getDirection;
 
 public class TickHandler {
 

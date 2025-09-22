@@ -2,17 +2,16 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerTank;
 import com.denfop.gui.GuiTank;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.InventoryFluid;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -41,13 +40,13 @@ import java.util.Set;
 
 public class TileEntityLiquedTank extends TileEntityInventory implements IUpgradableBlock {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
 
 
-    public final InvSlotFluidByList containerslot;
-    public final InvSlotFluidByList containerslot1;
+    public final InventoryFluidByList containerslot;
+    public final InventoryFluidByList containerslot1;
     public final Fluids fluids;
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public FluidTank fluidTank;
     @SideOnly(Side.CLIENT)
     public DataFluid dataFluid;
@@ -57,19 +56,19 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     public TileEntityLiquedTank(int tanksize) {
 
 
-        this.containerslot = new InvSlotFluidByList(this,
-                InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT
+        this.containerslot = new InventoryFluidByList(this,
+                Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.OUTPUT
         );
         this.containerslot.setUsually(true);
-        this.containerslot1 = new InvSlotFluidByList(this,
-                InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.INPUT
+        this.containerslot1 = new InventoryFluidByList(this,
+                Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.INPUT
         );
         this.containerslot1.setUsually(true);
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
     }
 

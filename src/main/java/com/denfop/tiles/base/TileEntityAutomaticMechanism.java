@@ -8,7 +8,7 @@ import com.denfop.container.ContainerAutomaticMechanism;
 import com.denfop.container.SlotInfo;
 import com.denfop.gui.GuiAutomaticMechanism;
 import com.denfop.invslot.HandlerInventory;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
@@ -37,7 +37,7 @@ import static com.denfop.utils.ModUtils.getItemHandler;
 public class TileEntityAutomaticMechanism extends TileEntityInventory implements IUpdatableTileEvent {
 
     public final SlotInfo slot;
-    public final InvSlot slotOI;
+    public final Inventory slotOI;
     public final Map<EnumFacing, HandlerInventory> iItemHandlerMap = new HashMap<>();
     public final Map<IItemHandler, Integer> slotHandler = new HashMap<>();
     private final IItemHandler main_handler;
@@ -56,7 +56,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                 ((TileEntityAutomaticMechanism) this.base).updateList();
             }
         };
-        this.slotOI = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 24) {
+        this.slotOI = new Inventory(this, Inventory.TypeItemSlot.INPUT_OUTPUT, 24) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -168,13 +168,13 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                 return;
             }
             if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
-                final List<InvSlot> inputs = this.getParent().getInputSlots();
+                final List<Inventory> inputs = this.getInputSlots();
                 TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
-                final List<InvSlot> outputs = inventory.getOutputSlots();
+                final List<Inventory> outputs = inventory.getOutputSlots();
                 cycle:
-                for (InvSlot slot : outputs) {
+                for (Inventory slot : outputs) {
                     cycle1:
-                    for (InvSlot invSlot : inputs) {
+                    for (Inventory invSlot : inputs) {
                         if (invSlot.acceptAllOrIndex()) {
                             cycle2:
                             for (int j = 0; j < slot.size(); j++) {
@@ -194,7 +194,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                         continue;
                                     }
                                 }
-                                if (invSlot.accepts(output, 0)) {
+                                if (invSlot.isItemValidForSlot(0, output)) {
                                     for (int jj = 0; jj < invSlot.size(); jj++) {
                                         if (output.isEmpty()) {
                                             continue cycle2;
@@ -246,7 +246,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                     ItemStack input = invSlot.get(j);
 
                                     if (input.isEmpty()) {
-                                        if (invSlot.accepts(output, j)) {
+                                        if (invSlot.isItemValidForSlot(j, output)) {
                                             if (invSlot.add(output)) {
                                                 slot.put(jj, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
@@ -320,9 +320,9 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
             int slots = 0;
             if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
                 TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
-                InvSlot slot = slotOI;
+                Inventory slot = slotOI;
                 cycle1:
-                for (InvSlot invSlot : inventory.getInputSlots()) {
+                for (Inventory invSlot : inventory.getInputSlots()) {
                     if (invSlot.acceptAllOrIndex()) {
                         cycle2:
                         for (int j = 0; j < slot.size(); j++) {
@@ -342,7 +342,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                     continue;
                                 }
                             }
-                            if (invSlot.accepts(output, 0)) {
+                            if (invSlot.isItemValidForSlot(0, output)) {
                                 for (int jj = 0; jj < invSlot.size(); jj++) {
                                     if (output.isEmpty()) {
                                         continue cycle2;
@@ -393,7 +393,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                     }
                                 }
                                 if (input.isEmpty()) {
-                                    if (invSlot.accepts(output, j)) {
+                                    if (invSlot.isItemValidForSlot(j, output)) {
                                         if (invSlot.add(output)) {
                                             slot.put(jj, ItemStack.EMPTY);
                                             output = ItemStack.EMPTY;
@@ -424,7 +424,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                 }
 
                 if (handler.getInventory() != null) {
-                    InvSlot slot = slotOI;
+                    Inventory slot = slotOI;
                     for (int j = 0; j < slot.size(); j++) {
                         ItemStack took = slot.get(j);
                         if (took.isEmpty()) {
@@ -457,7 +457,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                     }
 
                 } else {
-                    InvSlot slot = slotOI;
+                    Inventory slot = slotOI;
                     for (int j = 0; j < slot.size(); j++) {
                         ItemStack took = slot.get(j);
                         if (took.isEmpty()) {

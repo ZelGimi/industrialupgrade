@@ -19,7 +19,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerResearchTableSpace;
 import com.denfop.gui.GuiResearchTableSpace;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.space.ItemResearchLens;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -66,7 +66,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     private static final List<AxisAlignedBB> aabbs_north = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 1, 2.0D,
             1
     ));
-    public final InvSlot slotLens;
+    public final Inventory slotLens;
     public Map<IBody, SpaceOperation> map;
     public List<SpaceOperation> fakeBodySpaceOperationMap;
     public EnumLevels level = EnumLevels.NONE;
@@ -84,9 +84,9 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
         this.map = new HashMap<>();
         this.player = null;
         this.fakeBodySpaceOperationMap = new LinkedList<>();
-        this.slotLens = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slotLens = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemResearchLens;
             }
 

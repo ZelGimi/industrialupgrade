@@ -25,12 +25,12 @@ public class GuiImpAlloySmelter extends GuiIU<ContainerImpAlloySmelter> {
         this.container = container1;
 
         componentList.clear();
-        this.invSlotList.add(container.base.outputSlot);
+        this.inventoryList.add(container.base.outputSlot);
         inventory = new GuiComponent(this, 7, 83, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
         );
         this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.invSlotList))
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.inventoryList))
         );
 
         componentList.add(inventory);

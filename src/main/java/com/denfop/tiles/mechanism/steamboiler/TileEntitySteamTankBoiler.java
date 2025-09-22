@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamBoiler;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -135,7 +135,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
 
     @Override
     public void setSteam() {
-        this.tank.setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
+        this.tank.setTypeItemSlot(Inventory.TypeItemSlot.NONE);
         this.steam.onLoaded();
     }
 

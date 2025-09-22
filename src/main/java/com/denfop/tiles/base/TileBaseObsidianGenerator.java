@@ -3,15 +3,15 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerObsidianGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -33,14 +33,14 @@ import java.util.List;
 public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         implements IUpgradableBlock, IFluidHandler {
 
-    public final InvSlotOutput outputSlot1;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
+    public final InventoryOutput outputSlot1;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final FluidTank fluidTank1;
     public final FluidTank fluidTank2;
     private final FluidHandlerRecipe fluid_handler;
@@ -61,24 +61,24 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         this.defaultOperationLength = this.operationLength = length;
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.outputSlot1 = new InvSlotOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.outputSlot1 = new InventoryOutput(this, 1);
 
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, FluidRegistry.LAVA);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, FluidRegistry.WATER);
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, FluidRegistry.LAVA);
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank(
                 "fluidTank1",
                 12 * 1000,
                 Fluids.fluidPredicate(FluidRegistry.WATER),
-                InvSlot.TypeItemSlot.INPUT
+                Inventory.TypeItemSlot.INPUT
 
         );
         this.fluidTank2 = fluids.addTank(
                 "fluidTank2",
                 12 * 1000,
                 Fluids.fluidPredicate(FluidRegistry.LAVA),
-                InvSlot.TypeItemSlot.INPUT
+                Inventory.TypeItemSlot.INPUT
 
         );
         this.fluid_handler = new FluidHandlerRecipe("obsidian", fluids);
@@ -254,7 +254,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     public void operateOnce(List<ItemStack> processResult) {
         this.fluid_handler.consume();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
 
 

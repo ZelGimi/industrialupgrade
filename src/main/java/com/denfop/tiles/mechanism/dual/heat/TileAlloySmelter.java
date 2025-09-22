@@ -15,7 +15,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiAlloySmelter;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
@@ -34,14 +34,14 @@ import net.minecraftforge.oredict.OreDictionary;
 public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasRecipe {
 
 
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
     public TileAlloySmelter() {
         super(1, 300, 1, EnumDoubleElectricMachine.ALLOY_SMELTER);
         Recipes.recipes.addInitRecipes(this);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -53,7 +53,7 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

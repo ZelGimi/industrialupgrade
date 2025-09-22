@@ -3,13 +3,8 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -21,7 +16,7 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerProgrammingTable;
 import com.denfop.gui.GuiProgrammingTable;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.IManufacturerBlock;
@@ -44,8 +39,8 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe, IManufacturerBlock {
 
     public final ComponentTimer timer;
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
     private final ComponentUpgradeSlots componentUpgrade;
     public MachineRecipe output;
     public int level;
@@ -53,14 +48,14 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
     public TileEntityProgrammingTable() {
         super(100, 1, 1);
         Recipes.recipes.addInitRecipes(this);
-        inputSlotA = new InvSlotRecipes(this, "programming", this);
+        inputSlotA = new InventoryRecipes(this, "programming", this);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 2, 0)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((TileEntityProgrammingTable) this.parent).getLevel() * 1.75);
             }
         });
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));

@@ -10,7 +10,7 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamBoiler;
 import com.denfop.gui.GuiSteamBoiler;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -52,10 +52,10 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
 
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 4000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
+        this.fluidTank = this.fluids.addTank("fluidTank", 4000, Inventory.TypeItemSlot.INPUT, Fluids.fluidPredicate(
                 FluidRegistry.WATER
         ));
-        this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
@@ -201,7 +201,7 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.work) {
-            if (this.getWorld().getWorldTime() % 3 == 0) {
+            if (this.getWorld().getWorldTime() % 2 == 0) {
                 if (this.fluidTank.getFluid() != null && this.fluidTank.getFluid().amount >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
                     this.steam.addEnergy(2);
                     this.fluidTank.drain(2, true);

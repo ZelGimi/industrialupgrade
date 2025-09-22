@@ -99,7 +99,7 @@ public class InsulatorCategory extends GuiIU implements IRecipeCategory<Insulato
         this.slots1.drawBackground(5, 0);
 
         progress_bar.renderBar(-10, 10, xScale);
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
             element.drawBackground(this.guiLeft, this.guiTop);
         }
 

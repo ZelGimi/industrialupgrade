@@ -5,9 +5,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerHeatMachine;
 import com.denfop.gui.GuiHeatMachine;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -34,7 +34,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     public boolean auto;
     public FluidTank fluidTank;
     public Fluids fluids = null;
-    public InvSlotFluid fluidSlot;
+    public InventoryFluid fluidSlot;
     public int coef = 1;
     public boolean work = true;
 
@@ -43,19 +43,19 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
         this.hasFluid = hasFluid;
         if (this.hasFluid) {
             this.fluids = this.addComponent(new Fluids(this));
-            this.fluidTank = this.fluids.addTank("fluidTank", 12000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
+            this.fluidTank = this.fluids.addTank("fluidTank", 12000, Inventory.TypeItemSlot.INPUT, Fluids.fluidPredicate(
                     FluidName.fluidpahoehoe_lava.getInstance(),
                     FluidRegistry.LAVA, FluidName.fluiddizel.getInstance(),
                     FluidName.fluidbenz.getInstance(),
                     FluidName.fluidbiogas.getInstance(),
                     FluidName.fluidbiomass.getInstance()
             ));
-            this.fluidSlot = new InvSlotFluidByList(
+            this.fluidSlot = new InventoryFluidByList(
                     this,
-                    InvSlot.TypeItemSlot.INPUT,
+                    Inventory.TypeItemSlot.INPUT,
                     1,
 
-                    InvSlotFluid.TypeFluidSlot.INPUT,
+                    InventoryFluid.TypeFluidSlot.INPUT,
                     FluidName.fluidpahoehoe_lava.getInstance(),
                     FluidRegistry.LAVA, FluidName.fluiddizel.getInstance(),
                     FluidName.fluidbenz.getInstance(),

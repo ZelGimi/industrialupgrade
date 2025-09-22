@@ -10,7 +10,7 @@ import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneHandler;
 import com.denfop.container.ContainerAutoFuse;
 import com.denfop.gui.GuiAutoFuse;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityAutoFuse extends TileEntityInventory {
 
-    public final InvSlot slotBomb;
+    public final Inventory slotBomb;
     public final ComponentBaseEnergy rad_energy;
     private final Redstone redstone;
     public boolean fuse = false;
@@ -32,9 +32,9 @@ public class TileEntityAutoFuse extends TileEntityInventory {
     private boolean boom = false;
 
     public TileEntityAutoFuse() {
-        this.slotBomb = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slotBomb = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.nuclear_bomb.itemBlock;
             }
         };
@@ -50,7 +50,9 @@ public class TileEntityAutoFuse extends TileEntityInventory {
                                 }
         );
     }
-
+    public TileEntityInventory getParent() {
+        return this;
+    }
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.autofuse;

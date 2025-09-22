@@ -18,7 +18,7 @@ import com.denfop.api.pollution.PollutionManager;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
@@ -26,7 +26,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerMultiCrop;
 import com.denfop.gui.GuiMultiCrop;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -57,12 +57,12 @@ import static com.denfop.api.agriculture.genetics.Genome.geneticBiomes;
 
 public class TileEntityMultiCrop extends TileEntityInventory {
 
-    public final InvSlot downBlockSlot;
-    public final InvSlot upBlockSlot;
+    public final Inventory downBlockSlot;
+    public final Inventory upBlockSlot;
     public final Fluids.InternalFluidTank fluidPestTank;
     public final Fluids.InternalFluidTank fluidWaterTank;
-    public final InvSlotOutput outputSlot;
-    public final InvSlot fertilizerSlot;
+    public final InventoryOutput outputSlot;
+    public final Inventory fertilizerSlot;
     private final Fluids fluids;
     public ICrop[] crop;
     public Genome[] genome;
@@ -90,12 +90,12 @@ public class TileEntityMultiCrop extends TileEntityInventory {
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidWaterTank = fluids.addTankInsert("waterTank", 16000, Fluids.fluidPredicate(FluidRegistry.WATER));
         this.fluidPestTank = fluids.addTankInsert("pestTank", 16000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance()));
-        this.outputSlot = new InvSlotOutput(this, 9);
+        this.outputSlot = new InventoryOutput(this, 9);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1 * col / 2D));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1 * col / 2D));
-        this.fertilizerSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.fertilizerSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.fertilizer;
             }
 
@@ -103,14 +103,14 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                 return EnumTypeSlot.FERTILIZER;
             }
         };
-        this.downBlockSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, col) {
+        this.downBlockSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, col) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return EnumSoil.contain(stack);
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
 
@@ -129,9 +129,9 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                 return EnumTypeSlot.BLOCKS;
             }
         };
-        this.upBlockSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, col) {
+        this.upBlockSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, col) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ICropItem && canPlace(((ICropItem) stack.getItem()).getCrop(stack.getItemDamage(),
                         stack), index);
             }
@@ -141,7 +141,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
 
@@ -365,7 +365,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                             }
                             if (crop.getTick() >= crop.getMaxTick()) {
                                 if (crop.getId() != 3) {
-                                    outputSlot.add(crop.getDrops());
+                                    outputSlot.addAll(crop.getDrops());
                                     if (WorldBaseGen.random.nextInt(100) < 10) {
                                         outputSlot.add(ModUtils.setSize(this.upBlockSlot.get(i).copy(), 1));
                                     }
@@ -376,7 +376,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                             }
                         } else {
                             if (crop.getId() != 3) {
-                                outputSlot.add(crop.getDrops());
+                                outputSlot.addAll(crop.getDrops());
                                 if (WorldBaseGen.random.nextInt(100) < 10) {
                                     outputSlot.add(ModUtils.setSize(this.upBlockSlot.get(i).copy(), 1));
                                 }

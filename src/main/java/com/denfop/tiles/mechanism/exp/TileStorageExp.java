@@ -14,7 +14,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerStorageExp;
 import com.denfop.gui.GuiStorageExp;
-import com.denfop.invslot.InvSlotExpStorage;
+import com.denfop.invslot.InventoryExpStorage;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -40,7 +40,7 @@ import java.util.List;
 public class TileStorageExp extends TileEntityInventory implements
         IUpdatableTileEvent, IAudioFixer {
 
-    public final InvSlotExpStorage inputSlot;
+    public final InventoryExpStorage inputSlot;
     public final ComponentBaseEnergy energy;
     public int expirencelevel;
     public int expirencelevel1;
@@ -50,7 +50,7 @@ public class TileStorageExp extends TileEntityInventory implements
     private boolean sound = true;
 
     public TileStorageExp() {
-        this.inputSlot = new InvSlotExpStorage(this);
+        this.inputSlot = new InventoryExpStorage(this);
         this.energy = this.addComponent(new ComponentBaseEnergy(EnergyType.EXPERIENCE, this, 4000000000d, ModUtils.allFacings,
                 ModUtils.allFacings, 14
         ));

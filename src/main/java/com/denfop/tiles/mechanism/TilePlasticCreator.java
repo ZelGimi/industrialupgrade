@@ -7,7 +7,7 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -18,7 +18,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPlasticCreator;
 import com.denfop.gui.GuiPlasticCreator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticCreator;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,20 +39,20 @@ import java.util.Set;
 
 public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRecipe {
 
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
     public TilePlasticCreator() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotRecipes(this, "plastic", this, this.fluidTank);
+        this.inputSlotA = new InventoryRecipes(this, "plastic", this, this.fluidTank);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
         Recipes.recipes.addInitRecipes(this);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -64,7 +64,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

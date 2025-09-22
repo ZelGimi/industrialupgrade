@@ -8,7 +8,7 @@ import com.denfop.blocks.mechanism.BlockSteamBoiler;
 import com.denfop.container.ContainerDefaultMultiElement;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiSteamBoilerExchanger;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,29 +21,29 @@ import java.util.List;
 
 public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement implements IExchanger {
 
-    public final InvSlot slot;
-    public final InvSlot slot1;
+    public final Inventory slot;
+    public final Inventory slot1;
 
     public TileEntitySteamExchangerBoiler() {
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 599;
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
         };
-        this.slot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 10) {
+        this.slot1 = new Inventory(this, Inventory.TypeItemSlot.INPUT, 10) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 294;
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
         };

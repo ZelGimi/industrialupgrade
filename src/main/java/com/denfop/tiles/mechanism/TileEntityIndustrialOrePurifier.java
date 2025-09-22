@@ -4,13 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -22,7 +17,7 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerIndustrialOrePurifier;
 import com.denfop.gui.GuiIndustrialOrePurifier;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -46,8 +41,8 @@ import java.util.Set;
 public class TileEntityIndustrialOrePurifier extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
     public final ComponentBaseEnergy se;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
@@ -72,9 +67,9 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
-        this.inputSlotA = new InvSlotRecipes(this, "ore_purifier", this);
+        this.inputSlotA = new InventoryRecipes(this, "ore_purifier", this);
         this.se = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.SOLARIUM, this, 1500));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
     }
 

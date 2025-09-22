@@ -9,8 +9,8 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -57,13 +57,13 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     public double[] energyShare;
     public boolean queue;
     public byte redstoneMode;
-    public InvSlotRecipes[] inputSlot;
+    public InventoryRecipes[] inputSlot;
     public MachineRecipe[] output;
     public double perenergy;
     public double differenceenergy;
     public ItemStack[] output_stack = new ItemStack[4];
     public int maxAmount = 1;
-    public InvSlotOutput[] outputSlot;
+    public InventoryOutput[] outputSlot;
     public double[] energySlots;
     public double[] maxEnergySlots;
     protected double[] guiProgress;
@@ -81,9 +81,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         super(0, 14, 0);
         this.queue = false;
         this.redstoneMode = 0;
-        this.outputSlot = new InvSlotOutput[4];
+        this.outputSlot = new InventoryOutput[4];
         this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
-        this.inputSlot = new InvSlotRecipes[4];
+        this.inputSlot = new InventoryRecipes[4];
         this.output = new MachineRecipe[4];
         this.energySlots = new double[4];
         this.guiProgress = new double[4];
@@ -97,14 +97,14 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
         for (int i = 0; i < 4; i++) {
             this.output_stack[i] = new ItemStack(Items.AIR);
-            this.inputSlot[i] = new InvSlotRecipes(this, "molecular", this){
+            this.inputSlot[i] = new InventoryRecipes(this, "molecular", this){
                 @Override
-                public boolean accepts(final ItemStack itemStack, final int index) {
+                public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                     return this.getIndex() < maxAmount;
                 }
             };
             this.inputSlot[i].setIndex(i);
-            this.outputSlot[i] = new InvSlotOutput(this, 1);
+            this.outputSlot[i] = new InventoryOutput(this, 1);
         }
         Recipes.recipes.addInitRecipes(this);
     }
@@ -445,7 +445,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     public void operateOnce(int i, List<ItemStack> processResult) {
 
         this.inputSlot[i].consume();
-        this.outputSlot[i].add(processResult);
+        this.outputSlot[i].addAll(processResult);
         this.energySlots[i] = 0;
         if (!this.inputSlot[i].continue_process(this.output[i]) || !this.outputSlot[i].canAdd(output[i].getRecipe().output.items)) {
             getOutput(i);
@@ -456,7 +456,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     public void operateOnce(int index, List<ItemStack> processResult, int size) {
         for (int i = 0; i < size; i++) {
             this.inputSlot[index].consume();
-            this.outputSlot[index].add(processResult);
+            this.outputSlot[index].addAll(processResult);
         }
         this.energySlots[index] = 0;
         if (!this.inputSlot[index].continue_process(this.output[index]) || !this.outputSlot[index].canAdd(output[index].getRecipe().output.items)) {

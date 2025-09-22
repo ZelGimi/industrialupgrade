@@ -22,9 +22,9 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerBaseWaterGenerator;
 import com.denfop.gui.GuiBaseWaterGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotWaterRotor;
-import com.denfop.invslot.InvSlotWaterRotorBlades;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryWaterRotor;
+import com.denfop.invslot.InventoryWaterRotorBlades;
 import com.denfop.items.ItemWindRod;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
@@ -61,9 +61,9 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
 
     public final Energy energy;
-    public final InvSlotWaterRotorBlades slot_blades;
+    public final InventoryWaterRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
-    public InvSlotWaterRotor slot;
+    public InventoryWaterRotor slot;
     public double generation = 0;
     public boolean need_repair;
     public int mind_wind;
@@ -93,8 +93,8 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
     public TileBaseWaterGenerator(EnumLevelGenerators levelGenerators) {
         this.levelGenerators = levelGenerators;
-        this.slot = new InvSlotWaterRotor(this);
-        this.slot_blades = new InvSlotWaterRotorBlades(this);
+        this.slot = new InventoryWaterRotor(this);
+        this.slot_blades = new InventoryWaterRotorBlades(this);
         this.energy =
                 this.addComponent(Energy.asBasicSource(this, 500000 * (levelGenerators.ordinal() + 1),
                         1
@@ -207,7 +207,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -635,7 +635,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];

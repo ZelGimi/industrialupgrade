@@ -6,7 +6,7 @@ import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -18,8 +18,8 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDryer;
 import com.denfop.gui.GuiDryer;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -42,13 +42,13 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
 
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank1;
-    public final InvSlotFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot1;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput output1;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput output1;
     public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
@@ -64,7 +64,7 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
-        this.output1 = new InvSlotOutput(this, 1);
+        this.output1 = new InventoryOutput(this, 1);
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
 
@@ -72,8 +72,8 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
         this.fluid_handler = new FluidHandlerRecipe("dryer", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
 
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getFluids(0));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getFluids(0));
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
     }
@@ -248,7 +248,7 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
 
     public void operateOnce() {
         this.fluid_handler.consume();
-        this.outputSlot.add(this.fluid_handler.output().getOutput().items);
+        this.outputSlot.addAll(this.fluid_handler.output().getOutput().items);
     }
 
 

@@ -6,7 +6,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
@@ -35,15 +35,15 @@ public class TileEntityNightConverter extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent {
 
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentBaseEnergy ne;
     public final ComponentProgress progress;
     public MachineRecipe output;
 
     public TileEntityNightConverter() {
         super(0, 14, 1);
-        inputSlotA = new InvSlotRecipes(this, "solar_glass_recipe", this);
-        inputSlotA.setStackSizeLimit(1);
+        inputSlotA = new InventoryRecipes(this, "solar_glass_recipe", this);
+        inputSlotA.setInventoryStackLimit(1);
         this.ne = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.NIGHT, this, 10000));
         this.progress = this.addComponent(new ComponentProgress(this, 1, 80));
     }

@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 import com.denfop.container.ContainerSteamTurbineRod;
 import com.denfop.gui.GuiSteamTurbineRod;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -28,13 +28,13 @@ import java.util.List;
 
 public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement implements IRod {
 
-    private final InvSlot slot;
+    private final Inventory slot;
     List<ISteamBlade> list = new ArrayList<>();
 
     public TileEntitySteamTurbineRod() {
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 4) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ISteamBlade && ((ISteamBlade) stack.getItem()).getLevel() <= getMain().getBlockLevel();
             }
 
@@ -100,7 +100,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

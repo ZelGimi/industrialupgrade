@@ -39,17 +39,17 @@ public class GuiVending extends GuiIU<ContainerVending> {
         for (int i = 0; i < sizeWorkingSlot; i++) {
             if (!contains) {
                 int xDisplayPosition2 = dop + (46 - sizeWorkingSlot) * i - sizeWorkingSlot * 10 + 20;
-                if (!this.container.base.invSlotBuyPrivate
+                if (!this.container.base.inventoryBuyPrivate
                         .get(i).isEmpty()) {
                     final int finalI = i;
-                    new Area(this, xDisplayPosition2, 16, 18, 18).withTooltip(() -> this.container.base.invSlotBuyPrivate
+                    new Area(this, xDisplayPosition2, 16, 18, 18).withTooltip(() -> this.container.base.inventoryBuyPrivate
                             .get(finalI)
                             .getDisplayName()).drawForeground(par1, par2);
                 }
-                if (!this.container.base.invSlotSellPrivate
+                if (!this.container.base.inventorySellPrivate
                         .get(i).isEmpty()) {
                     final int finalI = i;
-                    new Area(this, xDisplayPosition2, 60, 18, 18).withTooltip(() -> this.container.base.invSlotSellPrivate
+                    new Area(this, xDisplayPosition2, 60, 18, 18).withTooltip(() -> this.container.base.inventorySellPrivate
                             .get(finalI)
                             .getDisplayName()).drawForeground(par1, par2);
 
@@ -97,13 +97,13 @@ public class GuiVending extends GuiIU<ContainerVending> {
 
             } else {
                 RenderHelper.enableGUIStandardItemLighting();
-                if (!this.container.base.invSlotBuyPrivate.get(i).isEmpty()) {
+                if (!this.container.base.inventoryBuyPrivate.get(i).isEmpty()) {
                     this.drawItemStack(xDisplayPosition2, 17,
-                            this.container.base.invSlotBuyPrivate.get(i)
+                            this.container.base.inventoryBuyPrivate.get(i)
                     );
                 }
-                if (!this.container.base.invSlotSellPrivate.get(i).isEmpty()) {
-                    this.drawItemStack(xDisplayPosition2, 61, this.container.base.invSlotSellPrivate.get(i));
+                if (!this.container.base.inventorySellPrivate.get(i).isEmpty()) {
+                    this.drawItemStack(xDisplayPosition2, 61, this.container.base.inventorySellPrivate.get(i));
                 }
                 RenderHelper.disableStandardItemLighting();
             }

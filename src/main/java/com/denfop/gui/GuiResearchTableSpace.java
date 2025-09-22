@@ -136,7 +136,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     new PacketSendRoversToPlanet(
                             guiContainer.base,
@@ -177,7 +177,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     new PacketChangeSpaceOperation(
                             container.player,
@@ -215,7 +215,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     if (container.player.getUniqueID().equals(container.base.getPlayer())) {
                         new PacketCreateColony(
@@ -252,7 +252,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     mode = 5;
                 }
@@ -261,7 +261,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         });
         this.elements.add(new CustomButton(this, 167, 20 + 10 + 10, 68, 18, guiContainer.base, 0, "") {
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     new PacketReturnRoversToPlanet(guiContainer.base, container.player, satellite != null ? satellite :
                             planet != null ?
@@ -294,7 +294,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     if (container.player.getUniqueID().equals(container.base.getPlayer())) {
                         new PacketSendResourceToEarth(
@@ -318,7 +318,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     if (container.player.getUniqueID().equals(container.base.getPlayer())) {
                         new PacketCreateAutoSends(
@@ -342,7 +342,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
 
             @Override
-            protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+            public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
                     if (container.player.getUniqueID().equals(container.base.getPlayer())) {
                         new PacketDeleteColony(

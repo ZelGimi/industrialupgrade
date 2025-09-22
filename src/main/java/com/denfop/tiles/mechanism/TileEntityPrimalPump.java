@@ -9,7 +9,7 @@ import com.denfop.blocks.mechanism.BlockPrimalPump;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerPump;
 import com.denfop.gui.GuiPump;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -44,7 +44,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
     public TileEntityPrimalPump() {
         super(0, 1, 4);
         componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) 25));
-        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
     }
 
     public boolean doesSideBlockRendering(EnumFacing side) {

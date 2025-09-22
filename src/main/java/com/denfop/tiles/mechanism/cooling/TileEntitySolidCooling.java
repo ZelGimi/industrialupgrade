@@ -11,7 +11,7 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerCoolMachine;
 import com.denfop.gui.GuiCoolMachine;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -32,7 +32,7 @@ import java.util.List;
 public class TileEntitySolidCooling extends TileElectricMachine implements IUpdatableTileEvent {
 
 
-    private final InvSlot input;
+    private final Inventory input;
     public CoolComponent cold;
     public int max;
     public boolean work;
@@ -42,7 +42,7 @@ public class TileEntitySolidCooling extends TileElectricMachine implements IUpda
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, tier));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
-        this.input = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1);
+        this.input = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1);
     }
 
     @Override

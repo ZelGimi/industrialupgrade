@@ -81,7 +81,7 @@ public class RefinerCategory extends GuiIU implements IRecipeCategory<RefinerRec
         new GuiComponent(this, 88, 40, EnumTypeComponent.PLUS_BUTTON,
                 new Component<>(new ComponentEmpty())
         ).drawBackground(this.guiLeft, this.guiTop);
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
             element.drawBackground(this.guiLeft, this.guiTop);
         }
 

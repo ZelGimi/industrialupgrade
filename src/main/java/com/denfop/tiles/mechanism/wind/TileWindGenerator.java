@@ -9,7 +9,7 @@ import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.EnumWindSide;
 import com.denfop.api.windsystem.IWindMechanism;
 import com.denfop.api.windsystem.IWindRotor;
-import com.denfop.api.windsystem.InvSlotWindRotor;
+import com.denfop.api.windsystem.InventoryWindRotor;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
@@ -21,8 +21,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerWindGenerator;
 import com.denfop.gui.GuiWindGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotRotorBlades;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryRotorBlades;
 import com.denfop.items.ItemWindRod;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
@@ -57,9 +57,9 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
 
 
     public final Energy energy;
-    public final InvSlotRotorBlades slot_blades;
+    public final InventoryRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
-    public InvSlotWindRotor slot;
+    public InventoryWindRotor slot;
     public double generation = 0;
     public boolean need_repair;
     public int mind_wind;
@@ -88,8 +88,8 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
 
     public TileWindGenerator(EnumLevelGenerators levelGenerators) {
         this.levelGenerators = levelGenerators;
-        this.slot = new InvSlotWindRotor(this);
-        this.slot_blades = new InvSlotRotorBlades(this);
+        this.slot = new InventoryWindRotor(this);
+        this.slot_blades = new InventoryRotorBlades(this);
         this.energy =
                 this.addComponent(Energy.asBasicSource(this, 500000 * (levelGenerators.ordinal() + 1),
                         1
@@ -109,7 +109,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -527,7 +527,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];

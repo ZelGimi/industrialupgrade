@@ -4,7 +4,7 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.reactors.IGraphiteReactor;
 import com.denfop.container.ContainerCapacitor;
 import com.denfop.gui.GuiCapacitor;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -21,14 +21,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityCapacitor extends TileEntityMultiBlockElement implements ICapacitor, IUpdatableTileEvent {
 
     private final int level;
-    private final InvSlot slot;
+    private final Inventory slot;
     public double percent = 1;
     private int x = 0;
     private ICapacitorItem item;
 
     public TileEntityCapacitor(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
 
             @Override
             public EnumTypeSlot getTypeSlot() {
@@ -36,7 +36,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ICapacitorItem && ((ICapacitorItem) stack.getItem()).getLevel() <= ((TileEntityCapacitor) this.base).getBlockLevel();
             }
 
@@ -53,7 +53,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
                 }
             }
         };
-        slot.setStackSizeLimit(1);
+        slot.setInventoryStackLimit(1);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     }
 
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

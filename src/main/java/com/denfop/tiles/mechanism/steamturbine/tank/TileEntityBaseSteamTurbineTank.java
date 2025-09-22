@@ -4,7 +4,7 @@ import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTurbineTank;
 import com.denfop.gui.GuiSteamTurbineTank;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
@@ -126,14 +126,14 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     @Override
     public void setWaterTank() {
         this.tank.setAcceptedFluids(Fluids.fluidPredicate(FluidRegistry.WATER));
-        this.tank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        this.tank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
     }
 
     @Override
     public void setSteamTank() {
 
         this.tank.setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance()));
-        this.tank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
+        this.tank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
     }
 
     @Override

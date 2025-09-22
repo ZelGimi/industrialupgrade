@@ -17,10 +17,10 @@ import com.denfop.componets.ComponentPollution;
 import com.denfop.componets.ComponentTimer;
 import com.denfop.container.ContainerMiniPanels;
 import com.denfop.gui.GuiMiniPanel;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotGlassMiniPanels;
-import com.denfop.invslot.InvSlotOutputMiniPanels;
-import com.denfop.invslot.InvSlotStorageMiniPanels;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryGlassMiniPanels;
+import com.denfop.invslot.InventoryOutputMiniPanels;
+import com.denfop.invslot.InventoryStorageMiniPanels;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -40,18 +40,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class TileEntityMiniPanels extends TileEntityInventory implements ISolarTile {
 
-    public final InvSlotStorageMiniPanels invSlotStorage;
-    public final InvSlotOutputMiniPanels invSlotOutput;
+    public final InventoryStorageMiniPanels invSlotStorage;
+    public final InventoryOutputMiniPanels invSlotOutput;
     public final ComponentTimer timer;
-    public final InvSlot invSlotCore;
+    public final Inventory inventoryCore;
     public ComponentMiniPanel component;
-    public InvSlotGlassMiniPanels invSlotGlass;
+    public InventoryGlassMiniPanels invSlotGlass;
     public ComponentPollution pollution;
     public boolean canRain;
     public boolean hasSky;
@@ -74,12 +73,12 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     public TileEntityMiniPanels() {
         this.component = this.addComponent(ComponentMiniPanel.asBasicSource(this, 0, 14));
-        this.invSlotGlass = new InvSlotGlassMiniPanels(this);
-        this.invSlotStorage = new InvSlotStorageMiniPanels(this);
-        this.invSlotOutput = new InvSlotOutputMiniPanels(this);
-        this.invSlotCore = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 2) {
+        this.invSlotGlass = new InventoryGlassMiniPanels(this);
+        this.invSlotStorage = new InventoryStorageMiniPanels(this);
+        this.invSlotOutput = new InventoryOutputMiniPanels(this);
+        this.inventoryCore = new Inventory(this, Inventory.TypeItemSlot.INPUT, 2) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.core;
             }
 
@@ -225,7 +224,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             pollution.onNetworkUpdate(customPacketBuffer);
             timer.onNetworkUpdate(customPacketBuffer);
             component.onNetworkUpdate(customPacketBuffer);
-            invSlotGlass.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            invSlotGlass.readFromNbt(((Inventory) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -452,7 +451,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public List<ItemStack> getCoresItems() {
-        return invSlotCore;
+        return inventoryCore;
     }
 
     @Override

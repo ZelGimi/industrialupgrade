@@ -5,7 +5,7 @@ import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBase;
-import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.InventoryCharge;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public abstract class TileEntityBaseGenerator extends TileEntityInventory {
 
-    public final InvSlotCharge chargeSlot;
+    public final InventoryCharge chargeSlot;
     public final Energy energy;
 
     public int fuel = 0;
@@ -29,7 +29,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory {
     public TileEntityBaseGenerator(double production, int tier, int maxStorage) {
         this.production = production;
         this.ticksSinceLastActiveUpdate = IUCore.random.nextInt(256);
-        this.chargeSlot = new InvSlotCharge(this, 1);
+        this.chargeSlot = new InventoryCharge(this, 1);
         this.energy =
                 this.addComponent(Energy.asBasicSource(this, maxStorage, tier).addManagedSlot(this.chargeSlot));
     }

@@ -15,10 +15,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAirCollector;
 import com.denfop.gui.GuiAirCollector;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDrainTank;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -50,8 +49,8 @@ import java.util.Set;
 public class TileAirCollector extends TileElectricMachine implements IUpgradableBlock, IManufacturerBlock {
 
     public final Fluids fluids;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotDrainTank[] containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryDrainTank[] containerslot;
     public FluidTank[] fluidTank;
     private int level;
     private boolean work;
@@ -65,18 +64,18 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
                 FluidName.fluidco2.getInstance()};
         for (int i = 0; i < fluidTank.length; i++) {
 
-            this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 10000, InvSlot.TypeItemSlot.OUTPUT,
+            this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 10000, Inventory.TypeItemSlot.OUTPUT,
                     Fluids.fluidPredicate(name1[i])
             );
 
         }
-        this.containerslot = new InvSlotDrainTank[name1.length];
+        this.containerslot = new InventoryDrainTank[name1.length];
         for (int i = 0; i < name1.length; i++) {
-            this.containerslot[i] = new InvSlotDrainTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                    InvSlotFluid.TypeFluidSlot.OUTPUT, name1[i]
+            this.containerslot[i] = new InventoryDrainTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                    InventoryFluid.TypeFluidSlot.OUTPUT, name1[i]
             );
         }
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.level = 0;
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
 
@@ -313,7 +312,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         }
         for (FluidTank tank : fluidTank) {
 
-            for (InvSlotDrainTank slot : this.containerslot) {
+            for (InventoryDrainTank slot : this.containerslot) {
                 if (tank.getFluidAmount() >= 1000 && !slot.isEmpty() && slot.acceptsLiquid(tank.getFluid().getFluid())) {
                     slot.processFromTank(tank, this.outputSlot);
                 }

@@ -1,9 +1,9 @@
 package com.denfop.world.vein;
 
 public enum TypeVein {
-    SMALL(4, 11, 2, 10, 3),
-    MEDIUM(8, 17, 3, 8, 4),
-    BIG(12, 28, 4, 5, 5);
+    SMALL(5, 15, 2, 8, 5),
+    MEDIUM(10, 20, 3, 5, 7),
+    BIG(15, 35, 4, 3, 9);
     private final int max;
     private final int max_length;
     private final int level;

@@ -4,7 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -14,22 +14,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityItemTrash extends TileEntityInventory {
 
-    private final InvSlot invSlot;
+    private final Inventory inventory;
 
     public TileEntityItemTrash() {
-        this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 96) {
+        this.inventory = new Inventory(this, Inventory.TypeItemSlot.INPUT, 96) {
             @Override
             public void put(final int index, final ItemStack content) {
 
             }
 
-            @Override
-            public void put(final ItemStack content) {
 
-            }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return true;
             }
         };

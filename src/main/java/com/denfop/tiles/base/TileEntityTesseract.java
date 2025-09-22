@@ -17,7 +17,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerTesseract;
 import com.denfop.gui.GuiTesseract;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -42,7 +42,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     private final Energy energy;
     private final Fluids fluids;
     private final Fluids.InternalFluidTank tank;
-    private final InvSlot slot;
+    private final Inventory slot;
 
     public Channel channel;
     List<Channel> channelList = new ArrayList<>();
@@ -53,7 +53,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
         this.energy = this.addComponent(new Energy(this, Integer.MAX_VALUE, ModUtils.allFacings, ModUtils.allFacings, 14));
         this.fluids = this.addComponent(new Fluids(this));
         tank = this.fluids.addTank("tank", 64000);
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 18);
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT_OUTPUT, 18);
         this.getComponentPrivate().setActivate(true);
     }
 
@@ -181,9 +181,9 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
         int size = customPacketBuffer.readInt();
         int size1 = customPacketBuffer.readInt();
         try {
-            InvSlot invSlot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
-            for (int i = 0; i < invSlot.size(); i++) {
-                this.slot.put(i, invSlot.get(i));
+            Inventory inventory = (Inventory) DecoderHandler.decode(customPacketBuffer);
+            for (int i = 0; i < inventory.size(); i++) {
+                this.slot.put(i, inventory.get(i));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -249,7 +249,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     }
 
     @Override
-    public InvSlot getSlotItem() {
+    public Inventory getSlotItem() {
         return slot;
     }
 

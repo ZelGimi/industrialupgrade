@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerTunerWireless;
 import com.denfop.gui.GuiTunerWireless;
-import com.denfop.invslot.InvSlotTuner;
+import com.denfop.invslot.InventoryTuner;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
@@ -22,14 +22,14 @@ public class TileTunerWireless extends TileElectricMachine
         implements IUpdatableTileEvent {
 
 
-    public final InvSlotTuner inputslot;
+    public final InventoryTuner inputslot;
 
 
     public TileTunerWireless() {
         super(0, 10, 1);
 
 
-        this.inputslot = new InvSlotTuner(this);
+        this.inputslot = new InventoryTuner(this);
     }
 
     public IMultiTileBlock getTeBlock() {

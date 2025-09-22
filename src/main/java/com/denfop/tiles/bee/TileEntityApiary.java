@@ -18,7 +18,7 @@ import com.denfop.api.pollution.PollutionManager;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -26,7 +26,7 @@ import com.denfop.blocks.mechanism.BlockApiary;
 import com.denfop.container.ContainerApiary;
 import com.denfop.damagesource.IUDamageSource;
 import com.denfop.gui.GuiApiary;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemFluidCell;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.items.energy.ItemNet;
@@ -80,12 +80,12 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     static final int percentWorkersBee = 45;
     static final int percentBuildersBee = 15;
     public static BeeAI beeAI = BeeAI.beeAI;
-    public final InvSlotOutput invSlotProduct;
-    public final InvSlot frameSlot;
-    public final InvSlotOutput invSlotFood;
-    public final InvSlotOutput invSlotJelly;
-    public final InvSlot foodCellSlot;
-    public final InvSlot jellyCellSlot;
+    public final InventoryOutput invSlotProduct;
+    public final Inventory frameSlot;
+    public final InventoryOutput invSlotFood;
+    public final InventoryOutput invSlotJelly;
+    public final Inventory foodCellSlot;
+    public final Inventory jellyCellSlot;
     public List<Bee> birthBeeList = new LinkedList<>();
     public double royalJelly = 0;
     public double food = 0;
@@ -170,24 +170,24 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     private EnumLevelRadiation radiationPollution = EnumLevelRadiation.LOW;
 
     public TileEntityApiary() {
-        this.invSlotProduct = new InvSlotOutput(this, 7);
-        this.invSlotFood = new InvSlotOutput(this, 1);
-        this.invSlotJelly = new InvSlotOutput(this, 1);
-        this.foodCellSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.invSlotProduct = new InventoryOutput(this, 7);
+        this.invSlotFood = new InventoryOutput(this, 1);
+        this.invSlotJelly = new InventoryOutput(this, 1);
+        this.foodCellSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemFluidCell;
             }
         };
-        this.jellyCellSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.jellyCellSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemFluidCell;
             }
         };
-        this.frameSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
+        this.frameSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 4) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof IFrameItem;
             }
 
@@ -422,18 +422,20 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         this.deathTask = customPacketBuffer.readByte();
         this.illTask = customPacketBuffer.readByte();
         this.queen = BeeNetwork.instance.getBee(customPacketBuffer.readInt()).copy();
-        int size = customPacketBuffer.readInt();
-        for (int i = 0; i < size; i++) {
-            double chance = customPacketBuffer.readDouble();
-            ICrop crop = CropNetwork.instance.getCrop(customPacketBuffer.readInt());
-            queen.addPercentProduct(crop, chance);
-        }
+        if (customPacketBuffer.readBoolean()) {
+            int size = customPacketBuffer.readInt();
+            for (int i = 0; i < size; i++) {
+                double chance = customPacketBuffer.readDouble();
+                ICrop crop = CropNetwork.instance.getCrop(customPacketBuffer.readInt());
+                queen.addPercentProduct(crop, chance);
+            }
 
-        try {
-            this.stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
-            this.genome = new Genome(stack);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            try {
+                this.stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+                this.genome = new Genome(stack);
+            } catch (IOException e) {
+
+            }
         }
     }
 
@@ -461,6 +463,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         } else {
             buffer.writeInt(0);
         }
+        buffer.writeBoolean(queen != null);
         buffer.writeInt(queen.getProduct().size());
         for (int i = 0; i < queen.getProduct().size(); i++) {
             Product product = queen.getProduct().get(i);
@@ -1808,7 +1811,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             if (WorldBaseGen.random.nextBoolean()) {
                 queen.getProduct().forEach(product -> {
                     if (WorldBaseGen.random.nextInt(100) < product.getChance() * productGenome) {
-                        invSlotProduct.add(product.getCrop().getDrop());
+                        invSlotProduct.addAll(product.getCrop().getDrop());
                     }
                 });
             }

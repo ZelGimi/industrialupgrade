@@ -7,7 +7,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -24,7 +24,7 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerSatelliteAssembler;
 import com.denfop.gui.GuiSatelliteAssembler;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -48,11 +48,11 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-0.5, 0.0D, -0.5, 1.5, 2.0D,
             1.5
     ));
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentUpgrade componentUpgrades;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
@@ -61,14 +61,14 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     public TileEntitySatelliteAssembler() {
         super(800, 1, 1);
         Recipes.recipes.addInitRecipes(this);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 800
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "satelliteassembler", this) {
+        this.inputSlotA = new InventoryRecipes(this, "satelliteassembler", this) {
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
         };

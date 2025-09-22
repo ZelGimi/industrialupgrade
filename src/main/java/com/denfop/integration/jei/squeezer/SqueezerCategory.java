@@ -8,7 +8,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockSqueezer;
 import com.denfop.componets.ComponentProgress;
@@ -108,7 +108,7 @@ public class SqueezerCategory extends GuiIU implements IRecipeCategory<SqueezerW
         this.slots.drawBackground(0, -10);
         progress_bar.renderBar(0, 0, xScale);
 
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
             element.drawBackground(this.guiLeft, this.guiTop - 5);
         }
 
@@ -124,7 +124,7 @@ public class SqueezerCategory extends GuiIU implements IRecipeCategory<SqueezerW
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
         IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInputstack());
         int i = 0;
         for (; i < inputs.size(); i++) {

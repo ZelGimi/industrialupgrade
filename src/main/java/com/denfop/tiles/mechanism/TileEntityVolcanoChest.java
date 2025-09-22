@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.BlockVolcanoChest;
 import com.denfop.container.ContainerVolcanoChest;
 import com.denfop.gui.GuiVolcanoChest;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,10 +25,10 @@ import java.util.List;
 
 public class TileEntityVolcanoChest extends TileEntityInventory {
 
-    public final InvSlot invSlot;
+    public final Inventory inventory;
 
     public TileEntityVolcanoChest() {
-        this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 27);
+        this.inventory = new Inventory(this, Inventory.TypeItemSlot.INPUT_OUTPUT, 27);
 
     }
 
@@ -75,8 +75,8 @@ public class TileEntityVolcanoChest extends TileEntityInventory {
             int index;
             do {
                 index = world.rand.nextInt(27);
-            } while (!this.invSlot.get(index).isEmpty());
-            this.invSlot.put(index, stack1);
+            } while (!this.inventory.get(index).isEmpty());
+            this.inventory.put(index, stack1);
         }
     }
 

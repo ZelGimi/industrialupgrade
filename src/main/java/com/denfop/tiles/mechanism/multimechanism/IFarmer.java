@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism.multimechanism;
 
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 
 public interface IFarmer {
 
-    InvSlot getFertilizerSlot();
+    Inventory getFertilizerSlot();
 
 }

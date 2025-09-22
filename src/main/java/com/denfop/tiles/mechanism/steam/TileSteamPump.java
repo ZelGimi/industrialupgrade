@@ -13,7 +13,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerSteamPump;
 import com.denfop.gui.GuiSteamPump;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
 import com.denfop.utils.ModUtils;
@@ -57,10 +57,10 @@ public class TileSteamPump extends TileElectricLiquidTankInventory {
         this.defaultEnergyStorage = this.operationLength;
         componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) operationLength));
 
-        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
-        ), InvSlot.TypeItemSlot.NONE);
+        ), Inventory.TypeItemSlot.NONE);
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 1));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank1);

@@ -6,6 +6,7 @@ import com.denfop.api.space.fakebody.FakePlanet;
 import com.denfop.api.space.fakebody.FakeSatellite;
 import com.denfop.api.tesseract.Channel;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.DataOre;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +48,7 @@ public enum EncodedType {
     Input(IInputItemStack.class),
     FluidStack(net.minecraftforge.fluids.FluidStack.class),
     FluidTank(net.minecraftforge.fluids.FluidTank.class),
-    InvSlot(com.denfop.invslot.InvSlot.class),
+    InvSlot(Inventory.class),
     FAKE_PLANET(FakePlanet.class),
     FAKE_SATELLITE(FakeSatellite.class),
     FAKE_ASTEROID(FakeAsteroid.class),

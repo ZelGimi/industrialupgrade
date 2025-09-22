@@ -2,7 +2,6 @@ package com.denfop.tiles.mechanism.energy;
 
 import com.denfop.IUItem;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.EnergyNetLocal;
 import com.denfop.api.energy.IEnergyConductor;
 import com.denfop.api.energy.IEnergyController;
 import com.denfop.api.energy.IEnergyTile;
@@ -15,7 +14,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerRemover;
 import com.denfop.gui.GuiEnergyRemover;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.FakePlayerSpawner;
@@ -32,7 +31,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,7 +42,7 @@ import java.util.Set;
 public class TileEnergyRemover extends TileEntityInventory implements
         IUpdatableTileEvent, IEnergyController {
 
-    public final InvSlot slot;
+    public final Inventory slot;
     public Set<IEnergyConductor> conductorList = new HashSet<>();
     FakePlayerSpawner fakePlayer;
     Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
@@ -54,7 +52,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
     private long id;
 
     public TileEnergyRemover() {
-        slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 16);
+        slot = new Inventory(this, Inventory.TypeItemSlot.OUTPUT, 16);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 

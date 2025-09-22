@@ -3,8 +3,8 @@ package com.denfop.componets;
 import com.denfop.IUItem;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.blocks.FluidName;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -26,10 +26,10 @@ public class ComponentSteamProcess extends AbstractComponent {
     protected double energyConsume;
     protected int operationLength;
     protected ComponentProgress componentProgress;
-    protected InvSlotRecipes invSlotRecipes;
+    protected InventoryRecipes invSlotRecipes;
     protected int operationsPerTick;
     protected int tick;
-    protected InvSlotOutput outputSlot;
+    protected InventoryOutput outputSlot;
     protected IUpdateTick updateTick;
     protected boolean hasTank = false;
     protected boolean hasAudio = false;
@@ -95,7 +95,7 @@ public class ComponentSteamProcess extends AbstractComponent {
 
     }
 
-    public void setSlotOutput(final InvSlotOutput slotOutput) {
+    public void setSlotOutput(final InventoryOutput slotOutput) {
         this.outputSlot = slotOutput;
     }
 
@@ -123,7 +123,7 @@ public class ComponentSteamProcess extends AbstractComponent {
         this.hasAudio = hasAudio;
     }
 
-    public void setInvSlotRecipes(final InvSlotRecipes invSlotRecipes) {
+    public void setInvSlotRecipes(final InventoryRecipes invSlotRecipes) {
         this.invSlotRecipes = invSlotRecipes;
         this.updateTick = invSlotRecipes.getTile();
 
@@ -267,7 +267,7 @@ public class ComponentSteamProcess extends AbstractComponent {
 
     public void operateOnce(List<ItemStack> processResult) {
         this.invSlotRecipes.consume();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
 
 
@@ -303,7 +303,7 @@ public class ComponentSteamProcess extends AbstractComponent {
         }
         size = Math.min(size, this.operationsPerTick);
         this.invSlotRecipes.consume(size, output);
-        this.outputSlot.add(output.getRecipe().getOutput().items, size);
+        this.outputSlot.addAll(output.getRecipe().getOutput().items, size);
         if (maxSize == size) {
             this.updateTick.setRecipeOutput(null);
         }

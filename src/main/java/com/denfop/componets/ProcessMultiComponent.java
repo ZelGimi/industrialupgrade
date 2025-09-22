@@ -5,12 +5,11 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.recipe.IMultiUpdateTick;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryMultiRecipes;
 import com.denfop.blocks.FluidName;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityBlock;
@@ -35,10 +34,10 @@ import java.util.Random;
 
 public class ProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
-    public final InvSlotOutput outputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final Energy energy;
-    public final InvSlotMultiRecipes inputSlots;
+    public final InventoryMultiRecipes inputSlots;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     final short[] progress;
@@ -76,17 +75,17 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     ) {
         super((TileEntityBlock) parent);
         this.multimachine = parent;
-        this.inputSlots = new InvSlotMultiRecipes(
+        this.inputSlots = new InventoryMultiRecipes(
                 (TileEntityInventory) parent,
                 enumMultiMachine.type.recipe,
                 this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(
+        this.outputSlot = new InventoryOutput(
                 (IAdvInventory<?>) parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
-        this.upgradeSlot = new InvSlotUpgrade((TileEntityInventory) parent, 4);
+        this.upgradeSlot = new InventoryUpgrade((TileEntityInventory) parent, 4);
         this.energy = ((TileEntityInventory) parent).getComp(Energy.class);
         this.enumMultiMachine = enumMultiMachine;
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
@@ -120,7 +119,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.output[slotId] = output;
     }
 
-    public InvSlotUpgrade getUpgradeSlot() {
+    public InventoryUpgrade getUpgradeSlot() {
         return upgradeSlot;
     }
 
@@ -191,10 +190,10 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 if (random) {
                     this.inputSlots.consume(slotId, size, 1);
                     size = (int) ((min * 1D / max) * size);
-                    this.outputSlot.add(outputStack, size);
+                    this.outputSlot.addAll(outputStack, size);
                 } else {
                     this.inputSlots.consume(slotId, size, output.getList().get(0));
-                    this.outputSlot.add(outputStack, size);
+                    this.outputSlot.addAll(outputStack, size);
                 }
             } else {
                 int maxSize1;
@@ -238,7 +237,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
                 if (!this.random) {
                     this.inputSlots.consume(slotId, size, output.getList().get(0));
-                    this.outputSlot.add(outputStack, size);
+                    this.outputSlot.addAll(outputStack, size);
                 } else {
                     Random rand = this.getParent().getWorld().rand;
                     for (int i = 0; i < size; i++) {
@@ -316,7 +315,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 Random rand = this.getParent().getWorld().rand;
                 this.inputSlots.consume(slotId);
                 if (rand.nextInt(max + 1) <= min) {
-                    this.outputSlot.add(processResult);
+                    this.outputSlot.addAll(processResult);
                 }
             }
 
@@ -830,7 +829,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
     public void setMode(int mode1) {
         if (this.enumMultiMachine.type == EnumTypeMachines.METALFOMER) {
-            final InvSlotMultiRecipes slot = this.inputSlots;
+            final InventoryMultiRecipes slot = this.inputSlots;
             switch (mode1) {
                 case 0:
                     slot.setNameRecipe("extruding");

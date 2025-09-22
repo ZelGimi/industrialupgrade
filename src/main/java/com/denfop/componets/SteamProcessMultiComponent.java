@@ -6,8 +6,8 @@ import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IMultiUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotSteamMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventorySteamMultiRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.blocks.FluidName;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -30,8 +30,8 @@ import java.util.List;
 
 public class SteamProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
-    public final InvSlotSteamMultiRecipes inputSlots;
-    public final InvSlotOutput outputSlot;
+    public final InventorySteamMultiRecipes inputSlots;
+    public final InventoryOutput outputSlot;
     private final ComponentSteamEnergy steam;
     private final PressureComponent pressure;
     private final ISteamMechanism multimachine;
@@ -51,13 +51,13 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
     public SteamProcessMultiComponent(final ISteamMechanism parent, final EnumMultiMachine enumMultiMachine) {
         super((TileEntityBlock) parent);
         this.multimachine = parent;
-        this.inputSlots = new InvSlotSteamMultiRecipes(
+        this.inputSlots = new InventorySteamMultiRecipes(
                 (TileEntityInventory) parent,
                 enumMultiMachine.type.recipe,
                 (IMultiUpdateTick) this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(
+        this.outputSlot = new InventoryOutput(
                 (IAdvInventory<?>) parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );

@@ -11,8 +11,8 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -26,10 +26,10 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerItemDivider;
 import com.denfop.gui.GuiItemDivider;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -57,13 +57,13 @@ import java.util.Set;
 public class TileEntityItemDivider extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
     public final Fluids.InternalFluidTank fluidTank2;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotFluidByList fluidSlot2;
-    public final InvSlotOutput output1;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot2;
+    public final InventoryOutput output1;
     public final FluidHandlerRecipe fluid_handler;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
@@ -88,22 +88,22 @@ public class TileEntityItemDivider extends TileElectricMachine implements
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.inputSlotA = new InvSlotRecipes(this, "item_divider", this);
+        this.inputSlotA = new InventoryRecipes(this, "item_divider", this);
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.output1 = new InvSlotOutput(this, 2);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.output1 = new InventoryOutput(this, 2);
 
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
 
         this.fluid_handler = new FluidHandlerRecipe("item_divider", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(1)));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
-        this.fluidSlot1.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.fluidSlot2.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(1));
+        this.fluidSlot1.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.fluidSlot2.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
     }
 
@@ -350,7 +350,7 @@ public class TileEntityItemDivider extends TileElectricMachine implements
 
     public void operateOnce() {
         this.inputSlotA.consume();
-        this.outputSlot.add(this.output.getRecipe().getOutput().items);
+        this.outputSlot.addAll(this.output.getRecipe().getOutput().items);
         this.fluid_handler.fillFluid();
     }
 

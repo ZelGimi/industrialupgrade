@@ -13,8 +13,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerSaplingGardener;
 import com.denfop.gui.GuiSaplingGardener;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
@@ -36,24 +36,24 @@ import java.util.Set;
 public class TileEntitySaplingGardener extends TileEntityInventory implements IUpgradableBlock {
 
     private static final int RADIUS = 4;
-    public final InvSlot slot;
+    public final Inventory slot;
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
 
     public TileEntitySaplingGardener() {
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((ItemBlock) stack.getItem()).getBlock()).getPlantType(
                         world,
                         getBlockPos()) == EnumPlantType.Plains;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));

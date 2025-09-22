@@ -82,7 +82,7 @@ public class GuiChemicalWaste extends GuiIU<ContainerDefaultMultiElement> {
         drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 76, 20, 55
         );
-        for (final GuiElement<?> element : this.elements) {
+        for (final GuiElement element : this.elements) {
             element.drawBackground(mouseX, mouseY);
         }
     }

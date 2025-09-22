@@ -3,7 +3,6 @@ package com.denfop.api.gui;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.gui.GuiCore;
-import com.denfop.items.book.GUIBook;
 import com.denfop.register.InitMultiBlockSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -23,7 +22,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Map;
 
-public class GuiElementMultiBlock extends GuiElement<GuiElementFluidToFluids> {
+public class GuiElementMultiBlock extends GuiElement {
 
     private final EnumFacing facing;
     public int scroll;
@@ -49,29 +48,7 @@ public class GuiElementMultiBlock extends GuiElement<GuiElementFluidToFluids> {
 
     }
 
-    public boolean onMouseClick(int mouseX, int mouseY, MouseButton button, boolean onThis) {
-        return onThis && this.onMouseClick(mouseX, mouseY, button);
-    }
 
-    protected boolean onMouseClick(int mouseX, int mouseY, MouseButton button) {
-        return false;
-    }
-
-    public boolean onMouseDrag(int mouseX, int mouseY, MouseButton button, long timeFromLastClick, boolean onThis) {
-        return onThis && this.onMouseDrag(mouseX, mouseY, button, timeFromLastClick);
-    }
-
-    protected boolean onMouseDrag(int mouseX, int mouseY, MouseButton button, long timeFromLastClick) {
-        return false;
-    }
-
-    public boolean onMouseRelease(int mouseX, int mouseY, MouseButton button, boolean onThis) {
-        return onThis && this.onMouseRelease(mouseX, mouseY, button);
-    }
-
-    protected boolean onMouseRelease(int mouseX, int mouseY, MouseButton button) {
-        return false;
-    }
 
 
     public void drawBackground(int mouseX, int mouseY) {

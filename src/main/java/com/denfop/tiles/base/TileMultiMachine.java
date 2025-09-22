@@ -24,9 +24,9 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.gui.GuiMultiMachine;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryDischarge;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.items.modules.ItemModuleTypePanel;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -67,10 +67,10 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
 
     public final Energy energy;
-    public final InvSlotDischarge dischargeSlot;
+    public final InventoryDischarge dischargeSlot;
     public final ProcessMultiComponent multi_process;
     public final int sizeWorkingSlot;
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final ComponentUpgradeSlots componentUpgrades;
     public CoolComponent cold;
     public HeatComponent heat = null;
@@ -100,7 +100,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     ) {
 
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
+        this.dischargeSlot = new InventoryDischarge(this, Inventory.TypeItemSlot.INPUT, aDefaultTier, false);
         this.energy = this.addComponent(Energy
                 .asBasicSink(this, (double) energyconsume * OperationsPerTick, (int) Math.min(14, Math.pow(
                         2,
@@ -109,7 +109,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                 .addManagedSlot(this.dischargeSlot));
         if (this.getMachine().type == EnumTypeMachines.OreWashing) {
             this.fluid = this.addComponent(new Fluids(this));
-            this.tank = fluid.addTank("tank", 64000, InvSlot.TypeItemSlot.INPUT,
+            this.tank = fluid.addTank("tank", 64000, Inventory.TypeItemSlot.INPUT,
                     Fluids.fluidPredicate(FluidRegistry.WATER)
             );
         }
@@ -129,14 +129,14 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.HEAT);
         this.componentUpgrades = this.addComponent(new ComponentUpgradeSlots(this, this.multi_process.getUpgradeSlot()) {
             @Override
-            public void setOverclockRates(final InvSlotUpgrade invSlotUpgrade) {
+            public void setOverclockRates(final InventoryUpgrade invSlotUpgrade) {
                 super.setOverclockRates(invSlotUpgrade);
                 invSlotUpgrade.isUpdate = true;
                 ((TileMultiMachine) this.getParent()).multi_process.setOverclockRates();
                 invSlotUpgrade.isUpdate = false;
             }
         });
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -153,7 +153,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
         };

@@ -4,7 +4,7 @@ import com.denfop.IUCore;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.IPatternStorage;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -16,10 +16,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerReplicator;
 import com.denfop.gui.GuiReplicator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -50,10 +49,10 @@ import java.util.Set;
 public class TileBaseReplicator extends TileElectricMachine implements IUpgradableBlock, IType,
         IUpdatableTileEvent {
 
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput cellSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput cellSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final double coef;
@@ -77,19 +76,19 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
     public TileBaseReplicator(double coef) {
         super(2000000, 4, 0);
         this.mode = TileBaseReplicator.Mode.STOPPED;
-        this.fluidSlot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.INPUT, FluidName.fluiduu_matter.getInstance()
+        this.fluidSlot = new InventoryFluidByList(this, Inventory.TypeItemSlot.INPUT, 1,
+                InventoryFluid.TypeFluidSlot.INPUT, FluidName.fluiduu_matter.getInstance()
         );
-        this.cellSlot = new InvSlotOutput(this, 1);
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.cellSlot = new InventoryOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 16000, Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance()));
         this.coef = coef;
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, this.upgradeSlot) {
             @Override
-            public void setOverclockRates(final InvSlotUpgrade invSlotUpgrade) {
+            public void setOverclockRates(final InventoryUpgrade invSlotUpgrade) {
                 super.setOverclockRates(invSlotUpgrade);
                 ((TileBaseReplicator) this.getParent()).setOverclockRates();
             }

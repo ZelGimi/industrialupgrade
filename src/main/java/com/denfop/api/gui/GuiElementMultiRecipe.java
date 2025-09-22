@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class GuiElementMultiRecipe extends GuiElement<GuiElementFluidToFluids> {
+public class GuiElementMultiRecipe extends GuiElement {
 
 
     private BaseMachineRecipe recipe;

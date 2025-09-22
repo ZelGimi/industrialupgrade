@@ -164,7 +164,6 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
-            this.updateConnectivity();
         }
 
 

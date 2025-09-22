@@ -17,9 +17,9 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoCrafter;
 import com.denfop.gui.GuiAutoCrafter;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotAutoCrafter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryAutoCrafter;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.invslot.InventoryAutoCrafting;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -46,14 +46,14 @@ import java.util.stream.Collectors;
 
 public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgradableBlock {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
     private final InventoryCrafting crafingTable;
-    private final InvSlot slot;
-    private final InvSlotAutoCrafter autoCrafter;
+    private final Inventory slot;
+    private final InventoryAutoCrafter autoCrafter;
     public int operationsPerTick;
     public double energyConsume;
     public ComponentProgress componentProgress;
@@ -62,7 +62,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
 
     public TileEntityAutoCrafter() {
         super(1000, 4, 1);
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 18) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 18) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -75,9 +75,9 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
         this.defaultOperationLength = operationsPerTick = 100;
         this.defaultTier = 4;
         this.defaultEnergyStorage = 2 * 100;
-        this.autoCrafter = new InvSlotAutoCrafter(this, null, 9);
+        this.autoCrafter = new InventoryAutoCrafter(this, null, 9);
         this.crafingTable = new InventoryAutoCrafting(this);
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) defaultOperationLength));
 
     }
@@ -276,13 +276,13 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
             }
         }
 
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
-    public InvSlotAutoCrafter getAutoCrafter() {
+    public InventoryAutoCrafter getAutoCrafter() {
         return autoCrafter;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

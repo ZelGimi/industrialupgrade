@@ -8,7 +8,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerAntiUpgrade;
 import com.denfop.gui.GuiAntiUpgradeBlock;
-import com.denfop.invslot.InvSlotAntiUpgradeBlock;
+import com.denfop.invslot.InventoryAntiUpgradeBlock;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdatableTileEvent {
 
-    public final InvSlotAntiUpgradeBlock input;
+    public final InventoryAntiUpgradeBlock input;
     public int index;
     public int progress;
     public boolean need;
@@ -38,7 +38,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
         super(1000, 14, 4);
         this.need = false;
         this.progress = 0;
-        this.input = new InvSlotAntiUpgradeBlock(this);
+        this.input = new InventoryAntiUpgradeBlock(this);
         this.index = 0;
     }
 

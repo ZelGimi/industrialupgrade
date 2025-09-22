@@ -10,7 +10,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerSteamPressureConverter;
 import com.denfop.gui.GuiSteamPressureConverter;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -51,7 +51,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
 
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 4000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
+        this.fluidTank = this.fluids.addTank("fluidTank", 4000, Inventory.TypeItemSlot.INPUT, Fluids.fluidPredicate(
                 FluidName.fluidsuperheated_steam.getInstance()
         ));
         this.pressure = this.addComponent(PressureComponent.asBasicSource(this, 4));
