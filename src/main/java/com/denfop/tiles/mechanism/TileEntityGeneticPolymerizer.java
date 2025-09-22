@@ -2,14 +2,8 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -26,9 +20,9 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerGeneticPolymerizer;
 import com.denfop.gui.GuiGeneticPolymerizer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
 import net.minecraft.client.gui.GuiScreen;
@@ -46,9 +40,9 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
         IUpgradableBlock {
 
 
-    public final InvSlotFluidByList fluidSlot;
-    public final InvSlotOutput outputSlot1;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryFluidByList fluidSlot;
+    public final InventoryOutput outputSlot1;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
@@ -56,7 +50,7 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgrade componentUpgrades;
 
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
 
     public TileEntityGeneticPolymerizer() {
@@ -66,14 +60,14 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
                 12,
                 Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance(), FluidName.fluidcropgenetic.getInstance())
         );
-        this.outputSlot1 = new InvSlotOutput(this, 1);
-        this.fluidSlot = new InvSlotFluidByList(
+        this.outputSlot1 = new InventoryOutput(this, 1);
+        this.fluidSlot = new InventoryFluidByList(
                 this,
                 1,
                 FluidName.fluidbeegenetic.getInstance(),
                 FluidName.fluidcropgenetic.getInstance()
         );
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
@@ -85,10 +79,10 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
 
-        this.inputSlotA = new InvSlotRecipes(this, "genetic_polymerizer", this, this.fluidTank);
+        this.inputSlotA = new InventoryRecipes(this, "genetic_polymerizer", this, this.fluidTank);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
         Recipes.recipes.addInitRecipes(this);

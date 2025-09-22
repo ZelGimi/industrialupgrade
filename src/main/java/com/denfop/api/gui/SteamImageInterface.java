@@ -4,7 +4,7 @@ import com.denfop.gui.GuiCore;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class SteamImageInterface extends GuiElement<ImageInterface> {
+public class SteamImageInterface extends GuiElement {
 
 
     public SteamImageInterface(GuiCore<?> gui, int x, int y, int width, int height) {

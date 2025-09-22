@@ -16,7 +16,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerSteamSqueezer;
 import com.denfop.gui.GuiSteamSqueezer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -49,7 +49,7 @@ public class TileEntitySteamSqueezer extends TileElectricMachine implements IHas
     public final Fluids.InternalFluidTank fluidTank;
     public final ComponentSteamEnergy steam;
     public final PressureComponent pressure;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     private final Fluids fluids;
     public double energyConsume;
     public int operationLength;
@@ -61,7 +61,7 @@ public class TileEntitySteamSqueezer extends TileElectricMachine implements IHas
     public TileEntitySteamSqueezer() {
         super(0, 1, 0);
         this.progress = 0;
-        this.inputSlotA = new InvSlotRecipes(this, "squeezer", this);
+        this.inputSlotA = new InventoryRecipes(this, "squeezer", this);
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 100;
         operationsPerTick = 1;
@@ -70,7 +70,7 @@ public class TileEntitySteamSqueezer extends TileElectricMachine implements IHas
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankExtract("fluidTank1", 4000);
         this.fluid_handler = new FluidHandlerRecipe("squeezer", fluids);
-        this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank = fluids.addTank("fluidTank2", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 2));

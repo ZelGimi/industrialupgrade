@@ -6,7 +6,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.container.ContainerGeothermalWaste;
 import com.denfop.gui.GuiGeothermalWaste;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,10 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityGeothermalWaste extends TileEntityMultiBlockElement implements IWaste {
 
-    private final InvSlot slot;
+    private final Inventory slot;
 
     public TileEntityGeothermalWaste() {
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 4);
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.OUTPUT, 4);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class TileEntityGeothermalWaste extends TileEntityMultiBlockElement imple
         return true;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

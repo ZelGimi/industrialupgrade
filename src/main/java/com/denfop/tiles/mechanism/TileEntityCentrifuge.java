@@ -9,7 +9,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -26,8 +26,8 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerCentrifuge;
 import com.denfop.gui.GuiCentrifuge;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
@@ -46,13 +46,13 @@ import java.util.Set;
 public class TileEntityCentrifuge extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentUpgrade componentUpgrades;
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
@@ -60,7 +60,7 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
 
     public TileEntityCentrifuge() {
         super(200, 1, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
             public void onLoaded() {
@@ -71,7 +71,7 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "genetic_centrifuge", this);
+        this.inputSlotA = new InventoryRecipes(this, "genetic_centrifuge", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1) {
             @Override
             public boolean checkRecipe() {
@@ -95,7 +95,7 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -107,7 +107,7 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

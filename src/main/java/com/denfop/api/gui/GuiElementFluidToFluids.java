@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiElementFluidToFluids extends GuiElement<GuiElementFluidToFluids> {
+public class GuiElementFluidToFluids extends GuiElement {
 
     private final FluidStack fluid;
     private final TypeFluids recipe;

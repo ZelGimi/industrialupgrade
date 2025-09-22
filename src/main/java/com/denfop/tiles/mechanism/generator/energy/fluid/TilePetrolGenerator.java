@@ -3,7 +3,7 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -15,10 +15,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPetrolGenerator;
 import com.denfop.gui.GuiPetrolGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryCharge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -42,9 +41,9 @@ import java.io.IOException;
 public class TilePetrolGenerator extends TileEntityLiquidTankInventory implements IAudioFixer,
         IUpdatableTileEvent {
 
-    public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput outputSlot;
+    public final InventoryCharge chargeSlot = new InventoryCharge(this, 1);
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput outputSlot;
     public final String name = null;
     public final Energy energy;
     public final int production = (int) 100.0F;
@@ -58,11 +57,11 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     public TilePetrolGenerator() {
         super(12);
         this.coef = 1;
-        this.fluidSlot = new InvSlotFluidByList(
+        this.fluidSlot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.INPUT,
+                InventoryFluid.TypeFluidSlot.INPUT,
                 FluidName.fluidbenz.getInstance(),
                 FluidName.fluidpetrol90.getInstance(),
                 FluidName.fluidpetrol95.getInstance()
@@ -70,7 +69,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
                 FluidName.fluidpetrol100.getInstance(),
                 FluidName.fluidpetrol105.getInstance()
         );
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSource(
                 this,
                 (double) 5000000,

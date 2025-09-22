@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
@@ -12,7 +12,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerWirelessMineralQuarry;
 import com.denfop.gui.GuiWirelessMineralQuarry;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemVeinSensor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -39,16 +39,16 @@ public class TileEntityWirelessMineralQuarry extends TileEntityInventory impleme
 
 
     public final Energy energy;
-    public final InvSlot invslot;
-    public final InvSlotOutput output;
+    public final Inventory invslot;
+    public final InventoryOutput output;
     public List<Vein> veinList = new LinkedList<>();
     public List<ItemStack> itemStacks = new LinkedList<>();
     public int level;
 
     public TileEntityWirelessMineralQuarry() {
-        this.output = new InvSlotOutput(this, 18);
+        this.output = new InventoryOutput(this, 18);
         this.energy = this.addComponent(Energy.asBasicSink(this, 50000, 14));
-        this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
+        this.invslot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 4) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -56,13 +56,13 @@ public class TileEntityWirelessMineralQuarry extends TileEntityInventory impleme
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemVeinSensor)) {
                     return false;
                 }
                 final NBTTagCompound nbt = ModUtils.nbt(stack);
                 if (!nbt.getString("type").isEmpty()) {
-                    return !nbt.getString("type").equals("oil");
+                    return !nbt.getString("type").equals("oil") && !nbt.getString("type").equals("gas");
                 }
                 return false;
             }

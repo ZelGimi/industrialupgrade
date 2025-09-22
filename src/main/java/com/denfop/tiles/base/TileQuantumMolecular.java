@@ -7,7 +7,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
@@ -58,7 +58,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     public int operationLength;
     public boolean need_put_check = false;
     public int operationsPerTick;
-    public InvSlotRecipes inputSlot;
+    public InventoryRecipes inputSlot;
     public double perenergy;
     public double differenceenergy;
     protected double progress;
@@ -77,7 +77,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
         this.time = new ArrayList<>();
         this.queue = false;
         this.redstoneMode = 0;
-        this.inputSlot = new InvSlotRecipes(this, "quantummolecular", this) {
+        this.inputSlot = new InventoryRecipes(this, "quantummolecular", this) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -465,7 +465,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     public void operateOnce(List<ItemStack> processResult) {
         if (this.outputSlot.canAdd(processResult)) {
             this.inputSlot.consume();
-            this.outputSlot.add(processResult);
+            this.outputSlot.addAll(processResult);
         }
     }
 
@@ -473,7 +473,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
         for (int i = 0; i < size; i++) {
             if (this.outputSlot.canAdd(processResult)) {
                 this.inputSlot.consume();
-                this.outputSlot.add(processResult);
+                this.outputSlot.addAll(processResult);
             }
         }
     }

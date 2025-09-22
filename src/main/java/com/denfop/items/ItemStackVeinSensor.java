@@ -3,8 +3,7 @@ package com.denfop.items;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerVeinSensor;
 import com.denfop.gui.GuiVeinSensor;
-import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.invslot.Inventory;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
 import net.minecraft.client.gui.GuiScreen;
@@ -73,20 +72,10 @@ public class ItemStackVeinSensor extends ItemStackInventory {
         return new GuiVeinSensor(new ContainerVeinSensor(player, this), itemStack1);
     }
 
-    @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

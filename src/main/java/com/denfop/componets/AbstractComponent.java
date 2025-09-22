@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketAbstractComponent;
 import com.denfop.tiles.base.TileEntityBlock;
@@ -53,7 +53,7 @@ public abstract class AbstractComponent {
         return false;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
 
     }
 

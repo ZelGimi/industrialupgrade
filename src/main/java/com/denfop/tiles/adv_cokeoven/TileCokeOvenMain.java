@@ -5,7 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -16,10 +16,9 @@ import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAdvCokeOven;
 import com.denfop.gui.GuiAdvCokeOven;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDrainTank;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -53,17 +52,17 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
         IUpdatableTileEvent,
         IAudioFixer {
 
-    public final InvSlotDrainTank fluidSlot1;
-    public final InvSlotOutput output2;
-    public final InvSlotOutput output1;
-    public final InvSlotFluidByList fluidSlot;
+    public final InventoryDrainTank fluidSlot1;
+    public final InventoryOutput output2;
+    public final InventoryOutput output1;
+    public final InventoryFluidByList fluidSlot;
     public final HeatComponent heat;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public FluidTank tank = null;
     public boolean load = false;
-    public InvSlotCokeOven invSlotBlastFurnace = new InvSlotCokeOven(this);
-    public InvSlotOutput output = new InvSlotOutput(this, 1);
+    public InventoryCokeOven invSlotBlastFurnace = new InventoryCokeOven(this);
+    public InventoryOutput output = new InventoryOutput(this, 1);
     public FluidTank tank1 = null;
 
     public IHeat blastHeat;
@@ -81,13 +80,13 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
         super(InitMultiBlockSystem.advCokeOvenMultiBlock);
         this.full = false;
         this.entityPlayerList = new ArrayList<>();
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidsteam.getInstance());
-        this.fluidSlot1 = new InvSlotDrainTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluidcreosote.getInstance()
+        this.fluidSlot = new InventoryFluidByList(this, 1, FluidName.fluidsteam.getInstance());
+        this.fluidSlot1 = new InventoryDrainTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                InventoryFluid.TypeFluidSlot.OUTPUT, FluidName.fluidcreosote.getInstance()
         );
         ;
-        this.output1 = new InvSlotOutput(this, 1);
-        this.output2 = new InvSlotOutput(this, 1);
+        this.output1 = new InventoryOutput(this, 1);
+        this.output2 = new InventoryOutput(this, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.36));

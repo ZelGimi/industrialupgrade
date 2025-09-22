@@ -25,9 +25,9 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerHydroTurbineController;
 import com.denfop.gui.GuiHydroTurbineController;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotHydroTurbineRotor;
-import com.denfop.invslot.InvSlotHydroTurbineRotorBlades;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryHydroTurbineRotor;
+import com.denfop.invslot.InventoryHydroTurbineRotorBlades;
 import com.denfop.items.ItemWindRod;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
@@ -72,10 +72,10 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         IUpdatableTileEvent {
 
 
-    public final InvSlotHydroTurbineRotorBlades slot_blades;
+    public final InventoryHydroTurbineRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
     public ISocket energy;
-    public InvSlotHydroTurbineRotor slot;
+    public InventoryHydroTurbineRotor slot;
     public double generation = 0;
     public boolean need_repair;
     public int mind_wind;
@@ -104,8 +104,8 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
     public TileEntityHydroTurbineController() {
         super(InitMultiBlockSystem.HydroTurbineMultiBlock);
         this.levelGenerators = EnumLevelGenerators.FOUR;
-        this.slot = new InvSlotHydroTurbineRotor(this);
-        this.slot_blades = new InvSlotHydroTurbineRotorBlades(this);
+        this.slot = new InventoryHydroTurbineRotor(this);
+        this.slot_blades = new InventoryHydroTurbineRotorBlades(this);
         this.addition_power = 0;
         this.addition_efficient = 0;
         this.addition_strength = 0;
@@ -223,7 +223,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -701,7 +701,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((Inventory) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];

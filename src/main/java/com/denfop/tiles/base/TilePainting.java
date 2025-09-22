@@ -81,7 +81,7 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
                 final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
                 double newCharge = ElectricItem.manager.getCharge(stack1);
                 this.invSlotRecipes.consume();
-                this.outputSlot.add(processResult);
+                this.outputSlot.addAll(processResult);
                 ItemStack stack = this.outputSlot.get();
                 stack.setTagCompound(tNBT);
                 NBTTagCompound nbt = ModUtils.nbt(stack);

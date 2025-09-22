@@ -7,8 +7,8 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -40,13 +40,13 @@ import java.util.List;
 
 public class TileEntityWaterRotorAssembler extends TileEntityInventory implements IUpdateTick, IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Energy energy;
     public final int defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final int defaultEnergyStorage;
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe recipe;
@@ -57,14 +57,14 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
     public int operationsPerTick = 1;
 
     public TileEntityWaterRotorAssembler() {
-        this.inputSlotA = new InvSlotRecipes(this, "water_rotor_assembler", this);
-        inputSlotA.setStackSizeLimit(1);
+        this.inputSlotA = new InventoryRecipes(this, "water_rotor_assembler", this);
+        inputSlotA.setInventoryStackLimit(1);
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 14;
         this.defaultEnergyStorage = 2 * 100;
         this.recipe = null;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSink(this, defaultEnergyStorage, defaultTier));
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
@@ -220,7 +220,7 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
 
         this.inputSlotA.consume();
 
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
         super(guiContainer);
         this.componentList.clear();
 
-        this.addElement(new TankGauge(this, 67, 15, 37, 49, container.base.getFuelTank(), TankGauge.TankGuiStyle.Normal) {
+        this.addElement(new TankGauge(this, 67, 15, 37, 49, container.base.getFuelTank()) {
 
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -53,14 +53,12 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
                 if (fs != null && fs.amount > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 37;
-                        fluidHeight = 49;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 37;
+                    fluidHeight = 49;
 
                     Fluid fluid = fs.getFluid();
                     TextureAtlasSprite sprite = fluid != null

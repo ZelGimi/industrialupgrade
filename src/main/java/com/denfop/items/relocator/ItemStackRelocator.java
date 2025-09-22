@@ -5,10 +5,9 @@ import com.denfop.container.ContainerRelocator;
 import com.denfop.container.ContainerRelocatorAddPoint;
 import com.denfop.gui.GuiRelocator;
 import com.denfop.gui.GuiRelocatorAddPoint;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -66,20 +65,10 @@ public class ItemStackRelocator extends ItemStackInventory {
         return new GuiRelocator(getGuiContainer(player));
     }
 
-    @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

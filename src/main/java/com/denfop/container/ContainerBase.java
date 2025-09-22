@@ -2,7 +2,7 @@ package com.denfop.container;
 
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.componets.AbstractComponent;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.network.packet.PacketUpdateFieldContainerItemStack;
 import com.denfop.network.packet.PacketUpdateFieldContainerTile;
@@ -41,15 +41,15 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         } else if (!requireInputOnly) {
             return true;
         } else {
-            return slot instanceof SlotInvSlot && ((SlotInvSlot) slot).invSlot.canInput();
+            return slot instanceof SlotInvSlot && ((SlotInvSlot) slot).inventory.canInput();
         }
 
     }
 
-    public SlotInvSlot findClassSlot(Class<? extends InvSlot> invSlotClass) {
+    public SlotInvSlot findClassSlot(Class<? extends Inventory> invSlotClass) {
         for (Slot slot : this.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
-                if (((SlotInvSlot) slot).invSlot.getClass().equals(invSlotClass)) {
+                if (((SlotInvSlot) slot).inventory.getClass().equals(invSlotClass)) {
                     return (SlotInvSlot) slot;
                 }
             }
@@ -67,11 +67,11 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         return list;
     }
 
-    public List<SlotInvSlot> findClassSlots(Class<? extends InvSlot> invSlotClass) {
+    public List<SlotInvSlot> findClassSlots(Class<? extends Inventory> invSlotClass) {
         List<SlotInvSlot> list = new ArrayList<>();
         for (Slot slot : this.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
-                if (((SlotInvSlot) slot).invSlot.getClass().equals(invSlotClass)) {
+                if (((SlotInvSlot) slot).inventory.getClass().equals(invSlotClass)) {
                     list.add((SlotInvSlot) slot);
                 }
             }
@@ -115,7 +115,7 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         if (!(slot instanceof SlotVirtual)) {
             if (slot instanceof SlotInvSlot) {
                 SlotInvSlot slot1 = (SlotInvSlot) slot;
-                if (!slot1.invSlot.canShift() && clickType == ClickType.QUICK_MOVE) {
+                if (!slot1.inventory.canShift() && clickType == ClickType.QUICK_MOVE) {
                     return ItemStack.EMPTY;
                 }
             }

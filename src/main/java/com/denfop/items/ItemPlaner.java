@@ -168,7 +168,7 @@ public class ItemPlaner extends Item implements IModelRegister {
                         BlockPos pos2 = pos.add(pos1);
                         ItemBlockTileEntity item1 = (ItemBlockTileEntity) item.getItem();
                         TileEntity tileEntity = world.getTileEntity(pos2);
-                        if (tileEntity == null && world.getBlockState(pos2).getMaterial() == Material.AIR) {
+                        if (tileEntity == null  && canPlace(world.getBlockState(pos2))) {
                             IBlockState iblockstate1 = item1.getBlock().getStateForPlacement(world, pos2,
                                     rotation, hitX,
                                     hitY,
@@ -236,7 +236,7 @@ public class ItemPlaner extends Item implements IModelRegister {
     }
 
     private boolean canPlace(IBlockState state) {
-        return state.getMaterial() == Material.AIR || state.getBlock() == Blocks.TALLGRASS || state.getBlock() == Blocks.DOUBLE_PLANT || state.getBlock() == Blocks.RED_FLOWER || state
+        return state.getMaterial() == Material.AIR ||state.getMaterial().isReplaceable() || state.getBlock() == Blocks.TALLGRASS || state.getBlock() == Blocks.DOUBLE_PLANT || state.getBlock() == Blocks.RED_FLOWER || state
                 .getMaterial()
                 .isLiquid();
     }

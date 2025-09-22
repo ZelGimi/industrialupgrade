@@ -16,8 +16,8 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerSteamGenerator;
 import com.denfop.gui.GuiSteamGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryCharge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -38,7 +38,7 @@ import java.io.IOException;
 public class TileEntitySteamGenerator extends TileEntityInventory implements
         IAudioFixer, IUpdatableTileEvent {
 
-    public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
+    public final InventoryCharge chargeSlot = new InventoryCharge(this, 1);
     public final double coef;
     public final Energy energy;
     public final int production = Math.round(4.0F * 1);
@@ -58,7 +58,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
-        ), InvSlot.TypeItemSlot.NONE);
+        ), Inventory.TypeItemSlot.NONE);
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank1);
         this.energy = this.addComponent(Energy.asBasicSource(this, (double) 25000 * coef, 1));

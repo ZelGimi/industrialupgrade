@@ -57,7 +57,7 @@ public class GeneratorVolcano {
     private static IBlockState basalt_blocked = IUItem.basalts.getState(BlockBasalts.Type.basalt_blocked);
     private static IBlockState[][] basalts_ores = null;
     private final World world;
-    private final BlockPos position;
+    private BlockPos position;
     private final Random rand;
     private final Thread thread;
     private final LinkedList<BlockPos> blockPosList1;
@@ -105,7 +105,10 @@ public class GeneratorVolcano {
             initBasaltsOres();
         }
         final int height = chunk.getHeight(position2);
-        this.position = new BlockPos(position1.getX(), height - maxbaseHeight, position1.getZ());
+        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), height, position2.getZ());
+        this.position = checkPos.add(0, -maxbaseHeight / 2,0);
+        if (position.getY() > 60)
+            position = position.add(0,-(position.getY()-60),0);
         this.y = 0;
         this.end = false;
         this.thread = new Thread() {

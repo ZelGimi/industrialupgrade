@@ -4,13 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.IDual;
 import com.denfop.api.sytem.ISource;
 import com.denfop.blocks.FluidName;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Timer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,10 +29,10 @@ public class ComponentProcess extends AbstractComponent {
     protected double energyConsume;
     protected int operationLength;
     protected ComponentProgress componentProgress;
-    protected InvSlotRecipes invSlotRecipes;
+    protected InventoryRecipes invSlotRecipes;
     protected int operationsPerTick;
     protected int tick;
-    protected InvSlotOutput outputSlot;
+    protected InventoryOutput outputSlot;
     protected IUpdateTick updateTick;
     protected boolean hasTank = false;
     protected boolean hasAudio = false;
@@ -63,7 +63,7 @@ public class ComponentProcess extends AbstractComponent {
 
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
 
         this.operationsPerTick = invSlotUpgrade.getOperationsPerTick1(this.defaultOperationLength);
         this.operationLength = invSlotUpgrade.getOperationLength1(this.defaultOperationLength);
@@ -106,7 +106,7 @@ public class ComponentProcess extends AbstractComponent {
         return super.onBlockActivated(player, hand);
     }
 
-    public void setSlotOutput(final InvSlotOutput slotOutput) {
+    public void setSlotOutput(final InventoryOutput slotOutput) {
         this.outputSlot = slotOutput;
     }
 
@@ -134,7 +134,7 @@ public class ComponentProcess extends AbstractComponent {
         this.hasAudio = hasAudio;
     }
 
-    public void setInvSlotRecipes(final InvSlotRecipes invSlotRecipes) {
+    public void setInvSlotRecipes(final InventoryRecipes invSlotRecipes) {
         this.invSlotRecipes = invSlotRecipes;
         this.updateTick = invSlotRecipes.getTile();
 
@@ -464,7 +464,7 @@ public class ComponentProcess extends AbstractComponent {
 
     public void operateOnce(List<ItemStack> processResult) {
         this.invSlotRecipes.consume();
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
         checkRadiation(true);
         checkExp(true);
     }
@@ -483,7 +483,7 @@ public class ComponentProcess extends AbstractComponent {
         }
         size = Math.min(this.getSESize(size), this.getRadiationSize(size));
         this.invSlotRecipes.consume(size, output);
-        this.outputSlot.add(output.getRecipe().getOutput().items, size);
+        this.outputSlot.addAll(output.getRecipe().getOutput().items, size);
         this.consumeSE(size);
         this.consumeRadiation(size);
         if (maxSize == size) {
@@ -525,7 +525,7 @@ public class ComponentProcess extends AbstractComponent {
         size = Math.min(size, this.operationsPerTick);
         size = Math.min(this.getSESize(size), this.getRadiationSize(size));
         this.invSlotRecipes.consume(size, output);
-        this.outputSlot.add(output.getRecipe().getOutput().items, size);
+        this.outputSlot.addAll(output.getRecipe().getOutput().items, size);
         this.consumeSE(size);
         this.consumeRadiation(size);
         if (maxSize == size) {

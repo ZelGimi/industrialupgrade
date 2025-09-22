@@ -8,10 +8,12 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
     public boolean isBlack = false;
     protected GuiComponent inventory;
     protected GuiComponent slots;
-    protected List<InvSlot> invSlotList = new ArrayList<>();
+    protected List<Inventory> inventoryList = new ArrayList<>();
     protected List<GuiComponent> componentList = new ArrayList<>();
 
     public GuiIU(final T container) {
@@ -169,7 +171,44 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
 
         return lines;
     }
+    private void enableScissor(int x, int y, int width, int height) {
+        final ScaledResolution scaledResolution = new ScaledResolution(mc);
+        int scaleFactor = scaledResolution.getScaleFactor();
+        int scaledHeight = scaledResolution.getScaledHeight();
 
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+
+
+        GL11.glScissor(
+                x * scaleFactor,
+                (scaledHeight - (y + height)) * scaleFactor,
+                width * scaleFactor,
+                height * scaleFactor
+        );
+    }
+
+    private void disableScissor() {
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+    public void drawTextInCanvasWithScissor(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
+        int maxWidth = (int) (canvasWidth / scale);
+        int x = guiLeft+ canvasX;
+        int y = guiTop + canvasY;
+
+
+        List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+
+        for (String line : lines) {
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(scale, scale, scale);
+            fontRenderer.drawString(line, (int) (x / scale), (int) (y / scale), 0xFFFFFF);
+            GlStateManager.popMatrix();
+
+            y += 10;
+        }
+
+    }
     public void drawTextInCanvas(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
         int maxWidth = (int) (canvasWidth / scale);
         int lineHeight = (int) (10 * scale);

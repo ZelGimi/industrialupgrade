@@ -17,10 +17,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGasPump;
 import com.denfop.gui.GuiGasPump;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -53,8 +52,8 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
 
 
     public final int defaultTier;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryFluid containerslot;
     public int level;
     public boolean find;
     public int count;
@@ -65,16 +64,16 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
     public TileGasPump() {
         super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidgas.getInstance()
         ));
-        this.containerslot = new InvSlotFluidByList(this,
-                InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT,
+        this.containerslot = new InventoryFluidByList(this,
+                Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidgas.getInstance()
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.defaultTier = 14;
         this.level = 0;
 
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
-        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
+        this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
     }
 
     private static int applyModifier(int extra) {

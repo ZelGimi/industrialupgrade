@@ -4,7 +4,7 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.reactors.IGraphiteReactor;
 import com.denfop.container.ContainerExchanger;
 import com.denfop.gui.GuiExchanger;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -21,21 +21,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityExchanger extends TileEntityMultiBlockElement implements IExchanger, IUpdatableTileEvent {
 
     public final int level;
-    private final InvSlot slot;
+    private final Inventory slot;
     public double percent = 1;
     private int x = 0;
     private IExchangerItem item;
 
     public TileEntityExchanger(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.EXCHANGE;
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((TileEntityExchanger) this.base).getBlockLevel();
             }
 
@@ -52,7 +52,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
                 }
             }
         };
-        slot.setStackSizeLimit(1);
+        slot.setInventoryStackLimit(1);
     }
 
     @Override
@@ -116,11 +116,11 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
     @Override
     public int getBlockLevel() {
-        return -1;
+        return level;
     }
 
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

@@ -11,8 +11,8 @@ import com.denfop.componets.ComponentTimer;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAlkalineEarthQuarry;
 import com.denfop.gui.GuiAlkalineEarthQuarry;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.items.ItemMesh;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -42,9 +42,9 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
     public static ItemStack beryllium;
     public static ItemStack boron;
     public final ComponentTimer timer;
-    public final InvSlot inputSlotA;
-    public final InvSlot inputSlotB;
-    public final InvSlotUpgrade upgradeSlot;
+    public final Inventory inputSlotA;
+    public final Inventory inputSlotB;
+    public final InventoryUpgrade upgradeSlot;
     public int level;
     public int level_mesh;
     public int type_block;
@@ -53,9 +53,9 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
         super(100, 14, 1);
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
-        inputSlotA = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        inputSlotA = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 Item item = stack.getItem();
                 if (!(item instanceof ItemBlock)) {
                     return false;
@@ -85,9 +85,9 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
                 }
             }
         };
-        inputSlotB = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        inputSlotB = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemMesh;
             }
 
@@ -108,7 +108,7 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
                 return (int) Math.max(1, 20 - ((TileEntityAlkalineEarthQuarry) this.parent).getLevel() * 1.1);
             }
         });
-        this.upgradeSlot = new InvSlotUpgrade(this, 2);
+        this.upgradeSlot = new InventoryUpgrade(this, 2);
         this.level = 0;
     }
 

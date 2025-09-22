@@ -2,7 +2,7 @@ package com.denfop.tiles.reactors.gas.intercooler;
 
 import com.denfop.container.ContainerInterCooler;
 import com.denfop.gui.GuiInterCooler;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.reactors.ItemsFan;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.gas.IInterCooler;
@@ -15,15 +15,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement implements IInterCooler {
 
     private final int level;
-    private final InvSlot slot;
+    private final Inventory slot;
     private int power;
     private int energy;
 
     public TileEntityBaseInterCooler(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemsFan && ((ItemsFan) stack.getItem()).getLevel() <= ((TileEntityBaseInterCooler) this.base).getBlockLevel();
             }
 
@@ -93,7 +93,7 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
         this.power = power;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

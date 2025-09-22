@@ -11,7 +11,7 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -24,7 +24,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerSteamSolidFluidMixer;
 import com.denfop.gui.GuiSteamSolidFluidMixer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -53,7 +53,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
         IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
     public final Fluids.InternalFluidTank fluidTank2;
     ;
@@ -85,14 +85,14 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
         this.defaultEnergyStorage = 100;
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.inputSlotA = new InvSlotRecipes(this, "solid_fluid_mixer", this, this.fluidTank1);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.inputSlotA = new InventoryRecipes(this, "solid_fluid_mixer", this, this.fluidTank1);
 
 
         this.fluid_handler = new FluidHandlerRecipe("solid_fluid_mixer", fluids);
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 2));
-        this.fluidTank = fluids.addTank("fluidTank6", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank = fluids.addTank("fluidTank6", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));

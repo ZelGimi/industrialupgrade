@@ -10,7 +10,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -30,9 +30,9 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerPerAlloySmelter;
 import com.denfop.gui.GuiPerAlloySmelter;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryDischarge;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
@@ -58,23 +58,22 @@ import java.util.Set;
 public class TileEntityPerAlloySmelter extends TileElectricMachine implements IHasRecipe, IType, IUpdateTick, IUpgradableBlock {
 
     public final HeatComponent heat;
-    public final InvSlot input_slot;
-    public final InvSlotUpgrade upgradeSlot;
+    public final Inventory input_slot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentProcess componentProcess;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentProgress componentProgress;
     private final ComponentUpgrade componentUpgrades;
     private final ComponentUpgradeSlots componentUpgrade;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
-    protected boolean sound = true;
 
     public TileEntityPerAlloySmelter() {
         super(300, 1, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.inputSlotA = new InvSlotRecipes(this, "peralloysmelter", this);
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, 1, false);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.inputSlotA = new InventoryRecipes(this, "peralloysmelter", this);
+        this.dischargeSlot = new InventoryDischarge(this, Inventory.TypeItemSlot.INPUT, 1, false);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
@@ -88,7 +87,7 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
                 .asBasicSink(this, 10000));
 
         Recipes.recipes.addInitRecipes(this);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -100,7 +99,7 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

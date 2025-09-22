@@ -33,8 +33,7 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
                 15,
                 117 - 59,
                 73 - 15,
-                container.base.getFluidTank(),
-                TankGauge.TankGuiStyle.Normal
+                container.base.getFluidTank()
         ) {
 
             protected List<String> getToolTip() {
@@ -67,14 +66,12 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
                 if (fs != null && fs.amount > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 6;
-                        fluidY += 6;
-                        fluidWidth = 46;
-                        fluidHeight = 46;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 6;
+                    fluidY += 6;
+                    fluidWidth = 46;
+                    fluidHeight = 46;
 
                     Fluid fluid = fs.getFluid();
                     TextureAtlasSprite sprite = fluid != null

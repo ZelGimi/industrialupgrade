@@ -8,7 +8,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerWirelessControllerGraphiteReactors;
 import com.denfop.gui.GuiWirelessControllerGraphiteReactors;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemReactorData;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -33,13 +33,13 @@ import java.util.List;
 public class TileEntityWirelessGraphiteController extends TileEntityInventory implements IUpdatableTileEvent {
 
 
-    public final InvSlot invslot;
+    public final Inventory invslot;
     public List<ItemStack> itemStacks = new LinkedList<>();
     public List<TileEntityGraphiteController> graphiteControllers = new LinkedList<>();
     public TileMultiBlockBase tileMultiBlockBase = null;
 
     public TileEntityWirelessGraphiteController() {
-        this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.invslot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -47,7 +47,7 @@ public class TileEntityWirelessGraphiteController extends TileEntityInventory im
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemReactorData)) {
                     return false;
                 }

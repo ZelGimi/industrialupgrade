@@ -39,11 +39,12 @@ public class CTFluidIntegrator {
         Recipes.recipes.getRecipeFluid().addRecipe(
                 "fluid_integrator",
                 new BaseFluidMachineRecipe(
-                        new InputFluid(
+                        new InputFluid(   new InputItemStack(input).getInputs().get(0),
                                 new FluidRecipeInput(input_fluid).getInputs()),
                         Collections.singletonList(new FluidRecipeInput(output).getInputs())
                 )
         );
+
     }
 
 

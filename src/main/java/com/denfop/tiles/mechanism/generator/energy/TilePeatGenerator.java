@@ -12,7 +12,7 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPeatGenerator;
 import com.denfop.gui.GuiPeatGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -33,7 +33,7 @@ import java.util.List;
 public class TilePeatGenerator extends TileElectricMachine implements IType {
 
 
-    public final InvSlot slot;
+    public final Inventory slot;
 
 
     public int fuel = 0;
@@ -41,9 +41,9 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
     public TilePeatGenerator() {
         super(0, 1, 0);
         energy = this.addComponent(Energy.asBasicSource(this, 150000, 1));
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.cultivated_peat_balls;
             }
         };

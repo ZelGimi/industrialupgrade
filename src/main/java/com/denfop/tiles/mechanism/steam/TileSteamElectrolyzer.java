@@ -15,7 +15,7 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamElectrolyzer;
 import com.denfop.gui.GuiSteamElectrolyzer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
@@ -51,15 +51,15 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
         this.ampere = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.AMPERE, this, 4000));
 
 
-        this.fluidTank1 = fluids.addTank("fluidTank1", 4 * 1000, InvSlot.TypeItemSlot.INPUT);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 4 * 1000, Inventory.TypeItemSlot.INPUT);
 
 
-        this.fluidTank2 = fluids.addTank("fluidTank2", 4 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 4 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
 
-        this.fluidTank3 = fluids.addTank("fluidTank3", 4 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank3 = fluids.addTank("fluidTank3", 4 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("electrolyzer", fluids);
-        this.fluidTank4 = fluids.addTank("fluidTank4", 4 * 1000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank4 = fluids.addTank("fluidTank4", 4 * 1000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()));
         this.steam.setFluidTank(fluidTank4);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));

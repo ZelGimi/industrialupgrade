@@ -455,7 +455,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                     if (casting.getProgress().getBar() >= 1) {
                         casting.getProgress().setProgress((short) 0);
                         casting.getFluid_handler().consume(firstTank);
-                        casting.getOutputSlot().add(casting.getFluid_handler().output().getOutput().items);
+                        casting.getOutputSlot().addAll(casting.getFluid_handler().output().getOutput().items);
                         casting.getFluid_handler().checkOutput(this.getFirstTank());
                         work = false;
                     }

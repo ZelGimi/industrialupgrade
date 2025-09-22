@@ -1,7 +1,7 @@
 package com.denfop.tiles.cyclotron;
 
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCyclotron;
@@ -16,10 +16,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityCyclotronElectrostaticDeflector extends TileEntityMultiBlockElement implements IElectrostaticDeflector {
 
 
-    private final InvSlotOutput outputSlot;
+    private final InventoryOutput outputSlot;
 
     public TileEntityCyclotronElectrostaticDeflector() {
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class TileEntityCyclotronElectrostaticDeflector extends TileEntityMultiBl
 
 
     @Override
-    public InvSlotOutput getOutputSlot() {
+    public InventoryOutput getOutputSlot() {
         return outputSlot;
     }
 

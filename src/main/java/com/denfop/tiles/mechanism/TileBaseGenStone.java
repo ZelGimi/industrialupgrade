@@ -3,13 +3,13 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.gui.GuiGenStone;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -35,7 +35,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final ItemStack sand;
     private final ItemStack gravel;
     public double energyConsume;
@@ -43,7 +43,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     public int operationLength;
 
     public int operationsPerTick;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     protected short progress;
     protected double guiProgress;
@@ -59,7 +59,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
         this.defaultOperationLength = this.operationLength = length;
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.mode = Mode.COBBLESTONE;
         this.sand = new ItemStack(Blocks.SAND, 8);
@@ -259,7 +259,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
         switch (this.getMode()) {
             default:
-                this.outputSlot.add(processResult);
+                this.outputSlot.addAll(processResult);
                 break;
             case SAND:
                 this.outputSlot.add(this.sand);

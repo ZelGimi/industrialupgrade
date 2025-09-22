@@ -3,13 +3,13 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerAdditionGenStone;
 import com.denfop.gui.GuiAdditionGenStone;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -35,7 +35,7 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ItemStack diorite;
     public final ItemStack andesite;
     public final ItemStack granite;
@@ -44,7 +44,7 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
     public int operationLength;
 
     public int operationsPerTick;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     protected short progress;
     protected double guiProgress;
@@ -60,7 +60,7 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
         this.defaultOperationLength = this.operationLength = length;
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.mode = Mode.GRANITE;
         this.granite = new ItemStack(Blocks.STONE, 8, 1);
@@ -263,7 +263,7 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
     public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
         switch (this.getMode()) {
             default:
-                this.outputSlot.add(processResult);
+                this.outputSlot.addAll(processResult);
                 break;
             case DIORITE:
                 this.outputSlot.add(this.diorite);

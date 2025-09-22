@@ -6,7 +6,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEarthQuarry;
 import com.denfop.container.ContainerEarthChest;
 import com.denfop.gui.GuiEarthChest;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,14 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityChest extends TileEntityMultiBlockElement implements IEarthChest {
 
-    private final InvSlot slot;
+    private final Inventory slot;
 
     public TileEntityChest() {
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 9);
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.OUTPUT, 9);
     }
 
     @Override
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

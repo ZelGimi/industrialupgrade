@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class FluidItem extends GuiElement<FluidItem> {
+public class FluidItem extends GuiElement {
 
     private final FluidStack fluid;
 

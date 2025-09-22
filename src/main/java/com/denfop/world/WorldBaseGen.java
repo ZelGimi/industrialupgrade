@@ -9,11 +9,16 @@ import com.denfop.world.vein.AlgorithmVein;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.TypeVein;
 import com.denfop.world.vein.VeinType;
+import com.denfop.world.vein.noise.PerlinNoiseViewer;
+import com.denfop.world.vein.noise.Point;
+import com.denfop.world.vein.noise.ShellCluster;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeHills;
@@ -28,12 +33,18 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.denfop.blocks.BlockClassicOre.BOOL_PROPERTY;
+import static com.denfop.world.vein.AlgorithmVein.*;
+import static com.denfop.world.vein.VeinType.veinTypeMap;
 
 public class WorldBaseGen implements IWorldGenerator {
 
@@ -528,29 +539,65 @@ public class WorldBaseGen implements IWorldGenerator {
             final Chunk chunk
     ) {
 
+        if (shellClusterChuncks.isEmpty()) {
+            shellClusterList = PerlinNoiseViewer.createClusters(random);
+            shellClusterList = new ArrayList<>(shellClusterList);
+            for (ShellCluster cluster : shellClusterList) {
+                if (WorldBaseGen.veinTypes1.isEmpty()) {
+                    WorldBaseGen.veinTypes1 = new ArrayList<>(WorldBaseGen.veinTypes);
+                }
+                int meta = WorldBaseGen.random.nextInt(WorldBaseGen.veinTypes1.size());
+                final VeinType veinType = WorldBaseGen.veinTypes1.remove(meta);
+                for (Point point : cluster.blacks) {
+                    Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.computeIfAbsent(point.x - 256, k -> new HashMap<>());
+                    tupleMap.put(point.y - 256, new Tuple<>(Color.BLACK, veinType.getId()));
+                    veinCoordination.computeIfAbsent(veinType.getId(), k -> new HashMap<>()).computeIfAbsent(point.x - 256, k -> new LinkedList<>()).add(point.y - 256);
 
-        if (WorldBaseGen.random.nextInt(4) <= 2) {
-            if (veinTypes1.isEmpty()) {
-                veinTypes1 = new ArrayList<>(veinTypes);
+                }
+                for (Point point : cluster.grays) {
+                    Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.computeIfAbsent(point.x - 256, k -> new HashMap<>());
+                    tupleMap.put(point.y - 256, new Tuple<>(Color.GRAY, veinType.getId()));
+                    veinCoordination.computeIfAbsent(veinType.getId(), k -> new HashMap<>()).computeIfAbsent(point.x - 256, k -> new LinkedList<>()).add(point.y - 256);
+
+                }
+                for (Point point : cluster.lightGrays) {
+                    Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.computeIfAbsent(point.x - 256, k -> new HashMap<>());
+                    tupleMap.put(point.y - 256, new Tuple<>(Color.LIGHT_GRAY, veinType.getId()));
+                    veinCoordination.computeIfAbsent(veinType.getId(), k -> new HashMap<>()).computeIfAbsent(point.x - 256, k -> new LinkedList<>()).add(point.y - 256);
+
+                }
             }
-            int meta = WorldBaseGen.random.nextInt(veinTypes1.size());
-            final VeinType veinType = veinTypes1.remove(meta);
-            AlgorithmVein.generate(world, veinType,
-                    new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16)), chunk, veinType.getDeposits_meta()
-            );
+            volcano = PerlinNoiseViewer.createVolcanoClusters(random);
         }
 
+        ChunkPos chunkPos = new ChunkPos(x/16,y/16);
+        Map<Integer, Tuple<Color, Integer>> tupleMap = shellClusterChuncks.get(chunkPos.x % 256);
+        if (tupleMap != null) {
+
+            Tuple<Color, Integer> tuple = tupleMap.get(chunkPos.z % 256);
+
+            if (tuple != null) {
+                VeinType veinType = veinTypeMap.get(tuple.getSecond());
+
+                AlgorithmVein.generate(world, veinType,
+                        new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16)), chunk, veinType.getDeposits_meta(),
+                        chunkProvider, chunkGenerator
+                );
+            }
+        }
         final BlockPos pos1 = new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16));
         final Biome biome = chunk.getWorld().getBiomeProvider().getBiome(pos1
                 ,
                 Biomes.PLAINS
         );
         if (biome instanceof BiomeHills) {
-            if (WorldBaseGen.random.nextInt(100) == 95) {
-                if (WorldBaseGen.random.nextInt(100) >= 60) {
+            ChunkPos pos = new ChunkPos(x%16,y%15);
+            if (volcano != null) {
+                if (volcano.point.x == Math.abs(pos.x) % 24 && volcano.point.y == Math.abs(pos.z) % 24) {
                     new WorldGenVolcano().generate(world, world.rand, pos1);
                 }
             }
+
         }
     }
 

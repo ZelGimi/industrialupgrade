@@ -79,7 +79,7 @@ public class GuiSteamAmpereGenerator extends GuiIU<ContainerSteamAmpereGenerator
 
         x -= this.guiLeft;
         y -= this.guiTop;
-        for (final GuiElement<?> guiElement : this.elements) {
+        for (final GuiElement guiElement : this.elements) {
             guiElement.drawBackground(x, y);
 
         }

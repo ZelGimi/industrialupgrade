@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.container.ContainerModuleMachine;
 import com.denfop.gui.GuiModuleMachine;
-import com.denfop.invslot.InvSlotModule;
+import com.denfop.invslot.InventoryModule;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
@@ -26,17 +26,17 @@ public class TileModuleMachine extends TileElectricMachine
         implements IUpdatableTileEvent {
 
 
-    public final InvSlotModule inputslot;
-    public final InvSlotModule inputslotA;
+    public final InventoryModule inputslot;
+    public final InventoryModule inputslotA;
     public List<String> listItems = new ArrayList<>();
 
     public TileModuleMachine() {
         super(0, 10, 0);
 
 
-        this.inputslot = new InvSlotModule(this, 0, 27);
-        inputslot.setStackSizeLimit(1);
-        this.inputslotA = new InvSlotModule(this, 1, 1);
+        this.inputslot = new InventoryModule(this, 0, 27);
+        inputslot.setInventoryStackLimit(1);
+        this.inputslotA = new InventoryModule(this, 1, 1);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -76,7 +76,8 @@ public class TileModuleMachine extends TileElectricMachine
     @Override
     public void updateTileServer(EntityPlayer player, double event) {
         if (!this.inputslotA.isEmpty()) {
-            initiate(1);
+            initiate(2);
+            initiate(0);
             this.inputslotA.get(0).setTagCompound(new NBTTagCompound());
             for (int i = 0; i < this.inputslot.size(); i++) {
                 String l = "number_" + i;

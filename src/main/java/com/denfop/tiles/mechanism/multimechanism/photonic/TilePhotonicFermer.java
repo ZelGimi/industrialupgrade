@@ -5,7 +5,7 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
@@ -13,15 +13,15 @@ import net.minecraft.item.ItemStack;
 
 public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
 
-    private final InvSlot fertilizerSlot;
+    private final Inventory fertilizerSlot;
     int col = 0;
 
     public TilePhotonicFermer() {
         super(EnumMultiMachine.PHO_Fermer
         );
-        this.fertilizerSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.fertilizerSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.fertilizer;
             }
 
@@ -38,7 +38,7 @@ public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
     }
 
     @Override
-    public InvSlot getFertilizerSlot() {
+    public Inventory getFertilizerSlot() {
         return fertilizerSlot;
     }
 

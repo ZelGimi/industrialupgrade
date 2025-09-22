@@ -13,7 +13,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerWirelessOilPump;
 import com.denfop.gui.GuiWirelessOilPump;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemVeinSensor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -42,7 +42,7 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
     public final Fluids fluids;
     public final Fluids.InternalFluidTank fluidTank;
     public final Energy energy;
-    public final InvSlot invslot;
+    public final Inventory invslot;
     public List<Vein> veinList = new LinkedList<>();
     public int level;
 
@@ -54,7 +54,7 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
                 FluidName.fluidsweet_heavy_oil.getInstance()
         ));
         this.energy = this.addComponent(Energy.asBasicSink(this, 50000, 14));
-        this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
+        this.invslot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 4) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -62,7 +62,7 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemVeinSensor)) {
                     return false;
                 }

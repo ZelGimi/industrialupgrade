@@ -5,7 +5,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -29,7 +29,7 @@ public class TileGenerationStone extends TileBaseGenStone implements IHasRecipe 
 
     public TileGenerationStone() {
         super(1, 100, 12);
-        this.inputSlotA = new InvSlotRecipes(this, "genstone", this);
+        this.inputSlotA = new InventoryRecipes(this, "genstone", this);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));

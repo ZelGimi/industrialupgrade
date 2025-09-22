@@ -17,7 +17,7 @@ import com.denfop.blocks.mechanism.BlockGasChamber;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerFluidMixer;
 import com.denfop.gui.GuiFluidMixer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -79,7 +79,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
         this.fluidTank2 = fluids.addTankInsert("fluidTank2", 12 * 1000);
 
 
-        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("gas_chamber", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(1)));

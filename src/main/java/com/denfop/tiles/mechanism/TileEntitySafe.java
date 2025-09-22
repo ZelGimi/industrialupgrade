@@ -6,7 +6,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerSafe;
 import com.denfop.gui.GuiSafe;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,12 +23,12 @@ import java.util.List;
 
 public class TileEntitySafe extends TileEntityInventory {
 
-    public final InvSlot slot;
+    public final Inventory slot;
     public int timer = 10;
 
     public TileEntitySafe() {
         this.getComponentPrivate().setActivate(true);
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 63);
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT_OUTPUT, 63);
     }
 
     @SideOnly(Side.CLIENT)
@@ -64,7 +64,7 @@ public class TileEntitySafe extends TileEntityInventory {
         return super.hasCapability(capability, facing);
     }
 
-    public List<InvSlot> getInputSlots() {
+    public List<Inventory> getInputSlots() {
         return Collections.emptyList();
     }
 

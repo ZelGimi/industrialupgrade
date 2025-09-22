@@ -6,7 +6,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockAdvCokeOven;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -18,7 +18,7 @@ public class TileEntityCokeOvenOutputFluid extends TileEntityMultiBlockElement i
 
     public TileEntityCokeOvenOutputFluid() {
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.OUTPUT,
+        this.tank = fluids.addTank("tank", 10000, Inventory.TypeItemSlot.OUTPUT,
                 Fluids.fluidPredicate(FluidName.fluidcreosote.getInstance())
         );
 

@@ -8,7 +8,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerPrivatizer;
 import com.denfop.gui.GuiPrivatizer;
-import com.denfop.invslot.InvSlotPrivatizer;
+import com.denfop.invslot.InventoryPrivatizer;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
@@ -26,16 +26,16 @@ public class TilePrivatizer extends TileElectricMachine
         implements IUpdatableTileEvent {
 
 
-    public final InvSlotPrivatizer inputslot;
-    public final InvSlotPrivatizer inputslotA;
+    public final InventoryPrivatizer inputslot;
+    public final InventoryPrivatizer inputslotA;
     public List<String> listItems = new ArrayList<>();
 
     public TilePrivatizer() {
         super(0, 10, 1);
 
 
-        this.inputslot = new InvSlotPrivatizer(this, 0, 9);
-        this.inputslotA = new InvSlotPrivatizer(this, 1, 1);
+        this.inputslot = new InventoryPrivatizer(this, 0, 9);
+        this.inputslotA = new InventoryPrivatizer(this, 1, 1);
     }
 
     public IMultiTileBlock getTeBlock() {

@@ -8,7 +8,7 @@ import com.denfop.componets.Energy;
 import com.denfop.container.ContainerShield;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.gui.GuiShield;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -56,7 +56,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
 
     final int latitudeSegments = 16;
     final int longitudeSegments = 16;
-    private final InvSlot slot;
+    private final Inventory slot;
     public boolean visibleShield = false;
     public boolean visibleLaser = false;
     Energy energy;
@@ -91,9 +91,9 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     private boolean isShooting = false;
     public TileEntityShield() {
         energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
-        slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
+        slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 9) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (!(stack.getItem() instanceof ItemEntityModule)) {
                     return false;
                 }
@@ -279,7 +279,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         return list;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

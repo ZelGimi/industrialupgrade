@@ -24,7 +24,7 @@ public class GuiCable1 extends GuiIU<ContainerCable> {
     public GuiCable1(ContainerCable guiContainer) {
         super(guiContainer);
         this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.invSlotList))
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.inventoryList))
         );
         this.componentList.clear();
         this.input = ((TileEntityItemPipes) guiContainer.base).isInput();

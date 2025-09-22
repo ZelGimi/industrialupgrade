@@ -14,8 +14,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPlantFertilizer;
 import com.denfop.gui.GuiPlantFertilizer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,9 +36,9 @@ import java.util.Set;
 public class TileEntityPlantFertilizer extends TileEntityInventory implements IUpgradableBlock {
 
     private static final int RADIUS = 8;
-    public final InvSlot slot;
+    public final Inventory slot;
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final AirPollutionComponent pollutionAir;
     private final SoilPollutionComponent pollutionSoil;
     private final ComponentUpgradeSlots componentUpgrade;
@@ -50,14 +50,14 @@ public class TileEntityPlantFertilizer extends TileEntityInventory implements IU
     List<Chunk> chunks;
 
     public TileEntityPlantFertilizer() {
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.fertilizer;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));

@@ -1,7 +1,7 @@
 package com.denfop.tiles.reactors.gas;
 
 import com.denfop.api.multiblock.IMultiElement;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 
 public interface IRecirculationPump extends IMultiElement {
 
@@ -9,6 +9,6 @@ public interface IRecirculationPump extends IMultiElement {
 
     int getPower();
 
-    InvSlot getSlot();
+    Inventory getSlot();
 
 }

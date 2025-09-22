@@ -7,13 +7,14 @@ import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.componets.SteamProcessMultiComponent;
 import com.denfop.container.ContainerSteamMultiMachine;
 import com.denfop.gui.GuiSteamMultiMachine;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -69,7 +70,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 1000));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 1));
         fluid = this.addComponent(new Fluids(this));
-        this.fluidTank = fluid.addTank("tank", OperationsPerTick * energyconsume, InvSlot.TypeItemSlot.NONE);
+        this.fluidTank = fluid.addTank("tank", OperationsPerTick * energyconsume, Inventory.TypeItemSlot.NONE);
         steam.setFluidTank(fluidTank);
         this.type = type;
         this.sound = true;
@@ -215,6 +216,10 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
         if (!entityPlayer.getHeldItem(hand).isEmpty()) {
             if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(entityPlayer.getHeldItem(hand)) != null && this.fluid != null) {
+                for (AbstractComponent component : componentList) {
+                    if (component.onBlockActivated(entityPlayer, hand))
+                        return true;
+                }
                 return ModUtils.interactWithFluidHandler(entityPlayer, hand,
                         this.fluid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
                 );

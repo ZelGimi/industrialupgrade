@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
@@ -12,8 +12,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDigger;
 import com.denfop.gui.GuiDigger;
-import com.denfop.invslot.InvSlotDigger;
-import com.denfop.invslot.InvSlotInput;
+import com.denfop.invslot.InventoryDigger;
+import com.denfop.invslot.InventoryInput;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,10 +26,10 @@ import java.util.List;
 
 public class TileEntityAutoDigger extends TileEntityInventory {
 
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public final Energy energy;
-    public final InvSlotInput inputslot;
-    public final InvSlotDigger slot_upgrade;
+    public final InventoryInput inputslot;
+    public final InventoryDigger slot_upgrade;
     public boolean mac_enabled = false;
     public boolean comb_mac_enabled = false;
     public boolean furnace;
@@ -43,13 +43,13 @@ public class TileEntityAutoDigger extends TileEntityInventory {
         this.chance = 0;
         this.col = 1;
         this.furnace = false;
-        this.outputSlot = new InvSlotOutput(this, 48);
+        this.outputSlot = new InventoryOutput(this, 48);
         this.energy = this.addComponent(Energy.asBasicSink(this, 500000, 14));
-        this.inputslot = new InvSlotInput(this, 16);
+        this.inputslot = new InventoryInput(this, 16);
 
         this.energyconsume = 500;
         this.consume = 500;
-        this.slot_upgrade = new InvSlotDigger(this);
+        this.slot_upgrade = new InventoryDigger(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.5));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
 

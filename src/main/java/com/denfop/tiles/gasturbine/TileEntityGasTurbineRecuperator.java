@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
 import com.denfop.container.ContainerGasTurbineRecuperator;
 import com.denfop.gui.GuiGasTurbineRecuperator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,13 +18,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement implements IRecuperator {
 
-    private final InvSlot invSlot;
+    private final Inventory inventory;
     double power;
 
     public TileEntityGasTurbineRecuperator() {
-        this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.inventory = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof IExchangerItem;
             }
 
@@ -85,8 +85,8 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
     }
 
     @Override
-    public InvSlot getExchanger() {
-        return invSlot;
+    public Inventory getExchanger() {
+        return inventory;
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerHeatFluids;
 import com.denfop.gui.GuiFluidHeater;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -64,10 +64,10 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
         this.defaultOperationLength = this.operationLength = 200;
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.INPUT);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.INPUT);
 
 
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
 
         this.fluid_handler = new FluidHandlerRecipe("heat", fluids);

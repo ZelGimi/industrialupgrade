@@ -13,7 +13,7 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -21,9 +21,9 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSqueezer;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -62,9 +62,9 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
     private static final List<AxisAlignedBB> aabbs1 = Collections.singletonList(new AxisAlignedBB(-0.5, 0.0D, 0, 1.5, 1.7D,
             1
     ));
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
-    public final InvSlotFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot1;
     public final FluidHandlerRecipe fluid_handler;
     public short progress;
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.SQUEEZER);
@@ -72,23 +72,23 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
 
     public TileEntitySqueezer() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "squeezer", this) {
+        this.inputSlotA = new InventoryRecipes(this, "squeezer", this) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 if (index == 4) {
-                    return super.accepts(itemStack, 0);
+                    return super.isItemValidForSlot(0, itemStack);
                 }
                 return false;
             }
         };
         this.progress = 0;
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("squeezer", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot1.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.inputSlotA.setStackSizeLimit(1);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot1.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.inputSlotA.setInventoryStackLimit(1);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -215,7 +215,7 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
                 this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
@@ -230,7 +230,7 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -298,7 +298,7 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
 
             return this.getWorld().isRemote;
         } else {
-            if (!stack.isEmpty() && this.inputSlotA.accepts(stack, 4)) {
+            if (!stack.isEmpty() && this.inputSlotA.isItemValidForSlot(4, stack)) {
                 if (this.inputSlotA.get(0).isEmpty()) {
                     ItemStack stack1 = stack.copy();
                     stack1.setCount(1);

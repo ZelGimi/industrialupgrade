@@ -4,7 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.GeneticTraits;
 import com.denfop.api.agriculture.genetics.Genome;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -14,7 +14,7 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerGenomeExtractor;
 import com.denfop.gui.GuiGenomeExtractor;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -29,19 +29,19 @@ import java.io.IOException;
 
 public class TileEntityGenomeExtractor extends TileEntityInventory implements IUpdatableTileEvent {
 
-    public final InvSlotOutput slot;
+    public final InventoryOutput slot;
     public final ComponentBaseEnergy energy;
-    public final InvSlot input;
+    public final Inventory input;
     public Genome genCrop;
     public com.denfop.api.bee.genetics.Genome genBee;
     int meta = -1;
     private boolean work;
 
     public TileEntityGenomeExtractor() {
-        this.slot = new InvSlotOutput(this, 1);
-        this.input = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new InventoryOutput(this, 1);
+        this.input = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ICropItem || stack.getItem() instanceof ItemJarBees;
             }
 

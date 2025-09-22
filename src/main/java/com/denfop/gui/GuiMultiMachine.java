@@ -10,7 +10,7 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.ItemStackImage;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
+import com.denfop.api.recipe.InventoryMultiRecipes;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMachine;
@@ -106,7 +106,7 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
+                if (slotInv.inventory instanceof InventoryMultiRecipes) {
                     this.process.setIndex(i);
                     this.process.setX(xX);
                     this.process.setY(yY + 19);
@@ -132,7 +132,7 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
         drawTexturedModalRect(j, k, 0, 0, 176, this.ySize);
-        for (final GuiElement<?> guiElement : this.elements) {
+        for (final GuiElement guiElement : this.elements) {
             guiElement.drawBackground(x - this.guiLeft, y - this.guiTop);
 
         }
@@ -148,7 +148,7 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof com.denfop.api.recipe.InvSlotMultiRecipes) {
+                if (slotInv.inventory instanceof InventoryMultiRecipes) {
                     this.process.setIndex(i);
                     this.process.setX(xX);
                     this.process.setY(yY + 19);

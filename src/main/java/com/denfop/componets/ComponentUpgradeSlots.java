@@ -1,17 +1,17 @@
 package com.denfop.componets;
 
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 
 public class ComponentUpgradeSlots extends AbstractComponent {
 
-    protected final InvSlotUpgrade invSlot;
+    protected final InventoryUpgrade invSlot;
     public boolean update = false;
 
     protected ComponentProcess componentProcess;
     protected Energy energy;
 
-    public ComponentUpgradeSlots(final TileEntityInventory parent, InvSlotUpgrade invSlotUpgrade) {
+    public ComponentUpgradeSlots(final TileEntityInventory parent, InventoryUpgrade invSlotUpgrade) {
         super(parent);
         this.invSlot = invSlotUpgrade;
     }
@@ -20,7 +20,7 @@ public class ComponentUpgradeSlots extends AbstractComponent {
         return true;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+    public void setOverclockRates(InventoryUpgrade invSlotUpgrade) {
         invSlotUpgrade.isUpdate = true;
         if (this.parent instanceof IComponentUpdate) {
             ((IComponentUpdate) parent).setOverclockRates();

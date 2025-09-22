@@ -38,6 +38,7 @@ import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketStopSoundPlayer;
 import com.denfop.network.packet.PacketSuccessUpdateColony;
+import com.denfop.network.packet.PacketSynhronyzationRelocator;
 import com.denfop.network.packet.PacketUpdateBody;
 import com.denfop.network.packet.PacketUpdateFakeBody;
 import com.denfop.network.packet.PacketUpdateFieldContainerItemStack;
@@ -46,9 +47,12 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateOvertimeTile;
 import com.denfop.network.packet.PacketUpdateRadiation;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
+import com.denfop.network.packet.PacketUpdateRelocator;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.network.packet.PacketUpdateTe;
 import com.denfop.network.packet.PacketUpdateTile;
+import com.denfop.network.packet.PacketUpdateCompleteQuest;
+import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -127,6 +131,10 @@ public class NetworkManager {
         this.registerPacket(new PacketSuccessUpdateColony());
         this.registerPacket(new PacketCreateAutoSends());
         this.registerPacket(new PacketDeleteColony());
+        this.registerPacket(new PacketUpdateCompleteQuest());
+        this.registerPacket(new PacketUpdateInformationAboutQuestsPlayer());
+        this.registerPacket(new PacketSynhronyzationRelocator());
+        this.registerPacket(new PacketUpdateRelocator());
 
     }
 

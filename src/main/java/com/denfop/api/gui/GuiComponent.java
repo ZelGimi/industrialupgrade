@@ -1,9 +1,9 @@
 package com.denfop.api.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.InventoryMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.vein.Vein;
 import com.denfop.componets.BioProcessMultiComponent;
 import com.denfop.componets.ComponentBioProcessRender;
@@ -22,8 +22,8 @@ import com.denfop.container.SlotInvSlot;
 import com.denfop.container.SlotVirtual;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIU;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,7 +33,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class GuiComponent extends GuiElement<GuiComponent> {
+public class GuiComponent extends GuiElement {
 
     public static final ResourceLocation commonTexture1 = new ResourceLocation(
             Constants.MOD_ID,
@@ -137,7 +137,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
     }
 
     public void drawForeground(int mouseX, int mouseY) {
-        if (this.contains(mouseX, mouseY) && !this.suppressTooltip(mouseX, mouseY) && visible()) {
+        if (this.contains(mouseX, mouseY)  && visible()) {
             List<String> lines = this.getToolTip();
             if (this.getType() == null || this.getType().isHasDescription()) {
                 String tooltip = this.component.getText(this);
@@ -1150,10 +1150,10 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             this.setX(xX - 1);
                             this.setY(yY - 1);
                             SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                            if (component.getBlackSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getBlackSlotList().contains(slotInvSlot.inventory)) {
                                 continue;
                             }
-                            if (component.getSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getSlotList().contains(slotInvSlot.inventory)) {
                                 int xx = 0;
                                 if (this.type.isNextBar()) {
                                     bindCommonTexture2();
@@ -1222,8 +1222,8 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
-                            if (((SlotInvSlot) slot).invSlot != null) {
-                                ITypeSlot typeSlot = ((SlotInvSlot) slot).invSlot;
+                            if (((SlotInvSlot) slot).inventory != null) {
+                                ITypeSlot typeSlot = ((SlotInvSlot) slot).inventory;
                                 final EnumTypeSlot type = typeSlot.getTypeSlot(((SlotInvSlot) slot).index);
                                 if (type == null) {
                                     continue;
@@ -1277,8 +1277,8 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                 case SLOTS_UPGRADE_JEI:
                     for (Slot slot : this.gui.getContainer().inventorySlots) {
                         if (slot instanceof SlotInvSlot) {
-                            final InvSlot invslot = ((SlotInvSlot) slot).invSlot;
-                            if (((SlotInvSlot) slot).invSlot instanceof InvSlotUpgrade) {
+                            final Inventory invslot = ((SlotInvSlot) slot).inventory;
+                            if (((SlotInvSlot) slot).inventory instanceof InventoryUpgrade) {
                                 continue;
                             }
                             int xX = slot.xPos;
@@ -1286,10 +1286,10 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             this.setX(xX - 1);
                             this.setY(yY - 1);
                             SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                            if (component.getBlackSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getBlackSlotList().contains(slotInvSlot.inventory)) {
                                 continue;
                             }
-                            if (component.getSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getSlotList().contains(slotInvSlot.inventory)) {
                                 int xx = 0;
                                 switch (this.type) {
                                     case ADVANCED:
@@ -1331,8 +1331,8 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
-                            if (((SlotInvSlot) slot).invSlot instanceof ITypeSlot) {
-                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).invSlot;
+                            if (((SlotInvSlot) slot).inventory instanceof ITypeSlot) {
+                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).inventory;
                                 final EnumTypeSlot type = typeSlot.getTypeSlot(((SlotInvSlot) slot).index);
                                 if (type == null) {
                                     continue;
@@ -1379,19 +1379,19 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                     }
                     break;
                 case SLOTS__JEI:
-                    InvSlotOutput output = null;
+                    InventoryOutput output = null;
                     for (Slot slot : this.gui.getContainer().inventorySlots) {
                         if (slot instanceof SlotInvSlot) {
-                            final InvSlot invslot = ((SlotInvSlot) slot).invSlot;
-                            if (((SlotInvSlot) slot).invSlot instanceof InvSlotUpgrade || !(invslot instanceof InvSlotRecipes
-                                    || invslot instanceof InvSlotMultiRecipes || invslot instanceof InvSlotOutput)) {
+                            final Inventory invslot = ((SlotInvSlot) slot).inventory;
+                            if (((SlotInvSlot) slot).inventory instanceof InventoryUpgrade || !(invslot instanceof InventoryRecipes
+                                    || invslot instanceof InventoryMultiRecipes || invslot instanceof InventoryOutput)) {
                                 continue;
                             }
-                            if (output == null && invslot instanceof InvSlotOutput) {
-                                output = (InvSlotOutput) invslot;
+                            if (output == null && invslot instanceof InventoryOutput) {
+                                output = (InventoryOutput) invslot;
                             } else {
-                                if (invslot instanceof InvSlotOutput) {
-                                    final InvSlotOutput output1 = (InvSlotOutput) invslot;
+                                if (invslot instanceof InventoryOutput) {
+                                    final InventoryOutput output1 = (InventoryOutput) invslot;
                                     if (output1 != output) {
                                         continue;
                                     }
@@ -1402,10 +1402,10 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             this.setX(xX - 1);
                             this.setY(yY - 1);
                             SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                            if (component.getBlackSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getBlackSlotList().contains(slotInvSlot.inventory)) {
                                 continue;
                             }
-                            if (component.getSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getSlotList().contains(slotInvSlot.inventory)) {
                                 int xx = 0;
                                 switch (this.type) {
                                     case ADVANCED:
@@ -1445,8 +1445,8 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
-                            if (((SlotInvSlot) slot).invSlot instanceof ITypeSlot) {
-                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).invSlot;
+                            if (((SlotInvSlot) slot).inventory instanceof ITypeSlot) {
+                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).inventory;
                                 final EnumTypeSlot type = typeSlot.getTypeSlot(((SlotInvSlot) slot).index);
                                 if (type == null) {
                                     continue;
@@ -1496,14 +1496,14 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                     output = null;
                     for (Slot slot : this.gui.getContainer().inventorySlots) {
                         if (slot instanceof SlotInvSlot) {
-                            final InvSlot invslot = ((SlotInvSlot) slot).invSlot;
-                            if (!(invslot instanceof InvSlotOutput)) {
+                            final Inventory invslot = ((SlotInvSlot) slot).inventory;
+                            if (!(invslot instanceof InventoryOutput)) {
                                 continue;
                             }
-                            if (output == null && invslot instanceof InvSlotOutput) {
-                                output = (InvSlotOutput) invslot;
+                            if (output == null && invslot instanceof InventoryOutput) {
+                                output = (InventoryOutput) invslot;
                             } else {
-                                final InvSlotOutput output1 = (InvSlotOutput) invslot;
+                                final InventoryOutput output1 = (InventoryOutput) invslot;
                                 if (output1 != output) {
                                     continue;
                                 }
@@ -1513,10 +1513,10 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             this.setX(xX - 1);
                             this.setY(yY - 1);
                             SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                            if (component.getBlackSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getBlackSlotList().contains(slotInvSlot.inventory)) {
                                 continue;
                             }
-                            if (component.getSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getSlotList().contains(slotInvSlot.inventory)) {
                                 int xx = 0;
                                 switch (this.type) {
                                     case ADVANCED:
@@ -1556,8 +1556,8 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
-                            if (((SlotInvSlot) slot).invSlot instanceof ITypeSlot) {
-                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).invSlot;
+                            if (((SlotInvSlot) slot).inventory instanceof ITypeSlot) {
+                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).inventory;
                                 final EnumTypeSlot type = typeSlot.getTypeSlot(((SlotInvSlot) slot).index);
                                 if (type == null) {
                                     continue;
@@ -1606,9 +1606,9 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                 case SLOTS__JEI_INPUT:
                     for (Slot slot : this.gui.getContainer().inventorySlots) {
                         if (slot instanceof SlotInvSlot) {
-                            final InvSlot invslot = ((SlotInvSlot) slot).invSlot;
-                            if (((SlotInvSlot) slot).invSlot instanceof InvSlotUpgrade || !(invslot instanceof InvSlotRecipes
-                                    || invslot instanceof InvSlotMultiRecipes)) {
+                            final Inventory invslot = ((SlotInvSlot) slot).inventory;
+                            if (((SlotInvSlot) slot).inventory instanceof InventoryUpgrade || !(invslot instanceof InventoryRecipes
+                                    || invslot instanceof InventoryMultiRecipes)) {
                                 continue;
                             }
                             int xX = slot.xPos;
@@ -1616,10 +1616,10 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             this.setX(xX - 1);
                             this.setY(yY - 1);
                             SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                            if (component.getBlackSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getBlackSlotList().contains(slotInvSlot.inventory)) {
                                 continue;
                             }
-                            if (component.getSlotList().contains(slotInvSlot.invSlot)) {
+                            if (component.getSlotList().contains(slotInvSlot.inventory)) {
                                 int xx = 0;
                                 switch (this.type) {
                                     case ADVANCED:
@@ -1659,8 +1659,8 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
-                            if (((SlotInvSlot) slot).invSlot instanceof ITypeSlot) {
-                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).invSlot;
+                            if (((SlotInvSlot) slot).inventory instanceof ITypeSlot) {
+                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).inventory;
                                 final EnumTypeSlot type = typeSlot.getTypeSlot(((SlotInvSlot) slot).index);
                                 if (type == null) {
                                     continue;
@@ -1709,7 +1709,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                 case SLOT:
                     for (Slot slot : this.gui.getContainer().inventorySlots) {
                         if (slot instanceof SlotInvSlot) {
-                            if (component.getSlotList().contains(((SlotInvSlot) slot).invSlot)) {
+                            if (component.getSlotList().contains(((SlotInvSlot) slot).inventory)) {
                                 int xX = slot.xPos;
                                 int yY = slot.yPos;
                                 this.setX(xX - 1);

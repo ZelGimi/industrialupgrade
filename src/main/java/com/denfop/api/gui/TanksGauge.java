@@ -11,12 +11,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class TanksGauge extends GuiElement<TankGauge> {
+public class TanksGauge extends GuiElement {
 
 
-    public static final int v = 100;
+
     private final List<Fluids.InternalFluidTank> tank;
-    private final TanksGauge.TankGuiStyle style;
 
     private TanksGauge(
             GuiCore<?> gui,
@@ -24,50 +23,21 @@ public class TanksGauge extends GuiElement<TankGauge> {
             int y,
             int width,
             int height,
-            List<Fluids.InternalFluidTank> tank,
-            TanksGauge.TankGuiStyle style
+            List<Fluids.InternalFluidTank> tank
     ) {
         super(gui, x, y, width, height);
         if (tank == null) {
             throw new NullPointerException("null tank");
         } else {
             this.tank = tank;
-            this.style = style;
         }
     }
 
     public static TanksGauge createNormal(GuiCore<?> gui, int x, int y, List<Fluids.InternalFluidTank> tank) {
-        return new TanksGauge(gui, x, y, 20, 55, tank, TanksGauge.TankGuiStyle.Normal);
+        return new TanksGauge(gui, x, y, 20, 55, tank);
     }
 
-    public static TanksGauge createPlain(
-            GuiCore<?> gui,
-            int x,
-            int y,
-            int width,
-            int height,
-            List<Fluids.InternalFluidTank> tank
-    ) {
-        return new TanksGauge(gui, x, y, width, height, tank, TanksGauge.TankGuiStyle.Plain);
-    }
 
-    public static TanksGauge createBorderless(
-            GuiCore<?> gui,
-            int x,
-            int y,
-            List<Fluids.InternalFluidTank> tank,
-            boolean mirrored
-    ) {
-        return new TanksGauge(
-                gui,
-                x,
-                y,
-                12,
-                47,
-                tank,
-                mirrored ? TanksGauge.TankGuiStyle.BorderlessMirrored : TanksGauge.TankGuiStyle.Borderless
-        );
-    }
 
     public void drawBackground(int mouseX, int mouseY) {
         bindCommonTexture();
@@ -82,27 +52,23 @@ public class TanksGauge extends GuiElement<TankGauge> {
             capacity += tank1.getCapacity();
         }
         if (fs != null && fs.amount > 0) {
-            if (this.style.withBorder) {
-                this.gui.drawTexturedRect(
-                        this.x,
-                        this.y,
-                        this.width,
-                        this.height,
-                        6.0D,
-                        100.0D
-                );
-            }
+            this.gui.drawTexturedRect(
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height,
+                    6.0D,
+                    100.0D
+            );
 
             int fluidX = this.x;
             int fluidY = this.y;
-            int fluidWidth = this.width;
-            int fluidHeight = this.height;
-            if (this.style.withBorder) {
-                fluidX += 4;
-                fluidY += 4;
-                fluidWidth = 12;
-                fluidHeight = 47;
-            }
+            int fluidWidth;
+            int fluidHeight;
+            fluidX += 4;
+            fluidY += 4;
+            fluidWidth = 12;
+            fluidHeight = 47;
 
             Fluid fluid = fs.getFluid();
             TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(FluidName
@@ -128,36 +94,19 @@ public class TanksGauge extends GuiElement<TankGauge> {
                     false,
                     true
             );
-            if (this.style.withGauge) {
-                bindCommonTexture();
-                int gaugeX = this.x;
-                int gaugeY = this.y;
-                if (!this.style.withBorder) {
-                    gaugeX -= 4;
-                    gaugeY -= 4;
-                }
+            bindCommonTexture();
+            int gaugeX = this.x;
+            int gaugeY = this.y;
+            this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D);
 
-                this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D, this.style.mirrorGauge);
-            }
-        } else if (this.style.withBorder) {
+        } else {
             this.gui.drawTexturedRect(
                     this.x,
                     this.y,
                     this.width,
                     this.height,
                     70.0D,
-                    100.0D,
-                    this.style.mirrorGauge
-            );
-        } else if (this.style.withGauge) {
-            this.gui.drawTexturedRect(
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height,
-                    74.0D,
-                    104.0D,
-                    this.style.mirrorGauge
+                    100.0D
             );
         }
 
@@ -187,21 +136,6 @@ public class TanksGauge extends GuiElement<TankGauge> {
         return ret;
     }
 
-    private enum TankGuiStyle {
-        Normal(true, true, false),
-        Borderless(false, true, false),
-        BorderlessMirrored(false, true, true),
-        Plain(false, false, false);
 
-        public final boolean withBorder;
-        public final boolean withGauge;
-        public final boolean mirrorGauge;
-
-        TankGuiStyle(boolean withBorder, boolean withGauge, boolean mirrorGauge) {
-            this.withBorder = withBorder;
-            this.withGauge = withGauge;
-            this.mirrorGauge = mirrorGauge;
-        }
-    }
 
 }

@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
@@ -18,11 +18,10 @@ import com.denfop.componets.TypeAction;
 import com.denfop.componets.TypeLoad;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerBaseWitherMaker;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import org.lwjgl.input.Keyboard;
@@ -33,13 +32,13 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         implements IUpgradableBlock, IUpdateTick {
 
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
     private final ComponentUpgrade componentUpgrades;
     public MachineRecipe output;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     private ItemStack WITHER_SKELETON_SKULL;
     private ItemStack  SOUL_SAND;
     public TileBaseWitherMaker(int energyPerTick, int length, int outputSlots) {
@@ -48,7 +47,7 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
 
     public TileBaseWitherMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
         super(energyPerTick * length, 1, outputSlots);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,

@@ -84,7 +84,7 @@ public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> 
         drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 98, 20, 55
         );
-        for (final GuiElement<?> element : this.elements) {
+        for (final GuiElement element : this.elements) {
             element.drawBackground(mouseX, mouseY);
         }
     }

@@ -202,6 +202,7 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.bee.ItemBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
+import com.denfop.items.book.ItemBook;
 import com.denfop.items.crop.ItemAgriculturalAnalyzer;
 import com.denfop.items.crop.ItemCrops;
 import com.denfop.items.energy.ItemAxe;
@@ -832,38 +833,38 @@ public class Register {
                 Constants.MOD_ID,
                 "textures/items/rotor/steel_rotor_model_1.png"
         ));
-        IUItem.carbon_steam_blade = new ItemSteamRod("carbon", 1, 0.15, (int) (60800 * 1.5), new ResourceLocation(
+        IUItem.carbon_steam_blade = new ItemSteamRod("carbon", 1, 0.2, (int) (60800 * 1.5), new ResourceLocation(
                 Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model_1.png"));
 
 
-        IUItem.iridium_steam_blade = new ItemStack(new ItemSteamRod("iridium", 1, 0.2, (int) (60800 * 2),
+        IUItem.iridium_steam_blade = new ItemStack(new ItemSteamRod("iridium", 1, 0.4, (int) (60800 * 2),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbo_rotor_model1.png")
         ));
-        IUItem.compressiridium_steam_blade = new ItemStack(new ItemSteamRod("compressiridium", 1, 0.25, (int) (60800 * 3),
+        IUItem.compressiridium_steam_blade = new ItemStack(new ItemSteamRod("compressiridium", 1, 0.6, (int) (60800 * 3),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_2.png")
         ));
-        IUItem.spectral_steam_blade = new ItemStack(new ItemSteamRod("spectral", 1, 0.35, (int) (60800 * 4),
+        IUItem.spectral_steam_blade = new ItemStack(new ItemSteamRod("spectral", 1, 0.95, (int) (60800 * 4),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_3.png")
         ));
-        IUItem.myphical_steam_blade = new ItemStack(new ItemSteamRod("myphical", 2, 0.45, (int) (60800 * 6),
+        IUItem.myphical_steam_blade = new ItemStack(new ItemSteamRod("myphical", 2, 1.15, (int) (60800 * 6),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_4.png")
         ));
 
-        IUItem.photon_steam_blade = new ItemStack(new ItemSteamRod("photon", 2, 0.6, (int) (60800 * 10),
+        IUItem.photon_steam_blade = new ItemStack(new ItemSteamRod("photon", 2, 1.5, (int) (60800 * 10),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_6.png")
         ));
-        IUItem.neutron_steam_blade = new ItemStack(new ItemSteamRod("neutron", 2, 0.7, (int) (60800 * 15),
+        IUItem.neutron_steam_blade = new ItemStack(new ItemSteamRod("neutron", 2, 2.0, (int) (60800 * 15),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_5.png")
         ));
 
-        IUItem.barion_steam_blade = new ItemStack(new ItemSteamRod("barion", 3, 0.825, (int) (60800 * 20),
+        IUItem.barion_steam_blade = new ItemStack(new ItemSteamRod("barion", 3, 2.5, (int) (60800 * 20),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_7.png")
         ));
 
-        IUItem.hadron_steam_blade = new ItemStack(new ItemSteamRod("hadron", 3, 0.95, (int) (60800 * 30),
+        IUItem.hadron_steam_blade = new ItemStack(new ItemSteamRod("hadron", 3, 3, (int) (60800 * 30),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_8.png")
         ));
-        IUItem.ultramarine_steam_blade = new ItemStack(new ItemSteamRod("ultramarine", 3, 1.15, (int) (60800 * 50),
+        IUItem.ultramarine_steam_blade = new ItemStack(new ItemSteamRod("ultramarine", 3, 3.5, (int) (60800 * 50),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png")
         ));
 
@@ -1884,6 +1885,8 @@ public class Register {
         IUItem.adv_exchanger_item = new ItemExchanger("adv_exchanger", 1, 0.1, 15000);
         IUItem.imp_exchanger_item = new ItemExchanger("imp_exchanger", 2, 0.15, 20000);
         IUItem.per_exchanger_item = new ItemExchanger("per_exchanger", 3, 0.2, 30000);
+
+        IUItem.book = new ItemBook("guide_book");
     }
 
     private static void registerfluid(

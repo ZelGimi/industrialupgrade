@@ -10,7 +10,7 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -18,9 +18,9 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockRefractoryFurnace;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -52,9 +52,9 @@ import java.util.List;
 public class TileEntityRefractoryFurnace extends TileEntityInventory implements IUpdateTick, IHasRecipe {
 
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
-    public final InvSlotFluidByList fluidSlot1;
+    public final InventoryFluidByList fluidSlot1;
     public final FluidHandlerRecipe fluid_handler;
     public short progress;
     private MachineRecipe output;
@@ -62,15 +62,15 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
 
     public TileEntityRefractoryFurnace() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "refractory_furnace", this);
+        this.inputSlotA = new InventoryRecipes(this, "refractory_furnace", this);
         this.progress = 0;
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 144 * 12, InvSlot.TypeItemSlot.OUTPUT);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 144 * 12, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("refractory_furnace", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot1.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.inputSlotA.setStackSizeLimit(1);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot1.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.inputSlotA.setInventoryStackLimit(1);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -363,7 +363,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
                 this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
@@ -378,7 +378,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -425,7 +425,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         }
 
 
-        if (!stack.isEmpty() && this.inputSlotA.accepts(stack, 0)) {
+        if (!stack.isEmpty() && this.inputSlotA.isItemValidForSlot(0, stack)) {
             if (this.inputSlotA.get(0).isEmpty()) {
                 ItemStack stack1 = stack.copy();
                 stack1.setCount(1);

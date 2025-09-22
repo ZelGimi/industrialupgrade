@@ -640,6 +640,11 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     @Override
     @Nonnull
     public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        if (this == item_trash || this == fluid_trash
+                || this == energy_trash
+        ) {
+            return MultiTileBlock.DefaultDrop.Self;
+        }
         if (this == oak_tank || this == steel_tank || this == quarry_pipe) {
             return MultiTileBlock.DefaultDrop.Self;
         }

@@ -11,7 +11,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.gui.GuiBlockLimiter;
-import com.denfop.invslot.InvSlotLimiter;
+import com.denfop.invslot.InventoryLimiter;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -37,7 +37,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio;
     public boolean sound = true;
-    public InvSlotLimiter slot;
+    public InventoryLimiter slot;
     public double max_value;
 
     public TileLimiter() {
@@ -54,7 +54,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
                 false
         ));
         this.energy.setLimit(true);
-        this.slot = new InvSlotLimiter(this);
+        this.slot = new InventoryLimiter(this);
         valuesAudio = EnumTypeAudio.values();
     }
 

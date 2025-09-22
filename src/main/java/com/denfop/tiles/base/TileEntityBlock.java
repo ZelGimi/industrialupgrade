@@ -13,7 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.events.TickHandlerIU;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketRemoveUpdateTile;
@@ -207,7 +207,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public NBTTagCompound getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
         try {
-            InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
+            Inventory slot = (Inventory) DecoderHandler.decode(customPacketBuffer);
             return slot.writeToNbt(new NBTTagCompound());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -332,19 +332,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        if (!this.getSupportedFacings().isEmpty()) {
-            byte facingValue = nbt.getByte("facing");
-            if (facingValue >= 0 && facingValue < EnumFacing.VALUES.length && this
-                    .getSupportedFacings()
-                    .contains(EnumFacing.VALUES[facingValue])) {
-                this.facing = facingValue;
-            } else if (!this.getSupportedFacings().isEmpty()) {
-                this.facing = (byte) this.getSupportedFacings().iterator().next().ordinal();
-            } else {
-                this.facing = (byte) EnumFacing.DOWN.ordinal();
-            }
-        }
-
+        this.facing = nbt.getByte("facing");
         this.active = nbt.getString("active");
         if (!this.componentList.isEmpty() && nbt.hasKey("components", 10)) {
             NBTTagCompound componentsNbt = nbt.getCompoundTag("components");
@@ -358,9 +346,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        if (!this.getSupportedFacings().isEmpty()) {
-            nbt.setByte("facing", this.facing);
-        }
+        nbt.setByte("facing", this.facing);
 
         nbt.setString("active", this.active);
         if (!this.componentList.isEmpty()) {
@@ -682,6 +668,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         this.active = customPacketBuffer.readString();
         this.facing = customPacketBuffer.readByte();
+
         this.rerender();
     }
 

@@ -6,13 +6,13 @@ import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -35,8 +35,8 @@ import java.util.UUID;
 
 public class TileEntityRollingMachine extends TileEntityInventory implements IUpdateTick, IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotOutput outputSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryOutput outputSlot;
     public int progress;
     public MachineRecipe output;
     public int tick = 0;
@@ -44,10 +44,10 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
 
     public TileEntityRollingMachine() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "cutting", this) {
+        this.inputSlotA = new InventoryRecipes(this, "cutting", this) {
         };
         this.progress = 0;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
     }
 
     @Override
@@ -96,14 +96,14 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -120,8 +120,8 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -197,7 +197,7 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
             return true;
         } else {
             if (!stack.isEmpty()) {
-                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 0)) {
+                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.isItemValidForSlot(0, stack)) {
                     this.inputSlotA.put(0, stack.copy());
                     stack.setCount(0);
                     if (!world.isRemote) {

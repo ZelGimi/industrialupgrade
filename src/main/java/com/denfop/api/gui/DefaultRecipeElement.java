@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultRecipeElement extends GuiElement<DefaultRecipeElement> {
+public class DefaultRecipeElement extends GuiElement {
 
     private final Supplier<ItemStack> itemSupplier;
     private int texY;

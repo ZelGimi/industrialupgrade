@@ -31,12 +31,12 @@ public class GuiScanner extends GuiIU<ContainerScanner> {
     public GuiScanner(final ContainerScanner container) {
         super(container, container.base.getStyle());
         componentList.clear();
-        this.invSlotList.add(container.base.inputSlot);
+        this.inventoryList.add(container.base.inputSlot);
         inventory = new GuiComponent(this, 7, 83, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
         );
         this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.invSlotList))
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE, this.inventoryList))
         );
 
         componentList.add(inventory);

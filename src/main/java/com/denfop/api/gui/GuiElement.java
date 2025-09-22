@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GuiElement<T extends GuiElement<T>> {
+public abstract class GuiElement {
 
     public static final ResourceLocation commonTexture = new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png");
     public static final ResourceLocation commonTexture1 = new ResourceLocation(
@@ -129,13 +129,13 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
     }
 
-    public T withTooltip(String tooltip) {
+    public GuiElement withTooltip(String tooltip) {
         return this.withTooltip(Suppliers.ofInstance(tooltip));
     }
 
-    public T withTooltip(Supplier<String> tooltipProvider) {
+    public GuiElement withTooltip(Supplier<String> tooltipProvider) {
         this.tooltipProvider = tooltipProvider;
-        return (T) this;
+        return this;
     }
 
     public int getHeight() {
@@ -174,7 +174,7 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     }
 
     public void drawForeground(int mouseX, int mouseY) {
-        if (this.contains(mouseX, mouseY) && !this.suppressTooltip(mouseX, mouseY)) {
+        if (this.contains(mouseX, mouseY)) {
             List<String> lines = this.getToolTip();
             if (this.tooltipProvider != null) {
                 String tooltip = this.tooltipProvider.get();
@@ -190,47 +190,16 @@ public abstract class GuiElement<T extends GuiElement<T>> {
 
     }
 
-    public boolean onMouseClick(int mouseX, int mouseY, MouseButton button, boolean onThis) {
-        return onThis && this.onMouseClick(mouseX, mouseY, button);
+    public boolean onMouseClick(int mouseX, int mouseY, MouseButton button) {
+        return true;
     }
 
-    protected boolean onMouseClick(int mouseX, int mouseY, MouseButton button) {
-        return false;
-    }
 
-    public boolean onMouseDrag(int mouseX, int mouseY, MouseButton button, long timeFromLastClick, boolean onThis) {
-        return onThis && this.onMouseDrag(mouseX, mouseY, button, timeFromLastClick);
-    }
 
-    protected boolean onMouseDrag(int mouseX, int mouseY, MouseButton button, long timeFromLastClick) {
-        return false;
-    }
 
-    public boolean onMouseRelease(int mouseX, int mouseY, MouseButton button, boolean onThis) {
-        return onThis && this.onMouseRelease(mouseX, mouseY, button);
-    }
-
-    protected boolean onMouseRelease(int mouseX, int mouseY, MouseButton button) {
-        return false;
-    }
-
-    public void onMouseScroll(int mouseX, int mouseY, ScrollDirection direction) {
-    }
-
-    public boolean onKeyTyped(char typedChar, int keyCode) {
-        return false;
-    }
-
-    protected boolean suppressTooltip(int mouseX, int mouseY) {
-        return false;
-    }
 
     protected List<String> getToolTip() {
         return new ArrayList<>();
-    }
-
-    protected final IInventory getBase() {
-        return this.gui.getContainer().base;
     }
 
 

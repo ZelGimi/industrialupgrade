@@ -16,7 +16,7 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiSynthesis;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
@@ -35,7 +35,7 @@ import java.util.Random;
 public class TileSynthesis extends TileDoubleElectricMachine implements IHasRecipe {
 
     public final ComponentBaseEnergy rad_energy;
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
 
     public TileSynthesis() {
         super(1, 300, 1, EnumDoubleElectricMachine.SYNTHESIS, false);
@@ -91,7 +91,7 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -103,7 +103,7 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

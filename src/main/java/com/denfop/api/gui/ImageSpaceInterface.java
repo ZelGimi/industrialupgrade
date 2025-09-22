@@ -4,7 +4,7 @@ import com.denfop.gui.GuiCore;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class ImageSpaceInterface extends GuiElement<ImageSpaceInterface> {
+public class ImageSpaceInterface extends GuiElement {
 
 
     public ImageSpaceInterface(GuiCore<?> gui, int x, int y, int width, int height) {

@@ -5,8 +5,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
@@ -121,7 +121,7 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         List<SlotInvSlot> list = new ArrayList<>();
         for (Slot slot : container1.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
-                if (((SlotInvSlot) slot).invSlot instanceof InvSlotRecipes) {
+                if (((SlotInvSlot) slot).inventory instanceof InventoryRecipes) {
                     list.add((SlotInvSlot) slot);
                 }
             }
@@ -134,7 +134,7 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
 
         }
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i, recipes.getOutput());
     }

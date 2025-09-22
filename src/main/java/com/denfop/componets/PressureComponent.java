@@ -7,7 +7,7 @@ import com.denfop.api.pressure.IPressureSource;
 import com.denfop.api.pressure.IPressureTile;
 import com.denfop.api.pressure.event.PressureTileLoadEvent;
 import com.denfop.api.pressure.event.PressureTileUnloadEvent;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
@@ -40,7 +40,7 @@ public class PressureComponent extends AbstractComponent {
     public int sourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots;
+    public List<Inventory> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
     public PressureComponent.EnergyNetDelegate delegate;

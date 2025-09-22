@@ -20,7 +20,7 @@ public class GuiSolarDestiller extends GuiIU<ContainerSolarDestiller> {
         this.ySize = 170;
         this.inventory.setY(101);
         this.componentList.clear();
-        this.addElement(new TankGauge(this, 38, 20, 22, 40, container.base.inputTank, TankGauge.TankGuiStyle.Normal) {
+        this.addElement(new TankGauge(this, 38, 20, 22, 40, container.base.inputTank) {
 
 
             @Override
@@ -30,14 +30,12 @@ public class GuiSolarDestiller extends GuiIU<ContainerSolarDestiller> {
                 if (fs != null && fs.amount > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 17;
-                        fluidHeight = 44;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 17;
+                    fluidHeight = 44;
 
                     Fluid fluid = fs.getFluid();
                     TextureAtlasSprite sprite = fluid != null
@@ -67,7 +65,7 @@ public class GuiSolarDestiller extends GuiIU<ContainerSolarDestiller> {
                 }
             }
         });
-        this.addElement(new TankGauge(this, 115, 20, 22, 40, container.base.outputTank, TankGauge.TankGuiStyle.Normal) {
+        this.addElement(new TankGauge(this, 115, 20, 22, 40, container.base.outputTank) {
 
 
             @Override
@@ -77,14 +75,12 @@ public class GuiSolarDestiller extends GuiIU<ContainerSolarDestiller> {
                 if (fs != null && fs.amount > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
-                    int fluidWidth = this.width;
-                    int fluidHeight = this.height;
-                    if (this.getStyle().withBorder) {
-                        fluidX += 3;
-                        fluidY += 3;
-                        fluidWidth = 17;
-                        fluidHeight = 44;
-                    }
+                    int fluidWidth;
+                    int fluidHeight;
+                    fluidX += 3;
+                    fluidY += 3;
+                    fluidWidth = 17;
+                    fluidHeight = 44;
 
                     Fluid fluid = fs.getFluid();
                     TextureAtlasSprite sprite = fluid != null

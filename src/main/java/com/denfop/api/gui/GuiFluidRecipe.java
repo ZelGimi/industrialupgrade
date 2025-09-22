@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiFluidRecipe extends GuiElement<GuiFluidRecipe> {
+public class GuiFluidRecipe extends GuiElement {
 
     private final FluidStack fluid;
     private final FluidGenerator recipe;

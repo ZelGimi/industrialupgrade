@@ -2,10 +2,9 @@ package com.denfop.tiles.base;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
@@ -15,10 +14,9 @@ import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneHandler;
 import com.denfop.container.ContainerMultiMatter;
 import com.denfop.gui.GuiMultiMatter;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -48,10 +46,10 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
         IUpdatableTileEvent, IType, IUpdateTick, IMatter {
 
     public static Map<Integer, Map<ChunkPos, List<IMatter>>> worldMatterMap = new HashMap<>();
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes amplifierSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes amplifierSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     public final FluidTank fluidTank;
     public final float energycost;
     protected final Fluids fluids;
@@ -67,22 +65,22 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
 
     public TileMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy) {
         super(Math.round(maxtempEnergy * 1), 3, 1);
-        this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
+        this.amplifierSlot = new InventoryRecipes(this, "matterAmplifier", this);
 
         this.energycost = storageEnergy * 1;
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.containerslot = new InvSlotFluidByList(
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.containerslot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluiduu_matter.getInstance()
         );
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", sizeTank * 1000,
-                Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance()), InvSlot.TypeItemSlot.OUTPUT
+                Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance()), Inventory.TypeItemSlot.OUTPUT
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.redstone = this.addComponent(new Redstone(this));
         this.redstone.subscribe(new RedstoneHandler() {
                                     @Override

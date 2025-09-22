@@ -6,7 +6,7 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
-import com.denfop.api.recipe.InvSlotSteamMultiRecipes;
+import com.denfop.api.recipe.InventorySteamMultiRecipes;
 import com.denfop.componets.ComponentSteamProcessRender;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamMultiMachine;
@@ -69,7 +69,7 @@ public class GuiSteamMultiMachine extends GuiIU<ContainerSteamMultiMachine> {
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof InvSlotSteamMultiRecipes) {
+                if (slotInv.inventory instanceof InventorySteamMultiRecipes) {
                     this.process.setIndex(i);
                     this.process.setX(xX);
                     this.process.setY(yY + 19);
@@ -99,7 +99,7 @@ public class GuiSteamMultiMachine extends GuiIU<ContainerSteamMultiMachine> {
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof com.denfop.api.recipe.InvSlotSteamMultiRecipes) {
+                if (slotInv.inventory instanceof InventorySteamMultiRecipes) {
                     this.process.setIndex(i);
                     this.process.setX(xX);
                     this.process.setY(yY + 19);
@@ -122,7 +122,7 @@ public class GuiSteamMultiMachine extends GuiIU<ContainerSteamMultiMachine> {
         }
 
 
-        for (final GuiElement<?> guiElement : this.elements) {
+        for (final GuiElement guiElement : this.elements) {
             guiElement.drawBackground(x - this.guiLeft, y - this.guiTop);
 
         }

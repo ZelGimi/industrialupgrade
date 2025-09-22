@@ -2,10 +2,9 @@ package com.denfop.componets;
 
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
-import com.denfop.api.recipe.IMultiUpdateTick;
-import com.denfop.api.recipe.InvSlotBioMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryBioMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.IBioMachine;
@@ -22,8 +21,8 @@ import java.util.List;
 
 public class BioProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
-    public final InvSlotBioMultiRecipes inputSlots;
-    public final InvSlotOutput outputSlot;
+    public final InventoryBioMultiRecipes inputSlots;
+    public final InventoryOutput outputSlot;
     public final HeatComponent heat;
     public final boolean isCentrifuge;
     private final ComponentBioFuelEnergy bioFuel;
@@ -44,13 +43,13 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
     public BioProcessMultiComponent(final IBioMachine parent, final EnumMultiMachine enumMultiMachine) {
         super((TileEntityBlock) parent);
         this.multimachine = parent;
-        this.inputSlots = new InvSlotBioMultiRecipes(
+        this.inputSlots = new InventoryBioMultiRecipes(
                 (TileEntityInventory) parent,
                 enumMultiMachine.type.recipe,
                 this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(
+        this.outputSlot = new InventoryOutput(
                 (IAdvInventory<?>) parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );

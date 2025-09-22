@@ -7,7 +7,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockDryer;
 import com.denfop.componets.ComponentProgress;
@@ -107,7 +107,7 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerWrapper
         this.slots.drawBackground(65, -65);
         progress_bar.renderBar(0, 0, xScale);
 
-        for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
+        for (final GuiElement element : ((List<GuiElement>) this.elements)) {
             element.drawBackground(this.guiLeft, this.guiTop);
         }
 
@@ -123,7 +123,7 @@ public class DryerCategory extends GuiIU implements IRecipeCategory<DryerWrapper
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
         IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotOutput.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryOutput.class);
         final List<FluidStack> inputs = Collections.singletonList(recipes.getInputstack());
 
 

@@ -3,13 +3,8 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -22,7 +17,7 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.container.ContainerPositronsConverter;
 import com.denfop.gui.GuiPositronsConverter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -38,10 +33,10 @@ import java.util.Set;
 public class TileEntityPositronConverter extends TileElectricMachine implements IUpgradableBlock, IUpdateTick,
         IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentProcess componentProcess;
     public final ComponentBaseEnergy positrons;
     public final ComponentBaseEnergy qe;
@@ -50,7 +45,7 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
 
     public TileEntityPositronConverter() {
         super(500, 8, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
             public void onLoaded() {
@@ -61,7 +56,7 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "positrons", this);
+        this.inputSlotA = new InventoryRecipes(this, "positrons", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 100, 1) {
                                                       @Override
                                                       public boolean checkRadiation(final boolean consume) {

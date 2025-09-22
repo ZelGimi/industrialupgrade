@@ -11,8 +11,8 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -27,11 +27,11 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerSolidStateElectrolyzer;
 import com.denfop.gui.GuiSolidStateElectrolyzer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotElectrolyzer;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryElectrolyzer;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryFluidByList;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -60,18 +60,18 @@ import java.util.Set;
 public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
     public final Fluids.InternalFluidTank fluidTank1;
-    public final InvSlotFluidByList fluidSlot1;
-    public final InvSlotOutput output1;
+    public final InventoryFluidByList fluidSlot1;
+    public final InventoryOutput output1;
     public final FluidHandlerRecipe fluid_handler;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotElectrolyzer cathodeslot;
-    public final InvSlotElectrolyzer anodeslot;
+    public final InventoryElectrolyzer cathodeslot;
+    public final InventoryElectrolyzer anodeslot;
     public MachineRecipe output;
     public double energyConsume;
     public int operationLength;
@@ -91,19 +91,19 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.inputSlotA = new InvSlotRecipes(this, "solid_electrolyzer", this);
+        this.inputSlotA = new InventoryRecipes(this, "solid_electrolyzer", this);
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.output1 = new InvSlotOutput(this, 1);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
+        this.output1 = new InventoryOutput(this, 1);
 
 
         this.fluid_handler = new FluidHandlerRecipe("solid_electrolyzer", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
-        this.fluidSlot1.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.cathodeslot = new InvSlotElectrolyzer(this, 1);
-        this.anodeslot = new InvSlotElectrolyzer(this, 0);
+        this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
+        this.fluidSlot1.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.cathodeslot = new InventoryElectrolyzer(this, 1);
+        this.anodeslot = new InventoryElectrolyzer(this, 0);
 
     }
 
@@ -412,7 +412,7 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
 
     public void operateOnce() {
         this.inputSlotA.consume();
-        this.outputSlot.add(this.output.getRecipe().getOutput().items);
+        this.outputSlot.addAll(this.output.getRecipe().getOutput().items);
         this.fluid_handler.fillFluid();
     }
 

@@ -7,14 +7,14 @@ import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCompressor;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -48,8 +48,8 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 1, 1.25D,
             1
     ));
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotOutput outputSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryOutput outputSlot;
     public int progress;
     public MachineRecipe output;
     public int durability = 96;
@@ -57,17 +57,17 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
 
     public TileEntityCompressor() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "compressor", this) {
+        this.inputSlotA = new InventoryRecipes(this, "compressor", this) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 if (index == 4) {
-                    return super.accepts(itemStack, 0);
+                    return super.isItemValidForSlot(0, itemStack);
                 }
                 return false;
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 if (output == null) {
                     return 1;
                 }
@@ -75,7 +75,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
             }
         };
         this.progress = 0;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
     }
 
     @Override
@@ -177,14 +177,14 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -201,8 +201,8 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -279,7 +279,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
                 return this.getWorld().isRemote;
             } else {
                 if (!stack.isEmpty()) {
-                    if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
+                    if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.isItemValidForSlot(4, stack)) {
                         final ItemStack stack1 = stack.copy();
                         stack1.setCount(1);
                         this.inputSlotA.put(0, stack1);
@@ -289,7 +289,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
                         }
                         return true;
                     } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).isItemEqual(stack)) {
-                        int minCount = this.inputSlotA.getStackSizeLimit() - this.inputSlotA.get(0).getCount();
+                        int minCount = this.inputSlotA.getInventoryStackLimit() - this.inputSlotA.get(0).getCount();
                         minCount = Math.min(stack.getCount(), minCount);
                         this.inputSlotA.get(0).grow(minCount);
                         stack.grow(-minCount);

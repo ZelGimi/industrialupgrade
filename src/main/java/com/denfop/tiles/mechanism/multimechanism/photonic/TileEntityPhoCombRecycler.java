@@ -15,7 +15,11 @@ public class TileEntityPhoCombRecycler extends TileMultiMachine {
         super(EnumMultiMachine.Pho_RECYCLER.usagePerTick, EnumMultiMachine.Pho_RECYCLER.lenghtOperation);
     }
 
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        this.cold.storage = 0;
+    }
     public void initiate(int soundEvent) {
         if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             super.initiate(soundEvent);

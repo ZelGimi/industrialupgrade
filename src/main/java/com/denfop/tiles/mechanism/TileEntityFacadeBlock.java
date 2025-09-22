@@ -7,7 +7,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerFacadeBlock;
 import com.denfop.gui.GuiFacadeBlock;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -29,16 +29,16 @@ import java.util.List;
 public class TileEntityFacadeBlock extends TileEntityInventory implements IUpdatableTileEvent {
 
 
-    public final InvSlot stackSlot;
+    public final Inventory stackSlot;
 
     public TileEntityFacadeBlock() {
-        this.stackSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.stackSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return Block.getBlockFromItem(stack.getItem()) != Blocks.AIR;
             }
         };
-        this.stackSlot.setStackSizeLimit(1);
+        this.stackSlot.setInventoryStackLimit(1);
     }
 
     @Override

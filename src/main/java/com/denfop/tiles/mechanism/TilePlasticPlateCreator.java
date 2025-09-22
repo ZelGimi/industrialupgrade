@@ -8,7 +8,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -21,7 +21,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPlasticPlateCreator;
 import com.denfop.gui.GuiPlasticPlateCreator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticPlateCreator;
 import com.denfop.utils.ModUtils;
@@ -41,18 +41,18 @@ import java.util.Set;
 
 public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator implements IUpdateTick, IHasRecipe {
 
-    public final InvSlot input_slot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
     public TilePlasticPlateCreator() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotRecipes(this, "plasticplate", this, this.fluidTank);
-        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
+        this.inputSlotA = new InventoryRecipes(this, "plasticplate", this, this.fluidTank);
+        fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
         Recipes.recipes.addInitRecipes(this);
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -64,7 +64,7 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 

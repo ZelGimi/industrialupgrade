@@ -25,8 +25,8 @@ import com.denfop.container.ContainerSolarPanels;
 import com.denfop.container.ContainerSolarPanels1;
 import com.denfop.gui.GuiSolarPanels;
 import com.denfop.gui.GuiSolarPanels1;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotPanel;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryPanel;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -53,7 +53,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,11 +67,11 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public final ComponentTimer timer;
     public final ComponentPollution pollution;
     public final WirelessComponent wirelessComponent;
-    public final InvSlot slotDept;
+    public final Inventory slotDept;
     public double coef;
     public EnumSolarPanels solarpanels;
     public int tier;
-    public InvSlotPanel inputslot;
+    public InventoryPanel inputslot;
     public Biome biome;
     public int solarType;
     public EnumType type;
@@ -138,7 +137,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         this.defaultOutoput = gOutput;
         this.tier = tier;
         this.defaultTier = tier;
-        this.inputslot = new InvSlotPanel(this, tier, 9, InvSlot.TypeItemSlot.INPUT_OUTPUT);
+        this.inputslot = new InventoryPanel(this, tier, 9, Inventory.TypeItemSlot.INPUT_OUTPUT);
         this.type = EnumType.DEFAULT;
         this.solarpanels = type;
         this.coef = 0;
@@ -154,9 +153,9 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         this.pollution.setTimer(timer);
         this.wirelessComponent = this.addComponent(new WirelessComponent(this));
         wirelessComponent.setEnergySource(this);
-        this.slotDept = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slotDept = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof IEnergyItem && ((IEnergyItem) stack.getItem()).canProvideEnergy(stack);
             }
 

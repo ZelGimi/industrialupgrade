@@ -3,7 +3,7 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -15,10 +15,9 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDieselGenerator;
 import com.denfop.gui.GuiDieselGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryFluid;
+import com.denfop.invslot.InventoryCharge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -42,9 +41,9 @@ import java.io.IOException;
 public class TileDieselGenerator extends TileEntityLiquidTankInventory implements IAudioFixer,
         IUpdatableTileEvent {
 
-    public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
-    public final InvSlotFluid fluidSlot;
-    public final InvSlotOutput outputSlot;
+    public final InventoryCharge chargeSlot = new InventoryCharge(this, 1);
+    public final InventoryFluid fluidSlot;
+    public final InventoryOutput outputSlot;
     public final String name = null;
     public final Energy energy;
     public final int production = 200;
@@ -59,12 +58,12 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
     public TileDieselGenerator() {
         super(12);
         this.coef = 1;
-        this.fluidSlot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.INPUT,
+        this.fluidSlot = new InventoryFluidByList(this, Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.INPUT,
                 FluidName.fluiddizel.getInstance(),
                 FluidName.fluida_diesel.getInstance(), FluidName.fluidaa_diesel.getInstance(),
                 FluidName.fluidaaa_diesel.getInstance(), FluidName.fluidaaaa_diesel.getInstance()
         );
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSource(
                 this,
                 (double) 10000000,

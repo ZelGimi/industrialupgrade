@@ -14,7 +14,7 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTank;
 import com.denfop.gui.GuiSteamTank;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -67,7 +67,7 @@ public class TileSteamStorage extends TileEntityInventory {
 
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 64 * 1000, InvSlot.TypeItemSlot.NONE,
+        this.fluidTank = this.fluids.addTank("fluidTank", 64 * 1000, Inventory.TypeItemSlot.NONE,
                 Fluids.fluidPredicate(FluidName.fluidsteam.getInstance())
         );
         this.steam.setFluidTank(fluidTank);

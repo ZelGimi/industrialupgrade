@@ -4,7 +4,7 @@ import com.denfop.gui.GuiCore;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class ImageRocketPadScreen extends GuiElement<ImageRocketPadScreen> {
+public class ImageRocketPadScreen extends GuiElement {
 
 
     public ImageRocketPadScreen(GuiCore<?> gui, int x, int y, int width, int height) {

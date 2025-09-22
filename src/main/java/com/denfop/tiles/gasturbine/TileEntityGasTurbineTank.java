@@ -5,7 +5,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class TileEntityGasTurbineTank extends TileEntityMultiBlockElement implem
 
     public TileEntityGasTurbineTank() {
         fluids = this.addComponent(new Fluids(this));
-        this.tank = fluids.addTank("tank", 20000, InvSlot.TypeItemSlot.INPUT);
+        this.tank = fluids.addTank("tank", 20000, Inventory.TypeItemSlot.INPUT);
     }
 
     @Override

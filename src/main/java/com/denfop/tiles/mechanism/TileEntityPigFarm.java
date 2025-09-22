@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -14,8 +14,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPigFarm;
 import com.denfop.gui.GuiPigFarm;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
@@ -42,10 +42,10 @@ public class TileEntityPigFarm extends TileEntityInventory implements IUpgradabl
 
     private static final int RADIUS = 4;
     private static final int MAX_PIGS = 20;
-    public final InvSlot slotSeeds;
-    public final InvSlotOutput output;
+    public final Inventory slotSeeds;
+    public final InventoryOutput output;
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
@@ -56,15 +56,15 @@ public class TileEntityPigFarm extends TileEntityInventory implements IUpgradabl
     List<Chunk> chunks = new ArrayList<>();
 
     public TileEntityPigFarm() {
-        this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slotSeeds = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == Items.CARROT;
             }
         };
-        this.output = new InvSlotOutput(this, 9);
+        this.output = new InventoryOutput(this, 9);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));

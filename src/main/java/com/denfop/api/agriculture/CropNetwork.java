@@ -126,7 +126,7 @@ public class CropNetwork {
                 .getSoil()
                 .getBlock() == downBlock.getBlock() && crop
                 .getSoil()
-                .isIgnore()) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus))) {
+                .isIgnore()) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus) || (crop.getSoil() == EnumSoil.REDSTONE && downBlock.getBlock() == Blocks.LIT_REDSTONE_ORE) )) {
             return crop.canGrowInBiome(biome);
         }
         return false;

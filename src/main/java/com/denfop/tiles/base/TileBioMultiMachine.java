@@ -15,7 +15,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerBioMultiMachine;
 import com.denfop.gui.GuiBioMultiMachine;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -74,10 +74,10 @@ public abstract class TileBioMultiMachine extends TileEntityInventory implements
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
         this.bioFuel = this.addComponent(ComponentBioFuelEnergy.asBasicSink(this, 1000));
         fluid = this.addComponent(new Fluids(this));
-        this.fluidTank = fluid.addTank("tank", OperationsPerTick * energyconsume, InvSlot.TypeItemSlot.NONE);
+        this.fluidTank = fluid.addTank("tank", OperationsPerTick * energyconsume, Inventory.TypeItemSlot.NONE);
         bioFuel.setFluidTank(fluidTank);
         if (this.getMachine().type == EnumTypeMachines.OreWashing) {
-            this.tank = fluid.addTank("tank", 64000, InvSlot.TypeItemSlot.INPUT,
+            this.tank = fluid.addTank("tank", 64000, Inventory.TypeItemSlot.INPUT,
                     Fluids.fluidPredicate(FluidRegistry.WATER)
             );
         }

@@ -6,8 +6,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockPrimalLaserPolisher;
 import com.denfop.componets.ComponentRenderInventory;
@@ -114,7 +114,7 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
 
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = recipes.getInputs1();
         int i = 0;
         for (; i < inputs.size(); i++) {
@@ -125,7 +125,7 @@ public class PrimalLaserCategory extends GuiIU implements IRecipeCategory<Primal
         isg.init(i, true, slots1.get(0).getJeiX() - 30, slots1.get(0).getJeiY());
         isg.set(i, new ItemStack(IUItem.laser));
 
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         isg.init(i + 1, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i + 1, recipes.getOutput());
     }

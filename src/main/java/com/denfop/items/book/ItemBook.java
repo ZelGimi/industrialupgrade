@@ -32,7 +32,7 @@ public class ItemBook extends Item implements IItemStackInventory, IModelRegiste
     public ItemBook(String internalName) {
 
         this.setCreativeTab(IUCore.ItemTab);
-        this.setMaxStackSize(64);
+        this.setMaxStackSize(1);
         this.internalName = internalName;
         IUCore.proxy.addIModelRegister(this);
         Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);

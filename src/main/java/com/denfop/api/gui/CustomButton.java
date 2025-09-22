@@ -8,7 +8,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 
-public class CustomButton extends GuiElement<CustomButton> {
+public class CustomButton extends GuiElement {
 
 
     private final EnumTypeComponent type;
@@ -217,7 +217,7 @@ public class CustomButton extends GuiElement<CustomButton> {
     }
 
     @Override
-    protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
+    public boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
         if (this.visible() && this.contains(mouseX, mouseY)) {
             this.getGui().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
                     SoundEvents.UI_BUTTON_CLICK,

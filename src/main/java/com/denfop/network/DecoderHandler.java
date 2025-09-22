@@ -10,7 +10,7 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.space.fakebody.FakePlanet;
 import com.denfop.api.tesseract.Channel;
 import com.denfop.api.vein.Vein;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
 import com.denfop.recipe.IInputItemStack;
@@ -287,7 +287,7 @@ public class DecoderHandler {
                 return is.readInt();
             case InvSlot:
                 ItemStack[] contents = (ItemStack[]) decode(is, EncodedType.Array);
-                InvSlot ret3 = new InvSlot(contents.length);
+                Inventory ret3 = new Inventory(contents.length);
 
                 for (i = 0; i < contents.length; ++i) {
                     ret3.put(i, contents[i]);

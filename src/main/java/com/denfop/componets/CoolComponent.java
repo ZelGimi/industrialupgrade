@@ -8,7 +8,7 @@ import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
@@ -40,7 +40,7 @@ public class CoolComponent extends AbstractComponent {
     public int sourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots;
+    public List<Inventory> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
     public CoolComponent.EnergyNetDelegate delegate;

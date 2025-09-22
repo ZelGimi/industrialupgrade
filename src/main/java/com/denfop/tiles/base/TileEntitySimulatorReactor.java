@@ -17,8 +17,8 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerSimulationReactors;
 import com.denfop.gui.GuiSimulationReactors;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotSimulatorReactor;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventorySimulatorReactor;
 import com.denfop.items.reactors.ItemComponentVent;
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.network.IUpdatableTileEvent;
@@ -41,8 +41,8 @@ import java.util.List;
 
 public class TileEntitySimulatorReactor extends TileEntityInventory implements IUpdatableTileEvent {
 
-    public final InvSlotSimulatorReactor invSlot;
-    public final InvSlot scheduleSlot;
+    public final InventorySimulatorReactor invSlot;
+    public final Inventory scheduleSlot;
     public int type = -1;
     public int level = -1;
     public EnumReactors reactors;
@@ -58,9 +58,9 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
 
     public TileEntitySimulatorReactor() {
 
-        this.invSlot = new InvSlotSimulatorReactor(this, InvSlot.TypeItemSlot.INPUT, 80) {
+        this.invSlot = new InventorySimulatorReactor(this, Inventory.TypeItemSlot.INPUT, 80) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 if (reactors == null) {
                     return false;
                 }
@@ -112,14 +112,14 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             }
         };
         this.reactor = new CreativeReactor(this.reactors, invSlot);
-        this.scheduleSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.scheduleSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 143;
             }
 
             @Override
-            public int getStackSizeLimit() {
+            public int getInventoryStackLimit() {
                 return 1;
             }
         };
@@ -160,9 +160,9 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             this.invSlot.clear();
             this.reactor.reset(reactors);
             this.size_inventory = 0;
-            InvSlot invSlot;
-            for (Iterator<InvSlot> var3 = this.invSlots.iterator(); var3.hasNext(); size_inventory += invSlot.size()) {
-                invSlot = var3.next();
+            Inventory inventory;
+            for (Iterator<Inventory> var3 = this.inventories.iterator(); var3.hasNext(); size_inventory += inventory.size()) {
+                inventory = var3.next();
             }
         }
     }
@@ -369,9 +369,9 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             this.reactor.reset(reactors);
             this.size_inventory = 0;
 
-            InvSlot invSlot;
-            for (Iterator<InvSlot> var3 = this.invSlots.iterator(); var3.hasNext(); size_inventory += invSlot.size()) {
-                invSlot = var3.next();
+            Inventory inventory;
+            for (Iterator<Inventory> var3 = this.inventories.iterator(); var3.hasNext(); size_inventory += inventory.size()) {
+                inventory = var3.next();
             }
             this.work = false;
             explode = false;

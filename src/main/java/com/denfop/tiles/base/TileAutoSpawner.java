@@ -18,8 +18,8 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoSpawner;
 import com.denfop.gui.GuiAutoSpawner;
-import com.denfop.invslot.InvSlotModules;
-import com.denfop.invslot.InvSlotUpgradeModule;
+import com.denfop.invslot.InventoryModules;
+import com.denfop.invslot.InventoryUpgradeModule;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -50,9 +50,9 @@ import java.util.Set;
 public class TileAutoSpawner extends TileElectricMachine
         implements IEnergyReceiver, IEnergyHandler, IUpgradableBlock {
 
-    public final InvSlotModules module_slot;
+    public final InventoryModules module_slot;
     public final double[] maxprogress;
-    public final InvSlotUpgradeModule module_upgrade;
+    public final InventoryUpgradeModule module_upgrade;
     public final int tempcostenergy;
     public final double maxEnergy2;
     public final int defaultconsume;
@@ -78,8 +78,8 @@ public class TileAutoSpawner extends TileElectricMachine
 
     public TileAutoSpawner() {
         super(150000, 14, 27);
-        this.module_slot = new InvSlotModules(this);
-        this.module_upgrade = new InvSlotUpgradeModule(this);
+        this.module_slot = new InventoryModules(this);
+        this.module_upgrade = new InventoryUpgradeModule(this);
         this.progress = new int[module_slot.size()];
         this.maxEnergy2 = 50000 * Config.coefficientrf;
         this.maxprogress = new double[4];

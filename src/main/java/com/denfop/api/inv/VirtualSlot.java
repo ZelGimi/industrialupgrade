@@ -17,6 +17,6 @@ public interface VirtualSlot {
 
     int size();
 
-    boolean accepts(ItemStack stack, int index);
+    boolean accepts(int index, ItemStack stack);
 
 }

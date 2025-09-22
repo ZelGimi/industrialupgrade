@@ -5,9 +5,8 @@ import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.container.ContainerAgriculturalAnalyzer;
 import com.denfop.gui.GuiAgriculturalAnalyzer;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,20 +70,10 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
         return new GuiAgriculturalAnalyzer(getGuiContainer(player), itemStack1);
     }
 
-    @Override
-    public TileEntityInventory getParent() {
-        return null;
-    }
-
 
     @Override
-    public void addInventorySlot(final InvSlot var1) {
+    public void addInventorySlot(final Inventory var1) {
 
-    }
-
-    @Override
-    public int getBaseIndex(final InvSlot var1) {
-        return 0;
     }
 
 

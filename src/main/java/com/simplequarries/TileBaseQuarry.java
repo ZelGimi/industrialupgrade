@@ -7,7 +7,7 @@ import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -69,10 +69,10 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
 
     public final String name;
     public final int index;
-    public final InvSlotBaseQuarry input;
+    public final InventoryBaseQuarry input;
     public final double constenergyconsume;
     public final double speed;
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public final ComponentBaseEnergy exp;
     public final CoolComponent cold;
     public int min_y;
@@ -115,11 +115,11 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         this.energy1 = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 200000, 14));
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
 
-        this.outputSlot = new InvSlotOutput(this, 24);
+        this.outputSlot = new InventoryOutput(this, 24);
         this.work = true;
         this.index = index;
         this.speed = Math.pow(2, index - 1);
-        this.input = new InvSlotBaseQuarry(this, Math.min(4, index));
+        this.input = new InventoryBaseQuarry(this, Math.min(4, index));
         this.constenergyconsume = 450 * coef;
         this.min_y = 0;
         this.max_y = 256;

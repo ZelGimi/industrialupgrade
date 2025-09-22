@@ -4,16 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -25,7 +17,7 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerElectricBioGenerator;
 import com.denfop.gui.GuiElectricBioGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -59,7 +51,7 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     public final int defaultTier;
     public final double defaultEnergyStorage;
     public final Energy steam;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentBioFuelEnergy bioEnergy;
     private final Fluids fluids;
     public double energyConsume;
@@ -72,14 +64,14 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     public TileEntityBioGenerator() {
         super(0, 1, 0);
         this.progress = 0;
-        this.inputSlotA = new InvSlotRecipes(this, "biomass", this);
+        this.inputSlotA = new InventoryRecipes(this, "biomass", this);
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 20;
         operationsPerTick = 1;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 20;
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE,
+        this.fluidTank1 = fluids.addTank("fluidTank1", 4000, Inventory.TypeItemSlot.NONE,
                 Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance())
         );
         this.fluid_handler = new FluidHandlerRecipe("biomass", fluids);

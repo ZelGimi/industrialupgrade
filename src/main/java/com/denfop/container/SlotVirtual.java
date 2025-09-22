@@ -3,7 +3,7 @@ package com.denfop.container;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.blocks.FluidName;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,12 +32,10 @@ public class SlotVirtual extends Slot {
             final int yPosition,
             VirtualSlot slotInfo
     ) {
-        super(
-                inventoryIn,
-                slotInfo instanceof InvSlot ? inventoryIn.getBaseIndex((InvSlot) slotInfo) + index : index,
+        super(slotInfo instanceof Inventory ? ((Inventory) slotInfo) : inventoryIn,
+                index,
                 xPosition,
-                yPosition
-        );
+                yPosition);
         this.slotInfo = slotInfo;
         this.index = index;
     }
@@ -108,7 +106,7 @@ public class SlotVirtual extends Slot {
     }
 
     public boolean isItemValid(ItemStack stack) {
-        return this.slotInfo.accepts(stack, index);
+        return this.slotInfo.accepts(index, stack);
     }
 
 }

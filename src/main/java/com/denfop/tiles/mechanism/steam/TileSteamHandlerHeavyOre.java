@@ -3,10 +3,9 @@ package com.denfop.tiles.mechanism.steam;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -22,7 +21,7 @@ import com.denfop.componets.HeatComponent;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerSteamHandlerHeavyOre;
 import com.denfop.gui.GuiSteamHandlerHeavyOre;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -46,7 +45,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
         implements IUpdateTick, IType {
 
 
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public final ComponentSteamProcess componentProcess;
     public final ComponentProgress componentProgress;
     public final Fluids.InternalFluidTank fluidTank;
@@ -56,7 +55,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
     private final EnumTypeStyle enumTypeSlot;
     private final double coef;
     private final Fluids fluids;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     private int[] col;
     private boolean work = false;
@@ -73,15 +72,15 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
     ) {
         super(0, 1, 1);
         this.enumTypeSlot = enumTypeSlot;
-        this.outputSlot = new InvSlotOutput(this, outputSlots + 2 * enumTypeSlot.ordinal());
-        this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
+        this.outputSlot = new InventoryOutput(this, outputSlots + 2 * enumTypeSlot.ordinal());
+        this.inputSlotA = new InventoryRecipes(this, "handlerho", this);
         this.col = new int[0];
         this.coef = getCoef();
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) length
         ));
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank = fluids.addTank("fluidTank2", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.heat = this.addComponent(HeatComponent

@@ -2,7 +2,7 @@ package com.denfop.tiles.reactors.heat.circulationpump;
 
 import com.denfop.container.ContainerHeatCirculationPump;
 import com.denfop.gui.GuiHeatCirculationPump;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.items.reactors.ItemsPumps;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.ICirculationPump;
@@ -15,15 +15,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityBaseCirculationPump extends TileEntityMultiBlockElement implements ICirculationPump {
 
     private final int level;
-    private final InvSlot slot;
+    private final Inventory slot;
     private int power;
     private int energy;
 
     public TileEntityBaseCirculationPump(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() instanceof ItemsPumps && ((ItemsPumps) stack.getItem()).getLevel() <= ((TileEntityBaseCirculationPump) this.base).getBlockLevel();
             }
 
@@ -107,7 +107,7 @@ public class TileEntityBaseCirculationPump extends TileEntityMultiBlockElement i
         this.power = power;
     }
 
-    public InvSlot getSlot() {
+    public Inventory getSlot() {
         return slot;
     }
 

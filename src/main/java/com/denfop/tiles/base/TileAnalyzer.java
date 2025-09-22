@@ -13,7 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAnalyzer;
 import com.denfop.gui.GuiAnalyzer;
-import com.denfop.invslot.InvSlotAnalyzer;
+import com.denfop.invslot.InventoryAnalyzer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -41,8 +41,8 @@ import java.util.List;
 
 public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileEvent {
 
-    public final InvSlotAnalyzer inputslot;
-    public final InvSlotAnalyzer inputslotA;
+    public final InventoryAnalyzer inputslot;
+    public final InventoryAnalyzer inputslotA;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public boolean furnace;
@@ -90,8 +90,8 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
         this.breakblock = 0;
         dataOreList = new DataOreList<>();
         this.quarry = false;
-        this.inputslot = new InvSlotAnalyzer(this, "input", 3, 0);
-        this.inputslotA = new InvSlotAnalyzer(this, "input1", 1, 1);
+        this.inputslot = new InventoryAnalyzer(this, "input", 3, 0);
+        this.inputslotA = new InventoryAnalyzer(this, "input1", 1, 1);
         this.y = 257;
         this.blacklist = new ArrayList<>();
         this.whitelist = new ArrayList<>();
@@ -601,7 +601,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                 if (dataOre.getVeinsList() != null && !dataOre.getVeinsList().isEmpty()) {
                     Vein vein = dataOre.getVeinsList().get(indexVein);
                     indexVein++;
-                    if (vein.getCol() >= 0) {
+                    if (vein.getCol() <= 0) {
                         for (TileEntityAnalyzerChest analyzerChest : target1) {
                             final int col1 = Math.min(vein.getCol(), 64);
                             if (vein.getCol() <= 0) {

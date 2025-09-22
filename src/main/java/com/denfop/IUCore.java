@@ -4,6 +4,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.guidebook.GuideBookCore;
 import com.denfop.api.heat.HeatNet;
 import com.denfop.api.pollution.PollutionManager;
 import com.denfop.api.pressure.PressureNet;
@@ -38,6 +39,8 @@ import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
+import com.denfop.network.packet.PacketUpdateInformationAboutQuestsPlayer;
+import com.denfop.network.packet.PacketUpdateRelocator;
 import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.register.RegisterOreDictionary;
@@ -255,7 +258,23 @@ public final class IUCore {
         }
 
     }
+    @SubscribeEvent
+    public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player.getEntityWorld().isRemote) {
+            return;
+        }
 
+        if (!GuideBookCore.uuidGuideMap.containsKey(event.player.getUniqueID())){
+            GuideBookCore.instance.load(event.player.getUniqueID(),event.player);
+            event.player.addItemStackToInventory(new ItemStack(IUItem.book));
+            event.player.addItemStackToInventory(new ItemStack(IUItem.veinsencor));
+        }else{
+            GuideBookCore.instance.loadOrThrow(event.player.getUniqueID());
+            new PacketUpdateInformationAboutQuestsPlayer(GuideBookCore.uuidGuideMap.get(event.player.getUniqueID()),event.player);
+        }
+
+        new PacketUpdateRelocator(event.player);
+    }
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (IUCore.proxy.isSimulating()) {
@@ -610,7 +629,8 @@ public final class IUCore {
                         get_comb_crushed_quarry.add(new QuarryItem(stack));
             }
         });
-
+        new GuideBookCore();
+        GuideBookCore.init();
     }
 
 

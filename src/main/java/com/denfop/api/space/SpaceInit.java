@@ -1655,7 +1655,7 @@ public class SpaceInit {
         SpaceNet.instance.getColonieNet().addItemStack(oberon, (short) 15, new ItemStack(IUItem.space_ore2, 1, 8));
         SpaceNet.instance.getColonieNet().addItemStack(oberon, (short) 20, new ItemStack(IUItem.space_ore2, 1, 9));
         SpaceNet.instance.getColonieNet().addFluidStack(oberon, (short) 25,
-                new FluidStack(FluidName.fluidethylene.getInstance(), 1)
+                new FluidStack(FluidName.fluidethane.getInstance(), 1)
         );
 
         SpaceNet.instance.getColonieNet().addItemStack(ariel, (short) 22, new ItemStack(IUItem.space_ore, 1, 0));
@@ -1667,7 +1667,7 @@ public class SpaceInit {
         );
 
         SpaceNet.instance.getColonieNet().addItemStack(miranda, (short) 10, new ItemStack(IUItem.space_ore2, 1, 4));
-        SpaceNet.instance.getColonieNet().addItemStack(miranda, (short) 20, new ItemStack(IUItem.space_ore2, 1, 6));
+        SpaceNet.instance.getColonieNet().addItemStack(miranda, (short) 20, new ItemStack(IUItem.space_ore2, 1, 5));
         SpaceNet.instance.getColonieNet().addFluidStack(miranda, (short) 15,
                 new FluidStack(FluidName.fluidsulfurtrioxide.getInstance(), 1)
         );

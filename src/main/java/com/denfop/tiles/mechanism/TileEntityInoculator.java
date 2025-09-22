@@ -11,7 +11,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -26,7 +26,7 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerInoculator;
 import com.denfop.gui.GuiInoculator;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
@@ -45,8 +45,8 @@ import java.util.Set;
 public class TileEntityInoculator extends TileElectricMachine implements IHasRecipe, IAudioFixer, IUpgradableBlock, IUpdateTick,
         IUpdatableTileEvent {
 
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryUpgrade upgradeSlot;
     public ComponentUpgradeSlots componentUpgrade;
     public ComponentProgress componentProgress;
     public ComponentProcess componentProcess;
@@ -55,13 +55,13 @@ public class TileEntityInoculator extends TileElectricMachine implements IHasRec
     public TileEntityInoculator() {
         super(300, 1, 1);
         Recipes.recipes.addInitRecipes(this);
-        this.inputSlotA = new InvSlotRecipes(this, "inoculator", this) {
+        this.inputSlotA = new InventoryRecipes(this, "inoculator", this) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 return itemStack.getItem() instanceof ICropItem || itemStack.getItem() instanceof com.denfop.api.bee.genetics.IGenomeItem || itemStack.getItem() instanceof IGenomeItem || itemStack.getItem() == IUItem.jarBees;
             }
         };
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
 
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override

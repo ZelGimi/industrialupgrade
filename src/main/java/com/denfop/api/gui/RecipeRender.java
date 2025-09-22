@@ -10,7 +10,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
-public class RecipeRender extends GuiElement<RecipeRender> {
+public class RecipeRender extends GuiElement {
 
     private final Supplier<ItemStack> itemSupplier;
     private final IRecipe recipe;

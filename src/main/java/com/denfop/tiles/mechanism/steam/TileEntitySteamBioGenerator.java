@@ -11,7 +11,7 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -26,7 +26,7 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
 import com.denfop.container.ContainerBioGenerator;
 import com.denfop.gui.GuiSteamBioGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -62,7 +62,7 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
     public final Fluids.InternalFluidTank fluidTank;
     public final ComponentSteamEnergy steam;
     public final PressureComponent pressure;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentBioFuelEnergy bioEnergy;
     private final Fluids fluids;
     public double energyConsume;
@@ -75,18 +75,18 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
     public TileEntitySteamBioGenerator() {
         super(0, 1, 0);
         this.progress = 0;
-        this.inputSlotA = new InvSlotRecipes(this, "biomass", this);
+        this.inputSlotA = new InventoryRecipes(this, "biomass", this);
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
         operationsPerTick = 1;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE,
+        this.fluidTank1 = fluids.addTank("fluidTank1", 4000, Inventory.TypeItemSlot.NONE,
                 Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance())
         );
         this.fluid_handler = new FluidHandlerRecipe("biomass", fluids);
-        this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
+        this.fluidTank = fluids.addTank("fluidTank2", 4000, Inventory.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 1));

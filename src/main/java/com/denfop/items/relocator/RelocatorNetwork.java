@@ -1,5 +1,6 @@
 package com.denfop.items.relocator;
 
+import com.denfop.network.packet.PacketSynhronyzationRelocator;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RelocatorNetwork {
 
@@ -30,6 +32,7 @@ public class RelocatorNetwork {
         );
         final List<Point> list = map.computeIfAbsent(player.getPersistentID(), k -> new LinkedList<>());
         list.add(point);
+        new PacketSynhronyzationRelocator(player,list);
     }
 
     public void removePoint(EntityPlayer player, Point point) {
@@ -39,8 +42,23 @@ public class RelocatorNetwork {
         );
         final List<Point> list = map.computeIfAbsent(player.getPersistentID(), k -> new LinkedList<>());
         list.removeIf(point1 -> point1.getName().equals(point.getName()));
+        new PacketSynhronyzationRelocator(player,list);
     }
+    public void addPoints(EntityPlayer player, int levelKey, List<Point> points) {
+        final Map<UUID, List<Point>> map = worldDataPoints.computeIfAbsent(
+                levelKey,
+                k -> new HashMap<>()
+        );
+        map.put(player.getUniqueID(),points);
+    }
+    public void addPoints(EntityPlayer player, List<Point> points) {
+        final Map<UUID, List<Point>> map = worldDataPoints.computeIfAbsent(
+                player.getEntityWorld().provider.getDimension(),
+                k -> new ConcurrentHashMap<>()
+        );
+        map.put(player.getUniqueID(),points);
 
+    }
     public void teleportPlayer(EntityPlayer player, Point point) {
         if (!player.getEntityWorld().isRemote) {
             double x = point.getPos().getX() + 0.5;

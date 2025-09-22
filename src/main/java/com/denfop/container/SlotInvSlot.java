@@ -1,6 +1,6 @@
 package com.denfop.container;
 
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 
 public class SlotInvSlot extends Slot {
 
-    public final InvSlot invSlot;
+    public final Inventory inventory;
     public final int index;
 
-    public SlotInvSlot(InvSlot invSlot, int index, int x, int y) {
-        super(invSlot.base.getParent(), invSlot.base.getBaseIndex(invSlot) + index, x, y);
-        this.invSlot = invSlot;
+    public SlotInvSlot(Inventory inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
+        this.inventory = inventory;
         this.index = index;
     }
 
@@ -27,15 +27,15 @@ public class SlotInvSlot extends Slot {
     }
 
     public boolean isItemValid(ItemStack stack) {
-        return this.invSlot.accepts(stack, this.index);
+        return this.inventory.isItemValidForSlot(this.index, stack);
     }
 
     public ItemStack getStack() {
-        return this.invSlot.get(this.index);
+        return this.inventory.get(this.index);
     }
 
     public void putStack(ItemStack stack) {
-        this.invSlot.put(this.index, stack);
+        this.inventory.put(this.index, stack);
         this.onSlotChanged();
     }
 
@@ -44,7 +44,7 @@ public class SlotInvSlot extends Slot {
         if (amount <= 0) {
             return ModUtils.emptyStack;
         } else {
-            ItemStack stack = this.invSlot.get(this.index);
+            ItemStack stack = this.inventory.get(this.index);
             if (ModUtils.isEmpty(stack)) {
                 return ModUtils.emptyStack;
             } else {
@@ -52,10 +52,10 @@ public class SlotInvSlot extends Slot {
                 ItemStack ret;
                 if (ModUtils.getSize(stack) == amount) {
                     ret = stack;
-                    this.invSlot.clear(this.index);
+                    this.inventory.set(this.index,ItemStack.EMPTY);
                 } else {
                     ret = ModUtils.setSize(stack, amount);
-                    this.invSlot.put(this.index, ModUtils.decSize(stack, amount));
+                    this.inventory.put(this.index, ModUtils.decSize(stack, amount));
                 }
 
                 this.onSlotChanged();
@@ -65,20 +65,15 @@ public class SlotInvSlot extends Slot {
     }
 
     public boolean isHere(IInventory inventory, int index) {
-        if (inventory != this.invSlot.base) {
+        if (inventory != this.inventory) {
             return false;
         } else {
-            int baseIndex = this.invSlot.base.getBaseIndex(this.invSlot);
-            if (baseIndex == -1) {
-                return false;
-            } else {
-                return baseIndex + this.index == index;
-            }
+            return this.index == index;
         }
     }
 
     public int getSlotStackLimit() {
-        return this.invSlot.getStackSizeLimit();
+        return this.inventory.getInventoryStackLimit();
     }
 
     public ItemStack onTake(EntityPlayer player, ItemStack stack) {

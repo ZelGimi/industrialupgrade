@@ -36,7 +36,6 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
     private int guiScreenID = 0;
     private int index = 24;
     private int index1 = 24;
-
     public GuiTesseract(ContainerTesseract guiContainer) {
         super(guiContainer);
         this.xSize = 191;

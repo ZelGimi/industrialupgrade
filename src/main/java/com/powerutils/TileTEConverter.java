@@ -10,7 +10,7 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.componets.Energy;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -47,7 +47,7 @@ public class TileTEConverter extends TileEntityInventory implements
 
 
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final int defaultEnergyRFStorage;
     public final int defaultEnergyStorage;
     public double capacity;
@@ -71,7 +71,7 @@ public class TileTEConverter extends TileEntityInventory implements
                 5, false
         )));
         this.energy.setDirections(ModUtils.allFacings, ModUtils.allFacings);
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.defaultEnergyStorage = 40000;
         this.defaultEnergyRFStorage = 400000;
         this.capacity = this.energy.capacity;

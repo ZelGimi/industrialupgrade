@@ -38,7 +38,7 @@ import java.util.Set;
 public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> extends GuiContainer {
 
     public final T container;
-    protected final List<GuiElement<?>> elements;
+    protected final List<GuiElement> elements;
     protected final Queue<GuiCore.Tooltip> queuedTooltips;
 
     public GuiCore(T container) {
@@ -200,7 +200,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 
-        for (final GuiElement<?> element : this.elements) {
+        for (final GuiElement element : this.elements) {
             element.drawBackground(mouseX, mouseY);
         }
 
@@ -245,7 +245,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
             this.handleUpgradeTooltip(mouseX, mouseY);
         }
 
-        for (final GuiElement<?> element : this.elements) {
+        for (final GuiElement element : this.elements) {
             element.drawForeground(mouseX, mouseY);
         }
 
@@ -276,11 +276,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
             direction = ScrollDirection.stopped;
         }
 
-        for (final GuiElement<?> element : this.elements) {
-            if (element.contains(mouseX, mouseY)) {
-                element.onMouseScroll(mouseX, mouseY, direction);
-            }
-        }
+
         final List<GuiButton> listButton = this.buttonList;
         for (GuiButton button : listButton) {
             if (button instanceof GuiVerticalSliderList) {
@@ -299,9 +295,9 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
             mouseX -= this.guiLeft;
             mouseY -= this.guiTop;
 
-            for (final GuiElement<?> element : this.elements) {
+            for (final GuiElement element : this.elements) {
 
-                handled |= element.onMouseClick(mouseX, mouseY, button, element.contains(mouseX, mouseY));
+                handled |= element.onMouseClick(mouseX, mouseY, button);
 
             }
 
@@ -319,66 +315,8 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
 
     }
 
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        boolean handled = false;
-        MouseButton button = MouseButton.get(clickedMouseButton);
-        if (button != null) {
-            mouseX -= this.guiLeft;
-            mouseY -= this.guiTop;
-
-            for (final GuiElement<?> element : this.elements) {
-                handled |= element.onMouseDrag(
-                        mouseX,
-                        mouseY,
-                        button,
-                        timeSinceLastClick,
-                        element.contains(mouseX, mouseY)
-                );
-
-            }
-
-            if (!handled) {
-                mouseX += this.guiLeft;
-                mouseY += this.guiTop;
-            } else {
-                this.mouseHandled = true;
-            }
-        }
 
 
-        if (!handled) {
-            super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-        }
-
-    }
-
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        boolean handled = false;
-        MouseButton button = MouseButton.get(state);
-        if (button != null) {
-            mouseX -= this.guiLeft;
-            mouseY -= this.guiTop;
-
-            for (final GuiElement<?> element : this.elements) {
-
-                handled |= element.onMouseRelease(mouseX, mouseY, button, element.contains(mouseX, mouseY));
-
-            }
-
-            if (!handled) {
-                mouseX += this.guiLeft;
-                mouseY += this.guiTop;
-            } else {
-                this.mouseHandled = true;
-            }
-        }
-
-
-        if (!handled) {
-            super.mouseReleased(mouseX, mouseY, state);
-        }
-
-    }
 
 
     public void onGuiClosed() {
@@ -386,11 +324,9 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
 
     }
 
-    public void drawTexturedRect(double x, double y, double width, double height, double texX, double texY) {
-        this.drawTexturedRect(x, y, width, height, texX, texY, false);
-    }
 
-    public void drawTexturedRect(double x, double y, double width, double height, double texX, double texY, boolean mirrorX) {
+
+    public void drawTexturedRect(double x, double y, double width, double height, double texX, double texY) {
         this.drawTexturedRect(
                 x,
                 y,
@@ -400,7 +336,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
                 texY / 256.0D,
                 (texX + width) / 256.0D,
                 (texY + height) / 256.0D,
-                mirrorX
+                false
         );
     }
 
@@ -583,7 +519,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
         this.queuedTooltips.clear();
     }
 
-    protected void addElement(GuiElement<?> element) {
+    protected void addElement(GuiElement element) {
         this.elements.add(element);
 
     }

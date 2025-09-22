@@ -2,7 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.Config;
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -16,10 +16,9 @@ import com.denfop.componets.RedstoneHandler;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerNeutronGenerator;
 import com.denfop.gui.GuiNeutronGenerator;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -39,9 +38,9 @@ import java.util.Set;
 public class TileNeutronGenerator extends TileElectricMachine implements IUpgradableBlock,
         IUpdatableTileEvent {
 
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput outputSlot;
-    public final InvSlotFluid containerslot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
+    public final InventoryFluid containerslot;
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
@@ -54,17 +53,17 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         super((int) (Config.energy * 128), 14, 1);
 
         this.energycost = (float) Config.energy / 100;
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.containerslot = new InvSlotFluidByList(
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.containerslot = new InventoryFluidByList(
                 this,
-                InvSlot.TypeItemSlot.INPUT,
+                Inventory.TypeItemSlot.INPUT,
                 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT,
+                InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidNeutron.getInstance()
         );
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 9 * 1000,
-                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance()), InvSlot.TypeItemSlot.OUTPUT
+                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance()), Inventory.TypeItemSlot.OUTPUT
         );
         this.redstone = this.addComponent(new Redstone(this));
         this.redstone.subscribe(new RedstoneHandler() {
@@ -78,7 +77,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.005));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
     }
 
     private static int applyModifier(int extra) {

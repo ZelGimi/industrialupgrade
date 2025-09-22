@@ -8,7 +8,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -57,7 +57,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
     public final ComponentProgress componentProgress;
     private final int MIN_DISTANCE = 5;
     private final int MAX_ATTEMPTS = 100;
-    public InvSlotRecipes inputSlotA;
+    public InventoryRecipes inputSlotA;
     public MachineRecipe output;
     public boolean start;
     public int[] data;
@@ -74,7 +74,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
         ));
 
 
-        this.inputSlotA = new InvSlotRecipes(this, "electronics", this);
+        this.inputSlotA = new InventoryRecipes(this, "electronics", this);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -631,7 +631,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
         if (start && componentProgress.getBar() >= 1) {
             this.inputSlotA.consume();
             this.componentProgress.setProgress(0, (short) 0);
-            this.outputSlot.add(this.output.getRecipe().getOutput().items);
+            this.outputSlot.addAll(this.output.getRecipe().getOutput().items);
             this.getOutput();
         }
     }

@@ -1,11 +1,11 @@
 package com.denfop.tiles.mechanism.vending;
 
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerVending;
 import com.denfop.gui.GuiVending;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -27,12 +27,12 @@ import java.util.Map;
 public class TileEntityBaseVending extends TileEntityInventory implements IType {
 
     public final EnumTypeStyle style;
-    public final InvSlot invSlotInventoryInput;
-    public final InvSlotOutput output;
-    public InvSlot invSlotBuy;
-    public InvSlot invSlotSell;
-    public InvSlot invSlotBuyPrivate;
-    public InvSlot invSlotSellPrivate;
+    public final Inventory inventoryInventoryInput;
+    public final InventoryOutput output;
+    public Inventory inventoryBuy;
+    public Inventory inventorySell;
+    public Inventory inventoryBuyPrivate;
+    public Inventory inventorySellPrivate;
 
     public boolean update;
     public int timer = 0;
@@ -40,29 +40,29 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
 
     public TileEntityBaseVending(EnumTypeStyle style) {
         this.style = style;
-        this.invSlotBuyPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1);
-        this.invSlotSellPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1);
+        this.inventoryBuyPrivate = new Inventory(this, Inventory.TypeItemSlot.INPUT, style.ordinal() + 1);
+        this.inventorySellPrivate = new Inventory(this, Inventory.TypeItemSlot.INPUT, style.ordinal() + 1);
 
-        this.invSlotBuy = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1) {
+        this.inventoryBuy = new Inventory(this, Inventory.TypeItemSlot.INPUT, style.ordinal() + 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
-                return !invSlotBuyPrivate.get(index).isEmpty() && invSlotBuyPrivate.get(index).isItemEqual(stack);
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+                return !inventoryBuyPrivate.get(index).isEmpty() && inventoryBuyPrivate.get(index).isItemEqual(stack);
             }
         };
-        this.invSlotSell = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, style.ordinal() + 1) {
+        this.inventorySell = new Inventory(this, Inventory.TypeItemSlot.OUTPUT, style.ordinal() + 1) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return false;
             }
         };
-        this.invSlotInventoryInput = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 18) {
+        this.inventoryInventoryInput = new Inventory(this, Inventory.TypeItemSlot.INPUT, 18) {
             @Override
-            public void onChanged() {
-                super.onChanged();
+            public void markDirty() {
+                super.markDirty();
                 update = true;
             }
         };
-        this.output = new InvSlotOutput(this, 18);
+        this.output = new InventoryOutput(this, 18);
     }
 
 
@@ -81,7 +81,7 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
 
     public void updateItems() {
         mapValues.clear();
-        for (ItemStack stack : invSlotInventoryInput) {
+        for (ItemStack stack : inventoryInventoryInput) {
             if (!stack.isEmpty()) {
                 final Map<Integer, Integer> map = mapValues.computeIfAbsent(stack.getItem(), k -> new HashMap<>());
                 int value = map.computeIfAbsent(stack.getItemDamage(), k -> 0);
@@ -103,11 +103,11 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
-            InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
-            InvSlot slot1 = (InvSlot) DecoderHandler.decode(customPacketBuffer);
+            Inventory slot = (Inventory) DecoderHandler.decode(customPacketBuffer);
+            Inventory slot1 = (Inventory) DecoderHandler.decode(customPacketBuffer);
             for (int i = 0; i < slot.size(); i++) {
-                this.invSlotBuyPrivate.set(i, slot.get(i));
-                this.invSlotSellPrivate.set(i, slot1.get(i));
+                this.inventoryBuyPrivate.set(i, slot.get(i));
+                this.inventorySellPrivate.set(i, slot1.get(i));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -118,8 +118,8 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         try {
-            EncoderHandler.encode(customPacketBuffer, this.invSlotBuyPrivate);
-            EncoderHandler.encode(customPacketBuffer, this.invSlotSellPrivate);
+            EncoderHandler.encode(customPacketBuffer, this.inventoryBuyPrivate);
+            EncoderHandler.encode(customPacketBuffer, this.inventorySellPrivate);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -150,23 +150,23 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
         if (timer > 0) {
             timer--;
         }
-        for (int i = 0; i < this.invSlotBuy.size(); i++) {
-            ItemStack stack = this.invSlotBuy.get(i);
+        for (int i = 0; i < this.inventoryBuy.size(); i++) {
+            ItemStack stack = this.inventoryBuy.get(i);
             if (stack.isEmpty()) {
                 continue;
             }
-            ItemStack privateStack = this.invSlotBuyPrivate.get(i);
+            ItemStack privateStack = this.inventoryBuyPrivate.get(i);
             if (privateStack.isEmpty()) {
                 continue;
             }
             if (!stack.isItemEqual(privateStack)){
                 return;
             }
-            ItemStack privateSell = this.invSlotSellPrivate.get(i);
+            ItemStack privateSell = this.inventorySellPrivate.get(i);
             if (privateSell.isEmpty()) {
                 continue;
             }
-            ItemStack output = this.invSlotSell.get(i);
+            ItemStack output = this.inventorySell.get(i);
 
             final Map<Integer, Integer> map = mapValues.computeIfAbsent(privateSell.getItem(), k -> new HashMap<>());
             if (map.isEmpty()) {
@@ -184,8 +184,24 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
                 if (countCan == 0) {
                     continue;
                 }
-                final int countCan1 = countCan;
-                for (ItemStack stack1 : invSlotInventoryInput) {
+                int totalFreeSpace = 0;
+                for (ItemStack outStack : this.output) {
+                    if (outStack.isEmpty()) {
+                        totalFreeSpace += privateStack.getMaxStackSize();
+                    } else if (outStack.isItemEqual(privateStack)) {
+                        totalFreeSpace += privateStack.getMaxStackSize() - outStack.getCount();
+                    }
+                }
+
+
+                int maxByOutput = totalFreeSpace / privateStack.getCount();
+
+
+                final int countCan1 = Math.min(maxByOutput, countCan);
+                if (countCan1 == 0) {
+                    continue;
+                }
+                for (ItemStack stack1 : inventoryInventoryInput) {
                     if (countCan == 0) {
                         break;
                     }
@@ -197,7 +213,7 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
                 }
                 stack.shrink(countCan1* privateStack.getCount());
                 this.output.add(ModUtils.setSize(privateStack, countCan1 * privateStack.getCount()));
-                this.invSlotSell.add(ModUtils.setSize(privateSell, countCan1 * privateSell.getCount()));
+                this.inventorySell.add(ModUtils.setSize(privateSell, countCan1 * privateSell.getCount()));
                 this.updateItems();
             }
         }

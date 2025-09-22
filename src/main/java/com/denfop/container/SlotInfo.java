@@ -1,7 +1,7 @@
 package com.denfop.container;
 
 import com.denfop.api.inv.VirtualSlot;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SlotInfo extends InvSlot implements VirtualSlot {
+public class SlotInfo extends Inventory implements VirtualSlot {
 
 
     List<FluidStack> fluidStackList;
@@ -60,6 +60,11 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     }
 
     @Override
+    public boolean accepts(final int index, final ItemStack stack) {
+        return this.isItemValidForSlot(index,stack);
+    }
+
+    @Override
     public NBTTagCompound writeToNbt(NBTTagCompound nbt) {
         nbt = super.writeToNbt(nbt);
         nbt.setBoolean("fluid", isFluid());
@@ -84,7 +89,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack, final int index) {
+    public boolean isItemValidForSlot(final int index, final ItemStack stack) {
         return true;
     }
 
@@ -113,11 +118,10 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
 
         this.listBlack = new ArrayList<>(listBlack);
         this.listWhite = new ArrayList<>(listWhite);
-        this.onChanged();
+        this.markDirty();
     }
 
-    protected void putFromNBT(int index, ItemStack content) {
-        this.contents.set(index, content);
+    public void markDirty() {
         listBlack.clear();
         listWhite.clear();
         for (int i = 0; i < size(); i++) {
@@ -125,14 +129,13 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
             if (itemStack.isEmpty()) {
                 continue;
             }
-            if (index < 9) {
+            if (i < 9) {
                 listBlack.add(itemStack);
             } else {
                 listWhite.add(itemStack);
             }
         }
     }
-
     public ItemStack get(int index) {
         return this.contents.get(index);
     }

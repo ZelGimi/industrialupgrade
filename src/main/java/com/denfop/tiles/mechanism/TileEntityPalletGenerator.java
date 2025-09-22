@@ -9,7 +9,7 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerPalletGenerator;
 import com.denfop.gui.GuiPalletGenerator;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class TileEntityPalletGenerator extends TileElectricMachine {
 
     public static Map<ItemStack, Double> integerMap = new HashMap<>();
-    public final InvSlot slot;
+    public final Inventory slot;
     public final ComponentBaseEnergy rad;
     public boolean update = true;
     public double generate = 0;
@@ -33,9 +33,9 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
         super(0, 14, 0);
         this.energy = this.addComponent(Energy.asBasicSource(this, 5000000, tier));
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000000D));
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 6) {
+        this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 6) {
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
 
                 for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
                     if (entry.getKey().isItemEqual(stack)) {
@@ -53,7 +53,7 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
             }
 
         };
-        this.slot.setStackSizeLimit(1);
+        this.slot.setInventoryStackLimit(1);
     }
 
 

@@ -7,7 +7,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityMatterFactory extends TileElectricMachine implements IUpdateTick, IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentTimer timer;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
@@ -37,7 +37,7 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
 
     public TileEntityMatterFactory() {
         super(2000, 14, 1);
-        this.inputSlotA = new InvSlotRecipes(this, "active_matter_factory", this);
+        this.inputSlotA = new InventoryRecipes(this, "active_matter_factory", this);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 30, 0)));
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));

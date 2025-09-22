@@ -960,7 +960,7 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
-    public boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot) {
+    public boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot) {
         if (recipe == null) {
             return false;
         }
@@ -982,7 +982,7 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
-    public boolean needContinue(final MachineRecipe recipe, final InvSlotRecipes slot, final FluidTank tank) {
+    public boolean needContinue(final MachineRecipe recipe, final InventoryRecipes slot, final FluidTank tank) {
         if (recipe == null) {
             return false;
         }

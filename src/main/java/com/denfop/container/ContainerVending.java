@@ -22,18 +22,18 @@ public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
         for (int i = 0; i < sizeWorkingSlot; i++) {
             int xDisplayPosition1 = dop + (46 - sizeWorkingSlot) * i - sizeWorkingSlot * 10;
 
-            addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotBuy, i, xDisplayPosition1, 16));
-            addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotSell, i, xDisplayPosition1, 60));
+            addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.inventoryBuy, i, xDisplayPosition1, 16));
+            addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.inventorySell, i, xDisplayPosition1, 60));
             if (b) {
                 int xDisplayPosition2 = dop + (46 - sizeWorkingSlot) * i - sizeWorkingSlot * 10 + 20;
 
-                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotBuyPrivate, i, xDisplayPosition2, 16));
-                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotSellPrivate, i, xDisplayPosition2, 60));
+                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.inventoryBuyPrivate, i, xDisplayPosition2, 16));
+                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.inventorySellPrivate, i, xDisplayPosition2, 60));
             }
         }
         if (b) {
             for (int i = 0; i < 18; i++) {
-                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotInventoryInput, i, 7 + (i % 9) * 18,
+                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.inventoryInventoryInput, i, 7 + (i % 9) * 18,
                         85 + (i / 9) * 18
                 ));
 

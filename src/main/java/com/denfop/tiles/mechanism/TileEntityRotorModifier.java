@@ -5,10 +5,10 @@ import com.denfop.api.inv.VirtualSlot;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
-import com.denfop.api.windsystem.InvSlotUpgrade;
+import com.denfop.api.windsystem.InventoryUpgrade;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
-import com.denfop.api.windsystem.upgrade.InvSlotRotor;
+import com.denfop.api.windsystem.upgrade.InventoryRotor;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
 import com.denfop.blocks.BlockTileEntity;
@@ -16,7 +16,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.container.ContainerRotorUpgrade;
 import com.denfop.gui.GuiRotorUpgrade;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -38,12 +38,12 @@ import java.util.List;
 
 public class TileEntityRotorModifier extends TileEntityInventory implements IWindUpgradeBlock, IUpdatableTileEvent {
 
-    public final InvSlotUpgrade slot;
-    public final InvSlotRotor rotor_slot;
+    public final InventoryUpgrade slot;
+    public final InventoryRotor rotor_slot;
 
     public TileEntityRotorModifier() {
-        slot = new InvSlotUpgrade(this);
-        rotor_slot = new InvSlotRotor(slot);
+        slot = new InventoryUpgrade(this);
+        rotor_slot = new InventoryRotor(slot);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
     @Override
     public List<ItemStack> getAuxDrops(int fortune) {
         List<ItemStack> ret = new ArrayList<>();
-        for (final InvSlot slot : this.invSlots) {
-            if (!(slot instanceof VirtualSlot)  && !(slot instanceof InvSlotUpgrade && !this.rotor_slot.isEmpty())) {
+        for (final Inventory slot : this.inventories) {
+            if (!(slot instanceof VirtualSlot)  && !(slot instanceof InventoryUpgrade && !this.rotor_slot.isEmpty())) {
                 for (final ItemStack stack : slot) {
                     if (!ModUtils.isEmpty(stack)) {
                         ret.add(stack);
@@ -152,7 +152,7 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
         if (var2 == 0) {
             if (!this.rotor_slot.get().isEmpty()) {
                 for (int i = 0; i < this.slot.size(); i++) {
-                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
+                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getWorld(), i);
                     if (!this.slot.get(i).isEmpty()) {
                         NBTTagCompound nbt = ModUtils.nbt(this.getItemStack());
                         nbt.setString(
@@ -160,7 +160,7 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
                                 (EnumInfoRotorUpgradeModules.getFromID(this.slot.get(i).getItemDamage())).name
                         );
                         MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this
-                                .getParent().getWorld(), (IRotorUpgradeItem) this
+                                .getWorld(), (IRotorUpgradeItem) this
                                 .getItemStack().getItem(), this
                                 .getItemStack()));
                     }
@@ -169,9 +169,9 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
         } else {
             if (!this.rotor_slot.get().isEmpty()) {
                 for (int i = 0; i < this.slot.size(); i++) {
-                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
+                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getWorld(), i);
                     MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this
-                            .getParent().getWorld(), (IRotorUpgradeItem) this
+                            .getWorld(), (IRotorUpgradeItem) this
                             .getItemStack().getItem(), this
                             .getItemStack()));
                 }

@@ -5,7 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -19,8 +19,8 @@ import com.denfop.container.ContainerBlastFurnace;
 import com.denfop.effects.SmokeParticle;
 import com.denfop.effects.SparkParticle;
 import com.denfop.gui.GuiBlastFurnace;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryFluidByList;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -34,7 +34,7 @@ import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastHeat;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastMain;
-import com.denfop.tiles.mechanism.blastfurnace.api.InvSlotBlastFurnace;
+import com.denfop.tiles.mechanism.blastfurnace.api.InventoryBlastFurnace;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
@@ -73,15 +73,15 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         IAudioFixer {
 
     public final FluidTank tank;
-    public final InvSlotOutput output1;
-    public final InvSlotFluidByList fluidSlot;
+    public final InventoryOutput output1;
+    public final InventoryFluidByList fluidSlot;
     public final HeatComponent heat;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public boolean load = false;
     public ItemStack outputStack = ItemStack.EMPTY;
-    public InvSlotBlastFurnace invSlotBlastFurnace = new InvSlotBlastFurnace(this);
-    public InvSlotOutput output = new InvSlotOutput(this, 1);
+    public InventoryBlastFurnace invSlotBlastFurnace = new InventoryBlastFurnace(this);
+    public InventoryOutput output = new InventoryOutput(this, 1);
     public FluidTank tank1 = new FluidTank(12000);
 
     public IBlastHeat blastHeat;
@@ -103,12 +103,12 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         this.full = false;
         final Fluids fluids = this.addComponent(new Fluids(this));
 
-        this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.INPUT,
+        this.tank = fluids.addTank("tank", 10000, Inventory.TypeItemSlot.INPUT,
                 Fluids.fluidPredicate(FluidName.fluidsteam.getInstance())
         );
         this.entityPlayerList = new ArrayList<>();
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
-        this.output1 = new InvSlotOutput(this, 1);
+        this.fluidSlot = new InventoryFluidByList(this, 1, FluidRegistry.WATER);
+        this.output1 = new InventoryOutput(this, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));

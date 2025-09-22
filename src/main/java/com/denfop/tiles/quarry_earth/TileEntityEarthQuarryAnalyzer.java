@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
@@ -91,6 +92,25 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         nbt.setBoolean("fullAnalyzer", this.fullAnalyzer);
         nbt.setInteger("blockCol", this.blockCol);
         nbt.setInteger("blockOres", this.blockOres);
+        NBTTagList mapList = new NBTTagList();
+
+        for (Map.Entry<ChunkPos, List<DataPos>> entry : chunkPosListHashMap.entrySet()) {
+            NBTTagCompound entryTag = new NBTTagCompound();
+            ChunkPos pos = entry.getKey();
+            entryTag.setInteger("x", pos.x);
+            entryTag.setInteger("z", pos.z);
+
+            NBTTagList dataList = new NBTTagList();
+            for (DataPos dp : entry.getValue()) {
+                dataList.appendTag(dp.save());
+            }
+            entryTag.setTag("data", dataList);
+
+            mapList.appendTag(entryTag);
+        }
+
+        nbt.setTag("ChunkPosListHashMap", mapList);
+
         return super.writeToNBT(nbt);
     }
 
@@ -101,6 +121,24 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         this.fullAnalyzer = nbtTagCompound.getBoolean("fullAnalyzer");
         this.blockCol = nbtTagCompound.getInteger("blockCol");
         this.blockOres = nbtTagCompound.getInteger("blockOres");
+        chunkPosListHashMap = new HashMap<>();
+
+        NBTTagList mapList = nbtTagCompound.getTagList("ChunkPosListHashMap", 10);
+        for (int i = 0; i < mapList.tagCount(); i++) {
+            NBTTagCompound entryTag = mapList.getCompoundTagAt(i);
+            int x = entryTag.getInteger("x");
+            int z = entryTag.getInteger("z");
+            ChunkPos pos = new ChunkPos(x, z);
+
+            NBTTagList dataList = entryTag.getTagList("data", 10);
+            List<DataPos> dataPosList = new ArrayList<>();
+            for (int j = 0; j < dataList.tagCount(); j++) {
+                dataPosList.add(DataPos.load(dataList.getCompoundTagAt(j)));
+            }
+
+            chunkPosListHashMap.put(pos, dataPosList);
+        }
+
     }
 
     @Override

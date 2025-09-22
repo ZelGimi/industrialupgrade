@@ -5,8 +5,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;
@@ -117,7 +117,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
 
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         final List<ItemStack> inputs = recipes.getInputs1();
         final List<ItemStack> outputs = recipes.getOutputs();
         int i = 0;
@@ -126,7 +126,7 @@ public class TripleSolidMixerCategory extends GuiIU implements IRecipeCategory<T
             isg.set(i, inputs.get(i));
 
         }
-        final List<SlotInvSlot> outputSlot = container1.findClassSlots(InvSlotOutput.class);
+        final List<SlotInvSlot> outputSlot = container1.findClassSlots(InventoryOutput.class);
         i = 0;
         for (; i < outputSlot.size(); i++) {
             isg.init(i + inputs.size(), true, outputSlot.get(i).getJeiX() - 8, outputSlot.get(i).getJeiY() - 10);

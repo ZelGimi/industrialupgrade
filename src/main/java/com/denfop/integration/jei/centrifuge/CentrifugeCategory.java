@@ -6,8 +6,8 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryMultiRecipes;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentRenderInventory;
@@ -64,7 +64,7 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
+                if (slotInv.inventory instanceof InventoryMultiRecipes) {
                     this.progress_bar.setIndex(0);
                     this.progress_bar.setX(xX);
                     this.progress_bar.setY(yY + 19);
@@ -124,7 +124,7 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryMultiRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
@@ -133,7 +133,7 @@ public class CentrifugeCategory extends GuiIU implements IRecipeCategory<Centrif
 
         }
 
-        final List<SlotInvSlot> outputSlots = container1.findClassSlots(InvSlotOutput.class);
+        final List<SlotInvSlot> outputSlots = container1.findClassSlots(InventoryOutput.class);
         final List<ItemStack> outputs = recipes.getOutputs();
         for (i = 0; i < outputs.size(); i++) {
             isg.init(i + inputs.size(), false, outputSlots.get(i).getJeiX(), outputSlots.get(i).getJeiY());

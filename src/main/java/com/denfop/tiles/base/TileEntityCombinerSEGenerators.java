@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -11,9 +11,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerCombinerSE;
 import com.denfop.gui.GuiCombinerSE;
-import com.denfop.invslot.InvSlotCombinerSEG;
-import com.denfop.invslot.InvSlotGenCombinerSunarrium;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
+import com.denfop.invslot.InventoryCombinerSEG;
+import com.denfop.invslot.InventoryGenCombinerSunarrium;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -37,11 +37,11 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         IUpgradableBlock {
 
 
-    public final InvSlotCombinerSEG inputSlot;
-    public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotOutput outputSlot;
+    public final InventoryCombinerSEG inputSlot;
+    public final InventoryUpgrade upgradeSlot;
+    public final InventoryOutput outputSlot;
     public final ComponentBaseEnergy sunenergy;
-    public final InvSlotGenCombinerSunarrium input;
+    public final InventoryGenCombinerSunarrium input;
     public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
     public double coef_day;
     public double coef_night;
@@ -55,11 +55,11 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     private boolean sunIsUp;
 
     public TileEntityCombinerSEGenerators() {
-        this.inputSlot = new InvSlotCombinerSEG(this);
-        this.input = new InvSlotGenCombinerSunarrium(this);
+        this.inputSlot = new InventoryCombinerSEG(this);
+        this.input = new InventoryGenCombinerSunarrium(this);
 
-        this.outputSlot = new InvSlotOutput(this, 9);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot = new InventoryOutput(this, 9);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSource(EnergyType.SOLARIUM, this, 0, 1));
         this.lst = new ArrayList<>();

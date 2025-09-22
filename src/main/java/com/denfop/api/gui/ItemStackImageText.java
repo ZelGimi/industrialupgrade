@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ItemStackImageText extends GuiElement<ItemStackImageText> {
+public class ItemStackImageText extends GuiElement {
 
     private final Supplier<ItemStack> itemSupplier;
     private final String text;

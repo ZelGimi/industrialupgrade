@@ -6,7 +6,7 @@ import com.google.common.base.Supplier;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 
-public class ItemStackImage extends GuiElement<ItemStackImage> {
+public class ItemStackImage extends GuiElement {
 
     private final Supplier<ItemStack> itemSupplier;
 

@@ -6,7 +6,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,7 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
 
     public TileEntityFluidInput() {
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.INPUT,
+        this.tank = fluids.addTank("tank", 10000, Inventory.TypeItemSlot.INPUT,
                 Fluids.fluidPredicate(FluidRegistry.WATER)
         );
 

@@ -11,8 +11,8 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -20,7 +20,7 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockAnvil;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.effects.ParticleItemCustom;
-import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -28,6 +28,7 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,8 +63,8 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     private static final List<AxisAlignedBB> aabbs1 = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 2, 1.0D,
             1
     ));
-    public final InvSlotRecipes inputSlotA;
-    public final InvSlotOutput outputSlot;
+    public final InventoryRecipes inputSlotA;
+    public final InventoryOutput outputSlot;
     public int progress;
     public MachineRecipe output;
     public int durability = 300;
@@ -72,17 +73,17 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
 
     public TileEntityAnvil() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "anvil", this) {
+        this.inputSlotA = new InventoryRecipes(this, "anvil", this) {
             @Override
-            public boolean accepts(final ItemStack itemStack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack itemStack) {
                 if (index == 4) {
-                    return super.accepts(itemStack, 0);
+                    return super.isItemValidForSlot(0, itemStack);
                 }
                 return false;
             }
         };
         this.progress = 0;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -175,14 +176,14 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -210,8 +211,8 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((Inventory) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
             this.durability = (int) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -346,12 +347,33 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
 
 
                     }
+                    if (WorldBaseGen.random.nextInt(100) < data.getOrDefault(player.getUniqueID(), 0.0) & this.output != null && this.outputSlot.canAdd(
+                            this.output.getRecipe().output.items.get(
+                                    0))){
+                        this.outputSlot.add(this.output.getRecipe().output.items.get(0));
+                        this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
+                        if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
+                            this.output = null;
+
+                        }
+                        if (!world.isRemote) {
+                            if (!this.inputSlotA.get(0).isEmpty()) {
+                                new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                            } else {
+                                new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
+                            }
+                            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+                            new PacketUpdateFieldTile(this, "durability", this.durability);
+
+
+                        }
+                    }
                 }
 
                 return this.getWorld().isRemote;
             } else {
                 if (!stack.isEmpty()) {
-                    if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
+                    if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.isItemValidForSlot(4, stack)) {
                         this.inputSlotA.put(0, stack.copy());
                         stack.setCount(0);
                         if (!world.isRemote) {

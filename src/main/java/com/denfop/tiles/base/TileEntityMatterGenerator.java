@@ -2,13 +2,13 @@ package com.denfop.tiles.base;
 
 import com.denfop.Config;
 import com.denfop.Localization;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerSolidMatter;
 import com.denfop.gui.GuiSolidMatter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -27,17 +27,17 @@ import java.util.Set;
 public abstract class TileEntityMatterGenerator extends TileEntityInventory implements
         IUpgradableBlock {
 
-    public final InvSlotOutput outputSlot;
+    public final InventoryOutput outputSlot;
     public final ItemStack itemstack;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     private final Energy energy;
     private final String name;
     private double progress;
 
     public TileEntityMatterGenerator(ItemStack itemstack, String name) {
         this.itemstack = itemstack;
-        this.outputSlot = new InvSlotOutput(this, 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.outputSlot = new InventoryOutput(this, 1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.progress = 0;
         this.name = name;
         this.energy = this.addComponent(Energy.asBasicSink(this, Config.SolidMatterStorage, 10));

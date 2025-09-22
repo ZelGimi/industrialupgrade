@@ -4,13 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -25,7 +20,7 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerEnchanterBooks;
 import com.denfop.gui.GuiEnchanterBooks;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -50,10 +45,10 @@ import java.util.Set;
 public class TileEntityEnchanterBooks extends TileElectricMachine implements IUpgradableBlock, IUpdateTick,
         IHasRecipe, IUpdatableTileEvent {
 
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final ComponentProcess componentProcess;
     public final ComponentBaseEnergy enchant;
     public MachineRecipe output;
@@ -61,14 +56,14 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
     public TileEntityEnchanterBooks() {
         super(400, 1, 1);
         Recipes.recipes.addInitRecipes(this);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 400
         ));
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.inputSlotA = new InvSlotRecipes(this, "enchanter_books", this);
+        this.inputSlotA = new InventoryRecipes(this, "enchanter_books", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 400, 1));
         this.componentProcess.setHasAudio(false);
         this.componentProcess.setSlotOutput(outputSlot);

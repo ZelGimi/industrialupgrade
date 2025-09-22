@@ -2,7 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.Energy;
 import com.denfop.network.IUpdatableTileEvent;
@@ -15,7 +15,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
         IUpdatableTileEvent {
 
 
-    public InvSlotOutput outputSlot = null;
+    public InventoryOutput outputSlot = null;
 
     public Energy energy;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
@@ -23,7 +23,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
 
     public TileStandartMachine(int count) {
         if (count != 0) {
-            this.outputSlot = new InvSlotOutput(this, count);
+            this.outputSlot = new InventoryOutput(this, count);
         }
 
 

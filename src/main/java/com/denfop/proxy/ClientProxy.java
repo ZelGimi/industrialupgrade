@@ -14,7 +14,6 @@ import com.denfop.events.TickHandler;
 import com.denfop.gui.GuiColorPicker;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.items.book.core.CoreBook;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.anvil.RenderItemAnvil;
 import com.denfop.render.anvil.RenderItemStrongAnvil;
@@ -352,7 +351,6 @@ public class ClientProxy extends CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
         new ElectricItemTooltipHandler();
-        CoreBook.init();
         final Block leaves = IUItem.leaves;
         this.mc.getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> ModUtils.convertRGBcolorToInt(10
                 , 96, 8), leaves);

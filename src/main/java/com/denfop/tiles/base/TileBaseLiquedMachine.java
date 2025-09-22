@@ -7,11 +7,8 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDrainTank;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
+import com.denfop.invslot.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
@@ -42,10 +39,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
 
     public final boolean[] drain;
     public final boolean[] fill;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final Fluids fluids;
-    public final InvSlotDrainTank[] containerslot;
-    public final InvSlotTank[] fluidSlot;
+    public final InventoryDrainTank[] containerslot;
+    public final InventoryTank[] fluidSlot;
     public final Fluid[] fluid;
     public final int[] old_amount;
     public FluidTank[] fluidTank;
@@ -69,7 +66,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             this.fluidTank[i] = this.fluids.addTank(
                     "fluidTank" + i,
                     8000,
-                    i == 0 ? InvSlot.TypeItemSlot.INPUT : InvSlot.TypeItemSlot.OUTPUT,
+                    i == 0 ? Inventory.TypeItemSlot.INPUT : Inventory.TypeItemSlot.OUTPUT,
                     i == 0 && name1[i].getName().equals(FluidName.fluidneft.getInstance().getName())
                             ? Fluids.fluidPredicate(name1[i],
                             FluidRegistry.getFluid("oil_heavy"), FluidRegistry.getFluid("oil_heavy_heat_1"),
@@ -83,18 +80,18 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             );
 
         }
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
         Fluid[] fluid = getFluids(drain, name1);
-        this.containerslot = new InvSlotDrainTank[fluid.length];
+        this.containerslot = new InventoryDrainTank[fluid.length];
         for (int i = 0; i < fluid.length; i++) {
-            this.containerslot[i] = new InvSlotDrainTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                    InvSlotFluid.TypeFluidSlot.OUTPUT, fluid[i]
+            this.containerslot[i] = new InventoryDrainTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                    InventoryFluid.TypeFluidSlot.OUTPUT, fluid[i]
             );
         }
-        this.fluidSlot = new InvSlotTank[1];
+        this.fluidSlot = new InventoryTank[1];
         for (int i = 0; i < fluidSlot.length; i++) {
-            this.fluidSlot[i] = new InvSlotTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                    InvSlotFluid.TypeFluidSlot.INPUT, this.fluidTank[0]
+            this.fluidSlot[i] = new InventoryTank(this, Inventory.TypeItemSlot.INPUT, 1,
+                    InventoryFluid.TypeFluidSlot.INPUT, this.fluidTank[0]
             );
 
 
@@ -239,7 +236,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
         needsInvUpdate = false;
         for (FluidTank tank : fluidTank) {
             if (!tank.equals(fluidTank[0])) {
-                for (InvSlotDrainTank slot : this.containerslot) {
+                for (InventoryDrainTank slot : this.containerslot) {
                     if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
                         slot.processFromTank(tank, this.outputSlot);
                         needsInvUpdate = true;
@@ -248,7 +245,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             }
         }
 
-        for (final InvSlotTank itemStacks : fluidSlot) {
+        for (final InventoryTank itemStacks : fluidSlot) {
             for (final FluidTank tank : fluidTank) {
                 if (tank.equals(fluidTank[0]) && tank.getFluidAmount() + 1000 <= tank.getCapacity() && !itemStacks
                         .get()

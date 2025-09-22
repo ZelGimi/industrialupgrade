@@ -175,7 +175,7 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
                             {
                                 if (slot instanceof SlotInvSlot) {
                                     SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                                    if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
+                                    if (slotInvSlot.inventory == this.container.base.reactorsElements) {
                                         if (slotInvSlot.index == component.getY() * this.container.base.getWidth() + component.getX()) {
                                             if (this.container.base.heat_sensor) {
                                                 this.fontRenderer.drawString(
@@ -254,7 +254,7 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
             if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
                 if (slot instanceof SlotInvSlot) {
                     SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                    if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
+                    if (slotInvSlot.inventory == this.container.base.reactorsElements) {
                         continue;
                     }
                 }

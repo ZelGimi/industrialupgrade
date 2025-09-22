@@ -9,8 +9,8 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.InventoryOutput;
+import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -23,8 +23,8 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRodManufacturer;
 import com.denfop.gui.GuiRodManufacturer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.Inventory;
+import com.denfop.invslot.InventoryUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -48,15 +48,15 @@ import java.util.Set;
 public class TileEntityRodManufacturer extends TileEntityInventory implements IUpgradableBlock, IUpdateTick,
         IHasRecipe {
 
-    public final InvSlotRecipes inputSlotA;
+    public final InventoryRecipes inputSlotA;
     public final Energy energy;
-    public final InvSlotUpgrade upgradeSlot;
+    public final InventoryUpgrade upgradeSlot;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    public final InvSlotOutput outputSlot;
-    public final InvSlot input_slot;
+    public final InventoryOutput outputSlot;
+    public final Inventory input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
@@ -73,15 +73,15 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         this.defaultTier = 1;
         this.defaultEnergyStorage = 2 * 300;
         this.output = null;
-        this.outputSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InventoryOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSink(this, defaultEnergyStorage, defaultTier));
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.inputSlotA = new InvSlotRecipes(this, "rod_assembler", this);
-        inputSlotA.setStackSizeLimit(1);
+        this.upgradeSlot = new InventoryUpgrade(this, 4);
+        this.inputSlotA = new InventoryRecipes(this, "rod_assembler", this);
+        inputSlotA.setInventoryStackLimit(1);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
-        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+        this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
@@ -93,7 +93,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
             }
 
             @Override
-            public boolean accepts(final ItemStack stack, final int index) {
+            public boolean isItemValidForSlot(final int index, final ItemStack stack) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
 
@@ -532,7 +532,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
 
         this.inputSlotA.consume();
 
-        this.outputSlot.add(processResult);
+        this.outputSlot.addAll(processResult);
     }
 
     public void onUnloaded() {
