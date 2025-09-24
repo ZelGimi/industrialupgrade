@@ -65,7 +65,6 @@ import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.DistExecutor;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
@@ -219,7 +218,7 @@ public class IUCore {
     boolean reg = false;
     List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
     Map<Integer, List<IReactorItem>> levelsReactorItem = new HashMap<>();
-    public static List<LootPool> VOLCANO_LOOT_POOL;
+
     public static LootTable VOLCANO_TABLE;
 
     public IUCore(ModContainer container, IEventBus modEventBus) {
@@ -427,7 +426,6 @@ public class IUCore {
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
         if (name.equals(IULootTableProvider.VOLCANO_LOOT_TABLE.location())) {
-            VOLCANO_LOOT_POOL = ((LootTableAccessor) event.getTable()).getPools();
             VOLCANO_TABLE = event.getTable();
         }
 

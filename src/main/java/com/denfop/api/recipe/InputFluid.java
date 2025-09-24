@@ -49,9 +49,11 @@ public class InputFluid implements IInputFluid {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Arrays.asList(inputs);
     }
+
     public InputFluid(List<FluidStack> inputs) {
         this.inputsfluid = inputs;
     }
+
     @Override
     public List<FluidStack> getInputs() {
         return this.inputsfluid;
@@ -61,12 +63,16 @@ public class InputFluid implements IInputFluid {
     public IInputItemStack getStack() {
         return stack;
     }
-    public static InputFluid readNBT(CompoundTag tag,RegistryAccess access) {
+
+    public static InputFluid readNBT(CompoundTag tag, RegistryAccess access) {
         List<FluidStack> fluids = new ArrayList<>();
         ListTag fluidsTag = tag.getList("Fluids", Tag.TAG_COMPOUND);
         for (Tag fluidTag : fluidsTag) {
             if (fluidTag instanceof CompoundTag fluidCompound) {
-                fluids.add(FluidStack.parseOptional(access,fluidCompound));
+                if (!fluidCompound.isEmpty())
+                    fluids.add(FluidStack.parseOptional(access, fluidCompound));
+                else
+                    fluids.add(FluidStack.EMPTY);
             }
         }
 
@@ -81,6 +87,7 @@ public class InputFluid implements IInputFluid {
 
         return inputFluid;
     }
+
     private void setStack(IInputItemStack stack) {
         this.stack = stack;
     }
@@ -91,7 +98,9 @@ public class InputFluid implements IInputFluid {
         ListTag fluidsTag = new ListTag();
         for (FluidStack fluid : inputsfluid) {
             CompoundTag fluidTag = new CompoundTag();
-            fluid.save(access,fluidTag);
+            if (!fluid.isEmpty())
+                fluid.save(access, fluidTag);
+
             fluidsTag.add(fluidTag);
         }
         tag.put("Fluids", fluidsTag);

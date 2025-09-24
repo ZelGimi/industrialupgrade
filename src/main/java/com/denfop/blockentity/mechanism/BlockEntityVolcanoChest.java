@@ -13,7 +13,6 @@ import com.denfop.containermenu.ContainerMenuVolcanoChest;
 import com.denfop.datagen.IULootTableProvider;
 import com.denfop.inventory.Inventory;
 import com.denfop.items.resource.ItemIngots;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.recipes.ItemStackHelper;
 import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.screen.ScreenVolcanoChest;

@@ -11,12 +11,10 @@
     "access.BeeAccessor",
     "access.DeferredRegisterAccessor",
     "access.ExplosionAccessor",
-    "access.LootTableAccessor",
     "access.RenderChunkRegionAccessor"
   ],
   "client": [
     "access.AbstractContainerScreenAccessor",
-    "access.AbstractContainerScreenInvoker",
     "access.LevelRendererAccessor",
     "access.SoundEngineAccess",
     "access.SoundEngineAccessor",

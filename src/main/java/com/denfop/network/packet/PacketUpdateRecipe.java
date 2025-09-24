@@ -45,14 +45,26 @@ public class PacketUpdateRecipe implements IPacket {
             try {
                 EncoderHandler.encode(buffer, recipeKey);
                 EncoderHandler.encode(buffer, isFluid);
-                EncoderHandler.encode(buffer, chunk);
+                int count = 0;
+                CustomPacketBuffer buffer1 = new CustomPacketBuffer(player.registryAccess());
+                for (T t : chunk) {
+                    try {
+                        EncoderHandler.encode(buffer1, t);
+                        count++;
+                    } catch (Exception ignored) {
+
+                    }
+                }
+                EncoderHandler.encode(buffer, count);
+                buffer.writeBytes(buffer1);
+
             } catch (IOException e) {
                 throw new RuntimeException("Failed to encode recipe chunk", e);
             }
 
             buffer.flip();
             this.buffer = buffer;
-            IUCore.network.getServer().sendPacket(this,buffer, player);
+            IUCore.network.getServer().sendPacket(this, buffer, player);
         }
     }
 
@@ -68,14 +80,14 @@ public class PacketUpdateRecipe implements IPacket {
             if (!register) {
                 String recipe = (String) DecoderHandler.decode(customPacketBuffer);
                 boolean isFluid = (boolean) DecoderHandler.decode(customPacketBuffer);
+                int count = (int) DecoderHandler.decode(customPacketBuffer);
+
                 if (isFluid) {
-                    List<BaseFluidMachineRecipe> recipes = (List<BaseFluidMachineRecipe>) DecoderHandler.decode(customPacketBuffer);
-                    for (BaseFluidMachineRecipe baseFluidMachineRecipe : recipes)
-                        Recipes.recipes.getRecipeFluid().addRecipe(recipe, baseFluidMachineRecipe);
+                    for (int i = 0; i < count; i++)
+                        Recipes.recipes.getRecipeFluid().addRecipe(recipe, (BaseFluidMachineRecipe) DecoderHandler.decode(customPacketBuffer));
                 } else {
-                    List<BaseMachineRecipe> recipes = (List<BaseMachineRecipe>) DecoderHandler.decode(customPacketBuffer);
-                    for (BaseMachineRecipe baseFluidMachineRecipe : recipes)
-                        Recipes.recipes.addRecipe(recipe, baseFluidMachineRecipe);
+                    for (int i = 0; i < count; i++)
+                        Recipes.recipes.addRecipe(recipe, (BaseMachineRecipe) DecoderHandler.decode(customPacketBuffer));
                 }
             }
         } catch (IOException e) {

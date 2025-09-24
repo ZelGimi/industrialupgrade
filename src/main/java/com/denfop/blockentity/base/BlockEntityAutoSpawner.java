@@ -19,7 +19,6 @@ import com.denfop.containermenu.ContainerMenuAutoSpawner;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.inventory.InventoryModules;
 import com.denfop.inventory.InventoryUpgradeModule;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -81,7 +80,6 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
     public LootTable[] loot_Tables = new LootTable[4];
     public LootParams.Builder[] lootContext = new LootParams.Builder[4];
 
-    public List<LootPool>[] lootPoolList = new List[4];
     public int fireAspect;
 
     public BlockEntityAutoSpawner(BlockPos pos, BlockState state) {
@@ -251,8 +249,7 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
                     lootcontext$builder = this.lootContext[index] = (new LootParams.Builder((ServerLevel) this.level))
                             .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ATTACKING_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
                             .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
-                    List<LootPool> lootPools = ((LootTableAccessor) table).getPools();
-                    this.lootPoolList[index] = lootPools;
+
                 }
                 final LootParams context = lootcontext$builder.create(LootContextParamSets.ENTITY);
 
