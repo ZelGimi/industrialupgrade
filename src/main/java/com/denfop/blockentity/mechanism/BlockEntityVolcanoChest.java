@@ -10,14 +10,10 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockVolcanoChest;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuVolcanoChest;
-import com.denfop.containermenu.ContainerMenuWaterSecurity;
 import com.denfop.datagen.IULootTableProvider;
 import com.denfop.inventory.Inventory;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.screen.ScreenVolcanoChest;
-import com.denfop.screen.ScreenWaterSecurity;
-import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +22,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +36,7 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
     public final Inventory invSlot;
 
     public BlockEntityVolcanoChest(BlockPos pos, BlockState state) {
-        super(BlockVolcanoChest.volcano_chest,pos,state);
+        super(BlockVolcanoChest.volcano_chest, pos, state);
         this.invSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT_OUTPUT, 27);
 
     }
@@ -51,18 +46,18 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
         LootContext.Builder lootcontext$builder;
         lootcontext$builder = (new LootContext.Builder((ServerLevel) this.level)).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         final LootContext context = lootcontext$builder.create(LootContextParamSets.CHEST);
-        if (IUCore.VOLCANO_LOOT_POOL == null){
-            IUCore.VOLCANO_TABLE =level.getServer().getLootTables().get(IULootTableProvider.VOLCANO_LOOT_TABLE);
-            IUCore.VOLCANO_LOOT_POOL =  ((LootTableAccessor) IUCore.VOLCANO_TABLE).getPools();
+        if (IUCore.VOLCANO_TABLE == null) {
+            IUCore.VOLCANO_TABLE = level.getServer().getLootTables().get(IULootTableProvider.VOLCANO_LOOT_TABLE);
         }
-        for (int i = 0; i < 8 ; i++)
-        IUCore.VOLCANO_LOOT_POOL.get(0).addRandomItems(stacks::add, context);
+        for (int i = 0; i < 8; i++)
+            IUCore.VOLCANO_TABLE.getRandomItems(context, stacks::add);
         return stacks;
     }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player var1, ContainerMenuBase<? extends CustomWorldContainer> menu) {
-        return new ScreenVolcanoChest((ContainerMenuVolcanoChest)menu);
+        return new ScreenVolcanoChest((ContainerMenuVolcanoChest) menu);
     }
 
 
@@ -70,8 +65,6 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
     public ContainerMenuVolcanoChest getGuiContainer(Player var1) {
         return new ContainerMenuVolcanoChest(this, var1);
     }
-
-
 
 
     @Override
@@ -82,13 +75,13 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
         }
         List<ItemStack> stacks = generateLoot();
         if (placer instanceof FakePlayerSpawner)
-        for (ItemStack stack1 : stacks) {
-            int index;
-            do {
-                index = level.random.nextInt(27);
-            } while (!this.invSlot.get(index).isEmpty());
-            this.invSlot.set(index, stack1);
-        }
+            for (ItemStack stack1 : stacks) {
+                int index;
+                do {
+                    index = level.random.nextInt(27);
+                } while (!this.invSlot.get(index).isEmpty());
+                this.invSlot.set(index, stack1);
+            }
     }
 
     @Override

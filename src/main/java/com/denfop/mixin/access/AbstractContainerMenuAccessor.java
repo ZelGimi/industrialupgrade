@@ -11,11 +11,6 @@ import java.util.function.Supplier;
 
 @Mixin(AbstractContainerMenu.class)
 public interface AbstractContainerMenuAccessor {
-    @Accessor
-    NonNullList<ItemStack> getLastSlots();
-
-    @Accessor
-    NonNullList<ItemStack> getRemoteSlots();
 
     @Invoker("synchronizeCarriedToRemote")
     void invokeSynchronizeCarriedToRemote();

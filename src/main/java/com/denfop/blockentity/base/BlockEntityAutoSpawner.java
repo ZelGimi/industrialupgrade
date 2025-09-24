@@ -19,7 +19,6 @@ import com.denfop.containermenu.ContainerMenuAutoSpawner;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.inventory.InventoryModules;
 import com.denfop.inventory.InventoryUpgradeModule;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -41,7 +40,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -81,7 +79,6 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
     public LootTable[] loot_Tables = new LootTable[4];
     public LootContext.Builder[] lootContext = new LootContext.Builder[4];
 
-    public List<LootPool>[] lootPoolList = new List[4];
     public int fireAspect;
 
     public BlockEntityAutoSpawner(BlockPos pos, BlockState state) {
@@ -253,16 +250,12 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
                     lootcontext$builder = this.lootContext[index] = (new LootContext.Builder((ServerLevel) this.level))
                             .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
                             .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_KILLER_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
-                    List<LootPool> lootPools = ((LootTableAccessor) table).getPools();
-                    this.lootPoolList[index] = lootPools;
                 }
                 final LootContext context = lootcontext$builder.create(LootContextParamSets.ENTITY);
 
                 List<ItemStack> list = Lists.newArrayList();
                 for (int j = 0; j < this.spawn; j++) {
-                    for (LootPool lootpool : this.lootPoolList[index]) {
-                        lootpool.addRandomItems(list::add, context);
-                    }
+                    table.getRandomItems(context, list::add);
                 }
                 for (ItemStack item : list) {
 

@@ -23,9 +23,10 @@ public class TileEntityRenderAutoLatexCollector implements BlockEntityRenderer<B
         FluidTank tank = te.tank;
         FluidStack fluidStack = tank.getFluid();
         if (!fluidStack.isEmpty()) {
-            final float scale = (te.tank.getFluidAmount()) * 1F / te.tank.getCapacity();
+            float scale = (te.tank.getFluidAmount()) * 1F / te.tank.getCapacity();
 
-
+            if (scale > 1)
+                scale = 1;
             poseStack.pushPose();
             poseStack.translate(0.55, -0.38, 0.55);
             poseStack.translate(0.0, 0.4, 0.0);

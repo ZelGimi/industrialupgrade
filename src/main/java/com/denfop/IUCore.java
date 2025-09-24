@@ -56,7 +56,6 @@ import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
 import com.denfop.network.packet.*;
@@ -201,7 +200,6 @@ public class IUCore {
     }
 
     private boolean register2 = false;
-    public static List<LootPool> VOLCANO_LOOT_POOL;
     public static LootTable VOLCANO_TABLE;
 
     public IUCore() {
@@ -506,11 +504,7 @@ public class IUCore {
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
-        if (name.getPath().startsWith("chests/"))
-        if (name.equals(IULootTableProvider.VOLCANO_LOOT_TABLE) ) {
-            VOLCANO_LOOT_POOL =  ((LootTableAccessor) event.getTable()).getPools();
-            VOLCANO_TABLE = event.getTable();
-        }
+
         if (name.getPath().startsWith("entities/")) {
             String id = name.toString();
 

@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/cube",
 	"textures": {
-		"3": "minecraft:blocks/terracotta",
-		"4": "minecraft:blocks/oak_planks",
-		"particle": "minecraft:blocks/terracotta"
+		"3": "minecraft:block/terracotta",
+		"4": "minecraft:block/oak_planks",
+		"particle": "minecraft:block/terracotta"
 	},
 	"elements": [
 		{

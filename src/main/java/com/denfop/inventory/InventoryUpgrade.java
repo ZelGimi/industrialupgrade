@@ -425,8 +425,9 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                         final FluidStack fluid = handler.drain(fluidTankProperties.copy(), IFluidHandler.FluidAction.SIMULATE);
                         if (!fluid.isEmpty() && fluid.getAmount() > 0 && tank.canDrain(facing.getOpposite()) && tank.isFluidValid(fluid) && (itemStackList.isEmpty() || itemStackList.contains(
                                 fluid.getFluid()))) {
-                            int amount = tank.getCapacity() - tank.getFluidAmount();
-                            FluidStack fluidStack = handler.drain(amount, IFluidHandler.FluidAction.EXECUTE);
+                            FluidStack fluidStack = fluidTankProperties.copy();
+                            fluidStack.setAmount(Math.min( tank.getCapacity() - tank.getFluidAmount(),fluidStack.getAmount()));
+                            handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                             tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                         }
                     }
@@ -455,8 +456,9 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                             final FluidStack fluid = handler.drain(fluidTankProperties.copy(), IFluidHandler.FluidAction.SIMULATE);
                             if (!fluid.isEmpty() && fluid.getAmount() > 0 && tank.acceptsFluid(fluid.getFluid()) && (itemStackList.isEmpty() || itemStackList.contains(
                                     fluid.getFluid()))) {
-                                int amount = tank.getCapacity() - tank.getFluidAmount();
-                                FluidStack fluidStack = handler.drain(amount, IFluidHandler.FluidAction.EXECUTE);
+                                FluidStack fluidStack = fluidTankProperties.copy();
+                                fluidStack.setAmount(Math.min( tank.getCapacity() - tank.getFluidAmount(),fluidStack.getAmount()));
+                                handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                                 tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                             }
                         }

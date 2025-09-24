@@ -7,8 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractContainerScreen.class)
 public interface AbstractContainerScreenAccessor {
-    @Accessor
-    Slot getHoveredSlot();
+
 
     @Accessor
     int getQuickCraftingType();
@@ -16,9 +15,4 @@ public interface AbstractContainerScreenAccessor {
     @Accessor
     Slot getClickedSlot();
 
-    @Accessor
-    Slot getSnapbackEnd();
-
-    @Accessor
-    Slot getQuickdropSlot();
 }
