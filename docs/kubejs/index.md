@@ -479,4 +479,4 @@ With this guide, you now have a clear, step‐by‐step reference for creating:
 * Pure fluid recipes.
 * Mixed item + fluid recipes.
 
-Use tags for flexibility, specify fluid amounts in mB, and leverage `params` for custom machine behavior. Place your JSON files under the correct `data/industrialupgrade/recipes/<machine>/` path, and your new recipes will work seamlessly in IndustrialUpgrade. Happy crafting!
+Use tags for flexibility, specify fluid amounts in mB, and leverage `params` for custom machine behavior. Place your JSON files under the correct (to 1.20.1) `data/recipes/<machine>/` path, (from 1.21.1) `data/recipe/<machine>/` path, and your new recipes will work seamlessly in IndustrialUpgrade. Happy crafting!
