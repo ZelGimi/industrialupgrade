@@ -74,6 +74,10 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
             RegistryObject<BlockTileEntity<T>>... block
     ) {
         Constructor<BlockEntityBase> constructor = (Constructor<BlockEntityBase>) typeClass.getConstructors()[0];
+        final Block[] resolvedBlocks = Arrays.stream(block)
+                .filter(Objects::nonNull)
+                .map(RegistryObject::get)
+                .toArray(Block[]::new);
 
         return BlockEntityType.Builder.of(
                 (pos, state) -> {
@@ -83,7 +87,7 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
                         throw new RuntimeException(e);
                     }
                 },
-                Arrays.stream(block).map(RegistryObject::get).toArray(Block[]::new)
+                resolvedBlocks
         ).build(null);
 
     }

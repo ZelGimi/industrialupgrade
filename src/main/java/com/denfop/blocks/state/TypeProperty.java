@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,9 +34,9 @@ public class TypeProperty extends Property<State> {
         for (StatesBlocks teBlockPair : locationBlocks) {
             this.allowedValues.addAll(teBlockPair.statesBlocks);
         }
+        this.allowedValues = new ArrayList<>(new LinkedHashSet<>(this.allowedValues));
         if (this.allowedValues.size() == 1)
             this.allowedValues.add(new State(teBlock, "invalid"));
-        this.allowedValues = new ArrayList<>(allowedValues);
         this.locationBlocks = new ArrayList<>(locationBlocks);
     }
 
@@ -91,18 +92,22 @@ public class TypeProperty extends Property<State> {
 
 
         public StatesBlocks(MultiBlockEntity block, String state, String[] multiModels) {
-            statesBlocks.add(new State(block, ""));
+            LinkedHashSet<State> uniqueStates = new LinkedHashSet<>();
+            uniqueStates.add(new State(block, ""));
             if (state.equals("active")) {
-                statesBlocks.add(new State(block, state));
+                uniqueStates.add(new State(block, state));
                 this.hasActive = true;
             } else {
                 this.hasActive = false;
             }
             if (multiModels != null) {
                 for (final String multiModel : multiModels) {
-                    statesBlocks.add(new State(block, multiModel));
+                    if (multiModel != null) {
+                        uniqueStates.add(new State(block, multiModel));
+                    }
                 }
             }
+            statesBlocks = new ArrayList<>(uniqueStates);
         }
 
 
