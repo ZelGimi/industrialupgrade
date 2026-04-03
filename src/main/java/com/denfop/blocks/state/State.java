@@ -33,7 +33,7 @@ public class State implements Comparable<State> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(state);
+        return Objects.hash(teBlock, state);
     }
 
     public int compareTo(State o) {
