@@ -24,7 +24,7 @@ group = 'com.denfop'
 version = minecraftRelease + '-' + modVersion
 
 java {
-    archivesBaseName = 'industrialupgrade'
+    archivesBaseName = 'IndustrialUpgrade'
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
@@ -116,35 +116,18 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraftRelease}-forge:${jeiVersion}"))
 
     implementation fg.deobf("curse.maven:the-one-probe-245211:3965693")
-    implementation fg.deobf("curse.maven:pipez-443900:3920730")
 
 
-    implementation fg.deobf("curse.maven:allthecompressed-514045:4068231")
-    implementation fg.deobf("curse.maven:ato-405593:4046926")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly fileTree('lib')
     runtimeOnly fileTree('lib')
     runtimeOnly fg.deobf("curse.maven:jade-324717:4914105")
     compileOnly fg.deobf("curse.maven:jade-324717:4914105")
-
     runtimeOnly fg.deobf("curse.maven:jade-addons-583345:4850581")
     compileOnly fg.deobf("curse.maven:jade-addons-583345:4850581")
-    runtimeOnly fg.deobf("curse.maven:thermal-expansion-69163:4782929")
-    compileOnly fg.deobf("curse.maven:thermal-expansion-69163:4782929")
-    runtimeOnly fg.deobf("curse.maven:thermal-foundation-222880:4782926")
-    compileOnly fg.deobf("curse.maven:thermal-foundation-222880:4782926")
-    runtimeOnly fg.deobf("curse.maven:thermal-dynamics-227443:4760633")
-    compileOnly fg.deobf("curse.maven:thermal-dynamics-227443:4760633")
-    compileOnly fg.deobf("curse.maven:ic2-classic-242942:4879119")
-    runtimeOnly fg.deobf("curse.maven:cofh-core-69162:4759876")
-    compileOnly fg.deobf("curse.maven:cofh-core-69162:4759876")
-    compileOnly fg.deobf("curse.maven:botania-225643:5608807")
 
     runtimeOnly fg.deobf("curse.maven:crafttweaker-239197:4886432")
     compileOnly fg.deobf("curse.maven:crafttweaker-239197:4886432")
-
-    runtimeOnly fg.deobf("curse.maven:thermal-innovation-291737:4759913")
-    compileOnly fg.deobf("curse.maven:thermal-innovation-291737:4759913")
 
 }
 
