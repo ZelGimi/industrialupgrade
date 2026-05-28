@@ -85,12 +85,11 @@ public class ItemJarBees<T extends Enum<T> & SubEnum> extends ItemMain<T> implem
     ) {
         tooltip.add(Component.translatable("iu.use_bee_analyzer").append(Component.translatable(IUItem.bee_analyzer.getItem().getDescriptionId())));
         Bee bee = getBee(stack);
-        tooltip.add(Component.literal(Localization.translate("iu.bee_analyzer.main_crop") + " " + Localization.translate("crop." + bee
-                .getCropFlower()
-                .getName())));
-        tooltip.add(Component.translatable("iu.bee_negative"));
-
         if (bee != null) {
+            tooltip.add(Component.literal(Localization.translate("iu.bee_analyzer.main_crop") + " " + Localization.translate("crop." + bee
+                    .getCropFlower()
+                    .getName())));
+            tooltip.add(Component.translatable("iu.bee_negative"));
             List<Bee> unCompatibleBees = bee.getUnCompatibleBees();
             for (Bee bee1 : unCompatibleBees) {
                 tooltip.add(Component.translatable("bee_" + bee1.getName()));

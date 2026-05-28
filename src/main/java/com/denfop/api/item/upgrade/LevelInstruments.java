@@ -20,7 +20,7 @@ public interface LevelInstruments {
         if (level >= 30) {
             return Integer.MAX_VALUE;
         }
-        return (int) (Math.pow(2, Math.log(Math.exp(Math.log(level + 1)))) * (150 * Math.log((Math.pow(8, level + 1)))));
+        return (int) ((int) (Math.pow(2, Math.log(Math.exp(Math.log(level + 1)))) * (150 * Math.log((Math.pow(8, level + 1))))));
     }
 
     default void addExperience(ItemStack stack, int experience) {

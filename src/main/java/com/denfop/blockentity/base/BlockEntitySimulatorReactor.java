@@ -52,7 +52,7 @@ public class BlockEntitySimulatorReactor extends BlockEntityInventory implements
         this.invSlot = new InventorySimulatorReactor(this, Inventory.TypeItemSlot.INPUT, 80) {
             @Override
             public boolean canPlaceVirtualItem(int index, ItemStack stack) {
-                return canPlaceItem(index,stack);
+                return canPlaceItem(index, stack);
             }
 
             @Override

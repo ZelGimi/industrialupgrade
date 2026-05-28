@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -65,12 +67,12 @@ public class BlockEntityElectricSqueezer extends BlockEntityElectricMachine impl
     protected short progress;
 
     public BlockEntityElectricSqueezer(BlockPos pos, BlockState state) {
-        super(200, 1, 0, BlockBaseMachine3Entity.electric_squeezer, pos, state);
+        super(ModConfig.mechanismDouble("electric_latex_extractor_energy_storage", 200.0D), 1, 0, BlockBaseMachine3Entity.electric_squeezer, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.progress = 0;
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electric_latex_extractor_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electric_latex_extractor_air_pollution_amount", 0.1D)));
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("electric_latex_extractor_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -100,9 +102,9 @@ public class BlockEntityElectricSqueezer extends BlockEntityElectricMachine impl
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 

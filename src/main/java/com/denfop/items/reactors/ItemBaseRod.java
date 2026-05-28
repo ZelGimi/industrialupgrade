@@ -1,5 +1,7 @@
 package com.denfop.items.reactors;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.item.armor.HazmatLike;
@@ -37,7 +39,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
     double[] p = new double[]{5.0D, 20D, 60D, 200D, 500D, 1300D};
 
     public ItemBaseRod(int cells, int heat, float power, int level) {
-        super(new Item.Properties().stacksTo(1).setNoRepair(), 1);
+        super(new Item.Properties().stacksTo(1).setNoRepair(), ModConfig.itemInt("base_rod_durability", 1));
         this.heat = heat;
         this.power = power;
         this.numberOfCells = cells;

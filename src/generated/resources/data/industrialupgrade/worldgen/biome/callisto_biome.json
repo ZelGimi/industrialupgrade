@@ -1,0 +1,79 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:callisto_cavity",
+      "industrialupgrade:space/callisto/stone_tunnels",
+      "industrialupgrade:space/callisto/hall_system",
+      "industrialupgrade:space/callisto/fractures",
+      "industrialupgrade:space/callisto/porous",
+      "industrialupgrade:space/callisto/liquid_chamber",
+      "industrialupgrade:space/callisto/frozen_chamber",
+      "industrialupgrade:space/callisto/crater_chamber",
+      "industrialupgrade:space/callisto/tunnel_caves",
+      "industrialupgrade:space/callisto/shaft_caves",
+      "industrialupgrade:space/callisto/dome_caves",
+      "industrialupgrade:space/callisto/well_caves",
+      "industrialupgrade:space/callisto/multi_tier_caves",
+      "industrialupgrade:space/callisto/branched_caves",
+      "industrialupgrade:space/callisto/spiral_caves",
+      "industrialupgrade:space/callisto/chamber_caves",
+      "industrialupgrade:space/callisto/pocket_caves",
+      "industrialupgrade:space/callisto/crevice_caves",
+      "industrialupgrade:space/callisto/cathedral_caves",
+      "industrialupgrade:space/callisto/gallery_caves",
+      "industrialupgrade:space/callisto/winding_caves",
+      "industrialupgrade:space/callisto/cascade_caves",
+      "industrialupgrade:space/callisto/collapse_caves",
+      "industrialupgrade:space/callisto/vertical_collectors"
+    ],
+    [],
+    [
+      "industrialupgrade:callisto_craters",
+      "industrialupgrade:space/callisto/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:callisto_ore_0",
+      "industrialupgrade:callisto_ore_1",
+      "industrialupgrade:callisto_ore_2",
+      "industrialupgrade:callisto_ore_3",
+      "industrialupgrade:callisto_ore_4",
+      "industrialupgrade:callisto_ore_5"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/callisto/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.3
+}

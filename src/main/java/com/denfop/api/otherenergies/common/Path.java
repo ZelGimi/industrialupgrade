@@ -29,4 +29,7 @@ public class Path {
     }
 
 
+    public ISink getSink() {
+        return target;
+    }
 }

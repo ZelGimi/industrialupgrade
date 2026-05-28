@@ -163,7 +163,7 @@ public enum BlockChargepadStorageEntity implements MultiBlockEntity, ElectricBlo
     @Override
     @Nonnull
     public Set<Direction> getSupportedFacings() {
-        return ModUtils.downSideFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override

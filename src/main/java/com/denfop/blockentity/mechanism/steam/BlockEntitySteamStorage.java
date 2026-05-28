@@ -72,24 +72,6 @@ public class BlockEntitySteamStorage extends BlockEntityInventory {
         this.steam.setFluidTank(fluidTank);
     }
 
-    public BlockEntitySteamStorage(MultiBlockEntity block, BlockPos pos, BlockState state, int capacity) {
-        super(block, pos, state);
-        this.steam = this.addComponent((new ComponentSteamEnergy(
-                EnergyType.STEAM, this, capacity * 1000,
-
-                Arrays.stream(Direction.values()).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
-                Collections.singletonList(this.getFacing()),
-                EnergyNetGlobal.instance.getTierFromPower(14),
-                EnergyNetGlobal.instance.getTierFromPower(14), false
-        )));
-
-
-        this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", capacity * 1000, Inventory.TypeItemSlot.NONE,
-                Fluids.fluidPredicate(FluidName.fluidsteam.getInstance().get())
-        );
-        this.steam.setFluidTank(fluidTank);
-    }
 
     @Override
     public int getLightValue() {
@@ -140,7 +122,7 @@ public class BlockEntitySteamStorage extends BlockEntityInventory {
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info") + com.denfop.utils.ModUtils.cleanComponentString(fluidStack.getDisplayName().getString()));
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }

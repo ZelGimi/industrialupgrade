@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:miranda_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:miranda_biome"
+    },
+    "settings": "industrialupgrade:miranda_noise"
+  }
+}

@@ -35,7 +35,7 @@ public class ScreenSolderingMechanism<T extends ContainerMenuSolderingMechanism>
 
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("soldering.info"));
@@ -162,8 +162,10 @@ public class ScreenSolderingMechanism<T extends ContainerMenuSolderingMechanism>
                 } else {
                     pos = k + prevPointer1;
                 }
+
+
                 this.drawTexturedModalRect(poseStack, this.guiLeft + 10 + pos, this.guiTop + 66, 1 + k, y1, 1, 4);
-                data[pos] = i;
+                data[Math.abs(pos)] = i;
                 k++;
             }
 

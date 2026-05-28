@@ -1,6 +1,8 @@
 package com.denfop.blockentity.mechanism;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -37,7 +39,7 @@ public class BlockEntityPrivatizer extends BlockEntityElectricMachine
     public List<String> listItems = new ArrayList<>();
 
     public BlockEntityPrivatizer(BlockPos pos, BlockState state) {
-        super(0, 10, 1, BlockBaseMachine3Entity.privatizer, pos, state);
+        super(ModConfig.mechanismDouble("privatizer_energy_storage", 0.0D), 10, 1, BlockBaseMachine3Entity.privatizer, pos, state);
 
 
         this.inputslot = new InventoryPrivatizer(this, 0, 9);

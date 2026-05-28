@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -38,7 +40,7 @@ public class BlockEntityAmpereGenerator extends BlockEntityElectricMachine imple
     public int levelBlock;
 
     public BlockEntityAmpereGenerator(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.ampere_generator, pos, state);
+        super(ModConfig.mechanismDouble("current_converter_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.ampere_generator, pos, state);
 
 
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 14));
@@ -54,12 +56,14 @@ public class BlockEntityAmpereGenerator extends BlockEntityElectricMachine imple
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
@@ -71,6 +75,7 @@ public class BlockEntityAmpereGenerator extends BlockEntityElectricMachine imple
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -92,7 +97,7 @@ public class BlockEntityAmpereGenerator extends BlockEntityElectricMachine imple
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override

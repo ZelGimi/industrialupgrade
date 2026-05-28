@@ -31,8 +31,8 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
 
     public final BufferEnergy buffer;
+    final double defaultCapacity;
     private final EnergyType type;
-    private final double defaultCapacity;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
     public EnergyNetDelegate delegate;
@@ -163,7 +163,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     }
 
-    private void createDelegate() {
+    public void createDelegate() {
         if (this.delegate != null) {
         } else {
 

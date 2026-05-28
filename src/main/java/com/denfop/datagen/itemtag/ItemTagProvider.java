@@ -30,6 +30,80 @@ public class ItemTagProvider extends ItemTagsProvider {
         super(output, lookupProvider, blockTagProvider, Constants.MOD_ID, existingFileHelper);
     }
 
+    public static boolean containsInTag(TagKey<Item> tag, ItemStack input) {
+        if (tag == null || input == null || input.isEmpty()) {
+            return false;
+        }
+
+        return containsInTag(tag.location(), input.getItem());
+    }
+
+    public static boolean containsInTag(ResourceLocation requiredTag, Item inputItem) {
+        if (requiredTag == null || inputItem == null) {
+            return false;
+        }
+
+        for (IItemTag itemTag : list) {
+            if (itemTag == null) {
+                continue;
+            }
+
+            Item item = itemTag.getItem();
+
+            if (item != inputItem) {
+                continue;
+            }
+
+            String[] tags = itemTag.getTags();
+
+            if (tags == null || tags.length == 0) {
+                continue;
+            }
+
+            for (String tagString : tags) {
+                if (matchesTag(requiredTag, tagString)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @SafeVarargs
+    public static boolean containsInAnyTag(ItemStack input, TagKey<Item>... tags) {
+        if (input == null || input.isEmpty() || tags == null) {
+            return false;
+        }
+
+        for (TagKey<Item> tag : tags) {
+            if (containsInTag(tag, input)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean matchesTag(ResourceLocation requiredTag, String actualTagString) {
+        if (requiredTag == null || actualTagString == null || actualTagString.isBlank()) {
+            return false;
+        }
+
+        ResourceLocation actualTag = ResourceLocation.tryParse(actualTagString);
+
+        if (actualTag == null) {
+            return false;
+        }
+
+
+        if (actualTag.equals(requiredTag)) {
+            return true;
+        }
+
+        return actualTag.getNamespace().equals(requiredTag.getNamespace())
+                && actualTag.getPath().startsWith(requiredTag.getPath() + "/");
+    }
 
     public void addCustom(String tag, Item item) {
         String[] stringTags = new String[]{"forge:" + tag};
@@ -132,6 +206,11 @@ public class ItemTagProvider extends ItemTagsProvider {
         this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:crystal/photon"))).add(IUItem.photoniy.getItem());
         this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:crystalingot/photon"))).add(IUItem.photoniy_ingot.getItem());
         this.tag(TagKey.create(Registries.ITEM, new ResourceLocation("forge:nuggets/neutron"))).add(IUItem.neutronium.getItem());
+        TagKey<Item> logRubber = TagKey.create(Registries.ITEM, ResourceLocation.tryParse("forge:logs/rubber"));
+        this.tag(logRubber).add(IUItem.swampRubWood.getItem(0));
+        this.tag(logRubber).add(IUItem.rubWood.getItem(0));
+        this.tag(logRubber).add(IUItem.tropicalRubWood.getItem(0));
+
 
     }
 }

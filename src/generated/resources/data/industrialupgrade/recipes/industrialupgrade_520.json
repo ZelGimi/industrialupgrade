@@ -11,20 +11,26 @@
     "C": {
       "item": "industrialupgrade:crafting_elements/crafting_275_element"
     },
-    "D": {
-      "item": "industrialupgrade:machines/advanced_solar_paneliu"
-    },
     "E": {
       "type": "forge:nbt",
       "count": 1,
       "item": "industrialupgrade:crafting_elements/crafting_272_element",
       "nbt": "{level:1}"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_565_element"
+    },
+    "J": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:upgradekitpanel/upgradepanelkit1"

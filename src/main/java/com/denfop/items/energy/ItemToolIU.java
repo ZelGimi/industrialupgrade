@@ -14,7 +14,9 @@ public class ItemToolIU extends DiggerItem implements IItemTab {
     public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_) {
         super(damage, speed, Tiers.IRON, p_204111_, new Properties().stacksTo(1).setNoRepair());
     }
-
+    public ItemToolIU(double damage, float speed, TagKey<Block> p_204111_) {
+        super((float) damage, speed, Tiers.IRON, p_204111_, new Properties().stacksTo(1).setNoRepair());
+    }
     public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties) {
         super(damage, speed, Tiers.IRON, p_204111_, properties);
     }
@@ -22,7 +24,9 @@ public class ItemToolIU extends DiggerItem implements IItemTab {
     public ItemToolIU(float damage, float speed, TagKey<Block> p_204111_, Properties properties, Tier tier) {
         super(damage, speed, tier, p_204111_, properties);
     }
-
+    public ItemToolIU(double damage, float speed, TagKey<Block> p_204111_, Properties properties, Tier tier) {
+        super((float) damage, speed, tier, p_204111_, properties);
+    }
     @Override
     public CreativeModeTab getItemCategory() {
         return IUCore.EnergyTab;

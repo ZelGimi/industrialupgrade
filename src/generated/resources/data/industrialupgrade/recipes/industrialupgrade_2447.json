@@ -3,19 +3,19 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:plates/bismuth"
+      "item": "quantumgenerators:qg/adsp_gen"
     },
     "B": {
-      "item": "minecraft:water_bucket"
+      "item": "industrialupgrade:itemcore/gracore"
     }
   },
   "pattern": [
-    "  A",
-    "AB ",
-    "AAA"
+    " B ",
+    "BAB",
+    " B "
   ],
   "result": {
-    "item": "wateringcan:simple_watering_can"
+    "item": "quantumgenerators:qg/grasp_gen"
   },
   "show_notification": true
 }

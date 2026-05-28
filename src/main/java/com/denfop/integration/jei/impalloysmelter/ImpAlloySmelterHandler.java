@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.impalloysmelter;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ImpAlloySmelterHandler {
+public class ImpAlloySmelterHandler implements IJeiVariantRecipe {
 
     public static final List<ImpAlloySmelterHandler> recipes = new ArrayList<>();
     public final ItemStack input, input1, input2, input3, output;
     public final short temperature;
     private final BaseMachineRecipe container;
-
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
     public ImpAlloySmelterHandler(
             ItemStack input,
             ItemStack input1,
@@ -70,11 +72,11 @@ public class ImpAlloySmelterHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("impalloysmelter")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0), container.input.getInputs().get(3).getInputs().get(0),
                     container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"), container
-            );
+            ), container);
 
 
         }
@@ -112,4 +114,15 @@ public class ImpAlloySmelterHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

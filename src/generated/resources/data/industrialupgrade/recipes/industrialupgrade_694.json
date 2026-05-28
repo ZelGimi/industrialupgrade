@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:transformer_iu/mv"
+      "item": "industrialupgrade:crafting_elements/crafting_207_element"
     },
     "B": {
       "item": "industrialupgrade:medium_current_converter_to_low"

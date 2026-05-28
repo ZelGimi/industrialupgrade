@@ -1,0 +1,74 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 197381,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:charon_cavity",
+      "industrialupgrade:charon_shaft",
+      "industrialupgrade:space/charon/stone_tunnels",
+      "industrialupgrade:space/charon/hall_system",
+      "industrialupgrade:space/charon/fractures",
+      "industrialupgrade:space/charon/shafts",
+      "industrialupgrade:space/charon/crater_chamber",
+      "industrialupgrade:space/charon/tunnel_caves",
+      "industrialupgrade:space/charon/shaft_caves",
+      "industrialupgrade:space/charon/dome_caves",
+      "industrialupgrade:space/charon/well_caves",
+      "industrialupgrade:space/charon/multi_tier_caves",
+      "industrialupgrade:space/charon/branched_caves",
+      "industrialupgrade:space/charon/spiral_caves",
+      "industrialupgrade:space/charon/chamber_caves",
+      "industrialupgrade:space/charon/pocket_caves",
+      "industrialupgrade:space/charon/crevice_caves",
+      "industrialupgrade:space/charon/cathedral_caves",
+      "industrialupgrade:space/charon/gallery_caves",
+      "industrialupgrade:space/charon/winding_caves",
+      "industrialupgrade:space/charon/collapse_caves",
+      "industrialupgrade:space/charon/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:charon_lake_0",
+      "industrialupgrade:charon_fluid_0",
+      "industrialupgrade:charon_lake_1",
+      "industrialupgrade:charon_fluid_1"
+    ],
+    [
+      "industrialupgrade:charon_craters",
+      "industrialupgrade:space/charon/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:charon_ore_0",
+      "industrialupgrade:charon_ore_1",
+      "industrialupgrade:charon_ore_2",
+      "industrialupgrade:charon_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

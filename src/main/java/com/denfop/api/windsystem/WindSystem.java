@@ -413,7 +413,7 @@ public class WindSystem implements IWindSystem {
             copy_power = copy_power / (150D / y);
         }
 
-        return copy_power;
+        return copy_power * 0.9;
 
     }
 
@@ -427,7 +427,7 @@ public class WindSystem implements IWindSystem {
                 .getEfficiency(rotor.getItemStack()) * (1 + rotor.getAdditionalPower())) * (rotor.getCoefficient() * (1 + rotor.getAdditionalCoefficient())));
 
 
-        return copy_power;
+        return copy_power * 0.9;
 
     }
 
@@ -441,7 +441,7 @@ public class WindSystem implements IWindSystem {
 
         return this.getPower(world, pos, windMechanism.getMin(), windMechanism) * (windMechanism
                 .getRotor()
-                .getEfficiency(stack) * (1 + windMechanism.getAdditionalPower())) * (windMechanism.getCoefficient() * (1 + windMechanism.getAdditionalCoefficient()));
+                .getEfficiency(stack) * (1 + windMechanism.getAdditionalPower())) * (windMechanism.getCoefficient() * (1 + windMechanism.getAdditionalCoefficient())) * 0.9;
     }
 
     @Override
@@ -453,7 +453,7 @@ public class WindSystem implements IWindSystem {
 
         return (this.getPower(world, new BlockPos(0, 150, 0), windMechanism.getMin(), windMechanism) / 27D) * 25 * (windMechanism
                 .getRotor()
-                .getEfficiency(stack) * (1 + windMechanism.getAdditionalPower())) * (windMechanism.getCoefficient() * (1 + windMechanism.getAdditionalCoefficient()));
+                .getEfficiency(stack) * (1 + windMechanism.getAdditionalPower())) * (windMechanism.getCoefficient() * (1 + windMechanism.getAdditionalCoefficient())) * 0.9;
     }
 
 }

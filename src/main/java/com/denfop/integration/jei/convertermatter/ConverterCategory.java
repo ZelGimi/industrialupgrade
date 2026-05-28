@@ -92,8 +92,8 @@ public class ConverterCategory extends ScreenMain implements IRecipeCategory<Con
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ConverterHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 113, 45).addItemStack(recipe.getOutput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 47, 45).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 114, 46).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 48, 46).addItemStack(recipe.getOutput());
     }
 
 

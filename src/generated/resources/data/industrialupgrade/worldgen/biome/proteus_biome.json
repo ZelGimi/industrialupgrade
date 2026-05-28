@@ -1,0 +1,77 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 197381,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:proteus_cavity",
+      "industrialupgrade:proteus_shaft",
+      "industrialupgrade:space/proteus/stone_tunnels",
+      "industrialupgrade:space/proteus/hall_system",
+      "industrialupgrade:space/proteus/fractures",
+      "industrialupgrade:space/proteus/shafts",
+      "industrialupgrade:space/proteus/liquid_chamber",
+      "industrialupgrade:space/proteus/crater_chamber",
+      "industrialupgrade:space/proteus/tunnel_caves",
+      "industrialupgrade:space/proteus/labyrinth_caves",
+      "industrialupgrade:space/proteus/shaft_caves",
+      "industrialupgrade:space/proteus/dome_caves",
+      "industrialupgrade:space/proteus/well_caves",
+      "industrialupgrade:space/proteus/multi_tier_caves",
+      "industrialupgrade:space/proteus/branched_caves",
+      "industrialupgrade:space/proteus/spiral_caves",
+      "industrialupgrade:space/proteus/arch_caves",
+      "industrialupgrade:space/proteus/chamber_caves",
+      "industrialupgrade:space/proteus/canyon_caves",
+      "industrialupgrade:space/proteus/pocket_caves",
+      "industrialupgrade:space/proteus/crevice_caves",
+      "industrialupgrade:space/proteus/amphitheater_caves",
+      "industrialupgrade:space/proteus/gallery_caves",
+      "industrialupgrade:space/proteus/winding_caves",
+      "industrialupgrade:space/proteus/cascade_caves",
+      "industrialupgrade:space/proteus/collapse_caves",
+      "industrialupgrade:space/proteus/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:proteus_lake_0",
+      "industrialupgrade:proteus_fluid_0"
+    ],
+    [
+      "industrialupgrade:proteus_craters",
+      "industrialupgrade:space/proteus/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:proteus_ore_0",
+      "industrialupgrade:proteus_ore_1",
+      "industrialupgrade:proteus_ore_2",
+      "industrialupgrade:proteus_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

@@ -65,7 +65,7 @@ public class ScreenGasWellAnalyzer<T extends ContainerMenuGasWellAnalyzer> exten
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         bindTexture();
-        if (((BlockEntityGasWellAnalyzer) this.container.base).work) {
+        if (this.container.base.work) {
             this.drawTexturedModalRect(poseStack, this.guiLeft + 78, this.guiTop + 33, 235, 64, 21, 21);
 
         }

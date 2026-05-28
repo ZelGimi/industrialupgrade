@@ -1,5 +1,7 @@
 package com.denfop.blockentity.reactors.water.socket;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.reactors.water.ISocket;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityImpSocket extends BlockEntityMainSocket implements ISocket {
 
     public BlockEntityImpSocket(BlockPos pos, BlockState state) {
-        super(30000, BlockWaterReactorsEntity.water_imp_socket, pos, state);
+        super(ModConfig.mechanismInt("advanced_liquid_reactor_socket_capacity", 30000), BlockWaterReactorsEntity.water_imp_socket, pos, state);
     }
 
     @Override

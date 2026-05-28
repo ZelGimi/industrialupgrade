@@ -12,8 +12,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
-
 public class AsteroidRecipe implements Recipe<Container> {
 
     private final ResourceLocation id;
@@ -37,7 +35,7 @@ public class AsteroidRecipe implements Recipe<Container> {
 
     public AsteroidRecipe(ResourceLocation id, String name, String systemName, String texturePath, EnumLevels level, String starName, Integer temperature, Double distance, EnumType type, Boolean colonies, Integer angle, Double time, Double size, Double rotation, Double maxLocation, Double minLocation, Integer amount) {
         this.name = name;
-        this.id=id;
+        this.id = id;
         this.systemName = systemName;
         this.texturePath = texturePath;
         this.level = level;
@@ -81,7 +79,6 @@ public class AsteroidRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
 
 
     @Override

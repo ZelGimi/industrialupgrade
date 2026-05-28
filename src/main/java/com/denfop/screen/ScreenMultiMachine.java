@@ -117,7 +117,7 @@ public class ScreenMultiMachine<T extends ContainerMenuMultiMachine> extends Scr
         }
         i = 0;
         for (ItemStack stack : this.itemStackList) {
-            new TooltipWidget(this, imageWidth, 5 + i * 18, 16, 16).withTooltip(stack.getDisplayName().getString()).drawForeground(poseStack, mouseX, mouseY);
+            new TooltipWidget(this, imageWidth, 5 + i * 18, 16, 16).withTooltip(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString())).drawForeground(poseStack, mouseX, mouseY);
             i++;
         }
     }

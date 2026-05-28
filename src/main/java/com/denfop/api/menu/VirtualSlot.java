@@ -1,5 +1,6 @@
 package com.denfop.api.menu;
 
+import com.denfop.api.storage.autocrafting.SameStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -19,4 +20,8 @@ public interface VirtualSlot {
 
     boolean canPlaceVirtualItem(int index, ItemStack stack);
 
+    default void setFluid(int index, SameStack stack) {
+    }
+
+    ;
 }

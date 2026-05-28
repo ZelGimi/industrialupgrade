@@ -3,28 +3,28 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_252_element"
+      "item": "industrialupgrade:crafting_elements/crafting_158_element"
     },
     "B": {
-      "item": "simplyquarries:simplyquarries/adv_simply_quarry"
+      "item": "industrialupgrade:blockresource/advanced_machine"
     },
     "C": {
-      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
     },
     "D": {
-      "item": "industrialupgrade:crafting_elements/crafting_139_element"
+      "item": "industrialupgrade:crafting_elements/crafting_72_element"
     },
     "E": {
-      "item": "industrialupgrade:crafting_elements/crafting_49_element"
+      "item": "industrialupgrade:crafting_elements/crafting_44_element"
     }
   },
   "pattern": [
-    "D D",
+    " D ",
     "ABE",
-    "DCD"
+    " C "
   ],
   "result": {
-    "item": "simplyquarries:simplyquarries/imp_simply_quarry"
+    "item": "simplyquarries:simplyquarries/simply_quarry"
   },
   "show_notification": true
 }

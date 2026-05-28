@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:ariel_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:ariel_biome"
+    },
+    "settings": "industrialupgrade:ariel_noise"
+  }
+}

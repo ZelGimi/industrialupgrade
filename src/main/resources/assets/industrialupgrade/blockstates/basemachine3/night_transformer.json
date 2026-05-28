@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/night_transformer",
       "y": 90
     },
-    "facing=down,type=night_transformer": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "x": 90
-    },
-    "facing=up,type=night_transformer": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "x": 270
-    },
-    "facing=north,type=night_transformer_invalid": {
-      "model": "industrialupgrade:block/basemachine/night_transformer"
-    },
-    "facing=south,type=night_transformer_invalid": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "y": 180
-    },
-    "facing=west,type=night_transformer_invalid": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "y": 270
-    },
-    "facing=east,type=night_transformer_invalid": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "y": 90
-    },
-    "facing=down,type=night_transformer_invalid": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "x": 90
-    },
-    "facing=up,type=night_transformer_invalid": {
-      "model": "industrialupgrade:block/basemachine/night_transformer",
-      "x": 270
-    },
     "facing=north,type=night_transformer_active": {
       "model": "industrialupgrade:block/basemachine/night_transformer"
     },
@@ -61,6 +30,10 @@
       "model": "industrialupgrade:block/basemachine/night_transformer",
       "y": 90
     },
+    "facing=up,type=night_transformer": {
+      "model": "industrialupgrade:block/basemachine/night_transformer",
+      "x": 270
+    },
     "facing=down,type=night_transformer_active": {
       "model": "industrialupgrade:block/basemachine/night_transformer",
       "x": 90
@@ -68,6 +41,10 @@
     "facing=up,type=night_transformer_active": {
       "model": "industrialupgrade:block/basemachine/night_transformer",
       "x": 270
+    },
+    "facing=down,type=night_transformer": {
+      "model": "industrialupgrade:block/basemachine/night_transformer",
+      "x": 90
     }
   }
 }

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.redstone;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -15,9 +17,9 @@ public class BlockEntityRedstoneGenerator extends BlockEntityBaseRedstoneGenerat
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityRedstoneGenerator(BlockPos pos, BlockState state) {
-        super(1, 1, BlockBaseMachine3Entity.redstone_generator, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.3));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.4));
+        super(ModConfig.mechanismDouble("redstone_generator_efficiency", 1.0D), 1, BlockBaseMachine3Entity.redstone_generator, pos, state);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("redstone_generator_soil_pollution_amount", 0.3D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("redstone_generator_air_pollution_amount", 0.4D)));
     }
 
     public MultiBlockEntity getTeBlock() {

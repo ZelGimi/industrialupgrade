@@ -43,7 +43,7 @@ public class PacketAddBuildingToColony implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (entityPlayer.getUUID().equals(uuid)) {
+        if (entityPlayer.getGameProfile().getId().equals(uuid)) {
             String body = customPacketBuffer.readString();
             IBody body1 = SpaceNet.instance.getBodyFromName(body);
             SpaceNet.instance.getColonieNet().addItemToColony(body1, entityPlayer);

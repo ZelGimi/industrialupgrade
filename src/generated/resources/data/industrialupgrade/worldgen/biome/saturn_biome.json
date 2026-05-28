@@ -1,0 +1,60 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 328968,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:space/saturn/stone_tunnels",
+      "industrialupgrade:space/saturn/hall_system",
+      "industrialupgrade:space/saturn/fractures",
+      "industrialupgrade:space/saturn/porous",
+      "industrialupgrade:space/saturn/shafts",
+      "industrialupgrade:space/saturn/thermal_chamber",
+      "industrialupgrade:space/saturn/tunnel_caves",
+      "industrialupgrade:space/saturn/labyrinth_caves",
+      "industrialupgrade:space/saturn/shaft_caves",
+      "industrialupgrade:space/saturn/dome_caves",
+      "industrialupgrade:space/saturn/multi_tier_caves",
+      "industrialupgrade:space/saturn/branched_caves",
+      "industrialupgrade:space/saturn/spiral_caves",
+      "industrialupgrade:space/saturn/arch_caves",
+      "industrialupgrade:space/saturn/chamber_caves",
+      "industrialupgrade:space/saturn/canyon_caves",
+      "industrialupgrade:space/saturn/pocket_caves",
+      "industrialupgrade:space/saturn/crevice_caves",
+      "industrialupgrade:space/saturn/amphitheater_caves",
+      "industrialupgrade:space/saturn/cathedral_caves",
+      "industrialupgrade:space/saturn/gallery_caves",
+      "industrialupgrade:space/saturn/winding_caves",
+      "industrialupgrade:space/saturn/collapse_caves"
+    ],
+    [],
+    [
+      "industrialupgrade:space/saturn/addition_craters"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.59999996
+}

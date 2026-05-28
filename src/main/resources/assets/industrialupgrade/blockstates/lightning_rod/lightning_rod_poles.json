@@ -15,6 +15,21 @@
       "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
       "y": 90
     },
+    "facing=north,type=lightning_rod_poles_active": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles"
+    },
+    "facing=south,type=lightning_rod_poles_active": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
+      "y": 180
+    },
+    "facing=west,type=lightning_rod_poles_active": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
+      "y": 270
+    },
+    "facing=east,type=lightning_rod_poles_active": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
+      "y": 90
+    },
     "facing=down,type=lightning_rod_poles": {
       "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
       "x": 90
@@ -23,28 +38,13 @@
       "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
       "x": 270
     },
-    "facing=north,type=lightning_rod_poles_invalid": {
-      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles"
-    },
-    "facing=south,type=lightning_rod_poles_invalid": {
-      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
-      "y": 180
-    },
-    "facing=west,type=lightning_rod_poles_invalid": {
-      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
-      "y": 270
-    },
-    "facing=east,type=lightning_rod_poles_invalid": {
-      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
-      "y": 90
-    },
-    "facing=down,type=lightning_rod_poles_invalid": {
-      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
-      "x": 90
-    },
-    "facing=up,type=lightning_rod_poles_invalid": {
+    "facing=up,type=lightning_rod_poles_active": {
       "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
       "x": 270
+    },
+    "facing=down,type=lightning_rod_poles_active": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_poles",
+      "x": 90
     }
   }
 }

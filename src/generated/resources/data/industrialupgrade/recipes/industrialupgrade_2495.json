@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:casings/hafnium"
+    },
+    "B": {
+      "tag": "forge:casings/iron"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:storage/pattern"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,11 @@
+{
+	"ore_block": "industrialupgrade:blockradiationore/americium_ore",
+    "replace_block": "minecraft:stone",
+    "min_height": 0,
+    "max_height": 56,
+    "min_vein_size": 2,
+    "max_vein_size": 4,
+    "min_veins_per_chunk": 2,
+    "max_veins_per_chunk": 5,
+    "chance": 0.3
+}

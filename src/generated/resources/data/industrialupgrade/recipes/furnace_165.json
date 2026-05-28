@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/ferromanganese"
+    "item": "industrialupgrade:blockspace4/titan_nickel_ore"
   },
-  "result": "industrialupgrade:alloyingot/ferromanganese"
+  "result": "industrialupgrade:itemingots/nickel_ingot"
 }

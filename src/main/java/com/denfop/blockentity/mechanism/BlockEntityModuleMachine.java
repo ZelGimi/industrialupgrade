@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -36,7 +38,7 @@ public class BlockEntityModuleMachine extends BlockEntityElectricMachine
     public List<TagKey<Item>> listItems = new ArrayList<>();
 
     public BlockEntityModuleMachine(BlockPos pos, BlockState state) {
-        super(0, 10, 0, BlockBaseMachineEntity.modulator, pos, state);
+        super(ModConfig.mechanismDouble("module_handler_energy_storage", 0.0D), 10, 0, BlockBaseMachineEntity.modulator, pos, state);
 
 
         this.inputslot = new InventoryModule(this, 0, 27);

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -56,8 +58,8 @@ public class BlockEntitySteamPump extends BlockEntityElectricLiquidTankInventory
     public ComponentProgress componentProgress;
 
     public BlockEntitySteamPump(BlockPos pos, BlockState state) {
-        super(0, 1, 10, BlockBaseMachine3Entity.steam_pump, pos, state);
-        this.defaultEnergyConsume = this.energyConsume = 2;
+        super(ModConfig.mechanismDouble("steam_pump_energy_storage", 0.0D), 1, ModConfig.mechanismInt("steam_pump_tank_capacity", 10), BlockBaseMachine3Entity.steam_pump, pos, state);
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("steam_pump_energy_use", 2);
         this.defaultOperationLength = this.operationLength = 25;
         this.defaultTier = 1;
         this.defaultEnergyStorage = this.operationLength;

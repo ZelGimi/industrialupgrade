@@ -3,40 +3,28 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_519_element"
+      "item": "industrialupgrade:quantumitems7"
     },
     "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_522_element"
+      "tag": "forge:doubleplate/iridium"
     },
     "C": {
-      "tag": "forge:doubleplate/ferromanganese"
+      "item": "industrialupgrade:photoniy_ingot"
     },
     "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "minecraft:diamond_axe",
-      "nbt": "{Damage:0}"
-    },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:5}"
+      "tag": "forge:casings/iridium"
     },
     "F": {
-      "item": "industrialupgrade:crafting_elements/crafting_524_element"
-    },
-    "H": {
-      "tag": "forge:rods/molybdenum"
+      "item": "industrialupgrade:quantumitems2"
     }
   },
   "pattern": [
-    "ADB",
-    "EFE",
-    "CHC"
+    "CDC",
+    "BAB",
+    "CFC"
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/nanoaxe"
+    "item": "industrialupgrade:quantumitems3"
   },
   "show_notification": true
 }

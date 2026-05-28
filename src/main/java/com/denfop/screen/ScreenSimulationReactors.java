@@ -71,19 +71,19 @@ public class ScreenSimulationReactors<T extends ContainerMenuSimulationReactors>
 
 
                 List<String> compatibleUpgrades = new ArrayList<>();
-                compatibleUpgrades.add("Output: " +
+                compatibleUpgrades.add(Localization.translate("gui.SuperSolarPanel.maxOutput") + ": " +
                         ModUtils.getString(this.container.base.output) + " EF"
                 );
-                compatibleUpgrades.add("Radiation: " +
+                compatibleUpgrades.add(Localization.translate("iu.reactor_info.radiation") + ": " +
                         ModUtils.getString(this.container.base.rad) + " ☢"
                 );
-                compatibleUpgrades.add("Heat: " +
+                compatibleUpgrades.add(Localization.translate("iu.reactor_info.heat") + ": " +
                         (int) this.container.base.heat + " °C"
                 );
-                compatibleUpgrades.add("Stable: " +
+                compatibleUpgrades.add(Localization.translate("iu.reactor_info.stable_heat") + ": " +
                         (int) this.container.base.reactor.getStableMaxHeat() + " °C"
                 );
-                compatibleUpgrades.add("Max Heat: " +
+                compatibleUpgrades.add(Localization.translate("iu.reactor_info.max_heat") + ": " +
                         (int) this.container.base.reactor.getMaxHeat() + " °C"
                 );
                 compatibleUpgrades.add(Localization.translate(

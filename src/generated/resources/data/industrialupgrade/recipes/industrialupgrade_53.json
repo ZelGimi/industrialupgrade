@@ -3,22 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemdust/energium_dust"
+      "item": "industrialupgrade:graphene_plate"
     },
     "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_282_element"
+      "item": "industrialupgrade:wiring/gold"
     },
     "C": {
-      "item": "industrialupgrade:compresscarbon"
+      "item": "industrialupgrade:polonium_palladium_composite"
+    },
+    "D": {
+      "item": "industrialupgrade:voltage_sensor_for_mechanism"
     }
   },
   "pattern": [
-    "ACA",
-    "BAB",
-    "ACA"
+    "AAA",
+    "BDB",
+    "C C"
   ],
   "result": {
-    "item": "industrialupgrade:nanobox"
+    "item": "industrialupgrade:medium_current_converter_to_low"
   },
   "show_notification": true
 }

@@ -25,6 +25,9 @@ import com.denfop.api.solar.SolarEnergySystem;
 import com.denfop.api.space.BaseSpaceSystem;
 import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.dimension.SpaceBootstrap;
+import com.denfop.api.space.dimension.SpaceDatagenRegistryBuilder;
+import com.denfop.api.space.dimension.worldgen.SpaceWorldgenContent;
 import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.space.upgrades.BaseSpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
@@ -33,6 +36,7 @@ import com.denfop.api.vein.common.VeinSystem;
 import com.denfop.api.vein.gas.GasVeinSystem;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.base.IManufacturerBlock;
 import com.denfop.blockentity.bee.BlockEntityApiary;
 import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
@@ -60,7 +64,6 @@ import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.NetworkManager;
 import com.denfop.network.Sides;
 import com.denfop.network.packet.*;
@@ -78,15 +81,15 @@ import com.denfop.utils.*;
 import com.denfop.villager.TradingSystem;
 import com.denfop.world.WorldBaseGen;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -102,12 +105,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -116,15 +118,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -138,12 +140,14 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.denfop.api.Recipes.inputFactory;
+import static com.denfop.api.crop.genetics.Genome.geneticBiomes;
 import static com.denfop.api.space.BaseSpaceSystem.fluidToLevel;
 import static com.denfop.utils.ListInformationUtils.mechanism_info;
 import static com.denfop.utils.ListInformationUtils.mechanism_info1;
@@ -195,7 +199,7 @@ public class IUCore {
     public static final CreativeModeTab GenomeTab = new TabCore(13, "GenomeTab");
     public static final CreativeModeTab SpaceTab = new TabCore(14, "SpaceTab");
     public static final CreativeModeTab fluidCellTab = new TabCore(15, "fluidCellTab");
-    private static final RegistrySetBuilder BUILDER = (new RegistrySetBuilder()).add(Registries.CONFIGURED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ConfiguredFeaturesGen::bootstrap).add(Registries.PLACED_FEATURE, (RegistrySetBuilder.RegistryBootstrap) ModPlacedFeatures::bootstrap).add(Registries.DAMAGE_TYPE, DamageTypes::bootstrap);
+
     public static IUCore instance;
     public static FMLJavaModLoadingContext context;
     public static Random random = new Random();
@@ -205,10 +209,14 @@ public class IUCore {
     public static boolean update = false;
     public static List<String> stringList = new ArrayList<>();
     public static boolean register = false;
+    public static boolean regTag = false;
     public static boolean register1 = false;
     public static Map<Item, Crop> cropMap = new HashMap<>();
     public static List<String> players = new LinkedList<>();
-    static boolean change = false;
+    public static boolean change = false;
+    public static LootTable VOLCANO_TABLE;
+    public static boolean updateRecipe = false;
+    private static RegistrySetBuilder BUILDER;
 
     static {
         proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
@@ -217,16 +225,16 @@ public class IUCore {
         Keys.instance = IUCore.keyboard;
     }
 
+    public boolean regData = false;
     boolean reg = false;
     List<RegistryObject<?>> objects = new ArrayList<>();
-    public static List<LootPool> VOLCANO_LOOT_POOL;
-    public static LootTable VOLCANO_TABLE;
 
     public IUCore() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
         context = FMLJavaModLoadingContext.get();
         IUCore.instance = this;
+        IUCore.random = new Random();
         new TileBlockCreator();
         ElectricItem.manager = new ElectricItemManager();
         EnergyNetGlobal.instance = new EnergyNetGlobal();
@@ -239,6 +247,7 @@ public class IUCore {
         MinecraftForge.EVENT_BUS.register(new IUEventHandler());
         Register.register();
         new WorldBaseGen();
+        new SpaceWorldgenContent();
         TradingSystem.init();
         MinecraftForge.EVENT_BUS.register(new EventUpdate());
         modEventBus.addListener(this::registerContent);
@@ -248,9 +257,23 @@ public class IUCore {
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::postInit);
         modEventBus.addListener(this::onAttributeCreate);
+    }
 
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        BlockEntityBase.setServerStopping(true);
+    }
 
-        MinecraftForge.EVENT_BUS.register(this);
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        BlockEntityBase.clearLifecycleUnloadState();
+    }
+
+    @SubscribeEvent
+    public void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof Level level) {
+            BlockEntityBase.markLevelUnloading(level);
+        }
     }
 
     public static void addrecipe(
@@ -308,6 +331,7 @@ public class IUCore {
 
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         BlockTagsProvider blockTags = new BlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
+        BUILDER = SpaceDatagenRegistryBuilder.createBuiltinBuilder();
         gen.addProvider(
                 event.includeServer(),
                 new DatapackBuiltinEntriesProvider(
@@ -316,16 +340,20 @@ public class IUCore {
 
                         BUILDER,
 
-                        Set.of(Constants.MOD_ID)
+                        Set.of(Constants.MOD_ID, "minecraft")
                 )
         );
+
 
         gen.addProvider(event.includeServer(), new IUPoiTypeTagsProvider(packOutput, lookupProvider, existingFileHelper));
         gen.addProvider(event.includeServer(), blockTags);
         gen.addProvider(event.includeServer(), new ItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
         gen.addProvider(event.includeServer(), new RecipeProvider(packOutput));
         gen.addProvider(event.includeServer(), new IULootTableProvider(packOutput));
+        gen.addProvider(event.includeServer(), new IULootModifierProvider(packOutput));
         gen.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
+        gen.addProvider(event.includeClient(), new PaintingVariantTagsProvider(packOutput, lookupProvider, existingFileHelper));
+
 
     }
 
@@ -358,11 +386,6 @@ public class IUCore {
     @SubscribeEvent
     public void onLootTableLoad(LootTableLoadEvent event) {
         ResourceLocation name = event.getName();
-        if (name.equals(IULootTableProvider.VOLCANO_LOOT_TABLE) ) {
-            VOLCANO_LOOT_POOL =  ((LootTableAccessor) event.getTable()).getPools();
-            VOLCANO_TABLE = event.getTable();
-        }
-
         if (name.getPath().startsWith("entities/")) {
             String id = name.toString();
 
@@ -420,7 +443,7 @@ public class IUCore {
     public void postInit(FMLLoadCompleteEvent setup) {
         ((RecipesCore) Recipes.recipes).setCanAdd(false);
 
-        BlockEntityApiary.beeAI =  BeeAI.beeAI;
+        BlockEntityApiary.beeAI = BeeAI.beeAI;
         cropMap.put(Items.WHEAT_SEEDS, CropInit.wheat_seed);
         cropMap.put(Items.SUGAR_CANE, CropInit.reed_seed);
         cropMap.put(Items.POTATO, CropInit.potato);
@@ -582,254 +605,6 @@ public class IUCore {
         }
     }
 
-    @SubscribeEvent
-    public void updateRecipe(TickEvent.PlayerTickEvent event) {
-        if (!update && event.player.level().isClientSide && event.phase == TickEvent.Phase.END) {
-            update = true;
-
-            Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
-            long startTime = System.nanoTime();
-            List<CraftingRecipe> listRecipes =event.player.level().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
-            List<MatterRecipe> matterRecipeList = new ArrayList<>();
-            IUCore.LOGGER.debug("Checking recipes {} ", listRecipes.size());
-
-
-            for (CraftingRecipe r : listRecipes) {
-                List<List<ItemStack>> itemStackList = new ArrayList<>();
-                for (Ingredient ingredient : r.getIngredients()) {
-                    List<ItemStack> itemStackList1;
-                    itemStackList1 = Arrays.asList(ingredient.getItems());
-                    if (!itemStackList1.isEmpty()) {
-                        itemStackList.add(itemStackList1);
-                    }
-                }
-                ItemStack output = ItemStack.EMPTY;
-                output = r.getResultItem(event.player.level().registryAccess());
-                if (output == ItemStack.EMPTY)
-                    continue;
-                final CompoundTag nbt = ModUtils.nbtOrNull(output);
-
-                if ((nbt != null && nbt.contains("RSControl"))) {
-                    continue;
-                }
-                if (Recipes.recipes.getRecipeOutput("converter", false, output) != null) {
-                    continue;
-                }
-                MatterRecipe matterRecipe = new MatterRecipe(r.getResultItem(event.player.level().registryAccess()));
-                matterRecipeList.add(matterRecipe);
-                itemStackMap1.put(itemStackList, matterRecipe);
-            }
-            IUCore.LOGGER.debug(
-                    "Finished checking recipes for converter matter after {} ms.",
-                    (System.nanoTime() - startTime) / 1000000L
-            );
-            startTime = System.nanoTime();
-            Map<List<List<ItemStack>>, MatterRecipe> itemStackMap3 = new HashMap<>();
-            final long startTime1 = System.nanoTime();
-            for (int i = 0; i < 1; i++) {
-                for (Map.Entry<List<List<ItemStack>>, MatterRecipe> entry : itemStackMap1.entrySet()) {
-                    List<List<ItemStack>> list = entry.getKey();
-                    final ItemStack output = entry.getValue().getStack();
-                    MatterRecipe matterRecipe = entry.getValue();
-                    if (matterRecipe.can()) {
-                        continue;
-                    }
-                    List<List<ItemStack>> list2 = new ArrayList<>();
-                    for (List<ItemStack> list1 : list) {
-                        boolean need_continue = false;
-                        for (ItemStack stack : list1) {
-                            BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("converter", false, stack);
-                            if (recipe == null) {
-                                continue;
-                            }
-                            need_continue = true;
-                            matterRecipe.addMatter(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_0") / output.getCount());
-                            matterRecipe.addSun(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_1") / output.getCount());
-                            matterRecipe.addAqua(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_2") / output.getCount());
-                            matterRecipe.addNether(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_3") / output.getCount());
-                            matterRecipe.addNight(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_4") / output.getCount());
-                            matterRecipe.addEarth(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_5") / output.getCount());
-                            matterRecipe.addEnd(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_6") / output.getCount());
-                            matterRecipe.addAer(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_7") / output.getCount());
-                            list2.add(list1);
-                            break;
-                        }
-                        if (!need_continue) {
-                            break;
-                        }
-
-                    }
-                    list.removeIf(list2::contains);
-                    if (list.isEmpty()) {
-                        matterRecipe.setCan(true);
-                        itemStackMap3.put(list, matterRecipe);
-                    }
-
-                }
-                List<MatterRecipe> matterRecipeList1 = new ArrayList<>();
-                matterRecipeList.forEach(matterRecipe1 -> {
-                    if (matterRecipe1.can()) {
-                        try {
-                            addrecipe(matterRecipe1.getStack(),
-                                    Precision.round(matterRecipe1.getMatter(), 2),
-                                    Precision.round(matterRecipe1.getSun(), 2)
-                                    ,
-                                    Precision.round(matterRecipe1.getAqua(), 2),
-                                    Precision.round(matterRecipe1.getNether(), 2),
-                                    Precision.round(matterRecipe1.getNight(), 2),
-                                    Precision.round(matterRecipe1.getEarth(), 2),
-                                    Precision.round(matterRecipe1.getEnd(), 2),
-                                    Precision.round(matterRecipe1.getAer(), 2)
-                            );
-                            matterRecipeList1.add(matterRecipe1);
-                        } catch (Exception e) {
-                        }
-                        ;
-
-                    }
-
-                });
-                matterRecipeList.removeAll(matterRecipeList1);
-                itemStackMap3.forEach((key, value) -> itemStackMap1.remove(key));
-                IUCore.LOGGER.debug("Finished  %d stage recipes for converter matter after {} ms. ", i,
-                        (System.nanoTime() - startTime) / 1000000L
-                );
-                startTime = System.nanoTime();
-            }
-
-            IUCore.LOGGER.debug("Finished adding recipes for converter matter after {} ms.", (System.nanoTime() - startTime1) / 1000000L
-            );
-            matterRecipeList.clear();
-            itemStackMap1.clear();
-            IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
-            IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
-        }
-    }
-
-    @SubscribeEvent
-    public void updateRecipe(ServerStartingEvent event) {
-        if (!update) {
-            update = true;
-
-            Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
-            long startTime = System.nanoTime();
-            List<CraftingRecipe> listRecipes = event.getServer().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
-            List<MatterRecipe> matterRecipeList = new ArrayList<>();
-            IUCore.LOGGER.debug("Checking recipes {} ", listRecipes.size());
-
-
-            for (CraftingRecipe r : listRecipes) {
-                List<List<ItemStack>> itemStackList = new ArrayList<>();
-                for (Ingredient ingredient : r.getIngredients()) {
-                    List<ItemStack> itemStackList1;
-                    itemStackList1 = Arrays.asList(ingredient.getItems());
-                    if (!itemStackList1.isEmpty()) {
-                        itemStackList.add(itemStackList1);
-                    }
-                }
-                ItemStack output = ItemStack.EMPTY;
-                output = r.getResultItem(event.getServer().getLevel(Level.OVERWORLD).registryAccess());
-                if (output == ItemStack.EMPTY)
-                    continue;
-                final CompoundTag nbt = ModUtils.nbtOrNull(output);
-
-                if ((nbt != null && nbt.contains("RSControl"))) {
-                    continue;
-                }
-                if (Recipes.recipes.getRecipeOutput("converter", false, output) != null) {
-                    continue;
-                }
-                MatterRecipe matterRecipe = new MatterRecipe(r.getResultItem(event.getServer().getLevel(Level.OVERWORLD).registryAccess()));
-                matterRecipeList.add(matterRecipe);
-                itemStackMap1.put(itemStackList, matterRecipe);
-            }
-            IUCore.LOGGER.debug(
-                    "Finished checking recipes for converter matter after {} ms.",
-                    (System.nanoTime() - startTime) / 1000000L
-            );
-            startTime = System.nanoTime();
-            Map<List<List<ItemStack>>, MatterRecipe> itemStackMap3 = new HashMap<>();
-            final long startTime1 = System.nanoTime();
-            for (int i = 0; i < 1; i++) {
-                for (Map.Entry<List<List<ItemStack>>, MatterRecipe> entry : itemStackMap1.entrySet()) {
-                    List<List<ItemStack>> list = entry.getKey();
-                    final ItemStack output = entry.getValue().getStack();
-                    MatterRecipe matterRecipe = entry.getValue();
-                    if (matterRecipe.can()) {
-                        continue;
-                    }
-                    List<List<ItemStack>> list2 = new ArrayList<>();
-                    for (List<ItemStack> list1 : list) {
-                        boolean need_continue = false;
-                        for (ItemStack stack : list1) {
-                            BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("converter", false, stack);
-                            if (recipe == null) {
-                                continue;
-                            }
-                            need_continue = true;
-                            matterRecipe.addMatter(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_0") / output.getCount());
-                            matterRecipe.addSun(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_1") / output.getCount());
-                            matterRecipe.addAqua(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_2") / output.getCount());
-                            matterRecipe.addNether(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_3") / output.getCount());
-                            matterRecipe.addNight(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_4") / output.getCount());
-                            matterRecipe.addEarth(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_5") / output.getCount());
-                            matterRecipe.addEnd(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_6") / output.getCount());
-                            matterRecipe.addAer(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_7") / output.getCount());
-                            list2.add(list1);
-                            break;
-                        }
-                        if (!need_continue) {
-                            break;
-                        }
-
-                    }
-                    list.removeIf(list2::contains);
-                    if (list.isEmpty()) {
-                        matterRecipe.setCan(true);
-                        itemStackMap3.put(list, matterRecipe);
-                    }
-
-                }
-                List<MatterRecipe> matterRecipeList1 = new ArrayList<>();
-                matterRecipeList.forEach(matterRecipe1 -> {
-                    if (matterRecipe1.can()) {
-                        try {
-                            addrecipe(matterRecipe1.getStack(),
-                                    Precision.round(matterRecipe1.getMatter(), 2),
-                                    Precision.round(matterRecipe1.getSun(), 2)
-                                    ,
-                                    Precision.round(matterRecipe1.getAqua(), 2),
-                                    Precision.round(matterRecipe1.getNether(), 2),
-                                    Precision.round(matterRecipe1.getNight(), 2),
-                                    Precision.round(matterRecipe1.getEarth(), 2),
-                                    Precision.round(matterRecipe1.getEnd(), 2),
-                                    Precision.round(matterRecipe1.getAer(), 2)
-                            );
-                            matterRecipeList1.add(matterRecipe1);
-                        } catch (Exception e) {
-                        }
-                        ;
-
-                    }
-
-                });
-                matterRecipeList.removeAll(matterRecipeList1);
-                itemStackMap3.forEach((key, value) -> itemStackMap1.remove(key));
-                IUCore.LOGGER.debug("Finished  %d stage recipes for converter matter after {} ms. ", i,
-                        (System.nanoTime() - startTime) / 1000000L
-                );
-                startTime = System.nanoTime();
-            }
-
-            IUCore.LOGGER.debug("Finished adding recipes for converter matter after {} ms.", (System.nanoTime() - startTime1) / 1000000L
-            );
-            matterRecipeList.clear();
-            itemStackMap1.clear();
-            IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
-            IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
-        }
-    }
-
     public void preInit(FMLCommonSetupEvent setup) {
         new VeinSystem();
         new GasVeinSystem();
@@ -863,8 +638,8 @@ public class IUCore {
 
     @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
+        BlockEntityBase.setServerStopping(false);
         ServerLevel world = event.getServer().overworld();
-
         if (!world.isClientSide) {
             EventHandlerPlanet.data = world.getDataStorage().computeIfAbsent(WorldSavedDataIU::new, WorldSavedDataIU::new, Constants.MOD_ID);
 
@@ -873,12 +648,133 @@ public class IUCore {
 
         }
     }
+    @SubscribeEvent
+    public void updateRecipe(ServerStartingEvent event) {
+        if (!update) {
+            update = true;
 
+
+            Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
+            long startTime = System.nanoTime();
+            List<CraftingRecipe> listRecipes = event.getServer().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
+            List<MatterRecipe> matterRecipeList = new ArrayList<>();
+            IUCore.LOGGER.debug("Checking recipes {} ", listRecipes.size());
+
+
+            for (CraftingRecipe r : listRecipes) {
+                List<List<ItemStack>> itemStackList = new ArrayList<>();
+                for (Ingredient ingredient : r.getIngredients()) {
+                    List<ItemStack> itemStackList1;
+                    itemStackList1 = Arrays.asList(ingredient.getItems());
+                    if (!itemStackList1.isEmpty()) {
+                        itemStackList.add(itemStackList1);
+                    }
+                }
+                ItemStack output = ItemStack.EMPTY;
+                output = r.getResultItem(event.getServer().registryAccess());
+                if (output == ItemStack.EMPTY)
+                    continue;
+                final CompoundTag nbt = ModUtils.nbtOrNull(output);
+
+                if ((nbt != null && nbt.contains("RSControl"))) {
+                    continue;
+                }
+                if (Recipes.recipes.getRecipeOutput("converter", false, output) != null) {
+                    continue;
+                }
+                MatterRecipe matterRecipe = new MatterRecipe(r.getResultItem(event.getServer().registryAccess()));
+                matterRecipeList.add(matterRecipe);
+                itemStackMap1.put(itemStackList, matterRecipe);
+            }
+            IUCore.LOGGER.debug(
+                    "Finished checking recipes for converter matter after {} ms.",
+                    (System.nanoTime() - startTime) / 1000000L
+            );
+            startTime = System.nanoTime();
+            Map<List<List<ItemStack>>, MatterRecipe> itemStackMap3 = new HashMap<>();
+            final long startTime1 = System.nanoTime();
+            for (int i = 0; i < 1; i++) {
+                for (Map.Entry<List<List<ItemStack>>, MatterRecipe> entry : itemStackMap1.entrySet()) {
+                    List<List<ItemStack>> list = entry.getKey();
+                    final ItemStack output = entry.getValue().getStack();
+                    MatterRecipe matterRecipe = entry.getValue();
+                    if (matterRecipe.can()) {
+                        continue;
+                    }
+                    List<List<ItemStack>> list2 = new ArrayList<>();
+                    for (List<ItemStack> list1 : list) {
+                        boolean need_continue = false;
+                        for (ItemStack stack : list1) {
+                            BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("converter", false, stack);
+                            if (recipe == null) {
+                                continue;
+                            }
+                            need_continue = true;
+                            matterRecipe.addMatter(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_0") / output.getCount());
+                            matterRecipe.addSun(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_1") / output.getCount());
+                            matterRecipe.addAqua(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_2") / output.getCount());
+                            matterRecipe.addNether(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_3") / output.getCount());
+                            matterRecipe.addNight(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_4") / output.getCount());
+                            matterRecipe.addEarth(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_5") / output.getCount());
+                            matterRecipe.addEnd(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_6") / output.getCount());
+                            matterRecipe.addAer(stack.getCount() * recipe.output.metadata.getDouble("quantitysolid_7") / output.getCount());
+                            list2.add(list1);
+                            break;
+                        }
+                        if (!need_continue) {
+                            break;
+                        }
+
+                    }
+                    list.removeIf(list2::contains);
+                    if (list.isEmpty()) {
+                        matterRecipe.setCan(true);
+                        itemStackMap3.put(list, matterRecipe);
+                    }
+
+                }
+                List<MatterRecipe> matterRecipeList1 = new ArrayList<>();
+                matterRecipeList.forEach(matterRecipe1 -> {
+                    if (matterRecipe1.can()) {
+                        try {
+                            addrecipe(matterRecipe1.getStack(),
+                                    Precision.round(matterRecipe1.getMatter(), 2),
+                                    Precision.round(matterRecipe1.getSun(), 2)
+                                    ,
+                                    Precision.round(matterRecipe1.getAqua(), 2),
+                                    Precision.round(matterRecipe1.getNether(), 2),
+                                    Precision.round(matterRecipe1.getNight(), 2),
+                                    Precision.round(matterRecipe1.getEarth(), 2),
+                                    Precision.round(matterRecipe1.getEnd(), 2),
+                                    Precision.round(matterRecipe1.getAer(), 2)
+                            );
+                            matterRecipeList1.add(matterRecipe1);
+                        } catch (Exception e) {
+                        }
+                        ;
+
+                    }
+
+                });
+                matterRecipeList.removeAll(matterRecipeList1);
+                itemStackMap3.forEach((key, value) -> itemStackMap1.remove(key));
+                IUCore.LOGGER.debug("Finished  %d stage recipes for converter matter after {} ms. ", i,
+                        (System.nanoTime() - startTime) / 1000000L
+                );
+                startTime = System.nanoTime();
+            }
+
+            IUCore.LOGGER.debug("Finished adding recipes for converter matter after {} ms.", (System.nanoTime() - startTime1) / 1000000L
+            );
+            matterRecipeList.clear();
+            itemStackMap1.clear();
+            IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
+            IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
+        }
+    }
     public void registerData(Level level) {
         if (!register1) {
             register1 = true;
-
-
             ListInformationUtils.init();
             List<MultiBlockEntity> tiles = TileBlockCreator.instance.getAllTiles();
             for (MultiBlockEntity tileBlock : tiles)
@@ -889,33 +785,37 @@ public class IUCore {
                     }
                 }
 
-            CropInit.initBiomes(level.registryAccess().registryOrThrow(Registries.BIOME));
+            CropInit.initBiomes(level.getServer().registryAccess().registryOrThrow(Registries.BIOME));
             RecipeManager recipeManager = level.getRecipeManager();
+
 
             Collection<SmeltingRecipe> furnaceRecipes = recipeManager.getAllRecipesFor(RecipeType.SMELTING);
 
             for (SmeltingRecipe recipe : furnaceRecipes) {
-                ItemStack input = recipe.getIngredients().get(0).getItems()[0];
-                ItemStack output = recipe.getResultItem(null);
-                if (input.isEmpty()) {
-                    continue;
-                }
-                CompoundTag nbt = new CompoundTag();
                 try {
-                    nbt.putFloat("experience", recipe.getExperience());
-                } catch (Exception e) {
-                    nbt.putFloat("experience", 0.1F);
+                    ItemStack input = recipe.getIngredients().get(0).getItems()[0];
+                    ItemStack output = recipe.getResultItem(level.getServer().registryAccess());
+                    if (input.isEmpty()) {
+                        continue;
+                    }
+                    CompoundTag nbt = new CompoundTag();
+                    try {
+                        nbt.putFloat("experience", recipe.getExperience());
+                    } catch (Exception e) {
+                        nbt.putFloat("experience", 0.1F);
 
+                    }
+                    Recipes.recipes.addRecipe(
+                            "furnace",
+                            new BaseMachineRecipe(
+                                    new Input(
+                                            inputFactory.getInput(input)
+                                    ),
+                                    new RecipeOutput(nbt, output)
+                            )
+                    );
+                } catch (Exception e) {
                 }
-                Recipes.recipes.addRecipe(
-                        "furnace",
-                        new BaseMachineRecipe(
-                                new Input(
-                                        inputFactory.getInput(input)
-                                ),
-                                new RecipeOutput(nbt, output)
-                        )
-                );
             }
 
             if (!change) {
@@ -926,12 +826,6 @@ public class IUCore {
                 removeOre("forge:gems/Curium");
                 removeOre("forge:gems/Thorium");
                 removeOre("forge:gems/Bor");
-                removeOre("forge:ores/Coal");
-                removeOre("forge:ores/apatite");
-                removeOre("forge:raw_materials/uranium");
-                removeOre("forge:ores/Thorium");
-                removeOre("forge:ores/Redstone");
-                removeOre("forge:ores/sheelite");
                 removeOre("forge:gems/CrystalFlux");
                 removeOre("forge:gems/Beryllium");
                 addOre1(new ItemStack(Items.REDSTONE));
@@ -949,38 +843,18 @@ public class IUCore {
                 removeOre("forge:ores/Boron");
                 removeOre("forge:ores/Beryllium");
                 removeOre("forge:ores/Lithium");
-                removeOre("forge:ores/Calcium");
-                removeOre("forge:ores/Draconium");
                 removeOre("forge:ores/uranium");
                 removeOre("forge:ores/Thorium");
+                removeOre("forge:ores/Calcium");
+                removeOre("forge:ores/Coal");
+                removeOre("forge:ores/apatite");
+                removeOre("forge:raw_materials/uranium");
+                removeOre("forge:ores/Thorium");
+                removeOre("forge:ores/Redstone");
+                removeOre("forge:ores/sheelite");
+                removeOre("forge:ores/Draconium");
                 removeOre("forge:ores/netherite_scrap");
                 removeOre("forge:ores/saltpeter");
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_crushed.add(stack);
-                    }
-                }
-                this.get_comb_crushed.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack);
-                    if (recipe != null) {
-                        this.get_comb_crushed.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_comb_crushed.add(stack);
-                    }
-                }
-                get_ingot.clear();
-                for (ItemStack stack : IUCore.list) {
-                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
-                    if (recipe != null) {
-                        this.get_ingot.add(recipe.getOutput().items.get(0));
-                    } else {
-                        this.get_ingot.add(stack);
-                    }
-                }
                 IUCore.list_furnace_adding.forEach(this::addOre2);
                 IUCore.list_furnace_removing.forEach(this::removeOre2);
                 IUCore.list_adding.forEach(this::addOre1);
@@ -1040,33 +914,37 @@ public class IUCore {
                                 get_comb_crushed_quarry.add(new QuarryItem(stack));
                     }
                 });
-
-
             }
+            try {
+
+                PotionRecipes.init();
+                List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
+                for (PotionRecipes.Mix<Potion> mix : potionMixes) {
+                    Holder<Potion> from = mix.from();
+                    Ingredient ingredient = mix.ingredient();
+                    Holder<Potion> to = mix.to();
+
+                    ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
+                    ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
 
 
-            PotionRecipes.init();
-            List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
-            for (PotionRecipes.Mix<Potion> mix : potionMixes) {
-                Holder<Potion> from = mix.from();
-                Ingredient ingredient = mix.ingredient();
-                Holder<Potion> to = mix.to();
+                    Recipes.recipes.addRecipe(
+                            "brewing",
+                            new BaseMachineRecipe(
+                                    new Input(
+                                            inputFactory.getInput(inputPotion),
+                                            inputFactory.getInput(ingredient.getItems()[0])
+                                    ),
+                                    new RecipeOutput(null, outputPotion)
+                            )
+                    );
+                }
 
-                ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
-                ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
 
-
-                Recipes.recipes.addRecipe(
-                        "brewing",
-                        new BaseMachineRecipe(
-                                new Input(
-                                        inputFactory.getInput(inputPotion),
-                                        inputFactory.getInput(ingredient.getItems()[0])
-                                ),
-                                new RecipeOutput(null, outputPotion)
-                        )
-                );
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            ;
         }
     }
 
@@ -1091,14 +969,16 @@ public class IUCore {
                 iItemTab.fillItemCategory(event.getTab(), stackNonNullList);
                 stackNonNullList.forEach(event::accept);
             }
+            if (object == null || object.get() == null)
+                System.out.println(object);
         }
 
     }
-    boolean regData = false;
+
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void registerData(TickEvent.PlayerTickEvent event){
-        if (event.player.level() != null && event.player.level().isClientSide && !this.regData){
+    public void registerData(TickEvent.PlayerTickEvent event) {
+        if (event.player.level() != null && event.player.level().isClientSide && !this.regData) {
             regData = true;
             if (mechanism_info.isEmpty()) {
                 ListInformationUtils.init();
@@ -1111,24 +991,20 @@ public class IUCore {
                         }
                     }
 
-                CropInit.initBiomes(event.player.level().registryAccess().registryOrThrow(Registries.BIOME));
+
             }
         }
+        if (geneticBiomes.isEmpty() && event.player.level().isClientSide)
+            CropInit.initBiomes(event.player.level().registryAccess().registryOrThrow(Registries.BIOME));
     }
+
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) {
 
             return;
         }
-        if (!players.contains(event.getEntity().getName().getString())) {
-            players.add(event.getEntity().getName().getString());
-            for (String baseRecipe : Recipes.recipes.getMap_recipe_managers())
-                new PacketUpdateRecipe(baseRecipe, false, (ServerPlayer) event.getEntity());
-            for (String baseRecipe : Recipes.recipes.getRecipeFluid().getRecipes())
-                new PacketUpdateRecipe(baseRecipe, true, (ServerPlayer) event.getEntity());
-            new PacketFixerRecipe((ServerPlayer) event.getEntity());
-        }
+
         if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())) {
             GuideBookCore.instance.load(event.getEntity().getUUID(), event.getEntity());
             event.getEntity().addItem(new ItemStack(IUItem.book.getItem()));
@@ -1141,212 +1017,51 @@ public class IUCore {
         new PacketUpdateRelocator(event.getEntity());
 
     }
+    @SubscribeEvent
+    public void onReloadCommand(CommandEvent event) {
+        String command = event.getParseResults().getReader().getString();
+
+        if (command == null) {
+            return;
+        }
+
+        command = command.trim();
+
+        if (!command.equals("reload") && !command.equals("minecraft:reload")) {
+            return;
+        }
+
+        CommandSourceStack source = event.getParseResults().getContext().getSource();
+
+        source.sendSuccess(
+                () -> Component.translatable("iu.reload.restart_required")
+                        .withStyle(ChatFormatting.YELLOW),
+                false
+        );
+    }
+    @SubscribeEvent
+    public void datapackSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() == null) {
+            LOGGER.debug("[IU reload] Skipping Industrial Upgrade recipe packet resend during datapack reload.");
+            return;
+        }
+
+        if (!event.getPlayer().level().isClientSide && IUCore.network.getClient() == null && IUCore.network.getServer() != null) {
+            if (!players.contains(event.getPlayer().getName().getString())) {
+                players.add(event.getPlayer().getName().getString());
+                for (String baseRecipe : Recipes.recipes.getMap_recipe_managers())
+                    new PacketUpdateRecipe(baseRecipe, false, event.getPlayer());
+                for (String baseRecipe : Recipes.recipes.getRecipeFluid().getRecipes())
+                    new PacketUpdateRecipe(baseRecipe, true, event.getPlayer());
+                new PacketFixerRecipe(event.getPlayer());
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartedEvent event) {
         registerData(event.getServer().overworld());
-
     }
-    public static boolean updateRecipe = false;
-
-    @SubscribeEvent
-    public void getore(RecipesUpdatedEvent event) {
-        if (!updateRecipe) {
-            updateRecipe = true;
-            SpaceInit.jsonInit();
-
-            Recipes.recipes.removeAllRecipesFromList();
-            Recipes.recipes.addAllRecipesFromList();
-            if (!change) {
-                change = true;
-                removeOre("c:gems/Iridium");
-                removeOre("c:gems/Americium");
-                removeOre("c:gems/Neptunium");
-
-                removeOre("c:ores/Redstone");
-                removeOre("c:gems/Curium");
-                removeOre("c:gems/Thorium");
-                removeOre("c:gems/Bor");
-                removeOre("c:gems/CrystalFlux");
-                removeOre("c:gems/Beryllium");
-                removeOre("c:ores/Coal");
-                removeOre("c:ores/sheelite");
-                addOre1(new ItemStack(Items.REDSTONE));
-                addOre1(new ItemStack(Items.COAL));
-                for (String name : RegisterOreDictionary.list_heavyore) {
-                    removeOre("c:ores/" + name);
-                }
-                for (String name : RegisterOreDictionary.list_mineral) {
-                    removeOre("c:ores/" + name);
-                }
-                for (String name : RegisterOreDictionary.spaceElementList) {
-                    removeOre("c:ores/" + name);
-                }
-
-                removeOre("c:ores/apatite");
-                removeOre("c:ores/uranium");
-                removeOre("c:ores/Thorium");
-                removeOre("c:ores/Sulfur");
-                removeOre("c:ores/Boron");
-                removeOre("c:ores/Beryllium");
-                removeOre("c:ores/Lithium");
-                removeOre("c:ores/Calcium");
-                removeOre("c:ores/Draconium");
-                removeOre("c:ores/netherite_scrap");
-                removeOre("c:ores/saltpeter");
-                IUCore.list_furnace_adding.forEach(this::addOre2);
-                IUCore.list_furnace_removing.forEach(this::removeOre2);
-                IUCore.list_adding.forEach(this::addOre1);
-                IUCore.list_removing.forEach(this::removeOre);
-                IUCore.list_comb_crushed_adding.forEach(this::addOre4);
-                IUCore.list_comb_crushed_removing.forEach(this::removeOre4);
-                IUCore.list_crushed_adding.forEach(this::addOre3);
-                IUCore.list_crushed_removing.forEach(this::removeOre3);
-                IUCore.list.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack.getItemStack().get(0)));
-                IUCore.get_ingot.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-
-                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack.getItemStack().get(0)));
-                IUCore.get_comb_crushed.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack.getItemStack().get(0)));
-                IUCore.get_crushed.forEach(stack -> {
-
-                    get_all_list.add(new RecipeInputStack(stack));
-                });
-
-                IUCore.get_crushed.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        get_crushed_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                IUCore.get_polisher.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_polisher_quarry.add(new QuarryItem(stack));
-                    }
-                });
-
-                IUCore.list.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                list_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                IUCore.get_ingot.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_ingot_quarry.add(new QuarryItem(stack));
-                    }
-                });
-                IUCore.get_comb_crushed.forEach(stack -> {
-                    if (!stack.isEmpty()) {
-                        this.
-                                get_comb_crushed_quarry.add(new QuarryItem(stack));
-                    }
-                });
-            }
-        }
-    }
-    @SubscribeEvent
-    public void getore(TagsUpdatedEvent event) {
-        if (!register) {
-            register = true;
-            Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation("forge", "ores")));
-            MaceratorRecipe.recipe();
-            CompressorRecipe.recipe();
-            ExtractorRecipe.init();
-            OreWashingRecipe.init();
-            ReplicatorRecipe.init();
-            CentrifugeRecipe.init();
-            MetalFormerRecipe.init();
-            BlockEntityPalletGenerator.init();
-            BlockEntitySolidCooling.init();
-            if (IUCore.network.getClient() == null) {
-                SpaceInit.jsonInit();
-                Recipes.recipes.removeAllRecipesFromList();
-                Recipes.recipes.addAllRecipesFromList();
-            }
-            BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
-            IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
-            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-            for (int i = 0; i < 8; i++) {
-                Recipes.recipes.addRecipe(
-                        "matter",
-                        new BaseMachineRecipe(
-                                new Input(
-                                        input.getInput(new ItemStack(IUItem.matter.getStack(i), 1))
-                                ),
-                                new RecipeOutput(null, new ItemStack(IUItem.matter.getStack(i), 1))
-                        )
-                );
-            }
-            new ScrapboxRecipeManager();
-            Recipes.recipes.initializationRecipes();
-            for (Holder<Item> holder : tagOres) {
-                get_ore.add(new ItemStack(holder));
-                Item item = holder.value();
-
-                List<TagKey<Item>> list1 = item.builtInRegistryHolder().tags().toList();
-                for (TagKey<Item> tagKey : list1) {
-                    ResourceLocation resourceLocation = tagKey.location();
-                    if (resourceLocation.getNamespace().equals("forge") && resourceLocation.getPath().startsWith("ores/")) {
-                        String name = resourceLocation.getPath();
-                        StringBuilder pathBuilder = new StringBuilder(name);
-                        String targetString = "ores/";
-                        String replacement = "";
-                        if (replacement != null) {
-                            int index = pathBuilder.indexOf(targetString);
-                            while (index != -1) {
-                                pathBuilder.replace(index, index + targetString.length(), replacement);
-                                index = pathBuilder.indexOf(targetString, index + replacement.length());
-                            }
-                        }
-                        name = pathBuilder.toString();
-                        if (stringList.contains(name))
-                            continue;
-                        TagKey<Item> tag = ItemTags.create(new ResourceLocation("forge", "gems/" + name));
-                        List<Holder<Item>> gemList = new ArrayList<>();
-                        BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(gemList::add);
-                        TagKey<Item> tag1 = ItemTags.create(new ResourceLocation("forge", "raw_materials/" + name));
-                        List<Holder<Item>> rawList = new ArrayList<>();
-                        BuiltInRegistries.ITEM.getTagOrEmpty(tag1).forEach(rawList::add);
-                        if (!gemList.isEmpty()) {
-                            if (!stringList.contains(name)) {
-                                list.add(new ItemStack(gemList.get(0).get()));
-                                stringList.add(name);
-                                break;
-                            }
-
-                        } else {
-                            if (!rawList.isEmpty()) {
-                                if (!stringList.contains(name)) {
-                                    list.add(new ItemStack(rawList.get(0).get()));
-                                    stringList.add(name);
-                                    break;
-                                }
-                            } else if (!stringList.contains(name)) {
-                                list.add(new ItemStack(item));
-                                stringList.add(name);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-
-        }
-    }
-
     public void removeOre(String name) {
         List<ItemStack> input = inputFactory.getInput(name).getInputs();
         if (!input.isEmpty()) {
@@ -1384,6 +1099,219 @@ public class IUCore {
 
     public void removeOre4(ItemStack name) {
         get_comb_crushed.removeIf(stack -> stack.is(name.getItem()));
+    }
+
+    @SubscribeEvent
+    public void getore(RecipesUpdatedEvent event) {
+        if (!updateRecipe) {
+            updateRecipe = true;
+
+
+            if (!change) {
+                change = true;
+                removeOre("forge:gems/Iridium");
+                removeOre("forge:gems/Americium");
+                removeOre("forge:gems/Neptunium");
+
+                removeOre("forge:ores/Redstone");
+                removeOre("forge:gems/Curium");
+                removeOre("forge:gems/Thorium");
+                removeOre("forge:gems/Bor");
+                removeOre("forge:gems/CrystalFlux");
+                removeOre("forge:gems/Beryllium");
+                removeOre("forge:ores/Coal");
+                removeOre("forge:ores/sheelite");
+                addOre1(new ItemStack(Items.REDSTONE));
+                addOre1(new ItemStack(Items.COAL));
+                for (String name : RegisterOreDictionary.list_heavyore) {
+                    removeOre("forge:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.list_mineral) {
+                    removeOre("forge:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.spaceElementList) {
+                    removeOre("forge:ores/" + name);
+                }
+
+                removeOre("forge:ores/apatite");
+                removeOre("forge:ores/uranium");
+                removeOre("forge:ores/Thorium");
+                removeOre("forge:ores/Sulfur");
+                removeOre("forge:ores/Boron");
+                removeOre("forge:ores/Beryllium");
+                removeOre("forge:ores/Lithium");
+                removeOre("forge:ores/Calcium");
+                removeOre("forge:ores/Draconium");
+                removeOre("forge:ores/netherite_scrap");
+                removeOre("forge:ores/saltpeter");
+                IUCore.list_furnace_adding.forEach(this::addOre2);
+                IUCore.list_furnace_removing.forEach(this::removeOre2);
+                IUCore.list_adding.forEach(this::addOre1);
+                IUCore.list_removing.forEach(this::removeOre);
+                IUCore.list_comb_crushed_adding.forEach(this::addOre4);
+                IUCore.list_comb_crushed_removing.forEach(this::removeOre4);
+                IUCore.list_crushed_adding.forEach(this::addOre3);
+                IUCore.list_crushed_removing.forEach(this::removeOre3);
+                IUCore.list.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack.getItemStack().get(0)));
+                IUCore.get_ingot.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack.getItemStack().get(0)));
+                IUCore.get_comb_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack.getItemStack().get(0)));
+                IUCore.get_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                IUCore.get_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        get_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_polisher.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_polisher_quarry.add(new QuarryItem(stack));
+                    }
+                });
+
+                IUCore.list.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                list_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_ingot.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_ingot_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_comb_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_comb_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+            }
+        }
+    }
+
+    private static boolean shouldRunTagBootstrap(TagsUpdatedEvent event) {
+        if (event.getUpdateCause() != TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+            return false;
+        }
+
+        synchronized (IUCore.class) {
+            if (register) {
+                LOGGER.info("[IU reload] Skipping Industrial Upgrade tag/bootstrap rebuild during datapack reload.");
+                return false;
+            }
+
+            register = true;
+            return true;
+        }
+    }
+
+    @SubscribeEvent
+    public void getore(TagsUpdatedEvent event) {
+        if (!shouldRunTagBootstrap(event)) {
+            return;
+        }
+
+        Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation("forge", "ores")));
+        MaceratorRecipe.recipe();
+        CompressorRecipe.recipe();
+        ExtractorRecipe.init();
+        OreWashingRecipe.init();
+        ReplicatorRecipe.init();
+        CentrifugeRecipe.init();
+        MetalFormerRecipe.init();
+        BlockEntityPalletGenerator.init();
+        BlockEntitySolidCooling.init();
+        SpaceInit.init();
+        SpaceInit.jsonInit();
+        Recipes.recipes.removeAllRecipesFromList();
+        Recipes.recipes.addAllRecipesFromList();
+        BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
+        IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
+        new ScrapboxRecipeManager();
+        Recipes.recipes.initializationRecipes();
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        for (int i = 0; i < 8; i++) {
+            Recipes.recipes.addRecipe(
+                    "matter",
+                    new BaseMachineRecipe(
+                            new Input(
+                                    input.getInput(new ItemStack(IUItem.matter.getStack(i), 1))
+                            ),
+                            new RecipeOutput(null, new ItemStack(IUItem.matter.getStack(i), 1))
+                    )
+            );
+        }
+        for (Holder<Item> holder : tagOres) {
+            get_ore.add(new ItemStack(holder));
+            Item item = holder.value();
+
+            List<TagKey<Item>> list1 = item.builtInRegistryHolder().tags().toList();
+            for (TagKey<Item> tagKey : list1) {
+                ResourceLocation resourceLocation = tagKey.location();
+                if (resourceLocation.getNamespace().equals("forge") && resourceLocation.getPath().startsWith("ores/")) {
+                    String name = resourceLocation.getPath();
+                    StringBuilder pathBuilder = new StringBuilder(name);
+                    String targetString = "ores/";
+                    String replacement = "";
+                    if (replacement != null) {
+                        int index = pathBuilder.indexOf(targetString);
+                        while (index != -1) {
+                            pathBuilder.replace(index, index + targetString.length(), replacement);
+                            index = pathBuilder.indexOf(targetString, index + replacement.length());
+                        }
+                    }
+                    name = pathBuilder.toString();
+                    if (stringList.contains(name))
+                        continue;
+                    TagKey<Item> tag = ItemTags.create(new ResourceLocation("forge", "gems/" + name));
+                    List<Holder<Item>> gemList = new ArrayList<>();
+                    BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(gemList::add);
+                    TagKey<Item> tag1 = ItemTags.create(new ResourceLocation("forge", "raw_materials/" + name));
+                    List<Holder<Item>> rawList = new ArrayList<>();
+                    BuiltInRegistries.ITEM.getTagOrEmpty(tag1).forEach(rawList::add);
+                    if (!gemList.isEmpty()) {
+                        if (!stringList.contains(name)) {
+                            list.add(new ItemStack(gemList.get(0).get()));
+                            stringList.add(name);
+                            break;
+                        }
+
+                    } else {
+                        if (!rawList.isEmpty()) {
+                            if (!stringList.contains(name)) {
+                                list.add(new ItemStack(rawList.get(0).get()));
+                                stringList.add(name);
+                                break;
+                            }
+                        } else if (!stringList.contains(name)) {
+                            list.add(new ItemStack(item));
+                            stringList.add(name);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 
     @SubscribeEvent

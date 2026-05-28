@@ -21,4 +21,6 @@ public interface ILocalNet {
 
     List<Path> getPaths(final IAcceptor par1);
 
+    List<Path> getPaths(final ISource par1);
+
 }

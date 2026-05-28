@@ -3,19 +3,28 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:plates/iron"
+      "item": "industrialupgrade:wiring_storage/bar_mfsu"
     },
     "B": {
-      "tag": "forge:plates/lapis"
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/neucore"
     }
   },
   "pattern": [
-    "A A",
-    "B B",
-    "A A"
+    "CBC",
+    "DAD",
+    "CBC"
   ],
   "result": {
-    "item": "industrialupgrade:electronic_stabilizers"
+    "item": "industrialupgrade:wiring_storage/had_mfsu"
   },
   "show_notification": true
 }

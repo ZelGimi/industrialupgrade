@@ -3,25 +3,23 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:wiring/copper"
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
     },
     "B": {
-      "item": "industrialupgrade:transformer_iu/mv"
-    },
-    "C": {
-      "item": "industrialupgrade:circuit/nanocircuit_part2"
+      "tag": "forge:casings/osmiridium"
     },
     "D": {
-      "item": "industrialupgrade:wiring_storage/cesu_iu"
+      "item": "industrialupgrade:crafting_elements/crafting_650_element"
     }
   },
   "pattern": [
     "ABA",
-    "CDC",
-    "ABA"
+    "D D",
+    "BBB"
   ],
   "result": {
-    "item": "powerutils:module_ic"
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_21_element"
   },
   "show_notification": true
 }

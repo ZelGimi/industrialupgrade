@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 4,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidiodine",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "crystal_outcrop",
+    "max_height": 14,
+    "max_radius": 2,
+    "min_height": 5,
+    "min_radius": 1,
+    "primary": {
+      "Name": "industrialupgrade:blockspace4/triton_neodymium"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacestone1/triton_stone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone1/triton_cobblestone"
+    }
+  }
+}

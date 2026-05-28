@@ -14,7 +14,7 @@ public class TradeBuilder {
     private ItemStack second = ItemStack.EMPTY;
     private ItemStack first = ItemStack.EMPTY;
 
-    //  MerchantOffers
+
     public TradeBuilder(ItemStack stack) {
         this.result = stack;
     }

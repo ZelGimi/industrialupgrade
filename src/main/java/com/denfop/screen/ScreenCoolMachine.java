@@ -71,7 +71,7 @@ public class ScreenCoolMachine<T extends ContainerMenuCoolMachine> extends Scree
         ));
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.cool_storage.info_main"));

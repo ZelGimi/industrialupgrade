@@ -1,0 +1,57 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 328968,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:space/neptune/stone_tunnels",
+      "industrialupgrade:space/neptune/hall_system",
+      "industrialupgrade:space/neptune/fractures",
+      "industrialupgrade:space/neptune/porous",
+      "industrialupgrade:space/neptune/tunnel_caves",
+      "industrialupgrade:space/neptune/labyrinth_caves",
+      "industrialupgrade:space/neptune/shaft_caves",
+      "industrialupgrade:space/neptune/dome_caves",
+      "industrialupgrade:space/neptune/multi_tier_caves",
+      "industrialupgrade:space/neptune/branched_caves",
+      "industrialupgrade:space/neptune/spiral_caves",
+      "industrialupgrade:space/neptune/arch_caves",
+      "industrialupgrade:space/neptune/chamber_caves",
+      "industrialupgrade:space/neptune/pocket_caves",
+      "industrialupgrade:space/neptune/crevice_caves",
+      "industrialupgrade:space/neptune/amphitheater_caves",
+      "industrialupgrade:space/neptune/cathedral_caves",
+      "industrialupgrade:space/neptune/gallery_caves",
+      "industrialupgrade:space/neptune/winding_caves",
+      "industrialupgrade:space/neptune/collapse_caves"
+    ],
+    [],
+    [
+      "industrialupgrade:space/neptune/addition_craters"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

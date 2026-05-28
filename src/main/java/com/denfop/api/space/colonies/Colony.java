@@ -23,6 +23,9 @@ public class Colony implements IColony {
 
     private final IBody body;
     byte tick = 0;
+    short availableItem = 0;
+    short availableFluid = 0;
+    byte seconds = 60;
     private UUID fakeplayer;
     private List<IColonyBuilding> list;
     private List<IBuildingHouse> buildingHouseList;
@@ -62,7 +65,7 @@ public class Colony implements IColony {
     private byte timeResetOxygen;
     private boolean auto;
     private byte timeWork = 0;
-    private short timeToSend = 300;
+    private short timeToSend = 0;
 
     public Colony(IBody body, UUID player) {
         this.body = body;
@@ -354,6 +357,40 @@ public class Colony implements IColony {
     }
 
     @Override
+    public short getMaxAvailableFluid() {
+        return (short) ((short) (Math.abs(this.level / 2)) * 50);
+    }
+
+    @Override
+    public short getMaxAvailableItem() {
+        return (short) (Math.abs(this.level / 2));
+    }
+
+    @Override
+    public short getAvailableFluid() {
+        return availableFluid;
+    }
+
+    @Override
+    public short getAvailableItem() {
+        return availableItem;
+    }
+
+    @Override
+    public void removeAvailableFluid(int amount) {
+        availableFluid -= amount;
+        if (availableFluid < 0)
+            availableFluid = 0;
+    }
+
+    @Override
+    public void removeAvailableItem(int amount) {
+        availableItem -= amount;
+        if (availableItem < 0)
+            availableItem = 0;
+    }
+
+    @Override
     public void update() {
         if (!this.enumProblemsList.isEmpty()) {
             if (toDelete > 0 && this.workers == 0) {
@@ -379,6 +416,12 @@ public class Colony implements IColony {
         tick++;
         if (this.tick > 10) {
             this.tick = 0;
+        }
+        seconds--;
+        if (seconds < 0) {
+            this.availableItem = this.getMaxAvailableItem();
+            this.availableFluid = this.getMaxAvailableFluid();
+            seconds = 60;
         }
         if (this.auto) {
             this.timeToSend--;

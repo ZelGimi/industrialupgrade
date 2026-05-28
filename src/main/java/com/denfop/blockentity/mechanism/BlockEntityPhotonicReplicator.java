@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -12,7 +14,7 @@ public class BlockEntityPhotonicReplicator extends BlockEntityBaseReplicator {
 
 
     public BlockEntityPhotonicReplicator(BlockPos pos, BlockState state) {
-        super(0.7, BlocksPhotonicMachine.photonic_replicator, pos, state);
+        super(ModConfig.mechanismDouble("photonic_replicator_efficiency", 0.7D), BlocksPhotonicMachine.photonic_replicator, pos, state);
     }
 
     @Override

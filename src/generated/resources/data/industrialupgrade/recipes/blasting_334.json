@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:alloydust/superalloy_haynes"
+  },
+  "result": "industrialupgrade:alloyingot/superalloy_haynes"
+}

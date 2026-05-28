@@ -44,7 +44,7 @@ public class ScreenElectronicsAssemble<T extends ContainerMenuElectronicsAssembl
         hover = par1 >= 7 && par2 >= 62 && par1 <= 18 && par2 <= 73;
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("electronics_assembler.info"));

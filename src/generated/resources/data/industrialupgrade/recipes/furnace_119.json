@@ -2,9 +2,9 @@
   "type": "minecraft:smelting",
   "category": "misc",
   "cookingtime": 200,
-  "experience": 0.6,
+  "experience": 5.0,
   "ingredient": {
-    "item": "industrialupgrade:raw_metals/raw_chromium"
+    "item": "industrialupgrade:blockspace3/moon_tin_ore"
   },
-  "result": "industrialupgrade:itemingots/chromium_ingot"
+  "result": "industrialupgrade:itemingots/tin_ingot"
 }

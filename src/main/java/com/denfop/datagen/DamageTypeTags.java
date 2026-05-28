@@ -15,7 +15,7 @@ public class DamageTypeTags extends DamageTypeTagsProvider {
     }
 
     protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR).add(DamageTypes.radiationObject, DamageTypes.beeObject, DamageTypes.currentObject, DamageTypes.frostbiteObject, DamageTypes.poison_gasObject);
+        this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR).add(DamageTypes.beeObject, DamageTypes.currentObject, DamageTypes.frostbiteObject, DamageTypes.poison_gasObject);
         this.tag(net.minecraft.tags.DamageTypeTags.IS_FIRE).add(DamageTypes.radiationObject);
     }
 }

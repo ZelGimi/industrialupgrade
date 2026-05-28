@@ -10,15 +10,12 @@
     },
     "C": {
       "item": "industrialupgrade:alloyplate/alcled"
-    },
-    "D": {
-      "item": "industrialupgrade:crafting_elements/crafting_20_element"
     }
   },
   "pattern": [
     "CCC",
     "ABA",
-    " D "
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:antiairpollution"

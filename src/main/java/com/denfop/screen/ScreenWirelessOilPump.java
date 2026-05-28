@@ -22,14 +22,16 @@ public class ScreenWirelessOilPump<T extends ContainerMenuWirelessOilPump> exten
     public ScreenWirelessOilPump(ContainerMenuWirelessOilPump guiContainer) {
         super(guiContainer);
         this.stack = new ItemStack(IUItem.oilblock.getItem());
-        this.addWidget(TankWidget.createNormal(this, this.imageWidth / 2 - 10, 20, (guiContainer.base).fluidTank));
+        this.addComponent(TankWidget.createNormal(this, this.imageWidth / 2 - 10, 20, (guiContainer.base).fluidTank));
         this.addComponent(new ScreenWidget(this, 10, (this.imageHeight - 80) / 2,
                 EnumTypeComponent.ENERGY_WEIGHT,
                 new WidgetDefault<>((this.container.base).energy)
         ));
+        this.addWidget(new ImageInterfaceWidget(this, 0, 0, imageWidth, imageHeight));
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.wireless_oil_vein.info"));
@@ -59,8 +61,14 @@ public class ScreenWirelessOilPump<T extends ContainerMenuWirelessOilPump> exten
                 int col = vein.getCol();
                 int colmax = vein.getMaxCol();
                 boolean isOil = vein.getType() == Type.OIL;
-                String name_vein;
-                name_vein = Localization.translate("iu.fluidneft");
+                int variety = vein.getMeta() / 3;
+                int type = vein.getMeta() % 3;
+                String varietyString = variety == 0 ? "iu.sweet_oil" : "iu.sour_oil";
+                String typeString = type == 0 ? "iu.light_oil" : type == 1 ? "iu.medium_oil" : "iu.heavy_oil";
+                String name_vein = Localization.translate(varietyString) + " " + Localization.translate(
+                        typeString) + " " + Localization.translate(new ItemStack(IUItem.oilblock.getItem()).getDescriptionId());
+
+
                 new TooltipWidget(this, 130, 8 + i * 18, 18, 18)
                         .withTooltip(name_vein + " " + col + (isOil ? "mb" : "") + "/" + colmax + (
                                 isOil
@@ -83,6 +91,7 @@ public class ScreenWirelessOilPump<T extends ContainerMenuWirelessOilPump> exten
         }
         bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+
     }
 
     public ResourceLocation getTexture() {

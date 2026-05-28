@@ -24,8 +24,8 @@ public class IUPotion extends MobEffect {
     }
 
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        int rate = 25 >> amplifier;
-        return rate == 0 || duration % rate == 0;
+
+        return true;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class IUPotion extends MobEffect {
     }
 
     public void applyEffect(LivingEntity entityLiving, int radiationDuration) {
-        MobEffectInstance effect = new MobEffectInstance(this, radiationDuration);
+        MobEffectInstance effect = new MobEffectInstance(this, radiationDuration, 1);
         entityLiving.addEffect(effect);
     }
 }

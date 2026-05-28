@@ -41,7 +41,6 @@ public class InventoryQuantumQuarry extends Inventory implements ITypeSlot {
                 this.tile.furnace = false;
                 this.tile.main_list = new ArrayList<>(IUCore.list_quarry);
                 if (!this.isEmpty()) {
-                    ItemStack type1 = this.get(0);
                     EnumQuarryModules module = EnumQuarryModules.getFromID(IUItem.module9.getMeta(this.get(0)));
                     EnumQuarryType type = module.type;
 
@@ -77,6 +76,9 @@ public class InventoryQuantumQuarry extends Inventory implements ITypeSlot {
                             this.tile.main_list = new ArrayList<>(IUCore.get_polisher_quarry);
                             this.tile.original = false;
                             break;
+                        case WHITELIST:
+                        case BLACKLIST:
+
                     }
                     this.tile.consume = this.tile.energyconsume * (1 + module.cost);
                     this.tile.main_list.removeIf(stack -> this.tile.list(this.tile.list_modules, stack));

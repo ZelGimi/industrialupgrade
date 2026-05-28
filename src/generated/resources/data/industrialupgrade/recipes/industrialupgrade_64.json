@@ -3,37 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_511_element"
+      "tag": "forge:ingots/vitalium"
     },
     "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_514_element"
+      "tag": "forge:ingots/ferromanganese"
     },
     "C": {
-      "tag": "forge:doubleplate/muntsa"
+      "tag": "forge:doubleplate/mikhail"
     },
     "D": {
-      "item": "industrialupgrade:energy_tools/nanoaxe"
-    },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
-    },
-    "F": {
-      "item": "industrialupgrade:crafting_elements/crafting_516_element"
-    },
-    "H": {
-      "tag": "forge:rods/electrum"
+      "item": "industrialupgrade:battery/advanced_re_battery"
     }
   },
   "pattern": [
-    "ADB",
-    "EFE",
-    "CHC"
+    "A B",
+    "CDC",
+    " C "
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/quantumaxe"
+    "item": "industrialupgrade:energy/magnet"
   },
   "show_notification": true
 }

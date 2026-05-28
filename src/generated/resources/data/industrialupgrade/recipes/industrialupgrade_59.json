@@ -3,25 +3,28 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:transformer_iu/umv"
+      "item": "industrialupgrade:compressed_redstone"
     },
     "B": {
-      "item": "industrialupgrade:extreme_current_converter_to_low"
+      "item": "industrialupgrade:electronic_stabilizers"
     },
     "C": {
-      "item": "industrialupgrade:upgrade_casing"
+      "item": "industrialupgrade:graphene_wire"
     },
     "D": {
-      "item": "industrialupgrade:wiring/gold1"
+      "item": "industrialupgrade:crafting_elements/crafting_96_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_592_element"
     }
   },
   "pattern": [
     " A ",
-    "DBD",
-    " C "
+    "BDB",
+    "CEC"
   ],
   "result": {
-    "item": "industrialupgrade:upgrades/transformerupgrade2"
+    "item": "industrialupgrade:imp_motors_with_improved_bearings_"
   },
   "show_notification": true
 }

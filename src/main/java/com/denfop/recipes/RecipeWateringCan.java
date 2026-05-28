@@ -1,6 +1,5 @@
 package com.denfop.recipes;
 
-import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.wateringcan.WateringCan;
 import net.minecraft.world.item.ItemStack;

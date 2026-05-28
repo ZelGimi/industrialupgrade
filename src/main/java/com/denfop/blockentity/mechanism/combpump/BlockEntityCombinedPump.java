@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.combpump;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.otherenergies.common.EnergyType;
@@ -64,7 +66,7 @@ public class BlockEntityCombinedPump extends BlockEntityElectricLiquidTankInvent
     boolean canWork = true;
 
     public BlockEntityCombinedPump(int size, int operationLength, EnumTypePump typePump, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(0, 0, size, block, pos, state);
+        super(ModConfig.mechanismDouble("combined_pump_energy_storage", 0.0D), 0, size, block, pos, state);
         this.containerSlot = new InventoryFluid(
                 this,
                 Inventory.TypeItemSlot.INPUT,
@@ -142,14 +144,14 @@ public class BlockEntityCombinedPump extends BlockEntityElectricLiquidTankInvent
                 this.energyQe.useEnergy(energyConsume);
             } else {
                 for (int i = 0; i < operationsPerTick; i++) {
-                    if (x < this.getBlockPos().getX() + this.typePump.getXz()) {
+                    if (x < this.getPos().getX() + this.typePump.getXz()) {
                         x++;
-                    } else if (z < this.getBlockPos().getZ() + this.typePump.getXz()) {
+                    } else if (z < this.getPos().getZ() + this.typePump.getXz()) {
                         z++;
-                        x = this.getBlockPos().getX();
-                    } else if (y >= this.getBlockPos().getY() - this.typePump.getY()) {
-                        z = this.getBlockPos().getZ();
-                        x = this.getBlockPos().getX();
+                        x = this.getPos().getX();
+                    } else if (y >= this.getPos().getY() - this.typePump.getY()) {
+                        z = this.getPos().getZ();
+                        x = this.getPos().getX();
                         y--;
                     } else {
                         canWork = false;

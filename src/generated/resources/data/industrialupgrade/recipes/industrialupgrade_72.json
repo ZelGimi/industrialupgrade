@@ -3,25 +3,31 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:energy_tools/vajra"
+      "item": "industrialupgrade:crafting_elements/crafting_515_element"
     },
     "B": {
-      "item": "industrialupgrade:energy_tools/ultddrill"
+      "item": "industrialupgrade:crafting_elements/crafting_512_element"
     },
     "C": {
-      "tag": "forge:plates/nimonic"
+      "tag": "forge:doubleplate/muntsa"
     },
     "D": {
-      "tag": "forge:plates/superalloyrene"
+      "item": "industrialupgrade:energy_tools/nanopickaxe"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_516_element"
+    },
+    "H": {
+      "tag": "forge:rods/electrum"
     }
   },
   "pattern": [
-    "CAC",
-    "DBD",
-    "   "
+    "BDA",
+    "CFC",
+    "CHC"
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/ult_vajra"
+    "item": "industrialupgrade:energy_tools/quantumpickaxe"
   },
   "show_notification": true
 }

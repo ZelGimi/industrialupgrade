@@ -30,11 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -52,7 +47,9 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
     public int progress;
     public MachineRecipe output;
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
-
+    ItemStack prevInput = ItemStack.EMPTY;
+    ItemStack prevInput1 = ItemStack.EMPTY;
+    ItemStack prevOutput = ItemStack.EMPTY;
     public BlockEntityPrimalWireInsulator(BlockPos pos, BlockState state) {
         super(BlockPrimalWireInsulatorEntity.primal_wire_insulator, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "wire_insulator", this) {
@@ -70,16 +67,61 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
             public int getStackSizeLimit() {
                 return 1;
             }
+
+
         };
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
-    }
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (prevInput.isEmpty() && !this.inputSlotA.get(0).isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (prevInput1.isEmpty() && !this.inputSlotA.get(1).isEmpty()) {
+            prevInput1 = this.inputSlotA.get(1);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (!prevInput1.isEmpty() && !this.inputSlotA.get(1).isEmpty() && prevInput1.getCount() != this.inputSlotA.get(1).getCount()) {
+            prevInput1 = this.inputSlotA.get(1);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (!prevInput1.isEmpty() && !prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            prevInput1 = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+            changeState();
+        }
+        if (!prevInput1.isEmpty() && !prevInput.isEmpty() && !this.inputSlotA.isEmpty() && output == null) {
+            output = inputSlotA.process();
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+            changeState();
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty() && prevOutput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+            changeState();
+        }
+        if (!prevOutput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevOutput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot2", false);
+            changeState();
+        }
 
+
+    }
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {

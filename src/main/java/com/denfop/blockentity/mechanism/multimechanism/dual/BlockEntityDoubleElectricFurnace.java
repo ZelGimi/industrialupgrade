@@ -1,6 +1,8 @@
 package com.denfop.blockentity.mechanism.multimechanism.dual;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -22,8 +24,8 @@ public class BlockEntityDoubleElectricFurnace extends BlockEntityMultiMachine {
                 EnumMultiMachine.DOUBLE_ELECTRIC_FURNACE.usagePerTick,
                 EnumMultiMachine.DOUBLE_ELECTRIC_FURNACE.lenghtOperation, BlockMoreMachineEntity.double_furnace, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("double_electric_furnace_soil_pollution_amount", 0.075D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("double_electric_furnace_air_pollution_amount", 0.1D)));
     }
 
     public MultiBlockEntity getTeBlock() {

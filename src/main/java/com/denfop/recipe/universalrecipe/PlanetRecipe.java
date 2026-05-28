@@ -2,8 +2,6 @@ package com.denfop.recipe.universalrecipe;
 
 import com.denfop.api.space.EnumLevels;
 import com.denfop.api.space.EnumType;
-import com.denfop.api.space.IStar;
-import com.denfop.api.space.ISystem;
 import com.denfop.register.Register;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -13,8 +11,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
 
 public class PlanetRecipe implements Recipe<Container> {
     public final ResourceLocation id;
@@ -81,8 +77,6 @@ public class PlanetRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
-
 
 
     @Override

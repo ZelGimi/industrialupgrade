@@ -54,7 +54,9 @@ public enum EnumInfoUpgradeModules {
     PURIFIER(1, "purifier_module"),  //44
     LATEX(1, "latex"),  //45
     WRENCH(1, "wrench"),  //46
-    ;
+    OXYGEN(1, "oxygen"),
+    THERMAL(4, "thermal"),
+    PRESSURE(1, "pressure");
     public final int max;
     public final String name;
     public final List<Integer> list;

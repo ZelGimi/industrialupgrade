@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.things.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -63,28 +65,50 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
     private ChunkPos chunkpos;
 
     public BlockEntityAirCollector(BlockPos pos, BlockState state) {
-        super(5000, 1, 3, BlockBaseMachine3Entity.aircollector, pos, state);
+        super(ModConfig.mechanismDouble("air_separation_unit_energy_storage", 5000.0D), 1, 3, BlockBaseMachine3Entity.aircollector, pos, state);
         this.fluidTank = new FluidTank[3];
         this.fluids = this.addComponent(new Fluids(this));
-        Fluid[] name1 = new Fluid[]{FluidName.fluidnitrogen.getInstance().get(), FluidName.fluidoxygen.getInstance().get(),
-                FluidName.fluidcarbondioxide.getInstance().get()};
-        for (int i = 0; i < fluidTank.length; i++) {
+        Fluid[] name1 = new Fluid[]{
+                FluidName.fluidnitrogen.getInstance().get(),
+                FluidName.fluidoxygen.getInstance().get(),
+                FluidName.fluidcarbondioxide.getInstance().get()
+        };
 
-            this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 10000, Inventory.TypeItemSlot.OUTPUT,
+        for (int i = 0; i < fluidTank.length; i++) {
+            this.fluidTank[i] = this.fluids.addTank(
+                    "fluidTank" + i,
+                    10000,
+                    Inventory.TypeItemSlot.OUTPUT,
                     Fluids.fluidPredicate(name1[i])
             );
-
         }
+
         this.containerslot = new InventoryDrainTank[name1.length];
         for (int i = 0; i < name1.length; i++) {
-            this.containerslot[i] = new InventoryDrainTank(this, Inventory.TypeItemSlot.INPUT, 1,
-                    InventoryFluid.TypeFluidSlot.OUTPUT, name1[i]
+            this.containerslot[i] = new InventoryDrainTank(
+                    this,
+                    Inventory.TypeItemSlot.INPUT,
+                    1,
+                    InventoryFluid.TypeFluidSlot.OUTPUT,
+                    name1[i]
             );
         }
+
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.levelBlock = 0;
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("air_collector_soil_pollution_amount", 0.1D)));
+    }
 
+    public static int getAirPurificationPerCycle(int level) {
+        return 5 + Math.max(0, level) * 5;
+    }
+
+    public static double getAirPurificationPerSecond(int level) {
+        return getAirPurificationPerCycle(level) / 3.0D;
+    }
+
+    public static int getCarbonDioxidePerCycle(int level) {
+        return 10 + Math.max(0, level) * 10;
     }
 
     @Override
@@ -93,8 +117,8 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
             for (int j = this.pos.getY() - 5; j <= this.pos.getY() + 5; j++) {
                 for (int k = this.pos.getZ() - 5; k <= this.pos.getZ() + 5; k++) {
                     final BlockEntity tile = this.getWorld().getBlockEntity(new BlockPos(i, j, k));
-                    if (tile instanceof BlockEntityAirCollector) {
-                        ((BlockEntityAirCollector) tile).update_collector(this.pos);
+                    if (tile instanceof BlockEntityAirCollector collector) {
+                        collector.update_collector(this.pos);
                     }
                 }
             }
@@ -107,14 +131,13 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
         for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {
             for (int j = this.pos.getY() - 5; j <= this.pos.getY() + 5; j++) {
                 for (int k = this.pos.getZ() - 5; k <= this.pos.getZ() + 5; k++) {
-
                     if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
                         continue;
                     }
                     final BlockEntity tile = this.getWorld().getBlockEntity(new BlockPos(i, j, k));
-                    if (tile instanceof BlockEntityAirCollector) {
+                    if (tile instanceof BlockEntityAirCollector collector) {
                         this.work = false;
-                        ((BlockEntityAirCollector) tile).work = false;
+                        collector.work = false;
                     }
                 }
             }
@@ -134,9 +157,9 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
                         continue;
                     }
                     final BlockEntity tile = this.getWorld().getBlockEntity(new BlockPos(i, j, k));
-                    if (tile instanceof BlockEntityAirCollector) {
+                    if (tile instanceof BlockEntityAirCollector collector) {
                         this.work = false;
-                        ((BlockEntityAirCollector) tile).work = false;
+                        collector.work = false;
                     }
                 }
             }
@@ -164,7 +187,6 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -186,28 +208,25 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.air_purifier.info"));
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
-                    ".machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.aircollector.info", 20) + new FluidStack(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu.machines_work_energy_type_eu"));
+            tooltip.add(Localization.translate("iu.aircollector.info", 20) + com.denfop.utils.ModUtils.cleanComponentString(new FluidStack(
                     FluidName.fluidnitrogen.getInstance().get(),
                     1
-            ).getDisplayName().getString());
-            tooltip.add(Localization.translate("iu.aircollector.info", 60) + new FluidStack(
+            ).getDisplayName().getString()));
+            tooltip.add(Localization.translate("iu.aircollector.info", 60) + com.denfop.utils.ModUtils.cleanComponentString(new FluidStack(
                     FluidName.fluidoxygen.getInstance().get(),
                     1
-            ).getDisplayName().getString());
-            tooltip.add(Localization.translate("iu.aircollector.info", 120) + new FluidStack(
+            ).getDisplayName().getString()));
+            tooltip.add(Localization.translate("iu.aircollector.info", 120) + com.denfop.utils.ModUtils.cleanComponentString(new FluidStack(
                     FluidName.fluidcarbondioxide.getInstance().get(),
                     1
-            ).getDisplayName().getString());
-
+            ).getDisplayName().getString()));
         }
         super.addInformation(stack, tooltip);
     }
@@ -234,15 +253,13 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
     public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.putInt("level", this.levelBlock);
-
         return nbttagcompound;
     }
 
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
-
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override
@@ -254,6 +271,7 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -261,10 +279,12 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
         }
     }
 
-
     @Override
     @OnlyIn(Dist.CLIENT)
-    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player var1, ContainerMenuBase<? extends CustomWorldContainer> menu) {
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(
+            Player var1,
+            ContainerMenuBase<? extends CustomWorldContainer> menu
+    ) {
         return new ScreenAirCollector((ContainerMenuAirCollector) menu);
     }
 
@@ -289,75 +309,86 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
             update_collector();
             this.chunkpos = new ChunkPos(this.pos);
         }
-
     }
-
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.level.getGameTime() % 60 == 0 && this.energy.getEnergy() > 5) {
+
+        if (this.level.getGameTime() % 60 == 0 && this.energy.getEnergy() > (5 + 5 * this.levelBlock)) {
             ChunkLevel chunkLevel = PollutionManager.pollutionManager.getChunkLevelAir(chunkpos);
             if (chunkLevel != null) {
-                if (chunkLevel.removePollution(5)) {
-                    if (fluidTank[2].getFluidAmount() + 10 <= fluidTank[2].getCapacity()) {
-                        fluidTank[2].fill(new FluidStack(FluidName.fluidcarbondioxide.getInstance().get(), Math.min(
-                                10,
-                                fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount()
-                        )), IFluidHandler.FluidAction.EXECUTE);
-                        work = true;
-                        this.energy.useEnergy(5);
-                    }
+                int cleanAmount = getAirPurificationPerCycle(this.levelBlock);
+                int co2Amount = Math.min(
+                        getCarbonDioxidePerCycle(this.levelBlock),
+                        fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount()
+                );
+
+                if (co2Amount > 0 && chunkLevel.removePollution(cleanAmount)) {
+                    fluidTank[2].fill(
+                            new FluidStack(FluidName.fluidcarbondioxide.getInstance().get(), co2Amount),
+                            IFluidHandler.FluidAction.EXECUTE
+                    );
+                    this.work = true;
+                    this.energy.useEnergy(5 + 5 * this.levelBlock);
                 }
-                ;
             }
         }
-        for (FluidTank tank : fluidTank) {
 
+        for (FluidTank tank : fluidTank) {
             for (InventoryDrainTank slot : this.containerslot) {
                 if (tank.getFluidAmount() >= 1000 && !slot.isEmpty() && slot.acceptsLiquid(tank.getFluid().getFluid())) {
                     slot.processFromTank(tank, this.outputSlot);
                 }
             }
-
         }
+
         boolean work = false;
         if (this.energy.getEnergy() > 5 + 5 * this.levelBlock) {
             if (this.level.getGameTime() % 400 == 0) {
                 this.initiate(2);
             }
             work = true;
+
             if (this.level.getGameTime() % 20 == 0) {
                 if (fluidTank[0].getFluidAmount() + 1 <= fluidTank[0].getCapacity()) {
                     fluidTank[0].fill(
-                            new FluidStack(FluidName.fluidnitrogen.getInstance().get(), Math.min(
-                                    1 + this.levelBlock,
-                                    fluidTank[0].getCapacity() - fluidTank[0].getFluidAmount()
-                            )),
+                            new FluidStack(
+                                    FluidName.fluidnitrogen.getInstance().get(),
+                                    Math.min(1 + this.levelBlock, fluidTank[0].getCapacity() - fluidTank[0].getFluidAmount())
+                            ),
                             IFluidHandler.FluidAction.EXECUTE
                     );
-
                 }
+
                 if (this.level.getGameTime() % 60 == 0) {
                     if (fluidTank[1].getFluidAmount() + 1 <= fluidTank[1].getCapacity()) {
-                        fluidTank[1].fill(new FluidStack(FluidName.fluidoxygen.getInstance().get(), Math.min(
-                                1 + this.levelBlock,
-                                fluidTank[1].getCapacity() - fluidTank[1].getFluidAmount()
-                        )), IFluidHandler.FluidAction.EXECUTE);
+                        fluidTank[1].fill(
+                                new FluidStack(
+                                        FluidName.fluidoxygen.getInstance().get(),
+                                        Math.min(1 + this.levelBlock, fluidTank[1].getCapacity() - fluidTank[1].getFluidAmount())
+                                ),
+                                IFluidHandler.FluidAction.EXECUTE
+                        );
                         work = true;
                     }
                 }
+
                 if (this.level.getGameTime() % 120 == 0) {
                     if (fluidTank[2].getFluidAmount() + 1 <= fluidTank[2].getCapacity()) {
-                        fluidTank[2].fill(new FluidStack(FluidName.fluidcarbondioxide.getInstance().get(), Math.min(
-                                1 + this.levelBlock,
-                                fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount()
-                        )), IFluidHandler.FluidAction.EXECUTE);
+                        fluidTank[2].fill(
+                                new FluidStack(
+                                        FluidName.fluidcarbondioxide.getInstance().get(),
+                                        Math.min(1 + this.levelBlock, fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount())
+                                ),
+                                IFluidHandler.FluidAction.EXECUTE
+                        );
                         work = true;
                     }
                 }
                 this.energy.useEnergy(5 + 5 * this.levelBlock);
             }
         }
+
         if (!work) {
             this.initiate(2);
             this.setActive(false);
@@ -365,6 +396,7 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
             this.initiate(0);
             this.setActive(true);
         }
+
         if (this.upgradeSlot.tickNoMark()) {
             this.setUpgradestat();
         }
@@ -374,12 +406,9 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
         this.energy.setSinkTier(this.tier + this.upgradeSlot.extraTier);
     }
 
-
     @Override
-
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.FluidExtract
-        );
+        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.FluidExtract);
     }
 
     @Override
@@ -388,17 +417,18 @@ public class BlockEntityAirCollector extends BlockEntityElectricMachine implemen
     }
 
     public void setLevelMech(final int levelBlock) {
-        this.levelBlock = levelBlock;
+        this.levelBlock = Math.max(0, Math.min(10, levelBlock));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
     public SoundEvent getSound() {
         return EnumSound.air_collector.getSoundEvent();
     }
-
 }

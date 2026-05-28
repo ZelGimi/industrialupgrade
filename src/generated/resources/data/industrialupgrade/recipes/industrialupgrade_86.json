@@ -1,18 +1,21 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:energy/wrench",
-      "nbt": "{Damage:0}"
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_278_element"
     },
-    {
-      "item": "industrialupgrade:wiring_storage/per_mfsu"
+    "B": {
+      "tag": "minecraft:wool"
     }
+  },
+  "pattern": [
+    "   ",
+    " B ",
+    "A  "
   ],
   "result": {
-    "item": "industrialupgrade:upgradekitstorage/upgradekit4"
-  }
+    "item": "industrialupgrade:energy/purifier"
+  },
+  "show_notification": true
 }

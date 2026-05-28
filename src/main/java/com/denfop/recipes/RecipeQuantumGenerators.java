@@ -7,7 +7,7 @@ import com.quantumgenerators.QGCore;
 
 public class RecipeQuantumGenerators {
     public static void register() {
-       Recipes.recipe.addRecipe(ItemStackHelper.fromData(QGCore.qg, 1, 0), new Object[]{
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(QGCore.qg, 1, 0), new Object[]{
                 "CBC", "BAB", "DBD",
 
                 Character.valueOf('A'), ItemStackHelper.fromData(IUItem.blockpanel, 1, 7), Character.valueOf('B'), ItemStackHelper.fromData(

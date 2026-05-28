@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/watergenerator",
       "y": 90
     },
-    "facing=down,type=watergenerator": {
-      "model": "industrialupgrade:block/basemachine/watergenerator",
-      "x": 90
-    },
-    "facing=up,type=watergenerator": {
-      "model": "industrialupgrade:block/basemachine/watergenerator",
-      "x": 270
-    },
-    "facing=north,type=watergenerator_invalid": {
-      "model": "industrialupgrade:block/basemachine/watergenerator_active"
-    },
-    "facing=south,type=watergenerator_invalid": {
-      "model": "industrialupgrade:block/basemachine/watergenerator_active",
-      "y": 180
-    },
-    "facing=west,type=watergenerator_invalid": {
-      "model": "industrialupgrade:block/basemachine/watergenerator_active",
-      "y": 270
-    },
-    "facing=east,type=watergenerator_invalid": {
-      "model": "industrialupgrade:block/basemachine/watergenerator_active",
-      "y": 90
-    },
-    "facing=down,type=watergenerator_invalid": {
-      "model": "industrialupgrade:block/basemachine/watergenerator_active",
-      "x": 90
-    },
-    "facing=up,type=watergenerator_invalid": {
-      "model": "industrialupgrade:block/basemachine/watergenerator_active",
-      "x": 270
-    },
     "facing=north,type=watergenerator_active": {
       "model": "industrialupgrade:block/basemachine/watergenerator_active"
     },
@@ -61,6 +30,10 @@
       "model": "industrialupgrade:block/basemachine/watergenerator_active",
       "y": 90
     },
+    "facing=up,type=watergenerator": {
+      "model": "industrialupgrade:block/basemachine/watergenerator",
+      "x": 270
+    },
     "facing=down,type=watergenerator_active": {
       "model": "industrialupgrade:block/basemachine/watergenerator_active",
       "x": 90
@@ -68,6 +41,10 @@
     "facing=up,type=watergenerator_active": {
       "model": "industrialupgrade:block/basemachine/watergenerator_active",
       "x": 270
+    },
+    "facing=down,type=watergenerator": {
+      "model": "industrialupgrade:block/basemachine/watergenerator",
+      "x": 90
     }
   }
 }

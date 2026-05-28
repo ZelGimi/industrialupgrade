@@ -41,9 +41,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -82,7 +84,7 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
 
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
         ArrayList<ItemStack> ret = new ArrayList<>();
-        Set<UpgradableProperty> properties = block.getUpgradableProperties();
+        Set<UpgradableProperty> properties = block.getAllPossibleUpgradableProperties();
 
         for (final ItemStack stack : UpgradeRegistry.getUpgrades()) {
             IUpgradeItem item = (IUpgradeItem) stack.getItem();
@@ -321,7 +323,7 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
         int k2;
         for (int k = 0; k < this.menu.slots.size(); ++k) {
             Slot slot = (Slot) this.menu.slots.get(k);
-            if (slot.isActive()) {
+            if (slot.isActive() && canRenderSlot(slot)) {
                 this.renderSlot(guiGraphics, slot);
             }
 
@@ -333,7 +335,7 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
                     renderSlotHighlight(guiGraphics, j2, k2, 0, this.getSlotColor(k));
                 }
                 if (slot instanceof SlotInvSlot)
-                    if (((SlotInvSlot) slot).inventory.hasItemList()&&!((SlotInvSlot) slot).hasItem() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (((SlotInvSlot) slot).inventory.hasItemList() && !((SlotInvSlot) slot).hasItem() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                         renderItemTooltipGrid(guiGraphics, ((SlotInvSlot) slot).inventory.getStacks(((SlotInvSlot) slot).index), mouseX - guiLeft + 5, mouseY - guiTop + 5);
                     }
             }
@@ -375,6 +377,10 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
         guiGraphics.pose().popPose();
         RenderSystem.enableDepthTest();
         this.changeParams();
+    }
+
+    public boolean canRenderSlot(Slot slot) {
+        return true;
     }
 
     public void changeParams() {
@@ -533,13 +539,13 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
 
     }
 
-    private void handleUpgradeTooltip(int n, int n2) {
+    public void handleUpgradeTooltip(int n, int n2) {
         if (n >= 0 && n <= 12 && n2 >= 0 && n2 <= 12) {
             ArrayList<String> arrayList = new ArrayList();
             arrayList.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (ItemStack itemStack : getCompatibleUpgrades((IUpgradableBlock) this.menu.base)) {
-                arrayList.add(itemStack.getHoverName().getString());
+                arrayList.add(com.denfop.utils.ModUtils.cleanComponentString(itemStack.getHoverName().getString()));
             }
 
             this.drawTooltip(n, n2, arrayList);
@@ -577,7 +583,7 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
 
     protected void mouseClicked(int i, int j, int k) {
         for (Renderable widget : this.renderables) {
-            if (widget instanceof GuiEventListener) {
+            if (widget instanceof GuiEventListener && !children().contains(widget)) {
                 ((GuiEventListener) widget).mouseClicked(i, j, k);
             }
         }
@@ -972,7 +978,30 @@ public class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? extends Custo
             return;
         }
         List<Component> tooltipComponents = new ArrayList<>();
-        tooltipComponents.add(stack.getDisplayName());
+        tooltipComponents.add(Component.literal(Localization.translate(stack.getDescriptionId())));
+        strings.forEach(s -> tooltipComponents.add(Component.literal(s)));
+        poseStack.renderComponentTooltip(font, tooltipComponents, x, y);
+    }
+
+    public void drawTooltip(GuiGraphics poseStack, int x, int y, ItemStack stack, List<String> strings) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        List<Component> tooltipComponents = new ArrayList<>();
+        List<Component> components = stack.getTooltipLines(container.player, TooltipFlag.NORMAL);
+        tooltipComponents.add(components.get(0));
+        strings.forEach(s -> tooltipComponents.add(Component.literal(s)));
+        if (components.size() > 1)
+            tooltipComponents.addAll(components.subList(1, components.size()));
+        poseStack.renderComponentTooltip(font, tooltipComponents, x, y);
+    }
+
+    public void drawTooltipOnlyName(GuiGraphics poseStack, int x, int y, FluidStack stack, List<String> strings) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        List<Component> tooltipComponents = new ArrayList<>();
+        tooltipComponents.add(Component.literal(Localization.translate(stack.getTranslationKey())));
         strings.forEach(s -> tooltipComponents.add(Component.literal(s)));
         poseStack.renderComponentTooltip(font, tooltipComponents, x, y);
     }

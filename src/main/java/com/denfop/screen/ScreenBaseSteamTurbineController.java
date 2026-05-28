@@ -65,7 +65,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                     if (fluid != null) {
                         ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
-                        ret.add("invalid fluid stack");
+                        ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                     }
                 } else {
                     ret.add(Localization.translate("iu.generic.text.empty"));
@@ -90,7 +90,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -141,7 +141,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                     if (fluid != null) {
                         ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
-                        ret.add("invalid fluid stack");
+                        ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                     }
                 } else {
                     ret.add(Localization.translate("iu.generic.text.empty"));
@@ -166,7 +166,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -219,7 +219,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
                         if (fluid != null) {
                             ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                         } else {
-                            ret.add("invalid fluid stack");
+                            ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
                     } else {
                         ret.add(Localization.translate("iu.generic.text.empty"));
@@ -244,7 +244,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
 
                         Fluid fluid = fs.getFluid();
                         IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                        TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                        TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                         int color = extensions.getTintColor();
                         double renderHeight = (double) fluidHeight * ModUtils.limit(
                                 (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -292,7 +292,7 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
         }
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.steam_turbine.info"));
@@ -328,10 +328,10 @@ public class ScreenBaseSteamTurbineController<T extends ContainerMenuBaseSteamTu
         hoverTen = false;
         hoverWork = false;
         this.index = -1;
-        new TooltipWidget(this, 10, 51, 156, 14).withTooltip(() -> "Phase: " + String.valueOf(this.container.base.phase) + "\n" + "Stage: " + String.valueOf(
+        new TooltipWidget(this, 10, 51, 156, 14).withTooltip(() -> Localization.translate("iu.tooltip.steam.phase") + String.valueOf(this.container.base.phase) + "\n" + Localization.translate("iu.tooltip.steam.stage") + String.valueOf(
                 this.container.base.enumSteamPhase.name()) +
-                "\n" + "Generate: " + ModUtils.getString(this.container.base.generation) + " EF/t" + "\n" +
-                "Heat: " + ModUtils.getString(this.container.base.heat)).drawForeground(poseStack, par1, par2);
+                "\n" + Localization.translate("iu.tooltip.steam.generate") + ModUtils.getString(this.container.base.generation) + " EF/t" + "\n" +
+                Localization.translate("iu.tooltip.steam.heat") + ModUtils.getString(this.container.base.heat)).drawForeground(poseStack, par1, par2);
 
         for (int i = 0; i < 10; i++)
             if (par1 >= 10 + 15 * i && par2 >= 66 && par1 <= 22 + 15 * i && par2 <= 80) {

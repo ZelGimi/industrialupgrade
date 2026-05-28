@@ -1,6 +1,8 @@
 package com.denfop.blockentity.mechanism.quarry;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -12,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityImpQuantumQuarry extends BlockEntityBaseQuantumQuarry {
 
     public BlockEntityImpQuantumQuarry(BlockPos pos, BlockState blockState) {
-        super(2, BlockBaseMachineEntity.imp_quantum_quarry, pos, blockState);
+        super(ModConfig.mechanismInt("advanced_quantum_quarry_efficiency", 2), BlockBaseMachineEntity.imp_quantum_quarry, pos, blockState);
     }
 
     @Override

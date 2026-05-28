@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.gearing;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryMultiRecipes;
@@ -125,7 +126,7 @@ public class GearingCategory extends ScreenMain implements IRecipeCategory<Geari
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            layout.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(layout, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipe, i, inputs.get(i));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);

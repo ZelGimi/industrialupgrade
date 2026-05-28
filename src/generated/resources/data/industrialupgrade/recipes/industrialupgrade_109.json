@@ -19,12 +19,15 @@
       "count": 1,
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:7}"
+    },
+    "H": {
+      "item": "industrialupgrade:module_schedule"
     }
   },
   "pattern": [
     "BCA",
     "DED",
-    "BCA"
+    "BHA"
   ],
   "result": {
     "item": "industrialupgrade:quarrymodules/per"

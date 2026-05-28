@@ -1,0 +1,91 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:umbriel_cavity",
+      "industrialupgrade:space/umbriel/stone_tunnels",
+      "industrialupgrade:space/umbriel/hall_system",
+      "industrialupgrade:space/umbriel/fractures",
+      "industrialupgrade:space/umbriel/porous",
+      "industrialupgrade:space/umbriel/shafts",
+      "industrialupgrade:space/umbriel/liquid_chamber",
+      "industrialupgrade:space/umbriel/frozen_chamber",
+      "industrialupgrade:space/umbriel/crater_chamber",
+      "industrialupgrade:space/umbriel/tunnel_caves",
+      "industrialupgrade:space/umbriel/labyrinth_caves",
+      "industrialupgrade:space/umbriel/shaft_caves",
+      "industrialupgrade:space/umbriel/dome_caves",
+      "industrialupgrade:space/umbriel/well_caves",
+      "industrialupgrade:space/umbriel/multi_tier_caves",
+      "industrialupgrade:space/umbriel/branched_caves",
+      "industrialupgrade:space/umbriel/spiral_caves",
+      "industrialupgrade:space/umbriel/arch_caves",
+      "industrialupgrade:space/umbriel/chamber_caves",
+      "industrialupgrade:space/umbriel/canyon_caves",
+      "industrialupgrade:space/umbriel/pocket_caves",
+      "industrialupgrade:space/umbriel/crevice_caves",
+      "industrialupgrade:space/umbriel/amphitheater_caves",
+      "industrialupgrade:space/umbriel/cathedral_caves",
+      "industrialupgrade:space/umbriel/gallery_caves",
+      "industrialupgrade:space/umbriel/winding_caves",
+      "industrialupgrade:space/umbriel/cascade_caves",
+      "industrialupgrade:space/umbriel/collapse_caves",
+      "industrialupgrade:space/umbriel/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:umbriel_lake_0",
+      "industrialupgrade:umbriel_fluid_0",
+      "industrialupgrade:umbriel_lake_1",
+      "industrialupgrade:umbriel_fluid_1",
+      "industrialupgrade:umbriel_lake_2",
+      "industrialupgrade:umbriel_fluid_2"
+    ],
+    [
+      "industrialupgrade:umbriel_craters",
+      "industrialupgrade:space/umbriel/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:umbriel_geyser_0",
+      "industrialupgrade:umbriel_geyser_1",
+      "industrialupgrade:umbriel_geyser_2"
+    ],
+    [],
+    [
+      "industrialupgrade:umbriel_ore_0",
+      "industrialupgrade:umbriel_ore_1"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/umbriel/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

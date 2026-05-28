@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -48,20 +50,20 @@ public class BlockEntityMoonSpotter extends BlockEntityElectricMachine implement
     public int levelBlock;
 
     public BlockEntityMoonSpotter(BlockPos pos, BlockState state) {
-        super(0, 14, 1, BlockBaseMachine3Entity.moon_spotter, pos, state);
+        super(ModConfig.mechanismDouble("moonlight_infuser_energy_storage", 0.0D), 14, 1, BlockBaseMachine3Entity.moon_spotter, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InventoryRecipes(this, "solar_glass_recipe", this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         inputSlotA.setStackSizeLimit(1);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 1, 0)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 0, 20)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((BlockEntityMoonSpotter) this.parent).getLevelMechanism() * 1.75);
             }
         });
         this.levelBlock = 0;
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("moonlight_infuser_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("moonlight_infuser_air_pollution_amount", 0.1D)));
 
     }
 
@@ -90,12 +92,14 @@ public class BlockEntityMoonSpotter extends BlockEntityElectricMachine implement
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
@@ -114,6 +118,7 @@ public class BlockEntityMoonSpotter extends BlockEntityElectricMachine implement
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -134,7 +139,7 @@ public class BlockEntityMoonSpotter extends BlockEntityElectricMachine implement
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override
@@ -191,6 +196,7 @@ public class BlockEntityMoonSpotter extends BlockEntityElectricMachine implement
             this.outputSlot.add(this.output.getRecipe().output.items.get(0));
             getOutput();
         }
+        this.upgradeSlot.tickNoMark();
     }
 
     @Override

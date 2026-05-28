@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -54,13 +56,13 @@ public class BlockEntityElectronicsAssembler extends BlockEntityElectricMachine 
     public MachineRecipe output;
 
     public BlockEntityElectronicsAssembler(BlockPos pos, BlockState state) {
-        super(300, 1, 1, BlockBaseMachine3Entity.electronic_assembler, pos, state);
+        super(ModConfig.mechanismDouble("electric_electronic_assembler_energy_storage", 300.0D), 1, 1, BlockBaseMachine3Entity.electronic_assembler, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "electronics", this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.output = null;
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electronics_assembly_table_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electronics_assembly_table_air_pollution_amount", 0.1D)));
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
@@ -152,7 +154,7 @@ public class BlockEntityElectronicsAssembler extends BlockEntityElectricMachine 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
         super.addInformation(stack, tooltip);

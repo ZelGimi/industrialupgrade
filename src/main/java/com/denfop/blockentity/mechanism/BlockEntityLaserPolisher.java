@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -51,7 +53,7 @@ public class BlockEntityLaserPolisher extends BlockEntityElectricMachine impleme
     public MachineRecipe output;
 
     public BlockEntityLaserPolisher(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.laser_polisher, pos, state);
+        super(ModConfig.mechanismDouble("laser_polisher_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.laser_polisher, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -64,8 +66,8 @@ public class BlockEntityLaserPolisher extends BlockEntityElectricMachine impleme
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("laser_polisher_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("laser_polisher_air_pollution_amount", 0.1D)));
         this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -134,7 +136,7 @@ public class BlockEntityLaserPolisher extends BlockEntityElectricMachine impleme
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 
@@ -160,6 +162,8 @@ public class BlockEntityLaserPolisher extends BlockEntityElectricMachine impleme
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(502)), IUItem.advIronIngot);
         addRecipe("forge:ores/Diamond", new ItemStack(Items.DIAMOND, 4));
         addRecipe("forge:ores/Coal", new ItemStack(Items.COAL, 5));
+
+        addRecipe("forge:ores/emerald", new ItemStack(Items.EMERALD, 4));
         addRecipe("forge:ores/Quartz", new ItemStack(Items.QUARTZ, 4));
         addRecipe("forge:ores/Lapis", new ItemStack(Items.LAPIS_LAZULI, 5));
         addRecipe("forge:ores/Sulfur", new ItemStack(IUItem.iudust.getStack(31), 4));
@@ -167,6 +171,11 @@ public class BlockEntityLaserPolisher extends BlockEntityElectricMachine impleme
         addRecipe("forge:ores/Boron", new ItemStack(IUItem.crafting_elements.getStack(448)));
         addRecipe("forge:ores/Redstone", new ItemStack(Items.REDSTONE, 5));
         addRecipe("forge:dusts/Quartz", new ItemStack(Items.QUARTZ));
+
+        addRecipe("forge:ores/ruby", new ItemStack(IUItem.preciousgem.getStack(0), 4));
+        addRecipe("forge:ores/sapphire", new ItemStack(IUItem.preciousgem.getStack(1), 4));
+        addRecipe("forge:ores/topaz", new ItemStack(IUItem.preciousgem.getStack(2), 4));
+
         addRecipe(319, new ItemStack(IUItem.crafting_elements.getStack(357)));
         addRecipe(new ItemStack(IUItem.crafting_elements.getStack(493)), new ItemStack(IUItem.crafting_elements.getStack(495)));
         addRecipe(IUItem.sulfurDust, new ItemStack(IUItem.crafting_elements.getStack(476)));

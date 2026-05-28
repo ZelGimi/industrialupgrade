@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -69,9 +71,9 @@ public class BlockEntityReverseTransriptor extends BlockEntityElectricMachine im
     protected double guiProgress;
 
     public BlockEntityReverseTransriptor(BlockPos pos, BlockState state) {
-        super(100, 1, 2, BlockBaseMachine3Entity.reverse_transcriptor, pos, state);
+        super(ModConfig.mechanismDouble("genetic_reverser_energy_storage", 100.0D), 1, 2, BlockBaseMachine3Entity.reverse_transcriptor, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("reverse_transriptor_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -96,8 +98,8 @@ public class BlockEntityReverseTransriptor extends BlockEntityElectricMachine im
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000));
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("reverse_transriptor_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("reverse_transriptor_air_pollution_amount", 0.25D)));
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

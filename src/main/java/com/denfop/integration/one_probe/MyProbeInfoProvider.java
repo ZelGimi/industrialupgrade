@@ -26,23 +26,17 @@ import com.denfop.utils.ModUtils;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class MyProbeInfoProvider implements IProbeInfoProvider {
@@ -136,9 +130,6 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
         );
     }
 
-    public static TextureAtlas getBlockTextureMap() {
-        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS);
-    }
 
     @Override
     public ResourceLocation getID() {
@@ -625,17 +616,13 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                     euBar(probeInfo, (int) ((Energy) component).getEnergy(), (int) ((Energy) component).getCapacity());
                 }
                 if (component instanceof Fluids) {
-                    Iterator<Fluids.InternalFluidTank> tanks = ((Fluids) component).getAllTanks().iterator();
-                    while (tanks.hasNext()) {
-                        Fluids.InternalFluidTank tank = tanks.next();
+                    for (Fluids.InternalFluidTank tank : ((Fluids) component).getAllTanks()) {
                         if (!tank.isEmpty()) {
                             FluidStack fluidStack = tank.getFluid();
                             Fluid fluid = fluidStack.getFluid();
                             int amount = fluidStack.getAmount();
                             int capacity = tank.getCapacity();
-                            IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fluidStack));
-                            int color = extensions.getTintColor();
+
 
                             probeInfo.horizontal().text(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + String.format("§b%d / %d mB", amount, capacity));
                         } else {

@@ -15,34 +15,34 @@
       "model": "industrialupgrade:block/heat_reactor/heat_pump",
       "y": 90
     },
+    "facing=north,type=heat_pump_active": {
+      "model": "industrialupgrade:block/heat_reactor/heat_pump"
+    },
+    "facing=south,type=heat_pump_active": {
+      "model": "industrialupgrade:block/heat_reactor/heat_pump",
+      "y": 180
+    },
+    "facing=west,type=heat_pump_active": {
+      "model": "industrialupgrade:block/heat_reactor/heat_pump",
+      "y": 270
+    },
+    "facing=east,type=heat_pump_active": {
+      "model": "industrialupgrade:block/heat_reactor/heat_pump",
+      "y": 90
+    },
     "facing=down,type=heat_pump": {
       "model": "industrialupgrade:block/heat_reactor/heat_pump",
       "x": 90
     },
-    "facing=up,type=heat_pump": {
+    "facing=up,type=heat_pump_active": {
       "model": "industrialupgrade:block/heat_reactor/heat_pump",
       "x": 270
     },
-    "facing=north,type=heat_pump_invalid": {
-      "model": "industrialupgrade:block/heat_reactor/heat_pump"
-    },
-    "facing=south,type=heat_pump_invalid": {
-      "model": "industrialupgrade:block/heat_reactor/heat_pump",
-      "y": 180
-    },
-    "facing=west,type=heat_pump_invalid": {
-      "model": "industrialupgrade:block/heat_reactor/heat_pump",
-      "y": 270
-    },
-    "facing=east,type=heat_pump_invalid": {
-      "model": "industrialupgrade:block/heat_reactor/heat_pump",
-      "y": 90
-    },
-    "facing=down,type=heat_pump_invalid": {
+    "facing=down,type=heat_pump_active": {
       "model": "industrialupgrade:block/heat_reactor/heat_pump",
       "x": 90
     },
-    "facing=up,type=heat_pump_invalid": {
+    "facing=up,type=heat_pump": {
       "model": "industrialupgrade:block/heat_reactor/heat_pump",
       "x": 270
     }

@@ -75,7 +75,7 @@ public class ItemReactorData extends Item implements IItemTab {
             nbt.putInt("x", tileMultiBlockBase.getBlockPos().getX());
             nbt.putInt("y", tileMultiBlockBase.getBlockPos().getY());
             nbt.putInt("z", tileMultiBlockBase.getBlockPos().getZ());
-            nbt.putString("name", tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString());
+            nbt.putString("name", com.denfop.utils.ModUtils.cleanComponentString(tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString()));
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

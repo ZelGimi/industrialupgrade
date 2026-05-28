@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.electronics;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,11 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ElectronicsHandler {
+public class ElectronicsHandler implements IJeiVariantRecipe {
 
     private static final List<ElectronicsHandler> recipes = new ArrayList<>();
 
-    private final ItemStack input, input1, input2, input3, input4, output;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+private final ItemStack input, input1, input2, input3, input4, output;
     private final BaseMachineRecipe container;
 
     public ElectronicsHandler(
@@ -62,14 +66,14 @@ public class ElectronicsHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("electronics")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.input.getInputs().get(4).getInputs().get(0),
                     container.getOutput().items.get(0), container
-            );
+            ), container);
 
 
         }
@@ -109,5 +113,16 @@ public class ElectronicsHandler {
 
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3, input4);
+    }
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
     }
 }

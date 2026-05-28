@@ -28,7 +28,7 @@ public class ScreenUpgradeItem<T extends ContainerMenuHeldUpgradeItem> extends S
     public ScreenUpgradeItem(ContainerMenuHeldUpgradeItem container, final ItemStack itemStack1) {
         super(container);
 
-        this.name = itemStack1.getDisplayName().getString();
+        this.name = com.denfop.utils.ModUtils.cleanComponentString(itemStack1.getDisplayName().getString());
         this.imageHeight = 125;
         this.list = ModUtils.get_blacklist_block();
         final List<String> list2 = UpgradeSystem.system.getBlackList(itemStack1);

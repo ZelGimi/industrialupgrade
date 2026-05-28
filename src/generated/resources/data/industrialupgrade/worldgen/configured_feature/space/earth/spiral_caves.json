@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "minecraft:water",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "spiral_caves",
+    "max_length": 26,
+    "max_radius": 4,
+    "max_vertical": 26,
+    "min_length": 16,
+    "min_radius": 2,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "minecraft:stone"
+    },
+    "secondary": {
+      "Name": "minecraft:cobblestone"
+    },
+    "tertiary": {
+      "Name": "minecraft:cobblestone"
+    }
+  }
+}

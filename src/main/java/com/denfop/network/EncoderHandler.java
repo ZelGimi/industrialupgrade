@@ -289,9 +289,9 @@ public class EncoderHandler {
             case ItemStack:
                 ItemStack stack = (ItemStack) o;
                 if (ModUtils.isEmpty(stack)) {
-                    os.writeByte(0);
+                    os.writeInt(0);
                 } else {
-                    os.writeByte(ModUtils.getSize(stack));
+                    os.writeInt(ModUtils.getSize(stack));
                     encode(os, stack.getItem(), false);
                     encode(os, stack.getTag(), true);
                 }

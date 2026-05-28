@@ -1,0 +1,59 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 328968,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:space/earth/stone_tunnels",
+      "industrialupgrade:space/earth/hall_system",
+      "industrialupgrade:space/earth/fractures",
+      "industrialupgrade:space/earth/shafts",
+      "industrialupgrade:space/earth/liquid_chamber",
+      "industrialupgrade:space/earth/tunnel_caves",
+      "industrialupgrade:space/earth/labyrinth_caves",
+      "industrialupgrade:space/earth/dome_caves",
+      "industrialupgrade:space/earth/well_caves",
+      "industrialupgrade:space/earth/multi_tier_caves",
+      "industrialupgrade:space/earth/branched_caves",
+      "industrialupgrade:space/earth/arch_caves",
+      "industrialupgrade:space/earth/chamber_caves",
+      "industrialupgrade:space/earth/canyon_caves",
+      "industrialupgrade:space/earth/pocket_caves",
+      "industrialupgrade:space/earth/crevice_caves",
+      "industrialupgrade:space/earth/amphitheater_caves",
+      "industrialupgrade:space/earth/cathedral_caves",
+      "industrialupgrade:space/earth/gallery_caves",
+      "industrialupgrade:space/earth/winding_caves",
+      "industrialupgrade:space/earth/cascade_caves",
+      "industrialupgrade:space/earth/vertical_collectors"
+    ],
+    [],
+    [
+      "industrialupgrade:space/earth/addition_craters"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 1.0
+}

@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:triton_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:triton_biome"
+    },
+    "settings": "industrialupgrade:triton_noise"
+  }
+}

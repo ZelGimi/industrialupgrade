@@ -3,28 +3,28 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:wiring_storage/mfe_iu"
-    },
-    "B": {
-      "item": "industrialupgrade:blockresource/advanced_machine"
-    },
-    "C": {
-      "item": "industrialupgrade:battery/lapotron_crystal"
-    },
-    "D": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:6}"
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
     }
   },
   "pattern": [
     "CDC",
-    "CAC",
-    "CBC"
+    "DAD",
+    "CDC"
   ],
   "result": {
-    "item": "industrialupgrade:wiring_storage/mfsu_iu"
+    "item": "industrialupgrade:upgradekitstorage/upgradekit3"
   },
   "show_notification": true
 }

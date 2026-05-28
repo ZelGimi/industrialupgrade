@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -55,13 +57,13 @@ public class BlockEntityBaseWorldCollector extends BlockEntityElectricMachine im
 
 
     public BlockEntityBaseWorldCollector(EnumTypeCollector enumTypeCollector1, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(0, 1, 1, block, pos, state);
+        super(ModConfig.mechanismDouble("base_world_collector_energy_storage", 0.0D), 1, 1, block, pos, state);
         enumTypeCollector = enumTypeCollector1;
         this.MatterSlot = new InventoryWorldCollector(this);
         this.inputSlot = new InventoryRecipes(this, enumTypeCollector1.name().toLowerCase() + "collector", this);
         this.machineRecipe = null;
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.defaultEnergyConsume = this.energyConsume = 40;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("base_world_collector_energy_use", 40);
         this.defaultOperationLength = this.operationLength = 800;
         this.operationsPerTick = 1;
         this.matter_energy = 0;
@@ -71,10 +73,10 @@ public class BlockEntityBaseWorldCollector extends BlockEntityElectricMachine im
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        tooltip.add(Localization.translate("iu.need_info") + new ItemStack(
+        tooltip.add(Localization.translate("iu.need_info") + com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                 IUItem.matter.getStack(enumTypeCollector.getMeta()),
                 1
-        ).getDisplayName().getString());
+        ).getDisplayName().getString()));
         super.addInformation(stack, tooltip);
     }
 
@@ -108,6 +110,16 @@ public class BlockEntityBaseWorldCollector extends BlockEntityElectricMachine im
         final IInputHandler input_recipe = com.denfop.api.Recipes.inputFactory;
         final CompoundTag nbt = ModUtils.nbt();
         nbt.putDouble("need", need);
+        Recipes.recipes.addRecipe(
+                enumTypeCollector.name().toLowerCase() + "collector",
+                new BaseMachineRecipe(new Input(input_recipe.getInput(input)), new RecipeOutput(nbt, output))
+        );
+    }
+
+    protected void addRecipe(String input, double need, ItemStack output) {
+        final IInputHandler input_recipe = com.denfop.api.Recipes.inputFactory;
+        final CompoundTag nbt = ModUtils.nbt();
+        nbt.putDouble("need", getMatterFromEnergy(need));
         Recipes.recipes.addRecipe(
                 enumTypeCollector.name().toLowerCase() + "collector",
                 new BaseMachineRecipe(new Input(input_recipe.getInput(input)), new RecipeOutput(nbt, output))
@@ -152,11 +164,11 @@ public class BlockEntityBaseWorldCollector extends BlockEntityElectricMachine im
 
     public void operate(MachineRecipe output) {
         for (int i = 0; i < this.operationsPerTick; i++) {
-
-            operateOnce(output.getRecipe().output.items);
             if (this.matter_energy < this.need_matter) {
                 break;
             }
+            operateOnce(output.getRecipe().output.items);
+
             if (this.inputSlot.get(0).isEmpty() || this.inputSlot
                     .get(0)
                     .getCount() < this.machineRecipe.getRecipe().input

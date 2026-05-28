@@ -44,7 +44,7 @@ public class GasSensorCategory extends ScreenMain implements IRecipeCategory<Gas
     @Nonnull
     @Override
     public String getTitles() {
-        return new ItemStack(IUItem.gasSensor.getItem()).getDisplayName().getString();
+        return com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.gasSensor.getItem()).getDisplayName().getString());
     }
 
 

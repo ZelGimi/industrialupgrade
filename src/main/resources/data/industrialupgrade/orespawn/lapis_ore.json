@@ -1,0 +1,11 @@
+{
+  "ore_block": "minecraft:lapis_ore",
+  "replace_block": "minecraft:stone",
+  "min_height": 0,
+  "max_height": 32,
+  "min_vein_size": 3,
+  "max_vein_size": 7,
+  "min_veins_per_chunk": 5,
+  "max_veins_per_chunk": 10,
+  "chance": 0.6
+}

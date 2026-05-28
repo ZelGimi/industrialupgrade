@@ -3,13 +3,19 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:wiring_storage/mfsu_iu"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     },
     "C": {
-      "item": "industrialupgrade:battery/lapotron_crystal"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
     },
     "D": {
-      "item": "industrialupgrade:photoniy_ingot"
+      "item": "industrialupgrade:itemcore/specore"
     }
   },
   "pattern": [
@@ -18,7 +24,7 @@
     "CDC"
   ],
   "result": {
-    "item": "industrialupgrade:wiring_storage/adv_mfsu"
+    "item": "industrialupgrade:upgradekitstorage/upgradekit4"
   },
   "show_notification": true
 }

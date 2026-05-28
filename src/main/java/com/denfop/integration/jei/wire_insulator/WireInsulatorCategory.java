@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.wire_insulator;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -106,7 +107,7 @@ public class WireInsulatorCategory extends ScreenMain implements IRecipeCategory
         final List<ItemStack> inputs = Arrays.asList(recipe.getInput(), recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipe, i, inputs.get(i));
 
 
         }

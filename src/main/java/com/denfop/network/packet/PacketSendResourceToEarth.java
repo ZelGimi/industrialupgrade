@@ -36,7 +36,7 @@ public class PacketSendResourceToEarth implements IPacket {
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
         try {
             UUID uuid = (UUID) DecoderHandler.decode(customPacketBuffer);
-            if (entityPlayer.getUUID().equals(uuid)) {
+            if (entityPlayer.getGameProfile().getId().equals(uuid)) {
                 boolean hasBody = customPacketBuffer.readBoolean();
                 if (hasBody) {
                     String body = customPacketBuffer.readString();

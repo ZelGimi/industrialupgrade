@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -48,7 +50,7 @@ public class BlockEntityRadioactiveOreHandler extends BlockEntityElectricMachine
     public MachineRecipe output;
 
     public BlockEntityRadioactiveOreHandler(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.radioactive_handler_ore, pos, state);
+        super(ModConfig.mechanismDouble("radioactive_ore_handler_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.radioactive_handler_ore, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.outputSlot1 = new InventoryOutput(this, 1);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
@@ -61,8 +63,8 @@ public class BlockEntityRadioactiveOreHandler extends BlockEntityElectricMachine
                 this.setOverclockRates(this.invSlot);
             }
         });
-        this.addComponent(new SoilPollutionComponent(this, 0.25));
-        this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("radioactive_ore_handler_soil_pollution_amount", 0.25D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("radioactive_ore_handler_air_pollution_amount", 0.25D)));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
@@ -175,7 +177,7 @@ public class BlockEntityRadioactiveOreHandler extends BlockEntityElectricMachine
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

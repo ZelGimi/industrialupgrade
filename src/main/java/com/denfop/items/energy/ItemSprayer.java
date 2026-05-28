@@ -1,5 +1,7 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
@@ -34,7 +36,7 @@ import java.util.*;
 public class ItemSprayer extends ItemFluidContainer implements IItemTab {
 
     public ItemSprayer() {
-        super(8000, 1);
+        super(8000, ModConfig.itemInt("sprayer_capacity", 1));
     }
 
     private static boolean canPlaceFoam(Level world, BlockPos pos, Target target) {

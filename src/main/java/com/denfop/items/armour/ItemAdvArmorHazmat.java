@@ -114,8 +114,8 @@ public class ItemAdvArmorHazmat extends ItemArmorUtility implements HazmatLike, 
             return this.type.getSlot() == EquipmentSlot.FEET && source.is(DamageTypeTags.IS_FALL) ? new ISpecialArmor.ArmorProperties(
                     10,
                     damage < 8.0 ? 1.0 : 0.875,
-                    (armor.getMaxDamage() - armor.getDamageValue() + 2) * 2 * 25
-            ) : new ISpecialArmor.ArmorProperties(0, 0.05, (armor.getMaxDamage() - armor.getDamageValue() + 2) / 2 * 25);
+                    (armor.getMaxDamage() - armor.getDamageValue() + 2) * 2 * 25, this
+            ) : new ISpecialArmor.ArmorProperties(0, 0.05, (armor.getMaxDamage() - armor.getDamageValue() + 2) / 2 * 25, this);
         }
     }
 

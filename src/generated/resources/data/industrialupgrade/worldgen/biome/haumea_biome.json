@@ -1,0 +1,92 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:haumea_cavity",
+      "industrialupgrade:space/haumea/stone_tunnels",
+      "industrialupgrade:space/haumea/hall_system",
+      "industrialupgrade:space/haumea/fractures",
+      "industrialupgrade:space/haumea/porous",
+      "industrialupgrade:space/haumea/shafts",
+      "industrialupgrade:space/haumea/liquid_chamber",
+      "industrialupgrade:space/haumea/frozen_chamber",
+      "industrialupgrade:space/haumea/tunnel_caves",
+      "industrialupgrade:space/haumea/labyrinth_caves",
+      "industrialupgrade:space/haumea/dome_caves",
+      "industrialupgrade:space/haumea/well_caves",
+      "industrialupgrade:space/haumea/multi_tier_caves",
+      "industrialupgrade:space/haumea/branched_caves",
+      "industrialupgrade:space/haumea/spiral_caves",
+      "industrialupgrade:space/haumea/arch_caves",
+      "industrialupgrade:space/haumea/chamber_caves",
+      "industrialupgrade:space/haumea/pocket_caves",
+      "industrialupgrade:space/haumea/crevice_caves",
+      "industrialupgrade:space/haumea/amphitheater_caves",
+      "industrialupgrade:space/haumea/cathedral_caves",
+      "industrialupgrade:space/haumea/gallery_caves",
+      "industrialupgrade:space/haumea/winding_caves",
+      "industrialupgrade:space/haumea/cascade_caves",
+      "industrialupgrade:space/haumea/collapse_caves"
+    ],
+    [
+      "industrialupgrade:haumea_lake_0",
+      "industrialupgrade:haumea_fluid_0",
+      "industrialupgrade:haumea_lake_1",
+      "industrialupgrade:haumea_fluid_1"
+    ],
+    [
+      "industrialupgrade:haumea_craters",
+      "industrialupgrade:space/haumea/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:haumea_geyser_0",
+      "industrialupgrade:haumea_geyser_1"
+    ],
+    [],
+    [
+      "industrialupgrade:haumea_ore_0",
+      "industrialupgrade:haumea_ore_1",
+      "industrialupgrade:haumea_ore_2",
+      "industrialupgrade:haumea_ore_3",
+      "industrialupgrade:haumea_ore_4",
+      "industrialupgrade:haumea_ore_5",
+      "industrialupgrade:haumea_ore_6",
+      "industrialupgrade:haumea_ore_7",
+      "industrialupgrade:haumea_ore_8",
+      "industrialupgrade:haumea_ore_9"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/haumea/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

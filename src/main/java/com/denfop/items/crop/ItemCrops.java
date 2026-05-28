@@ -25,6 +25,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -144,11 +146,13 @@ public class ItemCrops<T extends Enum<T> & SubEnum> extends ItemMain<T> implemen
         return IUCore.CropsTab;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public String[] properties() {
         return new String[]{"id"};
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
         Crop crop = getCrop(0, itemStack);

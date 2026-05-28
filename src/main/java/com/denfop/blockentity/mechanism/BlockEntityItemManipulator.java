@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -34,7 +36,7 @@ public class BlockEntityItemManipulator extends BlockEntityElectricMachine
     int type = 0;
 
     public BlockEntityItemManipulator(BlockPos pos, BlockState state) {
-        super(0, 0, 0, BlockBaseMachine3Entity.itemmanipulator, pos, state);
+        super(ModConfig.mechanismDouble("bag_unloader_energy_storage", 0.0D), 0, 0, BlockBaseMachine3Entity.itemmanipulator, pos, state);
 
 
         this.inputslot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {

@@ -1,0 +1,82 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 9194030,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 10707246,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:io_cavity",
+      "industrialupgrade:io_shaft",
+      "industrialupgrade:io_lava_tube",
+      "industrialupgrade:space/io/stone_tunnels",
+      "industrialupgrade:space/io/hall_system",
+      "industrialupgrade:space/io/fractures",
+      "industrialupgrade:space/io/shafts",
+      "industrialupgrade:space/io/liquid_chamber",
+      "industrialupgrade:space/io/volcanic_chamber",
+      "industrialupgrade:space/io/thermal_chamber",
+      "industrialupgrade:space/io/crater_chamber",
+      "industrialupgrade:space/io/tunnel_caves",
+      "industrialupgrade:space/io/labyrinth_caves",
+      "industrialupgrade:space/io/shaft_caves",
+      "industrialupgrade:space/io/dome_caves",
+      "industrialupgrade:space/io/well_caves",
+      "industrialupgrade:space/io/multi_tier_caves",
+      "industrialupgrade:space/io/branched_caves",
+      "industrialupgrade:space/io/spiral_caves",
+      "industrialupgrade:space/io/arch_caves",
+      "industrialupgrade:space/io/chamber_caves",
+      "industrialupgrade:space/io/canyon_caves",
+      "industrialupgrade:space/io/pocket_caves",
+      "industrialupgrade:space/io/crevice_caves",
+      "industrialupgrade:space/io/amphitheater_caves",
+      "industrialupgrade:space/io/gallery_caves",
+      "industrialupgrade:space/io/winding_caves",
+      "industrialupgrade:space/io/cascade_caves",
+      "industrialupgrade:space/io/collapse_caves",
+      "industrialupgrade:space/io/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:io_lake_0",
+      "industrialupgrade:space/io/lava_hydrology"
+    ],
+    [
+      "industrialupgrade:space/io/addition_craters",
+      "industrialupgrade:io_volcano"
+    ],
+    [],
+    [
+      "industrialupgrade:io_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:io_ore_0",
+      "industrialupgrade:io_ore_1",
+      "industrialupgrade:io_ore_2",
+      "industrialupgrade:io_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.3
+}

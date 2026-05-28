@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:umbriel_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:umbriel_biome"
+    },
+    "settings": "industrialupgrade:umbriel_noise"
+  }
+}

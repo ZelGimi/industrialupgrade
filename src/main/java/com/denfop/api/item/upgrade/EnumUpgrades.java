@@ -47,7 +47,10 @@ public enum EnumUpgrades {
             EnumInfoUpgradeModules.INVISIBILITY,
             EnumInfoUpgradeModules.NIGTHVISION,
             EnumInfoUpgradeModules.REPAIRED,
-            EnumInfoUpgradeModules.RESISTANCE
+            EnumInfoUpgradeModules.RESISTANCE,
+            EnumInfoUpgradeModules.OXYGEN,
+            EnumInfoUpgradeModules.PRESSURE,
+            EnumInfoUpgradeModules.THERMAL
     ),
     BODY(
             EnumInfoUpgradeModules.PROTECTION,
@@ -57,14 +60,20 @@ public enum EnumUpgrades {
             EnumInfoUpgradeModules.INVISIBILITY,
             EnumInfoUpgradeModules.REPAIRED,
             EnumInfoUpgradeModules.THORNS,
-            EnumInfoUpgradeModules.PROTECTION_ARROW
+            EnumInfoUpgradeModules.PROTECTION_ARROW,
+            EnumInfoUpgradeModules.OXYGEN,
+            EnumInfoUpgradeModules.PRESSURE,
+            EnumInfoUpgradeModules.THERMAL
     ),
     LEGGINGS(
             EnumInfoUpgradeModules.PROTECTION,
             EnumInfoUpgradeModules.SPEED,
             EnumInfoUpgradeModules.RESISTANCE,
             EnumInfoUpgradeModules.INVISIBILITY,
-            EnumInfoUpgradeModules.REPAIRED
+            EnumInfoUpgradeModules.REPAIRED,
+            EnumInfoUpgradeModules.OXYGEN,
+            EnumInfoUpgradeModules.PRESSURE,
+            EnumInfoUpgradeModules.THERMAL
     ),
     BOOTS(
             EnumInfoUpgradeModules.PROTECTION,
@@ -72,7 +81,10 @@ public enum EnumUpgrades {
             EnumInfoUpgradeModules.RESISTANCE,
             EnumInfoUpgradeModules.INVISIBILITY,
             EnumInfoUpgradeModules.REPAIRED,
-            EnumInfoUpgradeModules.FALLING_DAMAGE
+            EnumInfoUpgradeModules.FALLING_DAMAGE,
+            EnumInfoUpgradeModules.OXYGEN,
+            EnumInfoUpgradeModules.PRESSURE,
+            EnumInfoUpgradeModules.THERMAL
     ),
     SABERS(
             EnumInfoUpgradeModules.SABER_DAMAGE,

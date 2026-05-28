@@ -8,12 +8,6 @@
     "B": {
       "tag": "forge:plates/carbon"
     },
-    "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:5}"
-    },
     "D": {
       "tag": "forge:gears/electrum"
     },
@@ -23,7 +17,7 @@
   },
   "pattern": [
     "BBB",
-    "CAC",
+    " A ",
     "DED"
   ],
   "result": {

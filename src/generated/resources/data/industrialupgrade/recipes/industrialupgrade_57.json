@@ -2,23 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "A": {
+      "tag": "forge:plates/iron"
+    },
     "B": {
-      "item": "industrialupgrade:battery/lapotron_crystal"
-    },
-    "C": {
-      "item": "industrialupgrade:quantumitems3"
-    },
-    "D": {
-      "item": "industrialupgrade:photoniy_ingot"
+      "tag": "forge:plates/lapis"
     }
   },
   "pattern": [
-    "BCB",
-    "CDC",
-    "BCB"
+    "A A",
+    "B B",
+    "A A"
   ],
   "result": {
-    "item": "industrialupgrade:battery/itembatlamacrystal"
+    "item": "industrialupgrade:electronic_stabilizers"
   },
   "show_notification": true
 }

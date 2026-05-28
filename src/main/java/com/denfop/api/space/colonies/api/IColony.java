@@ -24,6 +24,18 @@ public interface IColony {
 
     List<FluidStack> getFluidsFromStorage();
 
+    short getMaxAvailableFluid();
+
+    short getMaxAvailableItem();
+
+    short getAvailableFluid();
+
+    short getAvailableItem();
+
+    void removeAvailableFluid(int amount);
+
+    void removeAvailableItem(int amount);
+
     int getProtection();
 
     int getLevel();

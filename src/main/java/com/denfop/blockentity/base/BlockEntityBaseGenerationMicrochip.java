@@ -100,7 +100,7 @@ public abstract class BlockEntityBaseGenerationMicrochip extends BlockEntityElec
             tooltip.add(Localization.translate("iu.heatmachine.info"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
         super.addInformation(stack, tooltip);

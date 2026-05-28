@@ -1,0 +1,70 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 197381,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:phobos_cavity",
+      "industrialupgrade:phobos_shaft",
+      "industrialupgrade:space/phobos/stone_tunnels",
+      "industrialupgrade:space/phobos/hall_system",
+      "industrialupgrade:space/phobos/fractures",
+      "industrialupgrade:space/phobos/porous",
+      "industrialupgrade:space/phobos/shafts",
+      "industrialupgrade:space/phobos/crater_chamber",
+      "industrialupgrade:space/phobos/tunnel_caves",
+      "industrialupgrade:space/phobos/shaft_caves",
+      "industrialupgrade:space/phobos/dome_caves",
+      "industrialupgrade:space/phobos/well_caves",
+      "industrialupgrade:space/phobos/multi_tier_caves",
+      "industrialupgrade:space/phobos/branched_caves",
+      "industrialupgrade:space/phobos/spiral_caves",
+      "industrialupgrade:space/phobos/chamber_caves",
+      "industrialupgrade:space/phobos/pocket_caves",
+      "industrialupgrade:space/phobos/crevice_caves",
+      "industrialupgrade:space/phobos/cathedral_caves",
+      "industrialupgrade:space/phobos/gallery_caves",
+      "industrialupgrade:space/phobos/winding_caves",
+      "industrialupgrade:space/phobos/collapse_caves",
+      "industrialupgrade:space/phobos/vertical_collectors"
+    ],
+    [],
+    [
+      "industrialupgrade:phobos_craters",
+      "industrialupgrade:space/phobos/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:phobos_ore_0",
+      "industrialupgrade:phobos_ore_1",
+      "industrialupgrade:phobos_ore_2",
+      "industrialupgrade:phobos_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.15000004
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:casings/aluminiumlithium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_780_element"
+    },
+    "D": {
+      "tag": "forge:plates/hafniumboride"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_781_element"
+  },
+  "show_notification": true
+}

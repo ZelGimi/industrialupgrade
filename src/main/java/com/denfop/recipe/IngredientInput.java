@@ -1,5 +1,6 @@
 package com.denfop.recipe;
 
+import com.denfop.utils.ModUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -76,12 +77,22 @@ public class IngredientInput extends Ingredient {
     }
 
     public Ingredient getInput() {
+
         if (!input.getInputs().isEmpty() && input.getInputs().get(0).hasTag()) {
+            ItemStack stack = input.getInputs().get(0);
+            ModUtils.removeIgnoreKeys(stack);
+            if (!stack.hasTag()) {
+                if (this.input.hasTag()) {
+                    return Ingredient.of(this.input.getTag());
+                } else {
+                    return Ingredient.of(this.input.getInputs().get(0));
+                }
+            }
             if (input.getInputs().size() == 1) {
                 return StrictNBTIngredient.of(input.getInputs().get(0));
             } else {
                 List<Item> items = new ArrayList<>();
-                input.getInputs().forEach(stack -> items.add(stack.getItem()));
+                input.getInputs().forEach(stack1 -> items.add(stack1.getItem()));
                 return PartialNBTIngredient.of(input.getInputs().get(0).getTag(), items.toArray(new Item[0]));
             }
         } else {

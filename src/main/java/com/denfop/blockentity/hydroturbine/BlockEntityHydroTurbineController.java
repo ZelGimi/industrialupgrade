@@ -32,6 +32,8 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.register.InitMultiBlockSystem;
+import com.denfop.render.water.WaterRotorDamageProfile;
+import com.denfop.render.water.WaterRotorModel;
 import com.denfop.render.windgenerator.RotorModel;
 import com.denfop.screen.ScreenHydroTurbineController;
 import com.denfop.screen.ScreenIndustrialUpgrade;
@@ -42,7 +44,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -64,17 +65,26 @@ import net.minecraftforge.common.MinecraftForge;
 import org.joml.Vector3f;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.denfop.render.windgenerator.WindGeneratorRenderer.rotorModels;
 import static net.minecraft.tags.BiomeTags.IS_OCEAN;
 import static net.minecraft.tags.BiomeTags.IS_RIVER;
 
 public class BlockEntityHydroTurbineController extends BlockEntityMultiBlockBase implements IWindMechanism, IType,
         IUpdatableTileEvent {
 
+    @OnlyIn(Dist.CLIENT)
+    private static final class ClientRotorModels {
 
-    public final InventoryHydroTurbineRotorBlades slot_blades;
+        private static final Map<Integer, WaterRotorModel> TURBINE_ROTOR_MODELS = new HashMap<>();
+        private static WaterRotorModel getOrCreate(int rotorId) {
+            return TURBINE_ROTOR_MODELS.computeIfAbsent(rotorId, WaterRotorModel::new);
+        }
+
+    }
+   public final InventoryHydroTurbineRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
     public ISocket energy;
     public InventoryHydroTurbineRotor slot;
@@ -180,7 +190,6 @@ public class BlockEntityHydroTurbineController extends BlockEntityMultiBlockBase
         return true;
     }
 
-
     @Override
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
@@ -283,7 +292,6 @@ public class BlockEntityHydroTurbineController extends BlockEntityMultiBlockBase
         return super.onActivated(player, hand, side, vec3);
     }
 
-
     public boolean checkSpace() {
         int box = this.getRotorDiameter() / 2;
         if (box == 0) {
@@ -323,7 +331,6 @@ public class BlockEntityHydroTurbineController extends BlockEntityMultiBlockBase
         new PacketUpdateFieldTile(this, "facing", this.facing);
         return fac;
     }
-
 
     @Override
     public EnumRotorSide getRotorSide() {
@@ -433,6 +440,7 @@ public class BlockEntityHydroTurbineController extends BlockEntityMultiBlockBase
 
             if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
+                new PacketUpdateFieldTile(this, "slot", this.slot);
             }
         } else {
             generation = 0;
@@ -457,58 +465,85 @@ public class BlockEntityHydroTurbineController extends BlockEntityMultiBlockBase
     @OnlyIn(Dist.CLIENT)
     protected void renderBlockRotor(IWindMechanism windGen, Level world, BlockPos pos, RenderLevelStageEvent event) {
         int diameter = windGen.getRotorDiameter();
+        WindRotor rotor = this.getRotor();
+        ResourceLocation rotorRL = windGen.getRotorRenderTexture();
 
-        if (diameter != 0) {
-            float angle = windGen.getAngle();
-            ResourceLocation rotorRL = windGen.getRotorRenderTexture();
-            rotorModels.clear();
-            EntityModel model = rotorModels.get(diameter);
-            if (model == null) {
-                model = new RotorModel(diameter);
-                rotorModels.put(diameter, model);
-            }
-
-            Direction facing = windGen.getFacing();
-            pos = pos.offset(facing.getNormal());
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            poseStack.translate(0.5F + facing.getStepX() * 0.35, 0.5F, 0.5F + facing.getStepZ() * 0.35);
-            switch (facing) {
-                case NORTH:
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
-                    break;
-                case EAST:
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-180.0F));
-                    break;
-                case SOUTH:
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-270.0F));
-                    break;
-                case UP:
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
-                    break;
-            }
-
-            if (windGen.getSpace()) {
-                WindRotor rotor = this.getRotor();
-                if (rotor.getMaxCustomDamage(this.slot.get(0)) - rotor.getCustomDamage(this.slot.get(0)) == 0) {
-                    angle = 0;
-                }
-                if (!Minecraft.getInstance().isPaused()) {
-                    poseStack.mulPose(Axis.XP.rotationDegrees(angle));
-                }
-            }
-            poseStack.translate(-0.2F, 0.0F, 0.0F);
-            ScreenIndustrialUpgrade.bindTexture(rotorRL);
-            VertexConsumer consumer = Minecraft.getInstance()
-                    .renderBuffers()
-                    .bufferSource()
-                    .getBuffer(RenderType.entityCutout(rotorRL));
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            int packedLight = event.getLevelRenderer().getLightColor(world, pos);
-            model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-
-            poseStack.popPose();
+        if (diameter <= 0 || rotor == null || rotorRL == null || this.slot.get(0).isEmpty()) {
+            return;
         }
+
+        WaterRotorModel model = ClientRotorModels.getOrCreate(diameter);
+        WaterRotorDamageProfile damageProfile = WaterRotorDamageProfile.resolve(this);
+
+        float angle = windGen.getAngle();
+        Direction facing = windGen.getFacing();
+
+        boolean rotorBroken = rotor.getMaxCustomDamage(this.slot.get(0)) - rotor.getCustomDamage(this.slot.get(0)) <= 0;
+        boolean spinning = false;
+
+        pos = pos.offset(facing.getNormal());
+
+        PoseStack poseStack = event.getPoseStack();
+        poseStack.pushPose();
+        poseStack.translate(0.5F + facing.getStepX() * 0.35F, 0.5F, 0.5F + facing.getStepZ() * 0.35F);
+
+        switch (facing) {
+            case NORTH:
+                poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+                break;
+            case EAST:
+                poseStack.mulPose(Axis.YP.rotationDegrees(-180.0F));
+                break;
+            case SOUTH:
+                poseStack.mulPose(Axis.YP.rotationDegrees(-270.0F));
+                break;
+            case UP:
+                poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
+                break;
+            case DOWN:
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+                break;
+            default:
+                break;
+        }
+
+        if (windGen.getSpace()) {
+            if (rotorBroken) {
+                angle = 0.0F;
+            }
+
+            if (!Minecraft.getInstance().isPaused()) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                spinning = !rotorBroken;
+            }
+        }
+
+        poseStack.translate(-0.2F, 0.0F, 0.0F);
+
+        ScreenIndustrialUpgrade.bindTexture(rotorRL);
+        VertexConsumer consumer = Minecraft.getInstance()
+                .renderBuffers()
+                .bufferSource()
+                .getBuffer(RenderType.entityCutoutNoCull(rotorRL));
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        int packedLight = event.getLevelRenderer().getLightColor(world, pos);
+        float animationTime = world != null
+                ? world.getGameTime() + Minecraft.getInstance().getFrameTime()
+                : Minecraft.getInstance().getFrameTime();
+
+        model.renderDamagedRotor(
+                poseStack,
+                consumer,
+                packedLight,
+                OverlayTexture.NO_OVERLAY,
+                damageProfile,
+                animationTime,
+                spinning
+        );
+
+        poseStack.popPose();
     }
 
     public void updateField(String name, CustomPacketBuffer is) {

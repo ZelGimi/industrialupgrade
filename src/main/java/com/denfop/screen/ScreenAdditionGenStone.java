@@ -49,11 +49,11 @@ public class ScreenAdditionGenStone<T extends ContainerMenuAdditionGenStone> ext
         new TooltipWidget(this, 63, 64, 18, 18)
                 .withTooltip(Localization.translate("message.text.mode") + ": " +
                         (this.container.base.getMode() == BlockEntityBaseAdditionGenStone.Mode.DIORITE ?
-                                this.container.base.diorite.getDisplayName().getString() :
+                                com.denfop.utils.ModUtils.cleanComponentString(this.container.base.diorite.getDisplayName().getString()) :
                                 this.container.base.getMode() == BlockEntityBaseAdditionGenStone.Mode.ANDESITE
                                         ?
-                                        this.container.base.andesite.getDisplayName().getString()
-                                        : this.container.base.granite.getDisplayName().getString()
+                                        com.denfop.utils.ModUtils.cleanComponentString(this.container.base.andesite.getDisplayName().getString())
+                                        : com.denfop.utils.ModUtils.cleanComponentString(this.container.base.granite.getDisplayName().getString())
                         ))
                 .drawForeground(poseStack, mouseX
                         , mouseY);

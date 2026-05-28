@@ -1,0 +1,87 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:triton_cavity",
+      "industrialupgrade:space/triton/stone_tunnels",
+      "industrialupgrade:space/triton/hall_system",
+      "industrialupgrade:space/triton/fractures",
+      "industrialupgrade:space/triton/porous",
+      "industrialupgrade:space/triton/shafts",
+      "industrialupgrade:space/triton/liquid_chamber",
+      "industrialupgrade:space/triton/frozen_chamber",
+      "industrialupgrade:space/triton/crater_chamber",
+      "industrialupgrade:space/triton/tunnel_caves",
+      "industrialupgrade:space/triton/labyrinth_caves",
+      "industrialupgrade:space/triton/shaft_caves",
+      "industrialupgrade:space/triton/dome_caves",
+      "industrialupgrade:space/triton/well_caves",
+      "industrialupgrade:space/triton/multi_tier_caves",
+      "industrialupgrade:space/triton/branched_caves",
+      "industrialupgrade:space/triton/spiral_caves",
+      "industrialupgrade:space/triton/arch_caves",
+      "industrialupgrade:space/triton/chamber_caves",
+      "industrialupgrade:space/triton/canyon_caves",
+      "industrialupgrade:space/triton/pocket_caves",
+      "industrialupgrade:space/triton/crevice_caves",
+      "industrialupgrade:space/triton/amphitheater_caves",
+      "industrialupgrade:space/triton/cathedral_caves",
+      "industrialupgrade:space/triton/gallery_caves",
+      "industrialupgrade:space/triton/winding_caves",
+      "industrialupgrade:space/triton/cascade_caves",
+      "industrialupgrade:space/triton/collapse_caves",
+      "industrialupgrade:space/triton/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:triton_lake_0",
+      "industrialupgrade:triton_fluid_0"
+    ],
+    [
+      "industrialupgrade:triton_craters",
+      "industrialupgrade:space/triton/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:triton_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:triton_ore_0",
+      "industrialupgrade:triton_ore_1",
+      "industrialupgrade:triton_ore_2",
+      "industrialupgrade:triton_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/triton/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

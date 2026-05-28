@@ -3,34 +3,34 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:energy_tools/spectralaxe"
+      "item": "industrialupgrade:crafting_elements/crafting_518_element"
     },
     "B": {
-      "item": "industrialupgrade:energy_tools/spectralshovel"
+      "item": "industrialupgrade:crafting_elements/crafting_521_element"
     },
     "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/photoncircuit",
-      "nbt": "{level:11}"
+      "tag": "forge:doubleplate/ferromanganese"
     },
     "D": {
-      "item": "industrialupgrade:energy_tools/spectralpickaxe"
-    },
-    "E": {
-      "item": "industrialupgrade:adv_spectral_box"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "minecraft:diamond_shovel",
+      "nbt": "{Damage:0}"
     },
     "F": {
-      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+      "item": "industrialupgrade:crafting_elements/crafting_524_element"
+    },
+    "H": {
+      "tag": "forge:rods/molybdenum"
     }
   },
   "pattern": [
-    "ACB",
-    "FDF",
-    "ECE"
+    "ADB",
+    "CFC",
+    "CHC"
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/ultddrill"
+    "item": "industrialupgrade:energy_tools/nanoshovel"
   },
   "show_notification": true
 }

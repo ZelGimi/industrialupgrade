@@ -13,6 +13,7 @@ import com.denfop.componets.ComponentButton;
 import com.denfop.containermenu.ContainerMenuGasMainController;
 import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.potion.IUPotion;
 import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -80,7 +81,7 @@ public class ScreenGasController<T extends ContainerMenuGasMainController> exten
         super.renderSlot(p_97800_, p_97801_);
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 160 && mouseX <= 189 && mouseY >= 135 && mouseY <= 148) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("reactor.guide.gas_reactor"));
@@ -192,11 +193,10 @@ public class ScreenGasController<T extends ContainerMenuGasMainController> exten
         if (this.container.base.security == EnumTypeSecurity.UNSTABLE) {
             time = this.container.base.yellow_timer.getDisplay();
         }
-        new AdvancedTooltipWidget(this, 161, 75, 189, 96).withTooltip("Radiation: " + ModUtils.getString(this.container.base
+        new AdvancedTooltipWidget(this, 161, 75, 189, 96).withTooltip(Localization.translate("iu.reactor_info.radiation") + ": " + ModUtils.getString(this.container.base
                 .getRad()
                 .getEnergy()) +
-                "/" + ModUtils.getString(this.container.base.getRad().getCapacity()) + " ☢" + "\n" + Localization.translate("iu" +
-                ".potion.radiation") + ": " + ModUtils.getString(
+                "/" + ModUtils.getString(this.container.base.getRad().getCapacity()) + " ☢" + "\n" + Localization.translate(IUPotion.radiation.getDescriptionId()) + ": " + ModUtils.getString(
                 this.container.base
                         .getReactor()
                         .getRadGeneration()) + " ☢/t \n" + ((this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor())

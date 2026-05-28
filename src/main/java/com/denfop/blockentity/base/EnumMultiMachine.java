@@ -288,7 +288,7 @@ public enum EnumMultiMachine {
             EnumTypeMachines.COMBMACERATOR,
             IUItem.pho_machine
     ),
-    Rolling(10, 200, 1, IUItem.machines_base2, 1, 0, 0, EnumTypeMachines.ROLLING, IUItem.machines_base2),
+    Rolling(2, 200, 1, IUItem.machines_base2, 1, 0, 0, EnumTypeMachines.ROLLING, IUItem.machines_base2),
     DOUBLE_Rolling(
             2,
             200,

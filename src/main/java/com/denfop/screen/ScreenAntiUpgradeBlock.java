@@ -34,7 +34,7 @@ public class ScreenAntiUpgradeBlock<T extends ContainerMenuAntiUpgrade> extends 
 
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.anti_modification.info"));
@@ -130,9 +130,11 @@ public class ScreenAntiUpgradeBlock<T extends ContainerMenuAntiUpgrade> extends 
             final List<ItemStack> list = UpgradeSystem.system.getListStack(this.container.base.input.get(0));
             final List<UpgradeModificator> list1 = UpgradeSystem.system.getListModifications(this.container.base.input.get(0));
             for (int i = 0; i < list1.size(); i++) {
+
                 drawTexturedModalRect(poseStack, xoffset + 149, yoffset + 10 + 18 * i, 200,
                         88, 18, 18
                 );
+
             }
             int i = 0;
             RenderSystem.setShaderColor(1F, 1, 1F, 1);
@@ -151,7 +153,11 @@ public class ScreenAntiUpgradeBlock<T extends ContainerMenuAntiUpgrade> extends 
                     i++;
                     continue;
                 }
-                new ItemStackWidget(this, 71, 9 + i * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
+                if (i < 4) {
+                    new ItemStackWidget(this, 71, 9 + i * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
+                }else{
+                    new ItemStackWidget(this, 150, 11+ (i - 4) * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
+                }
                 i++;
 
             }

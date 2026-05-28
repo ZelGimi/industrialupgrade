@@ -10,9 +10,8 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockVolcanoChest;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuVolcanoChest;
-import com.denfop.datagen.IULootTableProvider;
+import com.denfop.datagen.IULootTables;
 import com.denfop.inventory.Inventory;
-import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.screen.ScreenVolcanoChest;
 import net.minecraft.core.BlockPos;
@@ -47,9 +46,8 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
         LootParams.Builder lootcontext$builder;
         lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level)).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         final LootParams context = lootcontext$builder.create(LootContextParamSets.CHEST);
-        if (IUCore.VOLCANO_LOOT_POOL == null) {
-            IUCore.VOLCANO_TABLE = level.getServer().getLootData().getLootTable(IULootTableProvider.VOLCANO_LOOT_TABLE);
-            IUCore.VOLCANO_LOOT_POOL = ((LootTableAccessor) IUCore.VOLCANO_TABLE).getPools();
+        if (IUCore.VOLCANO_TABLE == null) {
+            IUCore.VOLCANO_TABLE = level.getServer().getLootData().getLootTable(IULootTables.VOLCANO);
         }
         for (int i = 0; i < 8; i++)
             IUCore.VOLCANO_TABLE.getRandomItems(context, stacks::add);
@@ -77,13 +75,13 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
         }
         List<ItemStack> stacks = generateLoot();
         if (placer instanceof FakePlayerSpawner)
-        for (ItemStack stack1 : stacks) {
-            int index;
-            do {
-                index = level.random.nextInt(27);
-            } while (!this.invSlot.get(index).isEmpty());
-            this.invSlot.set(index, stack1);
-        }
+            for (ItemStack stack1 : stacks) {
+                int index;
+                do {
+                    index = level.random.nextInt(27);
+                } while (!this.invSlot.get(index).isEmpty());
+                this.invSlot.set(index, stack1);
+            }
     }
 
     @Override

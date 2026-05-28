@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.mechanism.combpump.BlockEntityCombinedPump;
@@ -13,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityPhoCombPump extends BlockEntityCombinedPump {
 
     public BlockEntityPhoCombPump(BlockPos pos, BlockState state) {
-        super(320, 10, EnumTypePump.PH, BlocksPhotonicMachine.photonic_comb_pump, pos, state);
+        super(ModConfig.mechanismInt("photonic_comb_pump_radius_or_size", 320), ModConfig.mechanismInt("photonic_comb_pump_operation_length", 10), EnumTypePump.PH, BlocksPhotonicMachine.photonic_comb_pump, pos, state);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class ScreenMultiMatter<T extends ContainerMenuMultiMatter> extends Scree
 
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
         List<ItemStack> ret = new ArrayList<>();
-        Set<UpgradableProperty> properties = block.getUpgradableProperties();
+        Set<UpgradableProperty> properties = block.getAllPossibleUpgradableProperties();
 
         for (final ItemStack stack : UpgradeRegistry.getUpgrades()) {
             IUpgradeItem item = (IUpgradeItem) stack.getItem();
@@ -82,14 +82,14 @@ public class ScreenMultiMatter<T extends ContainerMenuMultiMatter> extends Scree
 
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
 
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
-                text.add(stack.getDisplayName().getString());
+                text.add(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()));
             }
 
             this.drawTooltip(mouseX, mouseY, text);

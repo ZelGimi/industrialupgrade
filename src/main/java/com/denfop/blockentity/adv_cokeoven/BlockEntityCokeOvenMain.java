@@ -1,5 +1,7 @@
 package com.denfop.blockentity.adv_cokeoven;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -96,8 +98,8 @@ public class BlockEntityCokeOvenMain extends BlockEntityMultiBlockBase implement
         this.output1 = new InventoryOutput(this, 1);
         this.output2 = new InventoryOutput(this, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("coke_oven_controller_soil_pollution_amount", 0.2D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("coke_oven_controller_air_pollution_amount", 0.5D)));
     }
 
     public MultiBlockEntity getTeBlock() {
@@ -147,7 +149,7 @@ public class BlockEntityCokeOvenMain extends BlockEntityMultiBlockBase implement
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
 
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString()));
 
     }
 

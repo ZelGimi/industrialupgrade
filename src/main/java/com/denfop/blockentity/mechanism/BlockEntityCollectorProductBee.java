@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.bee.BeeNetwork;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -77,8 +79,8 @@ public class BlockEntityCollectorProductBee extends BlockEntityInventory impleme
         this.outputSlot1 = new InventoryOutput(this, 16);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("bee_product_collector_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("bee_product_collector_air_pollution_amount", 0.1D)));
         visible = this.addComponent(new ComponentVisibleArea(this));
 
     }
@@ -158,9 +160,9 @@ public class BlockEntityCollectorProductBee extends BlockEntityInventory impleme
     }
 
     public boolean contains(BlockPos vec) {
-        if (vec.getX() > this.searchArea.minX && vec.getX() < searchArea.maxX) {
-            if (vec.getY() > this.searchArea.minY && vec.getY() < searchArea.maxY) {
-                return vec.getZ() > searchArea.minZ && vec.getZ() < searchArea.maxZ;
+        if (vec.getX() >= this.searchArea.minX && vec.getX() < searchArea.maxX) {
+            if (vec.getY() >= this.searchArea.minY && vec.getY() < searchArea.maxY) {
+                return vec.getZ() >= searchArea.minZ && vec.getZ() < searchArea.maxZ;
             } else {
                 return false;
             }

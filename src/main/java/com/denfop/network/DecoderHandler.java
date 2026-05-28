@@ -308,7 +308,7 @@ public class DecoderHandler {
             case Item:
                 return BuiltInRegistries.ITEM.get((ResourceLocation) decode(is, EncodedType.ResourceLocation));
             case ItemStack:
-                int size = is.readByte();
+                int size = is.readInt();
                 if (size == 0) {
                     return ModUtils.emptyStack;
                 }

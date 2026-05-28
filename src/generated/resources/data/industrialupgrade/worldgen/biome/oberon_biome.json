@@ -1,0 +1,82 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:oberon_cavity",
+      "industrialupgrade:space/oberon/stone_tunnels",
+      "industrialupgrade:space/oberon/hall_system",
+      "industrialupgrade:space/oberon/fractures",
+      "industrialupgrade:space/oberon/shafts",
+      "industrialupgrade:space/oberon/liquid_chamber",
+      "industrialupgrade:space/oberon/frozen_chamber",
+      "industrialupgrade:space/oberon/crater_chamber",
+      "industrialupgrade:space/oberon/tunnel_caves",
+      "industrialupgrade:space/oberon/shaft_caves",
+      "industrialupgrade:space/oberon/dome_caves",
+      "industrialupgrade:space/oberon/well_caves",
+      "industrialupgrade:space/oberon/multi_tier_caves",
+      "industrialupgrade:space/oberon/branched_caves",
+      "industrialupgrade:space/oberon/spiral_caves",
+      "industrialupgrade:space/oberon/chamber_caves",
+      "industrialupgrade:space/oberon/pocket_caves",
+      "industrialupgrade:space/oberon/crevice_caves",
+      "industrialupgrade:space/oberon/cathedral_caves",
+      "industrialupgrade:space/oberon/gallery_caves",
+      "industrialupgrade:space/oberon/winding_caves",
+      "industrialupgrade:space/oberon/cascade_caves",
+      "industrialupgrade:space/oberon/collapse_caves",
+      "industrialupgrade:space/oberon/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:oberon_lake_0",
+      "industrialupgrade:oberon_fluid_0"
+    ],
+    [
+      "industrialupgrade:oberon_craters",
+      "industrialupgrade:space/oberon/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:oberon_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:oberon_ore_0",
+      "industrialupgrade:oberon_ore_1",
+      "industrialupgrade:oberon_ore_2",
+      "industrialupgrade:oberon_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/oberon/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

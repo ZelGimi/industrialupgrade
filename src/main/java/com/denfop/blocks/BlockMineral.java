@@ -47,10 +47,7 @@ public class BlockMineral<T extends Enum<T> & SubEnum> extends BlockCore<T> impl
         p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
-    /**
-     * @param meta
-     * @return
-     */
+
     @Override
     public BlockState getStateMeta(int meta) {
         return this.stateDefinition.any();

@@ -185,7 +185,7 @@ public class BlockEntityBaseVending extends BlockEntityInventory implements ITyp
             }
             int value = map;
             if (value > 0) {
-                int countCan = output.isEmpty()
+                double countCan = output.isEmpty()
                         ? privateSell.getMaxStackSize() / privateSell.getCount()
                         : (privateSell.getMaxStackSize() - output.getCount()) / privateSell.getCount();
 
@@ -207,7 +207,7 @@ public class BlockEntityBaseVending extends BlockEntityInventory implements ITyp
                 int maxByOutput = totalFreeSpace / privateStack.getCount();
 
 
-                final int countCan1 = Math.min(maxByOutput, countCan);
+                final double countCan1 = Math.min(maxByOutput, countCan);
                 if (countCan1 == 0) {
                     continue;
                 }
@@ -216,14 +216,14 @@ public class BlockEntityBaseVending extends BlockEntityInventory implements ITyp
                         break;
                     }
                     if (stack1.is(privateSell.getItem())) {
-                        int shrink = Math.min(countCan, stack1.getCount() / privateSell.getCount());
-                        stack1.shrink(shrink * privateSell.getCount());
+                        double shrink = Math.min(countCan, 1D * stack1.getCount() / privateSell.getCount());
+                        stack1.shrink((int) (shrink * privateSell.getCount()));
                         countCan -= shrink;
                     }
                 }
-                stack.shrink(countCan1 * privateStack.getCount());
-                this.output.add(ModUtils.setSize(privateStack, countCan1 * privateStack.getCount()));
-                this.invSlotSell.add(ModUtils.setSize(privateSell, countCan1 * privateSell.getCount()));
+                stack.shrink((int) countCan1 * privateStack.getCount());
+                this.output.add(ModUtils.setSize(privateStack, (int) countCan1 * privateStack.getCount()));
+                this.invSlotSell.add(ModUtils.setSize(privateSell, (int) countCan1 * privateSell.getCount()));
                 this.updateItems();
             }
         }

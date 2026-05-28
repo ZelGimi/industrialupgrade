@@ -1,5 +1,7 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.Localization;
@@ -24,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -41,7 +44,7 @@ public class ItemSteelHammer extends ItemToolIU {
     private final List<TagKey<Block>> item_tools;
 
     public ItemSteelHammer() {
-        super(2, 8, BlockTags.MINEABLE_WITH_PICKAXE, new Properties().stacksTo(1).setNoRepair().durability(IUTiers.IRON.getUses()), IUTiers.IRON);
+        super(ModConfig.itemDouble("hammer_durability", 2.0D), -3, BlockTags.MINEABLE_WITH_PICKAXE, new Properties().stacksTo(1).setNoRepair().durability(IUTiers.IRON.getUses()), IUTiers.IRON);
         this.mineableBlocks = EnumTypeInstruments.DRILL.getMineableBlocks();
         this.item_tools = EnumTypeInstruments.DRILL.getListItems();
 
@@ -118,6 +121,7 @@ public class ItemSteelHammer extends ItemToolIU {
             Level level, Block block, BlockHitResult mop, byte modeItem, Player player, BlockPos pos,
             ItemStack stack
     ) {
+
         byte xRange = modeItem;
         byte yRange = modeItem;
         byte zRange = modeItem;
@@ -146,13 +150,13 @@ public class ItemSteelHammer extends ItemToolIU {
         fortune = Math.min(3, fortune);
 
         int yOffset = yRange > 0 ? yRange - 1 : 0;
-        stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        boolean breakBlocks = false;
 
         if (!player.getAbilities().instabuild) {
             for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
                 for (int yPos = y - yRange + yOffset; yPos <= y + yRange + yOffset; yPos++) {
                     for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
-                        if (stack.getDamageValue() > 0) {
+                        if (stack.getDamageValue() != stack.getMaxDamage()) {
                             BlockPos blockPos = new BlockPos(xPos, yPos, zPos);
                             BlockState state = level.getBlockState(blockPos);
                             Block localBlock = state.getBlock();
@@ -161,7 +165,7 @@ public class ItemSteelHammer extends ItemToolIU {
                                     && state.getDestroySpeed(level, blockPos) >= 0.0F
                             ) {
                                 if (state.getDestroySpeed(level, blockPos) > 0.0F) {
-                                    mineBlock(stack, level, state, blockPos, player);
+                                    breakBlocks = mineBlock(stack, level, state, blockPos, player) || breakBlocks;
                                 }
                                 if (!silkTouch) {
                                     ExperienceUtils.addPlayerXP(player, getExperience(state, level, blockPos, fortune, stack, localBlock));
@@ -174,14 +178,14 @@ public class ItemSteelHammer extends ItemToolIU {
                 }
             }
         } else {
-            if (stack.getDamageValue() > 0) {
+            if (stack.getDamageValue() != stack.getMaxDamage()) {
                 BlockState state = level.getBlockState(pos);
                 Block localBlock = state.getBlock();
                 if ((localBlock != Blocks.AIR && isCorrectToolForDrops(stack, state)
                         && state.getDestroySpeed(level, pos) >= 0.0F)
                         || (block == Blocks.INFESTED_STONE)) {
                     if (state.getDestroySpeed(level, pos) >= 0.0F) {
-                        mineBlock(stack, level, state, pos, player);
+                        breakBlocks = mineBlock(stack, level, state, pos, player) || breakBlocks;
                     }
                     if (!silkTouch) {
                         ExperienceUtils.addPlayerXP(player, getExperience(state, level, pos, fortune, stack, localBlock));
@@ -193,6 +197,9 @@ public class ItemSteelHammer extends ItemToolIU {
                 }
             }
         }
+        if (breakBlocks)
+            stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+
         return true;
     }
 
@@ -203,7 +210,7 @@ public class ItemSteelHammer extends ItemToolIU {
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return mineableBlocks.contains(state) ? this.speed : 1.0F;
+        return state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) ? this.speed : 1.0F;
     }
 
     public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
@@ -227,10 +234,10 @@ public class ItemSteelHammer extends ItemToolIU {
             if (ForgeHooks.onBlockBreakEvent(serverWorld, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos) == -1) {
                 return false;
             }
-
+            BlockEntity blockEntity = world.getBlockEntity(pos);
             if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
-                block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+                block.playerDestroy(world, (ServerPlayer) entity, pos, state, blockEntity, stack);
 
 
                 List<ItemEntity> items = world.getEntitiesOfClass(
@@ -259,8 +266,10 @@ public class ItemSteelHammer extends ItemToolIU {
             }
 
         } else {
-            if (world.destroyBlock(pos, true, player)) {
-                block.playerDestroy(world, player, pos, state, null, stack);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (block.onDestroyedByPlayer(state, world, pos, (Player) entity, true, world.getFluidState(pos))) {
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, (Player) entity, pos, state, blockEntity, stack);
             }
 
         }

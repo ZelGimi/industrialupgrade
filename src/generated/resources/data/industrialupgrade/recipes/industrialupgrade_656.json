@@ -5,12 +5,6 @@
     "B": {
       "item": "industrialupgrade:adv_spectral_box"
     },
-    "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
-    },
     "D": {
       "item": "industrialupgrade:energy_tools/quantumdrill"
     },
@@ -26,7 +20,7 @@
   },
   "pattern": [
     "THT",
-    "CDC",
+    "TDT",
     "BFB"
   ],
   "result": {

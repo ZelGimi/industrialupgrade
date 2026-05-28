@@ -3,25 +3,26 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:circuit/nanocircuit_part1"
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
     },
     "B": {
-      "item": "industrialupgrade:transformer_iu/mv"
+      "tag": "forge:casings/osmiridium"
     },
     "C": {
-      "item": "industrialupgrade:circuit/quantumcircuit_part2"
+      "tag": "forge:casings/adamantium"
     },
     "D": {
-      "item": "industrialupgrade:itemcore/hybcore"
+      "item": "industrialupgrade:crafting_elements/crafting_650_element"
     }
   },
   "pattern": [
-    "ABA",
-    "CDC",
-    "ABA"
+    "CCC",
+    "DAD",
+    "BBB"
   ],
   "result": {
-    "item": "powerutils:module_fe"
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_21_element"
   },
   "show_notification": true
 }

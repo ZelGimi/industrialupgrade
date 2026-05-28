@@ -38,8 +38,8 @@ public class FakePlanet implements IFakePlanet {
         this.spaceOperation = spaceOperation;
         this.data = data;
         int seconds =
-                (int) ((Math.abs(planet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
-        seconds+=planet.getSystem().getDistanceFromSolar()*60*60;
+                (int) ((Math.abs(planet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.5));
+        seconds += planet.getSystem().getDistanceFromSolar() * 60 * 60;
         if (SpaceUpgradeSystem.system.hasModules(
                 EnumTypeUpgrade.ENGINE,
                 rovers.getItemStack()

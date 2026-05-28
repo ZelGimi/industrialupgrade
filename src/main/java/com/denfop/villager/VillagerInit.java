@@ -2,6 +2,7 @@ package com.denfop.villager;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
+import com.denfop.villager.worldgen.ModVillageStructures;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -13,7 +14,6 @@ import static com.denfop.register.Register.POI_TYPE;
 import static com.denfop.register.Register.VILLAGER_PROFESSIONS;
 
 public class VillagerInit {
-
 
     public static final RegistryObject<PoiType> ENGINEER_POI = registerPoi("engineer", IUItem.programming_table.getObject(0));
     public static final RegistryObject<PoiType> MECHANIC_POI = registerPoi("mechanic", IUItem.basemachine2.getObject(BlockBaseMachine3Entity.generator_iu.getId()));
@@ -29,13 +29,12 @@ public class VillagerInit {
     public static final RegistryObject<VillagerProfession> CHEMIST = registerProfession("chemist", CHEMIST_POI);
     public static final RegistryObject<VillagerProfession> BOTANIST = registerProfession("botanist", BOTANIST_POI);
 
-    private static RegistryObject<PoiType> registerPoi(String name, RegistryObject<? extends Block> block) {
+    private static RegistryObject<PoiType> registerPoi(final String name, final RegistryObject<? extends Block> block) {
         return POI_TYPE.register(name, () ->
-                new PoiType(ImmutableSet.copyOf(block.get().getStateDefinition().getPossibleStates()),
-                        1, 1));
+                new PoiType(ImmutableSet.copyOf(block.get().getStateDefinition().getPossibleStates()), 1, 1));
     }
 
-    private static RegistryObject<VillagerProfession> registerProfession(String name, RegistryObject<PoiType> poiType) {
+    private static RegistryObject<VillagerProfession> registerProfession(final String name, final RegistryObject<PoiType> poiType) {
         return VILLAGER_PROFESSIONS.register(name, () -> new VillagerProfession(
                 name,
                 poiTypeHolder -> poiTypeHolder.value() == poiType.get(),
@@ -46,7 +45,7 @@ public class VillagerInit {
         ));
     }
 
-
     public static void init() {
+        ModVillageStructures.init();
     }
 }

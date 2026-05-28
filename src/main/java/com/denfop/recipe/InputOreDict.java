@@ -24,8 +24,8 @@ public class InputOreDict implements IInputItemStack {
 
     public final Integer meta;
     private final TagKey<Item> tag;
-    private final List<ItemStack> ores;
     public int amount;
+    private List<ItemStack> ores;
 
     public InputOreDict(String input) {
         this(input.toLowerCase(), 1);
@@ -115,7 +115,7 @@ public class InputOreDict implements IInputItemStack {
     }
 
     public InputOreDict(FriendlyByteBuf buffer) {
-        this(buffer.readInt(), new TagKey<>(Registries.ITEM, buffer.readResourceLocation()));
+        this(buffer.readInt(), TagKey.create(Registries.ITEM, buffer.readResourceLocation()));
 
     }
 
@@ -134,11 +134,6 @@ public class InputOreDict implements IInputItemStack {
     }
 
     public boolean matches(ItemStack subject) {
-        List<ItemStack> inputs = this.getOres();
-        boolean useOreStackMeta = this.meta == null;
-        Item subjectItem = subject.getItem();
-        int subjectMeta = 0;
-
         return subject.is(tag);
     }
 
@@ -209,6 +204,19 @@ public class InputOreDict implements IInputItemStack {
     }
 
     private List<ItemStack> getOres() {
+        if (this.ores.isEmpty()) {
+            ores = new ArrayList<>();
+            Iterable<Holder<Item>> holder = BuiltInRegistries.ITEM.getTagOrEmpty(this.tag);
+            holder.forEach(itemHolder -> ores.add(new ItemStack(itemHolder)));
+            if (ores.isEmpty()) {
+                if (mapItems.containsKey(tag.location())) {
+                    mapItems.get(tag.location()).forEach(items -> ores.add(items.copy()));
+                }
+            }
+            for (ItemStack stack : ores) {
+                stack.setCount(this.getAmount());
+            }
+        }
         return this.ores;
     }
 

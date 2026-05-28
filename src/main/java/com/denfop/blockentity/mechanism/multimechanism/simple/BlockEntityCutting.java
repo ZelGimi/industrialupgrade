@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.simple;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -19,8 +21,8 @@ public class BlockEntityCutting extends BlockEntityMultiMachine {
 
     public BlockEntityCutting(BlockPos pos, BlockState state) {
         super(EnumMultiMachine.Cutting.usagePerTick, EnumMultiMachine.Cutting.lenghtOperation, BlockMoreMachine2Entity.cutting, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("cutting_machine_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("cutting_machine_air_pollution_amount", 0.15D)));
     }
 
     public MultiBlockEntity getTeBlock() {

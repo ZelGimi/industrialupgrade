@@ -10,6 +10,8 @@ public enum EnergyType {
     STEAM(" mb", false, true),
     BIOFUEL(" mb", false, true),
     AMPERE(" A", false, true),
+
+    STORAGE("", false, false),
     ;
 
     private final String prefix;

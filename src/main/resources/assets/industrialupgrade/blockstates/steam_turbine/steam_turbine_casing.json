@@ -15,7 +15,26 @@
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
       "y": 90
     },
-    "facing=down,type=steam_turbine_casing": {
+    "facing=north,type=steam_turbine_casing_active": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing"
+    },
+    "facing=south,type=steam_turbine_casing_active": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_casing_active": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_casing_active": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
+      "y": 90
+    },
+    "facing=up,type=steam_turbine_casing_active": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
+      "x": 270
+    },
+    "facing=down,type=steam_turbine_casing_active": {
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
       "x": 90
     },
@@ -23,28 +42,9 @@
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
       "x": 270
     },
-    "facing=north,type=steam_turbine_casing_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing"
-    },
-    "facing=south,type=steam_turbine_casing_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
-      "y": 180
-    },
-    "facing=west,type=steam_turbine_casing_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
-      "y": 270
-    },
-    "facing=east,type=steam_turbine_casing_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
-      "y": 90
-    },
-    "facing=down,type=steam_turbine_casing_invalid": {
+    "facing=down,type=steam_turbine_casing": {
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
       "x": 90
-    },
-    "facing=up,type=steam_turbine_casing_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing",
-      "x": 270
     }
   }
 }

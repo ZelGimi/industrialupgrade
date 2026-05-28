@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.dual;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.widget.EnumTypeSlot;
@@ -38,8 +40,8 @@ public class BlockEntityDoubleFermer extends BlockEntityMultiMachine implements 
                 return EnumTypeSlot.FERTILIZER;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("double_fermer_soil_pollution_amount", 0.075D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("double_fermer_air_pollution_amount", 0.1D)));
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.lightning_rod.IController;
 import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
+import com.denfop.blocks.BlockNitrateMud;
 import com.denfop.containermenu.ContainerMenuBags;
 import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.items.EnumInfoUpgradeModules;
@@ -45,6 +46,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
@@ -58,6 +60,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -86,8 +90,8 @@ import static com.denfop.blockentity.lightning_rod.BlockEntityLightningRodContro
 
 public class IUEventHandler {
 
-    public static TagKey<Item> electrumTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("forge:ingots/electrum"));
-    public static TagKey<Item> coalDustTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("forge:dusts/coal"));
+    public static TagKey<Item> electrumTag = TagKey.create(Registries.ITEM, ResourceLocation.tryParse("forge:ingots/electrum"));
+    public static TagKey<Item> coalDustTag = TagKey.create(Registries.ITEM, ResourceLocation.tryParse("forge:dusts/coal"));
     public static List<ItemEntity> entityItemList = new LinkedList<>();
     final ChatFormatting[] name = {ChatFormatting.DARK_PURPLE, ChatFormatting.YELLOW, ChatFormatting.BLUE,
             ChatFormatting.RED, ChatFormatting.GRAY, ChatFormatting.GREEN, ChatFormatting.DARK_AQUA, ChatFormatting.AQUA};
@@ -101,6 +105,70 @@ public class IUEventHandler {
 
     }
 
+    @SubscribeEvent
+    public void onLevelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+
+        if (!(event.level instanceof ServerLevel level)) {
+            return;
+        }
+
+
+        if (level.getGameTime() % 20 != 0) {
+            return;
+        }
+        LevelEntityGetter<Entity> iterable = (level).getEntities();
+        List<Entity> list = StreamSupport.stream(iterable.getAll().spliterator(), false).filter(entity -> entity instanceof ItemEntity)
+                .toList();
+        for (Entity entity : list) {
+            if (!(entity instanceof ItemEntity itemEntity)) {
+                continue;
+            }
+
+            ItemStack stack = itemEntity.getItem();
+            if (!stack.is(Items.ROTTEN_FLESH)) {
+                continue;
+            }
+
+
+            BlockPos belowPos = BlockPos.containing(
+                    itemEntity.getX(),
+                    itemEntity.getBoundingBox().minY - 0.05D,
+                    itemEntity.getZ()
+            );
+
+            if (!level.getBlockState(belowPos).is(Blocks.MUD)) {
+                continue;
+            }
+
+            BlockPos aboveMud = belowPos.above();
+
+
+            if (itemEntity.getY() < aboveMud.getY() - 0.2D) {
+                continue;
+            }
+
+            level.setBlock(
+                    belowPos,
+                    IUItem.nitrate_mud.getDefaultState().setValue(BlockNitrateMud.STAGE, 0),
+                    Block.UPDATE_ALL
+            );
+
+            level.scheduleTick(belowPos, IUItem.nitrate_mud.getBlock(0), BlockNitrateMud.STAGE_TIME);
+
+            stack.shrink(1);
+
+            if (stack.isEmpty()) {
+                itemEntity.discard();
+            } else {
+                itemEntity.setItem(stack);
+            }
+
+
+        }
+    }
 
     @SubscribeEvent
     public void onWorldTick1(TickEvent.LevelTickEvent event) {
@@ -151,7 +219,7 @@ public class IUEventHandler {
             return;
         }
 
-        // Check if the item used is the cutter
+
         if (stack.getItem() == IUItem.cutter.getItem()) {
 
             BlockEntity tile = world.getBlockEntity(pos);
@@ -293,33 +361,98 @@ public class IUEventHandler {
         }
     }
 
-    public void setFly(Player player, boolean fly, ItemStack stack) {
-        player.getAbilities().flying = fly;
-        player.getAbilities().mayfly = fly;
-        player.getPersistentData().putBoolean("isFlyActive", fly);
-        if (player.level().isClientSide && !fly) {
-            player.getAbilities().setFlyingSpeed((float) 0.05);
-            player.fallDistance = 0;
-        } else {
-            boolean edit = player.getPersistentData().getBoolean("edit_fly");
-            if (!edit) {
-                int flyspeed = (UpgradeSystem.system.hasModules(
-                        EnumInfoUpgradeModules.FLYSPEED,
-                        stack
-                ) ?
-                        UpgradeSystem.system.getModules(
-                                EnumInfoUpgradeModules.FLYSPEED,
-                                stack
-                        ).number : 0);
+    private boolean isArmorFlightEnabled(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
 
-                if (player.level().isClientSide) {
-                    player.getAbilities().setFlyingSpeed((float) ((float) 0.1 + 0.05 * flyspeed));
-                }
-            } else {
-                if (player.level().isClientSide) {
-                    player.getAbilities().setFlyingSpeed(player.getPersistentData().getFloat("fly_speed"));
-                }
+        if (!canFly(stack)) {
+            return false;
+        }
+
+        CompoundTag armorNbt = ModUtils.nbt(stack);
+
+        if (!armorNbt.getBoolean("jetpack")) {
+            return false;
+        }
+
+        return ElectricItem.manager.canUse(stack, 1.0D);
+    }
+
+    public void setFly(Player player, boolean fly, ItemStack stack) {
+        CompoundTag playerData = player.getPersistentData();
+
+        boolean changed = false;
+
+        boolean oldMayfly = player.getAbilities().mayfly;
+        boolean oldFlying = player.getAbilities().flying;
+        float oldSpeed = player.getAbilities().getFlyingSpeed();
+
+        if (fly) {
+            playerData.putBoolean("isFlyActive", true);
+            playerData.putBoolean("hasFly", true);
+
+            if (!player.getAbilities().mayfly) {
+                player.getAbilities().mayfly = true;
+                changed = true;
             }
+
+
+            float targetSpeed;
+
+            boolean edit = playerData.getBoolean("edit_fly");
+            if (!edit) {
+                int flyspeed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FLYSPEED, stack)
+                        ? UpgradeSystem.system.getModules(EnumInfoUpgradeModules.FLYSPEED, stack).number
+                        : 0;
+
+                targetSpeed = (float) (0.1F + 0.05F * flyspeed);
+            } else {
+                targetSpeed = playerData.getFloat("fly_speed");
+            }
+
+            if (targetSpeed < 0.01F) {
+                targetSpeed = 0.01F;
+            }
+
+            if (targetSpeed > 1.0F) {
+                targetSpeed = 1.0F;
+            }
+
+            if (Math.abs(oldSpeed - targetSpeed) > 0.0001F) {
+                player.getAbilities().setFlyingSpeed(targetSpeed);
+                changed = true;
+            }
+        } else {
+            playerData.putBoolean("isFlyActive", false);
+            playerData.putBoolean("hasFly", false);
+
+            if (!player.isCreative() && !player.isSpectator()) {
+                if (player.getAbilities().flying) {
+                    player.getAbilities().flying = false;
+                    changed = true;
+                }
+
+                if (player.getAbilities().mayfly) {
+                    player.getAbilities().mayfly = false;
+                    changed = true;
+                }
+
+                if (Math.abs(oldSpeed - 0.05F) > 0.0001F) {
+                    player.getAbilities().setFlyingSpeed(0.05F);
+                    changed = true;
+                }
+
+                player.fallDistance = 0.0F;
+            }
+        }
+
+        if (oldMayfly != player.getAbilities().mayfly || oldFlying != player.getAbilities().flying) {
+            changed = true;
+        }
+
+        if (changed && player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.onUpdateAbilities();
         }
     }
 
@@ -335,59 +468,35 @@ public class IUEventHandler {
 
     @SubscribeEvent
     public void FlyUpdate(LivingEvent.LivingTickEvent event) {
-
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        Player player = (Player) event.getEntity();
-        CompoundTag nbtData = player.getPersistentData();
-        if (!player.isCreative()) {
 
-            if (!player.getInventory().armor.get(2).isEmpty()) {
-                if (canFly(player.getInventory().armor.get(2))) {
-                    CompoundTag nbtData1 = ModUtils.nbt(player.getInventory().armor.get(2));
-                    boolean jetpack = nbtData1.getBoolean("jetpack");
-                    if (!jetpack) {
-                        if (nbtData.getBoolean("isFlyActive")) {
-                            nbtData.putBoolean("hasFly", true);
-                            setFly(player, false, player.getInventory().armor
-                                    .get(2));
-                        }
-                    } else {
-                        if (!player.onGround()) {
-                            if (nbtData1.getBoolean("canFly")) {
-                                setFly(player, true, player.getInventory().armor
-                                        .get(2));
-                                nbtData1.putBoolean("canFly", false);
-                                nbtData.putBoolean("canjump", false);
-                            }
-                        } else {
-                            if (nbtData.getBoolean("isFlyActive")) {
-                                setFly(player, false, player.getInventory().armor
-                                        .get(2));
-                            }
-                        }
-                    }
-                } else if (!player.getInventory().armor.get(2).isEmpty()) {
-                    if (nbtData.getBoolean("isFlyActive")) {
-                        setFly(player, false, player.getInventory().armor
-                                .get(2));
-                    }
-                }
-            } else {
-                if (nbtData.getBoolean("isFlyActive")) {
-                    setFly(player, false, player.getInventory().armor
-                            .get(2));
-                }
-            }
-        } else {
-            if (nbtData.getBoolean("isFlyActive")) {
-                setFly(player, false, player.getInventory().armor
-                        .get(2));
-            }
+
+        if (player.level().isClientSide) {
+            return;
         }
 
+        CompoundTag playerData = player.getPersistentData();
 
+
+        if (player.isCreative() || player.isSpectator()) {
+            if (playerData.getBoolean("isFlyActive")) {
+                playerData.putBoolean("isFlyActive", false);
+                playerData.putBoolean("hasFly", false);
+            }
+            return;
+        }
+
+        ItemStack chest = player.getInventory().armor.get(2);
+
+        if (isArmorFlightEnabled(chest)) {
+            setFly(player, true, chest);
+        } else {
+            if (playerData.getBoolean("isFlyActive")) {
+                setFly(player, false, chest);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -436,6 +545,9 @@ public class IUEventHandler {
         }
         if (item == IUItem.recipe_schedule.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.receptor.info")));
+        }
+        if (item == IUItem.ore2.getItem(6)) {
+            event.getToolTip().add(Component.literal(Localization.translate("iu.nitrate.info")));
         }
         if (item == IUItem.connect_item.getItem()) {
             event.getToolTip().add(Component.literal(Localization.translate("iu.configure_cable.info")));

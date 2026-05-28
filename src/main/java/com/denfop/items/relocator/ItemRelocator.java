@@ -1,5 +1,7 @@
 package com.denfop.items.relocator;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.items.BaseEnergyItem;
@@ -28,7 +30,7 @@ import java.util.List;
 
 public class ItemRelocator extends BaseEnergyItem implements IItemStackInventory, IUpdatableItemStackEvent {
     public ItemRelocator() {
-        super(10000000, 8192, 3);
+        super(ModConfig.itemDouble("relocator_energy_capacity", 10000000.0D), ModConfig.itemDouble("relocator_transfer_limit", 8192.0D), 3);
 
     }
 

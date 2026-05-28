@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:haumea_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:haumea_biome"
+    },
+    "settings": "industrialupgrade:haumea_noise"
+  }
+}

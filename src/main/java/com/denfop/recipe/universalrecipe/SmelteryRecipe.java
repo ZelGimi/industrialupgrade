@@ -10,7 +10,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -20,9 +19,9 @@ public class SmelteryRecipe implements Recipe<Container> {
     private final List<IInputItemStack> inputs;
     private final List<IInputItemStack> outputs;
 
-    public SmelteryRecipe(ResourceLocation id,String operation, List<IInputItemStack> inputs, List<IInputItemStack> outputs) {
+    public SmelteryRecipe(ResourceLocation id, String operation, List<IInputItemStack> inputs, List<IInputItemStack> outputs) {
         this.operation = operation;
-        this.id=id;
+        this.id = id;
         this.inputs = inputs;
         this.outputs = outputs;
     }
@@ -39,6 +38,7 @@ public class SmelteryRecipe implements Recipe<Container> {
     public List<IInputItemStack> getOutputs() {
         return outputs;
     }
+
     @Override
     public boolean matches(Container inv, Level world) {
         return false;
@@ -65,7 +65,6 @@ public class SmelteryRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
 
 
     @Override

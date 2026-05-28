@@ -3,22 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:doubleplate/aluminumbronze"
-    },
-    "B": {
-      "item": "industrialupgrade:wiring_storage/cesu_iu"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     },
     "C": {
-      "item": "industrialupgrade:battery/energy_crystal"
+      "item": "industrialupgrade:battery/lapotron_crystal"
+    },
+    "D": {
+      "item": "industrialupgrade:photoniy_ingot"
     }
   },
   "pattern": [
-    "ACA",
-    "CBC",
-    "ACA"
+    "CDC",
+    "DAD",
+    "CDC"
   ],
   "result": {
-    "item": "industrialupgrade:wiring_storage/mfe_iu"
+    "item": "industrialupgrade:upgradekitstorage/upgradekit2"
   },
   "show_notification": true
 }

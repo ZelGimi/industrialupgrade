@@ -18,6 +18,10 @@ public class BlockEntityPhotonicOreWashing extends BlockEntityMultiMachine {
 
     }
 
+    public int getSize(int size) {
+        return Math.min(size, this.tank.getFluidAmount() / 1000);
+    }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();

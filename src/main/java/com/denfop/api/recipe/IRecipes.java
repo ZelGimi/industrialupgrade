@@ -143,4 +143,7 @@ public interface IRecipes {
     void addInitRecipes(IHasRecipe hasRecipe);
 
 
+    void reset();
+
+    void addFluidItemRemoveRecipe(String recipeType, ItemStack itemStack, boolean removeAll);
 }

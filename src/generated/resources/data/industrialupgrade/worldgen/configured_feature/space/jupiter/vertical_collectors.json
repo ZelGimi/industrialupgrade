@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "minecraft:water",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "vertical_collectors",
+    "max_length": 28,
+    "max_radius": 4,
+    "max_vertical": 28,
+    "min_length": 18,
+    "min_radius": 2,
+    "open_to_surface": true,
+    "primary": {
+      "Name": "minecraft:yellow_terracotta"
+    },
+    "secondary": {
+      "Name": "minecraft:orange_terracotta"
+    },
+    "tertiary": {
+      "Name": "minecraft:orange_terracotta"
+    }
+  }
+}

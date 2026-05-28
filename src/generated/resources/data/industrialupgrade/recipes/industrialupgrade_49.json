@@ -3,28 +3,31 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:compressed_redstone"
+      "item": "industrialupgrade:wiring_storage/had_mfsu"
     },
     "B": {
-      "item": "industrialupgrade:electronic_stabilizers"
+      "item": "industrialupgrade:battery/itembatlamacrystal"
     },
     "C": {
-      "item": "industrialupgrade:graphene_wire"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
     },
     "D": {
-      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      "item": "industrialupgrade:itemcore/adrcore"
     },
     "E": {
-      "item": "industrialupgrade:crafting_elements/crafting_598_element"
+      "item": "industrialupgrade:quantumitems2"
     }
   },
   "pattern": [
-    " A ",
-    "BDB",
-    "CEC"
+    "EBE",
+    "DAD",
+    "CBC"
   ],
   "result": {
-    "item": "industrialupgrade:adv_motors_with_improved_bearings_"
+    "item": "industrialupgrade:wiring_storage/gra_mfsu"
   },
   "show_notification": true
 }

@@ -76,6 +76,22 @@ public class OreWashingRecipe {
         addrecipe(40, new ItemStack(IUItem.smalldust.getStack(1), 2));
         addrecipe(41, new ItemStack(IUItem.smalldust.getStack(14), 2));
         addrecipe(42, new ItemStack(IUItem.smalldust.getStack(27), 2));
+        addrecipe1(new ItemStack(IUItem.raw_saltpeter.getItem(0)), IUItem.crafting_elements.getItemStack(790));
+    }
+
+    public static void addrecipe1(ItemStack input, ItemStack... output) {
+        final IInputHandler input1 = Recipes.inputFactory;
+        CompoundTag nbt = ModUtils.nbt();
+        nbt.putInt("amount", 1000);
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "orewashing",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input)
+                        ),
+                        new RecipeOutput(nbt, output)
+                )
+        );
     }
 
     public static void addrecipe(ItemStack input) {

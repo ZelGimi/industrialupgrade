@@ -170,7 +170,7 @@ public abstract class BlockEntityDoubleElectricMachine extends BlockEntityInvent
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
                 tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProgress.getMaxValue());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
             }
         } else if (EnumDoubleElectricMachine.SUNNARIUM_PANEL == type) {
@@ -183,7 +183,7 @@ public abstract class BlockEntityDoubleElectricMachine extends BlockEntityInvent
                         "iu.machines_work_energy_type_eu"));
                 tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                         ".machines_work_energy_type_se"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProgress.getMaxValue());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
             }
         } else {
@@ -193,7 +193,7 @@ public abstract class BlockEntityDoubleElectricMachine extends BlockEntityInvent
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
             }
         }
         if (this.getComp(Energy.class) != null) {

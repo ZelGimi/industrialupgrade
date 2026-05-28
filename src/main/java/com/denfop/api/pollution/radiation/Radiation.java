@@ -2,6 +2,7 @@ package com.denfop.api.pollution.radiation;
 
 
 import com.denfop.api.item.armor.HazmatLike;
+import com.denfop.config.ModConfig;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
 import com.denfop.network.packet.PacketUpdateRadiation;
@@ -200,6 +201,10 @@ public class Radiation {
     }
 
     public void process(Player player) {
+        if (!ModConfig.COMMON.radiationAccumulationEnabled.get()) {
+            return;
+
+        }
         boolean need = HazmatLike.hasCompleteHazmat(player, this.level);
         final CompoundTag nbt = player.getPersistentData();
         double radiation = nbt.getDouble("radiation");
@@ -209,6 +214,10 @@ public class Radiation {
                     int num = rand.nextInt(4);
                     nbt.putDouble("radiation", radiation + 0.02f);
                     new PacketRadiationUpdateValue(player, radiation + 0.02);
+                    if (!ModConfig.COMMON.radiationDamageEnabled.get()) {
+                        return;
+
+                    }
                     switch (num) {
                         case 0:
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
@@ -228,6 +237,10 @@ public class Radiation {
                     num = rand.nextInt(4);
                     nbt.putDouble("radiation", radiation + 0.02f);
                     new PacketRadiationUpdateValue(player, radiation + 0.2);
+                    if (!ModConfig.COMMON.radiationDamageEnabled.get()) {
+                        return;
+
+                    }
                     switch (num) {
                         case 0:
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
@@ -248,6 +261,10 @@ public class Radiation {
                     num = rand.nextInt(4);
                     nbt.putDouble("radiation", radiation + 0.02f);
                     new PacketRadiationUpdateValue(player, radiation + 2);
+                    if (!ModConfig.COMMON.radiationDamageEnabled.get()) {
+                        return;
+
+                    }
                     switch (num) {
                         case 0:
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));

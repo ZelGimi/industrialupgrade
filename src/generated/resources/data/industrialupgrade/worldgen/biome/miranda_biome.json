@@ -1,0 +1,89 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:miranda_cavity",
+      "industrialupgrade:space/miranda/stone_tunnels",
+      "industrialupgrade:space/miranda/hall_system",
+      "industrialupgrade:space/miranda/fractures",
+      "industrialupgrade:space/miranda/porous",
+      "industrialupgrade:space/miranda/liquid_chamber",
+      "industrialupgrade:space/miranda/frozen_chamber",
+      "industrialupgrade:space/miranda/crater_chamber",
+      "industrialupgrade:space/miranda/tunnel_caves",
+      "industrialupgrade:space/miranda/labyrinth_caves",
+      "industrialupgrade:space/miranda/shaft_caves",
+      "industrialupgrade:space/miranda/dome_caves",
+      "industrialupgrade:space/miranda/well_caves",
+      "industrialupgrade:space/miranda/multi_tier_caves",
+      "industrialupgrade:space/miranda/branched_caves",
+      "industrialupgrade:space/miranda/spiral_caves",
+      "industrialupgrade:space/miranda/arch_caves",
+      "industrialupgrade:space/miranda/chamber_caves",
+      "industrialupgrade:space/miranda/canyon_caves",
+      "industrialupgrade:space/miranda/pocket_caves",
+      "industrialupgrade:space/miranda/crevice_caves",
+      "industrialupgrade:space/miranda/amphitheater_caves",
+      "industrialupgrade:space/miranda/cathedral_caves",
+      "industrialupgrade:space/miranda/gallery_caves",
+      "industrialupgrade:space/miranda/winding_caves",
+      "industrialupgrade:space/miranda/cascade_caves",
+      "industrialupgrade:space/miranda/collapse_caves",
+      "industrialupgrade:space/miranda/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:miranda_lake_0",
+      "industrialupgrade:miranda_fluid_0",
+      "industrialupgrade:miranda_lake_1",
+      "industrialupgrade:miranda_fluid_1"
+    ],
+    [
+      "industrialupgrade:miranda_craters",
+      "industrialupgrade:space/miranda/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:miranda_geyser_0",
+      "industrialupgrade:miranda_geyser_1"
+    ],
+    [],
+    [
+      "industrialupgrade:miranda_ore_0",
+      "industrialupgrade:miranda_ore_1",
+      "industrialupgrade:miranda_ore_2",
+      "industrialupgrade:miranda_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/miranda/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

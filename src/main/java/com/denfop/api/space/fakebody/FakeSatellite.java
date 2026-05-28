@@ -45,8 +45,8 @@ public class FakeSatellite implements IFakeSatellite {
         if (planet.getPlanet() == SpaceInit.earth) {
             distanceSatellite = 1;
         }
-        int seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.8 + distancePlanetToPlanet * (12 * 60 * 0.8)));
-        seconds+=planet.getSystem().getDistanceFromSolar()*60*60;
+        int seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.5 + distancePlanetToPlanet * (12 * 60 * 0.5)));
+        seconds += planet.getSystem().getDistanceFromSolar() * 60 * 60;
         if (SpaceUpgradeSystem.system.hasModules(
                 EnumTypeUpgrade.ENGINE,
                 rovers.getItemStack()

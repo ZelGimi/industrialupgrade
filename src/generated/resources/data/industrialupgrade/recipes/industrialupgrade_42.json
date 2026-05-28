@@ -3,22 +3,22 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:nanobox"
+      "tag": "forge:doubleplate/aluminumbronze"
     },
     "B": {
-      "tag": "forge:plates/tantalumtungstenhafnium"
+      "item": "industrialupgrade:wiring_storage/cesu_iu"
     },
     "C": {
-      "item": "industrialupgrade:ef/reader"
+      "item": "industrialupgrade:battery/energy_crystal"
     }
   },
   "pattern": [
-    "AAA",
-    "BCB",
-    "   "
+    "ACA",
+    "CBC",
+    "ACA"
   ],
   "result": {
-    "item": "industrialupgrade:voltage_sensor_for_mechanism"
+    "item": "industrialupgrade:wiring_storage/mfe_iu"
   },
   "show_notification": true
 }

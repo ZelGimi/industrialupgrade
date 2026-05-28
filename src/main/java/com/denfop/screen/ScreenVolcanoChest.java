@@ -11,7 +11,7 @@ public class ScreenVolcanoChest<T extends ContainerMenuVolcanoChest> extends Scr
     }
 
     protected ResourceLocation getTexture() {
-        return  ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+        return ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

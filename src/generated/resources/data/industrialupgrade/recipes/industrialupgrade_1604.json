@@ -15,16 +15,13 @@
       "nbt": "{level:11}"
     },
     "E": {
-      "item": "industrialupgrade:quantumitems3"
-    },
-    "F": {
-      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+      "item": "industrialupgrade:adv_spectral_box"
     }
   },
   "pattern": [
     "ACB",
-    "F F",
-    "ECE"
+    "E E",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:energy_tools/ultddrill"

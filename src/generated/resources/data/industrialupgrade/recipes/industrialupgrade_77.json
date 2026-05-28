@@ -3,19 +3,31 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      "item": "industrialupgrade:crafting_elements/crafting_526_element"
     },
     "B": {
-      "tag": "minecraft:wool"
+      "item": "industrialupgrade:crafting_elements/crafting_529_element"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_285_element"
+    },
+    "D": {
+      "item": "industrialupgrade:energy_tools/quantumshovel"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_532_element"
+    },
+    "H": {
+      "tag": "forge:rods/iridium"
     }
   },
   "pattern": [
-    "   ",
-    " B ",
-    "A  "
+    "ADB",
+    "CFC",
+    "CHC"
   ],
   "result": {
-    "item": "industrialupgrade:energy/purifier"
+    "item": "industrialupgrade:energy_tools/spectralshovel"
   },
   "show_notification": true
 }

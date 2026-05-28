@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -75,7 +77,7 @@ public class BlockEntityMolecularTransformer extends BlockEntityElectricMachine 
     private BakedModel[] transformedModel;
 
     public BlockEntityMolecularTransformer(BlockPos pos, BlockState state) {
-        super(0, 14, 0, BlockMolecularEntity.molecular, pos, state);
+        super(ModConfig.mechanismDouble("molecular_transformer_energy_storage", 0.0D), 14, 0, BlockMolecularEntity.molecular, pos, state);
         this.queue = false;
         this.redstoneMode = 0;
         this.outputSlot = new InventoryOutput[4];

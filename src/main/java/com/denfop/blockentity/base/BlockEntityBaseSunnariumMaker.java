@@ -77,7 +77,7 @@ public abstract class BlockEntityBaseSunnariumMaker extends BlockEntityElectricM
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate(
                     "iu.machines_work_energy_type_se"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
         super.addInformation(stack, tooltip);

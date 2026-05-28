@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 1,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidnitricacid",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "ice_cliff",
+    "max_height": 22,
+    "max_radius": 5,
+    "min_height": 8,
+    "min_radius": 2,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/pluto_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/pluto_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace3/pluto_iridium"
+    }
+  }
+}

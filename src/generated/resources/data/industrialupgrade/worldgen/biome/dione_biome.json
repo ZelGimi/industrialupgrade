@@ -1,0 +1,82 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:dione_cavity",
+      "industrialupgrade:space/dione/stone_tunnels",
+      "industrialupgrade:space/dione/hall_system",
+      "industrialupgrade:space/dione/fractures",
+      "industrialupgrade:space/dione/porous",
+      "industrialupgrade:space/dione/liquid_chamber",
+      "industrialupgrade:space/dione/frozen_chamber",
+      "industrialupgrade:space/dione/crater_chamber",
+      "industrialupgrade:space/dione/tunnel_caves",
+      "industrialupgrade:space/dione/shaft_caves",
+      "industrialupgrade:space/dione/dome_caves",
+      "industrialupgrade:space/dione/well_caves",
+      "industrialupgrade:space/dione/multi_tier_caves",
+      "industrialupgrade:space/dione/branched_caves",
+      "industrialupgrade:space/dione/spiral_caves",
+      "industrialupgrade:space/dione/chamber_caves",
+      "industrialupgrade:space/dione/pocket_caves",
+      "industrialupgrade:space/dione/crevice_caves",
+      "industrialupgrade:space/dione/cathedral_caves",
+      "industrialupgrade:space/dione/gallery_caves",
+      "industrialupgrade:space/dione/winding_caves",
+      "industrialupgrade:space/dione/cascade_caves",
+      "industrialupgrade:space/dione/collapse_caves",
+      "industrialupgrade:space/dione/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:dione_lake_0",
+      "industrialupgrade:dione_fluid_0"
+    ],
+    [
+      "industrialupgrade:dione_craters",
+      "industrialupgrade:space/dione/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:dione_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:dione_ore_0",
+      "industrialupgrade:dione_ore_1",
+      "industrialupgrade:dione_ore_2",
+      "industrialupgrade:dione_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/dione/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.59999996
+}

@@ -32,9 +32,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             1,
             2,
-            20,
+            15,
             20000D,
-            40,
+            30,
             true
     ),
     PERFECT_SOLAR_PANEL(
@@ -42,9 +42,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             2,
             3,
-            80,
+            45,
             200000D,
-            160D,
+            90D,
             true
     ),
     QUANTUM_SOLAR_PANEL(
@@ -52,9 +52,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             3,
             4,
-            320,
+            135,
             1000000D,
-            640,
+            270,
             true
     ),
     SPECTRAL_SOLAR_PANEL(
@@ -62,9 +62,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             4,
             5,
-            1280,
+            405,
             5000000D,
-            2560,
+            810,
             true
     ),
     PROTON_SOLAR_PANEL(
@@ -72,9 +72,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             5,
             6,
-            5120,
+            1215,
             50000000D,
-            10240,
+            2430,
             true
     ),
     SINGULAR_SOLAR_PANEL(
@@ -82,9 +82,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             6,
             7,
-            20480,
+            3645,
             1000000000D,
-            40960,
+            7290,
             true
     ),
     DIFFRACTION_SOLAR_PANEL(
@@ -92,9 +92,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             7,
             8,
-            81920,
+            10935,
             1500000000D,
-            163840,
+            21870,
             true
     ),
     PHOTONIC_SOLAR_PANEL(
@@ -102,9 +102,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             8,
             9,
-            327680,
+            32805,
             5000000000D,
-            655360,
+            65610,
             true
     ),
     NEUTRONIUN_SOLAR_PANEL(
@@ -112,9 +112,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             9,
             10,
-            1310720,
+            131220,
             6500000000D,
-            2621440,
+            262440,
             true
     ),
     BARION_SOLAR_PANEL(
@@ -122,9 +122,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             10,
             11,
-            5242880,
+            524880,
             10000000000D,
-            10485760,
+            1049760,
             true
     ),
     HADRON_SOLAR_PANEL(
@@ -132,9 +132,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             11,
             12,
-            20971520,
+            2099520,
             25000000000D,
-            41943040,
+            4199040,
             true
     ),
     GRAVITON_SOLAR_PANEL(
@@ -142,9 +142,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             12,
             13,
-            83886080,
+            8398080,
             250000000000D,
-            167772160,
+            16796160,
             true
     ),
     QUARK_SOLAR_PANEL(
@@ -152,9 +152,9 @@ public enum EnumSolarPanels {
             IUItem.blockpanel,
             13,
             14,
-            335544320,
+            33592320,
             2500000000000D,
-            671088640,
+            67184640,
             true
     ),
 

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:block/interface_workbench",
+    "down" : "industrialupgrade:block/interface_workbench",
+    "up" : "industrialupgrade:block/interface_workbench",
+    "north" : "industrialupgrade:block/interface_workbench",
+    "east" : "industrialupgrade:block/interface_workbench",
+    "south" : "industrialupgrade:block/interface_workbench",
+    "west" : "industrialupgrade:block/interface_workbench"
+  }
+}

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+import com.denfop.config.ModConfig;
+
 public class CooldownTracker {
 
     int tick;
@@ -21,7 +23,9 @@ public class CooldownTracker {
     public void setTick(int tick) {
 
         this.tick = tick;
-
+        if (!ModConfig.COMMON.cooldownEnabled.get()) {
+            this.tick = 0;
+        }
     }
 
 }

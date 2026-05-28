@@ -1,0 +1,189 @@
+package com.denfop.blockentity.storage;
+
+import com.denfop.IUItem;
+import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.otherenergies.common.EnergyType;
+import com.denfop.api.storage.PreCraft;
+import com.denfop.api.storage.StorageNetwork;
+import com.denfop.api.storage.autocrafting.SameStack;
+import com.denfop.blockentity.base.BlockEntityInventory;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockStorageSystemEntity;
+import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.ComponentStorageEnergy;
+import com.denfop.containermenu.ContainerMenuBase;
+import com.denfop.containermenu.ContainerPreCraft;
+import com.denfop.inventory.InventoryPreCraft;
+import com.denfop.network.IUpdatableTileEvent;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.screen.ScreenPreCraft;
+import com.denfop.utils.Localization;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.ChatFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class BlockEntityPreCraft extends BlockEntityInventory implements PreCraft, IUpdatableTileEvent {
+
+
+    public final InventoryPreCraft inputItems;
+    private final ComponentBaseEnergy energy;
+    public StorageNetwork network;
+    List<SameStack> sameStackList;
+
+    public BlockEntityPreCraft(BlockPos pos, BlockState state) {
+        super(BlockStorageSystemEntity.precraft, pos, state);
+        this.energy = this.addComponent(ComponentStorageEnergy.asBasicSink(EnergyType.STORAGE, this, 0));
+        this.inputItems = new InventoryPreCraft(this, 10) {
+            @Override
+            public ItemStack set(int index, ItemStack content) {
+                ItemStack stack = super.set(index, content);
+                updateCraft();
+                return stack;
+            }
+        };
+
+    }
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (ForgeCapabilities.ITEM_HANDLER == cap)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
+    }
+    public MultiBlockEntity getTeBlock() {
+        return BlockStorageSystemEntity.precraft;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.storageSystem.getBlock(getTeBlock());
+    }
+
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        addStorageSystemConsumptionInformation(tooltip);
+    }
+
+    private void addStorageSystemConsumptionInformation(final List<String> tooltip) {
+        tooltip.add(ChatFormatting.GOLD + Localization.translate("iu.storage_system.tooltip.header"));
+        tooltip.add(ChatFormatting.GRAY + Localization.translate("iu.storage_system.tooltip.consumption")
+                + ": " + ChatFormatting.YELLOW + formatStorageSystemPower(getRequiredPower()) + " "
+                + Localization.translate("iu.storage_system.tooltip.unit"));
+        tooltip.add(ChatFormatting.DARK_GRAY + Localization.translate("iu.storage_system.tooltip.consumption.description"));
+    }
+
+    private static String formatStorageSystemPower(final double value) {
+        if (Math.abs(value - Math.rint(value)) < 0.000001D) {
+            return String.valueOf((long) Math.rint(value));
+        }
+        return String.format(Locale.ROOT, "%.2f", value);
+    }
+
+    @Override
+    public double getRequiredPower() {
+        return 1;
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        updateCraft();
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+
+
+    }
+
+    public void updateCraft() {
+        if (!(level instanceof ServerLevel))
+            return;
+        ;
+        if (this.network != null) {
+            this.network.reBuildPreCraft = true;
+            sameStackList = new ArrayList<>();
+            for (int i = 0; i < this.inputItems.sameStackList.size(); i++) {
+                SameStack sameStack = this.inputItems.sameStackList.get(i);
+
+                if (sameStack.isItem() || sameStack.isFluid()) {
+
+                    SameStack copy = sameStack.copyWithFluid();
+                    copy.setAmount(this.inputItems.integerList.get(i));
+                    sameStackList.add(copy);
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<SameStack> getPreCrafts() {
+        return sameStackList;
+    }
+
+    @Override
+    public ContainerPreCraft getGuiContainer(Player var1) {
+
+        return new ContainerPreCraft(this, var1);
+    }
+
+    @Override
+    public void updateTileServer(Player var1, double var2) {
+
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer packetBuffer = super.writeContainerPacket();
+
+        return packetBuffer;
+    }
+
+    @Override
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+
+    }
+
+    @Override
+    public CompoundTag writeToNBT(CompoundTag nbt) {
+        CompoundTag tag = super.writeToNBT(nbt);
+
+        return tag;
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag nbtTagCompound) {
+        super.readFromNBT(nbtTagCompound);
+
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player entityPlayer, ContainerMenuBase<? extends CustomWorldContainer> isAdmin) {
+        return new ScreenPreCraft((ContainerPreCraft) isAdmin);
+    }
+
+    @Override
+    public void setStorageNetwork(StorageNetwork network) {
+        this.network = network;
+    }
+}

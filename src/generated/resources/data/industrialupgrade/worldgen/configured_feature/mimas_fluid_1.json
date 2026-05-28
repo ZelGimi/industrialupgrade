@@ -1,0 +1,15 @@
+{
+  "type": "industrialupgrade:space_generic_fluid",
+  "config": {
+    "base_chance": 0.9375,
+    "body_id": "mimas",
+    "distribution_type": "cryo",
+    "fluid_id": "industrialupgrade:iufluidbutene",
+    "max_y": 28,
+    "min_y": -56,
+    "radius_max": 24,
+    "radius_min": 3,
+    "require_cold_context": true,
+    "surface_allowed": true
+  }
+}

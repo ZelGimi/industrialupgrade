@@ -19,9 +19,9 @@
     }
   },
   "pattern": [
-    "ABA",
-    "DCD",
-    "ABA"
+    "A A",
+    "BCB",
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:quarrymodules/for3"

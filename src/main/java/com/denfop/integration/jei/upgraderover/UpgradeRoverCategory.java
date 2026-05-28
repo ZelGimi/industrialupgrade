@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.upgraderover;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
@@ -49,7 +50,7 @@ public class UpgradeRoverCategory extends ScreenMain implements IRecipeCategory<
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockBaseMachine3Entity.upgrade_rover).getDisplayName().getString();
+        return com.denfop.utils.ModUtils.cleanComponentString(JEICompat.getBlockStack(BlockBaseMachine3Entity.upgrade_rover).getDisplayName().getString());
     }
 
 
@@ -79,8 +80,8 @@ public class UpgradeRoverCategory extends ScreenMain implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, UpgradeRoverHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 16, 35).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 61, 35).addItemStack(recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 16, 35, recipe, 0, recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 61, 35, recipe, 1, recipe.getInput1());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 110, 35).addItemStack(recipe.getOutput());
     }
 

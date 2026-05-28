@@ -12,10 +12,7 @@
       "item": "minecraft:glowstone"
     },
     "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:energy_tools/nano_saber",
-      "nbt": "{Damage:0}"
+      "item": "industrialupgrade:energy_tools/nano_saber"
     }
   },
   "pattern": [

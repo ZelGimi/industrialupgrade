@@ -31,12 +31,12 @@ public class TileEntityRenderFluidHeater implements BlockEntityRenderer<BlockEnt
 
             Component text = (tile.fluidTank1.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank1.getCapacity()) :
-                    Component.literal(tile.fluidTank1.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank1.getFluid().getDisplayName().getString()) + ": " +
                             tile.fluidTank1.getFluidAmount() + "/" + tile.fluidTank1.getCapacity());
 
             Component text1 = (tile.fluidTank2.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank2.getCapacity()) :
-                    Component.literal(tile.fluidTank2.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank2.getFluid().getDisplayName().getString()) + ": " +
                             tile.fluidTank2.getFluidAmount() + "/" + tile.fluidTank2.getCapacity());
 
             Component text2 = Component.literal(String.format("%d", (int) (tile.getProgress() * 100)) + "%");

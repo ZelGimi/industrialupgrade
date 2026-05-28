@@ -25,6 +25,7 @@ import static com.denfop.blocks.BlocksRadiationOre.BOOL_PROPERTY;
 import static com.denfop.register.Register.FEATURES;
 
 public class WorldBaseGen {
+    public static RegistryObject<GlobalOreFeature> GLOBAL_ORE_GENERATOR;
     public static RegistryObject<Feature<NoneFeatureConfiguration>> RUB_TREE_GENERATOR;
     public static RegistryObject<ConfiguredFeature<?, ?>> RUB_TREE;
     public static RegistryObject<PlacedFeature> RUB_TREE_PLACER;
@@ -73,120 +74,10 @@ public class WorldBaseGen {
                 () -> new WorldGenVolcano(NoneFeatureConfiguration.CODEC));
         OIL_GENERATOR = FEATURES.register("oil",
                 () -> new WorldGenOil(NoneFeatureConfiguration.CODEC));
+        GLOBAL_ORE_GENERATOR = FEATURES.register("global_ore",
+                () -> new GlobalOreFeature());
 
 
-
-        /*
-        RUB_TREE = CONFIGURED_FEATURES.register("rub_tree",
-                () -> new ConfiguredFeature<>(RUB_TREE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-        RUB_TREE_PLACER = PLACED_FEATURES.register(
-                "rub_tree_placed",
-                () -> new PlacedFeature(
-                        RUB_TREE.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-
-        VEIN = CONFIGURED_FEATURES.register("vein",
-                () -> new ConfiguredFeature<>(VEIN_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-       VEIN_PLACER = PLACED_FEATURES.register(
-                "vein_placed",
-                () -> new PlacedFeature(
-                        VEIN.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-         GEN_GAS = CONFIGURED_FEATURES.register("gen_gas",
-                () -> new ConfiguredFeature<>(GEN_GAS_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-        GEN_HIVE = CONFIGURED_FEATURES.register("gen_hive",
-                () -> new ConfiguredFeature<>(GEN_HIVE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-       GEN_GAS_PLACER = PLACED_FEATURES.register(
-                "gen_gas_placed",
-                () -> new PlacedFeature(
-                        GEN_GAS.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-       GEN_HIVE_PLACER = PLACED_FEATURES.register(
-                "gen_hive_placed",
-                () -> new PlacedFeature(
-                        GEN_HIVE.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-        VOLCANO = CONFIGURED_FEATURES.register("volcano",
-                () -> new ConfiguredFeature<>(VOLCANO_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-       VOLCANO_PLACER = PLACED_FEATURES.register(
-                "volcano_placed",
-                () -> new PlacedFeature(
-                        VOLCANO.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-        OIL = CONFIGURED_FEATURES.register("oil",
-                () -> new ConfiguredFeature<>(OIL_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-     OIL_PLACER = PLACED_FEATURES.register(
-                "oil_placed",
-                () -> new PlacedFeature(
-                        OIL.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-        CALCIUM = CONFIGURED_FEATURES.register("calcium", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(7).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(7).getBlock())), UniformInt.of(3, 4), 1)));
-       SALTPETER = CONFIGURED_FEATURES.register("saltpeter", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(6).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(6).getBlock())), UniformInt.of(3, 4), 1)));
-      PEAT = CONFIGURED_FEATURES.register("peat", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.blockResource.getStateFromMeta(10).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.blockResource.getStateFromMeta(9).getBlock())), UniformInt.of(2, 3), 1)));
-         CALCIUM_PLACER = PLACED_FEATURES.register(
-                "calcium_placed",
-                () -> new PlacedFeature(
-                        CALCIUM.getHolder().orElseThrow(),
-                        List.of(
-                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
-                        )
-                )
-        );
-        SALTPETER_PLACER = PLACED_FEATURES.register(
-                "saltpeter_placed",
-                () -> new PlacedFeature(
-                        SALTPETER.getHolder().orElseThrow(),
-                        List.of(
-                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
-                        )
-                )
-        );
-      PEAT_PLACER = PLACED_FEATURES.register(
-                "peat_placed",
-                () -> new PlacedFeature(
-                        PEAT.getHolder().orElseThrow(),
-                        List.of(
-                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
-                        )
-                )
-        );
-        */
     }
 
     public static void initVein() {
@@ -468,7 +359,7 @@ public class WorldBaseGen {
                 GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
                 try {
                     generatorVolcano.setWorld(event.level);
-                }catch (Exception e){
+                } catch (Exception e) {
                     WorldGenVolcano.generatorVolcanoList.remove(0);
                     return;
                 }

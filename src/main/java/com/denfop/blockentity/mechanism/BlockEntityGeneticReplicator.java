@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -68,9 +70,9 @@ public class BlockEntityGeneticReplicator extends BlockEntityElectricMachine imp
     protected double guiProgress;
 
     public BlockEntityGeneticReplicator(BlockPos pos, BlockState state) {
-        super(100, 1, 3, BlockBaseMachine3Entity.genetic_replicator, pos, state);
+        super(ModConfig.mechanismDouble("genetic_replicator_energy_storage", 100.0D), 1, 3, BlockBaseMachine3Entity.genetic_replicator, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("genetic_replicator_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -95,8 +97,8 @@ public class BlockEntityGeneticReplicator extends BlockEntityElectricMachine imp
         this.fluidSlot3.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("genetic_replicator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("genetic_replicator_air_pollution_amount", 0.25D)));
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

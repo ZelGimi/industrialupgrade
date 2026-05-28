@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.heat;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityBaseHeatMachine;
@@ -17,8 +19,8 @@ public class BlockEntityFluidHeat extends BlockEntityBaseHeatMachine {
 
     public BlockEntityFluidHeat(BlockPos pos, BlockState state) {
         super(true, BlockBaseMachine3Entity.fluid_heat, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.24));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.4));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("liquid_heater_soil_pollution_amount", 0.24D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("liquid_heater_air_pollution_amount", 0.4D)));
     }
 
     public MultiBlockEntity getTeBlock() {

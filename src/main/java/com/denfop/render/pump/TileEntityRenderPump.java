@@ -33,7 +33,7 @@ public class TileEntityRenderPump implements BlockEntityRenderer<BlockEntityPrim
             if (tile.fluidTank.getFluid().isEmpty()) {
                 text = Component.literal("FluidTank: 0/" + tile.fluidTank.getCapacity());
             } else {
-                text = Component.literal(tile.fluidTank.getFluid().getDisplayName().getString() + ": " +
+                text = Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank.getFluid().getDisplayName().getString()) + ": " +
                         tile.fluidTank.getFluidAmount() + "/" + tile.fluidTank.getCapacity());
             }
 

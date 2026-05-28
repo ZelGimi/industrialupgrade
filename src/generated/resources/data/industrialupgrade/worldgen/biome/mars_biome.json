@@ -1,0 +1,74 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 11760967,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 13075031,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:mars_cavity",
+      "industrialupgrade:mars_shaft",
+      "industrialupgrade:space/mars/stone_tunnels",
+      "industrialupgrade:space/mars/hall_system",
+      "industrialupgrade:space/mars/fractures",
+      "industrialupgrade:space/mars/porous",
+      "industrialupgrade:space/mars/thermal_chamber",
+      "industrialupgrade:space/mars/tunnel_caves",
+      "industrialupgrade:space/mars/labyrinth_caves",
+      "industrialupgrade:space/mars/shaft_caves",
+      "industrialupgrade:space/mars/dome_caves",
+      "industrialupgrade:space/mars/multi_tier_caves",
+      "industrialupgrade:space/mars/branched_caves",
+      "industrialupgrade:space/mars/spiral_caves",
+      "industrialupgrade:space/mars/arch_caves",
+      "industrialupgrade:space/mars/chamber_caves",
+      "industrialupgrade:space/mars/canyon_caves",
+      "industrialupgrade:space/mars/pocket_caves",
+      "industrialupgrade:space/mars/crevice_caves",
+      "industrialupgrade:space/mars/amphitheater_caves",
+      "industrialupgrade:space/mars/cathedral_caves",
+      "industrialupgrade:space/mars/gallery_caves",
+      "industrialupgrade:space/mars/winding_caves",
+      "industrialupgrade:space/mars/collapse_caves"
+    ],
+    [
+      "industrialupgrade:mars_lake_0",
+      "industrialupgrade:mars_fluid_0"
+    ],
+    [
+      "industrialupgrade:mars_craters",
+      "industrialupgrade:space/mars/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:mars_ore_0",
+      "industrialupgrade:mars_ore_1",
+      "industrialupgrade:mars_ore_2",
+      "industrialupgrade:mars_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.15000004
+}

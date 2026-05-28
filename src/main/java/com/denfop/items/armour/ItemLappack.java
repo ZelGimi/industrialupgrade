@@ -158,7 +158,7 @@ public class ItemLappack extends ItemArmorEnergy implements EnergyItem, ISpecial
         int damageLimit = (int) ((energyPerDamage > 0)
                 ? (25.0D * ElectricItem.manager.getCharge(armor) / (energyPerDamage - energyPerDamage * protect * 0.2))
                 : 0.0D);
-        return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
+        return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit, this);
     }
 
     public int getEnergyPerDamage() {
@@ -251,7 +251,7 @@ public class ItemLappack extends ItemArmorEnergy implements EnergyItem, ISpecial
             par3List.add(Component.literal(Localization.translate("press.lshift")));
         }
         if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
-            par3List.add(Component.literal(Localization.translate("iu.changemode_key") + KeyboardClient.changemode.getKey().getDisplayName().getString() + " +" +
+            par3List.add(Component.literal(Localization.translate("iu.changemode_key") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.changemode.getKey().getDisplayName().getString()) + " +" +
                     " " + Localization.translate(
                     "iu.changemode_rcm1")));
         }

@@ -64,7 +64,7 @@ public class ScreenCombinerSE<T extends ContainerMenuCombinerSE> extends ScreenM
     }
 
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 162 && mouseX <= 172 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.solar_generator_info"));

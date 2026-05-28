@@ -17,7 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -67,7 +68,7 @@ import java.util.*;
 
 public class ModUtils {
 
-    public static final Set<String> ignoredNbtKeys = new HashSet<>(Arrays.asList("damage", "charge", "energy", "advDmg"));
+    public static final Set<String> ignoredNbtKeys = new HashSet<>(Arrays.asList("damage", "Damage", "charge", "energy", "advDmg"));
     private static final Direction[] BY_2D_DATA = Arrays.stream(Direction.values()).filter((p_235685_) -> p_235685_.getAxis().isHorizontal()).sorted(Comparator.comparingInt(Direction::get2DDataValue)).toArray(Direction[]::new);
     public static Logger log;
     public static Direction[] facings = Direction.values();
@@ -121,6 +122,59 @@ public class ModUtils {
     }
 
 
+    public static boolean compareNbt(@Nullable Tag pTag, @Nullable Tag pOther, boolean pCompareListTag) {
+        if (pTag == null && pOther == null)
+            return true;
+        if (pTag == pOther) {
+            return true;
+        } else if (pTag == null && pOther != null) {
+            return false;
+        } else if (pOther == null) {
+            return false;
+        } else if (!pTag.getClass().equals(pOther.getClass())) {
+            return false;
+        } else if (pTag instanceof CompoundTag) {
+            CompoundTag compoundtag = (CompoundTag) pTag;
+            CompoundTag compoundtag1 = (CompoundTag) pOther;
+            if (compoundtag.getAllKeys().size() != compoundtag1.getAllKeys().size())
+                return false;
+            for (String s : compoundtag.getAllKeys()) {
+                Tag tag1 = compoundtag.get(s);
+                if (!compareNbt(tag1, compoundtag1.get(s), pCompareListTag)) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else if (pTag instanceof ListTag && pCompareListTag) {
+            ListTag listtag = (ListTag) pTag;
+            ListTag listtag1 = (ListTag) pOther;
+            if (listtag.isEmpty()) {
+                return listtag1.isEmpty();
+            } else {
+                for (int i = 0; i < listtag.size(); ++i) {
+                    Tag tag = listtag.get(i);
+                    boolean flag = false;
+
+                    for (int j = 0; j < listtag1.size(); ++j) {
+                        if (compareNbt(tag, listtag1.get(j), pCompareListTag)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    if (!flag) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        } else {
+            return pTag.equals(pOther);
+        }
+    }
+
     public static ItemStack get(Player player, InteractionHand hand) {
         return player.getItemInHand(hand);
     }
@@ -136,6 +190,28 @@ public class ModUtils {
     public static ItemStack incSize(ItemStack stack, int amount) {
         return setSize(stack, getSize(stack) + amount);
     }
+
+    public static FluidStack decSize(FluidStack stack) {
+        return decSize(stack, 1);
+    }
+
+    public static FluidStack decSize(FluidStack stack, int amount) {
+        return incSize(stack, -amount);
+    }
+
+    public static int getSize(FluidStack stack) {
+        return isEmpty(stack) ? 0 : stack.getAmount();
+    }
+
+    public static boolean isEmpty(FluidStack stack) {
+        if (stack.isEmpty()) return true;
+        return stack.getAmount() <= 0;
+    }
+
+    public static FluidStack incSize(FluidStack stack, int amount) {
+        return setSize(stack, getSize(stack) + amount);
+    }
+
 
     public static boolean storeInventoryItem(ItemStack stack, Player player, boolean simulate) {
         if (!simulate) {
@@ -198,7 +274,7 @@ public class ModUtils {
     }
 
     private static boolean checkNbtEquality(ItemStack a, ItemStack b) {
-        return NbtUtils.compareNbt(a.getTag(), b.getTag(), true);
+        return checkNbtEquality(a.getTag(), b.getTag());
     }
 
     public static boolean checkNbtEquality(CompoundTag a, CompoundTag b) {
@@ -311,7 +387,7 @@ public class ModUtils {
             for (int j = 0; j < size; j++) {
                 String l = "number_" + j;
                 String temp = ModUtils.NBTGetString(stack, l);
-                TagKey<Item> tag = new TagKey<>(Registries.ITEM, new ResourceLocation(temp));
+                TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(temp));
                 List<ItemStack> list = new Ingredient.TagValue(tag).getItems().stream().toList();
                 stacks.addAll(list);
 
@@ -807,6 +883,12 @@ public class ModUtils {
         return stack;
     }
 
+    public static FluidStack setSize(FluidStack stack, int col) {
+        stack = stack.copy();
+        stack.setAmount(col);
+        return stack;
+    }
+
     public static ItemStack setSize(Item item, int col) {
         final ItemStack stack = new ItemStack(item);
         stack.setCount(col);
@@ -840,12 +922,17 @@ public class ModUtils {
 
     public static ItemStack getRecipeFromType(Level world, ItemStack stack1, RecipeType<SmeltingRecipe> type) {
         List<SmeltingRecipe> recipes = world.getRecipeManager().getAllRecipesFor(type);
+
         for (SmeltingRecipe recipe : recipes) {
-            if (recipe.getIngredients().size() > 1)
-                return ItemStack.EMPTY;
-            else if (recipe.getIngredients().get(0).test(stack1))
-                return recipe.getResultItem(world.registryAccess());
+            if (recipe.getIngredients().size() > 1) {
+                continue;
+            }
+
+            if (recipe.getIngredients().get(0).test(stack1)) {
+                return recipe.getResultItem(world.registryAccess()).copy();
+            }
         }
+
         return ItemStack.EMPTY;
     }
 
@@ -1373,4 +1460,50 @@ public class ModUtils {
         }
         return stringList;
     }
+
+    public static void removeIgnoreKeys(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return;
+
+        if (!stack.hasTag()) {
+            stack.setTag(null);
+            return;
+        }
+
+        CompoundTag tag = stack.getTag();
+
+        for (String key : ignoredNbtKeys) {
+            if (tag.contains(key)) {
+                tag.remove(key);
+            }
+        }
+
+        if (tag.isEmpty()) {
+            stack.setTag(null);
+        } else {
+            stack.setTag(tag);
+        }
+    }
+
+
+    public static String cleanComponentString(String text) {
+        if (text == null) {
+            return "";
+        }
+        String result = text;
+        String trimmed = result.trim();
+        while (isSingleComponentListString(trimmed)) {
+            result = trimmed.substring(1, trimmed.length() - 1).trim();
+            trimmed = result.trim();
+        }
+        return result;
+    }
+
+    private static boolean isSingleComponentListString(String text) {
+        if (text.length() < 3 || text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
+            return false;
+        }
+        String inner = text.substring(1, text.length() - 1).trim();
+        return !inner.isEmpty() && inner.indexOf(',') < 0 && inner.indexOf(';') < 0;
+    }
+
 }

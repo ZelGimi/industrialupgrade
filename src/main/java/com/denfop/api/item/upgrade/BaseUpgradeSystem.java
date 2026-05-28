@@ -237,15 +237,15 @@ public class BaseUpgradeSystem implements UpgradeBaseSystem {
             for (UpgradeItemInform upgradeItemInform : list) {
                 if (upgradeItemInform.upgrade.equals(enumInfoUpgradeModules)) {
                     if (upgradeItemInform.number < upgradeItemInform.upgrade.max) {
-                        stringList.add(ChatFormatting.GREEN + "" + (upgradeItemInform.upgrade.max - upgradeItemInform.number) + "x " + (new ItemStack(
+                        stringList.add(ChatFormatting.GREEN + "" + (upgradeItemInform.upgrade.max - upgradeItemInform.number) + "x " + (com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                                 IUItem.upgrademodule.getItemFromMeta(enumInfoUpgradeModules.ordinal()),
                                 1
-                        ).getDisplayName().getString()));
+                        ).getDisplayName().getString())));
                     }
                     continue cycle;
                 }
             }
-            stringList.add(ChatFormatting.GREEN + "" + (enumInfoUpgradeModules.max) + "x " + (new ItemStack(
+            stringList.add(ChatFormatting.GREEN + "" + (enumInfoUpgradeModules.max) + "x " + com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                     IUItem.upgrademodule.getItemFromMeta(enumInfoUpgradeModules.ordinal()),
                     1
 

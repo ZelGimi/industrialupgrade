@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
@@ -24,7 +26,7 @@ import java.util.List;
 public class ItemPipette extends ItemFluidContainer implements IItemTab {
 
     public ItemPipette() {
-        super(10000, 1);
+        super(10000, ModConfig.itemInt("pipette_capacity", 1));
 
     }
 

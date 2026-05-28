@@ -68,11 +68,11 @@ public abstract class BlockEntityMultiMatter extends BlockEntityElectricMachine 
     private double lastEnergy;
     private MachineRecipe recipe;
 
-    public BlockEntityMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy, MultiBlockEntity multiTileBlock, BlockPos pos, BlockState blockState) {
+    public BlockEntityMultiMatter(double storageEnergy, int sizeTank, double maxtempEnergy, MultiBlockEntity multiTileBlock, BlockPos pos, BlockState blockState) {
         super(Math.round(maxtempEnergy * 1), 3, 1, multiTileBlock, pos, blockState);
         this.amplifierSlot = new InventoryRecipes(this, "matterAmplifier", this);
 
-        this.energycost = storageEnergy * 1;
+        this.energycost = (float) (storageEnergy * 1);
         this.outputSlot = new InventoryOutput(this, 1);
         this.containerslot = new InventoryFluidByList(
                 this,

@@ -6,9 +6,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import static com.denfop.api.space.SpaceInit.regAsteroid;
 import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
@@ -37,15 +34,15 @@ public class AsteroidSerializer implements RecipeSerializer<AsteroidRecipe> {
 
         ResourceLocation texture = ResourceLocation.tryParse(textureStr + ".png");
 
-        if (!stringList.contains("asteroid_"+name)) {
+        if (!stringList.contains("asteroid_" + name)) {
             regAsteroid.add(() -> new Asteroid(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemStr.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, level, (IStar) SpaceNet.instance.getBodyFromName(starStr), temperature,
                     distance, type, colonies, angle, time, size, rotation, minLocation, maxLocation, amount));
-            stringList.add("asteroid_"+name);
+            stringList.add("asteroid_" + name);
         }
-        return new AsteroidRecipe(id,name, systemStr, textureStr, level, starStr, temperature, distance, type, colonies, angle,
+        return new AsteroidRecipe(id, name, systemStr, textureStr, level, starStr, temperature, distance, type, colonies, angle,
                 time, size, rotation, minLocation, maxLocation, amount);
     }
 
@@ -67,13 +64,13 @@ public class AsteroidSerializer implements RecipeSerializer<AsteroidRecipe> {
         double minLocation = buf.readDouble();
         double maxLocation = buf.readDouble();
         int amount = buf.readVarInt();
-        if (!stringList.contains("asteroid_"+name)) {
+        if (!stringList.contains("asteroid_" + name)) {
             regAsteroid.add(() -> new Asteroid(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemName.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemName)), ResourceLocation.tryParse(texturePath), level, (IStar) SpaceNet.instance.getBodyFromName(starName), temperature,
                     distance, type, colonies, angle, time, size, rotation, minLocation, maxLocation, amount));
-            stringList.add("asteroid_"+name);
+            stringList.add("asteroid_" + name);
         }
         return new AsteroidRecipe(id,
                 name, systemName, texturePath, level, starName,

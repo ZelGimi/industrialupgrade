@@ -22,11 +22,12 @@
     }
   },
   "pattern": [
-    "CCC",
-    "DAD",
-    "EBE"
+    "ACA",
+    "DBD",
+    "ECE"
   ],
   "result": {
+    "count": 2,
     "item": "industrialupgrade:crafting_elements/crafting_25_element"
   },
   "show_notification": true

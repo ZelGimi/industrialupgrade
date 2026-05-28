@@ -18,7 +18,10 @@
       "item": "industrialupgrade:quantumitems7"
     },
     "F": {
-      "item": "industrialupgrade:compresscarbon"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
     }
   },
   "pattern": [

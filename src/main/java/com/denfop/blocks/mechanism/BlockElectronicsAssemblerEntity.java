@@ -116,7 +116,7 @@ public enum BlockElectronicsAssemblerEntity implements MultiBlockEntity {
 
     @Override
     public boolean hasActive() {
-        return false;
+        return true;
     }
 
     @Override

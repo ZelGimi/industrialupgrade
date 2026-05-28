@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,vent_type=lava": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=false,vent_type=cryo": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=false,vent_type=acid": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=false,vent_type=steam": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=false,vent_type=gas": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=true,vent_type=lava": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=true,vent_type=cryo": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=true,vent_type=acid": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=true,vent_type=steam": {
+      "model": "industrialupgrade:block/invisible_empty"
+    },
+    "active=true,vent_type=gas": {
+      "model": "industrialupgrade:block/invisible_empty"
+    }
+  }
+}

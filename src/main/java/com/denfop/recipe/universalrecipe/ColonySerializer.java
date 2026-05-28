@@ -19,7 +19,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.denfop.IUCore.register;
 import static com.denfop.IUCore.updateRecipe;
 import static com.denfop.api.space.SpaceInit.regColonyBaseResource;
 

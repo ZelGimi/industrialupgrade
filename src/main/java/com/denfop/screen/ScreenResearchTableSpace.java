@@ -3,6 +3,7 @@ package com.denfop.screen;
 import com.denfop.Constants;
 import com.denfop.api.space.*;
 import com.denfop.api.space.fakebody.Data;
+import com.denfop.api.space.rovers.enums.EnumRoversLevel;
 import com.denfop.api.widget.*;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.containermenu.ContainerMenuResearchTableSpace;
@@ -818,7 +819,7 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
         float offset = 50f * (1.0f - animationProgress);
         if (!animatingForward) offset *= -1;
 
-        // Индексы
+
         int nextIndex = (systemId + 1) % systems.size();
         int prevIndex = (systemId - 1);
         if (prevIndex < 0)
@@ -1148,13 +1149,27 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
                 return;
             }
             if (hoverOpen && focusedPlanet != null) {
+                EnumLevels level1 = EnumLevels.NONE;
+
+                if (focusedPlanet instanceof IPlanet) {
+                    level1 = ((IPlanet) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof ISatellite) {
+                    level1 = ((ISatellite) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof IAsteroid) {
+                    level1 = ((IAsteroid) focusedPlanet).getLevels();
+                }
+                if (!(this.container.base.level != null && this.container.base.level != EnumLevels.NONE && this.container.base.level.ordinal() >= level1.ordinal()))
+                    return;
+
                 mode = 2;
                 int seconds = 0;
                 EnumLevels levels = EnumLevels.FIRST;
                 if (focusedPlanet instanceof IPlanet) {
-                    seconds = (int) ((Math.abs(focusedPlanet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+                    seconds = (int) ((Math.abs(focusedPlanet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.5));
                     levels = ((IPlanet) focusedPlanet).getLevels();
-                    seconds+=focusedPlanet.getSystem().getDistanceFromSolar()*60*60;
+                    seconds += focusedPlanet.getSystem().getDistanceFromSolar() * 60 * 60;
                 }
                 if (focusedPlanet instanceof ISatellite) {
                     ISatellite planet = (ISatellite) focusedPlanet;
@@ -1166,13 +1181,13 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
                     if (planet.getPlanet() == SpaceInit.earth) {
                         distanceSatellite = 1;
                     }
-                    seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.8 + distancePlanetToPlanet * (12 * 60 * 0.8)));
-                    seconds+=planet.getSystem().getDistanceFromSolar()*60*60;
+                    seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.5 + distancePlanetToPlanet * (12 * 60 * 0.5)));
+                    seconds += planet.getSystem().getDistanceFromSolar() * 60 * 60;
                 }
                 if (focusedPlanet instanceof IAsteroid) {
                     IAsteroid planet = (IAsteroid) focusedPlanet;
-                    seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
-                    seconds+=planet.getSystem().getDistanceFromSolar()*60*60;
+                    seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.5));
+                    seconds += planet.getSystem().getDistanceFromSolar() * 60 * 60;
                     levels = planet.getLevels();
                 }
                 this.minimumLimit = findOptimalUpgradeDistribution(seconds * 2, levels.ordinal() + 1);
@@ -1469,7 +1484,7 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
         RenderSystem.disableDepthTest();
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
 
     }
 
@@ -1735,6 +1750,7 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
 
             int capacity = tankCapacities.getOrDefault(rocketLevel, 0);
             int upgrades = rocketUpgrades.getOrDefault(rocketLevel, 0);
+            EnumRoversLevel canLevel = EnumRoversLevel.values()[Math.min(rocketLevel - 1, EnumRoversLevel.values().length - 1)];
             double rocketMultiplier = 1.0 + upgrades * 0.125;
 
             for (Map.Entry<Integer, Double> entry : sortedFuel) {
@@ -1742,6 +1758,8 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
                 int fuelLevel = entry.getKey();
                 int requiredLevel = fuelPlanetRequirements.getOrDefault(fuelLevel, Integer.MAX_VALUE);
                 if (planetTier < requiredLevel)
+                    continue;
+                if (!canLevel.getLevelsList().contains(EnumLevels.values()[planetTier - 1]))
                     continue;
                 double fuelMultiplier = entry.getValue();
 
@@ -1807,56 +1825,3 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
     }
 }
 
-class Result {
-    FuelAllocation allocations;
-    int totalUpgrades;
-
-    Result(FuelAllocation allocations, int totalUpgrades) {
-        this.allocations = allocations;
-        this.totalUpgrades = totalUpgrades;
-    }
-
-
-}
-
-class FuelAllocation {
-    int remaining;
-    int rocketLevel;
-    int fuelLevel;
-    int fuelUsed;
-    int upgrades;
-
-    FuelAllocation(int rocketLevel, int fuelLevel, int fuelUsed, int upgrades, double remaining) {
-        this.rocketLevel = rocketLevel;
-        this.fuelLevel = fuelLevel;
-        this.fuelUsed = fuelUsed;
-        this.upgrades = upgrades;
-        this.remaining = (int) remaining;
-    }
-
-    @Override
-    public String toString() {
-        return "RocketLevel " + rocketLevel + " (+" + upgrades + " upgrades)"
-                + " -> FuelLevel " + fuelLevel + ": " + fuelUsed + " units" + " seconds: " + remaining;
-    }
-
-    public int getFuelLevel() {
-        return fuelLevel;
-    }
-
-    public int getFuelUsed() {
-        return fuelUsed;
-    }
-
-    public int getRemaining() {
-        return remaining;
-    }
-
-    public int getRocketLevel() {
-        return rocketLevel;
-    }
-
-    public int getUpgrades() {
-        return upgrades;
-    }
-}

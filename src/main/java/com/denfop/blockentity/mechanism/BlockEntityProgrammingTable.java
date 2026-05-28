@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -49,7 +51,7 @@ public class BlockEntityProgrammingTable extends BlockEntityElectricMachine impl
     public int levelBlock;
 
     public BlockEntityProgrammingTable(BlockPos pos, BlockState state) {
-        super(100, 1, 1, BlockBaseMachine3Entity.programming_table, pos, state);
+        super(ModConfig.mechanismDouble("electric_programming_table_energy_storage", 100.0D), 1, 1, BlockBaseMachine3Entity.programming_table, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InventoryRecipes(this, "programming", this);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 2, 0)) {
@@ -59,8 +61,8 @@ public class BlockEntityProgrammingTable extends BlockEntityElectricMachine impl
             }
         });
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electric_programming_table_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electric_programming_table_air_pollution_amount", 0.1D)));
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.levelBlock = 0;
     }
@@ -75,12 +77,14 @@ public class BlockEntityProgrammingTable extends BlockEntityElectricMachine impl
     }
 
     public void setLevelMech(final int levelBlock) {
-        this.levelBlock = levelBlock;
+        this.levelBlock = Math.max(0, Math.min(10, levelBlock));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
@@ -105,6 +109,7 @@ public class BlockEntityProgrammingTable extends BlockEntityElectricMachine impl
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -126,7 +131,7 @@ public class BlockEntityProgrammingTable extends BlockEntityElectricMachine impl
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override

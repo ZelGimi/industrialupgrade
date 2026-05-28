@@ -23,9 +23,10 @@ public class ScreenWirelessMineralQuarry<T extends ContainerMenuWirelessMineralQ
                 EnumTypeComponent.ENERGY,
                 new WidgetDefault<>((this.container.base).energy)
         ));
+        this.addWidget(new ImageInterfaceWidget(this, 0, 0, imageWidth, imageHeight));
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.wireless_mineral_vein.info"));
@@ -56,7 +57,7 @@ public class ScreenWirelessMineralQuarry<T extends ContainerMenuWirelessMineralQ
                 int colmax = vein.getMaxCol();
                 boolean isOil = vein.getType() == Type.OIL;
                 String name_vein;
-                name_vein = this.container.base.itemStacks.get(j).getDisplayName().getString();
+                name_vein = com.denfop.utils.ModUtils.cleanComponentString(this.container.base.itemStacks.get(j).getDisplayName().getString());
                 j++;
                 new TooltipWidget(this, 130, 8 + i * 18, 18, 18)
                         .withTooltip(name_vein + " " + col + (isOil ? "mb" : "") + "/" + colmax + (

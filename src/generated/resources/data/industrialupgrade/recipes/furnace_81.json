@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace/charon_arsenic"
+    "item": "industrialupgrade:baseore2/gallium"
   },
-  "result": "industrialupgrade:itemingots/arsenic"
+  "result": "industrialupgrade:itemingots/gallium"
 }

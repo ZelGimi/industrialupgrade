@@ -1,0 +1,20 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "mercury",
+    "depth_bonus": 0.35,
+    "distribution_type": "vein",
+    "horizontal_radius": 12,
+    "max_y": 80,
+    "min_y": -48,
+    "ore_block_id": "industrialupgrade:blockspace3/mercury_chromium_ore",
+    "path_length": 24,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone/mercury_stone",
+      "industrialupgrade:spacecobblestone/mercury_cobblestone"
+    ],
+    "require_near_lava": true,
+    "size": 12,
+    "vertical_radius": 6
+  }
+}

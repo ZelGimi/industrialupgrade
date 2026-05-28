@@ -36,7 +36,7 @@ public class ScreenFacadeBlock<T extends ContainerMenuFacadeBlock> extends Scree
         handleUpgradeTooltip(mouseX, mouseY);
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             List<String> compatibleUpgrades = ListInformationUtils.facade;

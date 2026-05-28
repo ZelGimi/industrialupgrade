@@ -3,7 +3,7 @@ loaderVersion="[43,)"
 license="AGPL"
 [[mods]] 
 modId="industrialupgrade"
-version="3.3.2.7" #mandatory
+version="3.4" #mandatory
 displayName="Industrial Upgrade" #mandatory
 credits=""
 authors="Denfop"
@@ -17,7 +17,7 @@ side="BOTH"
 [[dependencies.industrialupgrade]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.20.1,)"
+versionRange="[1.20.1,1.20.2)"
 ordering="NONE"
 side="BOTH"
 #[[dependencies.industrialupgrade]]

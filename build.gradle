@@ -19,6 +19,7 @@ minecraft {
 
     runs {
         client {
+            jvmArgs '-Xms2G', '-Xmx4G'
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -101,24 +102,16 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     runtimeOnly fg.deobf("curse.maven:spark-361579:4738952")
-/*    implementation fg.deobf("com.lowdragmc.ldlib:ldlib-forge-${mc_version}:${ldlib_version}") {
-        transitive = false
-    }
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}") {
-        transitive = false
-    }*/
 
-    implementation fg.deobf("curse.maven:immersive-engineering-231951:5224387")
     implementation fg.deobf("curse.maven:crafttweaker-239197:6256146")
 
     compileOnly fg.deobf("curse.maven:kubejs-238086:5853326")
-//    implementation fg.deobf("curse.maven:terralith-513688:5512076")
-    implementation fg.deobf("curse.maven:the-lost-cities-269024:6174986")
+
+    implementation fg.deobf("curse.maven:embeddium-908741:5681725")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
     implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    //runtimeOnly fg.deobf("curse.maven:ctm-267602:4393695")
 
     compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
         transitive = false
@@ -128,14 +121,7 @@ dependencies {
     }
     compileOnly fileTree('lib')
     runtimeOnly fileTree('lib')
-    compileOnly fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
-    compileOnly fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
-    //implementation fg.deobf("curse.maven:ftb-library-forge-404465:5282375")
-    //implementation fg.deobf("curse.maven:ftb-teams-forge-404468:5267190")
-    //implementation fg.deobf("curse.maven:ftb-chunks-forge-314906:5267364")
 
-    //runtimeOnly fg.deobf("curse.maven:nbtedit-reborn-678133:4420565")
-    //runtimeOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${ct_version}")
 
     compileOnly fg.deobf("curse.maven:emi-580555:5872526")
     runtimeOnly fg.deobf("curse.maven:emi-580555:5872526")
@@ -143,29 +129,20 @@ dependencies {
 
     implementation fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}")
     compileOnly fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:generators")
-    //compileOnly fg.deobf("mekanism:Mekanism:${mc_version}-${mekanism_version}:api")
 
-    compileOnly("cc.tweaked:cc-tweaked-${mc_version}-core-api:${cc_version}")
-    compileOnly(fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge-api:${cc_version}"))
-    implementation fg.deobf("cc.tweaked:cc-tweaked-${mc_version}-forge:${cc_version}")
 
-    compileOnly fg.deobf("curse.maven:sedna-511276:${sedna_version}")
-    compileOnly fg.deobf("curse.maven:markdownmanual-502485:${md_version}")
-    compileOnly fg.deobf("curse.maven:oc2r-1037738:${oc2_version}")
+
+
     implementation fg.deobf("curse.maven:the-one-probe-245211:6106996")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+
     runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
     compileOnly fg.deobf("curse.maven:jade-324717:6271651")
- //   runtimeOnly fg.deobf("curse.maven:almost-unified-633823:6552475")
-  //  compileOnly fg.deobf("curse.maven:almost-unified-633823:6552475")
 
-// Mockito dependencies
-    testImplementation 'org.mockito:mockito-core:5.3.1'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
+
+
 }
 
 jar {

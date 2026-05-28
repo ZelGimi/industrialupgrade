@@ -88,20 +88,18 @@ public class SlotVirtual extends Slot {
                             this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), FluidStack.EMPTY)));
                         }
                         this.slotInfo.getFluidStackList().set(index, containerFluid);
+                        this.slotInfo.setFluidList(this.slotInfo.getFluidStackList());
                     } else {
                         this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
+                        this.slotInfo.setFluidList(this.slotInfo.getFluidStackList());
                     }
                 }
             }
         } else {
 
             if (this.slotInfo.isFluid()) {
-                ItemStack stack = this.slotInfo.get(index);
-                if (FluidHandlerFix.hasFluidHandler(stack)) {
-                    this.slotInfo.getFluidStackList().set(index, new FluidStack(FluidHandlerFix.getFluidHandler(stack).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), 1));
-                } else {
-                    this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
-                }
+                this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
+                this.slotInfo.setFluidList(this.slotInfo.getFluidStackList());
 
             }
             set(itemstack12);

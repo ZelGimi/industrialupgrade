@@ -755,6 +755,23 @@
     "industrialupgrade:creative_blocks/creative_radiation_storage",
     "industrialupgrade:creative_blocks/creative_tank_storage",
     "industrialupgrade:volcano_chest/volcano_chest",
+    "industrialupgrade:storagesystem/storage_cells",
+    "industrialupgrade:storagesystem/controller",
+    "industrialupgrade:storagesystem/interface_workbench",
+    "industrialupgrade:storagesystem/interface_entity",
+    "industrialupgrade:storagesystem/importbus",
+    "industrialupgrade:storagesystem/exportbus",
+    "industrialupgrade:storagesystem/fluid_importbus",
+    "industrialupgrade:storagesystem/fluid_exportbus",
+    "industrialupgrade:storagesystem/processor",
+    "industrialupgrade:storagesystem/adv_processor",
+    "industrialupgrade:storagesystem/imp_processor",
+    "industrialupgrade:storagesystem/per_processor",
+    "industrialupgrade:storagesystem/monitor",
+    "industrialupgrade:storagesystem/pattern_monitor",
+    "industrialupgrade:storagesystem/fluid_monitor",
+    "industrialupgrade:storagesystem/precraft",
+    "industrialupgrade:storagesystem/autocraft_monitor",
     "industrialupgrade:baseore1/lithium",
     "industrialupgrade:baseore1/beryllium",
     "industrialupgrade:baseore1/bor",
@@ -1089,6 +1106,8 @@
     "industrialupgrade:blockradiationore/americium_ore",
     "industrialupgrade:blockradiationore/neptunium_ore",
     "industrialupgrade:blockradiationore/curium_ore",
-    "industrialupgrade:glass/reinforced"
+    "industrialupgrade:glass/reinforced",
+    "industrialupgrade:nitrate_mud/nitrate_mud",
+    "industrialupgrade:raw_saltpeter/raw_saltpeter"
   ]
 }

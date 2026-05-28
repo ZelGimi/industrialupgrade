@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:titania_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:titania_biome"
+    },
+    "settings": "industrialupgrade:titania_noise"
+  }
+}

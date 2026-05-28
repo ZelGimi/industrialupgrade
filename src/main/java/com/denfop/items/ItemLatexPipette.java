@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.blocks.BlockRubWood;
@@ -32,7 +34,7 @@ import java.util.List;
 public class ItemLatexPipette extends ItemFluidContainer implements IItemTab {
 
     public ItemLatexPipette() {
-        super(100 * 20, 1);
+        super(100 * 20, ModConfig.itemInt("latex_pipette_capacity", 1));
 
     }
 

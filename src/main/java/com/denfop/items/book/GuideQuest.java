@@ -12,6 +12,7 @@ import com.denfop.screen.ScreenResearchTableSpace;
 import com.denfop.toast.GuideToast;
 import com.denfop.utils.Localization;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -265,11 +266,29 @@ public class GuideQuest {
 
             }
         }
+        String name = quest.getLocalizedName();
+        int textWidth = guiIU.getStringWidth(name);
+        float scale = 1.0f;
 
-        guiIU.drawString(poseStack, quest.getLocalizedName(),
-                mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth(quest.getLocalizedName()) / 2,
-                mouseY + y + offsetY1 + 5, 0
-        );
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        pose.scale(scale, scale, 1.0f);
+
+
+        int centerX = mouseX + x + offsetX1 + 5 + width / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((mouseY + y + offsetY1 + 5) / scale);
+
+
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.WHITE + name, textX, textY, 0, false);
+        pose.scale(1 / scale, 1 / scale, 1);
+
+        pose.popPose();
         guiIU.drawString(poseStack, ChatFormatting.GREEN +
                         Localization.translate("iu.quest.task." + quest.typeQuest.name().toLowerCase()),
                 mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth("iu.quest.task." + quest.typeQuest.name().toLowerCase()) / 2,
@@ -491,7 +510,7 @@ public class GuideQuest {
             page = Math.max(1, page);
 
         }
-        return page != this.page;
+        return true;
     }
 
     public boolean canScrollItem(ScrollDirection direction) {

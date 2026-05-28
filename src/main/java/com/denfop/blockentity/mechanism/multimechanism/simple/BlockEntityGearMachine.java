@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.simple;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -28,8 +30,8 @@ public class BlockEntityGearMachine extends BlockEntityMultiMachine {
     public BlockEntityGearMachine(BlockPos pos, BlockState state) {
         super(EnumMultiMachine.Gearing.usagePerTick, EnumMultiMachine.Gearing.lenghtOperation, BlockMoreMachine3Entity.gearing, pos, state);
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("gear_machine_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("gear_machine_air_pollution_amount", 0.15D)));
     }
 
     public static void addrecipe(String input, String output) {

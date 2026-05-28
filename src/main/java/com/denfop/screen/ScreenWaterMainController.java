@@ -104,7 +104,7 @@ public class ScreenWaterMainController<T extends ContainerMenuWaterMainControlle
         super.renderSlot(p_97800_, p_97801_);
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 15 && mouseX <= 30 && mouseY >= 2 && mouseY <= 14) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("reactor.guide.water_reactor"));

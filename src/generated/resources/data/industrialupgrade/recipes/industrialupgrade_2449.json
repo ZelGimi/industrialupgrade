@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:plates/stellite"
+      "tag": "forge:plates/bismuth"
     },
     "B": {
-      "item": "wateringcan:adv_watering_can"
+      "item": "minecraft:water_bucket"
     }
   },
   "pattern": [
@@ -15,7 +15,7 @@
     "AAA"
   ],
   "result": {
-    "item": "wateringcan:imp_watering_can"
+    "item": "wateringcan:simple_watering_can"
   },
   "show_notification": true
 }

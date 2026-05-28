@@ -407,7 +407,9 @@ public class BlockEntityBaseWaterGenerator extends BlockEntityInventory implemen
             this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
 
             if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
-                this.slot.damage(this.getDamageRotor(), this.addition_strength);
+                this.slot.damage(this.getDamageRotor() * 400, this.addition_strength);
+                new PacketUpdateFieldTile(this, "slot", this.slot);
+
             }
         } else {
             generation = 0;

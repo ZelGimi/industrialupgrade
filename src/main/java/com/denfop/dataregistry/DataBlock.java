@@ -15,15 +15,13 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class DataBlock<T extends Enum<T> & SubEnum, E extends Block, F extends ItemBlockCore> {
-    public static List<RegistryObject<?>> objects = new LinkedList<>();
-    public static List<RegistryObject<?>> objectsBlock = new LinkedList<>();
+    public static List<RegistryObject<?>> objects = Collections.synchronizedList(new LinkedList<>());
+    public static List<RegistryObject<?>> objectsBlock = Collections.synchronizedList(new LinkedList<>());
     private final Map<T, RegistryObject<E>> block = new ConcurrentHashMap<>();
     private final Map<Integer, T> elementsMeta = new ConcurrentHashMap<>();
     private final T[] collections;
@@ -166,5 +164,14 @@ public class DataBlock<T extends Enum<T> & SubEnum, E extends Block, F extends I
             i++;
         }
         return 0;
+    }
+
+    public ItemStack getItem(ItemStack stack) {
+        for (RegistryObject<F> registryObject : registryObjectList.values()) {
+            if (registryObject.get() == stack.getItem()) {
+                return new ItemStack(registryObject.get());
+            }
+        }
+        return ItemStack.EMPTY;
     }
 }

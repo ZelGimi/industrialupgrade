@@ -11,20 +11,26 @@
     "C": {
       "item": "industrialupgrade:quantumitems4"
     },
-    "D": {
-      "item": "industrialupgrade:machines/graviton_solar_panel"
-    },
     "E": {
+      "item": "industrialupgrade:excitednucleus/kvrcore"
+    },
+    "H": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
+      "item": "industrialupgrade:circuit/photoncircuit",
+      "nbt": "{level:12}"
+    },
+    "J": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:upgradekitpanel/upgradepanelkit13"

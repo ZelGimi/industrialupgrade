@@ -1,0 +1,19 @@
+{
+  "feature": "industrialupgrade:eris_geyser_3",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 170
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

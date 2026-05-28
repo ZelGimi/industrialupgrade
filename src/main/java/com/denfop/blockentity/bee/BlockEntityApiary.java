@@ -72,11 +72,12 @@ import static com.denfop.api.bee.genetics.GeneticsManager.geneticTraitsMap;
 
 public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTile {
 
-    static final int percentAttackBee = 20;
-    static final int percentDoctorBee = 20;
-    static final int percentWorkersBee = 45;
+    public static final int percentAttackBee = 20;
+    public static final int percentDoctorBee = 20;
+    public static final int percentWorkersBee = 45;
     static final int percentBuildersBee = 15;
     public static BeeAI beeAI = BeeAI.beeAI;
+    public static boolean hasDamagePlayer = true;
     public final InventoryOutput invSlotProduct;
     public final Inventory frameSlot;
     public final InventoryOutput invSlotFood;
@@ -112,6 +113,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     public short maxJelly = 200;
     public short maxDefaultFood = 1000;
     public short maxDefaultJelly = 200;
+    public double coef;
     double[] massiveNeeds = new double[5];
     List<com.denfop.blockentity.bee.Bee> apairyBeeList = new LinkedList<>();
     Bee queen;
@@ -145,7 +147,6 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     private byte tickDrainFood = 0;
     private byte tickDrainJelly = 0;
     private Map<BlockEntityApiary, Double> bees_nearby;
-    private double coef;
     private ItemStack stack;
     private int weatherGenome = 0;
     private double pestGenome = 1;
@@ -166,7 +167,6 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     private LevelPollution soilPollution = LevelPollution.LOW;
     private EnumLevelRadiation radiationPollution = EnumLevelRadiation.LOW;
 
-    public static boolean hasDamagePlayer = true;
     public BlockEntityApiary(BlockPos pos, BlockState state) {
         super(BlockApiaryEntity.apiary, pos, state);
         this.invSlotProduct = new InventoryOutput(this, 7);
@@ -287,14 +287,14 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
         List<Player> players = getEntitiesWithinAABB(axisAlignedBB);
         entityWeightMap.clear();
         if (hasDamagePlayer)
-        for (Player player : players) {
-            if (getComponentPrivate().getPlayers().contains(player.getName().getString()) || player.isCreative()) {
-                continue;
+            for (Player player : players) {
+                if (getComponentPrivate().getPlayers().contains(player.getName().getString()) || player.isCreative()) {
+                    continue;
+                }
+                double distance = center.distanceTo(player.position());
+                double weight = calculateWeight(distance, maxDistance);
+                entityWeightMap.put(player, weight);
             }
-            double distance = center.distanceTo(player.position());
-            double weight = calculateWeight(distance, maxDistance);
-            entityWeightMap.put(player, weight);
-        }
 
 
         return entityWeightMap;
@@ -391,6 +391,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
+        this.coef = customPacketBuffer.readDouble();
         long packedData = customPacketBuffer.readLong();
 
         this.task = (int) (packedData & 0x7F);
@@ -408,8 +409,9 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
         this.royalJelly = customPacketBuffer.readDouble();
         this.deathTask = customPacketBuffer.readByte();
         this.illTask = customPacketBuffer.readByte();
-        this.queen = BeeNetwork.instance.getBee(customPacketBuffer.readInt()).copy();
-        if (customPacketBuffer.readBoolean()) {
+        int id = customPacketBuffer.readInt();
+        if (id != 0 && customPacketBuffer.readBoolean()) {
+            this.queen = BeeNetwork.instance.getBee(id).copy();
             int size = customPacketBuffer.readInt();
             for (int i = 0; i < size; i++) {
                 double chance = customPacketBuffer.readDouble();
@@ -423,12 +425,15 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             } catch (IOException e) {
 
             }
+        } else {
+            queen = null;
         }
     }
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer buffer = super.writeContainerPacket();
+        buffer.writeDouble(this.coef);
         long packedData = ((long) this.task & 0x7F) |
                 ((long) this.workers & 0x7F) << 7 |
                 ((long) this.builders & 0x7F) << 14 |
@@ -447,20 +452,24 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
         buffer.writeByte(this.illTask);
         if (queen != null) {
             buffer.writeInt(queen.getId());
-        } else {
-            buffer.writeInt(0);
-        }
-        buffer.writeBoolean(queen != null);
-        buffer.writeInt(queen.getProduct().size());
-        for (int i = 0; i < queen.getProduct().size(); i++) {
-            Product product = queen.getProduct().get(i);
-            buffer.writeDouble(product.getChance());
-            buffer.writeInt(product.getCrop().getId());
-        }
-        try {
-            EncoderHandler.encode(buffer, this.stack);
-        } catch (IOException e) {
 
+        } else {
+            buffer.writeInt(1);
+        }
+
+        buffer.writeBoolean(queen != null);
+        if (queen != null) {
+            buffer.writeInt(queen.getProduct().size());
+            for (int i = 0; i < queen.getProduct().size(); i++) {
+                Product product = queen.getProduct().get(i);
+                buffer.writeDouble(product.getChance());
+                buffer.writeInt(product.getCrop().getId());
+            }
+            try {
+                EncoderHandler.encode(buffer, this.stack);
+            } catch (IOException e) {
+
+            }
         }
         return buffer;
     }
@@ -582,7 +591,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
 
     @Override
     public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
+        CustomPacketBuffer customPacketBuffer = super.writePacket();
         customPacketBuffer.writeBoolean(queen != null);
         if (queen != null)
             customPacketBuffer.writeInt(queen.getId());
@@ -774,10 +783,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             death = 0;
             this.birthBeeList.clear();
         }
-        if (this.queen != null) {
-            return super.onActivated(player, hand, side, hitX);
-        }
-        return false;
+        return super.onActivated(player, hand, side, hitX);
     }
 
     @Override
@@ -814,24 +820,27 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             }
         }
 
-        double totalRequiredJelly = 0.0;
+        if (!birthBeeList.isEmpty()) {
+            double totalRequiredJelly = 0.0;
 
-
-        for (com.denfop.blockentity.bee.Bee bee : birthBeeList) {
-            totalRequiredJelly += 2 - bee.getJelly();
-        }
-
-
-        if (this.royalJelly >= totalRequiredJelly) {
             for (com.denfop.blockentity.bee.Bee bee : birthBeeList) {
-                double add = 2 - bee.getJelly();
-                bee.addJelly(add);
-                this.royalJelly -= add;
+                totalRequiredJelly += 2 - bee.getJelly();
             }
-        } else {
-            double equalFoodShare = this.royalJelly / birthBeeList.size();
-            for (com.denfop.blockentity.bee.Bee bee : birthBeeList) {
-                bee.addJelly(equalFoodShare);
+
+            if (totalRequiredJelly > 0) {
+                if (this.royalJelly >= totalRequiredJelly) {
+                    for (com.denfop.blockentity.bee.Bee bee : birthBeeList) {
+                        double add = 2 - bee.getJelly();
+                        bee.addJelly(add);
+                        this.royalJelly -= add;
+                    }
+                } else {
+                    double equalFoodShare = this.royalJelly / birthBeeList.size();
+                    for (com.denfop.blockentity.bee.Bee bee : birthBeeList) {
+                        bee.addJelly(equalFoodShare);
+                    }
+                    this.royalJelly = 0;
+                }
             }
         }
     }
@@ -1113,6 +1122,9 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             if (massiveNeeds[4] < 0.3) {
                 problemList.add(EnumProblem.JELLY);
             }
+            new PacketUpdateFieldTile(this, "problem", problemList.stream()
+                    .map(EnumProblem::ordinal)
+                    .toList());
             List<com.denfop.blockentity.bee.Bee> iterator = new ArrayList<>(apairyBeeList);
             ChunkLevel airPollution = PollutionManager.pollutionManager.getChunkLevelAir(chunkPos);
             int totalBees = (apairyBeeList.size() - birthBeeList.size());
@@ -1137,6 +1149,13 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                     if (bee.getType() == EnumTypeLife.LARVA) {
                         bee.removeJelly();
                     }
+                    double totalLifetimeTicks = bee.getMaxLife() * populationGenome;
+                    double lifetimeSeconds = Math.max(totalLifetimeTicks / 20.0D, 1.0D);
+                    double totalMortalityChance = queen.getMaxMortalityRate() * this.mortalityGenome;
+                    double perSecondMortalityChance = totalMortalityChance / lifetimeSeconds;
+                    double ageProgress = Math.min(1.0D, bee.getTick() / totalLifetimeTicks);
+                    double ageFactor = ageProgress < 0.75D ? 0.0D : (ageProgress - 0.75D) / 0.25D;
+                    double finalMortalityChance = perSecondMortalityChance * ageFactor;
 
                     if (bee.isIll() && royalJelly >= 0.5) {
                         if (WorldBaseGen.random.nextInt(100) == 0) {
@@ -1145,14 +1164,15 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                             illBeeList.remove(bee);
                         } else {
                             royalJelly -= 0.05;
-                            if (WorldBaseGen.random.nextDouble() < 0.25 && WorldBaseGen.random.nextDouble() < queen.getMaxMortalityRate() * this.mortalityGenome) {
+
+                            if (finalMortalityChance > 0.0D && WorldBaseGen.random.nextDouble() < finalMortalityChance) {
                                 bee.setDead(true);
                                 death(bee);
                                 continue;
                             }
                         }
                     } else {
-                        if (WorldBaseGen.random.nextDouble() < 0.1 && WorldBaseGen.random.nextDouble() <= queen.getMaxMortalityRate() * this.mortalityGenome) {
+                        if (finalMortalityChance > 0.0D && WorldBaseGen.random.nextDouble() < finalMortalityChance) {
                             bee.setDead(true);
                             death(bee);
                             continue;
@@ -1161,6 +1181,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                     if (!bee.isChild() && isChild && !bee.isDead()) {
                         birthBeeList.remove(bee);
                         findWork(bee);
+
                     }
                     if (!bee.isChild() && bee.getTypeBee() == typeBee && canChangeWork && WorldBaseGen.random.nextInt(4) == 0) {
                         switch (typeBee) {
@@ -1258,6 +1279,21 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                 jellyCellSlot.get(0).shrink(1);
                 this.invSlotJelly.add(ModUtils.getCellFromFluid(FluidName.fluidroyaljelly.getInstance().get()));
                 this.royalJelly -= 50D;
+            }
+        }
+    }
+
+    @Override
+    public void updateField(String name, CustomPacketBuffer is) {
+        super.updateField(name, is);
+        if (name.trim().equals("problem")) {
+            try {
+                List<Integer> list = (List<Integer>) DecoderHandler.decode(is);
+                this.problemList = list.stream()
+                        .map(integer -> EnumProblem.values()[integer])
+                        .toList();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -1815,17 +1851,19 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                 }
             }
         }
-        for (int i = 0; i < level.random.nextInt(Math.max(1, passedCrops.size() / 4)) + 1; i++) {
-            SmallBee smallBee = IUItem.entity_bee.get().create(level);
-            smallBee.setCrops(passedCrops);
-            smallBee.setBee(queen);
-            smallBee.setCustomHive(pos);
-            smallBee.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
-            if (smallBee != null) {
-                level.addFreshEntity(smallBee);
+        if (passedCrops.size() > 0) {
+            for (int i = 0; i < level.random.nextInt(Math.max(1, passedCrops.size() / 4)) + 1; i++) {
+                SmallBee smallBee = IUItem.entity_bee.get().create(level);
+                if (smallBee != null) {
+                    smallBee.setCrops(passedCrops);
+                    smallBee.setBee(queen);
+                    smallBee.setCustomHive(pos);
+                    smallBee.launchFromHive();
+                    level.addFreshEntity(smallBee);
+                }
             }
         }
-        if (harvest >= 3 / coef) {
+        if (harvest >= 1 / coef) {
             if (addFood) {
                 this.tickDrainFood++;
             }

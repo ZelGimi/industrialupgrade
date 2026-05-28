@@ -365,7 +365,7 @@ public class BlockEntityElectricBlock extends BlockEntityInventory implements
                             CommonProxy.sendPlayerMessage(
                                     entityPlayer,
                                     Localization.translate("successfully.charged")
-                                            + armorcharged.getDisplayName().getString()
+                                            + com.denfop.utils.ModUtils.cleanComponentString(armorcharged.getDisplayName().getString())
                                             + Localization.translate("iu.sendenergy")
                                             + ModUtils.getString(sent) + " EF"
                             );
@@ -393,7 +393,7 @@ public class BlockEntityElectricBlock extends BlockEntityInventory implements
                             CommonProxy.sendPlayerMessage(
                                     entityPlayer,
                                     Localization.translate("successfully.charged")
-                                            + charged.getDisplayName().getString()
+                                            + com.denfop.utils.ModUtils.cleanComponentString(charged.getDisplayName().getString())
                                             + Localization.translate("iu.sendenergy")
                                             + ModUtils.getString(sent) + " EF"
                             );

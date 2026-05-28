@@ -100,7 +100,7 @@ public class BlockEntityWirelessMineralQuarry extends BlockEntityInventory imple
     @Override
     public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.levelBlock = nbtTagCompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbtTagCompound.contains("level") ? nbtTagCompound.getInt("level") : nbtTagCompound.getInt("levelMech")));
     }
 
     @Override
@@ -119,6 +119,7 @@ public class BlockEntityWirelessMineralQuarry extends BlockEntityInventory imple
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -256,12 +257,14 @@ public class BlockEntityWirelessMineralQuarry extends BlockEntityInventory imple
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
 }

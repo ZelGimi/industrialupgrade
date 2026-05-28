@@ -21,7 +21,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 
 import static com.denfop.api.widget.ScreenWidget.bindBlockTexture;
-import static com.denfop.api.widget.ScreenWidget.getBlockTextureMap;
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
 import static com.denfop.screen.ScreenIndustrialUpgrade.bindTexture;
 
 public class ScreenResourceBody extends ScreenDefaultResearchTable {
@@ -41,9 +41,9 @@ public class ScreenResourceBody extends ScreenDefaultResearchTable {
             IBaseResource resource = planet.getResources().get(i);
             if (resource.getItemStack() != null) {
                 new TooltipWidget(getTile(), this.x + offsetX1 + ((15 + (i % 7) * 18)), this.y + offsetY1 + (int) ((27 + 18 * (i / 7))), 18, 18).withTooltip(
-                        (!(resource.getPercentPanel() > data.getPercent()) ? resource
+                        (!(resource.getPercentPanel() > data.getPercent()) ? com.denfop.utils.ModUtils.cleanComponentString(resource
                                 .getItemStack()
-                                .getDisplayName().getString() : "???") + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(
+                                .getDisplayName().getString()) : "???") + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(
                                 resource.getChance() * 100D / resource.getMaxChance()) + "%" +
                                 "\n" + Localization.translate("iu.space_rover") + " " + Localization.translate("iu" +
                                 ".space_rover_" + resource.getTypeRovers().name().toLowerCase())
@@ -51,9 +51,9 @@ public class ScreenResourceBody extends ScreenDefaultResearchTable {
             }
             if (resource.getFluidStack() != null && !(resource.getPercentPanel() > data.getPercent())) {
                 new TooltipWidget(getTile(), this.x + offsetX1 + ((15 + (i % 7) * 18)), (int) this.y + offsetY1 + ((27 + 18 * (i / 7))), 16, 16).withTooltip(
-                        (!(resource.getPercentPanel() > data.getPercent()) ? resource
-                                .getFluidStack()
-                                .getDisplayName().getString() : "???") + "\n" + (!(resource.getPercentPanel() > data.getPercent()) ? Localization.translate("iu.space_amount") : "??? mb") + " " + resource.getFluidStack().getAmount() + "mb" + "\n" +
+                        (!(resource.getPercentPanel() > data.getPercent()) ? com.denfop.utils.ModUtils.cleanComponentString(resource
+                               .getFluidStack()
+                                .getDisplayName().getString()) : "???") + "\n" + (!(resource.getPercentPanel() > data.getPercent()) ? Localization.translate("iu.space_amount") : "??? mb") + " " + resource.getFluidStack().getAmount() + "mb" + "\n" +
                                 Localization.translate("iu.space_chance") + " " + ModUtils.getString(resource.getChance() * 100D / resource.getMaxChance()) + "%" +
                                 "\n" + Localization.translate("iu.space_rover") + " " + Localization.translate("iu.space_rover_" + resource
                                 .getTypeRovers()
@@ -106,7 +106,7 @@ public class ScreenResourceBody extends ScreenDefaultResearchTable {
                     int fluidHeight = 16;
                     Fluid fluid = baseResource.getFluidStack().getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(baseResource.getFluidStack()));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(baseResource.getFluidStack());
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.getTile().drawSprite(poseStack,

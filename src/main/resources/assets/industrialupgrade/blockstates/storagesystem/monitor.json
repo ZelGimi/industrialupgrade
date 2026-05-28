@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=monitor": {
+      "model": "industrialupgrade:block/storagesystem/monitor"
+    },
+    "facing=south,type=monitor": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "y": 180
+    },
+    "facing=west,type=monitor": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "y": 270
+    },
+    "facing=east,type=monitor": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "y": 90
+    },
+    "facing=north,type=monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/monitor_active"
+    },
+    "facing=south,type=monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/monitor_active",
+      "y": 180
+    },
+    "facing=west,type=monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/monitor_active",
+      "y": 270
+    },
+    "facing=east,type=monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/monitor_active",
+      "y": 90
+    },
+    "facing=down,type=monitor": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "x": 90
+    },
+    "facing=up,type=monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "x": 270
+    },
+    "facing=down,type=monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "x": 90
+    },
+    "facing=up,type=monitor": {
+      "model": "industrialupgrade:block/storagesystem/monitor",
+      "x": 270
+    }
+  }
+}

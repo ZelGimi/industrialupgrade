@@ -3,28 +3,31 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:doubleplate/ferromanganese"
+      "tag": "c:doubleplate/vitalium"
     },
     "B": {
-      "item": "industrialupgrade:battery/itembatlamacrystal"
+      "item": "industrialupgrade:quantumitems2"
     },
     "C": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:6}"
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
     },
     "E": {
-      "item": "industrialupgrade:armour/adv_lappack"
+      "item": "industrialupgrade:armour/imp_lappack"
     }
   },
   "pattern": [
-    "ABA",
-    "CEC",
-    "ABA"
+    "ACA",
+    "BEB",
+    "ADA"
   ],
   "result": {
-    "item": "industrialupgrade:armour/imp_lappack"
+    "item": "industrialupgrade:armour/per_lappack"
   },
   "show_notification": true
 }

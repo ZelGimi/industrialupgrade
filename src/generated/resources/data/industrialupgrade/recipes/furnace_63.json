@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:baseore2/polonium"
+    "item": "industrialupgrade:baseore1/osmium"
   },
-  "result": "industrialupgrade:itemingots/polonium"
+  "result": "industrialupgrade:itemingots/osmium"
 }

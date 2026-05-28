@@ -45,6 +45,8 @@ public class ListInformationUtils {
     public static int index2 = 0;
 
     public static void init() {
+        if (!mechanism_info.isEmpty())
+            return;
         for (int i = 0; i < BlockMoreMachineEntity.values().length; i++) {
             mechanism_info.add(Localization.translate(new ItemStack(IUItem.machines_base.getItem(i), 1).getDescriptionId()));
         }
@@ -94,12 +96,8 @@ public class ListInformationUtils {
         panelinform.add(Localization.translate("iu.panelinformation4"));
         panelinform.add(Localization.translate("iu.panelinformation5"));
         panelinform.add(Localization.translate("iu.panelinformation6"));
-        panelinform.add(Localization.translate("iu.panelinformation7"));
         panelinform.add(Localization.translate("iu.panelinformation8"));
         panelinform.add(Localization.translate("iu.panelinformation9"));
-        storageinform.add(Localization.translate("iu.electricstorageinformation1"));
-        storageinform.add(Localization.translate("iu.electricstorageinformation2"));
-        storageinform.add(Localization.translate("iu.electricstorageinformation3"));
         storageinform.add(Localization.translate("iu.electricstorageinformation4"));
         storageinform.add(Localization.translate("iu.electricstorageinformation5"));
         storageinform.add(Localization.translate("iu.electricstorageinformation6"));
@@ -177,10 +175,10 @@ public class ListInformationUtils {
             quarryvein.add(Localization.translate("iu.quarryvein_info" + i));
         }
         for (int i = 0; i < 6; i++) {
-            solar.add(new ItemStack(IUItem.basemodules.getItemFromMeta(i), 1).getDisplayName().getString());
+            solar.add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.basemodules.getItemFromMeta(i), 1).getDisplayName().getString()));
         }
         for (int i = 15; i < 18; i++) {
-            solar.add(new ItemStack(IUItem.basemodules.getItemFromMeta(i), 1).getDisplayName().getString());
+            solar.add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.basemodules.getItemFromMeta(i), 1).getDisplayName().getString()));
         }
 
         for (EnumMultiMachine machines : EnumMultiMachine.values()) {
@@ -188,28 +186,28 @@ public class ListInformationUtils {
                 case 1:
                 case 2:
                     if (integerListMap.containsKey(0)) {
-                        integerListMap.get(0).add(new ItemStack(machines.block.getItem(machines.meta), 1).getDisplayName().getString());
+                        integerListMap.get(0).add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(machines.block.getItem(machines.meta), 1).getDisplayName().getString()));
                     } else {
                         List<String> stringList = new ArrayList<>();
-                        stringList.add(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString());
+                        stringList.add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString()));
                         integerListMap.put(0, stringList);
                     }
                     break;
                 case 3:
                     if (integerListMap.containsKey(1)) {
-                        integerListMap.get(1).add(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString());
+                        integerListMap.get(1).add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString()));
                     } else {
                         List<String> stringList = new ArrayList<>();
-                        stringList.add(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString());
+                        stringList.add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString()));
                         integerListMap.put(1, stringList);
                     }
                     break;
                 case 4:
                     if (integerListMap.containsKey(2)) {
-                        integerListMap.get(2).add(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString());
+                        integerListMap.get(2).add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString()));
                     } else {
                         List<String> stringList = new ArrayList<>();
-                        stringList.add(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString());
+                        stringList.add(com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(machines.block.getItem(machines.meta)).getDisplayName().getString()));
                         integerListMap.put(2, stringList);
                     }
                     break;

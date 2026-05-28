@@ -1,6 +1,8 @@
 package com.denfop.blockentity.base;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -69,13 +71,13 @@ public class BlockEntityFisher extends BlockEntityElectricMachine
     private LootPool listPool;
 
     public BlockEntityFisher(BlockPos pos, BlockState state) {
-        super(1E4, 14, 9, BlockBaseMachine2Entity.fisher, pos, state);
+        super(ModConfig.mechanismDouble("fishing_machine_energy_storage", 10000.0D), 14, 9, BlockBaseMachine2Entity.fisher, pos, state);
         this.progress = 0;
-        this.energyconsume = 100;
+        this.energyconsume = ModConfig.mechanismInt("fishing_machine_energy_use", 100);
         this.checkwater = false;
         this.inputslot = new InventoryFisher(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("fishing_machine_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("fishing_machine_air_pollution_amount", 0.1D)));
     }
 
     @Override
@@ -110,17 +112,19 @@ public class BlockEntityFisher extends BlockEntityElectricMachine
 
     @Override
     public int getLevelMechanism() {
-        return this.level;
+        return Math.max(0, this.level - 1);
     }
 
     @Override
     public void setLevelMech(final int levelMech) {
-        this.level = levelMech;
+        this.level = Math.max(1, Math.min(10, levelMech + 1));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.level = Math.max(1, this.level - level);
+        this.setChanged();
     }
 
     @Override
@@ -268,8 +272,9 @@ public class BlockEntityFisher extends BlockEntityElectricMachine
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         if (this.level != 1) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.level));
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.level - 1));
             this.level = 1;
+            this.setChanged();
         }
         return ret;
     }
@@ -288,6 +293,7 @@ public class BlockEntityFisher extends BlockEntityElectricMachine
             } else {
                 stack.shrink(1);
                 this.level++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -299,7 +305,7 @@ public class BlockEntityFisher extends BlockEntityElectricMachine
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getInt("progress");
 
-        this.level = nbttagcompound.getInt("level");
+        this.level = nbttagcompound.contains("level") ? Math.max(1, Math.min(10, nbttagcompound.getInt("level"))) : 1;
     }
 
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {

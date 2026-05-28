@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -44,8 +46,8 @@ public class BlockEntityWirelessMatterCollector extends BlockEntityInventory {
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("tank", 16384000, Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance().get()));
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("wireless_matter_collector_soil_pollution_amount", 0.15D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("wireless_matter_collector_air_pollution_amount", 0.15D)));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
 

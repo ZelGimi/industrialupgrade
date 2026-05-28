@@ -6,7 +6,6 @@ import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
-import com.denfop.mixin.access.DeferredRegisterAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,58 +19,64 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 import static com.denfop.dataregistry.DataBlock.objectsBlock;
 import static com.denfop.register.Register.*;
 
 public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
+
+    public static final List<RegistryObject<?>> objects = Collections.synchronizedList(new LinkedList<>());
     public static TileBlockCreator instance;
-    public static List<RegistryObject<?>> objects = new LinkedList<>();
     private final Map<T, RegistryObject<BlockTileEntity<T>>> block = new ConcurrentHashMap<>();
     private final Map<Integer, T> elementsMeta = new ConcurrentHashMap<>();
     private final T[] collections;
+    private final Map<T, RegistryObject<ItemBlockTileEntity<T>>> registryObjectList = new ConcurrentHashMap<>();
     public int index = 0;
-    Map<T, RegistryObject<ItemBlockTileEntity<T>>> registryObjectList = new ConcurrentHashMap<>();
 
     public DataBlockEntity(Class<T> typeClass) {
         this(typeClass, Constants.MOD_ID, BLOCKS, BLOCK_ENTITIES, ITEMS);
     }
 
-    public DataBlockEntity(Class<T> typeClass, String location, DeferredRegister<Block> BLOCKS, DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES, DeferredRegister<Item> ITEMS) {
-        T[] collections = typeClass.getEnumConstants();
-        this.collections = collections;
-        for (T type : collections) {
-            elementsMeta.put(type.getId(), type);
-            try {
-                final ResourceLocation key = new ResourceLocation(location, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
-                Supplier<BlockTileEntity<T>> supplier = () -> TileBlockCreator.instance.create(type, key);
-                RegistryObject<BlockTileEntity<T>> ret = RegistryObject.create(key, BLOCKS.getRegistryKey(), location);
-                objectsBlock.add(ret);
-                var entries = ((DeferredRegisterAccessor) BLOCKS).getEntries();
-                if (entries.putIfAbsent(ret, supplier) != null) {
-                    throw new IllegalArgumentException("Duplicate registration " + type.getMainPath());
-                }
-                Supplier<BlockEntityType<? extends BlockEntityBase>> supplierType = () -> create(Objects.requireNonNull(type.getTeClass()), ret);
-                RegistryObject<BlockEntityType<? extends BlockEntityBase>> blockEntityType = RegistryObject.create(key, BLOCK_ENTITIES.getRegistryKey(), location);
-                type.setType(blockEntityType);
-                var entries1 = ((DeferredRegisterAccessor) BLOCK_ENTITIES).getEntries();
-                if (entries1.putIfAbsent(blockEntityType, supplierType) != null) {
-                    throw new IllegalArgumentException("Duplicate registration " + type.getMainPath());
-                }
-                this.block.put(type, ret);
-                registerBlockItem(type, ret, location, ITEMS);
+    public DataBlockEntity(
+            Class<T> typeClass,
+            String location,
+            DeferredRegister<Block> BLOCKS,
+            DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES,
+            DeferredRegister<Item> ITEMS
+    ) {
+        this.collections = typeClass.getEnumConstants();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+        for (T type : this.collections) {
+            elementsMeta.put(type.getId(), type);
+
+            final String path = type.getMainPath() + "/" + type.getSerializedName().toLowerCase(Locale.ROOT);
+            final ResourceLocation key = new ResourceLocation(location, path);
+
+            final RegistryObject<BlockTileEntity<T>> blockObject = BLOCKS.register(
+                    path,
+                    () -> TileBlockCreator.instance.create(type, key)
+            );
+
+            objectsBlock.add(blockObject);
+            this.block.put(type, blockObject);
+
+            final RegistryObject<BlockEntityType<? extends BlockEntityBase>> blockEntityType = BLOCK_ENTITIES.register(
+                    path,
+                    () -> create(
+                            Objects.requireNonNull(type.getTeClass(), "BlockEntity class is null for " + type),
+                            blockObject
+                    )
+            );
+
+            type.setType(blockEntityType);
+
+            registerBlockItem(type, blockObject, path, key, ITEMS);
         }
     }
 
     public BlockEntityType<? extends BlockEntityBase> create(
             Class<? extends BlockEntityBase> typeClass,
-            RegistryObject<BlockTileEntity<T>>... block
+            RegistryObject<BlockTileEntity<T>>... blocks
     ) {
         Constructor<BlockEntityBase> constructor = (Constructor<BlockEntityBase>) typeClass.getConstructors()[0];
 
@@ -83,34 +88,28 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
                         throw new RuntimeException(e);
                     }
                 },
-                Arrays.stream(block).map(RegistryObject::get).toArray(Block[]::new)
+                Arrays.stream(blocks).map(RegistryObject::get).toArray(Block[]::new)
         ).build(null);
-
     }
 
-    private void registerBlockItem(T type, RegistryObject<BlockTileEntity<T>> block, String location, DeferredRegister<Item> ITEMS) {
-        int indexMax = 0;
-        if (!type.register())
+    private void registerBlockItem(
+            T type,
+            RegistryObject<BlockTileEntity<T>> block,
+            String path,
+            ResourceLocation key,
+            DeferredRegister<Item> ITEMS
+    ) {
+        if (!type.register()) {
             return;
-        try {
-            final ResourceLocation key = new ResourceLocation(location, type.getMainPath() + "/" + type.getSerializedName().toLowerCase());
-
-            Supplier<? extends ItemBlockTileEntity<T>> supplier = () -> new ItemBlockTileEntity<>(block.get(), type, key);
-            if (indexMax < type.getId())
-                indexMax = type.getId();
-
-            RegistryObject<ItemBlockTileEntity<T>> ret = RegistryObject.create(key, ITEMS.getRegistryKey(), location);
-            objects.add(ret);
-            var entries = ((DeferredRegisterAccessor) ITEMS).getEntries();
-            if (entries.putIfAbsent(ret, supplier) != null) {
-                throw new IllegalArgumentException("Duplicate registration " + type);
-            }
-            registryObjectList.put(type, ret);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
 
+        final RegistryObject<ItemBlockTileEntity<T>> itemObject = ITEMS.register(
+                path,
+                () -> new ItemBlockTileEntity<>(block.get(), type, key)
+        );
+
+        objects.add(itemObject);
+        registryObjectList.put(type, itemObject);
     }
 
     public T getElementFromID(int meta) {
@@ -134,7 +133,6 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
     }
 
     public BlockState getBlockState(int meta) {
-
         return block.get(getElementFromID(meta)).get().defaultBlockState();
     }
 
@@ -149,7 +147,6 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
     public BlockState getDefaultState() {
         return block.get(collections[0]).get().defaultBlockState();
     }
-
 
     public ItemBlockTileEntity<T> getItem(T element) {
         return registryObjectList.get(element).get();
@@ -191,8 +188,9 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
     public boolean contains(ItemStack itemStack) {
         Item item = itemStack.getItem();
         for (RegistryObject<ItemBlockTileEntity<T>> item1 : this.registryObjectList.values()) {
-            if (item1.get() == item)
+            if (item1.get() == item) {
                 return true;
+            }
         }
         return false;
     }
@@ -200,8 +198,9 @@ public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
     public ItemBlockTileEntity<T> getItem(ItemStack itemStack) {
         Item item = itemStack.getItem();
         for (RegistryObject<ItemBlockTileEntity<T>> item1 : this.registryObjectList.values()) {
-            if (item1.get() == item)
+            if (item1.get() == item) {
                 return item1.get();
+            }
         }
         return null;
     }

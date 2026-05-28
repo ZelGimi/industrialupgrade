@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidpropylene",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "gallery_caves",
+    "max_length": 30,
+    "max_radius": 4,
+    "max_vertical": 16,
+    "min_length": 20,
+    "min_radius": 2,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/charon_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone/charon_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone/charon_cobblestone"
+    }
+  }
+}

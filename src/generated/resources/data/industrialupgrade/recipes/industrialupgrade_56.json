@@ -2,23 +2,29 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "A": {
+      "item": "industrialupgrade:compressed_redstone"
+    },
     "B": {
-      "tag": "forge:ingots/duralumin"
+      "item": "industrialupgrade:electronic_stabilizers"
     },
     "C": {
-      "tag": "forge:doubleplate/invar"
+      "item": "industrialupgrade:graphene_wire"
     },
     "D": {
-      "item": "industrialupgrade:energy/magnet"
+      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_588_element"
     }
   },
   "pattern": [
-    "B B",
-    "CDC",
-    " C "
+    " A ",
+    "BDB",
+    "CEC"
   ],
   "result": {
-    "item": "industrialupgrade:energy/impmagnet"
+    "item": "industrialupgrade:motors_with_improved_bearings_"
   },
   "show_notification": true
 }

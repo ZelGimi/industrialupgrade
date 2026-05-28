@@ -5,8 +5,8 @@
     "A": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
     },
     "B": {
       "tag": "forge:plates/nimonic"

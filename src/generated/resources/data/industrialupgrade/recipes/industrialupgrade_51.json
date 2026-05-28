@@ -5,17 +5,20 @@
     "A": {
       "item": "industrialupgrade:nanobox"
     },
+    "B": {
+      "tag": "forge:plates/tantalumtungstenhafnium"
+    },
     "C": {
-      "item": "industrialupgrade:photoniy"
+      "item": "industrialupgrade:ef/reader"
     }
   },
   "pattern": [
-    " C ",
-    "CAC",
-    " C "
+    "AAA",
+    "BCB",
+    "   "
   ],
   "result": {
-    "item": "industrialupgrade:quantumitems7"
+    "item": "industrialupgrade:voltage_sensor_for_mechanism"
   },
   "show_notification": true
 }

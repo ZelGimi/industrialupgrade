@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:surface_space_crater",
+  "config": {
+    "branches": 0,
+    "fluid": {
+      "Name": "minecraft:water",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "crater",
+    "max_height": 0,
+    "max_radius": 9,
+    "min_height": 0,
+    "min_radius": 4,
+    "primary": {
+      "Name": "minecraft:cyan_terracotta"
+    },
+    "secondary": {
+      "Name": "minecraft:blue_terracotta"
+    },
+    "tertiary": {
+      "Name": "minecraft:cyan_terracotta"
+    }
+  }
+}

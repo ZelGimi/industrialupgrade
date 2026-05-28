@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.primalrolling;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityFluidIntegrator;
@@ -79,7 +80,7 @@ public class PrimalRollingCategory extends ScreenMain implements IRecipeCategory
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PrimalRollingHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 5, 25, recipe, 0, recipe.getInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.cutter.getItem()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipe.getOutput());
 

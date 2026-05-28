@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -65,10 +67,10 @@ public class BlockEntitySteamSqueezer extends BlockEntityElectricMachine impleme
     private MachineRecipe output;
 
     public BlockEntitySteamSqueezer(BlockPos pos, BlockState state) {
-        super(0, 1, 0, BlockBaseMachine3Entity.steam_squeezer, pos, state);
+        super(ModConfig.mechanismDouble("steam_squeezer_energy_storage", 0.0D), 1, 0, BlockBaseMachine3Entity.steam_squeezer, pos, state);
         this.progress = 0;
         this.inputSlotA = new InventoryRecipes(this, "squeezer", this);
-        this.defaultEnergyConsume = this.energyConsume = 2;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("steam_squeezer_energy_use", 2);
         this.defaultOperationLength = this.operationLength = 100;
         operationsPerTick = 1;
         this.defaultTier = 1;

@@ -1,0 +1,42 @@
+package com.denfop.network.packet;
+
+import com.denfop.IUCore;
+import com.denfop.items.space.teleport.SpaceTeleportController;
+import com.denfop.items.space.teleport.SpaceTeleportScreenData;
+import com.denfop.screen.ScreenPlanetaryTranslocator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
+public class PacketOpenPlanetaryTranslocatorScreen implements IPacket {
+
+    public PacketOpenPlanetaryTranslocatorScreen() {
+    }
+
+    public PacketOpenPlanetaryTranslocatorScreen(final ServerPlayer player, final ItemStack stack) {
+        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        buffer.writeByte(getId());
+
+        SpaceTeleportScreenData data = SpaceTeleportController.buildScreenData(player, stack);
+        data.write(buffer);
+
+        IUCore.network.getServer().sendPacket(buffer, player);
+    }
+
+    @Override
+    public byte getId() {
+        return 90;
+    }
+
+    @Override
+    public void readPacket(final CustomPacketBuffer buffer, final Player entityPlayer) {
+        SpaceTeleportScreenData data = new SpaceTeleportScreenData(buffer);
+        data.setScreen();
+    }
+
+    @Override
+    public EnumTypePacket getPacketType() {
+        return EnumTypePacket.SERVER;
+    }
+}

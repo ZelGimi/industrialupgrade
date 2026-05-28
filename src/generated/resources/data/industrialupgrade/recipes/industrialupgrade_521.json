@@ -15,13 +15,19 @@
       "item": "industrialupgrade:machines/hybrid_solar_paneliu"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/hybcore"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:3}"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_563_element"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:machines/ultimate_solar_paneliu"

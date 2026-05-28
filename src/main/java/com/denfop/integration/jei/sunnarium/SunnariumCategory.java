@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.sunnarium;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityStampMechanism;
@@ -87,12 +88,11 @@ public class SunnariumCategory extends ScreenMain implements IRecipeCategory<Sun
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SunnariumHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 29, 18).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 65, 18).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT, 29, 40).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT, 65, 40).addItemStack(recipe.getInput3());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 29, 18, recipe, 0, recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 65, 18, recipe, 1, recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 29, 40, recipe, 2, recipe.getInput2());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 65, 40, recipe, 3, recipe.getInput3());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 100, 29).addItemStack(recipe.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 

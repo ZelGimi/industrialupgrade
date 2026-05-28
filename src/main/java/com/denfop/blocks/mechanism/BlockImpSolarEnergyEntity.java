@@ -119,7 +119,7 @@ public enum BlockImpSolarEnergyEntity implements MultiBlockEntity, MultiBlockIte
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override

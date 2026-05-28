@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.quantum_storage;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityPhoQuantumStorage extends BlockEntityQuantumStorage {
 
     public BlockEntityPhoQuantumStorage(BlockPos pos, BlockState state) {
-        super(5120000000D, EnumTypeStyle.PHOTONIC, BlocksPhotonicMachine.photonic_quantum_storage, pos, state);
+        super(ModConfig.mechanismDouble("photonic_quantum_storage_energy_storage", 5120000000.0D), EnumTypeStyle.PHOTONIC, BlocksPhotonicMachine.photonic_quantum_storage, pos, state);
     }
 
     public MultiBlockEntity getTeBlock() {

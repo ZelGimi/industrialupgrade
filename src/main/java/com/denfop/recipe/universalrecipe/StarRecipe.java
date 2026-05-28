@@ -10,8 +10,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
-
 public class StarRecipe implements Recipe<Container> {
     private final ResourceLocation id;
 
@@ -56,8 +54,6 @@ public class StarRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
-
 
 
     @Override

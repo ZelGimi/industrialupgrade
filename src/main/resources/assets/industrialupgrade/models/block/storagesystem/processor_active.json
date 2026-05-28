@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:block/processor",
+    "down" : "industrialupgrade:block/processor",
+    "up" : "industrialupgrade:block/processor",
+    "north" : "industrialupgrade:block/processor",
+    "east" : "industrialupgrade:block/processor",
+    "south" : "industrialupgrade:block/processor",
+    "west" : "industrialupgrade:block/processor"
+  }
+}

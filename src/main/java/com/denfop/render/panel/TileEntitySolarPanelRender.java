@@ -26,6 +26,7 @@ public class TileEntitySolarPanelRender implements BlockEntityRenderer<BlockEnti
     private float rotation = 0;
     private float prevRotation = 0;
     private Map<BlockPos, DataPollution> entries = new HashMap<>();
+
     public TileEntitySolarPanelRender(BlockEntityRendererProvider.Context context) {
         this.contex = context;
     }

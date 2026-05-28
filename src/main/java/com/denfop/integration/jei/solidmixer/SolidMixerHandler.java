@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.solidmixer;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,10 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SolidMixerHandler {
+public class SolidMixerHandler implements IJeiVariantRecipe {
 
     private static final List<SolidMixerHandler> recipes = new ArrayList<>();
-    private final ItemStack input, input1, output, output1;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+private final ItemStack input, input1, output, output1;
 
     public SolidMixerHandler(
             ItemStack input, ItemStack input1,
@@ -57,12 +61,12 @@ public class SolidMixerHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("solid_mixer")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0),
                     container.getOutput().items.get(1)
-            );
+            ), container);
 
 
         }
@@ -95,5 +99,16 @@ public class SolidMixerHandler {
 
     public List<ItemStack> getOutputs() {
         return Arrays.asList(output, output1);
+    }
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
     }
 }

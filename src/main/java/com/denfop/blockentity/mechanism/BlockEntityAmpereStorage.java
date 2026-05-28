@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -31,7 +33,7 @@ public class BlockEntityAmpereStorage extends BlockEntityElectricMachine impleme
     public final ComponentBaseEnergy pressure;
 
     public BlockEntityAmpereStorage(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.ampere_storage, pos, state);
+        super(ModConfig.mechanismDouble("ampere_storage_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.ampere_storage, pos, state);
 
         this.pressure = this.addComponent((new ComponentBaseEnergy(EnergyType.AMPERE, this, 100000,
 

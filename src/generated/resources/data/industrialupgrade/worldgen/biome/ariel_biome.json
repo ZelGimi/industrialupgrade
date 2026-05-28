@@ -1,0 +1,83 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:ariel_cavity",
+      "industrialupgrade:space/ariel/stone_tunnels",
+      "industrialupgrade:space/ariel/hall_system",
+      "industrialupgrade:space/ariel/fractures",
+      "industrialupgrade:space/ariel/shafts",
+      "industrialupgrade:space/ariel/liquid_chamber",
+      "industrialupgrade:space/ariel/frozen_chamber",
+      "industrialupgrade:space/ariel/crater_chamber",
+      "industrialupgrade:space/ariel/tunnel_caves",
+      "industrialupgrade:space/ariel/shaft_caves",
+      "industrialupgrade:space/ariel/dome_caves",
+      "industrialupgrade:space/ariel/well_caves",
+      "industrialupgrade:space/ariel/multi_tier_caves",
+      "industrialupgrade:space/ariel/branched_caves",
+      "industrialupgrade:space/ariel/spiral_caves",
+      "industrialupgrade:space/ariel/chamber_caves",
+      "industrialupgrade:space/ariel/pocket_caves",
+      "industrialupgrade:space/ariel/crevice_caves",
+      "industrialupgrade:space/ariel/cathedral_caves",
+      "industrialupgrade:space/ariel/gallery_caves",
+      "industrialupgrade:space/ariel/winding_caves",
+      "industrialupgrade:space/ariel/cascade_caves",
+      "industrialupgrade:space/ariel/collapse_caves",
+      "industrialupgrade:space/ariel/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:ariel_lake_0",
+      "industrialupgrade:ariel_fluid_0",
+      "industrialupgrade:ariel_lake_1",
+      "industrialupgrade:ariel_fluid_1"
+    ],
+    [
+      "industrialupgrade:ariel_craters",
+      "industrialupgrade:space/ariel/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:ariel_geyser_0",
+      "industrialupgrade:ariel_geyser_1"
+    ],
+    [],
+    [
+      "industrialupgrade:ariel_ore_0",
+      "industrialupgrade:ariel_ore_1"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/ariel/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

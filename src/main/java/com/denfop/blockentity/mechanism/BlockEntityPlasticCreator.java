@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -42,13 +44,13 @@ public class BlockEntityPlasticCreator extends BlockEntityBasePlasticCreator imp
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityPlasticCreator(BlockPos pos, BlockState state) {
-        super(1, 300, 1, BlockBaseMachine2Entity.plastic_creator, pos, state);
+        super(ModConfig.mechanismInt("chemical_plant_energy_per_tick", 1), ModConfig.mechanismInt("chemical_plant_operation_length", 300), 1, BlockBaseMachine2Entity.plastic_creator, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "plastic", this, this.fluidTank);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
         fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("chemical_plant_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("chemical_plant_air_pollution_amount", 0.25D)));
         Recipes.recipes.addInitRecipes(this);
         this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
@@ -219,7 +221,7 @@ public class BlockEntityPlasticCreator extends BlockEntityBasePlasticCreator imp
         ));
         for (int i = 0; i < 14; i++) {
             Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
-                    new Input(new FluidStack(FluidName.fluidtemperedglass.getInstance().get(), 144),
+                    new Input(new FluidStack(FluidName.fluidtemperedglass.getInstance().get(), 90),
                             input.getInput(new ItemStack(IUItem.solar_day_glass.getStack(i), 1)),
                             input.getInput(new ItemStack(IUItem.solar_night_glass.getStack(i), 1))),
                     new RecipeOutput(null, new ItemStack(IUItem.solar_night_day_glass.getStack(i), 1))

@@ -39,6 +39,11 @@ public class Inventory extends AbstractList<ItemStack> implements ITypeSlot, Con
         this.typeItemSlot = null;
     }
 
+    @Override
+    public int getMaxStackSize() {
+        return this.getStackSizeLimit();
+    }
+
     public void clear() {
         this.contents = NonNullList.withSize(this.size(), ItemStack.EMPTY);
         this.stackSizeLimit = 64;

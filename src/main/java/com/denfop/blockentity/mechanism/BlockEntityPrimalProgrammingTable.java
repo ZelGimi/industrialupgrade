@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -58,7 +60,7 @@ public class BlockEntityPrimalProgrammingTable extends BlockEntityElectricMachin
     private int YELLOW_PERCENT = 100 - RED_PERCENT - GREEN_PERCENT;
 
     public BlockEntityPrimalProgrammingTable(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockPrimalProgrammingTableEntity.primal_programming_table, pos, state);
+        super(ModConfig.mechanismDouble("primal_programming_table_energy_storage", 0.0D), 0, 1, BlockPrimalProgrammingTableEntity.primal_programming_table, pos, state);
         this.output = null;
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300

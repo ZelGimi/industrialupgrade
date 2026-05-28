@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/privatizer",
       "y": 90
     },
-    "facing=down,type=privatizer": {
-      "model": "industrialupgrade:block/basemachine/privatizer",
-      "x": 90
-    },
-    "facing=up,type=privatizer": {
-      "model": "industrialupgrade:block/basemachine/privatizer",
-      "x": 270
-    },
-    "facing=north,type=privatizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/privatizer_active"
-    },
-    "facing=south,type=privatizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/privatizer_active",
-      "y": 180
-    },
-    "facing=west,type=privatizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/privatizer_active",
-      "y": 270
-    },
-    "facing=east,type=privatizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/privatizer_active",
-      "y": 90
-    },
-    "facing=down,type=privatizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/privatizer_active",
-      "x": 90
-    },
-    "facing=up,type=privatizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/privatizer_active",
-      "x": 270
-    },
     "facing=north,type=privatizer_active": {
       "model": "industrialupgrade:block/basemachine/privatizer_active"
     },
@@ -61,6 +30,10 @@
       "model": "industrialupgrade:block/basemachine/privatizer_active",
       "y": 90
     },
+    "facing=up,type=privatizer": {
+      "model": "industrialupgrade:block/basemachine/privatizer",
+      "x": 270
+    },
     "facing=down,type=privatizer_active": {
       "model": "industrialupgrade:block/basemachine/privatizer_active",
       "x": 90
@@ -68,6 +41,10 @@
     "facing=up,type=privatizer_active": {
       "model": "industrialupgrade:block/basemachine/privatizer_active",
       "x": 270
+    },
+    "facing=down,type=privatizer": {
+      "model": "industrialupgrade:block/basemachine/privatizer",
+      "x": 90
     }
   }
 }

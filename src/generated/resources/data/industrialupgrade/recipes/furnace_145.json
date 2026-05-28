@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:raw_metals/raw_palladium"
+    "item": "industrialupgrade:blockspace3/pluto_iridium"
   },
-  "result": "industrialupgrade:itemingots/palladium"
+  "result": "industrialupgrade:itemingots/iridium_ingot"
 }

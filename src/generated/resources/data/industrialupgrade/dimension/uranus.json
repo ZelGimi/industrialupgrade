@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:uranus_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:uranus_biome"
+    },
+    "settings": "industrialupgrade:uranus_noise"
+  }
+}

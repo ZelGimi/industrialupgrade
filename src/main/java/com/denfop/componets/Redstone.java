@@ -12,6 +12,7 @@ public class Redstone extends AbstractComponent {
 
     private final List<RedstoneHandler> changeSubscribers = new ArrayList<>();
     protected int redstoneInput;
+    private boolean needUpdate;
 
     public Redstone(BlockEntityInventory parent) {
         super(parent);
@@ -29,9 +30,22 @@ public class Redstone extends AbstractComponent {
     @Override
     public void onNeighborChange(BlockState srcBlock, BlockPos neighborPos) {
         super.onNeighborChange(srcBlock, neighborPos);
-        this.update();
+        this.needUpdate = true;
     }
 
+    @Override
+    public boolean isServer() {
+        return true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getParent().getLevel().getGameTime() % 20 == 0 && needUpdate) {
+            this.update();
+            needUpdate = false;
+        }
+    }
 
     public void update() {
         try {

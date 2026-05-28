@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.stamp;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,10 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StampHandler {
+public class StampHandler implements IJeiVariantRecipe {
 
     private static final List<StampHandler> recipes = new ArrayList<>();
-    private final ItemStack input, input1, input2, input3, output;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+private final ItemStack input, input1, input2, input3, output;
     private final String name;
 
     public StampHandler(
@@ -61,49 +65,49 @@ public class StampHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("stamp_vent")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.getOutput().items.get(0), "stamp_vent"
 
-            );
+            ), container);
         }
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("stamp_plate")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.getOutput().items.get(0), "stamp_plate"
 
-            );
+            ), container);
         }
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("stamp_exchanger")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.getOutput().items.get(0), "stamp_exchanger"
 
-            );
+            ), container);
         }
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("stamp_coolant")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.getOutput().items.get(0), "stamp_coolant"
 
-            );
+            ), container);
         }
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("stamp_capacitor")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.getOutput().items.get(0), "stamp_capacitor"
 
-            );
+            ), container);
         }
 
     }
@@ -141,4 +145,15 @@ public class StampHandler {
         return Arrays.asList(input, input1, input2, input3);
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

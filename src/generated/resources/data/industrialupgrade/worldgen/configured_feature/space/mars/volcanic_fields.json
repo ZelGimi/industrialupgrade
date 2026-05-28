@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 2,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidnitrogen",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "volcanic_field",
+    "max_height": 18,
+    "max_radius": 5,
+    "min_height": 8,
+    "min_radius": 2,
+    "primary": {
+      "Name": "industrialupgrade:spacecobblestone/mars_cobblestone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacestone/mars_stone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace3/mars_cobalt_ore"
+    }
+  }
+}

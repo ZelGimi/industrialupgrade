@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:raw_metals/raw_neodymium"
+    "item": "industrialupgrade:blockspace3/proteus_niobium"
   },
-  "result": "industrialupgrade:itemingots/neodymium"
+  "result": "industrialupgrade:itemingots/niobium"
 }

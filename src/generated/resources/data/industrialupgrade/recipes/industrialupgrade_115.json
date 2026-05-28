@@ -3,28 +3,16 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:plates/zinc"
+      "item": "industrialupgrade:module_schedule"
     },
     "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:6}"
-    },
-    "C": {
-      "item": "industrialupgrade:baseblockingot/vanadium"
-    },
-    "D": {
-      "tag": "forge:doubleplate/platinum"
-    },
-    "E": {
-      "item": "industrialupgrade:quantumitems2"
+      "item": "industrialupgrade:crafting_elements/crafting_90_element"
     }
   },
   "pattern": [
-    "AAA",
-    "BCB",
-    "DED"
+    "   ",
+    " A ",
+    " B "
   ],
   "result": {
     "item": "industrialupgrade:additionmodule/wireless"

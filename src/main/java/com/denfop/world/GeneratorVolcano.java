@@ -93,7 +93,7 @@ public class GeneratorVolcano {
                             if (!world.getBlockState(pos).isAir()) {
                                 pos = pos.above();
                             }
-                             generateChest(pos);
+                            generateChest(pos);
                             break;
                         }
                         genChest = true;
@@ -104,7 +104,7 @@ public class GeneratorVolcano {
                                 if (!world.getBlockState(pos).isAir()) {
                                     pos = pos.above();
                                 }
-                                   generateChest(pos);
+                                generateChest(pos);
                                 break;
                             }
                             genChest = true;
@@ -332,7 +332,7 @@ public class GeneratorVolcano {
             this.world = world;
             this.rand = WorldBaseGen.random;
             this.end = false;
-             this.baseHeight = 80 + rand.nextInt(30);
+            this.baseHeight = 80 + rand.nextInt(30);
             this.baseRadius = 35 + rand.nextInt(20);
             this.protrusionChance = 0.05;
             this.lavaFlowChance = 0.01;

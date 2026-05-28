@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -55,19 +57,19 @@ public class BlockEntityGraphiteHandler extends BlockEntityElectricMachine imple
     private int levelBlock;
 
     public BlockEntityGraphiteHandler(BlockPos pos, BlockState state) {
-        super(1000, 1, 1, BlockBaseMachine3Entity.graphite_handler, pos, state);
+        super(ModConfig.mechanismDouble("graphite_crystallizer_energy_storage", 1000.0D), 1, 1, BlockBaseMachine3Entity.graphite_handler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InventoryRecipes(this, "graphite_recipe", this);
 
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 30)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 1, 30)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((BlockEntityGraphiteHandler) this.parent).levelBlock * 1.75);
             }
         });
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("graphite_crystallizer_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("graphite_crystallizer_air_pollution_amount", 0.1D)));
         this.flintSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack stack) {
@@ -98,12 +100,14 @@ public class BlockEntityGraphiteHandler extends BlockEntityElectricMachine imple
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
@@ -248,6 +252,7 @@ public class BlockEntityGraphiteHandler extends BlockEntityElectricMachine imple
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -269,7 +274,7 @@ public class BlockEntityGraphiteHandler extends BlockEntityElectricMachine imple
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override

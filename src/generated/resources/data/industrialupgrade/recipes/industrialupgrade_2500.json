@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:plates/hafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "D": {
+      "item": "industrialupgrade:upgrades/ejector"
+    }
+  },
+  "pattern": [
+    "ABA",
+    " D ",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:storagesystem/exportbus"
+  },
+  "show_notification": true
+}

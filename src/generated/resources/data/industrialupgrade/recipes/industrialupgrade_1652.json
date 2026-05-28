@@ -9,10 +9,10 @@
       "nbt": "{level:1}"
     },
     "B": {
-      "item": "industrialupgrade:battery/advanced_re_battery"
+      "item": "industrialupgrade:battery/re_battery"
     },
     "C": {
-      "tag": "forge:casings/copper"
+      "item": "industrialupgrade:armour/batpack"
     }
   },
   "pattern": [

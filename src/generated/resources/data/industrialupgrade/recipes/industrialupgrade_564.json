@@ -8,8 +8,8 @@
     "B": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:8}"
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
     },
     "C": {
       "item": "industrialupgrade:module_schedule"

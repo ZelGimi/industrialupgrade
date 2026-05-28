@@ -15,7 +15,22 @@
       "model": "industrialupgrade:block/basemachine/rotor_modifier",
       "y": 90
     },
-    "facing=down,type=rotor_modifier": {
+    "facing=north,type=rotor_modifier_active": {
+      "model": "industrialupgrade:block/basemachine/rotor_modifier"
+    },
+    "facing=south,type=rotor_modifier_active": {
+      "model": "industrialupgrade:block/basemachine/rotor_modifier",
+      "y": 180
+    },
+    "facing=west,type=rotor_modifier_active": {
+      "model": "industrialupgrade:block/basemachine/rotor_modifier",
+      "y": 270
+    },
+    "facing=east,type=rotor_modifier_active": {
+      "model": "industrialupgrade:block/basemachine/rotor_modifier",
+      "y": 90
+    },
+    "facing=down,type=rotor_modifier_active": {
       "model": "industrialupgrade:block/basemachine/rotor_modifier",
       "x": 90
     },
@@ -23,28 +38,13 @@
       "model": "industrialupgrade:block/basemachine/rotor_modifier",
       "x": 270
     },
-    "facing=north,type=rotor_modifier_invalid": {
-      "model": "industrialupgrade:block/basemachine/rotor_modifier"
-    },
-    "facing=south,type=rotor_modifier_invalid": {
-      "model": "industrialupgrade:block/basemachine/rotor_modifier",
-      "y": 180
-    },
-    "facing=west,type=rotor_modifier_invalid": {
-      "model": "industrialupgrade:block/basemachine/rotor_modifier",
-      "y": 270
-    },
-    "facing=east,type=rotor_modifier_invalid": {
-      "model": "industrialupgrade:block/basemachine/rotor_modifier",
-      "y": 90
-    },
-    "facing=down,type=rotor_modifier_invalid": {
-      "model": "industrialupgrade:block/basemachine/rotor_modifier",
-      "x": 90
-    },
-    "facing=up,type=rotor_modifier_invalid": {
+    "facing=up,type=rotor_modifier_active": {
       "model": "industrialupgrade:block/basemachine/rotor_modifier",
       "x": 270
+    },
+    "facing=down,type=rotor_modifier": {
+      "model": "industrialupgrade:block/basemachine/rotor_modifier",
+      "x": 90
     }
   }
 }

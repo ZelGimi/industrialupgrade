@@ -55,7 +55,7 @@ public class ScreenGeneticPolymerizer<T extends ContainerMenuGeneticPolymerizer>
 
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
         List<ItemStack> ret = new ArrayList<>();
-        Set<UpgradableProperty> properties = block.getUpgradableProperties();
+        Set<UpgradableProperty> properties = block.getAllPossibleUpgradableProperties();
 
         for (final ItemStack stack : UpgradeRegistry.getUpgrades()) {
             IUpgradeItem item = (IUpgradeItem) stack.getItem();
@@ -79,7 +79,7 @@ public class ScreenGeneticPolymerizer<T extends ContainerMenuGeneticPolymerizer>
             text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
-                text.add(stack.getDisplayName().getString());
+                text.add(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()));
             }
 
             this.drawTooltip(mouseX, mouseY, text);

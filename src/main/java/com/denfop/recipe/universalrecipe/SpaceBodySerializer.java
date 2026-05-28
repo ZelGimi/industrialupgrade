@@ -1,7 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
 import com.denfop.api.space.BaseResource;
-import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
 import com.denfop.recipe.IInputItemStack;
@@ -20,10 +19,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static com.denfop.IUCore.register;
 import static com.denfop.IUCore.updateRecipe;
 import static com.denfop.api.space.SpaceInit.regBaseResource;
 
@@ -71,54 +68,54 @@ public class SpaceBodySerializer implements RecipeSerializer<SpaceBodyRecipe> {
         int percent = GsonHelper.getAsInt(json, "percent");
         int chance = GsonHelper.getAsInt(json, "chance");
 
-            if (operationType.equals("addAll")) {
-                switch (roverType) {
-                    case "rover":
-                        for (IInputItemStack itemStack : input) {
-                            if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROVERS));
-                            if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROVERS));
-                            if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROVERS));
+        if (operationType.equals("addAll")) {
+            switch (roverType) {
+                case "rover":
+                    for (IInputItemStack itemStack : input) {
+                        if (itemStack instanceof InputItemStack)
+                            regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROVERS));
+                        if (itemStack instanceof InputFluidStack)
+                            regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROVERS));
+                        if (itemStack instanceof InputOreDict)
+                            regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROVERS));
 
-                        }
-                        break;
-                    case "probe":
-                        for (IInputItemStack itemStack : input) {
-                            if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.PROBE));
-                            if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.PROBE));
-                            if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.PROBE));
+                    }
+                    break;
+                case "probe":
+                    for (IInputItemStack itemStack : input) {
+                        if (itemStack instanceof InputItemStack)
+                            regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.PROBE));
+                        if (itemStack instanceof InputFluidStack)
+                            regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.PROBE));
+                        if (itemStack instanceof InputOreDict)
+                            regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.PROBE));
 
-                        }
-                        break;
-                    case "satellite":
-                        for (IInputItemStack itemStack : input) {
-                            if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.SATELLITE));
-                            if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.SATELLITE));
-                            if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.SATELLITE));
+                    }
+                    break;
+                case "satellite":
+                    for (IInputItemStack itemStack : input) {
+                        if (itemStack instanceof InputItemStack)
+                            regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.SATELLITE));
+                        if (itemStack instanceof InputFluidStack)
+                            regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.SATELLITE));
+                        if (itemStack instanceof InputOreDict)
+                            regBaseResource.add(() -> new BaseResource(itemStack.getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.SATELLITE));
 
-                        }
-                        break;
-                    case "rocket":
-                        for (IInputItemStack itemStack : input) {
-                            if (itemStack instanceof InputItemStack)
-                                regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROCKET));
-                            if (itemStack instanceof InputFluidStack)
-                                regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROCKET));
-                            if (itemStack instanceof InputOreDict)
-                                regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROCKET));
+                    }
+                    break;
+                case "rocket":
+                    for (IInputItemStack itemStack : input) {
+                        if (itemStack instanceof InputItemStack)
+                            regBaseResource.add(() -> new BaseResource(((InputItemStack) itemStack).input, chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROCKET));
+                        if (itemStack instanceof InputFluidStack)
+                            regBaseResource.add(() -> new BaseResource(((InputFluidStack) itemStack).getFluid(), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROCKET));
+                        if (itemStack instanceof InputOreDict)
+                            regBaseResource.add(() -> new BaseResource(((InputOreDict) itemStack).getInputs().get(0), chance, 100, percent, SpaceNet.instance.getBodyFromName(bodyName.toLowerCase()), EnumTypeRovers.ROCKET));
 
-                        }
-                        break;
-                }
+                    }
+                    break;
             }
+        }
 
 
         return new SpaceBodyRecipe(id, bodyName, percent, chance, roverType, operationType, input);

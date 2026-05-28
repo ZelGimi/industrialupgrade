@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.coal;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -16,9 +18,9 @@ public class BlockEntityGeneratorAdv extends BlockEntityAdvGenerator {
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityGeneratorAdv(BlockPos pos, BlockState blockState) {
-        super(2.2, 8000, 2, BlockBaseMachineEntity.adv_gen, pos, blockState);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
+        super(ModConfig.mechanismDouble("improved_generator_efficiency", 2.2D), ModConfig.mechanismInt("improved_generator_energy_storage", 8000), 2, BlockBaseMachineEntity.adv_gen, pos, blockState);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("generator_improved_soil_pollution_amount", 0.2D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("generator_improved_air_pollution_amount", 0.5D)));
     }
 
     @Override

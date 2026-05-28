@@ -53,7 +53,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemSpectralSaber extends TieredItem implements EnergyItem, UpgradeItem, IProperties, IItemTab {
+public class ItemSpectralSaber extends Item implements EnergyItem, UpgradeItem, IProperties, IItemTab {
     public static int ticker = 0;
     public final int maxCharge;
     public final int transferLimit;
@@ -68,7 +68,7 @@ public class ItemSpectralSaber extends TieredItem implements EnergyItem, Upgrade
             int maxCharge,
             int transferLimit, int tier, int activedamage1, int damage
     ) {
-        super(Tiers.DIAMOND, new Properties().setNoRepair().setNoRepair().stacksTo(1));
+        super(new Properties().setNoRepair().setNoRepair().stacksTo(1));
         this.soundTicker = 0;
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
@@ -91,6 +91,14 @@ public class ItemSpectralSaber extends TieredItem implements EnergyItem, Upgrade
 
     private static void setActive(CompoundTag nbt, boolean active) {
         nbt.putBoolean("active", active);
+    }
+
+    public int getEnchantmentValue() {
+        return Tiers.DIAMOND.getEnchantmentValue();
+    }
+
+    public boolean isValidRepairItem(ItemStack pToRepair, ItemStack pRepair) {
+        return Tiers.DIAMOND.getRepairIngredient().test(pRepair) || super.isValidRepairItem(pToRepair, pRepair);
     }
 
     protected String getOrCreateDescriptionId() {

@@ -1,8 +1,14 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.tabs.IItemTab;
 import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.KeyboardIU;
+import com.denfop.utils.Localization;
+import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -40,7 +46,7 @@ import java.util.List;
 
 public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItemTab {
     public ItemReinforcedFluidCell() {
-        super(new Properties().setNoRepair().stacksTo(1), 10000);
+        super(new Properties().setNoRepair().stacksTo(1), ModConfig.itemInt("reinforced_fluid_cell_capacity", 10000));
     }
 
     public boolean canfill(Fluid fluid) {
@@ -61,9 +67,28 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, level, list, tooltipFlag);
+    public Component getName(ItemStack pStack) {
+        CompoundTag tag = ModUtils.nbt(pStack);
+        if (!tag.contains("type_recipe"))
+            return super.getName(pStack);
+        else {
+            FluidStack fluidStack = FluidHandlerFix.getFluidHandler(pStack).getFluidInTank(0);
+            return fluidStack.getDisplayName();
+        }
+    }
 
+    @Override
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        CompoundTag tag = ModUtils.nbt(stack);
+        if (!tag.contains("type_recipe")) {
+            super.appendHoverText(stack, level, list, tooltipFlag);
+            if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+                list.add(Component.literal(Localization.translate("press.lshift")));
+            }
+            if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+                list.add(Component.literal(Localization.translate("iu.fluid_cell.info")));
+            }
+        }
     }
 
     public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
@@ -124,6 +149,7 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
             BlockPos blockpos1 = blockpos.relative(direction);
             if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos1, direction, itemstack)) {
                 BlockState state = fs.getFluidInTank(0).isEmpty() ? world.getBlockState(blockpos) : world.getBlockState(blockpos1);
+                blockpos1 = fs.getFluidInTank(0).isEmpty() ? blockpos : blockpos1;
                 if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY && !state.liquid() && fs.getFluidInTank(0).getAmount() >= 1000) {
                     Fluid fluid = fs.getFluidInTank(0).getFluid();
                     boolean flag1 = world.getBlockState(blockpos).canBeReplaced();
@@ -170,10 +196,11 @@ public class ItemReinforcedFluidCell extends ItemFluidContainer implements IItem
             return false;
         } else {
             BlockState iblockstate = worldIn.getBlockState(posIn);
+            FluidState fluidState = worldIn.getFluidState(posIn);
             boolean flag1 = iblockstate.canBeReplaced();
-            if (iblockstate.liquid())
+            if (!fluidState.isEmpty() && fluidState.isSource())
                 return false;
-            if (!iblockstate.isAir() && !flag1) {
+            if (fluidState.isEmpty() && !flag1) {
                 return false;
             } else {
                 if (worldIn.dimension() == Level.NETHER && containedBlock == Blocks.WATER) {

@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.handlerho;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.nbt.CompoundTag;
@@ -9,13 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HandlerHOHandler {
+public class HandlerHOHandler implements IJeiVariantRecipe {
 
     protected static final List<HandlerHOHandler> recipes = new ArrayList<>();
     protected final List<ItemStack> output;
     protected final CompoundTag nbt;
     protected final ItemStack input;
-
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
     public HandlerHOHandler(ItemStack input, List<ItemStack> output, final CompoundTag metaData) {
         this.input = input;
         this.output = output;
@@ -56,10 +58,10 @@ public class HandlerHOHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("handlerho")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.getOutput().items, container.getOutput().metadata
-            );
+            ), container);
 
 
         }
@@ -82,4 +84,15 @@ public class HandlerHOHandler {
         return this.nbt;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

@@ -1,5 +1,5 @@
 {
-  "parent": "industrialupgrade:item/item/default",
+  "parent": "industrialupgrade:item/default",
   "overrides": [
    {
       "model": "industrialupgrade:item/crops/crops",

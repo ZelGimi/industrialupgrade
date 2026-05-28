@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:raw_metals/raw_gallium"
+    "item": "industrialupgrade:blockspace2/makemake_silver"
   },
-  "result": "industrialupgrade:itemingots/gallium"
+  "result": "industrialupgrade:itemingots/silver_ingot"
 }

@@ -1,0 +1,20 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "moon",
+    "depth_bonus": 0.35,
+    "distribution_type": "vein",
+    "horizontal_radius": 10,
+    "max_y": 72,
+    "min_y": -40,
+    "ore_block_id": "industrialupgrade:blockspace3/moon_meteoric_iron_ore",
+    "path_length": 20,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone1/moon_stone",
+      "industrialupgrade:spacecobblestone1/moon_cobblestone"
+    ],
+    "require_near_lava": true,
+    "size": 10,
+    "vertical_radius": 5
+  }
+}

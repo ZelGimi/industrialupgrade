@@ -19,6 +19,7 @@ public class EnergyBase {
     public static GlobalNet ampere;
     public static GlobalNet biofuel;
     public static GlobalNet NE;
+    public static GlobalNet storage;
 
     public static void init() {
         handler = new EnergyHandler();
@@ -31,6 +32,7 @@ public class EnergyBase {
         steam = new GlobalNet(EnergyType.STEAM);
         ampere = new GlobalNet(EnergyType.AMPERE);
         biofuel = new GlobalNet(EnergyType.BIOFUEL);
+        storage = new GlobalNet(EnergyType.STORAGE);
 
     }
 

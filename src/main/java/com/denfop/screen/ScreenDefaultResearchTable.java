@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 public class ScreenDefaultResearchTable {
     public final ScreenResearchTableSpace<ContainerMenuResearchTableSpace> tile;
     public final int x;
-    public final int y;
+    public int y;
     public int width;
     public int height;
     public int offsetX1 = 0, offsetY1 = 0;

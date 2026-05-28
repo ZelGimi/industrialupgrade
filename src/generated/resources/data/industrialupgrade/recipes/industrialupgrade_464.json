@@ -3,28 +3,22 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems3"
-    },
-    "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
+      "item": "industrialupgrade:crafting_elements/crafting_139_element"
     },
     "C": {
       "item": "industrialupgrade:basemachine/adv_matter"
     },
     "D": {
-      "tag": "forge:doubleplate/vitalium"
+      "item": "industrialupgrade:crafting_elements/crafting_232_element"
     },
     "E": {
-      "item": "industrialupgrade:itemcore/admcore"
+      "item": "industrialupgrade:itemcore/specore"
     }
   },
   "pattern": [
-    "DED",
-    "BCB",
-    "AAA"
+    "AEA",
+    " C ",
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:basemachine/imp_matter"

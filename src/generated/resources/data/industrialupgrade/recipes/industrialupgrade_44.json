@@ -3,28 +3,22 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:graphene_plate"
-    },
-    "B": {
-      "item": "industrialupgrade:wiring/gold"
+      "item": "industrialupgrade:wiring_storage/mfsu_iu"
     },
     "C": {
-      "item": "industrialupgrade:polonium_palladium_composite"
+      "item": "industrialupgrade:battery/lapotron_crystal"
     },
     "D": {
-      "item": "industrialupgrade:voltage_sensor_for_mechanism"
-    },
-    "E": {
-      "item": "industrialupgrade:motors_with_improved_bearings_"
+      "item": "industrialupgrade:photoniy_ingot"
     }
   },
   "pattern": [
-    "AAA",
-    "BDB",
-    "CEC"
+    "CDC",
+    "DAD",
+    "CDC"
   ],
   "result": {
-    "item": "industrialupgrade:medium_current_converter_to_low"
+    "item": "industrialupgrade:wiring_storage/adv_mfsu"
   },
   "show_notification": true
 }

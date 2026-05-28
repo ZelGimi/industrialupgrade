@@ -6,7 +6,7 @@
       "tag": "minecraft:slabs"
     },
     "B": {
-      "item": "industrialupgrade:rubber_wood/plain_y"
+      "tag": "forge:logs/rubber"
     }
   },
   "pattern": [

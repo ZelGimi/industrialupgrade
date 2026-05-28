@@ -2,9 +2,9 @@
   "type": "minecraft:smelting",
   "category": "misc",
   "cookingtime": 200,
-  "experience": 5.0,
+  "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace3/moon_tin_ore"
+    "item": "industrialupgrade:baseore2/barium"
   },
-  "result": "industrialupgrade:itemingots/tin_ingot"
+  "result": "industrialupgrade:itemingots/barium"
 }

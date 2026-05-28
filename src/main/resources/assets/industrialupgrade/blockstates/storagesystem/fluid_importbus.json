@@ -1,0 +1,180 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_core"
+      }
+    },
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "industrialupgrade:block/storagesystem/fluid_importbus"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "industrialupgrade:block/storagesystem/fluid_importbus",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "industrialupgrade:block/storagesystem/fluid_importbus",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "industrialupgrade:block/storagesystem/fluid_importbus",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "up"
+      },
+      "apply": {
+        "model": "industrialupgrade:block/storagesystem/fluid_importbus",
+        "x": -90
+      }
+    },
+    {
+      "when": {
+        "facing": "down"
+      },
+      "apply": {
+        "model": "industrialupgrade:block/storagesystem/fluid_importbus",
+        "x": 90
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "x": -90
+      },
+      "when": {
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "down": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true
+      },
+      "when": {
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "facing": "west" 
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "facing": "north" 
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "x": -90
+      },
+      "when": {
+        "facing": "down"
+      }
+    },
+    {
+      "apply": {
+        "model": "industrialupgrade:block/wiring/storage/storage_side",
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "facing": "up" 
+      }
+    }
+  ]
+}

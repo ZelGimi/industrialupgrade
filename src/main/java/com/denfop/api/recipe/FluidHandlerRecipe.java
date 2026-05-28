@@ -292,7 +292,7 @@ public class FluidHandlerRecipe {
         if (this.output != null) {
             for (FluidTank fluidTank : outputTank) {
                 final FluidStack fluid = output.output_fluid.get(0);
-                if ((fluidTank.getFluidAmount() + fluid.getAmount() < fluidTank.getCapacity() && (fluidTank.getFluid().isEmpty() || fluidTank
+                if ((fluidTank.getFluidAmount() + fluid.getAmount() <= fluidTank.getCapacity() && (fluidTank.getFluid().isEmpty() || fluidTank
                         .getFluid()
                         .getFluid() == fluid.getFluid()))) {
                     return true;

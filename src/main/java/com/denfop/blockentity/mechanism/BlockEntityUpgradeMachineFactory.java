@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -52,7 +54,7 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
     public MachineRecipe output;
 
     public BlockEntityUpgradeMachineFactory(BlockPos pos, BlockState state) {
-        super(400, 1, 1, BlockBaseMachine3Entity.upgrade_machine, pos, state);
+        super(ModConfig.mechanismDouble("upgrade_kit_manufacturer_energy_storage", 400.0D), 1, 1, BlockBaseMachine3Entity.upgrade_machine, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -67,8 +69,8 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
 
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("upgrade_machine_factory_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("upgrade_machine_factory_air_pollution_amount", 0.1D)));
 
     }
 
@@ -117,15 +119,15 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
     public void init() {
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 1),
-                "DED",
-                "BCB",
-                "AAA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ItemStackHelper.fromData(IUItem.core, 1, 3),
 
                 ('D'),
-                ("forge:doubleplate/Alumel"),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -133,19 +135,19 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
                 ItemStackHelper.fromData(IUItem.simplemachine, 1, 6),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.quantumtool)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 178)
         ), 0);
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 2),
-                "DED",
-                "BCB",
-                "AAA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 7),
+                ItemStackHelper.fromData(IUItem.core, 1, 4),
 
                 ('D'),
-                ("forge:doubleplate/Vitalium"),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -153,22 +155,22 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
                 ItemStackHelper.fromData(IUItem.machines, 1, 1),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.advQuantumtool)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 3),
-                "DED",
-                "BCB",
-                "AFA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('F'),
                 ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 8),
+                ItemStackHelper.fromData(IUItem.core, 1, 5),
 
                 ('D'),
-                ("forge:doubleplate/Duralumin"),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 233),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
@@ -176,7 +178,7 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
                 ItemStackHelper.fromData(IUItem.machines, 1, 2),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.advQuantumtool)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         ), 2);
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base, 1, 0), "A A",
                 "DBE", "ACA",
@@ -1142,7 +1144,7 @@ public class BlockEntityUpgradeMachineFactory extends BlockEntityElectricMachine
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

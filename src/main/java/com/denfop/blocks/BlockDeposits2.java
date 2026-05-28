@@ -80,30 +80,30 @@ public class BlockDeposits2<T extends Enum<T> & SubEnum> extends BlockCore<T> im
             final VeinType vein = WorldBaseGen.veinTypes.get(32 + meta);
             List<String> stringList = new ArrayList<>();
             final String s = Localization.translate("deposists.jei1") + (vein.getHeavyOre() != null ?
-                    new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
-                    new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
-                    ).getDisplayName().getString());
+                    com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString()) :
+                    com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
+                    ).getDisplayName().getString()));
             stringList.add(s);
             if (vein.getHeavyOre() != null) {
-                final String s1 = new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() + " 50%";
+                final String s1 = com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString()) + " 50%";
                 stringList.add(s1);
                 for (int i = 0; i < vein.getOres().size(); i++) {
                     final ChanceOre chanceOre = vein.getOres().get(i);
                     String s2 =
-                            new ItemStack(
+                            com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                                     chanceOre.getBlock().getBlock(),
                                     1
-                            ).getDisplayName().getString() + " " + chanceOre.getChance() + "%";
+                            ).getDisplayName().getString()) + " " + chanceOre.getChance() + "%";
                     stringList.add(s2);
                 }
             } else {
                 for (int i = 0; i < vein.getOres().size(); i++) {
                     final ChanceOre chanceOre = vein.getOres().get(i);
                     String s2 =
-                            new ItemStack(
+                            com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                                     chanceOre.getBlock().getBlock(),
                                     1
-                            ).getDisplayName().getString() + " " + chanceOre.getChance() + "%";
+                            ).getDisplayName().getString()) + " " + chanceOre.getChance() + "%";
                     stringList.add(s2);
                 }
             }

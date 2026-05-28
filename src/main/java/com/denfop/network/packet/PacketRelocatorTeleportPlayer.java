@@ -1,5 +1,7 @@
 package com.denfop.network.packet;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
@@ -34,8 +36,8 @@ public class PacketRelocatorTeleportPlayer implements IPacket {
         if (entityPlayer.getUUID().equals(uuid)) {
             Point point = new Point(customPacketBuffer);
             ItemStack stack = entityPlayer.getMainHandItem();
-            if (ElectricItem.manager.canUse(stack, 100000)) {
-                ElectricItem.manager.discharge(stack, 100000, 14, true, false, false);
+            if (ElectricItem.manager.canUse(stack, ModConfig.itemInt("relocator_teleport_energy_cost", 100000))) {
+                ElectricItem.manager.discharge(stack, ModConfig.itemInt("relocator_teleport_energy_cost", 100000), 14, true, false, false);
                 entityPlayer.closeContainer();
                 RelocatorNetwork.instance.teleportPlayer(entityPlayer, point);
             }

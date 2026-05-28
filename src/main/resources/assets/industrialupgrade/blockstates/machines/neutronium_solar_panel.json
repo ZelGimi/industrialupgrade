@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/neutronium_solar_panel",
       "y": 90
     },
-    "facing=down,type=neutronium_solar_panel": {
-      "model": "industrialupgrade:block/neutronium_solar_panel",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel": {
-      "model": "industrialupgrade:block/neutronium_solar_panel",
-      "x": 270
-    },
-    "facing=north,type=neutronium_solar_panel_invalid": {
+    "facing=north,type=neutronium_solar_panel_active": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain"
     },
-    "facing=south,type=neutronium_solar_panel_invalid": {
+    "facing=south,type=neutronium_solar_panel_active": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain",
       "y": 180
     },
-    "facing=west,type=neutronium_solar_panel_invalid": {
+    "facing=west,type=neutronium_solar_panel_active": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain",
       "y": 270
     },
-    "facing=east,type=neutronium_solar_panel_invalid": {
+    "facing=east,type=neutronium_solar_panel_active": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain",
       "y": 90
-    },
-    "facing=down,type=neutronium_solar_panel_invalid": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_rain",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_invalid": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_rain",
-      "x": 270
     },
     "facing=north,type=neutronium_solar_panel_aer": {
       "model": "industrialupgrade:block/neutronium_solar_panel_aer"
@@ -61,14 +45,6 @@
       "model": "industrialupgrade:block/neutronium_solar_panel_aer",
       "y": 90
     },
-    "facing=down,type=neutronium_solar_panel_aer": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_aer",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_aer": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_aer",
-      "x": 270
-    },
     "facing=north,type=neutronium_solar_panel_earth": {
       "model": "industrialupgrade:block/neutronium_solar_panel_earth"
     },
@@ -83,14 +59,6 @@
     "facing=east,type=neutronium_solar_panel_earth": {
       "model": "industrialupgrade:block/neutronium_solar_panel_earth",
       "y": 90
-    },
-    "facing=down,type=neutronium_solar_panel_earth": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_earth",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_earth": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_earth",
-      "x": 270
     },
     "facing=north,type=neutronium_solar_panel_end": {
       "model": "industrialupgrade:block/neutronium_solar_panel_end"
@@ -107,14 +75,6 @@
       "model": "industrialupgrade:block/neutronium_solar_panel_end",
       "y": 90
     },
-    "facing=down,type=neutronium_solar_panel_end": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_end",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_end": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_end",
-      "x": 270
-    },
     "facing=north,type=neutronium_solar_panel_nether": {
       "model": "industrialupgrade:block/neutronium_solar_panel_nether"
     },
@@ -129,14 +89,6 @@
     "facing=east,type=neutronium_solar_panel_nether": {
       "model": "industrialupgrade:block/neutronium_solar_panel_nether",
       "y": 90
-    },
-    "facing=down,type=neutronium_solar_panel_nether": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_nether",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_nether": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_nether",
-      "x": 270
     },
     "facing=north,type=neutronium_solar_panel_sun": {
       "model": "industrialupgrade:block/neutronium_solar_panel_sun"
@@ -153,14 +105,6 @@
       "model": "industrialupgrade:block/neutronium_solar_panel_sun",
       "y": 90
     },
-    "facing=down,type=neutronium_solar_panel_sun": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_sun",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_sun": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_sun",
-      "x": 270
-    },
     "facing=north,type=neutronium_solar_panel_night": {
       "model": "industrialupgrade:block/neutronium_solar_panel_night"
     },
@@ -175,14 +119,6 @@
     "facing=east,type=neutronium_solar_panel_night": {
       "model": "industrialupgrade:block/neutronium_solar_panel_night",
       "y": 90
-    },
-    "facing=down,type=neutronium_solar_panel_night": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_night",
-      "x": 90
-    },
-    "facing=up,type=neutronium_solar_panel_night": {
-      "model": "industrialupgrade:block/neutronium_solar_panel_night",
-      "x": 270
     },
     "facing=north,type=neutronium_solar_panel_rain": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain"
@@ -199,11 +135,75 @@
       "model": "industrialupgrade:block/neutronium_solar_panel_rain",
       "y": 90
     },
+    "facing=down,type=neutronium_solar_panel_night": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_night",
+      "x": 90
+    },
+    "facing=up,type=neutronium_solar_panel_end": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_end",
+      "x": 270
+    },
+    "facing=up,type=neutronium_solar_panel": {
+      "model": "industrialupgrade:block/neutronium_solar_panel",
+      "x": 270
+    },
+    "facing=down,type=neutronium_solar_panel_nether": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_nether",
+      "x": 90
+    },
+    "facing=up,type=neutronium_solar_panel_sun": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_sun",
+      "x": 270
+    },
+    "facing=up,type=neutronium_solar_panel_aer": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_aer",
+      "x": 270
+    },
     "facing=down,type=neutronium_solar_panel_rain": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain",
       "x": 90
     },
+    "facing=down,type=neutronium_solar_panel": {
+      "model": "industrialupgrade:block/neutronium_solar_panel",
+      "x": 90
+    },
+    "facing=up,type=neutronium_solar_panel_earth": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_earth",
+      "x": 270
+    },
+    "facing=down,type=neutronium_solar_panel_aer": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_aer",
+      "x": 90
+    },
+    "facing=down,type=neutronium_solar_panel_earth": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_earth",
+      "x": 90
+    },
+    "facing=down,type=neutronium_solar_panel_sun": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_sun",
+      "x": 90
+    },
+    "facing=up,type=neutronium_solar_panel_nether": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_nether",
+      "x": 270
+    },
+    "facing=down,type=neutronium_solar_panel_end": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_end",
+      "x": 90
+    },
     "facing=up,type=neutronium_solar_panel_rain": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_rain",
+      "x": 270
+    },
+    "facing=down,type=neutronium_solar_panel_active": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_rain",
+      "x": 90
+    },
+    "facing=up,type=neutronium_solar_panel_night": {
+      "model": "industrialupgrade:block/neutronium_solar_panel_night",
+      "x": 270
+    },
+    "facing=up,type=neutronium_solar_panel_active": {
       "model": "industrialupgrade:block/neutronium_solar_panel_rain",
       "x": 270
     }

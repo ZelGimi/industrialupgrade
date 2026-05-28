@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -27,11 +29,11 @@ public class BlockEntityGenerationStone extends BlockEntityBaseGenStone implemen
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityGenerationStone(BlockPos pos, BlockState state) {
-        super(1, 100, 12, BlockBaseMachineEntity.gen_stone, pos, state);
+        super(ModConfig.mechanismInt("stone_generator_energy_per_tick", 1), ModConfig.mechanismInt("stone_generator_operation_length", 100), 12, BlockBaseMachineEntity.gen_stone, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "genstone", this);
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("generation_stone_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("generation_stone_air_pollution_amount", 0.075D)));
     }
 
     public static void addGen(IInputItemStack container, IInputItemStack fill, ItemStack output) {

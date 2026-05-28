@@ -634,7 +634,6 @@ public class EnergyNetLocal {
         if (par1 == null) {
             return;
         }
-
         for (EnergyTick IEnergySource : par1) {
             if (IEnergySource.getList() != null) {
                 for (Path path : IEnergySource.getList()) {
@@ -682,7 +681,7 @@ public class EnergyNetLocal {
                     list.add(energyTicks);
                 }
             }
-            return list;
+            return new ArrayList<>(list);
         } else {
             if (par1 instanceof EnergyConductor) {
                 List<EnergyTick> list = new LinkedList<>();

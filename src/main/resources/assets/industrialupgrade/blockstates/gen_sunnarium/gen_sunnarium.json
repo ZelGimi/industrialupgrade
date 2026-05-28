@@ -15,6 +15,21 @@
       "model": "industrialupgrade:block/basemachine/gen_sunnarium",
       "y": 90
     },
+    "facing=north,type=gen_sunnarium_active": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium"
+    },
+    "facing=south,type=gen_sunnarium_active": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
+      "y": 180
+    },
+    "facing=west,type=gen_sunnarium_active": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
+      "y": 270
+    },
+    "facing=east,type=gen_sunnarium_active": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
+      "y": 90
+    },
     "facing=down,type=gen_sunnarium": {
       "model": "industrialupgrade:block/basemachine/gen_sunnarium",
       "x": 90
@@ -23,28 +38,13 @@
       "model": "industrialupgrade:block/basemachine/gen_sunnarium",
       "x": 270
     },
-    "facing=north,type=gen_sunnarium_invalid": {
-      "model": "industrialupgrade:block/basemachine/gen_sunnarium"
-    },
-    "facing=south,type=gen_sunnarium_invalid": {
-      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
-      "y": 180
-    },
-    "facing=west,type=gen_sunnarium_invalid": {
-      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
-      "y": 270
-    },
-    "facing=east,type=gen_sunnarium_invalid": {
-      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
-      "y": 90
-    },
-    "facing=down,type=gen_sunnarium_invalid": {
-      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
-      "x": 90
-    },
-    "facing=up,type=gen_sunnarium_invalid": {
+    "facing=up,type=gen_sunnarium_active": {
       "model": "industrialupgrade:block/basemachine/gen_sunnarium",
       "x": 270
+    },
+    "facing=down,type=gen_sunnarium_active": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium",
+      "x": 90
     }
   }
 }

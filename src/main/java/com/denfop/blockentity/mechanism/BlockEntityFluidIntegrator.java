@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -72,13 +74,13 @@ public class BlockEntityFluidIntegrator extends BlockEntityElectricMachine imple
     protected short progress;
 
     public BlockEntityFluidIntegrator(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.fluid_integrator, pos, state);
+        super(ModConfig.mechanismDouble("fluid_integrator_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.fluid_integrator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("fluid_integrator_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("fluid_integrator_air_pollution_amount", 0.1D)));
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("fluid_integrator_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -139,9 +141,9 @@ public class BlockEntityFluidIntegrator extends BlockEntityElectricMachine imple
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 
@@ -187,7 +189,7 @@ public class BlockEntityFluidIntegrator extends BlockEntityElectricMachine imple
                         , 150)
         );
         addRecipe(new ItemStack(IUItem.wolframite.getItem()), new ItemStack(IUItem.blockResource.getItem(13)),
-                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144),
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 90),
                 new FluidStack(FluidName.fluidoxygen.getInstance().get()
                         , 20)
         );

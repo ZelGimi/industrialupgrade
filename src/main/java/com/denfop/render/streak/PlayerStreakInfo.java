@@ -14,7 +14,7 @@ public class PlayerStreakInfo {
     }
 
     public PlayerStreakInfo(CompoundTag nbtTagCompound) {
-        this.rgb = new RGB(nbtTagCompound.getShort("red"), nbtTagCompound.getShort("green"), nbtTagCompound.getShort("blue"));
+        this.rgb = new RGB(nbtTagCompound.getShort("red"), nbtTagCompound.getShort("blue"), nbtTagCompound.getShort("green"));
         this.rainbow = nbtTagCompound.getBoolean("rainbow");
     }
 

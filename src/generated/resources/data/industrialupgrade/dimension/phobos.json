@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:phobos_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:phobos_biome"
+    },
+    "settings": "industrialupgrade:phobos_noise"
+  }
+}

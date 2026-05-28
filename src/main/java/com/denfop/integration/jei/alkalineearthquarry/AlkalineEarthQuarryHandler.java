@@ -43,24 +43,23 @@ public class AlkalineEarthQuarryHandler {
     }
 
     public static void initRecipes() {
-        addRecipe(new ItemStack(Blocks.SAND), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.ironMesh));
-        addRecipe(new ItemStack(Blocks.SAND), 2.5, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.steelMesh));
-        addRecipe(new ItemStack(Blocks.SAND), 4, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
-        addRecipe(new ItemStack(Blocks.SAND), 5, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
-        addRecipe(new ItemStack(Blocks.SAND), 7, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.steleticMesh));
+        addRecipe(new ItemStack(Blocks.SAND), 2, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.ironMesh));
+        addRecipe(new ItemStack(Blocks.SAND), 5, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.steelMesh));
+        addRecipe(new ItemStack(Blocks.SAND), 10, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
+        addRecipe(new ItemStack(Blocks.SAND), 15, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
+        addRecipe(new ItemStack(Blocks.SAND), 20, ItemStackHelper.fromData(IUItem.ore2, 1, 0), ItemStackHelper.fromData(IUItem.steleticMesh));
 
 
-        addRecipe(new ItemStack(Blocks.DIRT), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.steelMesh));
-        addRecipe(new ItemStack(Blocks.DIRT), 2, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
-        addRecipe(new ItemStack(Blocks.DIRT), 3, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
-        addRecipe(new ItemStack(Blocks.DIRT), 4, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.steleticMesh));
+        addRecipe(new ItemStack(Blocks.DIRT), 2, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.steelMesh));
+        addRecipe(new ItemStack(Blocks.DIRT), 5, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
+        addRecipe(new ItemStack(Blocks.DIRT), 10, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
+        addRecipe(new ItemStack(Blocks.DIRT), 15, ItemStackHelper.fromData(IUItem.ore2, 1, 1), ItemStackHelper.fromData(IUItem.steleticMesh));
 
 
-        addRecipe(new ItemStack(Blocks.GRAVEL), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.steelMesh));
-        addRecipe(new ItemStack(Blocks.GRAVEL), 0.5, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
-        addRecipe(new ItemStack(Blocks.GRAVEL), 1, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
-        addRecipe(new ItemStack(Blocks.GRAVEL), 2, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.steleticMesh));
-
+        addRecipe(new ItemStack(Blocks.GRAVEL), 1, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.steelMesh));
+        addRecipe(new ItemStack(Blocks.GRAVEL), 3, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.boridehafniumMesh));
+        addRecipe(new ItemStack(Blocks.GRAVEL), 7, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.vanadiumaluminumMesh));
+        addRecipe(new ItemStack(Blocks.GRAVEL), 11, ItemStackHelper.fromData(IUItem.ore2, 1, 2), ItemStackHelper.fromData(IUItem.steleticMesh));
 
     }
 

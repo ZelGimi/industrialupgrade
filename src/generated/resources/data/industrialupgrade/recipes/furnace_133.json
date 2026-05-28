@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace3/mercury_mithril_ore"
+    "item": "industrialupgrade:blockspace/ceres_iron_ore"
   },
-  "result": "industrialupgrade:itemingots/mithril"
+  "result": "minecraft:iron_ingot"
 }

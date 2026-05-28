@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -60,11 +62,11 @@ public class BlockEntitySteamCrystalCharge extends BlockEntityElectricMachine im
     protected short progress;
 
     public BlockEntitySteamCrystalCharge(BlockPos pos, BlockState state) {
-        super(0, 1, 1, BlockBaseMachine3Entity.steam_crystal_charge, pos, state);
+        super(ModConfig.mechanismDouble("steam_crystal_charger_energy_storage", 0.0D), 1, 1, BlockBaseMachine3Entity.steam_crystal_charge, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("steam_crystal_charger_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;

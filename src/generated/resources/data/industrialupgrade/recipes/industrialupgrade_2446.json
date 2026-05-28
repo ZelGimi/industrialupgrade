@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "quantumgenerators:qg/grasp_gen"
+      "item": "quantumgenerators:qg/bsp_gen"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/kvrcore"
+      "item": "industrialupgrade:itemcore/adrcore"
     }
   },
   "pattern": [
@@ -15,7 +15,7 @@
     " B "
   ],
   "result": {
-    "item": "quantumgenerators:qg/kvsp_gen"
+    "item": "quantumgenerators:qg/adsp_gen"
   },
   "show_notification": true
 }

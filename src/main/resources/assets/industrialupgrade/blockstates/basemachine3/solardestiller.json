@@ -15,34 +15,34 @@
       "model": "industrialupgrade:block/basemachine/solardestiller",
       "y": 90
     },
+    "facing=north,type=solardestiller_active": {
+      "model": "industrialupgrade:block/basemachine/solardestiller"
+    },
+    "facing=south,type=solardestiller_active": {
+      "model": "industrialupgrade:block/basemachine/solardestiller",
+      "y": 180
+    },
+    "facing=west,type=solardestiller_active": {
+      "model": "industrialupgrade:block/basemachine/solardestiller",
+      "y": 270
+    },
+    "facing=east,type=solardestiller_active": {
+      "model": "industrialupgrade:block/basemachine/solardestiller",
+      "y": 90
+    },
     "facing=down,type=solardestiller": {
       "model": "industrialupgrade:block/basemachine/solardestiller",
       "x": 90
     },
-    "facing=up,type=solardestiller": {
+    "facing=up,type=solardestiller_active": {
       "model": "industrialupgrade:block/basemachine/solardestiller",
       "x": 270
     },
-    "facing=north,type=solardestiller_invalid": {
-      "model": "industrialupgrade:block/basemachine/solardestiller"
-    },
-    "facing=south,type=solardestiller_invalid": {
-      "model": "industrialupgrade:block/basemachine/solardestiller",
-      "y": 180
-    },
-    "facing=west,type=solardestiller_invalid": {
-      "model": "industrialupgrade:block/basemachine/solardestiller",
-      "y": 270
-    },
-    "facing=east,type=solardestiller_invalid": {
-      "model": "industrialupgrade:block/basemachine/solardestiller",
-      "y": 90
-    },
-    "facing=down,type=solardestiller_invalid": {
+    "facing=down,type=solardestiller_active": {
       "model": "industrialupgrade:block/basemachine/solardestiller",
       "x": 90
     },
-    "facing=up,type=solardestiller_invalid": {
+    "facing=up,type=solardestiller": {
       "model": "industrialupgrade:block/basemachine/solardestiller",
       "x": 270
     }

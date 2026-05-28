@@ -6,7 +6,6 @@ import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBa
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSteamBoilerEntity;
-import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.inventory.Inventory;
 import com.denfop.register.InitMultiBlockSystem;

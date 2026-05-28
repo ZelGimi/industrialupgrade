@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.microchip;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityMatterFactory;
@@ -98,13 +99,12 @@ public class MicrochipCategory extends ScreenMain implements IRecipeCategory<Mic
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MicrochipHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 7, 6).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 7, 27).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT, 40, 6).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT, 40, 26).addItemStack(recipe.getInput3());
-        builder.addSlot(RecipeIngredientRole.INPUT, 68, 16).addItemStack(recipe.getInput4());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 7, 6, recipe, 0, recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 7, 27, recipe, 1, recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 40, 6, recipe, 2, recipe.getInput2());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 40, 26, recipe, 3, recipe.getInput3());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 68, 16, recipe, 4, recipe.getInput4());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 16).addItemStack(recipe.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 

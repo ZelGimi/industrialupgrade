@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.upgradeblock;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityTunerWireless;
@@ -86,8 +87,8 @@ public class UpgradeBlockCategory extends ScreenMain implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, UpgradeBlockHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 16, 35).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 61, 35).addItemStack(recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 16, 35, recipe, 0, recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 61, 35, recipe, 1, recipe.getInput1());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 110, 35).addItemStack(recipe.getOutput());
     }
 

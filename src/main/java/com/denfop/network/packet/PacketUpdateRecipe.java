@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PacketUpdateRecipe implements IPacket {
@@ -22,18 +23,20 @@ public class PacketUpdateRecipe implements IPacket {
     public PacketUpdateRecipe(String recipe, boolean isFluid, ServerPlayer player) {
         if (isFluid) {
             List<BaseFluidMachineRecipe> recipes = Recipes.recipes.getRecipeFluid().getRecipeList(recipe);
-            sendChunkedRecipes(recipe, recipes, true, player);
+            sendChunkedRecipes(recipe, new ArrayList<>(recipes), true, player);
         } else {
             List<BaseMachineRecipe> recipes = Recipes.recipes.getRecipeList(recipe);
-            sendChunkedRecipes(recipe, recipes, false, player);
+            sendChunkedRecipes(recipe, new ArrayList<>(recipes), false, player);
         }
     }
 
     private <T> void sendChunkedRecipes(String recipeKey, List<T> fullList, boolean isFluid, ServerPlayer player) {
         final int CHUNK_SIZE = 64;
+        if (fullList == null)
+            return;
         for (int i = 0; i < fullList.size(); i += CHUNK_SIZE) {
             int end = Math.min(i + CHUNK_SIZE, fullList.size());
-            List<T> chunk = fullList.subList(i, end);
+            List<T> chunk = new ArrayList<>(fullList.subList(i, end));
 
             CustomPacketBuffer buffer = new CustomPacketBuffer();
             buffer.writeByte(this.getId());

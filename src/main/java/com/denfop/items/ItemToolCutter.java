@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +14,7 @@ import java.util.List;
 public class ItemToolCutter extends ItemToolCrafting {
 
     public ItemToolCutter() {
-        super(60);
+        super(ModConfig.itemInt("tool_cutter_durability", 60));
     }
 
     @Override

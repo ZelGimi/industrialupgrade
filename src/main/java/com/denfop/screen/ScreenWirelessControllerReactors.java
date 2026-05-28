@@ -49,7 +49,7 @@ public class ScreenWirelessControllerReactors<T extends ContainerMenuWirelessCon
         }
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.wireless_reactor_controller.info"));
@@ -78,7 +78,7 @@ public class ScreenWirelessControllerReactors<T extends ContainerMenuWirelessCon
                 if (!stack.isEmpty()) {
                     final CompoundTag nbt = ModUtils.nbt(this.container.base.invslot.get(i));
                     BlockPos pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
-                    new TooltipWidget(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+                    new TooltipWidget(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()) + "\n" + "x" +
                             ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
                 }
             }

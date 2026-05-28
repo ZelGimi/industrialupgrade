@@ -7,7 +7,6 @@ import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
-import com.denfop.api.space.research.event.RocketPadReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.blockentity.base.BlockEntityInventory;
@@ -20,8 +19,12 @@ import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuRocketLaunchPad;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.inventory.Inventory;
+import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.render.rocketpad.DataRocket;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.render.rocketpad.RocketItemResolver;
+import com.denfop.render.rocketpad.RocketLaunchAnimation;
+import com.denfop.render.rocketpad.RocketPadEffects;
 import com.denfop.render.rocketpad.RocketPadRender;
 import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.screen.ScreenRocketLaunchPad;
@@ -53,10 +56,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 import java.util.function.Function;
 
 import static net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
@@ -72,7 +73,7 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
     public final Fluids fluids;
     public final Fluids.InternalFluidTank tank;
     public final Fluids.InternalFluidTank[] tanks;
-    public List<DataRocket> rocketList = new ArrayList<>();
+    public final List<RocketLaunchAnimation> rocketAnimations = new ArrayList<>();
     boolean added = false;
     private UUID player = new UUID(WorldBaseGen.random.nextLong(), WorldBaseGen.random.nextLong());
 
@@ -119,7 +120,8 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.getWorld().getGameTime() % 80 == 0) {
-            MinecraftForge.EVENT_BUS.post(new RocketPadReLoadEvent(this.getWorld(), this));
+            MinecraftForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
+            new PacketUpdateFieldTile(this, "uuid", player);
         }
         if (!this.roverSlot.isEmpty()) {
             charge(roverSlot.get(0));
@@ -131,7 +133,7 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
     public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
         if (placer instanceof Player) {
-            this.player = placer.getUUID();
+            this.player = ((Player) placer).getGameProfile().getId();
         }
     }
 
@@ -250,9 +252,71 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
         super.updateField(name, is);
         if (name.equals("datarocket")) {
             ItemStack stack = is.readItem();
-            this.rocketList.add(new DataRocket((IRoversItem) stack.getItem(), this.pos.getY()));
+            startRocketLaunch(stack);
             this.roverSlot.set(0, ItemStack.EMPTY);
         }
+        if (name.equals("uuid")) {
+            try {
+                this.player = (UUID) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public void updateEntityClient() {
+
+        if (this.getLevel() == null || !this.getLevel().isClientSide) {
+            return;
+        }
+
+        var random = this.getLevel().random;
+
+        for (Iterator<RocketLaunchAnimation> iterator = this.rocketAnimations.iterator(); iterator.hasNext(); ) {
+            RocketLaunchAnimation animation = iterator.next();
+
+            if (animation.shouldRemove(0.0F, this.getLevel().getGameTime())) {
+                iterator.remove();
+                continue;
+            }
+
+            RocketPadEffects.tickEffects(this.getLevel(), animation, random);
+
+            float age = animation.getAge(0.0F, this.getLevel().getGameTime());
+            if (((int) age) % 10 == 0) {
+                this.getLevel().playLocalSound(
+                        animation.getRenderX(0.0F, this.getLevel().getGameTime()) + 0.5D,
+                        animation.getRenderY(0.0F, this.getLevel().getGameTime()),
+                        animation.getRenderZ(0.0F, this.getLevel().getGameTime()) + 0.5D,
+                        net.minecraft.sounds.SoundEvents.FIREWORK_ROCKET_LAUNCH,
+                        net.minecraft.sounds.SoundSource.BLOCKS,
+                        0.8F,
+                        0.95F + this.getLevel().random.nextFloat() * 0.1F,
+                        false
+                );
+            }
+        }
+    }
+
+    public void startRocketLaunch(ItemStack roverStack) {
+        if (level == null || level.isClientSide == false) {
+            return;
+        }
+
+        ItemStack rocketVisual = RocketItemResolver.fromRover(roverStack);
+        if (rocketVisual.isEmpty()) {
+            return;
+        }
+
+        rocketAnimations.add(new RocketLaunchAnimation(
+                rocketVisual,
+                worldPosition.getX(),
+                worldPosition.getY(),
+                worldPosition.getZ(),
+                level.getGameTime(),
+                worldPosition.asLong() ^ level.getGameTime()
+        ));
     }
 
     @Override

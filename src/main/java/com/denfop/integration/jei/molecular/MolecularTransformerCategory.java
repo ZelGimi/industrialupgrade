@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.molecular;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityModuleMachine;
@@ -82,7 +83,7 @@ public class MolecularTransformerCategory extends ScreenMain implements IRecipeC
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MolecularTransformerHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 12, 8).addItemStack(recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 12, 8, recipe, 0, recipe.getInput());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 12, 48).addItemStack(recipe.getOutput());
     }
 

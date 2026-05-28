@@ -79,4 +79,6 @@ public class SlotInvSlot extends Slot {
 
     public void setDragType(int dragType) {
     }
+
+
 }

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:plates/nimonic"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_785_element"
+    },
+    "C": {
+      "tag": "forge:plates/vitalium"
+    },
+    "D": {
+      "tag": "forge:plates/superalloyrene"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_786_element"
+  },
+  "show_notification": true
+}

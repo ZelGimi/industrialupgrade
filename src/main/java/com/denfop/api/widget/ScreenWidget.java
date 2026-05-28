@@ -27,7 +27,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ScreenWidget extends AbstractWidget {
 
@@ -75,6 +77,7 @@ public class ScreenWidget extends AbstractWidget {
         this.gui = gui;
         this.widgetDefault = widgetDefault;
     }
+
     public ScreenWidget(ScreenIndustrialUpgrade<?> gui, int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("empty"));
         this.x = x;
@@ -208,7 +211,7 @@ public class ScreenWidget extends AbstractWidget {
         if (tooltipProvider != null) {
             String tooltip = tooltipProvider.get();
             if (tooltip != null)
-            return new ArrayList<>(List.of(tooltip.split("\n")));
+                return new ArrayList<>(List.of(tooltip.split("\n")));
         }
         return new LinkedList<>();
     }

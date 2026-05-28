@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.replicator;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.mechanism.BlockEntityBaseReplicator;
@@ -17,9 +19,9 @@ public class BlockEntityImpReplicator extends BlockEntityBaseReplicator {
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityImpReplicator(BlockPos pos, BlockState state) {
-        super(0.85, BlockBaseMachine3Entity.imp_replicator, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        super(ModConfig.mechanismDouble("advanced_replicator_efficiency", 0.85D), BlockBaseMachine3Entity.imp_replicator, pos, state);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("advanced_replicator_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("advanced_replicator_air_pollution_amount", 0.1D)));
     }
 
     @Override

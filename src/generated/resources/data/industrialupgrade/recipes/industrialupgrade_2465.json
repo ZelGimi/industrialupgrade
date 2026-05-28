@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:plates/hafniumcarbide"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_782_element"
+    },
+    "C": {
+      "tag": "forge:plates/orichalcum"
+    },
+    "D": {
+      "tag": "forge:plates/cobaltchrome"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_783_element"
+  },
+  "show_notification": true
+}

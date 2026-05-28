@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.waterrotorrods;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,10 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaterRotorsHandler {
+public class WaterRotorsHandler implements IJeiVariantRecipe {
 
     private static final List<WaterRotorsHandler> recipes = new ArrayList<>();
-    private final ItemStack output;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+private final ItemStack output;
     private final ItemStack[] input;
 
     public WaterRotorsHandler(ItemStack output, ItemStack... inputs) {
@@ -38,14 +42,14 @@ public class WaterRotorsHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("water_rotor_assembler")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.getOutput().items.get(0),
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.input.getInputs().get(4).getInputs().get(0)
-            );
+            ), container);
 
 
         }
@@ -61,4 +65,15 @@ public class WaterRotorsHandler {
     }
 
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

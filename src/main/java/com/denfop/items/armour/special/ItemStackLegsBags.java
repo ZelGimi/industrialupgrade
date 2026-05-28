@@ -33,7 +33,7 @@ public class ItemStackLegsBags extends ItemStackInventory {
         this.itemStack1 = stack;
         this.coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D : 0);
-        this.updatelist();
+
     }
 
     public ContainerMenuBase<ItemStackLegsBags> getGuiContainer(Player player) {
@@ -97,7 +97,7 @@ public class ItemStackLegsBags extends ItemStackInventory {
                 list.add(new BagsDescription(stack));
             }
         }
-        final CompoundTag nbt = ModUtils.nbt(itemStack1);
+        final CompoundTag nbt = ModUtils.nbt(containerStack);
         CompoundTag nbt1 = new CompoundTag();
         nbt1.putInt("size", list.size());
         for (int i = 0; i < list.size(); i++) {

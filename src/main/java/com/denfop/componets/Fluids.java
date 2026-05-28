@@ -125,10 +125,23 @@ public class Fluids extends AbstractComponent {
     ) {
         return this.addTank(new Fluids.InternalFluidTank(name, inputSides, outputSides, acceptedFluids, capacity, typeItemSlot));
     }
-
+    boolean hasExtract = false;
+    boolean hasInput = false;
     public Fluids.InternalFluidTank addTank(Fluids.InternalFluidTank tank) {
+        if (tank.isOutput())
+            hasExtract = true;
+        if (tank.isInput())
+            hasInput = true;
         this.managedTanks.add(tank);
         return tank;
+    }
+
+    public boolean isHasExtract() {
+        return hasExtract;
+    }
+
+    public boolean isHasInput() {
+        return hasInput;
     }
 
     public void addUnmanagedTanks(Fluids.InternalFluidTank tank) {

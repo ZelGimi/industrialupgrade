@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:baseore/iridium"
+    "item": "industrialupgrade:baseore/platinum"
   },
-  "result": "industrialupgrade:itemingots/iridium_ingot"
+  "result": "industrialupgrade:itemingots/platinum_ingot"
 }

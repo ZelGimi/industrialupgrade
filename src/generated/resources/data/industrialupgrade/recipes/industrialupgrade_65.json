@@ -2,38 +2,23 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_510_element"
-    },
     "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_513_element"
+      "tag": "forge:ingots/duralumin"
     },
     "C": {
-      "tag": "forge:doubleplate/muntsa"
+      "tag": "forge:doubleplate/invar"
     },
     "D": {
-      "item": "industrialupgrade:energy_tools/nanoshovel"
-    },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
-    },
-    "F": {
-      "item": "industrialupgrade:crafting_elements/crafting_516_element"
-    },
-    "H": {
-      "tag": "forge:rods/electrum"
+      "item": "industrialupgrade:energy/magnet"
     }
   },
   "pattern": [
-    "ADB",
-    "EFE",
-    "CHC"
+    "B B",
+    "CDC",
+    " C "
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/quantumshovel"
+    "item": "industrialupgrade:energy/impmagnet"
   },
   "show_notification": true
 }

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": true,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidchlorum",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "shaft_caves",
+    "max_length": 42,
+    "max_radius": 4,
+    "max_vertical": 18,
+    "min_length": 22,
+    "min_radius": 2,
+    "open_to_surface": true,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/titania_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/titania_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone1/titania_cobblestone"
+    }
+  }
+}

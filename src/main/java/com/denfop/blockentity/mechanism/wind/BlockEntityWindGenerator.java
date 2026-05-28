@@ -368,6 +368,7 @@ public class BlockEntityWindGenerator extends BlockEntityInventory implements IW
 
             if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
+                new PacketUpdateFieldTile(this, "slot", slot);
             }
         } else {
             generation = 0;

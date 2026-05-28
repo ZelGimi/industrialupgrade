@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -39,7 +41,7 @@ public class BlockEntityNightConverter extends BlockEntityElectricMachine implem
     public MachineRecipe output;
 
     public BlockEntityNightConverter(BlockPos pos, BlockState state) {
-        super(0, 14, 1, BlockBaseMachine3Entity.night_converter, pos, state);
+        super(ModConfig.mechanismDouble("night_converter_energy_storage", 0.0D), 14, 1, BlockBaseMachine3Entity.night_converter, pos, state);
         inputSlotA = new InventoryRecipes(this, "solar_glass_recipe", this);
         inputSlotA.setStackSizeLimit(1);
         this.ne = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.NIGHT, this, 10000));

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_porous_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidxenon",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "porous",
+    "max_length": 12,
+    "max_radius": 3,
+    "max_vertical": 20,
+    "min_length": 6,
+    "min_radius": 1,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/proteus_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/proteus_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone1/proteus_cobblestone"
+    }
+  }
+}

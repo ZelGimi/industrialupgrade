@@ -92,7 +92,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                 break;
         }
 
-        return new QuantumQuarryRecipe(id,recipeType, recipeOperation, input);
+        return new QuantumQuarryRecipe(id, recipeType, recipeOperation, input);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
         for (int i = 0; i < size; i++) {
             input.add(buf.readItem());
         }
-        if (!IUCore.updateRecipe){
+        if (!IUCore.updateRecipe) {
             switch (recipeOperation) {
                 case "default":
                     switch (recipeOperation) {

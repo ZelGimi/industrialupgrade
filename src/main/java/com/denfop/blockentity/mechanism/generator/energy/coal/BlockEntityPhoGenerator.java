@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.coal;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -12,7 +14,7 @@ public class BlockEntityPhoGenerator extends BlockEntityAdvGenerator {
 
 
     public BlockEntityPhoGenerator(BlockPos pos, BlockState state) {
-        super(6, 70000, 8, BlocksPhotonicMachine.photonic_generator, pos, state);
+        super(ModConfig.mechanismDouble("photonic_generator_efficiency", 6.0D), ModConfig.mechanismInt("photonic_generator_energy_storage", 70000), 8, BlocksPhotonicMachine.photonic_generator, pos, state);
     }
 
     @Override

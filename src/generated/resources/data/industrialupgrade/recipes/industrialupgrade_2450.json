@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:plates/muntsa"
+    },
+    "B": {
+      "item": "wateringcan:simple_watering_can"
+    }
+  },
+  "pattern": [
+    "  A",
+    "AB ",
+    "AAA"
+  ],
+  "result": {
+    "item": "wateringcan:adv_watering_can"
+  },
+  "show_notification": true
+}

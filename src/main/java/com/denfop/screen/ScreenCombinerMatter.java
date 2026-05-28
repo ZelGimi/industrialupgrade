@@ -34,8 +34,17 @@ public class ScreenCombinerMatter<T extends ContainerMenuCombinerMatter> extends
         return ret;
     }
 
-    private void handleUpgradeTooltip(int x, int y) {
-        if (x >= 165 && x <= 175 && y >= 0 && y <= 12) {
+    @Override
+    protected void drawBackground(GuiGraphics poseStack) {
+        super.drawBackground(poseStack);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+
+        bindTexture(getTexture());
+    }
+
+    public void handleUpgradeTooltip(int x, int y) {
+        if (x >= 0 && x <= 12 && y >= 0 && y <= 12) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.combMatterinformation"));
             List<String> compatibleUpgrades = getInformation();

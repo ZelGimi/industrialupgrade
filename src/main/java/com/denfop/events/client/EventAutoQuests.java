@@ -67,7 +67,7 @@ public class EventAutoQuests {
 
                 processed++;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         ;
     }

@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public interface CustomWorldContainer extends Container, MenuProvider {
 
     Level getWorld();
+
     void addInventorySlot(Inventory var1);
 
     MenuType<?> getMenuType();

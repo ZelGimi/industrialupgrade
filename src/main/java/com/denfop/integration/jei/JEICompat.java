@@ -51,6 +51,8 @@ import com.denfop.integration.jei.combmac.CombMacCategory;
 import com.denfop.integration.jei.combmac.CombMacHandler;
 import com.denfop.integration.jei.compressor.CompressorCategory;
 import com.denfop.integration.jei.compressor.CompressorHandler;
+import com.denfop.integration.jei.convertermatter.ConverterCategory;
+import com.denfop.integration.jei.convertermatter.ConverterHandler;
 import com.denfop.integration.jei.crops.CropCategory;
 import com.denfop.integration.jei.crops.CropCrossoverCategory;
 import com.denfop.integration.jei.crops.CropCrossoverHandler;
@@ -81,6 +83,8 @@ import com.denfop.integration.jei.enchanter.EnchantCategory;
 import com.denfop.integration.jei.enchanter.EnchantHandler;
 import com.denfop.integration.jei.enrichment.EnrichCategory;
 import com.denfop.integration.jei.enrichment.EnrichHandler;
+import com.denfop.integration.jei.environment.EnvironmentalTransformationCategory;
+import com.denfop.integration.jei.environment.EnvironmentalTransformationHandler;
 import com.denfop.integration.jei.extractor.ExtractorCategory;
 import com.denfop.integration.jei.extractor.ExtractorHandler;
 import com.denfop.integration.jei.extruder.ExtruderCategory;
@@ -353,16 +357,21 @@ import com.denfop.integration.jei.worldcollector.end.EndHandler;
 import com.denfop.integration.jei.worldcollector.nether.NetherCategory;
 import com.denfop.integration.jei.worldcollector.nether.NetherHandler;
 import com.denfop.recipes.ItemStackHelper;
+import com.denfop.screen.ScreenInterfaceWorkbench;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.*;
+import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -379,6 +388,7 @@ public class JEICompat implements IModPlugin {
     public static JeiInform analyzer = new JeiInform("analyzer", AnalyzerCategory.class, AnalyzerHandler.class);
     public static JeiInform anti_upgrade = new JeiInform("anti_upgrade", AntiUpgradeBlockCategory.class, AntiUpgradeBlockHandler.class);
     public static JeiInform anvil = new JeiInform("anvil", AnvilCategory.class, AnvilHandler.class);
+    public static JeiInform converter = new JeiInform("converter", ConverterCategory.class, ConverterHandler.class);
     public static JeiInform apiary = new JeiInform("apiary", ApiaryCategory.class, ApiaryHandler.class);
     public static JeiInform battery = new JeiInform("battery", BatteryCategory.class, BatteryHandler.class);
     public static JeiInform bee = new JeiInform("bee", BeeCategory.class, BeeHandler.class);
@@ -547,6 +557,7 @@ public class JEICompat implements IModPlugin {
     public static JeiInform world_collector_nether = new JeiInform("world_collector_nether", NetherCategory.class, NetherHandler.class);
     public static JeiInform scrapbox = new JeiInform("scrapbox", ScrapboxRecipeCategory.class, ScrapboxRecipeHandler.class);
     public static IGuiHelper guiHelper;
+    public static JeiInform environmental_transformations = new JeiInform("environmental_transformations", EnvironmentalTransformationCategory.class, EnvironmentalTransformationHandler.class);
 
     //  public static JeiInform reactor_schemes = new JeiInform("reactor_schemes", ReactorSchemesCategory.class, ReactorSchemesHandler.class);
     public JEICompat() {
@@ -557,6 +568,7 @@ public class JEICompat implements IModPlugin {
         return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
 
     }
+
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -711,6 +723,9 @@ public class JEICompat implements IModPlugin {
                 ItemStackHelper.fromData(IUItem.imp_satellite),
                 space_body.recipeType
         );
+        registry.addRecipeCatalyst(new ItemStack(Blocks.COMPOSTER), environmental_transformations.recipeType);
+        registry.addRecipeCatalyst(new ItemStack(Blocks.MUD), environmental_transformations.recipeType);
+
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.per_satellite),
                 space_body.recipeType
@@ -1077,7 +1092,10 @@ public class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3Entity.positronconverter),
                 positrons.recipeType
         );
-
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockConverterMatterEntity.converter_matter),
+                converter.recipeType
+        );
         registry.addRecipeCatalyst(
                 getBlockStack(BlockBaseMachine3Entity.polymerizer),
                 polymizer.recipeType
@@ -1936,7 +1954,10 @@ public class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3Entity.steam_macerator),
                 macerator.recipeType
         );
-
+        registry.addRecipeCatalyst(
+                JEICompat.getBlockStack(BlockBaseMachine3Entity.autocrafter),
+                RecipeTypes.CRAFTING
+        );
     }
 
     @Override
@@ -1953,12 +1974,24 @@ public class JEICompat implements IModPlugin {
     }
 
     @Override
-    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-
+    public void registerGuiHandlers(IGuiHandlerRegistration reg) {
+        reg.addRecipeClickArea(
+                ScreenInterfaceWorkbench.class,
+                88, 32, 28, 23,
+                RecipeTypes.CRAFTING
+        );
+        reg.addGuiContainerHandler(ScreenInterfaceWorkbench.class, new IGuiContainerHandler<>() {
+            @Override
+            public List<Rect2i> getGuiExtraAreas(ScreenInterfaceWorkbench screen) {
+                return Collections.emptyList();
+            }
+        });
     }
 
     @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration reg) {
+
+        reg.addUniversalRecipeTransferHandler(new StoragePatternMonitorRecipeTransfer(reg.getTransferHelper()));
 
     }
 

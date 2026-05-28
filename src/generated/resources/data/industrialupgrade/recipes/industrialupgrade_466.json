@@ -3,31 +3,22 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:adv_spectral_box"
-    },
-    "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/photoncircuit",
-      "nbt": "{level:11}"
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
     },
     "C": {
       "item": "industrialupgrade:basemachine/per_matter"
     },
     "D": {
-      "tag": "forge:doubleplate/duralumin"
+      "item": "industrialupgrade:crafting_elements/crafting_629_element"
     },
     "E": {
-      "item": "industrialupgrade:itemcore/barcore"
-    },
-    "F": {
-      "item": "industrialupgrade:quantumitems4"
+      "item": "industrialupgrade:itemcore/sincore"
     }
   },
   "pattern": [
-    "DED",
-    "BCB",
-    "AFA"
+    "AEA",
+    " C ",
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:photonic_machine/photonic_gen_matter"

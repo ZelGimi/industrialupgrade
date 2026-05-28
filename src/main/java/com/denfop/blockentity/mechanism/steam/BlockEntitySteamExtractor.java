@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntitySteamMultiMachine;
@@ -24,8 +26,8 @@ public class BlockEntitySteamExtractor extends BlockEntitySteamMultiMachine {
                 EnumMultiMachine.EXTRACTOR.lenghtOperation,
                 4, BlockBaseMachine3Entity.steam_extractor, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.125));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("steam_extractor_soil_pollution_amount", 0.125D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("steam_extractor_air_pollution_amount", 0.2D)));
     }
 
     public MultiBlockEntity getTeBlock() {

@@ -11,12 +11,6 @@
     "C": {
       "item": "industrialupgrade:energy_tools/quantumshovel"
     },
-    "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
-    },
     "E": {
       "item": "industrialupgrade:quantumitems6"
     },
@@ -27,7 +21,7 @@
   "pattern": [
     "EHE",
     "ABC",
-    " D "
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:energy_tools/quantumdrill"

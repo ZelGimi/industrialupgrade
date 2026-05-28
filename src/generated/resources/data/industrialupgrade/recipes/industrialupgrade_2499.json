@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:plates/hafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "D": {
+      "item": "industrialupgrade:upgrades/fluid_pulling"
+    }
+  },
+  "pattern": [
+    "ABA",
+    " D ",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:storagesystem/fluid_importbus"
+  },
+  "show_notification": true
+}

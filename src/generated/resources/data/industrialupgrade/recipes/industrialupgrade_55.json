@@ -3,25 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:ingots/vitalium"
+      "item": "industrialupgrade:synthetic_plate"
     },
     "B": {
-      "tag": "forge:ingots/ferromanganese"
+      "item": "industrialupgrade:wiring/glass"
     },
     "C": {
-      "tag": "forge:doubleplate/mikhail"
+      "tag": "forge:plates/stainlesssteel"
     },
     "D": {
-      "item": "industrialupgrade:battery/advanced_re_battery"
+      "item": "industrialupgrade:high_current_converter_to_low"
     }
   },
   "pattern": [
-    "A B",
-    "CDC",
-    " C "
+    "AAA",
+    "BDB",
+    "C C"
   ],
   "result": {
-    "item": "industrialupgrade:energy/magnet"
+    "item": "industrialupgrade:extreme_current_converter_to_low"
   },
   "show_notification": true
 }

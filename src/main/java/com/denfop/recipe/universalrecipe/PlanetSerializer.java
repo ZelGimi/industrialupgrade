@@ -31,10 +31,10 @@ public class PlanetSerializer implements RecipeSerializer<PlanetRecipe> {
         double time = json.get("time").getAsDouble();
         double size = json.get("size").getAsDouble();
         double rotation = json.get("rotation").getAsDouble();
-        if (!stringList.contains("planet_"+name)) {
+        if (!stringList.contains("planet_" + name)) {
             regPlanet.add(() -> new Planet(name, SpaceNet.instance.getSystem().stream().filter(systems -> systems.getName().equals(json.get("system").getAsString().toLowerCase())).toList().get(0), texture, level, (IStar) SpaceNet.instance.getBodyFromName(json.get("star").getAsString()), temperature, pressure, distance, type,
                     oxygen, colonies, angle, time, size, rotation));
-            stringList.add("planet_"+name);
+            stringList.add("planet_" + name);
         }
         return new PlanetRecipe(id, name, json.get("star").getAsString(), texture, level, json.get("star").getAsString(), temperature, pressure, distance, type,
                 oxygen, colonies, angle, time, size, rotation);
@@ -60,10 +60,10 @@ public class PlanetSerializer implements RecipeSerializer<PlanetRecipe> {
         double rotation = buf.readDouble();
 
 
-        if (!stringList.contains("planet_"+name)) {
+        if (!stringList.contains("planet_" + name)) {
             regPlanet.add(() -> new Planet(name, SpaceNet.instance.getSystem().stream().filter(systems -> systems.getName().equals(systemName.toLowerCase())).toList().get(0), texture, level, (IStar) SpaceNet.instance.getBodyFromName(starName), temperature, pressure, distance, type,
                     oxygen, colonies, angle, time, size, rotation));
-            stringList.add("planet_"+name);
+            stringList.add("planet_" + name);
         }
         return new PlanetRecipe(
                 id, name, systemName, texture, level, starName,

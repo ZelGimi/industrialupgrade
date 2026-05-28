@@ -69,18 +69,26 @@ public class SpaceInit {
     public static List<Runnable> regBaseResource = new LinkedList<>();
     public static List<Runnable> regColonyBaseResource = new LinkedList<>();
 
-    static boolean  isRead = false;
+    static boolean isRead = false;
+
+    public static void reset() {
+        regSystem = new LinkedList<>();
+        regStar = new LinkedList<>();
+        regPlanet = new LinkedList<>();
+        regSatellite = new LinkedList<>();
+        regAsteroid = new LinkedList<>();
+        regBaseResource = new LinkedList<>();
+        regColonyBaseResource = new LinkedList<>();
+    }
+
     public static void jsonInit() {
-        if (!isRead) {
-            regSystem.forEach(Runnable::run);
-            regStar.forEach(Runnable::run);
-            regPlanet.forEach(Runnable::run);
-            regSatellite.forEach(Runnable::run);
-            regAsteroid.forEach(Runnable::run);
-            regBaseResource.forEach(Runnable::run);
-            regColonyBaseResource.forEach(Runnable::run);
-            isRead = true;
-        }
+        regSystem.forEach(Runnable::run);
+        regStar.forEach(Runnable::run);
+        regPlanet.forEach(Runnable::run);
+        regSatellite.forEach(Runnable::run);
+        regAsteroid.forEach(Runnable::run);
+        regBaseResource.forEach(Runnable::run);
+        regColonyBaseResource.forEach(Runnable::run);
     }
 
     public static void init() {

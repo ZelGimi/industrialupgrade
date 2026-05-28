@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -63,7 +65,7 @@ public class BlockEntityDieselGenerator extends BlockEntityLiquidTankInventory i
     private boolean sound = true;
 
     public BlockEntityDieselGenerator(BlockPos pos, BlockState state) {
-        super(12, BlockBaseMachine2Entity.gen_disel, pos, state);
+        super(ModConfig.mechanismInt("diesel_generator_tank_capacity", 12), BlockBaseMachine2Entity.gen_disel, pos, state);
         this.coef = 1;
         this.fluidSlot = new InventoryFluidByList(this, Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.INPUT,
                 FluidName.fluiddiesel.getInstance().get(),
@@ -80,8 +82,8 @@ public class BlockEntityDieselGenerator extends BlockEntityLiquidTankInventory i
                 FluidName.fluida_diesel.getInstance().get(), FluidName.fluidaa_diesel.getInstance().get(),
                 FluidName.fluidaaa_diesel.getInstance().get(), FluidName.fluidaaaa_diesel.getInstance().get()
         ));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.45));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("diesel_generator_soil_pollution_amount", 0.45D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("diesel_generator_air_pollution_amount", 0.75D)));
     }
 
     @Override

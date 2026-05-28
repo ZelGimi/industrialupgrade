@@ -47,4 +47,5 @@ public interface ISpaceNet {
 
     List<IBody> getBodyList();
 
+    void reset();
 }

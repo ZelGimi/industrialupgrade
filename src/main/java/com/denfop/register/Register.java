@@ -6,12 +6,14 @@ import com.denfop.IUItem;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
 import com.denfop.api.space.rovers.enums.EnumRoversLevelFluid;
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
+import com.denfop.api.storage.cell.CellInfo;
 import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
 import com.denfop.blocks.fluid.IUFluidType;
 import com.denfop.blocks.mechanism.*;
+import com.denfop.containermenu.ContainerInterfaceWorkbench;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.dataregistry.*;
 import com.denfop.effects.EffectsRegister;
@@ -47,17 +49,23 @@ import com.denfop.items.resource.*;
 import com.denfop.items.resource.alloys.*;
 import com.denfop.items.resource.preciousresources.ItemPreciousGem;
 import com.denfop.items.space.*;
+import com.denfop.items.storage.ItemCell;
+import com.denfop.items.storage.ItemPattern;
+import com.denfop.items.storage.ItemWirelessTerminal;
 import com.denfop.items.upgradekit.ItemUpgradeKit;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
+import com.denfop.loot.AddFromLootTableModifier;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.painting.IUPainting;
 import com.denfop.potion.IUPotion;
 import com.denfop.recipe.IndustrialShapedRecipeSerializer;
 import com.denfop.recipe.IndustrialShapelessRecipeSerializer;
 import com.denfop.recipe.universalrecipe.*;
 import com.denfop.sound.Sounds;
 import com.denfop.villager.VillagerInit;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -71,6 +79,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -88,6 +97,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
@@ -120,7 +130,11 @@ public class Register {
     public static DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, IUCore.MODID);
     public static DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, IUCore.MODID);
     public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, IUCore.MODID);
+    public static DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODIFIER_SERIALIZERS =
+            DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Constants.MOD_ID);
 
+    public static DeferredRegister<PaintingVariant> PAINTING_VARIANTS =
+            DeferredRegister.create(ForgeRegistries.PAINTING_VARIANTS, Constants.MOD_ID);
     public static RegistryObject<DamageType> currentObject;
     public static RegistryObject<DamageType> radiationObject;
     public static RegistryObject<DamageType> frostbiteObject;
@@ -160,6 +174,7 @@ public class Register {
     public static RegistryObject<IndustrialShapedRecipeSerializer> RECIPE_SERIALIZER_SHAPED_RECIPE;
     public static RegistryObject<SmelterSerializer> RECIPE_SERIALIZER_SMELTERY_RECIPE;
     public static RegistryObject<RecipeType<Recipe<?>>> SMELTERY_RECIPE;
+    public static RegistryObject<MenuType<ContainerInterfaceWorkbench>> INTERFACE_WORKBENCH;
     private static ItemStackInventory invent;
 
     public static void register() {
@@ -177,6 +192,23 @@ public class Register {
         registerBlocks();
         registerItemAfterBlocks();
         registerVillagers();
+        registerLootModifier();
+        registerPainting();
+
+    }
+
+    private static void registerPainting() {
+
+        IUPainting.CHEMIST_PICTURE =
+                PAINTING_VARIANTS.register("chemist_picture", () -> new PaintingVariant(64, 64));
+
+    }
+
+    private static void registerLootModifier() {
+
+        AddFromLootTableModifier.ADD_FROM_LOOT_TABLE =
+                GLOBAL_LOOT_MODIFIER_SERIALIZERS.register("add_from_loot_table", () -> AddFromLootTableModifier.CODEC);
+
     }
 
     private static void registerSounds() {
@@ -197,8 +229,8 @@ public class Register {
         IUItem.treetap = new DataSimpleItem<>(new ResourceLocation("tools", "treetap"), ItemTreetap::new);
 
         IUItem.recipe_schedule = new DataSimpleItem<>(new ResourceLocation("", "recipe_schedule"), ItemRecipeSchedule::new);
-        IUItem.magnet = new DataSimpleItem<>(new ResourceLocation("energy", "magnet"), () -> new ItemMagnet(100000, 5000, 4, 7));
-        IUItem.impmagnet = new DataSimpleItem<>(new ResourceLocation("energy", "impmagnet"), () -> new ItemMagnet(200000, 7500, 5, 11));
+        IUItem.magnet = new DataSimpleItem<>(new ResourceLocation("energy", "magnet"), () -> new ItemMagnet(100000, 5000, 2, 7));
+        IUItem.impmagnet = new DataSimpleItem<>(new ResourceLocation("energy", "impmagnet"), () -> new ItemMagnet(200000, 7500, 3, 11));
         IUItem.electric_treetap = new DataSimpleItem<>(new ResourceLocation("energy", "electric_treetap"), ItemTreetapEnergy::new);
         IUItem.electric_wrench = new DataSimpleItem<>(new ResourceLocation("energy", "electric_wrench"), ItemToolWrenchEnergy::new);
         IUItem.electric_hoe = new DataSimpleItem<>(new ResourceLocation("energy", "electric_hoe"), ItemEnergyToolHoe::new);
@@ -915,14 +947,14 @@ public class Register {
         IUItem.perBatChargeCrystal = new DataSimpleItem<>(new ResourceLocation("battery", "itembatchargecrystal"), () -> new ItemBattery(100000000 * 4, 129472D, 6, true));
         IUItem.AdvlapotronCrystal = new DataSimpleItem<>(new ResourceLocation("battery", "itembatlamacrystal"), () -> new ItemBattery(100000000, 8092.0D, 4, false));
 
-        IUItem.reBattery = new DataSimpleItem<>(new ResourceLocation("battery", "re_battery"), () -> new ItemBattery(100000.0, 100.0, 1));
+        IUItem.reBattery = new DataSimpleItem<>(new ResourceLocation("battery", "re_battery"), () -> new ItemBattery(100000.0, 256.0, 2));
         IUItem.energy_crystal = new DataSimpleItem<>(new ResourceLocation("battery", "energy_crystal"), () -> new ItemBattery(1000000.0, 2048.0, 3));
         IUItem.lapotron_crystal = new DataSimpleItem<>(new ResourceLocation("battery", "lapotron_crystal"), () -> new ItemBattery(1.0E7, 8092.0, 4));
         IUItem.charging_re_battery = new DataSimpleItem<>(new ResourceLocation("battery", "charging_re_battery"), () -> new ItemBattery(40000.0, 128.0, 1, true));
         IUItem.advanced_charging_re_battery = new DataSimpleItem<>(new ResourceLocation("battery", "advanced_charging_re_battery"), () -> new ItemBattery(400000.0, 1024.0, 2, true));
         IUItem.charging_energy_crystal = new DataSimpleItem<>(new ResourceLocation("battery", "charging_energy_crystal"), () -> new ItemBattery(4000000.0, 8192.0, 3, true));
         IUItem.charging_lapotron_crystal = new DataSimpleItem<>(new ResourceLocation("battery", "charging_lapotron_crystal"), () -> new ItemBattery(4.0E7, 32768.0, 4, true));
-        IUItem.advBattery = new DataSimpleItem<>(new ResourceLocation("battery", "advanced_re_battery"), () -> new ItemBattery(10000.0, 256.0, 2));
+        IUItem.advBattery = new DataSimpleItem<>(new ResourceLocation("battery", "advanced_re_battery"), () -> new ItemBattery(10000.0, 100.0, 1));
 
 
         IUItem.pump = new DataSimpleItem<>(new ResourceLocation("pumps", "pump"), () -> new ItemsPumps(2000, 0, 1, 2));
@@ -930,10 +962,10 @@ public class Register {
         IUItem.imp_pump = new DataSimpleItem<>(new ResourceLocation("pumps", "imp_pump"), () -> new ItemsPumps(7500, 2, 4, 9));
         IUItem.per_pump = new DataSimpleItem<>(new ResourceLocation("pumps", "per_pump"), () -> new ItemsPumps(10000, 3, 6, 15));
 
-        IUItem.anode = new DataSimpleItem<>(new ResourceLocation("chemistry", "anode"), () -> new ItemChemistry(20000));
-        IUItem.cathode = new DataSimpleItem<>(new ResourceLocation("chemistry", "cathode"), () -> new ItemChemistry(20000));
-        IUItem.adv_anode = new DataSimpleItem<>(new ResourceLocation("chemistry", "adv_anode"), () -> new ItemChemistry(100000));
-        IUItem.adv_cathode = new DataSimpleItem<>(new ResourceLocation("chemistry", "adv_cathode"), () -> new ItemChemistry(100000));
+        IUItem.anode = new DataSimpleItem<>(new ResourceLocation("chemistry", "anode"), () -> new ItemChemistry(40000));
+        IUItem.cathode = new DataSimpleItem<>(new ResourceLocation("chemistry", "cathode"), () -> new ItemChemistry(40000));
+        IUItem.adv_anode = new DataSimpleItem<>(new ResourceLocation("chemistry", "adv_anode"), () -> new ItemChemistry(350000));
+        IUItem.adv_cathode = new DataSimpleItem<>(new ResourceLocation("chemistry", "adv_cathode"), () -> new ItemChemistry(350000));
 
         IUItem.reactorprotonSimple = new DataSimpleItem<>(new ResourceLocation("reactors", "reactorprotonsimple"), () -> new ItemBaseRod(1,
                 95, 6, 3
@@ -1116,6 +1148,30 @@ public class Register {
         IUItem.sprayer = new DataSimpleItem<>(new ResourceLocation("tools", "foam_sprayer"), ItemSprayer::new);
         IUItem.latexPipette = new DataSimpleItem<>(new ResourceLocation("tools", "latex_pipette"), ItemLatexPipette::new);
 
+        IUItem.itemCell1000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_1000"), () -> new ItemCell(CellInfo.ITEM_1000));
+        IUItem.itemCell4000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_4000"), () -> new ItemCell(CellInfo.ITEM_4000));
+        IUItem.itemCell16000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_16000"), () -> new ItemCell(CellInfo.ITEM_16000));
+        IUItem.itemCell64000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_64000"), () -> new ItemCell(CellInfo.ITEM_64000));
+        IUItem.itemCell256000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_256000"), () -> new ItemCell(CellInfo.ITEM_256000));
+        IUItem.itemCell1024000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_1024000"), () -> new ItemCell(CellInfo.ITEM_1024000));
+        IUItem.itemCell4096000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_4096000"), () -> new ItemCell(CellInfo.ITEM_4096000));
+        IUItem.itemCell16384000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_16384000"), () -> new ItemCell(CellInfo.ITEM_16384000));
+        IUItem.itemCell65536000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_65536000"), () -> new ItemCell(CellInfo.ITEM_65536000));
+        IUItem.itemCell262144000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_262144000"), () -> new ItemCell(CellInfo.ITEM_262144000));
+        IUItem.itemCell1048576000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_1048576000"), () -> new ItemCell(CellInfo.ITEM_1048576000));
+        IUItem.itemCell2097152000 = new DataSimpleItem<>(new ResourceLocation("storage", "item_2097152000"), () -> new ItemCell(CellInfo.ITEM_2097152000));
+
+        IUItem.fluidCell1000 = new DataSimpleItem<>(new ResourceLocation("storage", "fluid_1000"), () -> new ItemCell(CellInfo.FLUID_1000));
+        IUItem.fluidCell4000 = new DataSimpleItem<>(new ResourceLocation("storage", "fluid_4000"), () -> new ItemCell(CellInfo.FLUID_4000));
+        IUItem.fluidCell16000 = new DataSimpleItem<>(new ResourceLocation("storage", "fluid_16000"), () -> new ItemCell(CellInfo.FLUID_16000));
+        IUItem.fluidCell64000 = new DataSimpleItem<>(new ResourceLocation("storage", "fluid_64000"), () -> new ItemCell(CellInfo.FLUID_64000));
+        IUItem.fluidCell256000 = new DataSimpleItem<>(new ResourceLocation("storage", "fluid_256000"), () -> new ItemCell(CellInfo.FLUID_256000));
+        IUItem.fluidCell1024000 = new DataSimpleItem<>(new ResourceLocation("storage", "fluid_1024000"), () -> new ItemCell(CellInfo.FLUID_1024000));
+        IUItem.patternStack = new DataSimpleItem<>(new ResourceLocation("storage", "pattern"), ItemPattern::new);
+        IUItem.terminalWireless = new DataSimpleItem<>(new ResourceLocation("storage", "wireless_terminal"), ItemWirelessTerminal::new);
+        IUItem.planetary_translocator =
+                new DataSimpleItem<>(new ResourceLocation("space", "planetary_translocator"), ItemPlanetaryTranslocator::new);
+
     }
 
     private static void registerBlocks() {
@@ -1148,6 +1204,14 @@ public class Register {
         IUItem.space_ore1 = new DataBlock<>(BlockSpace1.Type.class, BlockSpace1.class, ItemBlockSpace1.class);
         IUItem.space_ore2 = new DataBlock<>(BlockSpace2.Type.class, BlockSpace2.class, ItemBlockSpace2.class);
         IUItem.space_ore3 = new DataBlock<>(BlockSpace3.Type.class, BlockSpace3.class, ItemBlockSpace3.class);
+        IUItem.asteroid_ore = new DataBlock<>(BlockAsteroidOre.Type.class, BlockAsteroidOre.class, ItemBlockAsteroidOre.class);
+        IUItem.asteroid_ore1 = new DataBlock<>(BlockAsteroidOre1.Type.class, BlockAsteroidOre1.class, ItemBlockAsteroidOre1.class);
+        IUItem.asteroid_ore2 = new DataBlock<>(BlockAsteroidOre2.Type.class, BlockAsteroidOre2.class, ItemBlockAsteroidOre2.class);
+        IUItem.asteroid_ore3 = new DataBlock<>(BlockAsteroidOre3.Type.class, BlockAsteroidOre3.class, ItemBlockAsteroidOre3.class);
+        IUItem.deep_ore = new DataBlock<>(BlockDeepOre.Type.class, BlockDeepOre.class, ItemBlockDeepOre.class);
+        IUItem.deep_ore1 = new DataBlock<>(BlockDeepOre1.Type.class, BlockDeepOre1.class, ItemBlockDeepOre1.class);
+        IUItem.deep_ore2 = new DataBlock<>(BlockDeepOre2.Type.class, BlockDeepOre2.class, ItemBlockDeepOre2.class);
+        IUItem.deep_ore3 = new DataBlock<>(BlockDeepOre3.Type.class, BlockDeepOre3.class, ItemBlockDeepOre3.class);
         IUItem.nuclear_bomb = new DataBlock<>(BlockNuclearBomb.Type.class, BlockNuclearBomb.class, ItemBlockNuclearBomb.class);
         IUItem.space_stone = new DataBlock<>(BlockSpaceStone.Type.class, BlockSpaceStone.class, ItemBlockSpaceStone.class);
         IUItem.space_stone1 = new DataBlock<>(BlockSpaceStone1.Type.class, BlockSpaceStone1.class, ItemBlockSpaceStone1.class);
@@ -1166,6 +1230,13 @@ public class Register {
         IUItem.leaves = new DataSimpleBlock<>(RubberLeaves.class, ItemBlockLeaves.class, "leaves", "leaves");
         IUItem.radiationore = new DataBlock<>(BlocksRadiationOre.Type.class, BlocksRadiationOre.class, ItemBlockRadiationOre.class);
         IUItem.glass = new DataBlock<>(BlockTexGlass.Type.class, BlockTexGlass.class, ItemBlockTexGlass.class);
+
+        IUItem.sootBlock = new DataBlock<>(SootBlock.Type.class, SootBlock.class, ItemBlockSoot.class);
+        IUItem.radiationDustBlock = new DataBlock<>(RadiationDustBlock.Type.class, RadiationDustBlock.class, ItemBlockRadiationDust.class);
+
+        IUItem.nitrate_mud = new DataBlock<>(BlockNitrateMud.Type.class, BlockNitrateMud.class, ItemBlockNitrateMud.class);
+        IUItem.raw_saltpeter = new DataBlock<>(BlockRawSaltpeter.Type.class, BlockRawSaltpeter.class, ItemBlockRawSaltpeter.class);
+
     }
 
     private static void registerBlockEntity() {
@@ -1259,6 +1330,9 @@ public class Register {
         IUItem.heat_reactor = new DataBlockEntity<>(BlockHeatReactorEntity.class);
         IUItem.creativeBlock = new DataBlockEntity<>(BlockCreativeBlocksEntity.class);
         IUItem.volcanoChest = new DataBlockEntity<>(BlockVolcanoChest.class);
+        IUItem.storageSystem = new DataBlockEntity<>(BlockStorageSystemEntity.class);
+        IUItem.storagepipes = new DataBlockEntity<>(BlockStorageSystemCableEntity.class);
+
     }
 
     private static void registerVillagers() {
@@ -1329,12 +1403,32 @@ public class Register {
             }
             return null;
         }));
+        INTERFACE_WORKBENCH =
+                MENU_TYPE.register("interface_workbench",
+                        () -> IForgeMenuType.create((windowId, inv, data) -> {
+                            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
+                            try {
+                                BlockEntity blockEntity = (BlockEntity) DecoderHandler.decode(packetBuffer);
+                                if (blockEntity instanceof BlockEntityInventory)
+                                    return ((ContainerInterfaceWorkbench) ((BlockEntityInventory) blockEntity).createMenu(windowId, inv, inv.player));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return null;
+                        }));
         inventory_container = MENU_TYPE.register("inventory_container", () -> IForgeMenuType.create((windowId, inv, data) -> {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer(data);
             try {
                 byte id = packetBuffer.readByte();
                 if (id == 1) {
-                    final ItemStack stack = inv.player.getItemInHand(InteractionHand.MAIN_HAND);
+
+                    ItemStack stack = inv.player.getItemInHand(InteractionHand.MAIN_HAND);
+                    if (stack.getItem() instanceof IItemStackInventory inventory) {
+                        Player player = inv.player;
+                        invent = (ItemStackInventory) inventory.getInventory(player, stack);
+                        return ((ContainerMenuBase<?>) invent.createMenu(windowId, inv, inv.player));
+                    }
+                    stack = inv.player.getItemBySlot(EquipmentSlot.OFFHAND);
                     if (stack.getItem() instanceof IItemStackInventory inventory) {
                         Player player = inv.player;
                         invent = (ItemStackInventory) inventory.getInventory(player, stack);
@@ -1416,6 +1510,8 @@ public class Register {
         PARTICLE_TYPE.register(IUCore.context.getModEventBus());
         POI_TYPE.register(IUCore.context.getModEventBus());
         VILLAGER_PROFESSIONS.register(IUCore.context.getModEventBus());
+        GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(IUCore.context.getModEventBus());
+        PAINTING_VARIANTS.register(IUCore.context.getModEventBus());
     }
 
     public static void registerFluids() {

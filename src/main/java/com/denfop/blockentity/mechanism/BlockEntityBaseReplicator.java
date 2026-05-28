@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -70,7 +72,7 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
     private boolean stack = false;
 
     public BlockEntityBaseReplicator(double coef, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(2000000, 4, 0, block, pos, state);
+        super(ModConfig.mechanismDouble("base_replicator_energy_storage", 2000000.0D), 4, 0, block, pos, state);
         this.mode = BlockEntityBaseReplicator.Mode.STOPPED;
         this.fluidSlot = new InventoryFluidByList(this, Inventory.TypeItemSlot.INPUT, 1,
                 InventoryFluid.TypeFluidSlot.INPUT, FluidName.fluiduu_matter.getInstance().get()
@@ -157,29 +159,34 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
 
     public void updateEntityServer() {
         super.updateEntityServer();
+
         if (this.fluidTank.getFluidAmount() < this.fluidTank.getCapacity()) {
             this.gainFluid();
         }
+
         if (this.componentUpgrades.isChange()) {
             this.instant = this.componentUpgrades.hasUpgrade(TypeUpgrade.INSTANT);
             this.stack = this.componentUpgrades.hasUpgrade(TypeUpgrade.STACK);
             this.componentUpgrades.setChange(false);
         }
+
         boolean newActive = false;
         double energyConsume = this.euPerTick;
-        if (this.instant) {
-            energyConsume *= 10;
-        }
-        if (this.mode != Mode.STOPPED && this.energy.getEnergy() >= energyConsume && this.pattern != null && this.outputSlot.canAdd(
-                this.pattern.getStack())) {
 
+        if (this.instant) energyConsume *= 10;
+
+        if ((this.mode != Mode.STOPPED) &&
+                this.energy.getEnergy() >= energyConsume &&
+                this.pattern != null &&
+                this.outputSlot.canAdd(this.pattern.getStack())) {
 
             double uuRemaining = this.patternUu - this.uuProcessed;
             boolean finish;
+
             if (this.instant) {
-                if (uuRemaining <= (this.fluidTank.getFluidAmount() * 1D)) {
-                    uuRemaining = this.patternUu;
+                if (uuRemaining <= (this.fluidTank.getFluidAmount() / 1000D) + this.extraUuStored) {
                     finish = true;
+                    uuRemaining = this.patternUu;
                 } else {
                     if (uuRemaining <= this.uuPerTick) {
                         finish = true;
@@ -196,38 +203,54 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
                     finish = false;
                 }
             }
+
             double size = 1;
+
             if (this.stack) {
-                size = (this.fluidTank.getFluidAmount() / (this.patternUu * 1000));
+                size = (this.fluidTank.getFluidAmount() / (this.patternUu * 1000D)) + (this.extraUuStored / this.patternUu);
                 size = Math.min(size, this.pattern.getStack().getMaxStackSize());
-                final int amount = this.outputSlot.get(0).isEmpty() ? 64 : this.outputSlot.get(0).getMaxStackSize() - this.outputSlot.get(0).getCount();
-                size = Math.min(amount, size);
+
+                int free = this.outputSlot.get(0).isEmpty()
+                        ? 64
+                        : this.outputSlot.get(0).getMaxStackSize() - this.outputSlot.get(0).getCount();
+
+                size = Math.min(free, size);
+
                 if (size >= 1) {
                     uuRemaining = this.patternUu;
                     finish = true;
+                } else {
+                    size = 1;
                 }
-
             }
-            if (this.consumeUu(uuRemaining * size)) {
+
+            double requiredUU = uuRemaining * size;
+
+            double totalAvailable = (this.fluidTank.getFluidAmount() / 1000D) + this.extraUuStored;
+            if (requiredUU > totalAvailable + 1e-9) {
+                this.setActive(false);
+                return;
+            }
+
+            if (this.consumeUu(requiredUU)) {
+
                 newActive = true;
                 this.energy.useEnergy(energyConsume);
                 this.uuProcessed += uuRemaining * size;
-                if (finish) {
-                    this.uuProcessed = 0.0D;
-                    if (this.mode == Mode.SINGLE) {
-                        this.mode = Mode.STOPPED;
-                    } else {
-                        this.refreshInfo();
-                    }
 
-                    if (this.pattern != null) {
-                        if (size > 1)
-                            for (int i = 0; i < size - 1; i++) {
-                                this.outputSlot.add(this.pattern.getStack());
-                            }
-                        else {
-                            this.outputSlot.add(this.pattern.getStack());
-                        }
+
+            }
+            if (finish) {
+                this.uuProcessed = 0.0D;
+                if (this.mode == Mode.SINGLE) {
+                    this.mode = Mode.STOPPED;
+                } else {
+                    this.refreshInfo();
+                }
+
+                if (this.pattern != null) {
+                    for (int i = 0; i < size; i++) {
+                        this.outputSlot.add(this.pattern.getStack());
                     }
                 }
             }
@@ -236,28 +259,42 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
         this.setActive(newActive);
     }
 
+
     private boolean consumeUu(double amount) {
+        if (amount < 1e-9) return false;
+
         if (amount <= this.extraUuStored) {
             this.extraUuStored -= amount;
             return true;
-        } else {
-            amount -= this.extraUuStored;
-            int toDrain = (int) Math.ceil(amount * 1000.0D);
-            FluidStack drained = this.fluidTank.drain(toDrain, IFluidHandler.FluidAction.SIMULATE);
-            if (!drained.isEmpty() && drained.getFluid() == FluidName.fluiduu_matter.getInstance().get() && drained.getAmount() == toDrain) {
-                this.fluidTank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
-                amount -= (double) drained.getAmount() / 1000.0D;
-                if (amount < 0.0D) {
-                    this.extraUuStored = -amount;
-                } else {
-                    this.extraUuStored = 0.0D;
-                }
-
-                return true;
-            } else {
-                return false;
-            }
         }
+
+        amount -= this.extraUuStored;
+        this.extraUuStored = 0.0D;
+
+        int toDrain = (int) Math.ceil(amount * 1000D);
+        if (toDrain <= 0) return false;
+
+        FluidStack drained = this.fluidTank.drain(toDrain, IFluidHandler.FluidAction.SIMULATE);
+
+        if (drained == null || drained.isEmpty() || drained.getAmount() <= 0)
+            return false;
+
+        if (drained.getFluid() == FluidName.fluiduu_matter.getInstance().get()
+                && drained.getAmount() == toDrain) {
+
+            this.fluidTank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
+
+            double drainedUU = drained.getAmount() / 1000D;
+            double leftover = drainedUU - amount;
+
+            if (leftover > 0) {
+                this.extraUuStored += leftover;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public void refreshInfo() {
@@ -302,7 +339,7 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
 
     public void setOverclockRates() {
         this.uuPerTick = 1.0E-4D / this.upgradeSlot.processTimeMultiplier;
-        this.euPerTick = (512.0D + this.upgradeSlot.extraEnergyDemand) * this.upgradeSlot.energyDemandMultiplier;
+        this.euPerTick = (512.0D + this.upgradeSlot.extraEnergyDemand) * Math.max(1, this.upgradeSlot.energyDemandMultiplier);
         this.energy.setSinkTier(applyModifier(4, this.upgradeSlot.extraTier, 1.0D));
         this.energy.setCapacity(applyModifier(
                 2000000,
@@ -368,10 +405,10 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
                         .getRecipeOutput("replicator", false, stack)
                         .getOutput().metadata.getDouble(
                                 "matter"));
-            }catch (Exception e){
-                if (nbt.contains("amount")){
+            } catch (Exception e) {
+                if (nbt.contains("amount")) {
                     this.pattern = new RecipeInfo(stack, nbt.getDouble("amount"));
-                }else{
+                } else {
                     pattern = null;
                 }
             }
@@ -389,7 +426,7 @@ public class BlockEntityBaseReplicator extends BlockEntityElectricMachine implem
             CompoundTag contentTag = new CompoundTag();
             this.pattern.getStack().save(contentTag);
             nbt.put("pattern", contentTag);
-            nbt.putDouble("amount",pattern.getCol());
+            nbt.putDouble("amount", pattern.getCol());
         } else {
             nbt.putBoolean("isPattern", false);
         }

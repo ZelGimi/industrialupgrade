@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -44,7 +46,7 @@ public class BlockEntityNuclearWasteRecycler extends BlockEntityElectricMachine 
 
 
     public BlockEntityNuclearWasteRecycler(BlockPos pos, BlockState state) {
-        super(500, 8, 1, BlockBaseMachine3Entity.nuclear_waste_recycler, pos, state);
+        super(ModConfig.mechanismDouble("radioactive_waste_reprocessor_energy_storage", 500.0D), 8, 1, BlockBaseMachine3Entity.nuclear_waste_recycler, pos, state);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -53,8 +55,8 @@ public class BlockEntityNuclearWasteRecycler extends BlockEntityElectricMachine 
                 this.componentProcess = ((BlockEntityNuclearWasteRecycler) this.getParent()).componentProcess;
             }
         });
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("radioactive_waste_reprocessor_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("radioactive_waste_reprocessor_air_pollution_amount", 0.1D)));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
@@ -63,7 +65,7 @@ public class BlockEntityNuclearWasteRecycler extends BlockEntityElectricMachine 
                                                       @Override
                                                       public void operateOnce(final List<ItemStack> processResult) {
                                                           super.operateOnce(processResult);
-                                                          ((BlockEntityNuclearWasteRecycler) this.getParent()).rad.addEnergy(150);
+                                                          ((BlockEntityNuclearWasteRecycler) this.getParent()).rad.addEnergy(350);
                                                       }
                                                   }
         );
@@ -134,7 +136,7 @@ public class BlockEntityNuclearWasteRecycler extends BlockEntityElectricMachine 
 
     @Override
     public MachineRecipe getRecipeOutput() {
-        if (this.rad.getEnergy() + 100 <= 10000) {
+        if (this.rad.getEnergy() + 350 <= 10000) {
             return this.output;
         } else {
             return null;

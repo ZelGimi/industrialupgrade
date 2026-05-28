@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityScanner;
@@ -13,7 +15,7 @@ public class BlockEntityPhotonicScanner extends BlockEntityScanner {
 
 
     public BlockEntityPhotonicScanner(BlockPos pos, BlockState state) {
-        super(1000, BlocksPhotonicMachine.photonic_scanner, pos, state);
+        super(ModConfig.mechanismInt("photonic_scanner_operation_length", 1000), BlocksPhotonicMachine.photonic_scanner, pos, state);
     }
 
     @Override

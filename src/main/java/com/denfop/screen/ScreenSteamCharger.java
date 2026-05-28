@@ -43,7 +43,7 @@ public class ScreenSteamCharger<T extends ContainerMenuSteamCharger> extends Scr
         ));
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("steam_machine.info"));

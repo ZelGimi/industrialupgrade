@@ -3,7 +3,13 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:wiring_storage/per_mfsu"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
+    },
+    "B": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
     },
     "C": {
       "type": "forge:nbt",
@@ -12,16 +18,19 @@
       "nbt": "{level:10}"
     },
     "D": {
-      "item": "industrialupgrade:itemcore/phocore"
+      "item": "industrialupgrade:itemcore/adrcore"
+    },
+    "E": {
+      "item": "industrialupgrade:quantumitems2"
     }
   },
   "pattern": [
-    "CDC",
+    "EBE",
     "DAD",
-    "CDC"
+    "CBC"
   ],
   "result": {
-    "item": "industrialupgrade:wiring_storage/bar_mfsu"
+    "item": "industrialupgrade:upgradekitstorage/upgradekit7"
   },
   "show_notification": true
 }

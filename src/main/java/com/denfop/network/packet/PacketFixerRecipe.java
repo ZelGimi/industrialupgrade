@@ -4,6 +4,7 @@ import com.denfop.IUCore;
 import com.denfop.api.space.SpaceInit;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

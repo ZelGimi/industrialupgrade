@@ -20,8 +20,6 @@ public interface AbstractContainerScreenAccessor {
     @Accessor("quickCraftingRemainder")
     void setQuickCraftingRemainder(int value);
 
-    @Accessor
-    Slot getHoveredSlot();
 
     @Accessor
     boolean getIsSplittingStack();

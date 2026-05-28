@@ -3,25 +3,34 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:battery/charging_lapotron_crystal"
+      "item": "industrialupgrade:crafting_elements/crafting_520_element"
     },
     "B": {
-      "item": "industrialupgrade:battery/itembatlamacrystal"
+      "item": "industrialupgrade:crafting_elements/crafting_523_element"
     },
     "C": {
+      "tag": "forge:doubleplate/ferromanganese"
+    },
+    "D": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
+      "item": "minecraft:diamond_pickaxe",
+      "nbt": "{Damage:0}"
+    },
+    "F": {
+      "item": "industrialupgrade:crafting_elements/crafting_524_element"
+    },
+    "H": {
+      "tag": "forge:rods/molybdenum"
     }
   },
   "pattern": [
-    "BCB",
-    "BAB",
-    "BCB"
+    "ADB",
+    "CFC",
+    "CHC"
   ],
   "result": {
-    "item": "industrialupgrade:battery/itemadvbatchargecrystal"
+    "item": "industrialupgrade:energy_tools/nanopickaxe"
   },
   "show_notification": true
 }

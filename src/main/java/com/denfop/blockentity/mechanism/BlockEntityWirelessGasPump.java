@@ -105,7 +105,7 @@ public class BlockEntityWirelessGasPump extends BlockEntityInventory implements 
     @Override
     public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.levelBlock = nbtTagCompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbtTagCompound.contains("level") ? nbtTagCompound.getInt("level") : nbtTagCompound.getInt("levelMech")));
     }
 
     @Override
@@ -124,6 +124,7 @@ public class BlockEntityWirelessGasPump extends BlockEntityInventory implements 
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -139,7 +140,7 @@ public class BlockEntityWirelessGasPump extends BlockEntityInventory implements 
         for (VeinBase vein : this.veinList) {
             if (this.energy.getEnergy() >= 10 && vein.isFind()) {
                 if (vein.getCol() >= 1) {
-                    int size = Math.min((this.levelBlock + 1) * 2, vein.getCol());
+                    int size = Math.min(this.levelBlock * 15 + 5, vein.getCol());
                     size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
                     if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
                         this.fluidTank.fill(new FluidStack(FluidName.fluidgas.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
@@ -243,12 +244,14 @@ public class BlockEntityWirelessGasPump extends BlockEntityInventory implements 
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
 }

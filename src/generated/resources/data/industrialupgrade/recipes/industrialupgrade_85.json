@@ -1,18 +1,48 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    {
+  "key": {
+    "A": {
+      "tag": "forge:doubleplate/muntsa"
+    },
+    "B": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:energy/wrench",
+      "item": "industrialupgrade:energy/electric_hoe",
       "nbt": "{Damage:0}"
     },
-    {
-      "item": "industrialupgrade:wiring_storage/ult_mfsu"
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/electric_wrench",
+      "nbt": "{Damage:0}"
+    },
+    "D": {
+      "item": "industrialupgrade:battery/energy_crystal"
+    },
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/electric_treetap",
+      "nbt": "{Damage:0}"
+    },
+    "F": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:4}"
+    },
+    "G": {
+      "item": "industrialupgrade:energy/purifier"
     }
+  },
+  "pattern": [
+    "ABA",
+    "CDE",
+    "FGF"
   ],
   "result": {
-    "item": "industrialupgrade:upgradekitstorage/upgradekit3"
-  }
+    "item": "industrialupgrade:gravitool/gravitool"
+  },
+  "show_notification": true
 }

@@ -3,28 +3,22 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems7"
+      "tag": "forge:plates/polonium"
     },
     "B": {
-      "tag": "forge:doubleplate/iridium"
+      "tag": "forge:plates/palladium"
     },
     "C": {
-      "item": "industrialupgrade:photoniy_ingot"
-    },
-    "D": {
-      "tag": "forge:casings/iridium"
-    },
-    "F": {
-      "item": "industrialupgrade:quantumitems2"
+      "item": "industrialupgrade:crafting_elements/crafting_274_element"
     }
   },
   "pattern": [
-    "CDC",
-    "BAB",
-    "CFC"
+    "AAA",
+    "BBB",
+    "CCC"
   ],
   "result": {
-    "item": "industrialupgrade:quantumitems3"
+    "item": "industrialupgrade:polonium_palladium_composite"
   },
   "show_notification": true
 }

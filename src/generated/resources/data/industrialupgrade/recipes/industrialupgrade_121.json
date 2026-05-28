@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/specore"
+      "item": "industrialupgrade:itemcore/ultcore"
     },
     "B": {
       "item": "industrialupgrade:photoniy"
@@ -13,12 +13,15 @@
       "count": 1,
       "item": "industrialupgrade:circuit/spectralcircuit",
       "nbt": "{level:9}"
+    },
+    "D": {
+      "item": "industrialupgrade:module_schedule"
     }
   },
   "pattern": [
     "ABA",
     "BCB",
-    "ABA"
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:quarrymodules/for1"

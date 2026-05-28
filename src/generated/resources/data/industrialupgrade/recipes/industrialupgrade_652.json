@@ -5,9 +5,6 @@
     "A": {
       "item": "industrialupgrade:energy_tools/nanopickaxe"
     },
-    "B": {
-      "item": "industrialupgrade:quantumitems7"
-    },
     "C": {
       "item": "industrialupgrade:energy_tools/nanoshovel"
     },
@@ -23,8 +20,8 @@
   },
   "pattern": [
     "EHE",
-    "ABC",
-    " D "
+    "ADC",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:energy_tools/nanodrill"

@@ -1,0 +1,81 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:titan_cavity",
+      "industrialupgrade:space/titan/stone_tunnels",
+      "industrialupgrade:space/titan/hall_system",
+      "industrialupgrade:space/titan/fractures",
+      "industrialupgrade:space/titan/shafts",
+      "industrialupgrade:space/titan/liquid_chamber",
+      "industrialupgrade:space/titan/frozen_chamber",
+      "industrialupgrade:space/titan/crater_chamber",
+      "industrialupgrade:space/titan/tunnel_caves",
+      "industrialupgrade:space/titan/labyrinth_caves",
+      "industrialupgrade:space/titan/shaft_caves",
+      "industrialupgrade:space/titan/dome_caves",
+      "industrialupgrade:space/titan/well_caves",
+      "industrialupgrade:space/titan/multi_tier_caves",
+      "industrialupgrade:space/titan/branched_caves",
+      "industrialupgrade:space/titan/spiral_caves",
+      "industrialupgrade:space/titan/arch_caves",
+      "industrialupgrade:space/titan/chamber_caves",
+      "industrialupgrade:space/titan/canyon_caves",
+      "industrialupgrade:space/titan/pocket_caves",
+      "industrialupgrade:space/titan/crevice_caves",
+      "industrialupgrade:space/titan/amphitheater_caves",
+      "industrialupgrade:space/titan/cathedral_caves",
+      "industrialupgrade:space/titan/gallery_caves",
+      "industrialupgrade:space/titan/winding_caves",
+      "industrialupgrade:space/titan/cascade_caves",
+      "industrialupgrade:space/titan/collapse_caves",
+      "industrialupgrade:space/titan/vertical_collectors"
+    ],
+    [],
+    [
+      "industrialupgrade:titan_craters",
+      "industrialupgrade:space/titan/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:titan_ore_0",
+      "industrialupgrade:titan_ore_1",
+      "industrialupgrade:titan_ore_2",
+      "industrialupgrade:titan_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/titan/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.59999996
+}

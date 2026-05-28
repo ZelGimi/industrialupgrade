@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/basemachine/squeezer_12",
       "y": 90
     },
-    "facing=down,type=squeezer_12": {
-      "model": "industrialupgrade:block/basemachine/squeezer_12",
-      "x": 90
-    },
-    "facing=up,type=squeezer_12": {
-      "model": "industrialupgrade:block/basemachine/squeezer_12",
-      "x": 270
-    },
-    "facing=north,type=squeezer2_invalid": {
+    "facing=north,type=squeezer2_active": {
       "model": "industrialupgrade:block/basemachine/squeezer2"
     },
-    "facing=south,type=squeezer2_invalid": {
+    "facing=south,type=squeezer2_active": {
       "model": "industrialupgrade:block/basemachine/squeezer2",
       "y": 180
     },
-    "facing=west,type=squeezer2_invalid": {
+    "facing=west,type=squeezer2_active": {
       "model": "industrialupgrade:block/basemachine/squeezer2",
       "y": 270
     },
-    "facing=east,type=squeezer2_invalid": {
+    "facing=east,type=squeezer2_active": {
       "model": "industrialupgrade:block/basemachine/squeezer2",
       "y": 90
-    },
-    "facing=down,type=squeezer2_invalid": {
-      "model": "industrialupgrade:block/basemachine/squeezer2",
-      "x": 90
-    },
-    "facing=up,type=squeezer2_invalid": {
-      "model": "industrialupgrade:block/basemachine/squeezer2",
-      "x": 270
     }
   }
 }

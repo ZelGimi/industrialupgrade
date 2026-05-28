@@ -56,6 +56,7 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
     public FluidTank fluidTank;
 
     public int prev = -10;
+    BlockEntityLiquedTank blockEntityLiquedTankDown;
     private int old_amount;
 
     public BlockEntityLiquedTank(int tanksize, MultiBlockEntity block, BlockPos pos, BlockState state) {
@@ -85,7 +86,6 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
             return this.fluidTank.getFluid().getFluid().getFluidType().getLightLevel();
         }
     }
-
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -133,13 +133,12 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
         }
     }
 
-
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getVisualOrderText());
+            tooltip.add(Localization.translate("iu.fluid.info") + Localization.translate(fluidStack.getTranslationKey()));
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
@@ -196,7 +195,6 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
 
-
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
@@ -220,6 +218,17 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
         return this.getFluidTank().getFluidAmount() < this.getFluidTank().getCapacity();
     }
 
+    @Override
+    public void onNeighborChange(BlockState neighbor, BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        if (this.pos.offset(Direction.DOWN.getNormal()).equals(neighborPos)) {
+            if (this.getLevel().getBlockEntity(neighborPos) instanceof BlockEntityLiquedTank liquedTank) {
+                blockEntityLiquedTankDown = liquedTank;
+            } else {
+                blockEntityLiquedTankDown = null;
+            }
+        }
+    }
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -234,7 +243,18 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
                 new PacketUpdateFieldTile(this, "fluidTank", this.fluidTank);
             }
         }
-
+        if (blockEntityLiquedTankDown != null) {
+            if (!this.fluidTank.getFluid().isEmpty()) {
+                if (blockEntityLiquedTankDown.fluidTank.isEmpty() || fluidTank.isFluidValid(blockEntityLiquedTankDown.fluidTank.getFluid())) {
+                    int amount = blockEntityLiquedTankDown.fluidTank.fill(this.fluidTank.getFluid(), IFluidHandler.FluidAction.SIMULATE);
+                    if (amount > 0) {
+                        FluidStack fluidStack = this.fluidTank.getFluid().copy();
+                        fluidTank.drain(amount, IFluidHandler.FluidAction.EXECUTE);
+                        blockEntityLiquedTankDown.fluidTank.fill(new FluidStack(fluidStack.getFluid(), amount), IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+            }
+        }
 
         MutableObject<ItemStack> output = new MutableObject<>();
         if (this.containerslot.transferFromTank(this.fluidTank, output, true)
@@ -291,6 +311,11 @@ public class BlockEntityLiquedTank extends BlockEntityInventory implements IUpgr
         super.onLoaded();
         if (!this.level.isClientSide) {
             setUpgradestat();
+            if (this.getLevel().getBlockEntity(this.pos.offset(Direction.DOWN.getNormal())) instanceof BlockEntityLiquedTank liquedTank) {
+                blockEntityLiquedTankDown = liquedTank;
+            } else {
+                blockEntityLiquedTankDown = null;
+            }
         }
     }
 

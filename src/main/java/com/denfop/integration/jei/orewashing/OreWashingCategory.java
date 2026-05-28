@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.orewashing;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryMultiRecipes;
@@ -127,7 +128,7 @@ public class OreWashingCategory extends ScreenMain implements IRecipeCategory<Or
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipe, i, inputs.get(i));
 
         }
         final List<SlotInvSlot> outputSlots = container1.findClassSlots(InventoryOutput.class);
@@ -135,7 +136,6 @@ public class OreWashingCategory extends ScreenMain implements IRecipeCategory<Or
         for (i = 0; i < outputs.size(); i++) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlots.get(i).getJeiX(), outputSlots.get(i).getJeiY()).addItemStack(outputs.get(i));
         }
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 

@@ -40,7 +40,7 @@ public class ScreenEarthController<T extends ContainerMenuEarthController> exten
         ));
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("quarry.guide.earth_quarry"));

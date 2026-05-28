@@ -294,7 +294,9 @@ public class LogicCreativeReactor {
             logicComponentList.forEach(logicComponent -> this.reactor.setItemAt(logicComponent.getX(), logicComponent.getY()));
             this.reactor.setUpdate();
         }
-
+        if (this.getMaxHeat() > this.reactor.getMaxHeat() * 1.15) {
+            this.reactor.setHeat(this.reactor.getHeat() * 0.5);
+        }
         if (!this.rodsList.isEmpty()) {
             this.reactor.setOutput(this.generation);
         } else {

@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems3"
+      "item": "industrialupgrade:quantumitems6"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/specore"
+      "item": "industrialupgrade:itemcore/quacore"
     },
     "C": {
       "item": "industrialupgrade:rotors_upgrade/rotorupgrade3"
@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "   ",
+    "DBD",
+    "ACA"
   ],
   "result": {
     "item": "industrialupgrade:rotors_upgrade/rotorupgrade4"

@@ -1,0 +1,11 @@
+{
+	"ore_block": "industrialupgrade:blockpreciousore/sapphire_ore",
+    "replace_block": "minecraft:stone",
+    "min_height": 0,
+    "max_height": 56,
+    "min_vein_size": 2,
+    "max_vein_size": 4,
+    "min_veins_per_chunk": 5,
+    "max_veins_per_chunk": 10,
+    "chance": 0.6
+}

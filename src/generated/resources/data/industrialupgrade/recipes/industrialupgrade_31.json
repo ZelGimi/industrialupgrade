@@ -3,22 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "minecraft:planks"
+      "tag": "forge:doubleplate/aluminumbronze"
     },
     "B": {
-      "item": "industrialupgrade:wiring/tin"
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     },
     "C": {
-      "item": "industrialupgrade:battery/advanced_re_battery"
+      "item": "industrialupgrade:battery/energy_crystal"
     }
   },
   "pattern": [
-    "ABA",
-    "CCC",
-    "AAA"
+    "ACA",
+    "CBC",
+    "ACA"
   ],
   "result": {
-    "item": "industrialupgrade:wiring_storage/batbox_iu"
+    "item": "industrialupgrade:upgradekitstorage/upgradekit"
   },
   "show_notification": true
 }

@@ -31,10 +31,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class RecyclerCategory extends ScreenMain implements IRecipeCategory<RecyclerHandler> {
@@ -120,14 +118,10 @@ public class RecyclerCategory extends ScreenMain implements IRecipeCategory<Recy
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecyclerHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryMultiRecipes.class);
-        final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
-        int i = 0;
-        for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+        final SlotInvSlot inputSlot = slots1.get(0);
+        builder.addSlot(RecipeIngredientRole.INPUT, inputSlot.getJeiX(), inputSlot.getJeiY()).addItemStacks(recipe.getInputs());
 
-        }
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
-
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
     }
 

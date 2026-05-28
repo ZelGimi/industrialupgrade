@@ -41,7 +41,7 @@ public class ItemCrystalMemory extends Item implements IItemTab {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         ItemStack recorded = this.readItemStack(p_41421_);
         if (!ModUtils.isEmpty(recorded)) {
-            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + recorded.getDisplayName().getString()));
+            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + com.denfop.utils.ModUtils.cleanComponentString(recorded.getDisplayName().getString())));
             p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.UU-Matter") + " " + ModUtils.getString(
                     ReplicatorRecipe.getInBuckets(
                             recorded)) + "B"));

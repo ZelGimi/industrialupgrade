@@ -15,6 +15,7 @@
     "BBA"
   ],
   "result": {
+    "count": 2,
     "item": "industrialupgrade:recipe_schedule"
   },
   "show_notification": true

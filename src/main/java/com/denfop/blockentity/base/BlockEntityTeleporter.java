@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -50,9 +52,9 @@ public class BlockEntityTeleporter extends BlockEntityElectricMachine {
     private int cooldown;
 
     public BlockEntityTeleporter(BlockPos pos, BlockState state) {
-        super(500000, 14, 0, BlockBaseMachine3Entity.teleporter_iu, pos, state);
+        super(ModConfig.mechanismDouble("teleporter_energy_storage", 500000.0D), 14, 0, BlockBaseMachine3Entity.teleporter_iu, pos, state);
         this.targetCheckTicker = IUCore.random.nextInt(1024);
-        this.cooldown = 0;
+        this.cooldown = ModConfig.mechanismInt("teleporter_cooldown_ticks", 0);
     }
 
     private static int getStackCost(ItemStack stack) {
@@ -289,7 +291,7 @@ public class BlockEntityTeleporter extends BlockEntityElectricMachine {
 
 
     private void onTeleportTo() {
-        this.cooldown = 20;
+        this.cooldown = ModConfig.mechanismInt("teleporter_cooldown_ticks", 20);
     }
 
 

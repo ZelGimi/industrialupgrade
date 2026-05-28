@@ -29,6 +29,7 @@ public class KeyboardClient extends KeyboardIU {
     public static final KeyMapping bootsmode = new KeyMapping("Boots Key", InputConstants.KEY_B, "IndustrialUpgrade");
     public static final KeyMapping leggingsmode = new KeyMapping("Leggings Key", InputConstants.KEY_N, "IndustrialUpgrade");
     public static final KeyMapping altmode = new KeyMapping("ALT Key", InputConstants.KEY_LALT, "IndustrialUpgrade");
+    public static final KeyMapping abilitymode = new KeyMapping("Ability Key", InputConstants.KEY_R, "IndustrialUpgrade");
 
     private final Minecraft mc = Minecraft.getInstance();
     private int lastKeyState = 0;
@@ -49,6 +50,7 @@ public class KeyboardClient extends KeyboardIU {
         ClientRegistry.register(bootsmode);
         ClientRegistry.register(leggingsmode);
         ClientRegistry.register(altmode);
+        ClientRegistry.register(abilitymode);
     }
 
 

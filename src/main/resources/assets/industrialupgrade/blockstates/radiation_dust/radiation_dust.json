@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "layers=1": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height2" },
+    "layers=2": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height4" },
+    "layers=3": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height6" },
+    "layers=4": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height8" },
+    "layers=5": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height10" },
+    "layers=6": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height12" },
+    "layers=7": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_height14" },
+    "layers=8": { "model": "industrialupgrade:block/radiation_dust/radiation_dust_block" }
+  }
+}

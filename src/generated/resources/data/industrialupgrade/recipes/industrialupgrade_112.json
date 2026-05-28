@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "ABA",
-    "CEC",
-    "ABA"
+    "A A",
+    "BEB",
+    "ACA"
   ],
   "result": {
     "item": "industrialupgrade:quarrymodules/ef2"

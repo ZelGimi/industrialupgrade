@@ -1,11 +1,13 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.api.crop.genetics.Genome;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.TypeVein;
 import com.denfop.world.vein.VeinType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -17,12 +19,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.denfop.api.crop.genetics.Genome.geneticBiomes;
 import static com.denfop.datagen.loader.VeinDataLoader.VEIN_DATA;
 import static com.denfop.items.ItemVeinSensor.dataColors;
 import static com.denfop.world.WorldBaseGen.*;
 
 public class PacketUpdateVeinData implements IPacket {
-
 
 
     public PacketUpdateVeinData() {
@@ -61,8 +63,6 @@ public class PacketUpdateVeinData implements IPacket {
     }
 
 
-
-
     @Override
     public byte getId() {
         return 75;
@@ -71,7 +71,9 @@ public class PacketUpdateVeinData implements IPacket {
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
-
+        if (geneticBiomes.isEmpty()) {
+            Genome.init(entityPlayer.level().registryAccess().registryOrThrow(Registries.BIOME));
+        }
         try {
             int size = (int) customPacketBuffer.readInt();
             for (int i = 0; i < size; i++) {
@@ -81,7 +83,7 @@ public class PacketUpdateVeinData implements IPacket {
                     dataColors.put(block.defaultBlockState(), id);
                 }
             }
-            size = (int)  customPacketBuffer.readInt();
+            size = (int) customPacketBuffer.readInt();
             for (int i = 0; i < size; i++) {
                 ResourceLocation resourceLocation = (ResourceLocation) DecoderHandler.decode(customPacketBuffer);
                 Block block = (Block) DecoderHandler.decode(customPacketBuffer);

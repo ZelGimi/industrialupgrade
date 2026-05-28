@@ -28,6 +28,7 @@ public class ConfiguredFeaturesGen {
     public static final ResourceKey<ConfiguredFeature<?, ?>> CALCIUM = registerKey("calcium");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SALTPETER = registerKey("saltpeter");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PEAT = registerKey("peat");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> GLOBAL_ORE = registerKey("global_ore");
 
     private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(Constants.MOD_ID, name));
@@ -36,6 +37,7 @@ public class ConfiguredFeaturesGen {
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         context.register(RUB_TREE, new ConfiguredFeature<>(WorldBaseGen.RUB_TREE_GENERATOR.get(), new NoneFeatureConfiguration()));
         context.register(VEIN, new ConfiguredFeature<>(WorldBaseGen.VEIN_GENERATOR.get(), new NoneFeatureConfiguration()));
+        context.register(GLOBAL_ORE, new ConfiguredFeature<>(WorldBaseGen.GLOBAL_ORE_GENERATOR.get(), new NoneFeatureConfiguration()));
         context.register(GEN_GAS, new ConfiguredFeature<>(WorldBaseGen.GEN_GAS_GENERATOR.get(), new NoneFeatureConfiguration()));
         context.register(GEN_HIVE, new ConfiguredFeature<>(WorldBaseGen.GEN_HIVE_GENERATOR.get(), new NoneFeatureConfiguration()));
         context.register(VOLCANO, new ConfiguredFeature<>(WorldBaseGen.VOLCANO_GENERATOR.get(), new NoneFeatureConfiguration()));

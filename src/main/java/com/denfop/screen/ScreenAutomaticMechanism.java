@@ -118,21 +118,21 @@ public class ScreenAutomaticMechanism<T extends ContainerMenuAutomaticMechanism>
             switch (upgrade) {
                 case EXTRACT:
                     new TooltipWidget(this, 115, 24 + 18 * index, 18, 18)
-                            .withTooltip(IUItem.ejectorUpgrade.getDisplayName().getString())
+                            .withTooltip(com.denfop.utils.ModUtils.cleanComponentString(IUItem.ejectorUpgrade.getDisplayName().getString()))
                             .drawForeground(poseStack, par1, par2);
                     break;
                 case PULLING:
                     new TooltipWidget(this, 115, 24 + 18 * index, 18, 18)
-                            .withTooltip(IUItem.pullingUpgrade.getDisplayName().getString())
+                            .withTooltip(com.denfop.utils.ModUtils.cleanComponentString(IUItem.pullingUpgrade.getDisplayName().getString()))
                             .drawForeground(poseStack, par1, par2);
                     break;
                 case EXT_PUL:
                     new TooltipWidget(this, 115, 24 + 18 * index, 18, 18)
-                            .withTooltip(IUItem.ejectorUpgrade.getDisplayName().getString() + "\n" + IUItem.pullingUpgrade.getDisplayName().getString())
+                            .withTooltip(com.denfop.utils.ModUtils.cleanComponentString(IUItem.ejectorUpgrade.getDisplayName().getString()) + "\n" + com.denfop.utils.ModUtils.cleanComponentString(IUItem.pullingUpgrade.getDisplayName().getString()))
                             .drawForeground(poseStack, par1, par2);
                     break;
                 case NONE:
-                    new TooltipWidget(this, 115, 24 + 18 * index, 18, 18).withTooltip("None").drawForeground(poseStack, par1, par2);
+                    new TooltipWidget(this, 115, 24 + 18 * index, 18, 18).withTooltip(Localization.translate("iu.tooltip.none")).drawForeground(poseStack, par1, par2);
                     break;
             }
         }

@@ -22,7 +22,7 @@ public enum EnumTypeSlot {
     SOLARIUM(207 + 19, 223, 18, 18),
     EXP_MODULE(239, 175, 16, 16),
     FISHING_ROD(239, 191, 16, 16),
-    PLASM(239, 223, 16, 16),
+    PLASM(239, 222, 16, 16),
     RECIPE_SCHEDULE(0, 0, 16, 16, true),
     FERTILIZER(16, 0, 16, 16, true),
     BATTERY(33, 0, 16, 16, true),
@@ -32,6 +32,7 @@ public enum EnumTypeSlot {
     BIT(48 + 32, 0, 16, 16, true),
     EXCHANGE(48 + 48, 0, 16, 16, true),
     CAPACITOR(96 + 16, 0, 16, 16, true),
+    STORAGE_CELL(239, 239, 16, 17, false),
     ;
     final boolean next;
     private final int x;

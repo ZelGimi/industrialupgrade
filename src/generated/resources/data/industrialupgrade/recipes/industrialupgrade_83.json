@@ -1,18 +1,30 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:energy/wrench",
-      "nbt": "{Damage:0}"
+  "key": {
+    "A": {
+      "item": "industrialupgrade:compresscarbon"
     },
-    {
-      "item": "industrialupgrade:wiring_storage/mfsu_iu"
+    "B": {
+      "tag": "forge:plates/adamantium"
+    },
+    "C": {
+      "item": "industrialupgrade:energy_tools/nano_saber"
+    },
+    "D": {
+      "item": "minecraft:glowstone"
+    },
+    "E": {
+      "item": "industrialupgrade:battery/lapotron_crystal"
     }
+  },
+  "pattern": [
+    "AB ",
+    "AC ",
+    "DEB"
   ],
   "result": {
-    "item": "industrialupgrade:upgradekitstorage/upgradekit1"
-  }
+    "item": "industrialupgrade:energy_tools/itemnanosaber1"
+  },
+  "show_notification": true
 }

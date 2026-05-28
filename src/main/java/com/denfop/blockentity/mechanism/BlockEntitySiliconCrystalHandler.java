@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -53,12 +55,12 @@ public class BlockEntitySiliconCrystalHandler extends BlockEntityElectricMachine
     private int levelBlock;
 
     public BlockEntitySiliconCrystalHandler(BlockPos pos, BlockState state) {
-        super(1000, 1, 1, BlockBaseMachine3Entity.silicon_crystal_handler, pos, state);
+        super(ModConfig.mechanismDouble("crystal_grower_energy_storage", 1000.0D), 1, 1, BlockBaseMachine3Entity.silicon_crystal_handler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InventoryRecipes(this, "silicon_recipe", this);
 
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 0)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 0, 45)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((BlockEntitySiliconCrystalHandler) this.parent).levelBlock * 1.4);
@@ -70,8 +72,8 @@ public class BlockEntitySiliconCrystalHandler extends BlockEntityElectricMachine
                 return stack.is(IUEventHandler.coalDustTag);
             }
         };
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("crystal_grower_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("crystal_grower_air_pollution_amount", 0.1D)));
         this.levelBlock = 0;
     }
 
@@ -82,12 +84,14 @@ public class BlockEntitySiliconCrystalHandler extends BlockEntityElectricMachine
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
@@ -242,6 +246,7 @@ public class BlockEntitySiliconCrystalHandler extends BlockEntityElectricMachine
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -262,7 +267,7 @@ public class BlockEntitySiliconCrystalHandler extends BlockEntityElectricMachine
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override

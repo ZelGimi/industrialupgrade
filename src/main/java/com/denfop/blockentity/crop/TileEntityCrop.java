@@ -28,6 +28,7 @@ import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
@@ -76,7 +77,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
     private Radiation radLevel;
     private ChunkPos chunkPos;
     private ChunkAccess chunk;
-    private Biome biome;
+    private Holder<Biome> biome;
     private int tickPest = 0;
     private BlockState downState;
     private ChunkLevel chunkLevel;
@@ -131,7 +132,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
         return downState;
     }
 
-    public Biome getBiome() {
+    public Holder<Biome> getBiome() {
         return biome;
     }
 
@@ -219,7 +220,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
         downState = world.getBlockState(pos.below());
         downBlock = downState.getBlock();
         for (EnumSoil soil1 : soil) {
-            if ((soil1.getState() == downState && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore()) || (downBlock == IUItem.humus.getBlock(0))) {
+            if ((soil1.getState().getBlock() == downBlock && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore()) || (downBlock == IUItem.humus.getBlock(0))) {
                 return true;
             }
         }
@@ -252,6 +253,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
 
     public void onLoaded() {
         super.onLoaded();
+
         if (!this.getWorld().isClientSide) {
             this.chunkPos = new ChunkPos(pos);
             Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
@@ -267,7 +269,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
             }
             this.chunkLevel = chunkLevel;
             this.chunk = this.getWorld().getChunk(pos);
-            this.biome = this.getWorld().getBiome(pos).get();
+            this.biome = this.getWorld().getBiome(pos);
             this.cropMap.clear();
             for (Direction facing1 : ModUtils.horizontalFacings) {
                 final BlockPos pos1 = pos.offset(facing1.getNormal());
@@ -318,9 +320,10 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
             crop.setTick(tick);
             crop.setGeneration(gen);
             this.genome = new Genome(this.cropItem);
+
             genome.loadCrop(crop);
-            this.biome = this.getWorld().getBiome(pos).value();
-            biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            this.biome = this.getWorld().getBiome(pos);
+            biomeCoef = crop.canGrowInBiome(biome) ? 1 : 0.5;
         }
         this.humus = downBlock == IUItem.humus.getBlock(0);
         this.level.setBlock(pos.below(), downState, 3);
@@ -998,7 +1001,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
                     }
                     this.chunkLevel = chunkLevel;
                     this.chunk = this.getWorld().getChunk(pos);
-                    this.biome = this.getWorld().getBiome(pos).get();
+                    this.biome = this.getWorld().getBiome(pos);
                 }
                 if (this.getWorld().getGameTime() % 60 == 0) {
                     this.canGrow = CropNetwork.instance.canGrow(level, pos, chunkPos, crop, radLevel, chunk, biome, chunkLevel);
@@ -1192,7 +1195,7 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
                 this.cropItem = combinedGenome.getStack();
                 newCrop.setStack(cropItem);
                 this.crop = newCrop;
-                this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+                this.biomeCoef = crop.canGrowInBiome(biome) ? 1 : 0.5;
                 this.genome = combinedGenome;
                 this.genome.loadCrop(this.crop);
                 this.setActive(crop.getName().toLowerCase() + "_" + this.crop.getStage());
@@ -1424,7 +1427,9 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
             stack.shrink(1);
             this.genome = new Genome(this.cropItem);
             this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
-            this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            if (biome == null)
+                this.biome = this.getLevel().getBiome(pos);
+            this.biomeCoef = crop.canGrowInBiome(biome) ? 1 : 0.5;
             this.genome.loadCrop(this.crop);
             this.setActive(crop.getName().toLowerCase() + "_0");
         } else {
@@ -1433,7 +1438,9 @@ public class TileEntityCrop extends BlockEntityBase implements ICropTile {
             stack.shrink(1);
             this.genome = new Genome(this.cropItem);
             this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
-            this.biomeCoef = crop.canGrowInBiome(biome, level) ? 1 : 0.5;
+            if (biome == null)
+                this.biome = this.getLevel().getBiome(pos);
+            this.biomeCoef = crop.canGrowInBiome(biome) ? 1 : 0.5;
             this.genome.loadCrop(this.crop);
             this.setActive(crop.getName().toLowerCase() + "_0");
         }

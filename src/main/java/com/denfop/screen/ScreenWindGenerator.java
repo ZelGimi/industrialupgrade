@@ -19,6 +19,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -28,9 +29,18 @@ import java.util.List;
 
 public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends ScreenMain<ContainerMenuWindGenerator> {
 
+    private static final int POWER_MIN = 100;
+    private static final int POWER_MAX = 150;
+    private static final int POWER_SLIDER_LEFT = 34;
+    private static final int POWER_SLIDER_TOP = 116;
+    private static final int POWER_SLIDER_TRAVEL = 130;
+    private static final int POWER_SLIDER_WIDTH = 10;
+    private static final int POWER_SLIDER_HEIGHT = 12;
     private final ResourceLocation background;
     public boolean hoverChangeSide;
     public boolean hoverChangePower;
+    private boolean draggingPowerSlider = false;
+    private int lastSentPower = Integer.MIN_VALUE;
 
     public ScreenWindGenerator(ContainerMenuWindGenerator guiContainer) {
         super(guiContainer, guiContainer.base.getStyle());
@@ -50,12 +60,70 @@ public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends S
 
     }
 
+    private boolean isOverPowerSlider(int mouseX, int mouseY) {
+        return mouseX >= POWER_SLIDER_LEFT
+                && mouseX <= POWER_SLIDER_LEFT + POWER_SLIDER_TRAVEL + POWER_SLIDER_WIDTH
+                && mouseY >= POWER_SLIDER_TOP
+                && mouseY <= POWER_SLIDER_TOP + POWER_SLIDER_HEIGHT;
+    }
+
+    private int getPowerSliderValueFromMouse(int mouseX) {
+        double ratio = (mouseX - POWER_SLIDER_LEFT) / (double) POWER_SLIDER_TRAVEL;
+        ratio = Mth.clamp(ratio, 0.0D, 1.0D);
+        int value = POWER_MIN + (int) Math.round(ratio * (POWER_MAX - POWER_MIN));
+        return Mth.clamp(value, POWER_MIN, POWER_MAX);
+    }
+
+    private void updatePowerSliderFromMouse(int mouseX) {
+        int newPower = getPowerSliderValueFromMouse(mouseX);
+
+        if (this.container.base.coefficient_power != newPower) {
+            this.container.base.coefficient_power = newPower;
+        }
+
+        if (this.lastSentPower != newPower) {
+            this.lastSentPower = newPower;
+            new PacketUpdateServerTile(this.container.base, newPower);
+        }
+
+        this.hoverChangePower = true;
+    }
+
     @Override
     protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
+
+        int mouseX = i - this.guiLeft;
+        int mouseY = j - this.guiTop;
+
+        if (k == 0 && isOverPowerSlider(mouseX, mouseY)) {
+            this.draggingPowerSlider = true;
+            updatePowerSliderFromMouse(mouseX);
+            return;
+        }
+
         if (this.container.base.getRotor() != null && hoverChangeSide) {
             new PacketUpdateServerTile(this.container.base, 0);
         }
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (this.draggingPowerSlider && button == 0) {
+            int localMouseX = (int) (mouseX - this.guiLeft);
+            updatePowerSliderFromMouse(localMouseX);
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 0 && this.draggingPowerSlider) {
+            this.draggingPowerSlider = false;
+            return true;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -71,7 +139,7 @@ public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends S
 
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.wind_generator.info_main"));
@@ -91,7 +159,7 @@ public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends S
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name = this.container.base.getDisplayName().getString();
+        String name = com.denfop.utils.ModUtils.cleanComponentString(this.container.base.getDisplayName().getString());
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
@@ -126,12 +194,12 @@ public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends S
         bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
         bindTexture();
-        drawTexturedModalRect(poseStack, (int) (xoffset + 34 + ((this.container.base.coefficient_power - 100) / 50D) * 130), yoffset + 116, 235, 0, 10, 12);
-        if (hoverChangePower) {
-            drawTexturedModalRect(poseStack, (int) (xoffset + 34 + ((this.container.base.coefficient_power - 100) / 50D) * 130), yoffset + 116, 246, 0, 10, 12);
+        int sliderX = (int) (xoffset + POWER_SLIDER_LEFT + ((this.container.base.coefficient_power - POWER_MIN) / (double) (POWER_MAX - POWER_MIN)) * POWER_SLIDER_TRAVEL);
+        drawTexturedModalRect(poseStack, sliderX, yoffset + POWER_SLIDER_TOP, 235, 0, POWER_SLIDER_WIDTH, POWER_SLIDER_HEIGHT);
 
+        if (hoverChangePower || draggingPowerSlider) {
+            drawTexturedModalRect(poseStack, sliderX, yoffset + POWER_SLIDER_TOP, 246, 0, POWER_SLIDER_WIDTH, POWER_SLIDER_HEIGHT);
         }
-        hoverChangePower = false;
         if (!this.container.base.slot.isEmpty()) {
             final List<ItemStack> list = RotorUpgradeSystem.instance.getListStack(this.container.base.slot.get(0));
             int i = 0;
@@ -191,6 +259,9 @@ public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends S
         if (mouseX >= 157 && mouseY >= 133 && (mouseX <= 176 && mouseY <= 152)) {
             hoverChangeSide = true;
         }
+        if (hoverChangeSide)
+            new AdvancedTooltipWidget(this, 157, 133, 176, 152).withTooltip(Localization.translate("iu.wind_change_side")).drawForeground(poseStack, mouseX, mouseY);
+        this.hoverChangePower = this.draggingPowerSlider || isOverPowerSlider(mouseX, mouseY);
         if (this.container.base.getWorld().dimension() == Level.OVERWORLD) {
             String fields = "";
             if (this.container.base.getMinWind() != 0) {
@@ -228,7 +299,7 @@ public class ScreenWindGenerator<T extends ContainerMenuWindGenerator> extends S
                     continue;
                 }
                 new AdvancedTooltipWidget(this, 80 + i * 18, 134, 80 + i * 18 + 18, 134 + 18)
-                        .withTooltip(stack.getDisplayName().getString())
+                        .withTooltip(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()))
                         .drawForeground(poseStack, mouseX, mouseY);
                 i++;
             }

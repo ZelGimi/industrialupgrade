@@ -39,7 +39,7 @@ public class ScreenAgriculturalAnalyzer<T extends ContainerMenuAgriculturalAnaly
         this.imageWidth = 203;
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.crop.info"));
@@ -119,8 +119,8 @@ public class ScreenAgriculturalAnalyzer<T extends ContainerMenuAgriculturalAnaly
                 Localization.translate("iu.crop_analyzer.name") + Localization.translate("crop." + crop.getName()) + "\n"
                         + Localization.translate("iu.crop_analyzer.grow_time") + (new Timer(crop.getMaxTick() / 20)).getDisplay() + "\n"
                         + Localization.translate("iu.crop_analyzer.yield") + crop.getYield() + "\n"
-                        + Localization.translate("iu.crop_analyzer.drop") + crop.getDrops().get(0).getDisplayName().getString() + "\n"
-                        + Localization.translate("iu.crop_analyzer.soil") + crop.getSoil().getStack().getDisplayName().getString() + "\n"
+                        + Localization.translate("iu.crop_analyzer.drop") + com.denfop.utils.ModUtils.cleanComponentString(crop.getDrops().get(0).getDisplayName().getString()) + "\n"
+                        + Localization.translate("iu.crop_analyzer.soil") + com.denfop.utils.ModUtils.cleanComponentString(crop.getSoil().getStack().getDisplayName().getString()) + "\n"
                         + Localization.translate("iu.crop_analyzer.daytime") + (crop.isSun() ? Localization.translate(
                         "iu.space_yes") : Localization.translate("iu.space_no")) + "\n"
                         + Localization.translate("iu.crop_analyzer.nighttime") + (crop.isNight() ? Localization.translate(

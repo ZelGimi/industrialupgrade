@@ -3,40 +3,19 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_520_element"
-    },
-    "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_523_element"
+      "item": "industrialupgrade:nanobox"
     },
     "C": {
-      "tag": "forge:doubleplate/ferromanganese"
-    },
-    "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "minecraft:diamond_pickaxe",
-      "nbt": "{Damage:0}"
-    },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:5}"
-    },
-    "F": {
-      "item": "industrialupgrade:crafting_elements/crafting_524_element"
-    },
-    "H": {
-      "tag": "forge:rods/molybdenum"
+      "item": "industrialupgrade:photoniy"
     }
   },
   "pattern": [
-    "ADB",
-    "EFE",
-    "CHC"
+    " C ",
+    "CAC",
+    " C "
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/nanopickaxe"
+    "item": "industrialupgrade:quantumitems7"
   },
   "show_notification": true
 }

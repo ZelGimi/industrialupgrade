@@ -1,6 +1,7 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.api.pollution.client.PollutionClientRenderRefresh;
 import com.denfop.api.pollution.radiation.Radiation;
 import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.network.DecoderHandler;
@@ -12,7 +13,6 @@ import java.io.IOException;
 public class PacketUpdateRadiation implements IPacket {
 
     public PacketUpdateRadiation() {
-
     }
 
     public PacketUpdateRadiation(Radiation radiation) {
@@ -20,8 +20,6 @@ public class PacketUpdateRadiation implements IPacket {
         try {
             buffer.writeByte(this.getId());
             EncoderHandler.encode(buffer, radiation);
-
-
         } catch (IOException var5) {
             throw new RuntimeException(var5);
         }
@@ -51,6 +49,8 @@ public class PacketUpdateRadiation implements IPacket {
                 radiation1.setCoef(radiation.getCoef());
                 radiation1.setLevel(radiation.getLevel());
             }
+
+            PollutionClientRenderRefresh.queueSingleChunkRadiationUpdated(radiation.getPos());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -60,5 +60,4 @@ public class PacketUpdateRadiation implements IPacket {
     public EnumTypePacket getPacketType() {
         return EnumTypePacket.SERVER;
     }
-
 }

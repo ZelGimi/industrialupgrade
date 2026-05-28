@@ -1,5 +1,7 @@
 package com.denfop.blockentity.se;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntitySolarGeneratorEnergy;
@@ -22,7 +24,7 @@ public class BlockEntityImpSolarGenerator extends BlockEntitySolarGeneratorEnerg
 
     public BlockEntityImpSolarGenerator(BlockPos pos, BlockState state) {
 
-        super(4, BlockImpSolarEnergyEntity.imp_se_gen, pos, state);
+        super(ModConfig.mechanismDouble("advanced_solar_energy_generator_generation_multiplier", 4.0D), BlockImpSolarEnergyEntity.imp_se_gen, pos, state);
 
     }
 

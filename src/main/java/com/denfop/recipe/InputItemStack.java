@@ -15,6 +15,7 @@ public class InputItemStack implements IInputItemStack {
     public static InputItemStack EMPTY = new InputItemStack(ItemStack.EMPTY, 1, true);
     public final ItemStack input;
     public int amount;
+
     public InputItemStack(ItemStack input) {
         this(input, ModUtils.getSize(input));
     }

@@ -1,0 +1,20 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "haumea",
+    "depth_bonus": 0.35,
+    "distribution_type": "deep",
+    "horizontal_radius": 9,
+    "max_y": 48,
+    "min_y": -56,
+    "ore_block_id": "industrialupgrade:blockspace2/haumea_apatite",
+    "path_length": 18,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone/haumea_stone",
+      "industrialupgrade:spacecobblestone/haumea_cobblestone"
+    ],
+    "require_near_lava": true,
+    "size": 9,
+    "vertical_radius": 4
+  }
+}

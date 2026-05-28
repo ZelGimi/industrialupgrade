@@ -1,0 +1,61 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 328968,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:space/uranus/stone_tunnels",
+      "industrialupgrade:space/uranus/hall_system",
+      "industrialupgrade:space/uranus/fractures",
+      "industrialupgrade:space/uranus/porous",
+      "industrialupgrade:space/uranus/shafts",
+      "industrialupgrade:space/uranus/liquid_chamber",
+      "industrialupgrade:space/uranus/tunnel_caves",
+      "industrialupgrade:space/uranus/labyrinth_caves",
+      "industrialupgrade:space/uranus/shaft_caves",
+      "industrialupgrade:space/uranus/dome_caves",
+      "industrialupgrade:space/uranus/well_caves",
+      "industrialupgrade:space/uranus/multi_tier_caves",
+      "industrialupgrade:space/uranus/branched_caves",
+      "industrialupgrade:space/uranus/arch_caves",
+      "industrialupgrade:space/uranus/chamber_caves",
+      "industrialupgrade:space/uranus/canyon_caves",
+      "industrialupgrade:space/uranus/pocket_caves",
+      "industrialupgrade:space/uranus/crevice_caves",
+      "industrialupgrade:space/uranus/amphitheater_caves",
+      "industrialupgrade:space/uranus/cathedral_caves",
+      "industrialupgrade:space/uranus/gallery_caves",
+      "industrialupgrade:space/uranus/winding_caves",
+      "industrialupgrade:space/uranus/cascade_caves",
+      "industrialupgrade:space/uranus/vertical_collectors"
+    ],
+    [],
+    [
+      "industrialupgrade:space/uranus/addition_craters"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

@@ -1,0 +1,12 @@
+{
+  "body": "asteroid",
+  "block": "industrialupgrade:blockspace/asteroid_barium_ore",
+  "weight": 72,
+  "min_vein_size": 3,
+  "max_vein_size": 8,
+  "rarity": 3,
+  "spawn_shape": "vein",
+  "allowed_types": ["metallic", "mixed", "ore_rich", "special"],
+  "min_depth": 0.12,
+  "max_depth": 0.82
+}

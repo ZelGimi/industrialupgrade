@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:block/storage_cells",
+    "down" : "industrialupgrade:block/storage_cells",
+    "up" : "industrialupgrade:block/storage_cells",
+    "north" : "industrialupgrade:block/storage_cells_front",
+    "east" : "industrialupgrade:block/storage_cells",
+    "south" : "industrialupgrade:block/storage_cells",
+    "west" : "industrialupgrade:block/storage_cells"
+  }
+}

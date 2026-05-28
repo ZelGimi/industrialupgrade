@@ -3,7 +3,12 @@ package com.denfop.proxy;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.pollution.client.PollutionEnvironmentBlockColors;
+import com.denfop.api.pollution.client.PollutionScreenOverlay;
+import com.denfop.api.space.dimension.worldgen.SpaceWorldgenContent;
+import com.denfop.api.space.dimension.worldgen.block.SpaceGeyserBlockEntityRenderer;
 import com.denfop.blockentity.base.*;
+import com.denfop.blockentity.bee.BlockEntityApiary;
 import com.denfop.blockentity.creative.BlockEntityCreativeSteamStorage;
 import com.denfop.blockentity.mechanism.*;
 import com.denfop.blockentity.mechanism.steam.BlockEntitySteamStorage;
@@ -16,7 +21,7 @@ import com.denfop.blockentity.panels.entity.BlockEntityMiniPanels;
 import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.ItemBlockCore;
+import com.denfop.blocks.mechanism.BlockApiaryEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.blocks.mechanism.BlockCreativeBlocksEntity;
 import com.denfop.containermenu.ContainerMenuBase;
@@ -28,12 +33,14 @@ import com.denfop.events.TickHandler;
 import com.denfop.events.client.EventAutoQuests;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.items.IProperties;
+import com.denfop.items.storage.ClientItemGridTooltipComponent;
+import com.denfop.items.storage.ItemGridTooltipComponent;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.mixin.access.RenderChunkRegionAccessor;
-import com.denfop.register.Register;
 import com.denfop.render.TileEntityRenderGasChamber;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.anvil.RenderItemAnvil;
+import com.denfop.render.apiary.TileEntityRenderApiary;
 import com.denfop.render.autocollector.TileEntityRenderAutoLatexCollector;
 import com.denfop.render.base.*;
 import com.denfop.render.compressor.TileEntityRenderCompressor;
@@ -68,12 +75,9 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -96,18 +100,12 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.denfop.IUCore.LOGGER;
-import static com.denfop.register.Register.containerBase;
-import static com.denfop.register.Register.inventory_container;
+import static com.denfop.register.Register.*;
 
 public class ClientProxy extends CommonProxy {
 
@@ -116,7 +114,6 @@ public class ClientProxy extends CommonProxy {
 
     public ClientProxy() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::onRegisterAdditionalModels);
         modEventBus.addListener(this::registerParticleFactories);
         modEventBus.addListener(this::registerBlockColor);
         modEventBus.addListener(this::registerItemColor);
@@ -124,10 +121,29 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::registerKeys);
         modEventBus.addListener(this::onRegisterGeometryLoaders);
+        modEventBus.addListener(this::registerTooltipFactories);
+        modEventBus.addListener(this::onRegisterGuiOverlays);
+        modEventBus.addListener(this::onRegisterBlockColors);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EventAutoQuests());
 
         new GlobalRenderManager();
+    }
+
+    @SubscribeEvent
+    public void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelowAll("pollution_visual_overlay", PollutionScreenOverlay.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
+        PollutionEnvironmentBlockColors.register(event);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void registerTooltipFactories(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(ItemGridTooltipComponent.class, ClientItemGridTooltipComponent::new);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -142,7 +158,13 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(IUItem.entity_nuclear_bomb.get(), NuclearBombRenderer::new);
         event.registerEntityRenderer(IUItem.entity_bee.get(), SmallBeeRenderer::new);
+        event.registerBlockEntityRenderer(
+                SpaceWorldgenContent.SPACE_GEYSER_BE.get(),
+                SpaceGeyserBlockEntityRenderer::new
+        );
+
     }
+
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
@@ -215,11 +237,22 @@ public class ClientProxy extends CommonProxy {
         IUCore.keyboard.register(event);
     }
 
+    public void setLevelIfNull(BlockEntityBase blockEntityBase) {
+        if (blockEntityBase.getLevel() == null)
+            blockEntityBase.setLevel(Minecraft.getInstance().level);
+    }
+
     @Override
     public void preInit() {
         super.preInit();
         MenuScreens.register(
                 containerBase.get(),
+                (MenuScreens.ScreenConstructor<ContainerMenuBase<? extends CustomWorldContainer>, ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>>>) (menu, inventory, p_96217_) -> {
+                    return ((CustomWorldContainer) menu.base).getGui(inventory.player, menu);
+                }
+        );
+        MenuScreens.register(
+                INTERFACE_WORKBENCH.get(),
                 (MenuScreens.ScreenConstructor<ContainerMenuBase<? extends CustomWorldContainer>, ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>>>) (menu, inventory, p_96217_) -> {
                     return ((CustomWorldContainer) menu.base).getGui(inventory.player, menu);
                 }
@@ -231,6 +264,7 @@ public class ClientProxy extends CommonProxy {
                     return stackInventory.getGui(inventory.player, menu);
                 }
         );
+
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityAnvil>) IUItem.anvil.getBlock(0).getValue().getBlockType(), RenderItemAnvil::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityPrimalFluidHeater>) IUItem.primalFluidHeater.getBlock(0).getValue().getBlockType(), TileEntityRenderFluidHeater::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityPrimalGasChamber>) IUItem.gasChamber.getBlock(0).getValue().getBlockType(), TileEntityRenderGasChamber::new);
@@ -287,56 +321,13 @@ public class ClientProxy extends CommonProxy {
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityLiquedTank>) IUItem.creativeBlock.getBlock(BlockCreativeBlocksEntity.creative_tank_storage).getValue().getBlockType(), TileEntityTankRender::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityAutoLatexCollector>) IUItem.basemachine2.getBlock(BlockBaseMachine3Entity.auto_latex_collector).getValue().getBlockType(), TileEntityRenderAutoLatexCollector::new);
 
+        BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityApiary>) IUItem.apiary.getBlock(BlockApiaryEntity.apiary).getValue().getBlockType(), TileEntityRenderApiary::new);
 
         MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());
         EnumMultiMachine.write();
         new TickHandler();
     }
 
-
-    @OnlyIn(Dist.CLIENT)
-    private void onRegisterAdditionalModels(ModelEvent.BakingCompleted event) {
-        try {
-            // Access the models field via reflection
-            Field modelsField = ModelEvent.BakingCompleted.class.getDeclaredField("models");
-            modelsField.setAccessible(true);
-
-            // Get the unmodifiable models map
-            Map<ResourceLocation, BakedModel> unmodifiableModels = (Map<ResourceLocation, BakedModel>) modelsField.get(event);
-
-            // Create a new modifiable map and copy the entries from the unmodifiable map
-            Map<ResourceLocation, BakedModel> newModels = new HashMap<>(unmodifiableModels);
-
-            // Modify the map as needed
-            for (RegistryObject<Item> registryObject : Register.ITEMS.getEntries()) {
-                Item item = registryObject.get();
-                if (item instanceof ItemBlockCore<?>) {
-                    ItemBlockCore<?> blockCore = (ItemBlockCore<?>) item;
-                    ModelResourceLocation model = new ModelResourceLocation(blockCore.getRegistryName(), "inventory");
-                    ModelResourceLocation modelBlock = BlockModelShaper.stateToModelLocation(blockCore.getBlock().defaultBlockState());
-
-                    // Ensure modelBlock is not null
-                    if (modelBlock == null) {
-                        LOGGER.error("ModelBlock for item {} is null!", blockCore.getRegistryName());
-                        continue;
-                    }
-                    BakedModel model1 = newModels.get(modelBlock);
-
-                    // Replace the model in the new map
-                    if (newModels.containsKey(model)) {
-                        newModels.put(model, newModels.get(modelBlock)); // Modify the model directly
-                    } else {
-                        LOGGER.warn("Model not found for item: {}", blockCore.getRegistryName());
-                    }
-                }
-            }
-
-            // Set the new map back into the event (if the event allows setting it)
-            modelsField.set(event, newModels);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to modify models map", e);
-        }
-    }
 
     @SubscribeEvent
     public void registerParticleFactories(RegisterParticleProvidersEvent event) {
@@ -354,6 +345,7 @@ public class ClientProxy extends CommonProxy {
     public void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
         {
+
             IUCore.proxy.getPropertiesList().forEach(properties -> {
                         for (String property : properties.properties())
                             ItemProperties.register((Item) properties,

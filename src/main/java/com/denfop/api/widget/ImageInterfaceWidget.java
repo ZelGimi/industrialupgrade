@@ -13,6 +13,8 @@ public class ImageInterfaceWidget extends ScreenWidget {
     }
 
     public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
+        if (!visible)
+            return;
         mouseX = gui.guiLeft();
         mouseY = gui.guiTop();
         ScreenIndustrialUpgrade.bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/common3.png"));

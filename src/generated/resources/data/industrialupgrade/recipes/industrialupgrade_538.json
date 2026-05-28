@@ -11,17 +11,26 @@
     "C": {
       "item": "industrialupgrade:quantumitems4"
     },
-    "D": {
-      "item": "industrialupgrade:machines/neutronium_solar_panel"
-    },
     "E": {
-      "item": "industrialupgrade:excitednucleus/neucore"
+      "item": "industrialupgrade:excitednucleus/barcore"
+    },
+    "H": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/photoncircuit",
+      "nbt": "{level:11}"
+    },
+    "J": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:upgradekitpanel/upgradepanelkit10"

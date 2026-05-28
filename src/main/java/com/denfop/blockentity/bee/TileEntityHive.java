@@ -58,7 +58,7 @@ public class TileEntityHive extends BlockEntityBase {
 
     public void onClicked(Player player) {
         if (hasDamagePlayer)
-        player.hurt(new DamageSource(player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.beeObject)), 5);
+            player.hurt(new DamageSource(player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.beeObject)), 5);
     }
 
     @Override

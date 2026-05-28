@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import static com.denfop.register.Register.ITEMS;
 
 public class DataItem<T extends Enum<T> & SubEnum, E extends Item> {
-    public static List<RegistryObject<Item>> objects = new LinkedList<>();
+    public static List<RegistryObject<Item>> objects = Collections.synchronizedList(new ArrayList<>());
     List<RegistryObject<E>> registryObjectList;
 
     public DataItem(Class<T> typeClass, Class<E> itemClass) {
@@ -91,9 +91,10 @@ public class DataItem<T extends Enum<T> & SubEnum, E extends Item> {
     public int getMeta(E item) {
         int i = 0;
         for (RegistryObject<E> registryObject : registryObjectList) {
-            if (registryObject.get() == item) {
-                return i;
-            }
+            if (registryObject != null)
+                if (registryObject.get() == item) {
+                    return i;
+                }
             i++;
         }
         return 0;
@@ -103,9 +104,10 @@ public class DataItem<T extends Enum<T> & SubEnum, E extends Item> {
         int i = 0;
         E item = (E) itemStack.getItem();
         for (RegistryObject<E> registryObject : registryObjectList) {
-            if (registryObject.get().equals(item)) {
-                return i;
-            }
+            if (registryObject != null)
+                if (registryObject.get().equals(item)) {
+                    return i;
+                }
             i++;
         }
         return 0;

@@ -12,21 +12,21 @@
       "nbt": "{level:7}"
     },
     "C": {
-      "item": "industrialupgrade:battery/itembatlamacrystal"
+      "item": "industrialupgrade:battery/lapotron_crystal"
     },
     "D": {
       "item": "industrialupgrade:crafting_elements/crafting_285_element"
     },
     "E": {
-      "item": "industrialupgrade:quantumitems3"
+      "item": "industrialupgrade:quantumitems6"
     },
     "F": {
       "item": "industrialupgrade:bags/adv_iu_bags"
     }
   },
   "pattern": [
-    "DCD",
-    "BAB",
+    "DBD",
+    "CAC",
     "EFE"
   ],
   "result": {

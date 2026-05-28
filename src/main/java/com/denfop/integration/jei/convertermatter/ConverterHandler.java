@@ -44,11 +44,14 @@ public class ConverterHandler {
     }
 
     public static void initRecipes() {
-        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("converter")) {
-            addRecipe(
-                    container.getOutput().items.get(0)
-            );
 
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("converter")) {
+            try {
+                addRecipe(
+                        container.getOutput().items.get(0)
+                );
+            } catch (Exception e) {
+            }
 
         }
 

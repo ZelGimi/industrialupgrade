@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.worldcollector.aer;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityEnchanterBooks;
@@ -84,7 +85,7 @@ public class AerCategory extends ScreenMain implements IRecipeCategory<AerHandle
 
         drawTexturedModalRect(stack, +66 - 5, +34 - 5, 177, 60, xScale, 18);
         drawSplitString(stack,
-                Localization.translate("iu.need_info") + recipe.getNeed() + Localization.translate("iu.need_info_matter"),
+                Localization.translate("iu.need_info") + ModUtils.getString(recipe.getNeed()) + Localization.translate("iu.need_info_matter"),
                 79,
                 54,
                 150 - 69,
@@ -94,7 +95,7 @@ public class AerCategory extends ScreenMain implements IRecipeCategory<AerHandle
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AerHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 39, 19).addItemStack(recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 39, 19, recipe, 0, recipe.getInput());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 105, 30).addItemStack(recipe.getOutput());
 
     }

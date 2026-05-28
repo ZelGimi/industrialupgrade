@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -55,11 +57,11 @@ public class BlockEntityNeutronSeparator extends BlockEntityElectricMachine impl
     protected short progress;
 
     public BlockEntityNeutronSeparator(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.neutronseparator, pos, state);
+        super(ModConfig.mechanismDouble("neutronium_transformer_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.neutronseparator, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 50;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("neutron_separator_energy_use", 50);
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -86,9 +88,9 @@ public class BlockEntityNeutronSeparator extends BlockEntityElectricMachine impl
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 15 + Localization.translate(
-                    "iu.machines_work_energy_type_qe"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 200);
+            tooltip.add(Localization.translate("iu.machines_work_energy") + defaultEnergyConsume + Localization.translate(
+                    "iu.machines_work_energy_type_eu"));
+            tooltip.add(Localization.translate("iu.machines_work_length") + defaultOperationLength);
         }
         super.addInformation(stack, tooltip);
 

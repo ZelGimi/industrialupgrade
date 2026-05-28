@@ -92,7 +92,7 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
         return super.mouseScrolled(d, d2, d3);
     }
 
-    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+    public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.bee.info"));
@@ -113,6 +113,7 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
+        handleUpgradeTooltip(par1, par2);
         if (this.container.base.getQueen() == null)
             return;
         if (this.container.base.getGenome() != null) {
@@ -138,16 +139,16 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
 
             } else {
                 int j = 0;
-                for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+                for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 3), maxIndexAdditionProducts); i++, j++) {
                     Product product = products.get(i);
 
-                    this.addWidget(new TooltipWidget(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> product.getCrop().getDrop().get(0).getDisplayName().getString() + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(product.getChance() / 3) + "%"));
+                    this.addWidget(new TooltipWidget(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(product.getCrop().getDrop().get(0).getDisplayName().getString()) + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(product.getChance() / (2 / this.container.base.coef)) + "%"));
 
 
                 }
             }
         }
-        handleUpgradeTooltip(par1, par2);
+
     }
 
     @Override
@@ -174,7 +175,7 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
             j = 0;
             List<Product> products = this.container.base.getQueen().getProduct();
             maxIndexAdditionProducts = products.size();
-            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 3), maxIndexAdditionProducts); i++, j++) {
                 Product product = products.get(i);
                 RenderSystem.enableBlend();
                 poseStack.renderItem(product.getCrop().getDrop().get(0), 176 + this.guiLeft(), (int) (8 + 16 * (j + 3.5) + this.guiTop()));

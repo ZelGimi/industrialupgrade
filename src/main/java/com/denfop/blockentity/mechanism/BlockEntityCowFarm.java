@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -67,8 +69,8 @@ public class BlockEntityCowFarm extends BlockEntityInventory implements IUpgrada
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("cow_farm_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("cow_farm_air_pollution_amount", 0.1D)));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
@@ -118,9 +120,7 @@ public class BlockEntityCowFarm extends BlockEntityInventory implements IUpgrada
             List<Cow> cows = level.getEntitiesOfClass(Cow.class, searchArea);
 
 
-            if (cows.size() < MAX_COWS) {
-                breedCows(cows);
-            }
+            breedCows(cows);
 
 
             killOldCows(cows);

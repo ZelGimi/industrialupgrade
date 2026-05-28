@@ -3,34 +3,31 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:energy_tools/spectralaxe"
+      "item": "industrialupgrade:crafting_elements/crafting_511_element"
     },
     "B": {
-      "item": "industrialupgrade:energy_tools/spectralshovel"
+      "item": "industrialupgrade:crafting_elements/crafting_514_element"
     },
     "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/photoncircuit",
-      "nbt": "{level:12}"
+      "tag": "forge:doubleplate/muntsa"
     },
     "D": {
-      "item": "industrialupgrade:energy_tools/spectralpickaxe"
-    },
-    "E": {
-      "item": "industrialupgrade:quantumitems3"
+      "item": "industrialupgrade:energy_tools/nanoaxe"
     },
     "F": {
-      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+      "item": "industrialupgrade:crafting_elements/crafting_516_element"
+    },
+    "H": {
+      "tag": "forge:rods/electrum"
     }
   },
   "pattern": [
-    "ACB",
-    "FDF",
-    "ECE"
+    "ADB",
+    "CFC",
+    "CHC"
   ],
   "result": {
-    "item": "industrialupgrade:energy_tools/vajra"
+    "item": "industrialupgrade:energy_tools/quantumaxe"
   },
   "show_notification": true
 }

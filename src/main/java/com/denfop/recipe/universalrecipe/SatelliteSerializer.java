@@ -6,9 +6,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import static com.denfop.api.space.SpaceInit.regSatellite;
 import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
@@ -34,15 +31,15 @@ public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
         double size = json.get("size").getAsDouble();
         double rotation = json.get("rotation").getAsDouble();
         ResourceLocation texture = ResourceLocation.tryParse(textureStr + ".png");
-        if (!stringList.contains("satellite_"+name)) {
+        if (!stringList.contains("satellite_" + name)) {
             regSatellite.add(() -> new Satellite(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemStr.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, level, (IPlanet) SpaceNet.instance.getBodyFromName(planetStr), temperature, pressure, distance,
                     type, oxygen, colonies, angle, time, size, rotation));
-            stringList.add("satellite_"+name);
+            stringList.add("satellite_" + name);
         }
-        return new SatelliteRecipe(id,name, systemStr, textureStr, level, planetStr, temperature, pressure, distance, type, oxygen, colonies, angle, time, size, rotation);
+        return new SatelliteRecipe(id, name, systemStr, textureStr, level, planetStr, temperature, pressure, distance, type, oxygen, colonies, angle, time, size, rotation);
 
     }
 
@@ -64,13 +61,13 @@ public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
         double size = buf.readDouble();
         double rotation = buf.readDouble();
         ResourceLocation texture = ResourceLocation.tryParse(texturePath + ".png");
-        if (!stringList.contains("satellite_"+name)) {
+        if (!stringList.contains("satellite_" + name)) {
             regSatellite.add(() -> new Satellite(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemName.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemName)), texture, level, (IPlanet) SpaceNet.instance.getBodyFromName(planetName), temperature, pressure, distance,
                     type, oxygen, colonies, angle, time, size, rotation));
-            stringList.add("satellite_"+name);
+            stringList.add("satellite_" + name);
         }
         return new SatelliteRecipe(
                 id, name, systemName, texturePath, level, planetName,
